@@ -73,13 +73,13 @@ public class GetFunction extends AbstractFunction {
 
         //构建出dingo的主键
         Key key = derive.buildKey(originData, day);
-        Record record = dingoClient.get(key);
+        Record recordData = dingoClient.get(key);
 
         //如果为空, 返回nil
-        if (record == null) {
+        if (recordData == null) {
             return AviatorNil.NIL;
         }
-        Object value = record.getValue(storeTable.getStoreColumn());
+        Object value = recordData.getValue(storeTable.getStoreColumn());
         return AviatorRuntimeJavaType.valueOf(value);
     }
 

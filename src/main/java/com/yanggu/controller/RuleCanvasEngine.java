@@ -214,10 +214,8 @@ public class RuleCanvasEngine {
         List<Atom> atomList = tableData.getAtom();
         if (CollUtil.isNotEmpty(atomList)) {
             List<AtomMetricCalculate> collect = atomList.stream()
-                    .map(tempAtom -> {
-                        //初始化原子指标
-                        return MetricUtil.initAtom(tempAtom, fieldMap);
-                    })
+                    //初始化原子指标
+                    .map(tempAtom -> MetricUtil.initAtom(tempAtom, fieldMap))
                     .collect(Collectors.toList());
             metricCalculate.setAtomMetricCalculateList(collect);
         }
@@ -279,8 +277,4 @@ public class RuleCanvasEngine {
         return metricCalculate;
     }
 
-    /** 风险信息发送至Kafka */
-    public void sendResultToKafka(JSONObject message, JSONObject result) {
-        // kafkaTemplate.send("topic", result.toJSONString());
-    }
 }

@@ -27,10 +27,6 @@ public enum ErrorCode {
     private final String info;
     private final String format;
 
-    ErrorCode(Integer httpStatus, Integer code, String info) {
-        this(httpStatus, code, info, null);
-    }
-
     ErrorCode(Integer httpStatus, Integer code, String info, String format) {
         this.httpStatus = httpStatus;
         this.code = code;

@@ -68,15 +68,14 @@ public class CompositeMetricCalculate implements Calculate<Map<String, Object>, 
     }
 
     @Override
-    public void save(Object result) throws Exception {
-        if (!store.getIsStore()) {
+    public void save(Object result) throws RuntimeException {
+        if (Boolean.FALSE.equals(store.getIsStore())) {
             return;
         }
 
         List<StoreTable> storeTableList = store.getStoreTableList();
         StoreTable storeTable = storeTableList.get(0);
-
-        String storeTableName = storeTable.getStoreTable();
+        //System.out.println(storeTable);
 
 
     }

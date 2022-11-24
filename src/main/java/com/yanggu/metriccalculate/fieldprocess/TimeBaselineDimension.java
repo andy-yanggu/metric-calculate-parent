@@ -47,8 +47,7 @@ public class TimeBaselineDimension {
      * @param jsonObject
      * @return
      */
-    public Long getCurrentAggregateTimestamp(JSONObject jsonObject) {
-        Long timestamp = timeExtractor.process(jsonObject);
+    public Long getCurrentAggregateTimestamp(Long timestamp) {
         return DateUtil.truncate(new Date(timestamp), unit.getDateField()).getTime();
     }
 

@@ -26,6 +26,10 @@ import java.util.Map;
 @Slf4j
 public class MetricUtil {
 
+    private MetricUtil() {
+
+    }
+
     /**
      * 初始化原子指标计算类
      * @param atom

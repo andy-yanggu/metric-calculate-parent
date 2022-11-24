@@ -10,7 +10,7 @@ public interface Calculate<E, R> {
     /**
      * 初始化方法
      */
-    default void init() throws Exception {
+    default void init() throws RuntimeException {
         throw new RuntimeException("需要重写init方法");
     }
 
@@ -22,7 +22,7 @@ public interface Calculate<E, R> {
     /**
      * 保存到外部存储
      */
-    default void save(Object result) throws Exception {
+    default void save(Object result) throws RuntimeException {
         throw new RuntimeException("需要重写save方法");
     }
 

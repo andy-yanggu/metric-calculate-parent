@@ -3,6 +3,10 @@ package com.yanggu.metriccalculate.constant;
 
 public class Constant {
 
+    private Constant() {
+
+    }
+
     /**
      * 原始数据
      */

@@ -31,7 +31,7 @@ public class SwaggerConfig {
                         .version(version)
                         .build())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.zetyun.controller"))
+                .apis(RequestHandlerSelectors.basePackage("com.yanggu.controller"))
                 .paths(PathSelectors.any())
                 .build();
     }
