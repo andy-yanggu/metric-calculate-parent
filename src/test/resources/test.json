@@ -1,0 +1,67 @@
+{
+  "id": 1,
+  "name": "trade_detail",
+  "derive": [
+    {
+      "name": "out_amount_178_sum",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no_out2"
+        }
+      ],
+      "metricColumn": {
+        "columnName": "debit_amt_out",
+        "columnIndex": 8
+      },
+      "timeColumn": {
+        "timeFormat": "timestamp",
+        "columnName": "trans_timestamp"
+      },
+      "duration": 1,
+      "timeUnit": "DAY",
+      "store": {
+        "isStore": true,
+        "storeTableList": [
+          {
+            "storeTable": "account_out_transaction_summary",
+            "storeColumn": "out_amount_178_sum",
+            "storeTimeFormat": "yyyyMMdd",
+            "columnType": "BigDecimal",
+            "storeType": "DinGo",
+            "storeColumnDtoList": [
+              {
+                "storeColumnType": "TIME",
+                "columnName": "metrics_store_data_date_time",
+                "storeColumnIndex": 1
+              },
+              {
+                "storeColumnType": "DIMENSION",
+                "dimensionName": "account_no_out2",
+                "storeColumnIndex": 2,
+                "columnName": "account_no_out"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "fields": [
+    {
+      "className": "trade_detail",
+      "labels": null,
+      "name": "account_no_out",
+      "properties": null,
+      "valueType": "STRING"
+    },
+    {
+      "className": "trade_detail",
+      "labels": null,
+      "name": "trans_timestamp",
+      "properties": null,
+      "valueType": "STRING"
+    }
+  ]
+}

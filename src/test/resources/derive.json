@@ -1,0 +1,37 @@
+{
+  "dimension": [
+    {
+      "columnName": "account_no_out",
+      "columnIndex": 2,
+      "dimensionName": "account_no_out2"
+    }
+  ],
+  "store": {
+    "isStore": true,
+    "storeTableList": [
+      {
+        "storeTable": "account_out_transaction_summary",
+        "storeColumn": "out_amount_178_sum",
+        "storeTimeFormat": "yyyyMMdd",
+        "columnType": "BigDecimal",
+        "storeType": "DinGo",
+        "storeColumnDtoList": [
+          {
+            "storeColumnType": "TIME",
+            "columnName": "metrics_store_data_date_time"
+          },
+          {
+            "storeColumnType": "DIMENSION",
+            "dimensionName": "account_no_out2",
+            "columnName": "account_no_out"
+          }
+        ]
+      }
+    ]
+  },
+  "timeColumn": {
+    "timeFormat": "timestamp",
+    "columnName": "trans_timestamp"
+  },
+  "name": "out_amount_178_sum"
+}
