@@ -14,11 +14,12 @@ import java.util.*;
 
 /**
  * 时间序列存储
+ * key是聚合后的时间戳, value是MergedUnit
  *
  * @param <V>
  */
 @Data
-public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<V>> extends TreeMap<Long, V> implements KVTable<Long, V, TimeSeriesKVTable<V>>, SortedTable<Long, V, Long, V, TimeSeriesKVTable<V>>,
+public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V> implements KVTable<Long, V, TimeSeriesKVTable<V>>, SortedTable<Long, V, Long, V, TimeSeriesKVTable<V>>,
         TimeReferable {
 
     /**

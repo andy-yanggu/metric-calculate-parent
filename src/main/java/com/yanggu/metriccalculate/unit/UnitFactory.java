@@ -62,17 +62,17 @@ public class UnitFactory {
     /**
      * Get unit instance by init value.
      */
-    public static Object initInstanceByValue(String mergeable, Object initValue, BasicType valueType) throws Exception {
+    public static MergedUnit initInstanceByValue(String mergeable, Object initValue) throws Exception {
         Class clazz = UnitFactory.getMergeableClass(mergeable);
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
         if (clazz.isAnnotationPresent(Numerical.class)) {
-            return createNumericUnit(clazz, initValue, valueType);
+            return createNumericUnit(clazz, initValue);
         } else if (clazz.isAnnotationPresent(Collective.class)) {
-            return createCollectiveUnit(clazz, initValue, valueType);
+            return createCollectiveUnit(clazz, initValue);
         } else if (clazz.isAnnotationPresent(Objective.class)) {
-            return createObjectiveUnit(clazz, initValue, valueType);
+            return createObjectiveUnit(clazz, initValue);
         }
         throw new RuntimeException(clazz.getName() + " not support.");
     }
@@ -81,7 +81,7 @@ public class UnitFactory {
      * Create unit.
      */
     public static MergedUnit createObjectiveUnit(
-            Class<ObjectiveUnit> clazz, Object initValue, BasicType valueType) throws Exception {
+            Class<ObjectiveUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().value(initValue);
     }
 
@@ -89,7 +89,7 @@ public class UnitFactory {
      * Create collective unit.
      */
     public static MergedUnit createCollectiveUnit(
-            Class<CollectionUnit> clazz, Object initValue, BasicType valueType) throws Exception {
+            Class<CollectionUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().add(initValue);
     }
 
@@ -97,8 +97,9 @@ public class UnitFactory {
      * Create number unit.
      */
     public static NumberUnit createNumericUnit(
-            Class<NumberUnit> clazz, Object initValue, BasicType valueType) throws Exception {
+            Class<NumberUnit> clazz, Object initValue) throws Exception {
         Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class);
+        BasicType valueType = BasicType.ofValue(initValue);
         switch (valueType) {
             case LONG:
                 return constructor.newInstance(CubeLong.of((Number) initValue));

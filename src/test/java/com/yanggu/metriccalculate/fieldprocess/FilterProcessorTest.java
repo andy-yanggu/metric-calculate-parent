@@ -16,15 +16,71 @@ import static org.junit.Assert.*;
  */
 public class FilterProcessorTest {
 
+    /**
+     * 如果没有设置前置过滤条件和fieldMap应该正常执行
+     *
+     * @throws Exception
+     */
     @Test
-    public void init() throws Exception {
+    public void init1() throws Exception {
         FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.setFieldMap(Collections.emptyMap());
         filterProcessor.init();
 
-        assertEquals("true", filterProcessor.getFilterExpress());
-        assertEquals(AviatorEvaluator.compile("true").toString(), filterProcessor.getFilterExpression().toString());
+        assertNull(filterProcessor.getFilterExpression());
+    }
 
+    /**
+     * 表达式中使用了常量表达式, 应该报错
+     *
+     * @throws Exception
+     */
+    @Test
+    public void init2() throws Exception {
+        String filterExpress = "true";
+
+        FilterProcessor filterProcessor = new FilterProcessor();
+        filterProcessor.setFieldMap(Collections.emptyMap());
+        filterProcessor.setFilterExpress(filterExpress);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
+
+        assertEquals("过滤条件为常量表达式, 没有意义: " + filterExpress, runtimeException.getMessage());
+    }
+
+    /**
+     * 表达式中使用了数据明细宽表中没有的字段, 应该报错
+     *
+     * @throws Exception
+     */
+    @Test
+    public void init3() throws Exception {
+        String filterExpress = "amount > 100.00";
+
+        FilterProcessor filterProcessor = new FilterProcessor();
+        filterProcessor.setFilterExpress(filterExpress);
+        filterProcessor.setFieldMap(Collections.emptyMap());
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
+
+        assertEquals("数据明细宽表中没有该字段: amount", runtimeException.getMessage());
+    }
+
+    /**
+     * 表达式正常, 应该正常编译
+     *
+     * @throws Exception
+     */
+    @Test
+    public void init4() throws Exception {
+        String filterExpress = "amount > 100.00";
+
+        FilterProcessor filterProcessor = new FilterProcessor();
+        filterProcessor.setFilterExpress(filterExpress);
+        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
+            put("amount", BigDecimal.class);
+        }};
+        filterProcessor.setFieldMap(fieldMap);
+        filterProcessor.init();
+
+        assertEquals(AviatorEvaluator.compile(filterExpress, true).toString(), filterProcessor.getFilterExpression().toString());
     }
 
     /**
@@ -178,6 +234,21 @@ public class FilterProcessorTest {
         jsonObject.set("amount", "120");
         result = filterProcessor.process(jsonObject);
         assertTrue(result);
+    }
+
+    /**
+     * 没有前置过滤条件, 应该返回true
+     *
+     * @throws Exception
+     */
+    @Test
+    public void test6() throws Exception {
+        FilterProcessor filterProcessor = new FilterProcessor();
+        filterProcessor.init();
+
+        Boolean process = filterProcessor.process(null);
+        assertTrue(process);
+
     }
 
 }

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  * @param <V>
  */
 @Data
-public class TimedKVMetricCube<V extends MergedUnit<V> & Value<V>, C extends TimedKVMetricCube<V, C>>
+public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>>
         implements MetricCube<TimeSeriesKVTable<V>, Long, V, C, TimeUnit> {
 
     /**
@@ -32,6 +32,9 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<V>, C extends Tim
      */
     private TimeBaselineDimension timeBaselineDimension;
 
+    /**
+     * 时间序列存储
+     */
     private TimeSeriesKVTable<V> table;
 
     /**

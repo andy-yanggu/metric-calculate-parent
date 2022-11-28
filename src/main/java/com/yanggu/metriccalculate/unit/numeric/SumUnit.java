@@ -5,7 +5,9 @@
 package com.yanggu.metriccalculate.unit.numeric;
 
 import com.yanggu.metriccalculate.annotation.Numerical;
+import com.yanggu.metriccalculate.number.CubeLong;
 import com.yanggu.metriccalculate.number.CubeNumber;
+import com.yanggu.metriccalculate.value.Value;
 
 @Numerical
 public class SumUnit<N extends CubeNumber<N>> extends NumberUnit<N, SumUnit<N>> {

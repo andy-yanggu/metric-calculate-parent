@@ -98,10 +98,10 @@ public class DeriveMetricCalculate implements Calculate<JSONObject, Object> {
         }
 
         //计算并存储
-        Object save = save(rtEvent, process);
+        save(rtEvent, process);
 
         //精度处理
-        return RoundAccuracyUtil.handlerRoundAccuracy(save, roundAccuracy);
+        return null;
     }
 
     //计算并存储数据到dingo-db数据库中

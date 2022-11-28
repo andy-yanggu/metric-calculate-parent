@@ -9,14 +9,10 @@ import cn.hutool.json.JSONUtil;
 import com.yanggu.client.magiccube.pojo.Atom;
 import com.yanggu.client.magiccube.pojo.Derive;
 import com.yanggu.client.magiccube.pojo.Fields;
-import com.yanggu.metriccalculate.fieldprocess.TimeBaselineDimension;
-import com.yanggu.metriccalculate.fieldprocess.DimensionSetProcessor;
-import com.yanggu.metriccalculate.fieldprocess.FilterProcessor;
-import com.yanggu.metriccalculate.fieldprocess.MetricFieldProcessor;
-import com.yanggu.metriccalculate.fieldprocess.TimeFieldProcessor;
 import com.yanggu.metriccalculate.calculate.AtomMetricCalculate;
 import com.yanggu.metriccalculate.calculate.DeriveMetricCalculate;
 import com.yanggu.metriccalculate.calculate.MetricCalculate;
+import com.yanggu.metriccalculate.fieldprocess.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -25,10 +21,6 @@ import java.util.Map;
 
 @Slf4j
 public class MetricUtil {
-
-    private MetricUtil() {
-
-    }
 
     /**
      * 初始化原子指标计算类
@@ -180,11 +172,9 @@ public class MetricUtil {
                 return;
             }
             //如果是数值型的, 并且原始数据类型不是数值型的, 进行转换
-            if (tempDataClass.getSuperclass().equals(Number.class)) {
+            if (tempDataClass.getSuperclass().equals(Number.class) || tempDataClass.equals(Boolean.class)) {
                 value = Convert.convert(tempDataClass, value);
                 //如果是Boolean类型的, , 并且原始数据类型不是boolean型的, 需要进行转换
-            } else if (tempDataClass.equals(Boolean.class) && !value.getClass().equals(Boolean.class)) {
-                value = Convert.convert(tempDataClass, value);
             }
             params.put(key, value);
         });
@@ -195,3 +185,4 @@ public class MetricUtil {
     }
 
 }
+

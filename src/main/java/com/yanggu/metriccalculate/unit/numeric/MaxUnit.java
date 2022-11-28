@@ -34,9 +34,8 @@ public class MaxUnit<N extends CubeNumber<N>> extends NumberUnit<N, MaxUnit<N>> 
             return this;
         }
         if (getClass().equals(that.getClass())) {
-            MaxUnit<N> maxUnit = that;
-            count.add(maxUnit.count);
-            setValue(CubeNumber.max(value, maxUnit.value));
+            count.add(that.count);
+            setValue(CubeNumber.max(value, that.value));
         }
         return this;
     }
