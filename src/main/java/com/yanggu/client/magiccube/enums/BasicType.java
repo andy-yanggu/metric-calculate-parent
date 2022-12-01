@@ -30,6 +30,9 @@ public enum BasicType {
      */
     DECIMAL(BigDecimal.class);
 
+    /**
+     * java的数据类型
+     */
     private final Class<?> type;
 
 }

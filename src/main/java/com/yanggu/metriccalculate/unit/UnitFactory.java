@@ -28,9 +28,14 @@ import static com.yanggu.client.magiccube.enums.BasicType.*;
 
 public class UnitFactory {
 
+    private UnitFactory() {
+
+    }
+
     private static final Map<String, Class<? extends MergedUnit>> methodReflection = new HashMap<>();
 
     static {
+        //数值型
         methodReflection.put("SUM", SumUnit.class);
         methodReflection.put("AVG", AvgUnit.class);
         methodReflection.put("COUNT", CountUnit.class);
@@ -47,11 +52,14 @@ public class UnitFactory {
         methodReflection.put("MAXDECREASECOUNT", MaxDecreaseCountUnit.class);
         methodReflection.put("MAXCONTINUOUSCOUNT", MaxContinuousCountUnit.class);
 
+        //对象型
         methodReflection.put("REPLACED", ReplacedUnit.class);
         methodReflection.put("OCCUPIED", OccupiedUnit.class);
         methodReflection.put("MAXOBJECT", MaxObjectUnit.class);
         methodReflection.put("MINOBJECT", MinObjectUnit.class);
         methodReflection.put("SORTEDLISTOBJECT", SortedListUnit.class);
+
+        //TODO 以后支持添加自定义的聚合函数
     }
 
 
@@ -80,24 +88,21 @@ public class UnitFactory {
     /**
      * Create unit.
      */
-    public static MergedUnit createObjectiveUnit(
-            Class<ObjectiveUnit> clazz, Object initValue) throws Exception {
+    public static MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().value(initValue);
     }
 
     /**
      * Create collective unit.
      */
-    public static MergedUnit createCollectiveUnit(
-            Class<CollectionUnit> clazz, Object initValue) throws Exception {
+    public static MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().add(initValue);
     }
 
     /**
      * Create number unit.
      */
-    public static NumberUnit createNumericUnit(
-            Class<NumberUnit> clazz, Object initValue) throws Exception {
+    public static NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue) throws Exception {
         Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class);
         BasicType valueType = ofValue(initValue);
         switch (valueType) {

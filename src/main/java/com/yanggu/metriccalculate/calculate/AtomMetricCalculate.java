@@ -9,6 +9,7 @@ import com.yanggu.metriccalculate.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metriccalculate.fieldprocess.TimeFieldProcessor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -49,6 +50,7 @@ public class AtomMetricCalculate<E> implements Calculate<JSONObject, E> {
      */
     private Store store;
 
+    @SneakyThrows
     @Override
     public E exec(JSONObject rtEvent) {
         //执行前置过滤条件

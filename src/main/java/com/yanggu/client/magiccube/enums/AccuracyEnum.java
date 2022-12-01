@@ -22,8 +22,14 @@ public enum AccuracyEnum {
      */
     KEEP_UP(2, "向上保留");
 
+    /**
+     * 编码
+     */
     private final Integer code;
 
+    /**
+     * 精度处理逻辑
+     */
     private final String desc;
 
 }

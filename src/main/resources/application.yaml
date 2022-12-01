@@ -1,12 +1,5 @@
 server:
-  servlet:
-    context-path: /
   port: 14100
-  tomcat:
-    basedir: /var/lib/rulecanvas2/tmp
-
-#logging:
-#  config: classpath:log4j/log4j2.xml
 
 spring:
   application:
@@ -17,18 +10,7 @@ spring:
     url: jdbc:mysql://172.20.7.143:3307/rulecanvas2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=PRC&allowMultiQueries=true&nullNamePatternMatchesAll=true&createDatabaseIfNotExist=true
     username: root
     password: MySQL!23
-  http:
-    multipart:
-  liquibase:
-    change-log: classpath:liquibase/master.xml
-    drop-first: false
-    enabled: true
 
 feign:
   magiccube-api:
     host: http://172.20.7.146:13611
-
-dingo:
-  client:
-    retry-times: 10
-    coordinator-server-list: 172.20.7.140:19181,172.20.7.141:19181,172.20.7.142:19181

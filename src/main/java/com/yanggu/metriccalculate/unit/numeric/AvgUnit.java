@@ -35,8 +35,7 @@ public class AvgUnit<N extends CubeNumber<N>> extends NumberUnit<N, AvgUnit<N>> 
 
     @Override
     public AvgUnit<N> fastClone() {
-        AvgUnit<N> result = new AvgUnit<>(value.fastClone(), count.longValue());
-        return result;
+        return new AvgUnit<>(value.fastClone(), count.longValue());
     }
 
 }

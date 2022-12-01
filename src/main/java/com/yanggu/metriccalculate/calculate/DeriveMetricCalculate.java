@@ -102,14 +102,14 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
         //本地缓存的目的是为了进行批处理计算, 进行本地聚合操作
         return cache.compute(dimensionSet, (k, v) -> {
             if (v == null) {
-                TimeSeriesKVTable<M> timeSeriesKVTable = new TimeSeriesKVTable<>();
-                timeSeriesKVTable.setTimeBaselineDimension(timeBaselineDimension);
+                TimeSeriesKVTable<M> table = new TimeSeriesKVTable<>();
+                table.setTimeBaselineDimension(timeBaselineDimension);
                 v = new TimedKVMetricCube<>();
                 v.setName(name);
                 v.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
                 v.setTimeBaselineDimension(timeBaselineDimension);
                 v.setDimensionSet(dimensionSet);
-                v.setTable(timeSeriesKVTable);
+                v.setTable(table);
             }
             v.put(timestamp, process);
             return v;

@@ -15,6 +15,10 @@ import java.math.RoundingMode;
 @Slf4j
 public class RoundAccuracyUtil {
 
+    private RoundAccuracyUtil() {
+
+    }
+
     public static Object handlerRoundAccuracy(Object result, RoundAccuracy roundAccuracy) {
         Object returnData = result;
         //如果结果为数值并且需要精度处理
