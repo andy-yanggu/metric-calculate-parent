@@ -35,7 +35,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
     private FilterProcessor filterProcessor;
 
     /**
-     * 聚合字段处理器
+     * 聚合字段处理器, 生成MergeUnit
      */
     private AggregateFieldProcessor<M> aggregateFieldProcessor;
 
@@ -50,7 +50,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
     private TimeBaselineDimension timeBaselineDimension;
 
     /**
-     * 维度字段处理器
+     * 维度字段处理器, 从明细数据中提取出维度数据
      */
     private DimensionSetProcessor dimensionSetProcessor;
 
@@ -60,7 +60,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
     private RoundAccuracy roundAccuracy;
 
     /**
-     * 存储宽表
+     * 存储宽表, 用于指标存储相关信息
      */
     private Store store;
 
@@ -78,7 +78,6 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
     @Override
     public TimedKVMetricCube<M, ? extends TimedKVMetricCube> exec(JSONObject input) {
         //执行前置过滤条件
-
         Boolean filter = filterProcessor.process(input);
         if (Boolean.FALSE.equals(filter) && log.isDebugEnabled()) {
             log.debug("Input discard, input = {}", JSONUtil.toJsonStr(input));
@@ -106,11 +105,12 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
                 table.setTimeBaselineDimension(timeBaselineDimension);
                 v = new TimedKVMetricCube<>();
                 v.setName(name);
-                v.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
                 v.setTimeBaselineDimension(timeBaselineDimension);
                 v.setDimensionSet(dimensionSet);
                 v.setTable(table);
             }
+            //设置数据当前聚合时间
+            v.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
             v.put(timestamp, process);
             return v;
         });

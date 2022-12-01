@@ -7,6 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.client.magiccube.pojo.Derive;
 import com.yanggu.metriccalculate.cube.TimedKVMetricCube;
+import com.yanggu.metriccalculate.unit.numeric.SumUnit;
 import com.yanggu.metriccalculate.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class DeriveMetricCalculateTest {
 
-    private DeriveMetricCalculate deriveMetricCalculate;
+    private DeriveMetricCalculate<?> deriveMetricCalculate;
 
     @Before
     public void init() {
@@ -43,30 +44,28 @@ public class DeriveMetricCalculateTest {
                 "    \"trans_date\":\"20220609\"\n" +
                 "}";
         JSONObject input = JSONUtil.parseObj(jsonString);
-        TimedKVMetricCube exec = deriveMetricCalculate.exec(input);
+        extracted(input);
 
+        input.set("debit_amt_out", 900);
+        input.set("trans_date", "20220608");
+        extracted(input);
+
+        input.set("trans_date", "20220609");
+        extracted(input);
+
+        input.set("trans_date", "20220607");
+        extracted(input);
+
+    }
+
+    private void extracted(JSONObject input) {
+        TimedKVMetricCube exec = deriveMetricCalculate.exec(input);
         Object value = exec.query().value();
         Tuple timeWindow = exec.getTimeWindow();
         Object windowStart = timeWindow.get(0);
         Object windowEnd = timeWindow.get(1);
+
         String collect = exec.getDimensionSet().getDimensionMap().entrySet().stream()
-                .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
-                .collect(Collectors.joining(";"));
-
-        System.out.println("指标名称: " + exec.getName() +
-                ", 指标维度: " + collect +
-                ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowStart.toString()))) +
-                ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowEnd.toString()))) +
-                ", 聚合值: " + value);
-
-        input.set("debit_amt_out", 900);
-        exec = deriveMetricCalculate.exec(input);
-        value = exec.query().value();
-        timeWindow = exec.getTimeWindow();
-        windowStart = timeWindow.get(0);
-        windowEnd = timeWindow.get(1);
-
-        collect = exec.getDimensionSet().getDimensionMap().entrySet().stream()
                 .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
                 .collect(Collectors.joining(","));
 
@@ -75,7 +74,6 @@ public class DeriveMetricCalculateTest {
                 ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowStart.toString()))) +
                 ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowEnd.toString()))) +
                 ", 聚合值: " + value);
-
     }
 
 }
