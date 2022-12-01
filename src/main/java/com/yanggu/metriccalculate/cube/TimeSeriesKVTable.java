@@ -99,7 +99,6 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
         return null;
     }
 
-
     protected Value query(long from, boolean fromInclusive,
                           long to, boolean toInclusive) {
         NavigableMap<Long, V> subMap = subMap(from, fromInclusive, to, toInclusive);

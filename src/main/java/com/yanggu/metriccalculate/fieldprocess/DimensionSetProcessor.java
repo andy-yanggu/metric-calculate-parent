@@ -20,7 +20,12 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, Map<String, Object>> {
+public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, DimensionSet> {
+
+    /**
+     * 指标名称
+     */
+    private String metricName;
 
     /**
      * 维度字段
@@ -42,7 +47,7 @@ public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, 
     }
 
     @Override
-    public Map<String, Object> process(JSONObject input) {
+    public DimensionSet process(JSONObject input) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         if (CollUtil.isNotEmpty(dimensionList)) {
             for (Dimension dimension : dimensionList) {
@@ -54,7 +59,8 @@ public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, 
                 map.put(dimension.getDimensionName(), result);
             }
         }
-        return map;
+
+        return new DimensionSet(metricName, map);
     }
 
 }

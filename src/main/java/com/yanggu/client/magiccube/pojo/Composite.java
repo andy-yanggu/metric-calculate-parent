@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * 复合指标
+ * 复合指标可以从多个维度进行计算
  */
 @Data
 public class Composite {
@@ -26,24 +26,19 @@ public class Composite {
     private String name;
 
     /**
-     * 维度字段
-     */
-    private List<Dimension> dimension;
-
-    /**
      * 时间字段
      */
     private TimeColumn timeColumn;
 
     /**
+     * 多维度计算
+     */
+    private List<MultiDimensionCalculate> multiDimensionCalculateList;
+
+    /**
      * 精度相关
      */
     private RoundAccuracy roundAccuracy;
-
-    /**
-     * 计算表达式
-     */
-    private String calculateExpression;
 
     /**
      * 指标存储相关信息

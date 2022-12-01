@@ -1,5 +1,6 @@
 package com.yanggu.metriccalculate.cube;
 
+import com.yanggu.metriccalculate.fieldprocess.DimensionSet;
 import com.yanggu.metriccalculate.fieldprocess.TimeBaselineDimension;
 import com.yanggu.metriccalculate.unit.MergedUnit;
 import com.yanggu.metriccalculate.value.TimeReferable;
@@ -10,7 +11,7 @@ import java.util.Map;
 public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V, C, U>, U>
         extends Cube<C>, KeyReferable, TimeReferable, MergedUnit<C> {
 
-    Map<String, Object> dimensions();
+    DimensionSet dimensions();
 
     TimeBaselineDimension baselineDimension();
 

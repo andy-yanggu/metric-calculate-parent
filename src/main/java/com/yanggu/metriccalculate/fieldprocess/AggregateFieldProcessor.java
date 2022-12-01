@@ -1,5 +1,6 @@
 package com.yanggu.metriccalculate.fieldprocess;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -11,6 +12,7 @@ import com.yanggu.metriccalculate.util.MetricUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -18,7 +20,7 @@ import java.util.Map;
  */
 @Data
 @Slf4j
-public class AggFieldProcessor implements FieldExtractProcessor<JSONObject, MergedUnit<?>> {
+public class AggregateFieldProcessor<M extends MergedUnit<M>> implements FieldExtractProcessor<JSONObject, M> {
 
     /**
      * 宽表字段
@@ -44,20 +46,32 @@ public class AggFieldProcessor implements FieldExtractProcessor<JSONObject, Merg
     public void init() throws Exception {
         AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
         //编译度量字段表达式
-        metricExpression = instance.compile(metricExpress, true);
+        Expression tempMetricExpression = instance.compile(metricExpress, true);
+        List<String> variableNames = tempMetricExpression.getVariableNames();
+        //检查数据明细宽表中是否包含当前参数
+        if (CollUtil.isNotEmpty(variableNames)) {
+            variableNames.forEach(tempName -> {
+                if (!fieldMap.containsKey(tempName)) {
+                    throw new RuntimeException("数据明细宽表中没有该度量值: " + tempName);
+                }
+            });
+        }
+        this.metricExpression = tempMetricExpression;
     }
 
     @Override
-    public MergedUnit<?> process(JSONObject input) throws Exception {
+    public M process(JSONObject input) throws Exception {
         //获取执行参数
         Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
         if (log.isDebugEnabled()) {
             log.debug("度量字段表达式: {}, 输入的数据: {}", metricExpress, JSONUtil.toJsonStr(params));
         }
 
+        //获取度量值
         Object execute = metricExpression.execute(params);
 
-        return UnitFactory.initInstanceByValue(aggregateType, execute);
+        //生成MergedUnit
+        return (M) UnitFactory.initInstanceByValue(aggregateType, execute);
     }
 
 }

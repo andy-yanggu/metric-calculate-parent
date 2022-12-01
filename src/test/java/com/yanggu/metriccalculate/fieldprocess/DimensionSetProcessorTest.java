@@ -63,8 +63,8 @@ public class DimensionSetProcessorTest {
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("name", "张三");
 
-        Map<String, Object> process = dimensionSetProcessor.process(jsonObject);
-        assertEquals("张三", process.get("dimension_name"));
+        DimensionSet process = dimensionSetProcessor.process(jsonObject);
+        assertEquals("张三", process.getDimensionMap().get("dimension_name"));
     }
 
 }

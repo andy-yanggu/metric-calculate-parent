@@ -1,7 +1,3 @@
-/*
- * Copyright 2019, Zetyun MagicCube All rights reserved.
- */
-
 package com.yanggu.metriccalculate.unit.obj;
 
 import com.yanggu.metriccalculate.annotation.Objective;
@@ -10,13 +6,13 @@ import com.yanggu.metriccalculate.value.Value;
 import com.yanggu.metriccalculate.value.Cloneable;
 
 @Objective
-public class MinUnit<T extends Comparable<T> & Cloneable<T>> implements ObjectiveUnit<T, MinUnit<T>>, Value {
+public class MinObjectUnit<T extends Comparable<T> & Cloneable<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
     private T value;
 
-    public MinUnit() {
+    public MinObjectUnit() {
     }
 
-    public MinUnit(T value) {
+    public MinObjectUnit(T value) {
         setValue(value);
     }
 
@@ -29,7 +25,7 @@ public class MinUnit<T extends Comparable<T> & Cloneable<T>> implements Objectiv
     }
 
     @Override
-    public MinUnit<T> merge(MinUnit<T> that) {
+    public MinObjectUnit<T> merge(MinObjectUnit<T> that) {
         if (that == null) {
             return this;
         }
@@ -40,13 +36,13 @@ public class MinUnit<T extends Comparable<T> & Cloneable<T>> implements Objectiv
     }
 
     @Override
-    public MinUnit<T> fastClone() {
-        MinUnit<T> minUnit = new MinUnit<>(value.fastClone());
-        return minUnit;
+    public MinObjectUnit<T> fastClone() {
+        MinObjectUnit<T> minObjectUnit = new MinObjectUnit<>(value.fastClone());
+        return minObjectUnit;
     }
 
     @Override
-    public MinUnit<T> value(T object) {
+    public MinObjectUnit<T> value(T object) {
         setValue(object);
         return this;
     }
@@ -78,7 +74,7 @@ public class MinUnit<T extends Comparable<T> & Cloneable<T>> implements Objectiv
         if (getClass() != that.getClass()) {
             return false;
         }
-        MinUnit<T> thatUnit = (MinUnit) that;
+        MinObjectUnit<T> thatUnit = (MinObjectUnit) that;
         if (this.value == null) {
             return thatUnit.value == null;
         } else {

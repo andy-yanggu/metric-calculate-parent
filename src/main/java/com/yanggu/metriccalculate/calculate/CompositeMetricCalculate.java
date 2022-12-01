@@ -5,6 +5,8 @@ import com.googlecode.aviator.Expression;
 import com.yanggu.client.magiccube.pojo.RoundAccuracy;
 import com.yanggu.client.magiccube.pojo.Store;
 import com.yanggu.client.magiccube.pojo.StoreTable;
+import com.yanggu.metriccalculate.fieldprocess.DimensionSetProcessor;
+import com.yanggu.metriccalculate.fieldprocess.TimeFieldProcessor;
 import com.yanggu.metriccalculate.util.RoundAccuracyUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +25,16 @@ public class CompositeMetricCalculate implements Calculate<Map<String, Object>, 
      * 指标名称
      */
     private String name;
+
+    /**
+     * 时间字段, 提取出时间戳
+     */
+    private TimeFieldProcessor timeFieldProcessor;
+
+    /**
+     * 维度字段处理器
+     */
+    private DimensionSetProcessor dimensionSetProcessor;
 
     /**
      * 编译后的计算表达式
@@ -50,7 +62,7 @@ public class CompositeMetricCalculate implements Calculate<Map<String, Object>, 
     private Store store;
 
     @Override
-    public Object exec(Map<String, Object> env) throws Exception {
+    public Object exec(Map<String, Object> env) {
         //执行表达式
         Object result = expression.execute(env);
         if (log.isDebugEnabled()) {

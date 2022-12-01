@@ -2,9 +2,11 @@ package com.yanggu.metriccalculate.calculate;
 
 
 import com.yanggu.client.magiccube.pojo.DataDetailsWideTable;
+import com.yanggu.metriccalculate.enums.MetricTypeEnum;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 指标计算类
@@ -27,6 +29,11 @@ public class MetricCalculate extends DataDetailsWideTable {
      * 复合指标计算类
      */
     private List<CompositeMetricCalculate> compositeMetricCalculateList;
+
+    /**
+     * 指标名称和指标类型映射
+     */
+    private Map<String, MetricTypeEnum> metricTypeMap;
 
 }
 

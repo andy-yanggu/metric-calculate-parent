@@ -68,7 +68,7 @@ public class FilterProcessor implements FieldExtractProcessor<JSONObject, Boolea
     }
 
     @Override
-    public Boolean process(JSONObject input) throws Exception {
+    public Boolean process(JSONObject input) {
         //如果表达式为空, 直接return true
         if (StrUtil.isBlank(filterExpress)) {
             return true;

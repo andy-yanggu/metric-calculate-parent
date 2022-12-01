@@ -1,7 +1,3 @@
-/*
- * Copyright 2019, Zetyun MagicCube All rights reserved.
- */
-
 package com.yanggu.metriccalculate.unit.obj;
 
 import com.yanggu.metriccalculate.annotation.Objective;
@@ -10,13 +6,13 @@ import com.yanggu.metriccalculate.value.Value;
 import com.yanggu.metriccalculate.value.Cloneable;
 
 @Objective
-public class MaxUnit<T extends Comparable<T> & Cloneable<T>> implements ObjectiveUnit<T, MaxUnit<T>>, Value {
+public class MaxObjectUnit<T extends Comparable<T> & Cloneable<T>> implements ObjectiveUnit<T, MaxObjectUnit<T>>, Value {
     private T maxValue;
 
-    public MaxUnit() {
+    public MaxObjectUnit() {
     }
 
-    public MaxUnit(T o) {
+    public MaxObjectUnit(T o) {
         setValue(o);
     }
 
@@ -29,11 +25,11 @@ public class MaxUnit<T extends Comparable<T> & Cloneable<T>> implements Objectiv
     }
 
     @Override
-    public MaxUnit<T> merge(MaxUnit<T> that) {
+    public MaxObjectUnit<T> merge(MaxObjectUnit<T> that) {
         return maxValue(that);
     }
 
-    private MaxUnit<T> maxValue(MaxUnit<T> that) {
+    private MaxObjectUnit<T> maxValue(MaxObjectUnit<T> that) {
         if (that == null) {
             return this;
         }
@@ -48,13 +44,13 @@ public class MaxUnit<T extends Comparable<T> & Cloneable<T>> implements Objectiv
      * @return MaxUnit
      */
     @Override
-    public MaxUnit<T> fastClone() {
-        MaxUnit<T> maxUnit = new MaxUnit<>(this.maxValue.fastClone());
+    public MaxObjectUnit<T> fastClone() {
+        MaxObjectUnit<T> maxUnit = new MaxObjectUnit<>(this.maxValue.fastClone());
         return maxUnit;
     }
 
     @Override
-    public MaxUnit<T> value(T object) {
+    public MaxObjectUnit<T> value(T object) {
         setValue(object);
         return this;
     }
@@ -96,7 +92,7 @@ public class MaxUnit<T extends Comparable<T> & Cloneable<T>> implements Objectiv
         if (getClass() != that.getClass()) {
             return false;
         }
-        MaxUnit<T> thatUnit = (MaxUnit) that;
+        MaxObjectUnit<T> thatUnit = (MaxObjectUnit) that;
         if (this.maxValue == null) {
             if (thatUnit.maxValue != null) {
                 return false;

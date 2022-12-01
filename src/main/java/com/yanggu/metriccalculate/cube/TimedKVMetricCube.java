@@ -1,21 +1,21 @@
 package com.yanggu.metriccalculate.cube;
 
 import com.yanggu.client.magiccube.enums.TimeUnit;
+import com.yanggu.metriccalculate.fieldprocess.DimensionSet;
 import com.yanggu.metriccalculate.fieldprocess.TimeBaselineDimension;
 import com.yanggu.metriccalculate.unit.MergedUnit;
 import com.yanggu.metriccalculate.value.Value;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- *
  * @param <V>
  */
 @Data
-public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>>
-        implements MetricCube<TimeSeriesKVTable<V>, Long, V, C, TimeUnit> {
+@NoArgsConstructor
+public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>> implements MetricCube<TimeSeriesKVTable<V>, Long, V, C, TimeUnit> {
 
     /**
      * 指标名称
@@ -25,7 +25,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     /**
      * 指标维度
      */
-    private Map<String, Object> dimensionMap;
+    private DimensionSet dimensionSet;
 
     /**
      * 时间聚合粒度
@@ -37,6 +37,13 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
      */
     private TimeSeriesKVTable<V> table;
 
+    public TimedKVMetricCube(String name, DimensionSet dimensionSet, TimeBaselineDimension timeBaselineDimension, TimeSeriesKVTable<V> table) {
+        this.name = name;
+        this.dimensionSet = dimensionSet;
+        this.timeBaselineDimension = timeBaselineDimension;
+        this.table = table;
+    }
+
     /**
      * 当前指标唯一的key
      * 指标名称 + 指标维度
@@ -45,7 +52,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
      */
     @Override
     public String getRealKey() {
-        return name + ":" + dimensionMap.values().stream().map(String::valueOf).collect(Collectors.joining(","));
+        return name + ":" + dimensionSet.getDimensionMap().values().stream().map(String::valueOf).collect(Collectors.joining(","));
     }
 
     @Override
@@ -55,9 +62,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
 
     @Override
     public String key() {
-        return dimensionMap.values().stream()
-                .map(String::valueOf)
-                .collect(Collectors.joining(","));
+        return dimensionSet.getDimensionMap().values().stream().map(String::valueOf).collect(Collectors.joining(","));
     }
 
     @Override
@@ -76,8 +81,8 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public Map<String, Object> dimensions() {
-        return dimensionMap;
+    public DimensionSet dimensions() {
+        return dimensionSet;
     }
 
     @Override

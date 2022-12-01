@@ -4,41 +4,30 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
-import com.googlecode.aviator.Expression;
-import com.googlecode.aviator.Options;
 import com.yanggu.client.magiccube.MagicCubeClient;
-import com.yanggu.client.magiccube.pojo.Atom;
-import com.yanggu.client.magiccube.pojo.Composite;
-import com.yanggu.client.magiccube.pojo.DataDetailsWideTable;
-import com.yanggu.client.magiccube.pojo.Derive;
-import com.yanggu.metriccalculate.aviatorfunction.CoalesceFunction;
-import com.yanggu.metriccalculate.aviatorfunction.GetFunction;
-import com.yanggu.metriccalculate.dingo.DingoService;
+import com.yanggu.client.magiccube.pojo.*;
 import com.yanggu.metriccalculate.calculate.AtomMetricCalculate;
 import com.yanggu.metriccalculate.calculate.CompositeMetricCalculate;
 import com.yanggu.metriccalculate.calculate.DeriveMetricCalculate;
 import com.yanggu.metriccalculate.calculate.MetricCalculate;
+import com.yanggu.metriccalculate.enums.MetricTypeEnum;
 import com.yanggu.metriccalculate.util.MetricUtil;
 import com.yanggu.util.ApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metriccalculate.constant.Constant.*;
+import static com.yanggu.metriccalculate.enums.MetricTypeEnum.*;
 
 @Slf4j
 @Api(tags = "规则引擎接口")
@@ -54,9 +43,6 @@ public class RuleCanvasEngine {
 
     @Autowired
     private MagicCubeClient magiccubeClient;
-
-    @Autowired
-    private DingoService dingoService;
 
     @Scheduled(fixedRate = 1000 * 60 * 60)
     public void scheduledRefreshMetric() {
@@ -90,7 +76,7 @@ public class RuleCanvasEngine {
 
     @ApiOperation("执行接口")
     @PostMapping("/execute")
-    public ApiResponse<Object> execute(@RequestBody JSONObject message) throws Exception {
+    public ApiResponse<Object> execute(@ApiParam("明细宽表数据") @RequestBody JSONObject message) throws Exception {
         ApiResponse<Object> response = new ApiResponse<>();
         /*刷新指标*/
         if (refreshMetric.compareAndSet(true, false)) {
@@ -112,54 +98,50 @@ public class RuleCanvasEngine {
         //计算原子指标
         List<AtomMetricCalculate> atomMetricCalculateList = dataWideTable.getAtomMetricCalculateList();
         if (CollUtil.isNotEmpty(atomMetricCalculateList)) {
-            for (AtomMetricCalculate atomMetricCalculate : atomMetricCalculateList) {
-                Object exec = atomMetricCalculate.exec(message);
-                if (exec != null) {
-                    resultMap.put(atomMetricCalculate.getName(), exec);
-                }
-            }
+            atomMetricCalculateList.parallelStream()
+                    .forEach(atomMetricCalculate -> {
+                        Object exec = atomMetricCalculate.exec(message);
+                        if (exec != null) {
+                            resultMap.put(atomMetricCalculate.getName(), exec);
+                        }
+                    });
         }
 
         //计算衍生指标
         List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
-            for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
-                Object exec = deriveMetricCalculate.exec(message);
-                if (exec != null) {
-                    resultMap.put(deriveMetricCalculate.getName(), exec);
-                }
-            }
+            deriveMetricCalculateList.parallelStream()
+                    .forEach(deriveMetricCalculate -> {
+                        Object exec = deriveMetricCalculate.exec(message);
+                        if (exec != null) {
+                            resultMap.put(deriveMetricCalculate.getName(), exec);
+                        }
+                    });
         }
 
         //计算复合指标
-        //准备计算参数
-        Map<String, Object> env = new HashMap<>();
-        //放入原始指标数据
-        env.put(ORIGIN_DATA, message);
+        MetricCalculate finalDataWideTable = dataWideTable;
+        List<CompositeMetricCalculate> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
+        if (CollUtil.isNotEmpty(compositeMetricCalculateList)) {
+            compositeMetricCalculateList.parallelStream()
+                    .forEach(temp -> {
+                        //准备计算参数
+                        Map<String, Object> env = new HashMap<>();
+                        //放入原始指标数据
+                        env.put(ORIGIN_DATA, message);
+                        //放入指标元数据信息
+                        env.put(METRIC_CALCULATE, finalDataWideTable);
+                        //放入复合指标元数据
+                        env.put(COMPOSITE_METRIC_META_DATA, temp);
 
-        //放入指标元数据信息
-        //原子指标
-        Map<String, Atom> atomMap = dataWideTable.getAtom().stream()
-                .collect(Collectors.toMap(Atom::getName, Function.identity()));
-        env.put(ATOM_METRIC_META_DATA, atomMap);
-
-        //衍生指标
-        Map<String, DeriveMetricCalculate> metricMetaDataMap = deriveMetricCalculateList.stream()
-                .collect(Collectors.toMap(DeriveMetricCalculate::getName, Function.identity()));
-        env.put(DERIVE_METRIC_META_DATA, metricMetaDataMap);
-
-        //放入dingo连接信息
-        env.put(DINGO_CLIENT, dingoService.getDingoClient());
-
-        //执行复合指标的计算操作
-        //dataWideTable.getCompositeMetricCalculateList().parallelStream()
-        //        .forEach(temp -> {
-        //            Object exec = temp.exec(env);
-        //            //输出到下游
-        //            if (exec != null) {
-        //                resultMap.put(temp.getName(), exec);
-        //            }
-        //        });
+                        //计算数据
+                        Object exec = temp.exec(env);
+                        //输出到下游
+                        if (exec != null) {
+                            resultMap.put(temp.getName(), exec);
+                        }
+                    });
+        }
 
         if (log.isDebugEnabled()) {
             log.debug("原子指标、衍生指标、复合指标计算后的数据: {}", JSONUtil.toJsonStr(resultMap));
@@ -189,7 +171,7 @@ public class RuleCanvasEngine {
         }
         Set<Long> tableIdSet = metricMap.keySet();
 
-        tableIdSet.forEach(this::buildMetric);
+        tableIdSet.parallelStream().forEach(this::buildMetric);
     }
 
     /** 从数据库加载规则定义 */
@@ -197,8 +179,9 @@ public class RuleCanvasEngine {
         log.info("load rule from DB");
     }
 
-    private MetricCalculate buildMetric(Long tableId) {
+    public MetricCalculate buildMetric(Long tableId) {
 
+        //根据明细宽表id查询指标数据和宽表数据
         DataDetailsWideTable tableData = magiccubeClient.getTableAndMetricById(tableId);
         if (tableData == null || tableData.getId() == null) {
             log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
@@ -207,6 +190,9 @@ public class RuleCanvasEngine {
 
         MetricCalculate metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
 
+        Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
+        metricCalculate.setMetricTypeMap(metricTypeMap);
+
         //宽表字段
         Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
 
@@ -214,8 +200,11 @@ public class RuleCanvasEngine {
         List<Atom> atomList = tableData.getAtom();
         if (CollUtil.isNotEmpty(atomList)) {
             List<AtomMetricCalculate> collect = atomList.stream()
-                    //初始化原子指标
-                    .map(tempAtom -> MetricUtil.initAtom(tempAtom, fieldMap))
+                    .map(tempAtom -> {
+                        metricTypeMap.put(tempAtom.getName(), ATOM);
+                        //初始化原子指标计算类
+                        return MetricUtil.initAtom(tempAtom, fieldMap);
+                    })
                     .collect(Collectors.toList());
             metricCalculate.setAtomMetricCalculateList(collect);
         }
@@ -225,12 +214,10 @@ public class RuleCanvasEngine {
         if (CollUtil.isNotEmpty(deriveList)) {
             List<DeriveMetricCalculate> collect = deriveList.stream()
                     .map(tempDerive -> {
+                        metricTypeMap.put(tempDerive.getName(), DERIVE);
 
-                        //初始化派生指标
+                        //初始化派生指标计算类
                         DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, fieldMap);
-
-                        //设置dingo客户端
-                        deriveMetricCalculate.setDingoClient(dingoService.getDingoClient());
 
                         return deriveMetricCalculate;
                     })
@@ -242,35 +229,21 @@ public class RuleCanvasEngine {
         //复合指标
         List<Composite> compositeList = tableData.getComposite();
         if (CollUtil.isNotEmpty(compositeList)) {
-            List<CompositeMetricCalculate> collect = compositeList.stream()
-                    .map(compositeMetric -> {
-                        CompositeMetricCalculate compositeMetricCalculate = new CompositeMetricCalculate();
+            List<CompositeMetricCalculate> collect = new ArrayList<>();
+            compositeList.forEach(compositeMetric -> {
+                metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
 
-                        //设置表达式字符串
-                        String expression = compositeMetric.getCalculateExpression();
-                        compositeMetricCalculate.setExpressString(expression);
-
-                        AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
-                        //在Aviator中添加自定义函数
-                        instance.addFunction(new GetFunction());
-                        instance.addFunction(new CoalesceFunction());
-                        instance.setOption(Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY, false);
-                        Expression compile = instance.compile(expression, true);
-                        compositeMetricCalculate.setExpression(compile);
-
-                        List<String> variableNames = compile.getVariableNames();
-                        compositeMetricCalculate.setParamList(variableNames);
-
-                        //设置名称
-                        compositeMetricCalculate.setName(compositeMetric.getName());
-                        //设置精度信息
-                        compositeMetricCalculate.setRoundAccuracy(compositeMetric.getRoundAccuracy());
-
-                        return compositeMetricCalculate;
-                    })
-                    .collect(Collectors.toList());
-
+                //初始化复合指标计算类
+                List<CompositeMetricCalculate> compositeMetricCalculateList = MetricUtil.initComposite(compositeMetric);
+                collect.addAll(compositeMetricCalculateList);
+            });
             metricCalculate.setCompositeMetricCalculateList(collect);
+        }
+
+        //全局指标
+        List<Global> globalList = tableData.getGlobal();
+        if (CollUtil.isNotEmpty(globalList)) {
+            globalList.forEach(temp -> metricTypeMap.put(temp.getName(), GLOBAL));
         }
 
         metricMap.put(tableId, metricCalculate);

@@ -27,7 +27,6 @@
         <aviator.version>5.3.1</aviator.version>
         <hutool.version>5.8.10</hutool.version>
         <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
-        <dingo-sdk.version>0.5.0-SNAPSHOT</dingo-sdk.version>
         <kryo.version>4.0.0</kryo.version>
     </properties>
 
@@ -97,12 +96,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.dingodb</groupId>
-            <artifactId>dingo-sdk</artifactId>
-            <version>${dingo-sdk.version}</version>
-            <classifier>all</classifier>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>

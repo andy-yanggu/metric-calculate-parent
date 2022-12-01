@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class AtomMetricCalculate implements Calculate<JSONObject, Object> {
+public class AtomMetricCalculate<E> implements Calculate<JSONObject, E> {
 
     /**
      * 指标名称
@@ -32,7 +32,7 @@ public class AtomMetricCalculate implements Calculate<JSONObject, Object> {
     /**
      * 度量字段处理器, 提取出度量值
      */
-    private MetricFieldProcessor<?> metricFieldProcessor;
+    private MetricFieldProcessor<E> metricFieldProcessor;
 
     /**
      * 时间字段, 提取出时间戳
@@ -50,14 +50,14 @@ public class AtomMetricCalculate implements Calculate<JSONObject, Object> {
     private Store store;
 
     @Override
-    public Object exec(JSONObject rtEvent) throws Exception {
+    public E exec(JSONObject rtEvent) {
         //执行前置过滤条件
         if (Boolean.FALSE.equals(filterProcessor.process(rtEvent))) {
             return null;
         }
 
         //执行度量表达式, 提取出度量字段的值
-        Object process = metricFieldProcessor.process(rtEvent);
+        E process = metricFieldProcessor.process(rtEvent);
         if (process == null && log.isDebugEnabled()) {
             log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(rtEvent));
         }

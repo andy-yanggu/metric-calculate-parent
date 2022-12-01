@@ -4,7 +4,6 @@
 
 package com.yanggu.metriccalculate.kryo;
 
-import cn.hutool.core.lang.Tuple;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.yanggu.client.magiccube.enums.TimeUnit;
@@ -16,9 +15,7 @@ import com.yanggu.metriccalculate.unit.collection.ListUnit;
 import com.yanggu.metriccalculate.unit.collection.SortedListUnit;
 import com.yanggu.metriccalculate.unit.collection.UniqueListUnit;
 import com.yanggu.metriccalculate.unit.numeric.*;
-import com.yanggu.metriccalculate.unit.obj.MapUnit;
-import com.yanggu.metriccalculate.unit.obj.OccupiedUnit;
-import com.yanggu.metriccalculate.unit.obj.ReplacedUnit;
+import com.yanggu.metriccalculate.unit.obj.*;
 import com.yanggu.metriccalculate.unit.pattern.EventConnector;
 import com.yanggu.metriccalculate.unit.pattern.Pattern;
 import com.yanggu.metriccalculate.unit.pattern.PatternNode;
@@ -51,8 +48,8 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(AvgUnit.class);
         kryo.register(CountUnit.class);
         kryo.register(SumUnit.class);
-        kryo.register(com.yanggu.metriccalculate.unit.obj.MaxUnit.class);
-        kryo.register(com.yanggu.metriccalculate.unit.obj.MinUnit.class);
+        kryo.register(MaxObjectUnit.class);
+        kryo.register(MinObjectUnit.class);
         kryo.register(VarpUnit.class);
         kryo.register(VarsUnit.class);
         kryo.register(IncreaseCountUnit.class);

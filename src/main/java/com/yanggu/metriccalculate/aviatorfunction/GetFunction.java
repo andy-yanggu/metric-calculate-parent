@@ -7,17 +7,13 @@ import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorJavaType;
 import com.googlecode.aviator.runtime.type.AviatorNil;
 import com.googlecode.aviator.runtime.type.AviatorObject;
-import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
-import com.yanggu.client.magiccube.pojo.*;
 import com.yanggu.metriccalculate.calculate.DeriveMetricCalculate;
-import io.dingodb.sdk.client.DingoClient;
-import io.dingodb.sdk.common.Key;
-import io.dingodb.sdk.common.Record;
 import lombok.SneakyThrows;
 
-import java.util.*;
+import java.util.Map;
 
-import static com.yanggu.metriccalculate.constant.Constant.*;
+import static com.yanggu.metriccalculate.constant.Constant.DERIVE_METRIC_META_DATA;
+import static com.yanggu.metriccalculate.constant.Constant.ORIGIN_DATA;
 
 /**
  * 自定义get函数.
@@ -63,24 +59,25 @@ public class GetFunction extends AbstractFunction {
         }
 
         //dingo客户端
-        DingoClient dingoClient = (DingoClient) env.get(DINGO_CLIENT);
-        if (dingoClient == null) {
-            throw new RuntimeException("Dingo客户端为空");
-        }
-
-        //取第一个指标存储宽表
-        StoreTable storeTable = CollUtil.getFirst(derive.getStore().getStoreTableList());
-
-        //构建出dingo的主键
-        Key key = derive.buildKey(originData, day);
-        Record recordData = dingoClient.get(key);
-
-        //如果为空, 返回nil
-        if (recordData == null) {
-            return AviatorNil.NIL;
-        }
-        Object value = recordData.getValue(storeTable.getStoreColumn());
-        return AviatorRuntimeJavaType.valueOf(value);
+        //DingoClient dingoClient = (DingoClient) env.get(DINGO_CLIENT);
+        //if (dingoClient == null) {
+        //    throw new RuntimeException("Dingo客户端为空");
+        //}
+        //
+        ////取第一个指标存储宽表
+        //StoreTable storeTable = CollUtil.getFirst(derive.getStore().getStoreTableList());
+        //
+        ////构建出dingo的主键
+        //Key key = derive.buildKey(originData, day);
+        //Record recordData = dingoClient.get(key);
+        //
+        ////如果为空, 返回nil
+        //if (recordData == null) {
+        //    return AviatorNil.NIL;
+        //}
+        //Object value = recordData.getValue(storeTable.getStoreColumn());
+        //return AviatorRuntimeJavaType.valueOf(value);
+        return AviatorNil.NIL;
     }
 
 }
