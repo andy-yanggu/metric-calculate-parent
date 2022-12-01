@@ -144,7 +144,7 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
 
     @Override
     public long referenceTime() {
-        return 0;
+        return lastKey();
     }
 
     @Override

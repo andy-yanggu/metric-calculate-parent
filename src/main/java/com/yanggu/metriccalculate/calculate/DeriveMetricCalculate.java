@@ -104,7 +104,12 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
             if (v == null) {
                 TimeSeriesKVTable<M> timeSeriesKVTable = new TimeSeriesKVTable<>();
                 timeSeriesKVTable.setTimeBaselineDimension(timeBaselineDimension);
-                v = new TimedKVMetricCube<>(name, dimensionSet, timeBaselineDimension, timeSeriesKVTable);
+                v = new TimedKVMetricCube<>();
+                v.setName(name);
+                v.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
+                v.setTimeBaselineDimension(timeBaselineDimension);
+                v.setDimensionSet(dimensionSet);
+                v.setTable(timeSeriesKVTable);
             }
             v.put(timestamp, process);
             return v;

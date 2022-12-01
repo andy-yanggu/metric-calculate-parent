@@ -26,6 +26,11 @@ public class MetricCalculate extends DataDetailsWideTable {
     private List<DeriveMetricCalculate> deriveMetricCalculateList;
 
     /**
+     * 派生指标的上下文, 用于缓存本地聚合值
+     */
+    private TimedKVMetricContext taskContext;
+
+    /**
      * 复合指标计算类
      */
     private List<CompositeMetricCalculate> compositeMetricCalculateList;

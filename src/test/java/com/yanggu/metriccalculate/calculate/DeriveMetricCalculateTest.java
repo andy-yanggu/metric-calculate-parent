@@ -1,17 +1,20 @@
 package com.yanggu.metriccalculate.calculate;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.client.magiccube.pojo.Derive;
-import com.yanggu.metriccalculate.cube.TimeSeriesKVTable;
 import com.yanggu.metriccalculate.cube.TimedKVMetricCube;
 import com.yanggu.metriccalculate.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class DeriveMetricCalculateTest {
 
@@ -41,12 +44,38 @@ public class DeriveMetricCalculateTest {
                 "}";
         JSONObject input = JSONUtil.parseObj(jsonString);
         TimedKVMetricCube exec = deriveMetricCalculate.exec(input);
-        System.out.println(exec);
+
+        Object value = exec.query().value();
+        Tuple timeWindow = exec.getTimeWindow();
+        Object windowStart = timeWindow.get(0);
+        Object windowEnd = timeWindow.get(1);
+        String collect = exec.getDimensionSet().getDimensionMap().entrySet().stream()
+                .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
+                .collect(Collectors.joining(";"));
+
+        System.out.println("指标名称: " + exec.getName() +
+                ", 指标维度: " + collect +
+                ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowStart.toString()))) +
+                ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowEnd.toString()))) +
+                ", 聚合值: " + value);
 
         input.set("debit_amt_out", 900);
         exec = deriveMetricCalculate.exec(input);
+        value = exec.query().value();
+        timeWindow = exec.getTimeWindow();
+        windowStart = timeWindow.get(0);
+        windowEnd = timeWindow.get(1);
 
-        System.out.println(exec);
+        collect = exec.getDimensionSet().getDimensionMap().entrySet().stream()
+                .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
+                .collect(Collectors.joining(","));
+
+        System.out.println("指标名称: " + exec.getName() +
+                ", 指标维度: " + collect +
+                ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowStart.toString()))) +
+                ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowEnd.toString()))) +
+                ", 聚合值: " + value);
+
     }
 
 }

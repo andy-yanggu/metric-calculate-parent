@@ -9,7 +9,7 @@ import com.yanggu.metriccalculate.value.Value;
 import java.util.Map;
 
 public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V, C, U>, U>
-        extends Cube<C>, KeyReferable, TimeReferable, MergedUnit<C> {
+        extends Cube<C>, KeyReferable, MergedUnit<C> {
 
     DimensionSet dimensions();
 
@@ -18,10 +18,6 @@ public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V,
     V put(K key, V value);
 
     T table();
-
-    T table(String key);
-
-    MetricCube table(String key, T table);
 
     Value query();
 

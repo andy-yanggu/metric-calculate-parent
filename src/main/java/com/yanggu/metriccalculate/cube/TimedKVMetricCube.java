@@ -1,5 +1,7 @@
 package com.yanggu.metriccalculate.cube;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Tuple;
 import com.yanggu.client.magiccube.enums.TimeUnit;
 import com.yanggu.metriccalculate.fieldprocess.DimensionSet;
 import com.yanggu.metriccalculate.fieldprocess.TimeBaselineDimension;
@@ -8,6 +10,7 @@ import com.yanggu.metriccalculate.value.Value;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.stream.Collectors;
 
 /**
@@ -23,6 +26,11 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     private String name;
 
     /**
+     * 当前数据聚合时间戳
+     */
+    private long referenceTime;
+
+    /**
      * 指标维度
      */
     private DimensionSet dimensionSet;
@@ -36,13 +44,6 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
      * 时间序列存储
      */
     private TimeSeriesKVTable<V> table;
-
-    public TimedKVMetricCube(String name, DimensionSet dimensionSet, TimeBaselineDimension timeBaselineDimension, TimeSeriesKVTable<V> table) {
-        this.name = name;
-        this.dimensionSet = dimensionSet;
-        this.timeBaselineDimension = timeBaselineDimension;
-        this.table = table;
-    }
 
     /**
      * 当前指标唯一的key
@@ -101,18 +102,8 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public TimeSeriesKVTable<V> table(String key) {
-        return null;
-    }
-
-    @Override
-    public MetricCube table(String key, TimeSeriesKVTable<V> table) {
-        return null;
-    }
-
-    @Override
     public Value<V> query() {
-        return null;
+        return table.query(referenceTime - this.timeBaselineDimension.realLength(), false, referenceTime, true);
     }
 
     @Override
@@ -151,16 +142,20 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
             return (C) this;
         }
         table.merge(that.getTable());
+        this.referenceTime = that.getReferenceTime();
         return (C) this;
     }
 
-    @Override
-    public long referenceTime() {
-        return 0;
+    /**
+     * 获取时间窗口
+     * WindowStart和WindowEnd, 包含Start, 不包含End, 左闭右开
+     *
+     * @return
+     */
+    public Tuple getTimeWindow() {
+        long windowEnd = DateUtil.ceiling(new Date(referenceTime), timeBaselineDimension.getUnit().getDateField()).getTime() + 1;
+        long windowStart = windowEnd - timeBaselineDimension.realLength();
+        return new Tuple(windowStart, windowEnd);
     }
 
-    @Override
-    public void referenceTime(long referenceTime) {
-
-    }
 }
