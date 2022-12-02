@@ -7,7 +7,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.client.magiccube.pojo.Derive;
 import com.yanggu.metriccalculate.cube.TimedKVMetricCube;
-import com.yanggu.metriccalculate.unit.numeric.SumUnit;
 import com.yanggu.metriccalculate.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,8 @@ public class DeriveMetricCalculateTest {
 
     @Test
     public void exec() {
-        String jsonString = "{\n" +
+        String jsonString =
+                "{\n" +
                 "    \"account_no_out\": \"000000000011\",\n" +
                 "    \"account_no_in\": \"000000000012\",\n" +
                 "    \"trans_timestamp\": \"1654768045000\",\n" +

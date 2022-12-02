@@ -14,6 +14,8 @@ import com.yanggu.client.magiccube.pojo.*;
 import com.yanggu.metriccalculate.aviatorfunction.CoalesceFunction;
 import com.yanggu.metriccalculate.aviatorfunction.GetFunction;
 import com.yanggu.metriccalculate.calculate.*;
+import com.yanggu.metriccalculate.cube.DeriveMetricMiddleHashMapStore;
+import com.yanggu.metriccalculate.cube.DeriveMetricMiddleStore;
 import com.yanggu.metriccalculate.fieldprocess.*;
 import lombok.extern.slf4j.Slf4j;
 
@@ -146,6 +148,10 @@ public class MetricUtil {
 
         //存储宽表
         deriveMetricCalculate.setStore(tempDerive.getStore());
+
+        //派生指标中间结算结果存储接口
+        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 
         return deriveMetricCalculate;
     }

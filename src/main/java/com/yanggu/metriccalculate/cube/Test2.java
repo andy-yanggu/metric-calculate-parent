@@ -1,6 +1,5 @@
 package com.yanggu.metriccalculate.cube;
 
-import com.yanggu.metriccalculate.number.CubeInteger;
 import com.yanggu.metriccalculate.number.CubeLong;
 import com.yanggu.metriccalculate.unit.numeric.SumUnit;
 

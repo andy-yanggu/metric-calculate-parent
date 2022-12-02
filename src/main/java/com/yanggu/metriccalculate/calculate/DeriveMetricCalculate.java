@@ -1,20 +1,28 @@
 package com.yanggu.metriccalculate.calculate;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.client.magiccube.pojo.RoundAccuracy;
 import com.yanggu.client.magiccube.pojo.Store;
+import com.yanggu.metriccalculate.cube.DeriveMetricMiddleStore;
+import com.yanggu.metriccalculate.cube.MetricCube;
 import com.yanggu.metriccalculate.cube.TimeSeriesKVTable;
 import com.yanggu.metriccalculate.cube.TimedKVMetricCube;
 import com.yanggu.metriccalculate.fieldprocess.*;
 import com.yanggu.metriccalculate.unit.MergedUnit;
+import com.yanggu.metriccalculate.util.RoundAccuracyUtil;
 import com.yanggu.metriccalculate.value.Value;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 派生指标计算类
@@ -69,6 +77,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
      */
     private Map<DimensionSet, TimedKVMetricCube<M, ? extends TimedKVMetricCube<M, ?>>> cache;
 
+    /**
+     * 派生指标中间结算结果类
+     */
+    private DeriveMetricMiddleStore deriveMetricMiddleStore;
+
     @Override
     public void init(TaskContext taskContext) throws RuntimeException {
         cache = taskContext.cache();
@@ -114,6 +127,46 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
             v.put(timestamp, process);
             return v;
         });
+    }
+
+    public DeriveMetricCalculateResult query(TimedKVMetricCube newMetricCube) {
+        TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(newMetricCube.getRealKey());
+        if (metricCube == null) {
+            metricCube = newMetricCube;
+        } else {
+            metricCube.merge(newMetricCube);
+        }
+        Object value = metricCube.query().value();
+        //处理精度
+        value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
+
+        Tuple timeWindow = metricCube.getTimeWindow();
+        Object windowStart = timeWindow.get(0);
+        Object windowEnd = timeWindow.get(1);
+
+        DeriveMetricCalculateResult deriveMetricCalculateResult = new DeriveMetricCalculateResult();
+        //指标名称
+        deriveMetricCalculateResult.setName(metricCube.getName());
+        //指标维度
+        deriveMetricCalculateResult.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+        //窗口开始时间
+        deriveMetricCalculateResult.setStartTime(DateUtil.formatDateTime(new Date(Long.parseLong(windowStart.toString()))));
+        //窗口结束时间
+        deriveMetricCalculateResult.setEndTime(DateUtil.formatDateTime(new Date(Long.parseLong(windowEnd.toString()))));
+        //聚合值
+        deriveMetricCalculateResult.setResult(value);
+
+        if (log.isDebugEnabled()) {
+            String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
+                    .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
+                    .collect(Collectors.joining(","));
+            log.debug("指标名称: " + metricCube.getName() +
+                    ", 指标维度: " + collect +
+                    ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowStart.toString()))) +
+                    ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(Long.parseLong(windowEnd.toString()))) +
+                    ", 聚合值: " + value);
+        }
+        return deriveMetricCalculateResult;
     }
 
 }
