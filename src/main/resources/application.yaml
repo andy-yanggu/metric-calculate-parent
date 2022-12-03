@@ -1,15 +1,10 @@
 server:
-  port: 14100
+  port: 8888
 
 spring:
   application:
-    name: metric-calculate
+    name: @project.name@
     version: @project.version@
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://172.20.7.143:3307/rulecanvas2?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=PRC&allowMultiQueries=true&nullNamePatternMatchesAll=true&createDatabaseIfNotExist=true
-    username: root
-    password: MySQL!23
 
 feign:
   magiccube-api:
