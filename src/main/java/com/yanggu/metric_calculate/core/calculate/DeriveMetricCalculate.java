@@ -139,6 +139,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implement
         //处理精度
         value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
 
+        //获取统计的时间窗口
         Tuple timeWindow = metricCube.getTimeWindow();
         Object windowStart = timeWindow.get(0);
         Object windowEnd = timeWindow.get(1);

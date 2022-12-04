@@ -75,11 +75,13 @@ public class FilterProcessor implements FieldExtractProcessor<JSONObject, Boolea
         }
         //获取执行参数
         Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
-        if (log.isDebugEnabled()) {
-            log.debug("前置过滤条件: {}, 输入的数据: {}", filterExpress, JSONUtil.toJsonStr(params));
-        }
 
-        return ((boolean) filterExpression.execute(params));
+        //执行过滤表达式
+        boolean result = (boolean) filterExpression.execute(params);
+        if (log.isDebugEnabled()) {
+            log.debug("前置过滤条件: {}, 输入的数据: {}, 过滤结果: {}", filterExpress, JSONUtil.toJsonStr(params), result);
+        }
+        return result;
     }
 
 }

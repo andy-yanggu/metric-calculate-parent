@@ -16,9 +16,8 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    public ApiResponse(ErrorCodeException e) {
-        this.status = e.getError().getCode().toString();
-        this.message = e.getErrorMessage();
+    public static ApiResponse success() {
+        return new ApiResponse<>();
     }
 
     public ApiResponse<T> set(ErrorCodeException e) {

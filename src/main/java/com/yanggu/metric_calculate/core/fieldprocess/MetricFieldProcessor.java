@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -63,11 +64,12 @@ public class MetricFieldProcessor<R> implements FieldExtractProcessor<JSONObject
     public R process(JSONObject input) throws Exception {
         //获取执行参数
         Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
-        if (log.isDebugEnabled()) {
-            log.debug("度量字段表达式: {}, 输入的数据: {}", metricExpress, JSONUtil.toJsonStr(params));
-        }
 
-        return (R) metricExpression.execute(params);
+        R execute = (R) metricExpression.execute(params);
+        if (log.isDebugEnabled()) {
+            log.debug("度量字段表达式: {}, 输入的数据: {}, 生成数据: {}", metricExpress, JSONUtil.toJsonStr(params), StrUtil.toString(execute));
+        }
+        return execute;
     }
 
 }

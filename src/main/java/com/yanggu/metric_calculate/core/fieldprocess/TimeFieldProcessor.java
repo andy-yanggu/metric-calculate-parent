@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 public class TimeFieldProcessor implements FieldExtractProcessor<JSONObject, Long> {
 
+    private static final String TIMESTAMP = "TIMESTAMP";
+
     /**
      * 时间格式
      */
@@ -40,7 +42,7 @@ public class TimeFieldProcessor implements FieldExtractProcessor<JSONObject, Lon
                     + "时间字段名: {}, 原始数据: {}", timeColumnName, JSONUtil.toJsonStr(input)));
         }
         String dateStr = data.toString();
-        if (StrUtil.equalsIgnoreCase(timeFormat, "TIMESTAMP")) {
+        if (StrUtil.equals(timeFormat.toUpperCase(), TIMESTAMP)) {
             return Long.parseLong(dateStr);
         } else {
             return DateUtil.parse(dateStr, timeFormat).getTime();
