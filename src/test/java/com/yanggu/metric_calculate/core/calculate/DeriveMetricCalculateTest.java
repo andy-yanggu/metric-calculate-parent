@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
 import java.util.Map;
 
 public class DeriveMetricCalculateTest {
@@ -37,27 +38,26 @@ public class DeriveMetricCalculateTest {
         JSONObject input = JSONUtil.parseObj(jsonString);
 
         TimedKVMetricCube exec;
-        DeriveMetricCalculateResult query;
+        List<DeriveMetricCalculateResult> query;
         exec = deriveMetricCalculate.exec(input);
         query = deriveMetricCalculate.query(exec);
-        System.out.println(query);
+        System.out.println(query.get(0));
 
         input.set("debit_amt_out", 900);
         input.set("trans_date", "20220608");
         exec = deriveMetricCalculate.exec(input);
         query = deriveMetricCalculate.query(exec);
-        System.out.println(query);
+        System.out.println(query.get(0));
 
         input.set("trans_date", "20220609");
         exec = deriveMetricCalculate.exec(input);
         query = deriveMetricCalculate.query(exec);
-        System.out.println(query);
+        System.out.println(query.get(0));
 
         input.set("trans_date", "20220607");
         exec = deriveMetricCalculate.exec(input);
         query = deriveMetricCalculate.query(exec);
-        System.out.println(query);
-
+        System.out.println(query.get(0));
     }
 
 }

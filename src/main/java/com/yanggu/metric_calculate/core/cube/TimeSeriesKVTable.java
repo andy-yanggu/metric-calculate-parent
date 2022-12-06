@@ -80,8 +80,10 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     }
 
     @Override
-    public Table<Long, V, Long, V, TimeSeriesKVTable<V>> cloneEmpty() {
-        return null;
+    public TimeSeriesKVTable<V> cloneEmpty() {
+        TimeSeriesKVTable<V> result = new TimeSeriesKVTable();
+        result.timeBaselineDimension = timeBaselineDimension;
+        return result;
     }
 
     @Override
@@ -96,7 +98,7 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
 
     @Override
     public Value query(Long from, Long to) {
-        return null;
+        return query(from, true, to, false);
     }
 
     protected Value query(long from, boolean fromInclusive,
@@ -139,7 +141,9 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
 
     @Override
     public TimeSeriesKVTable<V> subTable(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return null;
+        TimeSeriesKVTable<V> result = cloneEmpty();
+        subMap(from, fromInclusive, to, toInclusive).forEach((k, v) -> result.put(k, v.fastClone()));
+        return result;
     }
 
     @Override

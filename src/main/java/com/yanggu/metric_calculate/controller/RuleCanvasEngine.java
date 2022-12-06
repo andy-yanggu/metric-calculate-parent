@@ -103,8 +103,8 @@ public class RuleCanvasEngine {
             deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
                 TimedKVMetricCube<?, ?> exec = deriveMetricCalculate.exec(message);
                 if (exec != null) {
-                    DeriveMetricCalculateResult query = deriveMetricCalculate.query(exec);
-                    deriveResultMap.put(query.getName(), query);
+                    List<DeriveMetricCalculateResult> query = deriveMetricCalculate.query(exec);
+                    query.forEach(temp -> deriveResultMap.put(temp.getName(), temp));
                 }
             });
         }

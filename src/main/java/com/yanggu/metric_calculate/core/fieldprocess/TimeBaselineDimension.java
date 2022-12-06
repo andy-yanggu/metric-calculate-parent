@@ -1,14 +1,15 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
 import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Tuple;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.client.magiccube.enums.TimeUnit;
+import com.yanggu.metric_calculate.core.calculate.TimeWindow;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 时间聚合粒度
@@ -29,15 +30,9 @@ public class TimeBaselineDimension {
      */
     private TimeUnit unit;
 
-    /**
-     * 时间字段处理器, 从原始数据中提取出时间戳
-     */
-    private TimeFieldProcessor timeExtractor;
-
-    public TimeBaselineDimension(Integer length, TimeUnit unit, TimeFieldProcessor timeExtractor) {
+    public TimeBaselineDimension(Integer length, TimeUnit unit) {
         this.length = length;
         this.unit = unit;
-        this.timeExtractor = timeExtractor;
     }
 
     /**
@@ -55,12 +50,24 @@ public class TimeBaselineDimension {
      * 包含左区间, 不包含右区间
      * 例如数据时间为2022-11-21 14:00:00, 时间单位为DAY, 时间长度为7, 也就是过去7天
      * 时间区间为[2022-11-15 00:00:00, 2022-11-22 00:00:00), 左闭右开
+     * 如果时间聚合粒度不是1, 就是滑动窗口, 窗口滑动步长就是1个时间单位
      */
-    public Tuple getTimeWindow(JSONObject jsonObject) {
-        Long timestamp = timeExtractor.process(jsonObject);
+    public List<TimeWindow> getTimeWindow(Long timestamp) {
         Long windowEnd = DateUtil.ceiling(new Date(timestamp), unit.getDateField()).getTime() + 1;
-        long windowStart = windowEnd - realLength();
-        return new Tuple(windowStart, windowEnd);
+        Long windowSize = realLength();
+        Long slidingSize = this.unit.getMillis();
+        long windowStart = windowEnd - windowSize;
+        List<TimeWindow> windows = new ArrayList<>();
+        for (int i = 0; i < length; i++) {
+            windows.add(new TimeWindow(windowStart + i * slidingSize, windowStart + i * slidingSize + windowSize));
+        }
+        if (log.isDebugEnabled()) {
+            for (TimeWindow window : windows) {
+                log.debug("窗口开始时间: {}, 结束时间: {}", DateUtil.formatDateTime(new Date(window.getStart())),
+                        DateUtil.formatDateTime(new Date(window.getEnd())));
+            }
+        }
+        return windows;
     }
 
     /**

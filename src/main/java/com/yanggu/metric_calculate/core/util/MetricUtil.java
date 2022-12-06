@@ -134,8 +134,7 @@ public class MetricUtil {
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(
-                tempDerive.getDuration(), tempDerive.getTimeUnit(), timeFieldProcessor);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(tempDerive.getDuration(), tempDerive.getTimeUnit());
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器
