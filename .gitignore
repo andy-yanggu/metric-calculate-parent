@@ -25,3 +25,4 @@ mvnw.cmd
 /dist/
 /nbdist/
 /.nb-gradle/
+/**/target/**

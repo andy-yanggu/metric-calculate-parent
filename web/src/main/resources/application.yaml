@@ -1,0 +1,15 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: @project.name@
+    version: @project.version@
+  mvc:
+    pathmatch:
+      # 配置策略
+      matching-strategy: ant-path-matcher
+
+feign:
+  magiccube-api:
+    host: http://172.20.7.90:13611
