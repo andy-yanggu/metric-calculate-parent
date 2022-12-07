@@ -1,11 +1,9 @@
 package com.yanggu.metric_calculate.core.unit;
 
 
-import cn.hutool.core.annotation.AnnotationUtil;
-import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.client.magiccube.enums.BasicType;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
@@ -16,9 +14,10 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.obj.ObjectiveUnit;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -30,41 +29,56 @@ import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.client.magiccube.enums.BasicType.*;
 
+@Data
+@NoArgsConstructor
 public class UnitFactory {
 
     private Map<String, Class<? extends MergedUnit>> methodReflection = new HashMap<>();
 
-    public UnitFactory() throws Exception {
+    private List<String> udafJarPathList;
+
+    public UnitFactory(List<String> udafJarPathList) {
+        this.udafJarPathList = udafJarPathList;
+    }
+
+    public void init() throws Exception {
         //扫描有MergeType注解
         Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
+        //扫描系统自带的聚合函数
         Set<Class<?>> classSet = ClassUtil.scanPackage("com.yanggu.metric_calculate.core.unit", classFilter);
         classSet.forEach(tempClazz -> {
             MergeType annotation = tempClazz.getAnnotation(MergeType.class);
             methodReflection.put(annotation.value(), (Class<? extends MergedUnit>) tempClazz);
         });
 
-        //TODO 以后支持添加自定义的聚合函数
-        String pathname = "D:\\project\\self\\metric-calculate\\udf-test\\target\\udf-test-1.0.0-SNAPSHOT.jar";
-        File file = new File(pathname);
-        Enumeration<JarEntry> entries = new JarFile(file).entries();
-        URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()}, ClassLoader.getSystemClassLoader());
-        while (entries.hasMoreElements()) {
-            JarEntry entry = entries.nextElement();
-            if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
-                String entryName = entry.getName().substring(0, entry.getName().indexOf(".class")).replaceAll("/", ".");
-                Class<?> loadClass = urlClassLoader.loadClass(entryName);
-                Annotation[] annotations = loadClass.getAnnotations();
-                for (Annotation annotation : annotations) {
-                    if (MergeType.class.getName().equals(annotation.annotationType().getName())) {
-                        //@com.yanggu.metric_calculate.core.annotation.MergeType(value=MYUNIT)
-                        String annotationString = annotation.toString();
-                        String between = StrUtil.subBetween(annotationString, "(", ")");
-                        String[] split = between.split(", ");
-                        Map<String, String> collect = Arrays.stream(split)
-                                .collect(Collectors.toMap(s -> s.split("=")[0], s -> s.split("=")[1]));
-                        String value = collect.get("value");
-                        methodReflection.put(value, (Class<? extends MergedUnit>) loadClass);
-                        break;
+        if (CollUtil.isEmpty(udafJarPathList)) {
+            return;
+        }
+        //支持添加自定义的聚合函数
+        URL[] urls = new URL[udafJarPathList.size()];
+        List<JarEntry> jarEntries = new ArrayList<>();
+        for (int i = 0; i < udafJarPathList.size(); i++) {
+            String udafJarPath = udafJarPathList.get(i);
+            File file = new File(udafJarPath);
+            urls[i] = file.toURI().toURL();
+
+            JarFile jarFile = new JarFile(udafJarPath);
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                jarEntries.add(entries.nextElement());
+            }
+        }
+
+        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类
+        try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
+            for (JarEntry entry : jarEntries) {
+                if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
+                    String entryName = entry.getName().substring(0, entry.getName().indexOf(".class"))
+                            .replace("/", ".");
+                    Class<?> loadClass = urlClassLoader.loadClass(entryName);
+                    if (loadClass.isAnnotationPresent(MergeType.class)) {
+                        MergeType annotation = loadClass.getAnnotation(MergeType.class);
+                        methodReflection.put(annotation.value(), (Class<? extends MergedUnit>) loadClass);
                     }
                 }
             }
@@ -78,8 +92,8 @@ public class UnitFactory {
     /**
      * Get unit instance by init value.
      */
-    public static MergedUnit initInstanceByValue(String mergeable, Object initValue) throws Exception {
-        Class clazz = new UnitFactory().getMergeableClass(mergeable);
+    public MergedUnit initInstanceByValue(String mergeable, Object initValue) throws Exception {
+        Class clazz = getMergeableClass(mergeable);
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
@@ -141,8 +155,15 @@ public class UnitFactory {
     }
 
     public static void main(String[] args) throws Exception {
-        MergedUnit count2 = initInstanceByValue("COUNT2", 1L);
+        String canonicalPath = new File("").getCanonicalPath();
+        String pathname = canonicalPath + "/udf-test/target/udf-test-1.0.0-SNAPSHOT.jar";
+        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
+        unitFactory.init();
+        MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L);
         System.out.println(count2);
+
+        MergedUnit sum2 = unitFactory.initInstanceByValue("SUM2", 2L);
+        System.out.println(sum2);
     }
 
 }

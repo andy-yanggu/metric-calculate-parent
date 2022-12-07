@@ -18,10 +18,14 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
      */
     private String aggregateType;
 
+    private UnitFactory unitFactory;
+
     @Override
     public void init() throws Exception {
         //初始化度量字段表达式
         super.init();
+        unitFactory = new UnitFactory();
+        unitFactory.init();
     }
 
     @Override
@@ -33,7 +37,7 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
         }
 
         //生成MergedUnit
-        return (M) UnitFactory.initInstanceByValue(aggregateType, execute);
+        return (M) unitFactory.initInstanceByValue(aggregateType, execute);
     }
 
 }
