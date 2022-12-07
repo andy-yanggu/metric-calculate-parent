@@ -1,11 +1,8 @@
 package com.yanggu.metric_calculate.core.number;
 
 
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-
 import java.util.Objects;
 
-@Numerical
 public class CubeDouble implements CubeNumber<CubeDouble> {
 
     private Double value;

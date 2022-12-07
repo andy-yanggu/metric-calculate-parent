@@ -1,8 +1,5 @@
 package com.yanggu.metric_calculate.core.unit.collection;
 
-import com.yanggu.metric_calculate.core.annotation.Collective;
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.unit.CollectionUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable;
 
@@ -11,8 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-@MergeType("SORTEDLISTOBJECT")
-@Collective
 public class SortedListUnit<T extends Comparable<T> & Cloneable<T>>
         implements CollectionUnit<T, SortedListUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
     private static final long serialVersionUID = -1300607404480893613L;

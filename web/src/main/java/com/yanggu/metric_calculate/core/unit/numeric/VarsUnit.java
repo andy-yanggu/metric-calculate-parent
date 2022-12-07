@@ -1,14 +1,10 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.number.CubeZero;
 
-@MergeType("VARS")
-@Numerical
 public class VarsUnit extends VarpUnit<VarsUnit> {
     private static final long serialVersionUID = 914745812510434980L;
 

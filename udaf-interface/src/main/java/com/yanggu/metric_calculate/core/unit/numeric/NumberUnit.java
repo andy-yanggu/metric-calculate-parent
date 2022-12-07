@@ -8,6 +8,12 @@ import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.Objects;
 
+/**
+ * 数值型
+ *
+ * @param <N>
+ * @param <M>
+ */
 @Numerical
 public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N, M>>
         implements CubeNumber<M>, MergedUnit<M>, Value<Number> {

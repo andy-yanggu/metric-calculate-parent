@@ -1,15 +1,12 @@
 package com.yanggu.metric_calculate.core.number;
 
 
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Objects;
 
 import static java.math.RoundingMode.HALF_UP;
 
-@Numerical
 public class CubeDecimal implements CubeNumber<CubeDecimal> {
 
     private BigDecimal value;

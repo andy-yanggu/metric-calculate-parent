@@ -12,6 +12,7 @@ import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
+import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.obj.ObjectiveUnit;
 import lombok.Data;
@@ -160,7 +161,7 @@ public class UnitFactory {
 
     public static void main(String[] args) throws Exception {
         String canonicalPath = new File("").getCanonicalPath();
-        String pathname = canonicalPath + "/udf-test/target/udf-test-1.0.0-SNAPSHOT.jar";
+        String pathname = canonicalPath + "/udaf-test/target/udaf-test-1.0.0-SNAPSHOT.jar";
         UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
         unitFactory.init();
         MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L);

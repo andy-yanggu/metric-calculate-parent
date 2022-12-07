@@ -1,8 +1,5 @@
 package com.yanggu.metric_calculate.core.unit.collection;
 
-import com.yanggu.metric_calculate.core.annotation.Collective;
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.unit.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
@@ -13,8 +10,6 @@ import java.util.Iterator;
 import java.util.Set;
 import com.yanggu.metric_calculate.core.value.Cloneable;
 
-@MergeType("DISTINCTLIST")
-@Collective
 public class UniqueListUnit<T extends Cloneable<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
         UnlimitedMergedUnit<UniqueListUnit<T>>, Value<Collection<T>>, Serializable, Iterable<T> {
 

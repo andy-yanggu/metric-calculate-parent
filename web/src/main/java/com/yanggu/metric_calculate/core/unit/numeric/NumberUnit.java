@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
-import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
@@ -8,7 +7,6 @@ import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.Objects;
 
-@Numerical
 public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N, M>>
         implements CubeNumber<M>, MergedUnit<M>, Value<Number> {
 

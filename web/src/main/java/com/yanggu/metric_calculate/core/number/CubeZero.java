@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.core.number;
 
 
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-
-@Numerical
 public class CubeZero<N extends CubeNumber<N>> implements CubeNumber<N> {
     /**
      * Add num.

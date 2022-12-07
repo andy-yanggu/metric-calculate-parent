@@ -1,11 +1,7 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.*;
 
-@MergeType("COV")
-@Numerical
 public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> {
     private static final long serialVersionUID = -3797610254543124206L;
 

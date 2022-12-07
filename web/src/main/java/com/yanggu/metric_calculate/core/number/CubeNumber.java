@@ -2,13 +2,11 @@ package com.yanggu.metric_calculate.core.number;
 
 
 
-import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.unit.Unit;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
 
-@Numerical
 public interface CubeNumber<N extends CubeNumber<N>> extends Unit<N>, Value<Number>, Comparable<N>, Serializable {
 
     /**

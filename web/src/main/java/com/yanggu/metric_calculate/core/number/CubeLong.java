@@ -1,10 +1,7 @@
 package com.yanggu.metric_calculate.core.number;
 
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-
 import java.util.Objects;
 
-@Numerical
 public class CubeLong implements CubeNumber<CubeLong> {
 
     private Long value;
