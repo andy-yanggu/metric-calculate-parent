@@ -46,10 +46,7 @@ public class UnitFactory {
         Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
         //扫描系统自带的聚合函数
         Set<Class<?>> classSet = ClassUtil.scanPackage("com.yanggu.metric_calculate.core.unit", classFilter);
-        classSet.forEach(tempClazz -> {
-            MergeType annotation = tempClazz.getAnnotation(MergeType.class);
-            methodReflection.put(annotation.value(), (Class<? extends MergedUnit>) tempClazz);
-        });
+        classSet.forEach(this::addClassToMap);
 
         if (CollUtil.isEmpty(udafJarPathList)) {
             return;
@@ -77,8 +74,7 @@ public class UnitFactory {
                             .replace("/", ".");
                     Class<?> loadClass = urlClassLoader.loadClass(entryName);
                     if (loadClass.isAnnotationPresent(MergeType.class)) {
-                        MergeType annotation = loadClass.getAnnotation(MergeType.class);
-                        methodReflection.put(annotation.value(), (Class<? extends MergedUnit>) loadClass);
+                        addClassToMap(loadClass);
                     }
                 }
             }
@@ -152,6 +148,14 @@ public class UnitFactory {
             return DECIMAL;
         }
         throw new IllegalArgumentException(String.format("Not support type: %s", value.getClass().getName()));
+    }
+
+    private void addClassToMap(Class<?> tempClazz) {
+        MergeType annotation = tempClazz.getAnnotation(MergeType.class);
+        Class<? extends MergedUnit> put = methodReflection.put(annotation.value(), (Class<? extends MergedUnit>) tempClazz);
+        if (put != null) {
+            throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
+        }
     }
 
     public static void main(String[] args) throws Exception {
