@@ -71,6 +71,11 @@
             <artifactId>kryo</artifactId>
             <version>${kryo.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.yanggu</groupId>
+            <artifactId>interface</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

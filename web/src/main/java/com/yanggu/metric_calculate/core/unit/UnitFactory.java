@@ -44,10 +44,10 @@ public class UnitFactory {
         });
 
         //TODO 以后支持添加自定义的聚合函数
-        String pathname = "D:\\project\\self\\metric-calculate\\udf-test\\target\\interface-1.0.0-SNAPSHOT.jar";
+        String pathname = "D:\\project\\self\\metric-calculate\\udf-test\\target\\udf-test-1.0.0-SNAPSHOT.jar";
         File file = new File(pathname);
         Enumeration<JarEntry> entries = new JarFile(file).entries();
-        URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()}, null);
+        URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[]{file.toURI().toURL()}, ClassLoader.getSystemClassLoader());
         while (entries.hasMoreElements()) {
             JarEntry entry = entries.nextElement();
             if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
@@ -141,7 +141,7 @@ public class UnitFactory {
     }
 
     public static void main(String[] args) throws Exception {
-        MergedUnit count2 = initInstanceByValue("COUNT2", 0);
+        MergedUnit count2 = initInstanceByValue("COUNT2", 1L);
         System.out.println(count2);
     }
 
