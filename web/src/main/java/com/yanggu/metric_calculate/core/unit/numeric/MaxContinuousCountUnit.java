@@ -1,9 +1,13 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
+import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 
 import java.util.Objects;
 
+@MergeType("MAXCONTINUOUSCOUNT")
+@Numerical
 public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousCountUnit> {
     private static final long serialVersionUID = -3396993409877201343L;
 

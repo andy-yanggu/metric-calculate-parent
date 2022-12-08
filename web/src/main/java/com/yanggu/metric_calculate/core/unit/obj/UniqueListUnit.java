@@ -1,7 +1,8 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
-import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
+import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
+import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable;
 
@@ -15,6 +16,7 @@ import java.util.Set;
  * Moved {@link com.yanggu.metric_calculate.core.unit.collection.UniqueListUnit}.
  */
 @Deprecated
+@Collective
 public class UniqueListUnit<T extends Cloneable<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
         UnlimitedMergedUnit<UniqueListUnit<T>>, Value<Collection<T>>, Serializable, Iterable<T> {
 

@@ -1,8 +1,12 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
+import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
+@MergeType("INCREASECOUNT")
+@Numerical
 public class IncreaseCountUnit<M extends IncreaseCountUnit<M>> extends BoundaryUnit<CubeNumber, M> {
     private static final long serialVersionUID = 822979245308734777L;
 

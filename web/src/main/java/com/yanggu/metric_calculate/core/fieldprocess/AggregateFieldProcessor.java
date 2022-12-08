@@ -38,8 +38,6 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
     public void init() throws Exception {
         //初始化度量字段表达式
         super.init();
-        unitFactory = new UnitFactory();
-        unitFactory.init();
     }
 
     @Override

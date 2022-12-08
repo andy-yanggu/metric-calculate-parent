@@ -4,6 +4,7 @@ import com.yanggu.metric_calculate.client.magiccube.enums.TimeUnit;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -56,6 +57,21 @@ public class Derive {
      * 聚合逻辑
      */
     private String calculateLogic;
+
+    /**
+     * 是否是自定义udaf
+     */
+    private Boolean isUdaf;
+
+    /**
+     * 自定义udaf-jar的路径
+     */
+    private List<String> udafJarPathList;
+
+    /**
+     * 用户自定义聚合函数的参数
+     */
+    private Map<String, Object> udafParams;
 
     /**
      * 度量字段

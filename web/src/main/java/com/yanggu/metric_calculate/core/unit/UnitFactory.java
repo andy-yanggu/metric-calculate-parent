@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.unit;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import com.yanggu.metric_calculate.client.magiccube.enums.BasicType;
@@ -19,7 +20,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -27,9 +27,10 @@ import java.net.URLClassLoader;
 import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.client.magiccube.enums.BasicType.*;
+import static java.util.concurrent.TimeUnit.HOURS;
+import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Data
 @NoArgsConstructor
@@ -45,6 +46,11 @@ public class UnitFactory {
         this.udafJarPathList = udafJarPathList;
     }
 
+    /**
+     * 添加系统自带的聚合函数和用户自定义的聚合函数
+     *
+     * @throws Exception
+     */
     public void init() throws Exception {
         //扫描有MergeType注解
         Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
@@ -98,7 +104,6 @@ public class UnitFactory {
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
-        Annotation annotation = clazz.getAnnotation(MergeType.class);
         if (clazz.isAnnotationPresent(Numerical.class)) {
             return createNumericUnit(clazz, initValue);
         } else if (clazz.isAnnotationPresent(Collective.class)) {
@@ -114,12 +119,26 @@ public class UnitFactory {
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
+        MergeType mergeType = (MergeType) clazz.getAnnotation(MergeType.class);
+        boolean useParam = mergeType.useParam();
         if (clazz.isAnnotationPresent(Numerical.class)) {
-            return createNumericUnitForUdaf(clazz, initValue, params);
+            if (useParam) {
+                return createNumericUnitForUdaf(clazz, initValue, params);
+            } else {
+                return createNumericUnit(clazz, initValue);
+            }
         } else if (clazz.isAnnotationPresent(Collective.class)) {
-            return createCollectiveUnitForUdaf(clazz, initValue, params);
+            if (useParam) {
+                return createCollectiveUnitForUdaf(clazz, initValue, params);
+            } else {
+                return createCollectiveUnit(clazz, initValue);
+            }
         } else if (clazz.isAnnotationPresent(Objective.class)) {
-            return createObjectiveUnitForUdaf(clazz, initValue, params);
+            if (useParam) {
+                return createObjectiveUnitForUdaf(clazz, initValue, params);
+            } else {
+                return createObjectiveUnit(clazz, initValue);
+            }
         }
         throw new RuntimeException(clazz.getName() + " not support.");
     }
@@ -127,14 +146,14 @@ public class UnitFactory {
     /**
      * Create unit.
      */
-    public static MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue) throws Exception {
+    public MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().value(initValue);
     }
 
     /**
      * Create unit.
      */
-    public static MergedUnit createObjectiveUnitForUdaf(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+    public MergedUnit createObjectiveUnitForUdaf(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         Constructor<ObjectiveUnit> constructor = clazz.getConstructor(Map.class);
         return constructor.newInstance(params).value(initValue);
     }
@@ -142,14 +161,14 @@ public class UnitFactory {
     /**
      * Create collective unit.
      */
-    public static MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue) throws Exception {
+    public MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().add(initValue);
     }
 
     /**
      * Create collective unit.
      */
-    public static MergedUnit createCollectiveUnitForUdaf(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+    public MergedUnit createCollectiveUnitForUdaf(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         Constructor<CollectionUnit> constructor = clazz.getConstructor(Map.class);
         return constructor.newInstance(params).add(initValue);
     }
@@ -157,7 +176,7 @@ public class UnitFactory {
     /**
      * Create number unit.
      */
-    public static NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue) throws Exception {
+    public NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue) throws Exception {
         Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class);
         BasicType valueType = ofValue(initValue);
         switch (valueType) {
@@ -173,7 +192,7 @@ public class UnitFactory {
     /**
      * Create number unit.
      */
-    public static NumberUnit createNumericUnitForUdaf(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+    public NumberUnit createNumericUnitForUdaf(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class, Map.class);
         BasicType valueType = ofValue(initValue);
         switch (valueType) {
@@ -186,7 +205,7 @@ public class UnitFactory {
         }
     }
 
-    public static BasicType ofValue(Object value) {
+    public BasicType ofValue(Object value) {
         if (value instanceof Long) {
             return LONG;
         }
@@ -228,6 +247,31 @@ public class UnitFactory {
 
         MergedUnit sum2 = unitFactory.initInstanceByValueForUdaf("SUM2", 2L, null);
         System.out.println(sum2);
+
+
+        HashMap<String, Object> params = new HashMap<>();
+        //一天内3小时内的交易比例0.6, 如果大于0.6就返回1, 否则返回0
+        params.put("ratio", 0.6D);
+        params.put("continueHour", 3);
+
+        long currentTimeMillis = DateUtil.parseDateTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:00:00")).getTime();
+        NumberUnit myUnit = (NumberUnit) unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis, params);
+
+        //只有一条交易, 应该返回1
+        System.out.println(myUnit.value());
+
+        //新的交易在3小时外, 应该返回0
+        myUnit.merge(unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis + HOURS.toMillis(3L), params));
+        System.out.println(myUnit.value());
+
+        //只有2条交易在3小时内 2.0 / 3 = 0.66 > 0.6
+        myUnit.merge(unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis + HOURS.toMillis(2L), params));
+        System.out.println(myUnit.value());
+
+        //有3条交易在3小时内, 3.0 / 4 = 0.75 > 0.6
+        myUnit.merge(unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis + HOURS.toMillis(2L) + MINUTES.toMillis(59L), params));
+        System.out.println(myUnit.value());
+
     }
 
 }

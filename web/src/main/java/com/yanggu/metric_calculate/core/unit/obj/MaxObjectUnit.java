@@ -1,9 +1,13 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
+import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable;
 
+@MergeType("MAXOBJECT")
+@Objective
 public class MaxObjectUnit<T extends Comparable<T> & Cloneable<T>> implements ObjectiveUnit<T, MaxObjectUnit<T>>, Value {
     private T maxValue;
 

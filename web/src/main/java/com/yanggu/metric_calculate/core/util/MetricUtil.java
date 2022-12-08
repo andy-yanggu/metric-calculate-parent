@@ -17,6 +17,8 @@ import com.yanggu.metric_calculate.core.calculate.*;
 import com.yanggu.metric_calculate.core.cube.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.cube.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -87,6 +89,7 @@ public class MetricUtil {
      * @param fieldMap
      * @return
      */
+    @SneakyThrows
     public static DeriveMetricCalculate initDerive(Derive tempDerive, Map<String, Class<?>> fieldMap) {
         DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate();
 
@@ -120,6 +123,15 @@ public class MetricUtil {
         aggregateFieldProcessor.setMetricExpress(columnName);
         aggregateFieldProcessor.setFieldMap(fieldMap);
         aggregateFieldProcessor.setAggregateType(tempDerive.getCalculateLogic());
+        aggregateFieldProcessor.setIsUdaf(tempDerive.getIsUdaf());
+        aggregateFieldProcessor.setUdafParams(tempDerive.getUdafParams());
+
+        //设置UnitFactory, 生成MergeUnit
+        UnitFactory unitFactory = new UnitFactory(tempDerive.getUdafJarPathList());
+        unitFactory.init();
+
+        aggregateFieldProcessor.setUnitFactory(unitFactory);
+
         try {
             aggregateFieldProcessor.init();
         } catch (Exception e) {

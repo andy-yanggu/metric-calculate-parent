@@ -1,10 +1,14 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
+import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable;
 
 import java.io.Serializable;
 
+@MergeType("REPLACED")
+@Objective
 public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value<T>, Serializable {
     private static final long serialVersionUID = 5240954691662766328L;
 

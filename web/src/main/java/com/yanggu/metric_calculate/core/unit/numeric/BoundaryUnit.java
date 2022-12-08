@@ -1,7 +1,9 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
+import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 
+@Numerical
 public abstract class BoundaryUnit<T, M extends NumberUnit<CubeLong, M>> extends NumberUnit<CubeLong, M> {
     private static final long serialVersionUID = -2556274529298273739L;
 
