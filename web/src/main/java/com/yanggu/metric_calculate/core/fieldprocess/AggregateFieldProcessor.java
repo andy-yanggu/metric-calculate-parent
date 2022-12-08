@@ -30,8 +30,11 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
     /**
      * 用户自定义聚合函数的参数
      */
-    private Map<String, Object> udafParams;
+    private transient Map<String, Object> udafParams;
 
+    /**
+     * 用于生成MergeUnit
+     */
     private transient UnitFactory unitFactory;
 
     @Override
@@ -49,11 +52,7 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
         }
 
         //生成MergedUnit
-        if (Boolean.TRUE.equals(isUdaf)) {
-            return (M) unitFactory.initInstanceByValue(aggregateType, execute);
-        } else {
-            return (M) unitFactory.initInstanceByValueForUdaf(aggregateType, execute, udafParams);
-        }
+        return (M) unitFactory.initInstanceByValue(aggregateType, execute, udafParams);
     }
 
 }

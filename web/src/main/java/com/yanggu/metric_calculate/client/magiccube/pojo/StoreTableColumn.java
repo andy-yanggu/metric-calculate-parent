@@ -4,6 +4,9 @@ import com.yanggu.metric_calculate.client.magiccube.enums.BasicType;
 import com.yanggu.metric_calculate.client.magiccube.enums.StoreColumnTypeEnum;
 import lombok.Data;
 
+/**
+ * 存储宽表字段
+ */
 @Data
 public class StoreTableColumn {
 

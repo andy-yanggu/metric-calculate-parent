@@ -12,9 +12,9 @@ import java.util.List;
 public class StoreTable {
 
     /**
-     * 存储宽表
+     * 存储宽表名称
      */
-    private String storeTable;
+    private String storeTableName;
 
     /**
      * 存储时间格式

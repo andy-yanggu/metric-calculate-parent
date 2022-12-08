@@ -28,7 +28,8 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>> implements Calculate<JSONObject, TimedKVMetricCube<M, ? extends TimedKVMetricCube>> {
+public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
+        implements Calculate<JSONObject, TimedKVMetricCube<M, ? extends TimedKVMetricCube>> {
 
     /**
      * 指标名称

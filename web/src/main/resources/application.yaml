@@ -3,8 +3,8 @@ server:
 
 spring:
   application:
-    name: @project.name@
-    version: @project.version@
+    name: metric-calculate
+    version: 1.0.0
   mvc:
     pathmatch:
       # 配置策略
@@ -12,4 +12,4 @@ spring:
 
 feign:
   magiccube-api:
-    host: http://172.20.7.90:13611
+    host: http://172.20.7.146:13611

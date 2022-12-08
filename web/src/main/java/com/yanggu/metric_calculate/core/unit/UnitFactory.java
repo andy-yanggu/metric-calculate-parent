@@ -85,41 +85,20 @@ public class UnitFactory {
                             .replace("/", ".");
                     Class<?> loadClass = urlClassLoader.loadClass(entryName);
                     if (classFilter.accept(loadClass)) {
-                        addClassToUdafMap(loadClass);
+                        addClassToMap(loadClass);
                     }
                 }
             }
         }
     }
 
-    public Class<? extends MergedUnit> getMergeableClass(String actionType) {
-        return methodReflection.get(actionType);
-    }
-
-    /**
-     * Get unit instance by init value.
-     */
-    public MergedUnit initInstanceByValue(String mergeable, Object initValue) throws Exception {
-        Class clazz = getMergeableClass(mergeable);
-        if (clazz == null) {
-            throw new NullPointerException("MergedUnit class not found.");
-        }
-        if (clazz.isAnnotationPresent(Numerical.class)) {
-            return createNumericUnit(clazz, initValue);
-        } else if (clazz.isAnnotationPresent(Collective.class)) {
-            return createCollectiveUnit(clazz, initValue);
-        } else if (clazz.isAnnotationPresent(Objective.class)) {
-            return createObjectiveUnit(clazz, initValue);
-        }
-        throw new RuntimeException(clazz.getName() + " not support.");
-    }
-
-    public MergedUnit initInstanceByValueForUdaf(String mergeable, Object initValue, Map<String, Object> params) throws Exception {
-        Class clazz = udafMethodReflection.get(mergeable);
+    public MergedUnit initInstanceByValue(String mergeable, Object initValue, Map<String, Object> params) throws Exception {
+        Class clazz = methodReflection.get(mergeable);
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
         MergeType mergeType = (MergeType) clazz.getAnnotation(MergeType.class);
+        //是否使用自定义参数
         boolean useParam = mergeType.useParam();
         if (clazz.isAnnotationPresent(Numerical.class)) {
             if (useParam) {
@@ -229,23 +208,15 @@ public class UnitFactory {
         }
     }
 
-    private void addClassToUdafMap(Class<?> tempClazz) {
-        MergeType annotation = tempClazz.getAnnotation(MergeType.class);
-        Class<? extends MergedUnit> put = udafMethodReflection.put(annotation.value(), (Class<? extends MergedUnit>) tempClazz);
-        if (put != null) {
-            throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
-        }
-    }
-
     public static void main(String[] args) throws Exception {
         String canonicalPath = new File("").getCanonicalPath();
         String pathname = canonicalPath + "/udaf-test/target/udaf-test-1.0.0-SNAPSHOT.jar";
         UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
         unitFactory.init();
-        MergedUnit count2 = unitFactory.initInstanceByValueForUdaf("COUNT2", 1L, null);
+        MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L, null);
         System.out.println(count2);
 
-        MergedUnit sum2 = unitFactory.initInstanceByValueForUdaf("SUM2", 2L, null);
+        MergedUnit sum2 = unitFactory.initInstanceByValue("SUM2", 2L, null);
         System.out.println(sum2);
 
 
@@ -255,21 +226,21 @@ public class UnitFactory {
         params.put("continueHour", 3);
 
         long currentTimeMillis = DateUtil.parseDateTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:00:00")).getTime();
-        NumberUnit myUnit = (NumberUnit) unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis, params);
+        NumberUnit myUnit = (NumberUnit) unitFactory.initInstanceByValue("MYUNIT", currentTimeMillis, params);
 
         //只有一条交易, 应该返回1
         System.out.println(myUnit.value());
 
         //新的交易在3小时外, 应该返回0
-        myUnit.merge(unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis + HOURS.toMillis(3L), params));
+        myUnit.merge(unitFactory.initInstanceByValue("MYUNIT", currentTimeMillis + HOURS.toMillis(3L), params));
         System.out.println(myUnit.value());
 
         //只有2条交易在3小时内 2.0 / 3 = 0.66 > 0.6
-        myUnit.merge(unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis + HOURS.toMillis(2L), params));
+        myUnit.merge(unitFactory.initInstanceByValue("MYUNIT", currentTimeMillis + HOURS.toMillis(2L), params));
         System.out.println(myUnit.value());
 
         //有3条交易在3小时内, 3.0 / 4 = 0.75 > 0.6
-        myUnit.merge(unitFactory.initInstanceByValueForUdaf("MYUNIT", currentTimeMillis + HOURS.toMillis(2L) + MINUTES.toMillis(59L), params));
+        myUnit.merge(unitFactory.initInstanceByValue("MYUNIT", currentTimeMillis + HOURS.toMillis(2L) + MINUTES.toMillis(59L), params));
         System.out.println(myUnit.value());
 
     }

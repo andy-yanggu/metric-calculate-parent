@@ -13,6 +13,9 @@ public class Dimension {
      */
     private String columnName;
 
+    /**
+     * 维度的顺序
+     */
     private Integer columnIndex;
 
     /**
