@@ -16,4 +16,17 @@ public @interface MergeType {
      */
     String value();
 
+    /**
+     * 描述信息
+     * @return
+     */
+    String description() default "";
+
+    /**
+     * 是否使用参数
+     *
+     * @return
+     */
+    boolean useParam() default false;
+
 }

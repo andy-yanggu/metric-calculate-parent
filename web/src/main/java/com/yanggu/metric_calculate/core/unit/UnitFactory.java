@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.File;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -35,6 +36,8 @@ import static com.yanggu.metric_calculate.client.magiccube.enums.BasicType.*;
 public class UnitFactory {
 
     private Map<String, Class<? extends MergedUnit>> methodReflection = new HashMap<>();
+
+    private Map<String, Class<? extends MergedUnit>> udafMethodReflection = new HashMap<>();
 
     private List<String> udafJarPathList;
 
@@ -67,15 +70,16 @@ public class UnitFactory {
             }
         }
 
-        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类
+        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类,
+        //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
         try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
             for (JarEntry entry : jarEntries) {
                 if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
                     String entryName = entry.getName().substring(0, entry.getName().indexOf(".class"))
                             .replace("/", ".");
                     Class<?> loadClass = urlClassLoader.loadClass(entryName);
-                    if (loadClass.isAnnotationPresent(MergeType.class)) {
-                        addClassToMap(loadClass);
+                    if (classFilter.accept(loadClass)) {
+                        addClassToUdafMap(loadClass);
                     }
                 }
             }
@@ -94,13 +98,28 @@ public class UnitFactory {
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
-        List<String> collect = Arrays.stream(clazz.getAnnotations()).map(temp -> temp.annotationType().getSimpleName()).collect(Collectors.toList());
-        if (collect.contains(Numerical.class.getSimpleName())) {
+        Annotation annotation = clazz.getAnnotation(MergeType.class);
+        if (clazz.isAnnotationPresent(Numerical.class)) {
             return createNumericUnit(clazz, initValue);
-        } else if (collect.contains(Collective.class.getSimpleName())) {
+        } else if (clazz.isAnnotationPresent(Collective.class)) {
             return createCollectiveUnit(clazz, initValue);
-        } else if (collect.contains(Objective.class.getSimpleName())) {
+        } else if (clazz.isAnnotationPresent(Objective.class)) {
             return createObjectiveUnit(clazz, initValue);
+        }
+        throw new RuntimeException(clazz.getName() + " not support.");
+    }
+
+    public MergedUnit initInstanceByValueForUdaf(String mergeable, Object initValue, Map<String, Object> params) throws Exception {
+        Class clazz = udafMethodReflection.get(mergeable);
+        if (clazz == null) {
+            throw new NullPointerException("MergedUnit class not found.");
+        }
+        if (clazz.isAnnotationPresent(Numerical.class)) {
+            return createNumericUnitForUdaf(clazz, initValue, params);
+        } else if (clazz.isAnnotationPresent(Collective.class)) {
+            return createCollectiveUnitForUdaf(clazz, initValue, params);
+        } else if (clazz.isAnnotationPresent(Objective.class)) {
+            return createObjectiveUnitForUdaf(clazz, initValue, params);
         }
         throw new RuntimeException(clazz.getName() + " not support.");
     }
@@ -113,10 +132,26 @@ public class UnitFactory {
     }
 
     /**
+     * Create unit.
+     */
+    public static MergedUnit createObjectiveUnitForUdaf(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+        Constructor<ObjectiveUnit> constructor = clazz.getConstructor(Map.class);
+        return constructor.newInstance(params).value(initValue);
+    }
+
+    /**
      * Create collective unit.
      */
     public static MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue) throws Exception {
         return clazz.newInstance().add(initValue);
+    }
+
+    /**
+     * Create collective unit.
+     */
+    public static MergedUnit createCollectiveUnitForUdaf(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+        Constructor<CollectionUnit> constructor = clazz.getConstructor(Map.class);
+        return constructor.newInstance(params).add(initValue);
     }
 
     /**
@@ -130,6 +165,22 @@ public class UnitFactory {
                 return constructor.newInstance(CubeLong.of((Number) initValue));
             case DECIMAL:
                 return constructor.newInstance(CubeDecimal.of((Number) initValue));
+            default:
+                throw new IllegalStateException("Unexpected value type: " + valueType);
+        }
+    }
+
+    /**
+     * Create number unit.
+     */
+    public static NumberUnit createNumericUnitForUdaf(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+        Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class, Map.class);
+        BasicType valueType = ofValue(initValue);
+        switch (valueType) {
+            case LONG:
+                return constructor.newInstance(CubeLong.of((Number) initValue), params);
+            case DECIMAL:
+                return constructor.newInstance(CubeDecimal.of((Number) initValue), params);
             default:
                 throw new IllegalStateException("Unexpected value type: " + valueType);
         }
@@ -159,15 +210,23 @@ public class UnitFactory {
         }
     }
 
+    private void addClassToUdafMap(Class<?> tempClazz) {
+        MergeType annotation = tempClazz.getAnnotation(MergeType.class);
+        Class<? extends MergedUnit> put = udafMethodReflection.put(annotation.value(), (Class<? extends MergedUnit>) tempClazz);
+        if (put != null) {
+            throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
+        }
+    }
+
     public static void main(String[] args) throws Exception {
         String canonicalPath = new File("").getCanonicalPath();
         String pathname = canonicalPath + "/udaf-test/target/udaf-test-1.0.0-SNAPSHOT.jar";
         UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
         unitFactory.init();
-        MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L);
+        MergedUnit count2 = unitFactory.initInstanceByValueForUdaf("COUNT2", 1L, null);
         System.out.println(count2);
 
-        MergedUnit sum2 = unitFactory.initInstanceByValue("SUM2", 2L);
+        MergedUnit sum2 = unitFactory.initInstanceByValueForUdaf("SUM2", 2L, null);
         System.out.println(sum2);
     }
 

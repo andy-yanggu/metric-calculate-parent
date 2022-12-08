@@ -4,13 +4,17 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Map;
 
 /**
  * 聚合字段处理器继承自度量字段处理器, 增加了聚合类型
  */
 @Data
 @Slf4j
+@NoArgsConstructor
 public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<Object> {
 
     /**
@@ -18,7 +22,17 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
      */
     private String aggregateType;
 
-    private UnitFactory unitFactory;
+    /**
+     * 是否是自定义udaf
+     */
+    private Boolean isUdaf;
+
+    /**
+     * 用户自定义聚合函数的参数
+     */
+    private Map<String, Object> udafParams;
+
+    private transient UnitFactory unitFactory;
 
     @Override
     public void init() throws Exception {
@@ -37,7 +51,11 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
         }
 
         //生成MergedUnit
-        return (M) unitFactory.initInstanceByValue(aggregateType, execute);
+        if (Boolean.TRUE.equals(isUdaf)) {
+            return (M) unitFactory.initInstanceByValue(aggregateType, execute);
+        } else {
+            return (M) unitFactory.initInstanceByValueForUdaf(aggregateType, execute, udafParams);
+        }
     }
 
 }
