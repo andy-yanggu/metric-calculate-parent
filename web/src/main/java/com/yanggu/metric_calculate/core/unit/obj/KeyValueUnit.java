@@ -6,10 +6,12 @@ public abstract class KeyValueUnit<K extends Comparable<K>, V, U extends KeyValu
         implements MergedUnit<U> {
 
     private K key;
+
     private V value;
 
     public KeyValueUnit(K key, V value) {
         this.key = key;
         this.value = value;
     }
+
 }

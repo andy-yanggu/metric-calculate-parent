@@ -15,7 +15,7 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
-import com.yanggu.metric_calculate.core.unit.obj.ObjectiveUnit;
+import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

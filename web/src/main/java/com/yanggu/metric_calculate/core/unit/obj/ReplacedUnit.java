@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.unit.obj;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
+import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable;
 

@@ -67,7 +67,7 @@ public class PatternNode<T extends EventState> implements MergedUnit<PatternNode
         if (!(getName().equals(node.getName()))) {
             return false;
         }
-        MergedUnit unit = currentState.fastClone().merge(node.currentState);
+        MergedUnit unit = ((MergedUnit)currentState.fastClone()).merge(node.currentState);
         return ((Comparable)mergeLimit).compareTo(unit) >= 0;
     }
 
