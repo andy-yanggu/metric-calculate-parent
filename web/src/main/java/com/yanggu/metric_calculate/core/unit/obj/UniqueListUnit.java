@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @Deprecated
 @Collective
-public class UniqueListUnit<T extends Cloneable<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
+public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
         UnlimitedMergedUnit<UniqueListUnit<T>>, Value<Collection<T>>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -5104878154756554088L;

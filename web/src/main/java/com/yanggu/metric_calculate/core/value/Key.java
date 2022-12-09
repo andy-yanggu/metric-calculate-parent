@@ -2,17 +2,17 @@ package com.yanggu.metric_calculate.core.value;
 
 import java.util.Objects;
 
-public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneable<Key<K>> {
+public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneable2<Key<K>> {
 
     private K key;
-    private Cloneable<CloneableWrapper<K>> cloneableKey;
+    private Cloneable2<Cloneable2Wrapper<K>> cloneable2Key;
 
     public Key() {
     }
 
     public Key(K key) {
         this.key = key;
-        cloneableKey = CloneableWrapper.wrap(key);
+        cloneable2Key = Cloneable2Wrapper.wrap(key);
     }
 
     public K key() {
@@ -26,21 +26,21 @@ public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneab
 
     private void setKey(K key) {
         this.key = key;
-        cloneableKey = CloneableWrapper.wrap(key);
+        cloneable2Key = Cloneable2Wrapper.wrap(key);
     }
 
-    public Cloneable<CloneableWrapper<K>> cloneableKey() {
-        return cloneableKey;
+    public Cloneable2<Cloneable2Wrapper<K>> cloneableKey() {
+        return cloneable2Key;
     }
 
-    public Key<K> cloneableKey(Cloneable<CloneableWrapper<K>> cloneableKey) {
-        this.cloneableKey = cloneableKey;
+    public Key<K> cloneableKey(Cloneable2<Cloneable2Wrapper<K>> cloneable2Key) {
+        this.cloneable2Key = cloneable2Key;
         return this;
     }
 
     @Override
     public Key<K> fastClone() {
-        return new Key(cloneableKey.fastClone().value());
+        return new Key(cloneable2Key.fastClone().value());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneab
 
     @Override
     public int hashCode() {
-        return Objects.hash(key, cloneableKey);
+        return Objects.hash(key, cloneable2Key);
     }
 
 

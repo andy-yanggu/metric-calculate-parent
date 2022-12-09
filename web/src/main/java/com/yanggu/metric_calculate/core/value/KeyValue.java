@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class KeyValue<K extends Comparable<K> & Cloneable<K>, V extends Cloneable<V> & Value>
-        implements Value<Map<String, Object>>, Cloneable<KeyValue<K, V>>, Comparable<KeyValue<K, ?>> {
+public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneable2<V> & Value>
+        implements Value<Map<String, Object>>, Cloneable2<KeyValue<K, V>>, Comparable<KeyValue<K, ?>> {
 
     private K key;
     private V value;
@@ -23,7 +23,7 @@ public class KeyValue<K extends Comparable<K> & Cloneable<K>, V extends Cloneabl
 
     public KeyValue(Comparable key, Object value) {
         this.key = (K) new Key(key);
-        this.value = (V) CloneableWrapper.wrap(value);
+        this.value = (V) Cloneable2Wrapper.wrap(value);
     }
 
     public K key() {

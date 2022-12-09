@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
@@ -13,7 +13,7 @@ import java.util.Set;
 
 @MergeType("DISTINCTCOUNT")
 @Collective
-public class UniqueCountUnit<T extends Cloneable<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
+public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
         UnlimitedMergedUnit<UniqueCountUnit<T>>, Value<Number>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -5104878154756554088L;

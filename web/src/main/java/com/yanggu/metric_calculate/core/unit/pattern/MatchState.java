@@ -1,8 +1,9 @@
 package com.yanggu.metric_calculate.core.unit.pattern;
 
+import com.yanggu.metric_calculate.core.value.Cloneable2;
+
 import java.util.Objects;
 import java.util.StringJoiner;
-import com.yanggu.metric_calculate.core.value.Cloneable;
 
 public class MatchState<E> implements EventState<E, MatchState<E>> {
 
@@ -30,7 +31,7 @@ public class MatchState<E> implements EventState<E, MatchState<E>> {
 
     @Override
     public MatchState<E> fastClone() {
-        return new MatchState<>(event instanceof Cloneable ? (E) ((Cloneable) event).fastClone() : event);
+        return new MatchState<>(event instanceof Cloneable2 ? (E) ((Cloneable2) event).fastClone() : event);
     }
 
     @Override

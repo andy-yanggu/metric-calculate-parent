@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
@@ -67,7 +67,7 @@ public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value
     @Override
     public ReplacedUnit fastClone() {
         ReplacedUnit replacedUnit = new ReplacedUnit(
-            (this.value instanceof Cloneable) ? ((Cloneable) this.value).fastClone() : this.value);
+            (this.value instanceof Cloneable2) ? ((Cloneable2) this.value).fastClone() : this.value);
         return replacedUnit;
     }
 

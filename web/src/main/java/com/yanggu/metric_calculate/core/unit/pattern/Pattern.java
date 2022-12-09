@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.FieldExtractProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -199,7 +199,7 @@ public class Pattern<T extends EventState> implements MergedUnit<Pattern<T>>, Va
             }
             node.setNextNode(nextNode);
         } while ((node = node.getNextNode()) != null);
-        Object value = this.value instanceof Cloneable ? ((Cloneable) this.value).fastClone() : this.value;
+        Object value = this.value instanceof Cloneable2 ? ((Cloneable2) this.value).fastClone() : this.value;
 
         pattern.setRootNode(rootNode);
         if (pattern.currentNode == null) {

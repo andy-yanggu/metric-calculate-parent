@@ -4,12 +4,12 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import com.yanggu.metric_calculate.core.value.NoneValue;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable;
 
 @MergeType("MINOBJECT")
 @Objective
-public class MinObjectUnit<T extends Comparable<T> & Cloneable<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
+public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
     private T value;
 
     public MinObjectUnit() {

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.obj;
 
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Collective
 @Deprecated
-public class SortedListUnit<T extends Comparable<T> & Cloneable<T>>
+public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
         implements CollectionUnit<T, SortedListUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
     private static final long serialVersionUID = -1300607404480893613L;
 

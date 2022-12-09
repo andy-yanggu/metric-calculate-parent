@@ -1,10 +1,9 @@
 package com.yanggu.metric_calculate.core.unit;
 
-import com.yanggu.metric_calculate.core.value.Cloneable;
-
 import java.util.Collection;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
-public interface MixedUnit<U extends MixedUnit<U> & Cloneable<U>> extends MergedUnit<U> {
+public interface MixedUnit<U extends MixedUnit<U> & Cloneable2<U>> extends MergedUnit<U> {
 
     U mixMerge(U mixUnit);
 

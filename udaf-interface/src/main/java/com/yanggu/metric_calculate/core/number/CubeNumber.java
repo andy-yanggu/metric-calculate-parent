@@ -4,12 +4,12 @@ package com.yanggu.metric_calculate.core.number;
 
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
 @Numerical
-public interface CubeNumber<N extends CubeNumber<N>> extends Cloneable<N>, Value<Number>, Comparable<N>, Serializable {
+public interface CubeNumber<N extends CubeNumber<N>> extends Cloneable2<N>, Value<Number>, Comparable<N>, Serializable {
 
     /**
      * Add num.

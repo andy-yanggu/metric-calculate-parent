@@ -10,11 +10,11 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 @MergeType("DISTINCTLIST")
 @Collective
-public class UniqueListUnit<T extends Cloneable<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
+public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
         UnlimitedMergedUnit<UniqueListUnit<T>>, Value<Collection<T>>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -5104878154756554088L;

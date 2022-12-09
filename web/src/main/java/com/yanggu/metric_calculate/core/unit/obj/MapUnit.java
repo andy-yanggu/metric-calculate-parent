@@ -4,14 +4,14 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class MapUnit<K extends Cloneable<K> & Comparable<K>, V extends Cloneable<V> & Value>
+public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneable2<V> & Value>
         implements UnlimitedMergedUnit<MapUnit<K, V>>, Value<Map<K, V>>, Serializable, Iterable<Map.Entry<K, V>> {
 
     private static final long serialVersionUID = -1300607404480893613L;
