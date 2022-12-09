@@ -3,11 +3,10 @@ import cn.hutool.core.date.DateUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * 转出账户近7天90%的交易集中在连续3小时完成的天数
@@ -15,6 +14,7 @@ import java.util.stream.Collectors;
  * @param <N>
  */
 @MergeType(value = "MYUNIT", useParam = true)
+@NoArgsConstructor
 @FieldNameConstants
 public class MyUnit<N extends CubeNumber<N>> extends NumberUnit<N, MyUnit<N>> {
 
@@ -46,40 +46,50 @@ public class MyUnit<N extends CubeNumber<N>> extends NumberUnit<N, MyUnit<N>> {
 
     @Override
     public Number value() {
-
         if (CollUtil.isEmpty(treeMap)) {
             return 0;
         }
-
+        //treeMap中保留了过去7天所有聚合到小时的数据
         //现将treeMap按照一天进行切割
-        Map<String, TreeMap<String, Long>> map = new HashMap<>();
-        Set<String> strings = treeMap.keySet();
-        for (String string : strings) {
-            String date = DateUtil.formatDate(DateUtil.parseDateTime(string));
-            TreeMap<String, Long> treeMap1 = map.getOrDefault(date, new TreeMap<>());
-            map.put(date, treeMap1);
-            treeMap1.put(string, treeMap.get(string));
+        Map<String, TreeMap<String, Long>> multiMap = new HashMap<>();
+        for (Map.Entry<String, Long> entry : treeMap.entrySet()) {
+            String dateString = entry.getKey();
+            Long count = entry.getValue();
+            String date = DateUtil.formatDate(DateUtil.parseDateTime(dateString));
+            TreeMap<String, Long> tempTreeMap = multiMap.getOrDefault(date, new TreeMap<>());
+            multiMap.put(date, tempTreeMap);
+            tempTreeMap.put(dateString, count);
         }
 
-        map.values().forEach(tempTreeMap -> {
-
-        });
-        //Map<Integer, Integer> rangMap = new HashMap<>();
-        //for (Integer key : treeMap.keySet()) {
-        //    int end = key + continueHour;
-        //    rangMap.put(key, end);
-        //}
-        //
-        //long total = treeMap.values().stream().mapToLong(Long::longValue).sum();
-        //for (Map.Entry<Integer, Integer> entry : rangMap.entrySet()) {
-        //    SortedMap<Integer, Long> subMap = treeMap.subMap(entry.getKey(), entry.getValue());
-        //    double tempRatio = 1.0 * subMap.values().stream().mapToLong(Long::longValue).sum() / total;
-        //    if (tempRatio >= ratio) {
-        //        return 1;
-        //    }
-        //}
-        //return 0;
-        return 0;
+        int totalDay = 0;
+        //这里对按照天分割后的treeMap进行判断
+        for (TreeMap<String, Long> tempTreeMap : multiMap.values()) {
+            Map<Integer, Integer> rangMap = new HashMap<>();
+            TreeMap<Integer, Long> newTreeMap = new TreeMap<>();
+            for (Map.Entry<String, Long> entry : tempTreeMap.entrySet()) {
+                //将日期字符串, 格式化成24小时
+                int hour = Integer.parseInt(DateUtil.format(DateUtil.parseDateTime(entry.getKey()), "HH"));
+                newTreeMap.put(hour, entry.getValue());
+                //这里是一个滑动窗口, 左闭右开
+                //例如continueHour是3, hour是4
+                //窗口是[2, 5)、[3, 6)、[4, 7)
+                int start = Math.max(hour - continueHour + 1, 0);
+                for (int i = start; i <= hour; i++) {
+                    rangMap.put(i, i + continueHour);
+                }
+            }
+            //判断1天90%的交易集中在连续3小时完成
+            long total = newTreeMap.values().stream().mapToLong(Long::longValue).sum();
+            for (Map.Entry<Integer, Integer> entry : rangMap.entrySet()) {
+                SortedMap<Integer, Long> subMap = newTreeMap.subMap(entry.getKey(), entry.getValue());
+                double tempRatio = 1.0 * subMap.values().stream().mapToLong(Long::longValue).sum() / total;
+                if (tempRatio >= ratio) {
+                    totalDay++;
+                    break;
+                }
+            }
+        }
+        return totalDay;
     }
 
 }
