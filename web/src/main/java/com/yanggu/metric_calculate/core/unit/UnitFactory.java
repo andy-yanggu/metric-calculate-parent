@@ -38,8 +38,6 @@ public class UnitFactory {
 
     private Map<String, Class<? extends MergedUnit>> methodReflection = new HashMap<>();
 
-    private Map<String, Class<? extends MergedUnit>> udafMethodReflection = new HashMap<>();
-
     private List<String> udafJarPathList;
 
     public UnitFactory(List<String> udafJarPathList) {
@@ -101,23 +99,11 @@ public class UnitFactory {
         //是否使用自定义参数
         boolean useParam = mergeType.useParam();
         if (clazz.isAnnotationPresent(Numerical.class)) {
-            if (useParam) {
-                return createNumericUnitForUdaf(clazz, initValue, params);
-            } else {
-                return createNumericUnit(clazz, initValue);
-            }
+            return createNumericUnit(clazz, initValue, params, useParam);
         } else if (clazz.isAnnotationPresent(Collective.class)) {
-            if (useParam) {
-                return createCollectiveUnitForUdaf(clazz, initValue, params);
-            } else {
-                return createCollectiveUnit(clazz, initValue);
-            }
+            return createCollectiveUnit(clazz, initValue, params, useParam);
         } else if (clazz.isAnnotationPresent(Objective.class)) {
-            if (useParam) {
-                return createObjectiveUnitForUdaf(clazz, initValue, params);
-            } else {
-                return createObjectiveUnit(clazz, initValue);
-            }
+            return createObjectiveUnit(clazz, initValue, params, useParam);
         }
         throw new RuntimeException(clazz.getName() + " not support.");
     }
@@ -125,63 +111,56 @@ public class UnitFactory {
     /**
      * Create unit.
      */
-    public MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue) throws Exception {
-        return clazz.newInstance().value(initValue);
-    }
-
-    /**
-     * Create unit.
-     */
-    public MergedUnit createObjectiveUnitForUdaf(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        Constructor<ObjectiveUnit> constructor = clazz.getConstructor(Map.class);
-        return constructor.newInstance(params).value(initValue);
+    public MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params, boolean useParam) throws Exception {
+        ObjectiveUnit objectiveUnit;
+        if (useParam) {
+            objectiveUnit = clazz.getConstructor(Map.class).newInstance(params);
+        } else {
+            objectiveUnit = clazz.getConstructor().newInstance();
+        }
+        return objectiveUnit.value(initValue);
     }
 
     /**
      * Create collective unit.
      */
-    public MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue) throws Exception {
-        return clazz.newInstance().add(initValue);
-    }
-
-    /**
-     * Create collective unit.
-     */
-    public MergedUnit createCollectiveUnitForUdaf(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        Constructor<CollectionUnit> constructor = clazz.getConstructor(Map.class);
-        return constructor.newInstance(params).add(initValue);
+    public MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params, boolean useParam) throws Exception {
+        CollectionUnit collectionUnit;
+        if (useParam) {
+            collectionUnit = clazz.getConstructor(Map.class).newInstance(params);
+        } else {
+            collectionUnit = clazz.getConstructor().newInstance();
+        }
+        return collectionUnit.add(initValue);
     }
 
     /**
      * Create number unit.
      */
-    public NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue) throws Exception {
-        Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class);
+    public NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params, boolean useParam) throws Exception {
+        Constructor<NumberUnit> constructor;
+        Object[] initargs;
+        if (useParam) {
+            constructor = clazz.getConstructor(CubeNumber.class, Map.class);
+            initargs = new Object[2];
+            initargs[1] = params;
+        } else {
+            constructor = clazz.getConstructor(CubeNumber.class);
+            initargs = new Object[1];
+        }
+        //判断数据类型
         BasicType valueType = ofValue(initValue);
         switch (valueType) {
             case LONG:
-                return constructor.newInstance(CubeLong.of((Number) initValue));
+                initargs[0] = CubeLong.of((Number) initValue);
+                break;
             case DECIMAL:
-                return constructor.newInstance(CubeDecimal.of((Number) initValue));
+                initargs[0] = CubeDecimal.of((Number) initValue);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value type: " + valueType);
         }
-    }
-
-    /**
-     * Create number unit.
-     */
-    public NumberUnit createNumericUnitForUdaf(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        Constructor<NumberUnit> constructor = clazz.getConstructor(CubeNumber.class, Map.class);
-        BasicType valueType = ofValue(initValue);
-        switch (valueType) {
-            case LONG:
-                return constructor.newInstance(CubeLong.of((Number) initValue), params);
-            case DECIMAL:
-                return constructor.newInstance(CubeDecimal.of((Number) initValue), params);
-            default:
-                throw new IllegalStateException("Unexpected value type: " + valueType);
-        }
+        return constructor.newInstance(initargs);
     }
 
     public BasicType ofValue(Object value) {
@@ -225,7 +204,7 @@ public class UnitFactory {
         params.put("ratio", 0.6D);
         params.put("continueHour", 3);
 
-        long currentTimeMillis = DateUtil.parseDateTime(DateUtil.format(new Date(), "yyyy-MM-dd HH:00:00")).getTime();
+        long currentTimeMillis = DateUtil.parseDateTime("2022-12-09 11:06:11").getTime();
         NumberUnit myUnit = (NumberUnit) unitFactory.initInstanceByValue("MYUNIT", currentTimeMillis, params);
 
         //只有一条交易, 应该返回1
