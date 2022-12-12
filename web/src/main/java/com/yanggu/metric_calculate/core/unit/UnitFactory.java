@@ -79,8 +79,7 @@ public class UnitFactory {
         try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
             for (JarEntry entry : jarEntries) {
                 if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
-                    String entryName = entry.getName().substring(0, entry.getName().indexOf(".class"))
-                            .replace("/", ".");
+                    String entryName = entry.getName().substring(0, entry.getName().indexOf(".class")).replace("/", ".");
                     Class<?> loadClass = urlClassLoader.loadClass(entryName);
                     if (classFilter.accept(loadClass)) {
                         addClassToMap(loadClass);
@@ -90,8 +89,17 @@ public class UnitFactory {
         }
     }
 
-    public MergedUnit initInstanceByValue(String mergeable, Object initValue, Map<String, Object> params) throws Exception {
-        Class clazz = methodReflection.get(mergeable);
+    /**
+     * 生成mergeUnit
+     *
+     * @param aggregateType 聚合类型
+     * @param initValue     度量值
+     * @param params        自定义参数
+     * @return
+     * @throws Exception
+     */
+    public MergedUnit initInstanceByValue(String aggregateType, Object initValue, Map<String, Object> params) throws Exception {
+        Class clazz = methodReflection.get(aggregateType);
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
@@ -141,6 +149,8 @@ public class UnitFactory {
         Constructor<NumberUnit> constructor;
         Object[] initargs;
         if (useParam) {
+            //构造函数, 如果使用自定义参数
+            //对于数值型是两个参数, 第一个是CubeNumber, 第二个是Map
             constructor = clazz.getConstructor(CubeNumber.class, Map.class);
             initargs = new Object[2];
             initargs[1] = params;

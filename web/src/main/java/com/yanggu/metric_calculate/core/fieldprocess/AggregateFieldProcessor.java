@@ -30,12 +30,12 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
     /**
      * 用户自定义聚合函数的参数
      */
-    private transient Map<String, Object> udafParams;
+    private Map<String, Object> udafParams;
 
     /**
      * 用于生成MergeUnit
      */
-    private transient UnitFactory unitFactory;
+    private UnitFactory unitFactory;
 
     @Override
     public void init() throws Exception {
