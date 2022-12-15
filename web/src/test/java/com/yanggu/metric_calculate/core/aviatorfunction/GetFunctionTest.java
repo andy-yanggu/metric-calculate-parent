@@ -16,11 +16,11 @@ import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.constant.Constant.*;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GetFunctionTest {
@@ -39,7 +39,7 @@ public class GetFunctionTest {
         AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
         //在Aviator中添加自定义函数
         instance.addFunction(new GetFunction());
-        compile = instance.compile(expression, true);
+        compile = instance.compile(expression, false);
 
         env = new HashMap<>();
 
@@ -120,6 +120,17 @@ public class GetFunctionTest {
         //when(dingoClient.get(any(Key.class))).thenReturn(null);
         //Object execute = compile.execute(env);
         //assertNull(execute);
+    }
+
+    @Test
+    public void test2() {
+        String expression = "get(out_amount_178_sum, -1)";
+        AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
+        //在Aviator中添加自定义函数
+        instance.addFunction(new GetFunction());
+        compile = instance.compile(expression, false);
+        List<String> variableNames = compile.getVariableNames();
+        System.out.println(compile);
     }
 
     private JSONObject mockOriginData() {

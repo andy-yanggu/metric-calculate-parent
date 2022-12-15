@@ -252,10 +252,10 @@ public class MetricUtil {
             if (value == null) {
                 return;
             }
-            //如果是数值型的, 并且原始数据类型不是数值型的, 进行转换
+            //如果是数值型的, 进行转换
+            //如果是Boolean类型的, 需要进行转换
             if (tempDataClass.getSuperclass().equals(Number.class) || tempDataClass.equals(Boolean.class)) {
                 value = Convert.convert(tempDataClass, value);
-                //如果是Boolean类型的, , 并且原始数据类型不是boolean型的, 需要进行转换
             }
             params.put(key, value);
         });

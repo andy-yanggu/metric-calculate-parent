@@ -53,7 +53,7 @@ public class MetricFieldProcessor<R> implements FieldExtractProcessor<JSONObject
         if (CollUtil.isNotEmpty(variableNames)) {
             variableNames.forEach(tempName -> {
                 if (!fieldMap.containsKey(tempName)) {
-                    throw new RuntimeException("数据明细宽表中没有该度量值: " + tempName);
+                    throw new RuntimeException("数据明细宽表中没有该度量字段: " + tempName);
                 }
             });
         }

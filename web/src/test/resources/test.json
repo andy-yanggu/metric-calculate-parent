@@ -62,6 +62,13 @@
       "name": "trans_timestamp",
       "properties": null,
       "valueType": "STRING"
-    }
+    },
+    {
+      "className": "trade_detail",
+      "labels": null,
+      "name": "debit_amt_out",
+      "properties": null,
+      "valueType": "DECIMAL"
+    },
   ]
 }

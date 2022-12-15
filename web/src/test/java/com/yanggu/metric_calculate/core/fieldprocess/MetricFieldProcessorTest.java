@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -15,6 +16,11 @@ public class MetricFieldProcessorTest {
     public void init() throws Exception {
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         objectMetricFieldProcessor.setMetricExpress("amount");
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", BigDecimal.class);
+        objectMetricFieldProcessor.setFieldMap(fieldMap);
+
         objectMetricFieldProcessor.init();
 
         assertEquals(AviatorEvaluator.compile("amount", true).toString(), objectMetricFieldProcessor.getMetricExpression().toString());

@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.client.magiccube.enums.BasicType;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
@@ -18,6 +19,7 @@ import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
@@ -33,11 +35,20 @@ import static java.util.concurrent.TimeUnit.HOURS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 
 @Data
+@Slf4j
 @NoArgsConstructor
 public class UnitFactory {
 
+    /**
+     * 内置MergeUnit的包路径
+     */
+    public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core.unit";
+
     private Map<String, Class<? extends MergedUnit>> methodReflection = new HashMap<>();
 
+    /**
+     * udaf的jar包路径
+     */
     private List<String> udafJarPathList;
 
     public UnitFactory(List<String> udafJarPathList) {
@@ -53,7 +64,7 @@ public class UnitFactory {
         //扫描有MergeType注解
         Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
         //扫描系统自带的聚合函数
-        Set<Class<?>> classSet = ClassUtil.scanPackage("com.yanggu.metric_calculate.core.unit", classFilter);
+        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, classFilter);
         classSet.forEach(this::addClassToMap);
 
         if (CollUtil.isEmpty(udafJarPathList)) {
@@ -87,6 +98,9 @@ public class UnitFactory {
                 }
             }
         }
+        if (log.isDebugEnabled()) {
+            log.debug("生成的unit: {}", JSONUtil.toJsonStr(methodReflection));
+        }
     }
 
     /**
@@ -103,25 +117,25 @@ public class UnitFactory {
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
-        MergeType mergeType = (MergeType) clazz.getAnnotation(MergeType.class);
-        //是否使用自定义参数
-        boolean useParam = mergeType.useParam();
         if (clazz.isAnnotationPresent(Numerical.class)) {
-            return createNumericUnit(clazz, initValue, params, useParam);
+            return createNumericUnit(clazz, initValue, params);
         } else if (clazz.isAnnotationPresent(Collective.class)) {
-            return createCollectiveUnit(clazz, initValue, params, useParam);
+            return createCollectiveUnit(clazz, initValue, params);
         } else if (clazz.isAnnotationPresent(Objective.class)) {
-            return createObjectiveUnit(clazz, initValue, params, useParam);
+            return createObjectiveUnit(clazz, initValue, params);
+        } else {
+            throw new RuntimeException(clazz.getName() + " not support.");
         }
-        throw new RuntimeException(clazz.getName() + " not support.");
     }
 
     /**
      * Create unit.
      */
-    public MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params, boolean useParam) throws Exception {
+    private MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz,
+                                           Object initValue,
+                                           Map<String, Object> params) throws Exception {
         ObjectiveUnit objectiveUnit;
-        if (useParam) {
+        if (useParam(clazz)) {
             objectiveUnit = clazz.getConstructor(Map.class).newInstance(params);
         } else {
             objectiveUnit = clazz.getConstructor().newInstance();
@@ -132,9 +146,9 @@ public class UnitFactory {
     /**
      * Create collective unit.
      */
-    public MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params, boolean useParam) throws Exception {
+    private MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         CollectionUnit collectionUnit;
-        if (useParam) {
+        if (useParam(clazz)) {
             collectionUnit = clazz.getConstructor(Map.class).newInstance(params);
         } else {
             collectionUnit = clazz.getConstructor().newInstance();
@@ -145,48 +159,52 @@ public class UnitFactory {
     /**
      * Create number unit.
      */
-    public NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params, boolean useParam) throws Exception {
+    private NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         Constructor<NumberUnit> constructor;
-        Object[] initargs;
-        if (useParam) {
+        Object[] initArgs;
+        if (useParam(clazz)) {
             //构造函数, 如果使用自定义参数
             //对于数值型是两个参数, 第一个是CubeNumber, 第二个是Map
             constructor = clazz.getConstructor(CubeNumber.class, Map.class);
-            initargs = new Object[2];
-            initargs[1] = params;
+            initArgs = new Object[2];
+            initArgs[1] = params;
         } else {
             constructor = clazz.getConstructor(CubeNumber.class);
-            initargs = new Object[1];
+            initArgs = new Object[1];
         }
         //判断数据类型
         BasicType valueType = ofValue(initValue);
         switch (valueType) {
             case LONG:
-                initargs[0] = CubeLong.of((Number) initValue);
+                initArgs[0] = CubeLong.of((Number) initValue);
                 break;
             case DECIMAL:
-                initargs[0] = CubeDecimal.of((Number) initValue);
+                initArgs[0] = CubeDecimal.of((Number) initValue);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value type: " + valueType);
         }
-        return constructor.newInstance(initargs);
+        return constructor.newInstance(initArgs);
     }
 
-    public BasicType ofValue(Object value) {
+    private boolean useParam(Class<?> clazz) {
+        MergeType mergeType = clazz.getAnnotation(MergeType.class);
+        //是否使用自定义参数
+        return mergeType.useParam();
+    }
+
+    private BasicType ofValue(Object value) {
         if (value instanceof Long) {
             return LONG;
-        }
-        if (value instanceof String) {
+        } else if (value instanceof String) {
             return STRING;
-        }
-        if (value instanceof Boolean) {
+        } else if (value instanceof Boolean) {
             return BOOLEAN;
-        }
-        if (value instanceof BigDecimal) {
+        } else if (value instanceof BigDecimal) {
             return DECIMAL;
+        } else {
+            throw new IllegalArgumentException(String.format("Not support type: %s", value.getClass().getName()));
         }
-        throw new IllegalArgumentException(String.format("Not support type: %s", value.getClass().getName()));
     }
 
     private void addClassToMap(Class<?> tempClazz) {
