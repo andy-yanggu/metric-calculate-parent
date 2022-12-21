@@ -1,11 +1,13 @@
 package com.yanggu.metric_calculate.core.calculate;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
  * 包含start, 不包含end
  */
 @Data
+@AllArgsConstructor
 public class TimeWindow {
 
     /**
@@ -17,10 +19,5 @@ public class TimeWindow {
      * 窗口结束时间戳（不包含）
      */
     private final long end;
-
-    public TimeWindow(long start, long end) {
-        this.start = start;
-        this.end = end;
-    }
 
 }

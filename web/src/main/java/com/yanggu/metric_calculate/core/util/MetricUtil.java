@@ -167,6 +167,7 @@ public class MetricUtil {
         deriveMetricCalculate.setStore(tempDerive.getStore());
 
         //派生指标中间结算结果存储接口
+        //DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
         RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
         deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
