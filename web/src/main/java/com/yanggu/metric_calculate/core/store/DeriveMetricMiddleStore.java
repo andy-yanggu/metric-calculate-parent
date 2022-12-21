@@ -1,4 +1,6 @@
-package com.yanggu.metric_calculate.core.cube;
+package com.yanggu.metric_calculate.core.store;
+
+import com.yanggu.metric_calculate.core.cube.MetricCube;
 
 /**
  * 派生指标中间结算结果存储接口

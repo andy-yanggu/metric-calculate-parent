@@ -9,6 +9,10 @@ spring:
     pathmatch:
       # 配置策略
       matching-strategy: ant-path-matcher
+  redis:
+    host: 172.20.7.143
+    port: 6379
+    client-type: lettuce
 
 feign:
   magiccube-api:

@@ -1,5 +1,7 @@
-package com.yanggu.metric_calculate.core.cube;
+package com.yanggu.metric_calculate.core.store;
 
+
+import com.yanggu.metric_calculate.core.cube.MetricCube;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

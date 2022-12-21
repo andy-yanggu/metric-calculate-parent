@@ -3,7 +3,9 @@ package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -14,12 +16,14 @@ import com.yanggu.metric_calculate.client.magiccube.pojo.*;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.*;
-import com.yanggu.metric_calculate.core.cube.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core.cube.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleHashMapStore;
+import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleRedisStore;
+import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.HashMap;
 import java.util.List;
@@ -142,7 +146,8 @@ public class MetricUtil {
 
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(),
+                timeColumn.getColumnName());
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
@@ -162,7 +167,9 @@ public class MetricUtil {
         deriveMetricCalculate.setStore(tempDerive.getStore());
 
         //派生指标中间结算结果存储接口
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+        RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
+        deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
         deriveMetricMiddleStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 

@@ -6,7 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.client.magiccube.pojo.RoundAccuracy;
 import com.yanggu.metric_calculate.client.magiccube.pojo.Store;
-import com.yanggu.metric_calculate.core.cube.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.cube.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
@@ -109,7 +109,8 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
         //生成cube, 并且放入缓存中, 如果缓存中存在之前的数据, 则进行合并
-        //本地缓存的目的是为了进行批处理计算, 进行本地聚合操作
+        //本地缓存的目的是为了加快处理速度, 进行本地聚合操作
+        //可以对exec进行批量for循环调用, 进行本地批处理
         return cache.compute(dimensionSet, (k, v) -> {
             if (v == null) {
                 TimeSeriesKVTable<M> table = new TimeSeriesKVTable<>();
@@ -134,6 +135,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         } else {
             metricCube.merge(newMetricCube);
         }
+        //删除过期数据
+        metricCube.eliminateExpiredData();
+        //更新中间状态数据
+        deriveMetricMiddleStore.put(metricCube.getRealKey(), metricCube);
+
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(metricCube.getReferenceTime());
         Long startWindow = CollUtil.getFirst(timeWindowList).getStart();

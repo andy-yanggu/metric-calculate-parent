@@ -13,6 +13,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ErrorResponse exceptionHandler(Exception ex) {
         ErrorResponse response = new ErrorResponse();
+        ex.printStackTrace();
 
         if (ex instanceof ErrorCodeException) {
             ErrorCodeException errorCodeException = (ErrorCodeException) ex;

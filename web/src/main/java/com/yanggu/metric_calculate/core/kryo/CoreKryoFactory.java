@@ -70,22 +70,12 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(NoneValue.class);
         kryo.register(ImmutableValue.class);
 
-        //kryo.register(DimensionSet.class, new DimensionSetSerializer());
-
         kryo.register(EventConnector.class, new EventConnectorSerializer());
         kryo.register(PatternNode.class, new PatternNodeSerializer());
         kryo.register(Pattern.class, new PatternSerializer());
 
         kryo.register(TimedKVMetricCube.class, new TimedKVMetricCubeSerializer());
         kryo.register(TimeSeriesKVTable.class, new TimeSeriesKVTableSerializer());
-
-        //kryo.register(NumberFieldExtractProcessor.class);
-        //kryo.register(ObjectFieldExtractProcessor.class);
-        //kryo.register(DateTimeFormatterExtractor.class);
-
-        //kryo.register(BasicFieldExtractProcessor.class);
-
-        //kryo.register(JaninoExprCond.class);
 
         return kryo;
     }

@@ -21,10 +21,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
-import static com.yanggu.metric_calculate.core.constant.Constant.*;
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
 
 @Slf4j
@@ -65,10 +64,9 @@ public class RuleCanvasEngine {
 
     @ApiOperation("执行接口")
     @PostMapping("/execute")
-    public ApiResponse<Object> execute(@ApiParam("明细宽表数据") @RequestBody JSONObject message) throws Exception {
-        ApiResponse<Object> response = new ApiResponse<>();
+    public ApiResponse<Map<String, Object>> execute(@ApiParam("明细宽表数据") @RequestBody JSONObject message) throws Exception {
+        ApiResponse<Map<String, Object>> response = new ApiResponse<>();
 
-        /*映射明细宽表*/
         Long tableId = message.getLong("tableId");
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId");
@@ -78,9 +76,77 @@ public class RuleCanvasEngine {
             dataWideTable = buildMetric(tableId);
         }
 
+        Map<String, Object> returnData = new HashMap<>();
+        response.setData(returnData);
+
         //原子指标计算结果
         Map<String, Object> atomicResultMap = new ConcurrentHashMap<>();
+        returnData.put("ATOM", atomicResultMap);
+
         //计算原子指标
+        calcAtom(message, dataWideTable, atomicResultMap);
+
+        if (log.isDebugEnabled()) {
+            log.debug("原子指标计算后的数据: {}", JSONUtil.toJsonStr(atomicResultMap));
+        }
+
+        //派生指标计算结果
+        List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = new CopyOnWriteArrayList<>();
+        returnData.put("DERIVE", deriveMetricCalculateResultList);
+
+        //计算衍生指标
+        calcDerive(message, dataWideTable, deriveMetricCalculateResultList);
+
+        if (log.isDebugEnabled()) {
+            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveMetricCalculateResultList));
+        }
+
+        //Map<String, Object> compositeResultMap = new ConcurrentHashMap<>();
+        ////计算复合指标
+        //MetricCalculate finalDataWideTable = dataWideTable;
+        //List<CompositeMetricCalculate> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
+        //if (CollUtil.isNotEmpty(compositeMetricCalculateList)) {
+        //    compositeMetricCalculateList.parallelStream().forEach(temp -> {
+        //        //准备计算参数
+        //        Map<String, Object> env = new HashMap<>();
+        //        //放入原始指标数据
+        //        env.put(ORIGIN_DATA, message);
+        //        //放入指标元数据信息
+        //        env.put(METRIC_CALCULATE, finalDataWideTable);
+        //        //放入复合指标元数据
+        //        env.put(COMPOSITE_METRIC_META_DATA, temp);
+        //
+        //        //计算数据
+        //        Object exec = temp.exec(env);
+        //        //输出到下游
+        //        if (exec != null) {
+        //            compositeResultMap.put(temp.getName(), exec);
+        //        }
+        //    });
+        //}
+
+        //if (log.isDebugEnabled()) {
+        //    log.debug("复合指标计算后的数据: {}", JSONUtil.toJsonStr(compositeResultMap));
+        //}
+        return response;
+    }
+
+    private void calcDerive(JSONObject message, MetricCalculate dataWideTable, List<DeriveMetricCalculateResult> deriveMetricCalculateResultList) {
+        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
+            deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
+                TimedKVMetricCube<?, ?> exec = deriveMetricCalculate.exec(message);
+                //清空本地缓存
+                deriveMetricCalculate.getCache().clear();
+                if (exec != null) {
+                    List<DeriveMetricCalculateResult> query = deriveMetricCalculate.query(exec);
+                    deriveMetricCalculateResultList.addAll(query);
+                }
+            });
+        }
+    }
+
+    private void calcAtom(JSONObject message, MetricCalculate dataWideTable, Map<String, Object> atomicResultMap) {
         List<AtomMetricCalculate> atomMetricCalculateList = dataWideTable.getAtomMetricCalculateList();
         if (CollUtil.isNotEmpty(atomMetricCalculateList)) {
             atomMetricCalculateList.parallelStream().forEach(atomMetricCalculate -> {
@@ -90,58 +156,6 @@ public class RuleCanvasEngine {
                 }
             });
         }
-
-        if (log.isDebugEnabled()) {
-            log.debug("原子指标计算后的数据: {}", JSONUtil.toJsonStr(atomicResultMap));
-        }
-
-        //派生指标计算结果
-        Map<String, DeriveMetricCalculateResult> deriveResultMap = new ConcurrentHashMap<>();
-        //计算衍生指标
-        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
-        if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
-            deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
-                TimedKVMetricCube<?, ?> exec = deriveMetricCalculate.exec(message);
-                if (exec != null) {
-                    List<DeriveMetricCalculateResult> query = deriveMetricCalculate.query(exec);
-                    query.forEach(temp -> deriveResultMap.put(temp.getName(), temp));
-                }
-            });
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveResultMap));
-        }
-
-        //派生指标计算结果
-        Map<String, Object> compositeResultMap = new ConcurrentHashMap<>();
-        //计算复合指标
-        MetricCalculate finalDataWideTable = dataWideTable;
-        List<CompositeMetricCalculate> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
-        if (CollUtil.isNotEmpty(compositeMetricCalculateList)) {
-            compositeMetricCalculateList.parallelStream().forEach(temp -> {
-                //准备计算参数
-                Map<String, Object> env = new HashMap<>();
-                //放入原始指标数据
-                env.put(ORIGIN_DATA, message);
-                //放入指标元数据信息
-                env.put(METRIC_CALCULATE, finalDataWideTable);
-                //放入复合指标元数据
-                env.put(COMPOSITE_METRIC_META_DATA, temp);
-
-                //计算数据
-                Object exec = temp.exec(env);
-                //输出到下游
-                if (exec != null) {
-                    compositeResultMap.put(temp.getName(), exec);
-                }
-            });
-        }
-
-        if (log.isDebugEnabled()) {
-            log.debug("复合指标计算后的数据: {}", JSONUtil.toJsonStr(compositeResultMap));
-        }
-        return response;
     }
 
     /**
