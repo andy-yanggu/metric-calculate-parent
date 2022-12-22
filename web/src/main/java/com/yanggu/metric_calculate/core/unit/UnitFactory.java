@@ -6,11 +6,18 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.json.JSONUtil;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.io.Output;
+import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.client.magiccube.enums.BasicType;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.annotation.Objective;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
+import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
@@ -21,6 +28,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
@@ -249,6 +257,29 @@ public class UnitFactory {
         //有3条交易在3小时内, 3.0 / 4 = 0.75 > 0.6
         myUnit.merge(unitFactory.initInstanceByValue("MYUNIT", currentTimeMillis + HOURS.toMillis(2L) + MINUTES.toMillis(59L), params));
         System.out.println(myUnit.value());
+
+        //测试Kryo序列化和反序列化自定义的udaf
+        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory());
+
+        Kryo kryo = kryoPool.borrow();
+        unitFactory.getMethodReflection().values().forEach(kryo::register);
+
+        byte[] bytes;
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
+            Output output = new Output(byteArrayOutputStream);
+            output.writeByte(1);
+            kryo.writeClassAndObject(output, myUnit);
+            output.close();
+            bytes = byteArrayOutputStream.toByteArray();
+        }
+
+        Input input = new Input(bytes);
+        byte versionCode = input.readByte();
+        if (1 != versionCode) {
+            log.error("Magic cube code not match, version code is [{}]", versionCode);
+        }
+        Object result = kryo.readClassAndObject(input);
+        System.out.println(result);
 
     }
 

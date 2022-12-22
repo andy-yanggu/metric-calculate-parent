@@ -8,12 +8,14 @@ import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
 import com.yanggu.metric_calculate.core.kryo.KryoUtils;
+import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 @Data
 @Slf4j
@@ -25,9 +27,11 @@ public class DeriveMetricMiddleRedisStore implements DeriveMetricMiddleStore {
 
     private RedisTemplate<String, byte[]> redisTemplate;
 
+    private List<Class<? extends MergedUnit>> classList;
+
     @Override
     public void init() {
-        kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory());
+        kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
     }
 
     @Override

@@ -3,6 +3,7 @@ import cn.hutool.core.date.DateUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
@@ -13,6 +14,7 @@ import java.util.*;
  *
  * @param <N>
  */
+@Data
 @MergeType(value = "MYUNIT", useParam = true)
 @NoArgsConstructor
 @FieldNameConstants

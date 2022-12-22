@@ -20,11 +20,13 @@ import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -167,9 +169,15 @@ public class MetricUtil {
         deriveMetricCalculate.setStore(tempDerive.getStore());
 
         //派生指标中间结算结果存储接口
+
+        //并发HashMap存储中间数据
         //DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+
+        //redis存储中间数据
         DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
         RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
+        List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getMethodReflection().values());
+        deriveMetricMiddleStore.setClassList(classList);
         deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
         deriveMetricMiddleStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);

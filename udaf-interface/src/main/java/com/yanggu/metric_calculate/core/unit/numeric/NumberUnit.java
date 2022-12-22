@@ -161,11 +161,6 @@ public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N
     }
 
     @Override
-    public String toString() {
-        return String.format("%s {count=%s, value=%s}", getClass().getSimpleName(), count, value);
-    }
-
-    @Override
     public int hashCode() {
         byte b = 31;
         int i = 1;
