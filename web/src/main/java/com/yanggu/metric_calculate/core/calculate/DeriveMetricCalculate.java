@@ -90,15 +90,19 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     public TimedKVMetricCube<M, ? extends TimedKVMetricCube> exec(JSONObject input) {
         //执行前置过滤条件
         Boolean filter = filterProcessor.process(input);
-        if (Boolean.FALSE.equals(filter) && log.isDebugEnabled()) {
-            log.debug("Input discard, input = {}", JSONUtil.toJsonStr(input));
+        if (Boolean.FALSE.equals(filter)) {
+            if (log.isDebugEnabled()) {
+                log.debug("Input discard, input = {}", JSONUtil.toJsonStr(input));
+            }
             return null;
         }
 
         //执行聚合字段处理器, 生成MergeUnit
         M process = aggregateFieldProcessor.process(input);
-        if (process == null && log.isDebugEnabled()) {
-            log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(input));
+        if (process == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(input));
+            }
             return null;
         }
 
