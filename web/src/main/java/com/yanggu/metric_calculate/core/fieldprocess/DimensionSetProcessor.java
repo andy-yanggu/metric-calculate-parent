@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.client.magiccube.pojo.Dimension;
@@ -32,6 +33,11 @@ public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, 
      */
     private List<Dimension> dimensionList;
 
+    /**
+     * 宽表字段
+     */
+    private Map<String, Class<?>> fieldMap;
+
     public DimensionSetProcessor(List<Dimension> dimensionList) {
         this.dimensionList = dimensionList;
     }
@@ -56,7 +62,8 @@ public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, 
                     throw new RuntimeException("没有对应的维度值, 字段名称: "
                             + dimension.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));
                 }
-                map.put(dimension.getDimensionName(), result);
+                Class<?> clazz = fieldMap.get(dimension.getColumnName());
+                map.put(dimension.getDimensionName(), Convert.convert(clazz, result));
             }
         }
 

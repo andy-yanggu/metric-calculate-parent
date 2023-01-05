@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -21,7 +20,7 @@ public class DimensionSet {
 
     /**
      * 维度kv
-     * k是维度名称, value是维度值
+     * <p>k是维度名称, value是维度值
      */
     private Map<String, Object> dimensionMap;
 

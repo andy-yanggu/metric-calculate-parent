@@ -17,7 +17,6 @@ import com.yanggu.metric_calculate.core.unit.obj.*;
 import com.yanggu.metric_calculate.core.unit.pattern.EventConnector;
 import com.yanggu.metric_calculate.core.unit.pattern.Pattern;
 import com.yanggu.metric_calculate.core.unit.pattern.PatternNode;
-import com.yanggu.metric_calculate.core.value.AutoValueHashMap;
 import com.yanggu.metric_calculate.core.value.ImmutableValue;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import lombok.AllArgsConstructor;
@@ -66,7 +65,6 @@ public class CoreKryoFactory extends BaseKryoFactory {
         //对象型和集合型
         kryo.register(MaxUnit.class);
         kryo.register(MinUnit.class);
-        kryo.register(AutoValueHashMap.class);
         kryo.register(ReplacedUnit.class);
         kryo.register(OccupiedUnit.class);
         kryo.register(ListUnit.class);

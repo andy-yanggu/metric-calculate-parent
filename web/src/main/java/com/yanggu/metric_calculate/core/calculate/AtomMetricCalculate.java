@@ -52,18 +52,14 @@ public class AtomMetricCalculate<E> implements Calculate<JSONObject, E> {
 
     @SneakyThrows
     @Override
-    public E exec(JSONObject rtEvent) {
+    public E exec(JSONObject jsonObject) {
         //执行前置过滤条件
-        if (Boolean.FALSE.equals(filterProcessor.process(rtEvent))) {
+        if (Boolean.FALSE.equals(filterProcessor.process(jsonObject))) {
             return null;
         }
 
         //执行度量表达式, 提取出度量字段的值
-        E process = metricFieldProcessor.process(rtEvent);
-        if (process == null && log.isDebugEnabled()) {
-            log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(rtEvent));
-        }
-        return process;
+        return metricFieldProcessor.process(jsonObject);
     }
 
 }

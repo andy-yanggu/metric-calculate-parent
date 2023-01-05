@@ -29,7 +29,7 @@ public class DeriveMetricCalculateResult {
 
     /**
      * 维度kv k是维度名称, value是维度值
-     * 维度和页面定义的维度顺序一致
+     * <p>维度和页面定义的维度顺序一致
      */
     private LinkedHashMap<String, Object> dimensionMap;
 

@@ -7,7 +7,6 @@ import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 @MergeType("COUNT2")
 @Numerical
 public class CountUnit2 extends NumberUnit<CubeLong, CountUnit2> {
-    private static final long serialVersionUID = -8427535031107918740L;
 
     public CountUnit2() {
         super();

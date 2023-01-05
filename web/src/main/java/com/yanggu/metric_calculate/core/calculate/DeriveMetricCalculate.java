@@ -91,9 +91,6 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         //执行前置过滤条件
         Boolean filter = filterProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
-            if (log.isDebugEnabled()) {
-                log.debug("Input discard, input = {}", JSONUtil.toJsonStr(input));
-            }
             return null;
         }
 

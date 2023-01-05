@@ -3,6 +3,9 @@ package com.yanggu.metric_calculate.client.magiccube.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 精度处理逻辑
+ */
 @Getter
 @AllArgsConstructor
 public enum AccuracyEnum {

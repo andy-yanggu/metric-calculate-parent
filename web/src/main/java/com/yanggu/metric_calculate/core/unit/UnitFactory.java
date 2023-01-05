@@ -125,10 +125,13 @@ public class UnitFactory {
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
+        //数值型
         if (clazz.isAnnotationPresent(Numerical.class)) {
             return createNumericUnit(clazz, initValue, params);
+            //集合型
         } else if (clazz.isAnnotationPresent(Collective.class)) {
             return createCollectiveUnit(clazz, initValue, params);
+            //对象型
         } else if (clazz.isAnnotationPresent(Objective.class)) {
             return createObjectiveUnit(clazz, initValue, params);
         } else {

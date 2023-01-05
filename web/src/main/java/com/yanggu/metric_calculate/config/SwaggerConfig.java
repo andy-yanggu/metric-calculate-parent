@@ -10,7 +10,9 @@ import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-
+/**
+ * knife4j的配置类
+ */
 @Configuration
 @EnableKnife4j
 public class SwaggerConfig {

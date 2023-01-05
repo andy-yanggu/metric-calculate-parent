@@ -17,4 +17,5 @@ public class ImmutableValue implements Value, Comparable<Value> {
     public int compareTo(Value o) {
         return value.compareTo(o.value());
     }
+
 }

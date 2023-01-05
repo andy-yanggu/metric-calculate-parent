@@ -53,7 +53,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
      */
     @Override
     public String getRealKey() {
-        return name + ":" + dimensionSet.getDimensionMap().values().stream().map(String::valueOf).collect(Collectors.joining(","));
+        return dimensionSet.realKey();
     }
 
     @Override

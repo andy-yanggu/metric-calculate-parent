@@ -1,7 +1,5 @@
 package com.yanggu.metric_calculate.core.value;
 
-
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
@@ -10,6 +8,7 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
         implements Value<Map<String, Object>>, Cloneable2<KeyValue<K, V>>, Comparable<KeyValue<K, ?>> {
 
     private K key;
+
     private V value;
 
     public KeyValue() {

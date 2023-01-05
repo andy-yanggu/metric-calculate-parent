@@ -5,7 +5,9 @@ import lombok.Getter;
 
 import java.math.BigDecimal;
 
-
+/**
+ * 数据明细宽表字段数据类型
+ */
 @Getter
 @AllArgsConstructor
 public enum BasicType {

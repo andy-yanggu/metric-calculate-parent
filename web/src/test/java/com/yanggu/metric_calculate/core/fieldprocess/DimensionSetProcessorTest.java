@@ -4,9 +4,7 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.client.magiccube.pojo.Dimension;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.Assert.*;
 
@@ -57,6 +55,11 @@ public class DimensionSetProcessorTest {
         dimension.setColumnIndex(0);
         dimension.setDimensionName("dimension_name");
         dimensionSetProcessor.setDimensionList(Collections.singletonList(dimension));
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("name", String.class);
+        dimensionSetProcessor.setFieldMap(fieldMap);
+
         dimensionSetProcessor.init();
 
         JSONObject jsonObject = new JSONObject();

@@ -3,9 +3,7 @@ package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -17,16 +15,12 @@ import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.*;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +35,7 @@ public class MetricUtil {
 
     /**
      * 初始化原子指标计算类
+     *
      * @param atom
      * @param fieldMap
      * @return
@@ -78,6 +73,7 @@ public class MetricUtil {
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(atom.getDimension());
+        dimensionSetProcessor.setFieldMap(fieldMap);
         dimensionSetProcessor.setMetricName(atom.getName());
         dimensionSetProcessor.init();
         atomMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
@@ -148,8 +144,7 @@ public class MetricUtil {
 
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(),
-                timeColumn.getColumnName());
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
@@ -159,6 +154,7 @@ public class MetricUtil {
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(tempDerive.getDimension());
         dimensionSetProcessor.setMetricName(tempDerive.getName());
+        dimensionSetProcessor.setFieldMap(fieldMap);
         dimensionSetProcessor.init();
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
@@ -171,14 +167,14 @@ public class MetricUtil {
         //派生指标中间结算结果存储接口
 
         //并发HashMap存储中间数据
-        //DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
 
         //redis存储中间数据
-        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
-        RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
-        List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getMethodReflection().values());
-        deriveMetricMiddleStore.setClassList(classList);
-        deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
+        //DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+        //RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
+        //List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getMethodReflection().values());
+        //deriveMetricMiddleStore.setClassList(classList);
+        //deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
         deriveMetricMiddleStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 
@@ -189,9 +185,10 @@ public class MetricUtil {
      * 初始化复合指标
      *
      * @param compositeMetric
+     * @param fieldMap
      * @return
      */
-    public static List<CompositeMetricCalculate> initComposite(Composite compositeMetric) {
+    public static List<CompositeMetricCalculate> initComposite(Composite compositeMetric, Map<String, Class<?>> fieldMap) {
         List<MultiDimensionCalculate> multiDimensionCalculateList = compositeMetric.getMultiDimensionCalculateList();
         if (CollUtil.isEmpty(multiDimensionCalculateList)) {
             throw new RuntimeException("复合指标多维度计算为空, 复合指标元数据: " + JSONUtil.toJsonStr(compositeMetric));
@@ -200,11 +197,10 @@ public class MetricUtil {
                 .map(temp -> {
                     CompositeMetricCalculate compositeMetricCalculate = new CompositeMetricCalculate();
 
-                    //设置表达式字符串
-                    String expression = temp.getCalculateExpression();
-                    compositeMetricCalculate.setExpressString(expression);
                     //设置维度字段处理器
                     DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(temp.getDimension());
+                    dimensionSetProcessor.setMetricName(compositeMetric.getName());
+                    dimensionSetProcessor.setFieldMap(fieldMap);
                     dimensionSetProcessor.init();
                     compositeMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
@@ -214,6 +210,9 @@ public class MetricUtil {
                     compositeMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
                     AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
 
+                    //设置表达式字符串
+                    String expression = temp.getCalculateExpression();
+                    compositeMetricCalculate.setExpressString(expression);
                     //在Aviator中添加自定义函数
                     instance.addFunction(new GetFunction());
                     instance.addFunction(new CoalesceFunction());
@@ -255,10 +254,11 @@ public class MetricUtil {
 
     /**
      * 从原始数据中提取数据, 进行手动数据类型转换
-     * 防止输入的数据类型和数据明细宽表定义的数据类型不匹配
-     * 主要是数值型
-     * @param input
-     * @param fieldMap
+     * <p>防止输入的数据类型和数据明细宽表定义的数据类型不匹配
+     * <p>主要是数值型
+     *
+     * @param input    输入的数据
+     * @param fieldMap 宽表字段名称和数据类型
      * @return
      */
     public static Map<String, Object> getParam(JSONObject input, Map<String, Class<?>> fieldMap) {
@@ -275,11 +275,7 @@ public class MetricUtil {
             }
             params.put(key, value);
         });
-        if (CollUtil.isEmpty(params)) {
-            throw new RuntimeException("没有对应的原始数据");
-        }
         return params;
     }
 
 }
-

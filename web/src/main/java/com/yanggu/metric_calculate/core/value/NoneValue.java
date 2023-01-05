@@ -15,4 +15,5 @@ public class NoneValue implements Value {
     public String toString() {
         return "None";
     }
+
 }

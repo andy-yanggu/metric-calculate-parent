@@ -16,7 +16,6 @@ import java.math.RoundingMode;
 public class RoundAccuracyUtil {
 
     private RoundAccuracyUtil() {
-
     }
 
     public static Object handlerRoundAccuracy(Object result, RoundAccuracy roundAccuracy) {
@@ -54,4 +53,5 @@ public class RoundAccuracyUtil {
         }
         return returnData;
     }
+
 }
