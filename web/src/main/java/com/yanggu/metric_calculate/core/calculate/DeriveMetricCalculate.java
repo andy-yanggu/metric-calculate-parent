@@ -36,6 +36,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     private String name;
 
     /**
+     * 指标标识(数据明细宽表id-指标id)
+     */
+    private String key;
+
+    /**
      * 前置过滤条件处理器, 进行过滤处理
      */
     private FilterProcessor filterProcessor;
@@ -118,6 +123,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
                 table.setTimeBaselineDimension(timeBaselineDimension);
                 v = new TimedKVMetricCube<>();
                 v.setName(name);
+                v.setKey(key);
                 v.setTimeBaselineDimension(timeBaselineDimension);
                 v.setDimensionSet(dimensionSet);
                 v.setTable(table);
@@ -130,7 +136,8 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     }
 
     public List<DeriveMetricCalculateResult> query(TimedKVMetricCube newMetricCube) {
-        TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(newMetricCube.getRealKey());
+        String realKey = newMetricCube.getRealKey();
+        TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(realKey);
         if (metricCube == null) {
             metricCube = newMetricCube;
         } else {
@@ -139,7 +146,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         //删除过期数据
         metricCube.eliminateExpiredData();
         //更新中间状态数据
-        deriveMetricMiddleStore.put(metricCube.getRealKey(), metricCube);
+        deriveMetricMiddleStore.put(realKey, metricCube);
 
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(metricCube.getReferenceTime());

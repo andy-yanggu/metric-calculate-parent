@@ -19,20 +19,10 @@ public class RedisConfig {
     public RedisTemplate<String, Object> kryoRedisTemplate(RedisConnectionFactory factory) {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
         template.setConnectionFactory(factory);
-        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
-        // key采用String的序列化方式
-        template.setKeySerializer(stringRedisSerializer);
-        template.setValueSerializer(new RedisSerializer<byte[]>() {
-            @Override
-            public byte[] serialize(byte[] bytes) throws SerializationException {
-                return bytes;
-            }
-
-            @Override
-            public byte[] deserialize(byte[] bytes) throws SerializationException {
-                return bytes;
-            }
-        });
+        //key采用String的序列化方式
+        template.setKeySerializer(new StringRedisSerializer());
+        //value采用字节数组的方式
+        template.setValueSerializer(RedisSerializer.byteArray());
         template.afterPropertiesSet();
         return template;
     }

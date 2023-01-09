@@ -206,6 +206,7 @@ public class RuleCanvasEngine {
 
             //宽表字段
             Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
+            metricCalculate.setFieldMap(fieldMap);
 
             //原子指标
             List<Atom> atomList = tableData.getAtom();
@@ -225,7 +226,7 @@ public class RuleCanvasEngine {
                     metricTypeMap.put(tempDerive.getName(), DERIVE);
 
                     //初始化派生指标计算类
-                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, fieldMap);
+                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
 
                     return deriveMetricCalculate;
                 }).collect(Collectors.toList());

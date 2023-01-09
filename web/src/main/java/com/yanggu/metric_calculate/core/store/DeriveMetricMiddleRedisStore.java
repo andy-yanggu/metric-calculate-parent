@@ -21,8 +21,6 @@ import java.util.List;
 @Slf4j
 public class DeriveMetricMiddleRedisStore implements DeriveMetricMiddleStore {
 
-    private int finalVersionCode = 0;
-
     private KryoPool kryoPool;
 
     private RedisTemplate<String, byte[]> redisTemplate;
@@ -66,17 +64,12 @@ public class DeriveMetricMiddleRedisStore implements DeriveMetricMiddleStore {
             return null;
         }
         Input input = new Input(bytes);
-        byte versionCode = input.readByte();
-        if (finalVersionCode != versionCode) {
-            log.error("Magic cube code not match, version code is [{}]", versionCode);
-        }
         return (MetricCube) kryo.readClassAndObject(input);
     }
 
     private byte[] serialize(Kryo kryo, MetricCube unit) throws IOException {
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             Output output = new Output(byteArrayOutputStream);
-            output.writeByte(finalVersionCode);
             kryo.writeClassAndObject(output, unit);
             output.close();
             return byteArrayOutputStream.toByteArray();

@@ -15,6 +15,7 @@ public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
     public void write(Kryo kryo, Output output, TimedKVMetricCube cube) {
 
         kryo.writeObject(output, cube.name());
+        kryo.writeObject(output, cube.key());
         kryo.writeObject(output, cube.getReferenceTime());
         kryo.writeObject(output, cube.dimensions());
         kryo.writeObject(output, cube.baselineDimension());
@@ -25,6 +26,7 @@ public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
     public TimedKVMetricCube read(Kryo kryo, Input input, Class<TimedKVMetricCube> type) {
 
         String name = kryo.readObject(input, String.class);
+        String key = kryo.readObject(input, String.class);
         Long referenceTime = kryo.readObject(input, Long.class);
         DimensionSet dimensionSet = kryo.readObject(input, DimensionSet.class);
         TimeBaselineDimension baselineDimension = kryo.readObject(input, TimeBaselineDimension.class);
@@ -32,6 +34,7 @@ public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
 
         TimedKVMetricCube cube = new TimedKVMetricCube<>();
         cube.setName(name);
+        cube.setKey(key);
         cube.setReferenceTime(referenceTime);
         cube.setDimensionSet(dimensionSet);
         cube.setTimeBaselineDimension(baselineDimension);

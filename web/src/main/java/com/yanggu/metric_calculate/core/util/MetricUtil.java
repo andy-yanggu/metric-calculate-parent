@@ -88,11 +88,10 @@ public class MetricUtil {
      * 初始化派生指标
      *
      * @param tempDerive
-     * @param fieldMap
      * @return
      */
     @SneakyThrows
-    public static DeriveMetricCalculate initDerive(Derive tempDerive, Map<String, Class<?>> fieldMap) {
+    public static DeriveMetricCalculate initDerive(Derive tempDerive, MetricCalculate metricCalculate) {
         DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate();
 
         //初始化上下文, 本地缓存
@@ -103,7 +102,11 @@ public class MetricUtil {
         //设置名称
         deriveMetricCalculate.setName(tempDerive.getName());
 
+        //设置key
+        deriveMetricCalculate.setKey(metricCalculate.getId() + "_" + tempDerive.getId());
+
         //设置前置过滤条件处理器
+        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         FilterProcessor filterProcessor = new FilterProcessor(fieldMap, tempDerive.getFilter());
         try {
             filterProcessor.init();

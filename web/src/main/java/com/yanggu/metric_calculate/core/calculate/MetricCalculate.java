@@ -40,5 +40,12 @@ public class MetricCalculate extends DataDetailsWideTable {
      */
     private Map<String, MetricTypeEnum> metricTypeMap;
 
+    /**
+     * 明细宽表字段名称和数据类型的map
+     * <p>key 字段名称
+     * <p>value class数据类型
+     */
+    private Map<String, Class<?>> fieldMap;
+
 }
 

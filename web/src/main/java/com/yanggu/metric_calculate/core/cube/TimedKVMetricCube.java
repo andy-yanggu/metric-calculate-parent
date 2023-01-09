@@ -20,10 +20,17 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>> implements MetricCube<TimeSeriesKVTable<V>, Long, V, C, TimeUnit> {
 
+    public static final String PREFIX = "MC.T.KV.C";
+
     /**
      * 指标名称
      */
     private String name;
+
+    /**
+     * 指标标识(数据明细宽表id-指标id)
+     */
+    private String key;
 
     /**
      * 当前数据聚合时间戳
@@ -45,15 +52,20 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
      */
     private TimeSeriesKVTable<V> table;
 
+    @Override
+    public String getPrefix() {
+        return PREFIX;
+    }
+
     /**
      * 当前指标唯一的key
-     * 指标名称 + 指标维度
+     * 指标key + 指标维度
      *
      * @return
      */
     @Override
     public String getRealKey() {
-        return dimensionSet.realKey();
+        return getPrefix() + ":" + key + ":" + dimensionSet.realKey();
     }
 
     @Override
@@ -63,7 +75,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
 
     @Override
     public String key() {
-        return dimensionSet.getDimensionMap().values().stream().map(String::valueOf).collect(Collectors.joining(","));
+        return key;
     }
 
     @Override

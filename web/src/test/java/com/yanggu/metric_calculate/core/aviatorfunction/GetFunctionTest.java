@@ -56,8 +56,9 @@ public class GetFunctionTest {
         //衍生指标
         MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test.json"), MetricCalculate.class);
         Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
+        metricCalculate.setFieldMap(fieldMap);
 
-        derive = MetricUtil.initDerive(metricCalculate.getDerive().get(0), fieldMap);
+        derive = MetricUtil.initDerive(metricCalculate.getDerive().get(0), metricCalculate);
 
         deriveMap.put("out_amount_178_sum", derive);
 

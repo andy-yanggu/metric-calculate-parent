@@ -9,6 +9,9 @@ import com.esotericsoftware.kryo.util.MapReferenceResolver;
 
 public class KryoUtils {
 
+    private KryoUtils() {
+    }
+
     public static KryoPool createRegisterKryoPool(KryoFactory kryoFactory) {
         return new RegisterKryoPool(new RegisterKryoFactory(kryoFactory), true);
     }
