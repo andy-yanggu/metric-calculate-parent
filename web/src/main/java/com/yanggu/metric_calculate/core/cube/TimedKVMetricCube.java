@@ -65,7 +65,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
      */
     @Override
     public String getRealKey() {
-        return getPrefix() + ":" + key + ":" + dimensionSet.realKey();
+        return getPrefix() + ":" + dimensionSet.realKey();
     }
 
     @Override

@@ -157,32 +157,42 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         List<DeriveMetricCalculateResult> list = new ArrayList<>();
         for (TimeWindow timeWindow : timeWindowList) {
 
-            DeriveMetricCalculateResult deriveMetricCalculateResult = new DeriveMetricCalculateResult();
-            list.add(deriveMetricCalculateResult);
+            DeriveMetricCalculateResult result = new DeriveMetricCalculateResult();
+            list.add(result);
             //指标名称
-            deriveMetricCalculateResult.setName(metricCube.getName());
+            result.setName(metricCube.getName());
+
+            //指标key
+            result.setKey(metricCube.getKey());
+
             //指标维度
-            deriveMetricCalculateResult.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+            result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+
             //窗口开始时间
             long windowStart = timeWindow.getStart();
-            deriveMetricCalculateResult.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
+            result.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
+
             //窗口结束时间
             long windowEnd = timeWindow.getEnd();
-            deriveMetricCalculateResult.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
+            result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
+
             //聚合值
             Object value = timeSeriesKVTable.query(windowStart, windowEnd).value();
+
             //处理精度
             value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
-            deriveMetricCalculateResult.setResult(value);
+            result.setResult(value);
 
             if (log.isDebugEnabled()) {
                 String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
                         .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
                         .collect(Collectors.joining(","));
-                log.debug("指标名称: " + metricCube.getName() +
+                log.debug("指标名称: " + result.getName() +
+                        ", 指标key: " + result.getKey() +
                         ", 指标维度: " + collect +
                         ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(windowStart)) +
                         ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(windowEnd)) +
+                        ", 聚合方式: " + aggregateFieldProcessor.getAggregateType() +
                         ", 聚合值: " + value);
             }
         }

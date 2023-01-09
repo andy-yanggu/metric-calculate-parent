@@ -90,53 +90,19 @@ public class RuleCanvasEngine {
         //计算原子指标
         calcAtom(message, dataWideTable, atomicResultMap);
 
-        if (log.isDebugEnabled()) {
-            log.debug("原子指标计算后的数据: {}", JSONUtil.toJsonStr(atomicResultMap));
-        }
-
         //派生指标计算结果
         List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = new CopyOnWriteArrayList<>();
         returnData.put("DERIVE", deriveMetricCalculateResultList);
         //计算衍生指标
         calcDerive(message, dataWideTable, deriveMetricCalculateResultList);
 
-        if (log.isDebugEnabled()) {
-            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveMetricCalculateResultList));
-        }
-
+        //复合指标
         Map<String, Object> compositeResultMap = new ConcurrentHashMap<>();
         returnData.put("COMPOSITE", compositeResultMap);
         //计算复合指标
         calcComposite(message, dataWideTable, compositeResultMap);
 
-        if (log.isDebugEnabled()) {
-            log.debug("复合指标计算后的数据: {}", JSONUtil.toJsonStr(compositeResultMap));
-        }
-
         return response;
-    }
-
-    private void calcComposite(JSONObject message, MetricCalculate dataWideTable, Map<String, Object> compositeResultMap) {
-        List<CompositeMetricCalculate> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
-        if (CollUtil.isNotEmpty(compositeMetricCalculateList)) {
-            compositeMetricCalculateList.parallelStream().forEach(temp -> {
-                //准备计算参数
-                Map<String, Object> env = new HashMap<>();
-                //放入原始指标数据
-                env.put(ORIGIN_DATA, message);
-                //放入指标元数据信息
-                env.put(METRIC_CALCULATE, dataWideTable);
-                //放入复合指标元数据
-                env.put(COMPOSITE_METRIC_META_DATA, temp);
-
-                //计算数据
-                Object exec = temp.exec(env);
-                //输出到下游
-                if (exec != null) {
-                    compositeResultMap.put(temp.getName(), exec);
-                }
-            });
-        }
     }
 
     private void calcAtom(JSONObject message, MetricCalculate dataWideTable, Map<String, Object> atomicResultMap) {
@@ -150,9 +116,13 @@ public class RuleCanvasEngine {
                 atomicResultMap.put(atomMetricCalculate.getName(), exec);
             }
         });
+        if (log.isDebugEnabled()) {
+            log.debug("原子指标计算后的数据: {}", JSONUtil.toJsonStr(atomicResultMap));
+        }
     }
 
-    private void calcDerive(JSONObject message, MetricCalculate dataWideTable, 
+    private void calcDerive(JSONObject message,
+                            MetricCalculate dataWideTable,
                             List<DeriveMetricCalculateResult> deriveMetricCalculateResultList) {
         List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
@@ -164,9 +134,44 @@ public class RuleCanvasEngine {
             deriveMetricCalculate.getCache().clear();
             if (exec != null) {
                 List<DeriveMetricCalculateResult> query = deriveMetricCalculate.query(exec);
-                deriveMetricCalculateResultList.addAll(query);
+                if (CollUtil.isNotEmpty(query)) {
+                    deriveMetricCalculateResultList.addAll(query);
+                }
             }
         });
+        if (log.isDebugEnabled()) {
+            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveMetricCalculateResultList));
+        }
+    }
+
+    private void calcComposite(JSONObject message,
+                               MetricCalculate dataWideTable,
+                               Map<String, Object> compositeResultMap) {
+
+        List<CompositeMetricCalculate> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
+        if (CollUtil.isEmpty(compositeMetricCalculateList)) {
+            return;
+        }
+        compositeMetricCalculateList.parallelStream().forEach(temp -> {
+            //准备计算参数
+            Map<String, Object> env = new HashMap<>();
+            //放入原始指标数据
+            env.put(ORIGIN_DATA, message);
+            //放入指标元数据信息
+            env.put(METRIC_CALCULATE, dataWideTable);
+            //放入复合指标元数据
+            env.put(COMPOSITE_METRIC_META_DATA, temp);
+
+            //计算数据
+            Object exec = temp.exec(env);
+            //输出到下游
+            if (exec != null) {
+                compositeResultMap.put(temp.getName(), exec);
+            }
+        });
+        if (log.isDebugEnabled()) {
+            log.debug("复合指标计算后的数据: {}", JSONUtil.toJsonStr(compositeResultMap));
+        }
     }
 
     /**
@@ -211,25 +216,27 @@ public class RuleCanvasEngine {
             //原子指标
             List<Atom> atomList = tableData.getAtom();
             if (CollUtil.isNotEmpty(atomList)) {
-                List<AtomMetricCalculate> collect = atomList.stream().map(tempAtom -> {
-                    metricTypeMap.put(tempAtom.getName(), ATOM);
-                    //初始化原子指标计算类
-                    return MetricUtil.initAtom(tempAtom, fieldMap);
-                }).collect(Collectors.toList());
+                List<AtomMetricCalculate> collect = atomList.stream()
+                        .map(tempAtom -> {
+                            metricTypeMap.put(tempAtom.getName(), ATOM);
+                            //初始化原子指标计算类
+                            return MetricUtil.initAtom(tempAtom, fieldMap);
+                        })
+                        .collect(Collectors.toList());
                 metricCalculate.setAtomMetricCalculateList(collect);
             }
 
             //派生指标
             List<Derive> deriveList = tableData.getDerive();
             if (CollUtil.isNotEmpty(deriveList)) {
-                List<DeriveMetricCalculate> collect = deriveList.stream().map(tempDerive -> {
-                    metricTypeMap.put(tempDerive.getName(), DERIVE);
-
-                    //初始化派生指标计算类
-                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
-
-                    return deriveMetricCalculate;
-                }).collect(Collectors.toList());
+                List<DeriveMetricCalculate> collect = deriveList.stream()
+                        .map(tempDerive -> {
+                            metricTypeMap.put(tempDerive.getName(), DERIVE);
+                            //初始化派生指标计算类
+                            DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
+                            return deriveMetricCalculate;
+                        })
+                        .collect(Collectors.toList());
 
                 metricCalculate.setDeriveMetricCalculateList(collect);
             }
@@ -242,7 +249,8 @@ public class RuleCanvasEngine {
                     metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
 
                     //初始化复合指标计算类
-                    List<CompositeMetricCalculate> compositeMetricCalculateList = MetricUtil.initComposite(compositeMetric, fieldMap);
+                    List<CompositeMetricCalculate> compositeMetricCalculateList =
+                            MetricUtil.initComposite(compositeMetric, fieldMap);
                     collect.addAll(compositeMetricCalculateList);
                 });
                 metricCalculate.setCompositeMetricCalculateList(collect);

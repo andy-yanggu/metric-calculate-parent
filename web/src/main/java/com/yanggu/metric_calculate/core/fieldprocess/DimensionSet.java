@@ -19,6 +19,11 @@ public class DimensionSet {
     private String metricName;
 
     /**
+     * 指标标识(数据明细宽表id-指标id)
+     */
+    private String key;
+
+    /**
      * 维度kv
      * <p>k是维度名称, value是维度值
      */
@@ -34,7 +39,7 @@ public class DimensionSet {
      * @return
      */
     public String realKey() {
-        return metricName + ":" + dimensionMap.values().stream().map(Object::toString).collect(Collectors.joining(":"));
+        return key + ":" + metricName + ":" + dimensionMap.values().stream().map(Object::toString).collect(Collectors.joining(":"));
     }
 
 }

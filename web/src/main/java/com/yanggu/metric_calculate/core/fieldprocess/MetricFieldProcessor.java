@@ -67,7 +67,8 @@ public class MetricFieldProcessor<R> implements FieldExtractProcessor<JSONObject
 
         R execute = (R) metricExpression.execute(params);
         if (log.isDebugEnabled()) {
-            log.debug("度量字段表达式: {}, 输入的数据: {}, 生成数据: {}", metricExpress, JSONUtil.toJsonStr(params), StrUtil.toString(execute));
+            log.debug("度量字段表达式: {}, 输入的数据: {}, 生成数据: {}", metricExpress,
+                    JSONUtil.toJsonStr(params), StrUtil.toString(execute));
         }
         return execute;
     }

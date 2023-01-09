@@ -16,6 +16,11 @@ public class DeriveMetricCalculateResult {
     private String name;
 
     /**
+     * 指标标识(数据明细宽表id-指标id)
+     */
+    private String key;
+
+    /**
      * 开始时间
      * yyyy-MM-dd HH:mm:ss格式, 包含开始时间
      */
