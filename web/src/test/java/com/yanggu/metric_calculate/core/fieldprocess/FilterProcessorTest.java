@@ -30,16 +30,34 @@ public class FilterProcessorTest {
     }
 
     /**
-     * 表达式中使用了常量表达式, 应该报错
+     * 如果设置了过滤表达式, 但是没有设置fieldMap应该应该报错
      *
      * @throws Exception
      */
     @Test
     public void init2() throws Exception {
         String filterExpress = "true";
+        FilterProcessor filterProcessor = new FilterProcessor();
+        filterProcessor.setFilterExpress(filterExpress);
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
+        assertEquals("明细宽表字段map为空", runtimeException.getMessage());
+    }
+
+    /**
+     * 表达式中使用了常量表达式, 应该报错
+     *
+     * @throws Exception
+     */
+    @Test
+    public void init3() throws Exception {
+        String filterExpress = "true";
 
         FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.setFieldMap(Collections.emptyMap());
+        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
+            put("amount", BigDecimal.class);
+        }};
+        filterProcessor.setFieldMap(fieldMap);
         filterProcessor.setFilterExpress(filterExpress);
         RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
 
@@ -52,12 +70,15 @@ public class FilterProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init3() throws Exception {
+    public void init4() throws Exception {
         String filterExpress = "amount > 100.00";
 
         FilterProcessor filterProcessor = new FilterProcessor();
         filterProcessor.setFilterExpress(filterExpress);
-        filterProcessor.setFieldMap(Collections.emptyMap());
+        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
+            put("amount2", BigDecimal.class);
+        }};
+        filterProcessor.setFieldMap(fieldMap);
         RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
 
         assertEquals("数据明细宽表中没有该字段: amount", runtimeException.getMessage());
@@ -69,7 +90,7 @@ public class FilterProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init4() throws Exception {
+    public void init5() throws Exception {
         String filterExpress = "amount > 100.00";
 
         FilterProcessor filterProcessor = new FilterProcessor();
@@ -81,6 +102,8 @@ public class FilterProcessorTest {
         filterProcessor.init();
 
         assertEquals(AviatorEvaluator.compile(filterExpress, true).toString(), filterProcessor.getFilterExpression().toString());
+        assertEquals(filterExpress, filterProcessor.getFilterExpress());
+        assertEquals(fieldMap, filterProcessor.getFieldMap());
     }
 
     /**
@@ -212,7 +235,7 @@ public class FilterProcessorTest {
 
     /**
      * 测试过滤字段为BigDecimal的数据类型
-     * 但是传入的数据类型和定义的不匹配, 代码内部进行了转换
+     * <p>但是传入的数据类型和定义的不匹配, 代码内部进行了转换</p>
      *
      * @throws Exception
      */

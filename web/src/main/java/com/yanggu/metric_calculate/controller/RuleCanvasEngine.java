@@ -220,7 +220,7 @@ public class RuleCanvasEngine {
                         .map(tempAtom -> {
                             metricTypeMap.put(tempAtom.getName(), ATOM);
                             //初始化原子指标计算类
-                            return MetricUtil.initAtom(tempAtom, fieldMap);
+                            return MetricUtil.initAtom(tempAtom, metricCalculate);
                         })
                         .collect(Collectors.toList());
                 metricCalculate.setAtomMetricCalculateList(collect);
@@ -250,7 +250,7 @@ public class RuleCanvasEngine {
 
                     //初始化复合指标计算类
                     List<CompositeMetricCalculate> compositeMetricCalculateList =
-                            MetricUtil.initComposite(compositeMetric, fieldMap);
+                            MetricUtil.initComposite(compositeMetric, metricCalculate);
                     collect.addAll(compositeMetricCalculateList);
                 });
                 metricCalculate.setCompositeMetricCalculateList(collect);

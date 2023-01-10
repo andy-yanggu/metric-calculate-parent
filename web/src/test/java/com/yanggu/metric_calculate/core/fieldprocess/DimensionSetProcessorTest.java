@@ -50,6 +50,10 @@ public class DimensionSetProcessorTest {
     @Test
     public void process() {
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor();
+
+        dimensionSetProcessor.setMetricName("metricName");
+        dimensionSetProcessor.setKey("1_1");
+
         Dimension dimension = new Dimension();
         dimension.setColumnName("name");
         dimension.setColumnIndex(0);
@@ -66,7 +70,12 @@ public class DimensionSetProcessorTest {
         jsonObject.set("name", "张三");
 
         DimensionSet process = dimensionSetProcessor.process(jsonObject);
+
+        //验证维度map、MetricName、Key和realKey()逻辑是否正确
         assertEquals("张三", process.getDimensionMap().get("dimension_name"));
+        assertEquals("metricName", process.getMetricName());
+        assertEquals("1_1", process.getKey());
+        assertEquals("1_1:metricName:张三", process.realKey());
     }
 
 }

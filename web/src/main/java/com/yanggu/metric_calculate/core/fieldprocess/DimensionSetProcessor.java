@@ -29,6 +29,11 @@ public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, 
     private String metricName;
 
     /**
+     * 指标标识(数据明细宽表id-指标id)
+     */
+    private String key;
+
+    /**
      * 维度字段
      */
     private List<Dimension> dimensionList;
@@ -67,7 +72,7 @@ public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, 
             }
         }
 
-        return new DimensionSet(metricName, map);
+        return new DimensionSet(key, metricName, map);
     }
 
 }

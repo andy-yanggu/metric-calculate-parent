@@ -50,6 +50,9 @@ public class FilterProcessor implements FieldExtractProcessor<JSONObject, Boolea
         if (StrUtil.isBlank(filterExpress)) {
             return;
         }
+        if (CollUtil.isEmpty(fieldMap)) {
+            throw new RuntimeException("明细宽表字段map为空");
+        }
         AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
 
         Expression tempFilterExpression = instance.compile(filterExpress, true);

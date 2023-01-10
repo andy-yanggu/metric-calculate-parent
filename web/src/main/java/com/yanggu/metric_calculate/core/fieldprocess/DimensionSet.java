@@ -29,7 +29,8 @@ public class DimensionSet {
      */
     private Map<String, Object> dimensionMap;
 
-    public DimensionSet(String metricName, Map<String, Object> dimensionMap) {
+    public DimensionSet(String key, String metricName, Map<String, Object> dimensionMap) {
+        this.key = key;
         this.metricName = metricName;
         this.dimensionMap = dimensionMap;
     }

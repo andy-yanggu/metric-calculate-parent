@@ -16,12 +16,55 @@ import static org.junit.Assert.*;
 public class MetricFieldProcessorTest {
 
     /**
+     * 没有传递metricExpress, 应该报错
+     */
+    @Test
+    public void init1() {
+        MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
+        assertEquals("度量表达式为空", runtimeException.getMessage());
+    }
+
+    /**
+     * 没有传递fieldMap, 应该报错
+     */
+    @Test
+    public void init2() {
+        MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
+        metricFieldProcessor.setMetricExpress("metricExpress");
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
+        assertEquals("明细宽表字段map为空", runtimeException.getMessage());
+    }
+
+    /**
+     * 如果度量表达式的变量没有在宽表字段中, 应该报错
+     *
+     * @throws Exception
+     */
+    @Test
+    public void init3() throws Exception {
+        String metricExpress = "amount";
+        MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
+        objectMetricFieldProcessor.setMetricExpress(metricExpress);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount2", BigDecimal.class);
+        objectMetricFieldProcessor.setFieldMap(fieldMap);
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, objectMetricFieldProcessor::init);
+        assertEquals("数据明细宽表中没有该度量字段: " + metricExpress, runtimeException.getMessage());
+
+    }
+
+    /**
      * init方法应该对度量值进行编译
      *
      * @throws Exception
      */
     @Test
-    public void init() throws Exception {
+    public void init4() throws Exception {
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         objectMetricFieldProcessor.setMetricExpress("amount");
 
@@ -32,6 +75,8 @@ public class MetricFieldProcessorTest {
         objectMetricFieldProcessor.init();
 
         assertEquals(AviatorEvaluator.compile("amount", true).toString(), objectMetricFieldProcessor.getMetricExpression().toString());
+        assertEquals("amount", objectMetricFieldProcessor.getMetricExpress());
+        assertEquals(fieldMap, objectMetricFieldProcessor.getFieldMap());
 
     }
 

@@ -17,7 +17,6 @@ import com.yanggu.metric_calculate.core.unit.obj.*;
 import com.yanggu.metric_calculate.core.unit.pattern.EventConnector;
 import com.yanggu.metric_calculate.core.unit.pattern.Pattern;
 import com.yanggu.metric_calculate.core.unit.pattern.PatternNode;
-import com.yanggu.metric_calculate.core.value.ImmutableValue;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -75,7 +74,6 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(TimeUnit.class);
 
         kryo.register(NoneValue.class);
-        kryo.register(ImmutableValue.class);
 
         kryo.register(EventConnector.class, new EventConnectorSerializer());
         kryo.register(PatternNode.class, new PatternNodeSerializer());

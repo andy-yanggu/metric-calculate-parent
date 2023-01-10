@@ -38,13 +38,14 @@ public class MetricFieldProcessor<R> implements FieldExtractProcessor<JSONObject
      */
     protected transient Expression metricExpression;
 
-    public MetricFieldProcessor(Map<String, Class<?>> fieldMap, String metricExpress) {
-        this.fieldMap = fieldMap;
-        this.metricExpress = metricExpress;
-    }
-
     @Override
     public void init() throws Exception {
+        if (StrUtil.isBlank(metricExpress)) {
+            throw new RuntimeException("度量表达式为空");
+        }
+        if (CollUtil.isEmpty(fieldMap)) {
+            throw new RuntimeException("明细宽表字段map为空");
+        }
         AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
         //编译度量字段表达式
         Expression tempMetricExpression = instance.compile(metricExpress, true);

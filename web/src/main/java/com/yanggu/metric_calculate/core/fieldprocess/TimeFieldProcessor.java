@@ -35,6 +35,16 @@ public class TimeFieldProcessor implements FieldExtractProcessor<JSONObject, Lon
     }
 
     @Override
+    public void init() {
+        if (StrUtil.isBlank(timeColumnName)) {
+            throw new RuntimeException("时间字段的值为空");
+        }
+        if (StrUtil.isBlank(timeFormat)) {
+            throw new RuntimeException("时间格式为空");
+        }
+    }
+
+    @Override
     public Long process(JSONObject input) {
         Object data = input.get(timeColumnName);
         if (data == null) {

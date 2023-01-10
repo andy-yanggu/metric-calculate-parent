@@ -37,10 +37,10 @@ public class MetricUtil {
      * 初始化原子指标计算类
      *
      * @param atom
-     * @param fieldMap
      * @return
      */
-    public static AtomMetricCalculate initAtom(Atom atom, Map<String, Class<?>> fieldMap) {
+    public static AtomMetricCalculate initAtom(Atom atom, MetricCalculate metricCalculate) {
+        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         AtomMetricCalculate atomMetricCalculate = new AtomMetricCalculate<>();
 
         //设置名称
@@ -57,7 +57,9 @@ public class MetricUtil {
         atomMetricCalculate.setFilterProcessor(filterProcessor);
 
         //度量字段处理器
-        MetricFieldProcessor<?> metricFieldProcessor = new MetricFieldProcessor<>(fieldMap, atom.getMetricColumn().getColumnName());
+        MetricFieldProcessor<?> metricFieldProcessor = new MetricFieldProcessor<>();
+        metricFieldProcessor.setMetricExpress(atom.getMetricColumn().getColumnName());
+        metricFieldProcessor.setFieldMap(fieldMap);
         try {
             metricFieldProcessor.init();
         } catch (Exception e) {
@@ -69,12 +71,14 @@ public class MetricUtil {
         //时间字段处理器
         TimeColumn timeColumn = atom.getTimeColumn();
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+        timeFieldProcessor.init();
         atomMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(atom.getDimension());
         dimensionSetProcessor.setFieldMap(fieldMap);
         dimensionSetProcessor.setMetricName(atom.getName());
+        dimensionSetProcessor.setKey(metricCalculate.getId() + "_" + atom.getId());
         dimensionSetProcessor.init();
         atomMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
@@ -148,6 +152,7 @@ public class MetricUtil {
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+        timeFieldProcessor.init();
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
@@ -157,6 +162,7 @@ public class MetricUtil {
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(tempDerive.getDimension());
         dimensionSetProcessor.setMetricName(tempDerive.getName());
+        dimensionSetProcessor.setKey(metricCalculate.getId() + "_" + tempDerive.getId());
         dimensionSetProcessor.setFieldMap(fieldMap);
         dimensionSetProcessor.init();
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
@@ -188,10 +194,10 @@ public class MetricUtil {
      * 初始化复合指标
      *
      * @param compositeMetric
-     * @param fieldMap
      * @return
      */
-    public static List<CompositeMetricCalculate> initComposite(Composite compositeMetric, Map<String, Class<?>> fieldMap) {
+    public static List<CompositeMetricCalculate> initComposite(Composite compositeMetric, MetricCalculate metricCalculate) {
+        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<MultiDimensionCalculate> multiDimensionCalculateList = compositeMetric.getMultiDimensionCalculateList();
         if (CollUtil.isEmpty(multiDimensionCalculateList)) {
             throw new RuntimeException("复合指标多维度计算为空, 复合指标元数据: " + JSONUtil.toJsonStr(compositeMetric));
@@ -203,6 +209,7 @@ public class MetricUtil {
                     //设置维度字段处理器
                     DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(temp.getDimension());
                     dimensionSetProcessor.setMetricName(compositeMetric.getName());
+                    dimensionSetProcessor.setKey(metricCalculate.getId() + "_" + compositeMetric.getId());
                     dimensionSetProcessor.setFieldMap(fieldMap);
                     dimensionSetProcessor.init();
                     compositeMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
@@ -210,6 +217,7 @@ public class MetricUtil {
                     //设置时间字段处理器
                     TimeColumn timeColumn = compositeMetric.getTimeColumn();
                     TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+                    timeFieldProcessor.init();
                     compositeMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
                     AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
 
