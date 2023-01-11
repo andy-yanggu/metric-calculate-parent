@@ -273,6 +273,14 @@ public class MetricUtil {
      * @return
      */
     public static Map<String, Object> getParam(JSONObject input, Map<String, Class<?>> fieldMap) {
+        if (CollUtil.isEmpty((Map<?, ?>) input)) {
+            throw new RuntimeException("输入数据为空");
+        }
+
+        if (CollUtil.isEmpty(fieldMap)) {
+            throw new RuntimeException("宽表字段为空");
+        }
+
         Map<String, Object> params = new HashMap<>();
         fieldMap.forEach((key, tempDataClass) -> {
             Object value = input.get(key);
