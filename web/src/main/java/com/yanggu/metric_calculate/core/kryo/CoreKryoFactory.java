@@ -83,7 +83,7 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(TimeSeriesKVTable.class, new TimeSeriesKVTableSerializer());
 
         //这里主要是注册自定义的MergeUnit
-        if (CollUtil.isEmpty(classList)) {
+        if (CollUtil.isNotEmpty(classList)) {
             classList.forEach(kryo::register);
         }
         return kryo;

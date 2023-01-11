@@ -1,3 +1,5 @@
+package com.yanggu.metric_calculate.core.test_unit;
+
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
@@ -41,8 +43,8 @@ public class CountUnit2 extends NumberUnit<CubeLong, CountUnit2> {
 
     @Override
     public CountUnit2 fastClone() {
-        CountUnit2 countUnit = new CountUnit2(value.fastClone(), count.longValue());
-        return countUnit;
+        return new CountUnit2(value.fastClone(), count.longValue());
     }
+
 }
 
