@@ -55,6 +55,7 @@ public class AggregateFieldProcessorTest {
         metricFieldProcessorTest.init2();
         metricFieldProcessorTest.init3();
         metricFieldProcessorTest.init4();
+        assertNotNull(metricFieldProcessorTest);
     }
 
     /**

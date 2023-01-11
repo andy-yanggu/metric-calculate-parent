@@ -12,6 +12,37 @@ import static org.junit.Assert.*;
 public class TimeFieldProcessorTest {
 
     /**
+     * 测试是否校验时间字段
+     */
+    @Test
+    public void init1() {
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
+        assertThrows("时间字段的值为空", RuntimeException.class, timeFieldProcessor::init);
+    }
+
+    /**
+     * 测试是否校验时间格式
+     */
+    @Test
+    public void init2() {
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
+        timeFieldProcessor.setTimeColumnName("TimeColumnName");
+        assertThrows("时间格式为空", RuntimeException.class, timeFieldProcessor::init);
+    }
+
+    /**
+     * 测试正常流程
+     */
+    @Test
+    public void init3() {
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timeFormat", "TimeColumnName");
+        timeFieldProcessor.init();
+
+        assertEquals("timeFormat", timeFieldProcessor.getTimeFormat());
+        assertEquals("TimeColumnName", timeFieldProcessor.getTimeColumnName());
+    }
+
+    /**
      * 时间格式是时间戳
      */
     @Test
