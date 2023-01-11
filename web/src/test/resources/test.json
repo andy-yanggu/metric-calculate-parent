@@ -4,6 +4,7 @@
   "derive": [
     {
       "name": "out_amount_178_sum",
+      "calculateLogic": "SUM",
       "dimension": [
         {
           "columnName": "account_no_out",

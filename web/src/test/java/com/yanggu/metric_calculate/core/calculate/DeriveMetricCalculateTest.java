@@ -21,7 +21,7 @@ public class DeriveMetricCalculateTest {
         MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), MetricCalculate.class);
         Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
         metricCalculate.setFieldMap(fieldMap);
-        Derive derive = JSONUtil.toBean(FileUtil.readUtf8String("derive.json"), Derive.class);
+        Derive derive = metricCalculate.getDerive().get(0);
         deriveMetricCalculate = MetricUtil.initDerive(derive, metricCalculate);
     }
 

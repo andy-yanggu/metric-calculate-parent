@@ -185,6 +185,12 @@ public class UnitFactoryTest {
         assertEquals(count2, result);
     }
 
+    /**
+     * 使用maven命令生产udaf-test-1.0.0-SNAPSHOT.jar包
+     *
+     * @return jar路径
+     * @throws Exception
+     */
     private String testJarPath() throws Exception {
         String canonicalPath = new File("").getCanonicalPath();
         String separator = File.separator;

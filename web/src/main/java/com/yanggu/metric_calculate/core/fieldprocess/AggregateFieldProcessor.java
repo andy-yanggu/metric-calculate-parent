@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
@@ -41,6 +42,14 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
     public void init() throws Exception {
         //初始化度量字段表达式
         super.init();
+
+        if (StrUtil.isBlank(aggregateType)) {
+            throw new RuntimeException("聚合类型为空");
+        }
+
+        if (unitFactory == null) {
+            throw new RuntimeException("UnitFactory为空");
+        }
     }
 
     @Override
