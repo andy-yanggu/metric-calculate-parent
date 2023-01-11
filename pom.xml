@@ -8,9 +8,10 @@
     <name>metric-calculate</name>
     <version>1.0.0-SNAPSHOT</version>
     <modules>
-        <module>web</module>
+        <module>metric-calculate-web</module>
         <module>udaf-interface</module>
         <module>udaf-test</module>
+        <module>metric-calculate-core</module>
     </modules>
     <packaging>pom</packaging>
 
