@@ -73,7 +73,8 @@ public class AggregateFieldProcessorTest {
 
         aggregateFieldProcessor.setFieldMap(fieldMap);
 
-        assertThrows("聚合类型为空", RuntimeException.class, aggregateFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateFieldProcessor::init);
+        assertEquals("聚合类型为空", runtimeException.getMessage());
     }
 
     /**
@@ -92,7 +93,8 @@ public class AggregateFieldProcessorTest {
         aggregateFieldProcessor.setFieldMap(fieldMap);
         aggregateFieldProcessor.setAggregateType("COUNT");
 
-        assertThrows("UnitFactory为空", RuntimeException.class, aggregateFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateFieldProcessor::init);
+        assertEquals("UnitFactory为空", runtimeException.getMessage());
     }
 
     /**

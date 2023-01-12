@@ -1,15 +1,13 @@
 package com.yanggu.metric_calculate.controller;
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
-import com.yanggu.metric_calculate.core.pojo.*;
 import com.yanggu.metric_calculate.core.calculate.*;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
-import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
+import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import io.swagger.annotations.Api;
@@ -20,14 +18,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
-import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.constant.Constant.*;
-import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
 
 @Slf4j
 @Api(tags = "规则引擎接口")
@@ -203,65 +202,10 @@ public class RuleCanvasEngine {
                 log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
                 throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
             }
-
-            MetricCalculate metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
-
-            Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
-            metricCalculate.setMetricTypeMap(metricTypeMap);
-
-            //宽表字段
-            Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
-            metricCalculate.setFieldMap(fieldMap);
-
-            //原子指标
-            List<Atom> atomList = tableData.getAtom();
-            if (CollUtil.isNotEmpty(atomList)) {
-                List<AtomMetricCalculate> collect = atomList.stream()
-                        .map(tempAtom -> {
-                            metricTypeMap.put(tempAtom.getName(), ATOM);
-                            //初始化原子指标计算类
-                            return MetricUtil.initAtom(tempAtom, metricCalculate);
-                        })
-                        .collect(Collectors.toList());
-                metricCalculate.setAtomMetricCalculateList(collect);
+            MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tableData);
+            if (metricCalculate == null) {
+                throw new RuntimeException("指标计算类初始化失败");
             }
-
-            //派生指标
-            List<Derive> deriveList = tableData.getDerive();
-            if (CollUtil.isNotEmpty(deriveList)) {
-                List<DeriveMetricCalculate> collect = deriveList.stream()
-                        .map(tempDerive -> {
-                            metricTypeMap.put(tempDerive.getName(), DERIVE);
-                            //初始化派生指标计算类
-                            DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
-                            return deriveMetricCalculate;
-                        })
-                        .collect(Collectors.toList());
-
-                metricCalculate.setDeriveMetricCalculateList(collect);
-            }
-
-            //复合指标
-            List<Composite> compositeList = tableData.getComposite();
-            if (CollUtil.isNotEmpty(compositeList)) {
-                List<CompositeMetricCalculate> collect = new ArrayList<>();
-                compositeList.forEach(compositeMetric -> {
-                    metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
-
-                    //初始化复合指标计算类
-                    List<CompositeMetricCalculate> compositeMetricCalculateList =
-                            MetricUtil.initComposite(compositeMetric, metricCalculate);
-                    collect.addAll(compositeMetricCalculateList);
-                });
-                metricCalculate.setCompositeMetricCalculateList(collect);
-            }
-
-            //全局指标
-            List<Global> globalList = tableData.getGlobal();
-            if (CollUtil.isNotEmpty(globalList)) {
-                globalList.forEach(temp -> metricTypeMap.put(temp.getName(), GLOBAL));
-            }
-
             metricMap.put(tableId, metricCalculate);
             return metricCalculate;
         } finally {

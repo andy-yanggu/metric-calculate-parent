@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.util;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
@@ -13,6 +14,7 @@ import com.googlecode.aviator.Options;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.*;
+import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.*;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
@@ -21,16 +23,85 @@ import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
+import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.GLOBAL;
+
 @Slf4j
 public class MetricUtil {
 
     private MetricUtil() {
+    }
+
+    public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
+        if (tableData == null) {
+            throw new RuntimeException("明细宽表为空");
+        }
+
+        MetricCalculate metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
+
+        Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
+        metricCalculate.setMetricTypeMap(metricTypeMap);
+
+        //宽表字段
+        Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
+        metricCalculate.setFieldMap(fieldMap);
+
+        //原子指标
+        List<Atom> atomList = tableData.getAtom();
+        if (CollUtil.isNotEmpty(atomList)) {
+            List<AtomMetricCalculate> collect = atomList.stream()
+                    .map(tempAtom -> {
+                        metricTypeMap.put(tempAtom.getName(), ATOM);
+                        //初始化原子指标计算类
+                        return MetricUtil.initAtom(tempAtom, metricCalculate);
+                    })
+                    .collect(Collectors.toList());
+            metricCalculate.setAtomMetricCalculateList(collect);
+        }
+
+        //派生指标
+        List<Derive> deriveList = tableData.getDerive();
+        if (CollUtil.isNotEmpty(deriveList)) {
+            List<DeriveMetricCalculate> collect = deriveList.stream()
+                    .map(tempDerive -> {
+                        metricTypeMap.put(tempDerive.getName(), DERIVE);
+                        //初始化派生指标计算类
+                        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
+                        return deriveMetricCalculate;
+                    })
+                    .collect(Collectors.toList());
+
+            metricCalculate.setDeriveMetricCalculateList(collect);
+        }
+
+        //复合指标
+        List<Composite> compositeList = tableData.getComposite();
+        if (CollUtil.isNotEmpty(compositeList)) {
+            List<CompositeMetricCalculate> collect = new ArrayList<>();
+            compositeList.forEach(compositeMetric -> {
+                metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
+
+                //初始化复合指标计算类
+                List<CompositeMetricCalculate> compositeMetricCalculateList =
+                        MetricUtil.initComposite(compositeMetric, metricCalculate);
+                collect.addAll(compositeMetricCalculateList);
+            });
+            metricCalculate.setCompositeMetricCalculateList(collect);
+        }
+
+        //全局指标
+        List<Global> globalList = tableData.getGlobal();
+        if (CollUtil.isNotEmpty(globalList)) {
+            globalList.forEach(temp -> metricTypeMap.put(temp.getName(), GLOBAL));
+        }
+        return metricCalculate;
     }
 
     /**
@@ -39,6 +110,7 @@ public class MetricUtil {
      * @param atom
      * @return
      */
+    @SneakyThrows
     public static AtomMetricCalculate initAtom(Atom atom, MetricCalculate metricCalculate) {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         AtomMetricCalculate atomMetricCalculate = new AtomMetricCalculate<>();
@@ -48,29 +120,21 @@ public class MetricUtil {
 
         //设置前置过滤条件处理器
         FilterProcessor filterProcessor = new FilterProcessor(fieldMap, atom.getFilter());
-        try {
-            filterProcessor.init();
-        } catch (Exception e) {
-            log.error("前置过滤条件处理器初始化失败, 指标的名称: " + atom.getDisplayName());
-            throw new RuntimeException(e);
-        }
+        filterProcessor.init();
+
         atomMetricCalculate.setFilterProcessor(filterProcessor);
 
         //度量字段处理器
         MetricFieldProcessor<?> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setMetricExpress(atom.getMetricColumn().getColumnName());
         metricFieldProcessor.setFieldMap(fieldMap);
-        try {
-            metricFieldProcessor.init();
-        } catch (Exception e) {
-            log.error("度量字段处理器初始化失败, 指标名称: " + atom.getDisplayName());
-            throw new RuntimeException(e);
-        }
+        metricFieldProcessor.init();
         atomMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
 
         //时间字段处理器
         TimeColumn timeColumn = atom.getTimeColumn();
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(),
+                timeColumn.getColumnName());
         timeFieldProcessor.init();
         atomMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
@@ -112,12 +176,7 @@ public class MetricUtil {
         //设置前置过滤条件处理器
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         FilterProcessor filterProcessor = new FilterProcessor(fieldMap, tempDerive.getFilter());
-        try {
-            filterProcessor.init();
-        } catch (Exception e) {
-            log.error("前置过滤条件处理器初始化失败, 指标的名称: " + tempDerive.getDisplayName());
-            throw new RuntimeException(e);
-        }
+        filterProcessor.init();
         deriveMetricCalculate.setFilterProcessor(filterProcessor);
 
         //聚合字段处理器
@@ -140,13 +199,7 @@ public class MetricUtil {
         unitFactory.init();
 
         aggregateFieldProcessor.setUnitFactory(unitFactory);
-
-        try {
-            aggregateFieldProcessor.init();
-        } catch (Exception e) {
-            log.error("聚合字段处理器初始化失败, 指标名称: " + tempDerive.getDisplayName());
-            throw new RuntimeException(e);
-        }
+        aggregateFieldProcessor.init();
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
@@ -290,11 +343,7 @@ public class MetricUtil {
             if (value == null) {
                 return;
             }
-            //如果是数值型的, 进行转换
-            //如果是Boolean类型的, 需要进行转换
-            if (tempDataClass.getSuperclass().equals(Number.class) || tempDataClass.equals(Boolean.class)) {
-                value = Convert.convert(tempDataClass, value);
-            }
+            value = Convert.convert(tempDataClass, value);
             params.put(key, value);
         });
         return params;
