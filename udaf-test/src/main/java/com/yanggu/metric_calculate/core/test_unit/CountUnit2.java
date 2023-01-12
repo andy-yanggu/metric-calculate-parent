@@ -6,6 +6,9 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 
+/**
+ * 数值型不使用自定义参数
+ */
 @MergeType("COUNT2")
 @Numerical
 public class CountUnit2 extends NumberUnit<CubeLong, CountUnit2> {

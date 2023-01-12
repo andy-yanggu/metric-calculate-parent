@@ -18,6 +18,7 @@ import com.yanggu.metric_calculate.core.unit.obj.MaxObjectUnit;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.Key;
 import com.yanggu.metric_calculate.core.value.KeyValue;
+import com.yanggu.metric_calculate.core.value.Value;
 import org.apache.maven.shared.invoker.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.junit.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static com.yanggu.metric_calculate.core.unit.UnitFactory.SCAN_PACKAGE;
 import static org.junit.Assert.*;
@@ -109,6 +111,52 @@ public class UnitFactoryTest {
     }
 
     /**
+     * 测试数值型
+     *
+     * @throws Exception
+     */
+    @Test
+    public void createNumericUnit() throws Exception {
+        MergedUnit unit = unitFactory.initInstanceByValue("SUM", 100L, null);
+        assertTrue(unit instanceof SumUnit);
+        assertEquals(100L, ((SumUnit) unit).value());
+
+        MergedUnit unit2 = (MergedUnit) unit.fastClone();
+        unit.merge(unit2);
+
+        assertEquals(200L, ((SumUnit<?>) unit).value());
+    }
+
+    /**
+     * 测试数值型, 使用自定义参数
+     *
+     * @throws Exception
+     */
+    @Test
+    public void createNumericUnit2() throws Exception {
+        //初始化UnitFactory
+        String pathname = testJarPath();
+        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
+        unitFactory.init();
+
+        Map<String, Object> params = new HashMap<>();
+        //限定最大值200, 不能等于
+        params.put("maxValue", 200.0D);
+
+        MergedUnit unit = unitFactory.initInstanceByValue("SUM2", 100.0D, params);
+        assertEquals(100.0D, ((Value) unit).value());
+
+        MergedUnit unit2 = unitFactory.initInstanceByValue("SUM2", 100.0D, params);
+        unit.merge(unit2);
+        assertEquals(200.0D, ((Value) unit).value());
+
+        //因为限制最大值200, 累加值最大只能是200
+        unit.merge(unit2);
+        assertEquals(200.0D, ((Value) unit).value());
+        assertEquals(2L, ((NumberUnit) unit).getCount().longValue());
+    }
+
+    /**
      * 测试对象型
      *
      * @throws Exception
@@ -119,18 +167,6 @@ public class UnitFactoryTest {
         MergedUnit unit = unitFactory.initInstanceByValue("MAXOBJECT", keyValue, null);
         assertTrue(unit instanceof MaxObjectUnit);
         assertEquals(keyValue.value(), ((MaxObjectUnit) unit).value());
-    }
-
-    /**
-     * 测试数值型
-     *
-     * @throws Exception
-     */
-    @Test
-    public void createNumericUnit() throws Exception {
-        MergedUnit unit = unitFactory.initInstanceByValue("SUM", 100L, null);
-        assertTrue(unit instanceof SumUnit);
-        assertEquals(100L, ((SumUnit) unit).value());
     }
 
     /**
@@ -145,6 +181,40 @@ public class UnitFactoryTest {
         assertTrue(unit instanceof UniqueCountUnit);
         assertEquals(new HashSet(Collections.singleton(keyValue)), ((UniqueCountUnit) unit).asCollection());
         assertEquals(1, ((UniqueCountUnit) unit).value());
+    }
+
+    /**
+     * 测试集合型, 使用自定义参数
+     * SORTEDLISTOBJECT2, 有序对象, 且可以设置升序和降序和大小
+     *
+     * @throws Exception
+     */
+    @Test
+    public void createCollectionUnit2() throws Exception {
+        //初始化UnitFactory
+        String pathname = testJarPath();
+        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
+        unitFactory.init();
+
+        Map<String, Object> params = new HashMap<>();
+        //降序, 最多2个
+        params.put("desc", true);
+        params.put("limit", 2);
+
+        KeyValue value1 = new KeyValue(1, 1);
+        KeyValue value2 = new KeyValue(2, 2);
+        KeyValue value3 = new KeyValue(0, 0);
+
+        Value unit = (Value) unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value1, params);
+        assertEquals(Collections.singletonList(value1), unit.value());
+
+        //按照key降序排序 value2, value1
+        unit = (Value) ((MergedUnit) unit).merge(unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value2, params));
+        assertEquals(Arrays.asList(value2, value1), unit.value());
+
+        //最多只能有2个
+        unit = (Value) ((MergedUnit) unit).merge(unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value3, params));
+        assertEquals(Arrays.asList(value2, value1), unit.value());
     }
 
     /**
@@ -192,19 +262,39 @@ public class UnitFactoryTest {
      * @throws Exception
      */
     private String testJarPath() throws Exception {
-        String canonicalPath = new File("").getCanonicalPath();
+
+        //找到udaf-test-*.jar路径
+        String testModuleName = "udaf-test";
         String separator = File.separator;
+
+        String canonicalPath = new File("").getCanonicalPath();
         canonicalPath = canonicalPath.substring(0, canonicalPath.lastIndexOf(separator));
-        String pathname = canonicalPath + separator + "udaf-test" + separator + "target" + separator + "udaf-test-1.0.0-SNAPSHOT.jar";
-        if (new File(pathname).exists()) {
-            return pathname;
+        String directoryPath = canonicalPath + separator + testModuleName + separator + "target";
+        File directory = new File(directoryPath);
+
+        String pathname = directoryPath + separator + "udaf-test-1.0.0-SNAPSHOT.jar";
+        for (File file : Objects.requireNonNull(directory.listFiles())) {
+            String name = file.getName();
+            if (file.isFile() && name.startsWith(testModuleName) && name.endsWith(".jar")) {
+                pathname = file.getAbsolutePath();
+                break;
+            }
+        }
+        File file = new File(pathname);
+        if (file.exists()) {
+            long lastModified = file.lastModified();
+            //如果新生成的jar包在3min内, 就直接返回
+            if (Math.abs(System.currentTimeMillis() - lastModified) <= TimeUnit.MINUTES.toMillis(3L)) {
+                return pathname;
+            }
         }
 
+        //使用maven命令进行打包
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(canonicalPath + separator + "pom.xml"));
         //System.out.println(canonicalPath + separator + "pom.xml");
         request.setGoals(Arrays.asList("clean", "package"));
-        request.setProjects(Collections.singletonList("udaf-test"));
+        request.setProjects(Collections.singletonList(testModuleName));
         request.setAlsoMake(true);
         request.setThreads("2.0C");
         request.setMavenOpts("-Dmaven.test.skip=true");

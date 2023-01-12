@@ -20,7 +20,8 @@ public class ListUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<Li
 
     public int limit = 0;
 
-    public ListUnit() {}
+    public ListUnit() {
+    }
 
     public ListUnit(T value) {
         this();
@@ -46,6 +47,7 @@ public class ListUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<Li
 
     /**
      * add.
+     *
      * @return
      */
     @Override
@@ -62,30 +64,17 @@ public class ListUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<Li
     }
 
     @Deprecated
-    public ListUnit<T> merge(com.yanggu.metric_calculate.core.unit.obj.ListUnit<T> that) {
-        return merge(that, false);
-    }
-
-    @Deprecated
-    private ListUnit<T> merge(com.yanggu.metric_calculate.core.unit.obj.ListUnit<T> that, boolean useLimit) {
-        if (that == null) {
-            return this;
-        }
-        List<T> values = that.getList();
-        int limit = that.limit;
-        return internalMerge(values, useLimit, limit);
-    }
-
     @Override
     public ListUnit<T> merge(ListUnit<T> that) {
         return merge(that, false);
     }
 
+    @Deprecated
     private ListUnit<T> merge(ListUnit<T> that, boolean useLimit) {
         if (that == null) {
             return this;
         }
-        List<T> values = that.values;
+        List<T> values = that.getList();
         int limit = that.limit;
         return internalMerge(values, useLimit, limit);
     }
@@ -137,7 +126,7 @@ public class ListUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<Li
         if (that == null || getClass() != that.getClass()) {
             return false;
         }
-        ListUnit<T> thatUnit = (ListUnit)that;
+        ListUnit<T> thatUnit = (ListUnit) that;
         if (this.values == null) {
             if (thatUnit.values != null) {
                 return false;

@@ -22,6 +22,9 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
 
     private List<T> original = new ArrayList<>();
 
+    public SortedListUnit() {
+    }
+
     public SortedListUnit(T value) {
         this(value, 0, true);
     }
@@ -37,9 +40,6 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
         this.limit = limit;
         this.desc = desc;
         add(value);
-    }
-
-    public SortedListUnit() {
     }
 
     public SortedListUnit(T value, boolean desc) {
@@ -103,11 +103,6 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
 
     @Override
     public SortedListUnit<T> merge(SortedListUnit<T> that) {
-        return that == null ? this : internalMerge(that.desc(), that.limit(), that.original());
-    }
-
-    @Deprecated
-    public SortedListUnit<T> merge(com.yanggu.metric_calculate.core.unit.obj.SortedListUnit<T> that) {
         return that == null ? this : internalMerge(that.desc(), that.limit(), that.original());
     }
 

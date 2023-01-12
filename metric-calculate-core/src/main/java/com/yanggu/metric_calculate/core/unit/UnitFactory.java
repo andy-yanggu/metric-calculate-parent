@@ -203,6 +203,8 @@ public class UnitFactory {
             return BOOLEAN;
         } else if (value instanceof BigDecimal) {
             return DECIMAL;
+        } else if (value instanceof Double) {
+            return DECIMAL;
         } else {
             throw new IllegalArgumentException(String.format("Not support type: %s", value.getClass().getName()));
         }

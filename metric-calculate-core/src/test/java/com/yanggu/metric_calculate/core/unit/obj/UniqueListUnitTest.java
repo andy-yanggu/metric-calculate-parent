@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
+import com.yanggu.metric_calculate.core.unit.collection.UniqueListUnit;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import org.junit.Test;
 

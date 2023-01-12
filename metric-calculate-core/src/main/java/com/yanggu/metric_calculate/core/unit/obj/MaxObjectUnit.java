@@ -105,4 +105,5 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
         }
         return true;
     }
+
 }

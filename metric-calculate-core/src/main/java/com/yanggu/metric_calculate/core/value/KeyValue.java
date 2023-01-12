@@ -12,7 +12,6 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
     private V value;
 
     public KeyValue() {
-
     }
 
     public KeyValue(K key, V value) {

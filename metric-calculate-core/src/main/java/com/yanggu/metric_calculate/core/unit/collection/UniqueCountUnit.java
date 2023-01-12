@@ -59,21 +59,9 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
         return this;
     }
 
-    @Deprecated
-    public UniqueCountUnit<T> merge(com.yanggu.metric_calculate.core.unit.obj.UniqueCountUnit<T> that) {
-        original.merge(that.original());
-        return this;
-    }
-
     @Override
     public UniqueCountUnit<T> unlimitedMerge(UniqueCountUnit<T> that) {
         original.unlimitedMerge(that.original);
-        return this;
-    }
-
-    @Deprecated
-    public UniqueCountUnit<T> unlimitedMerge(com.yanggu.metric_calculate.core.unit.obj.UniqueCountUnit<T> that) {
-        original.unlimitedMerge(that.original());
         return this;
     }
 

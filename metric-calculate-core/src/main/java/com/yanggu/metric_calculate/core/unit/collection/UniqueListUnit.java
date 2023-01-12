@@ -65,35 +65,14 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
         return limit;
     }
 
-    @Deprecated
-    public UniqueListUnit<T> merge(com.yanggu.metric_calculate.core.unit.obj.UniqueListUnit<T> that) {
-        return internalMergeOp(that, false);
-    }
-
     @Override
     public UniqueListUnit<T> merge(UniqueListUnit<T> that) {
         return internalMergeOp(that, false);
     }
 
-    @Deprecated
-    public UniqueListUnit<T> unlimitedMerge(com.yanggu.metric_calculate.core.unit.obj.UniqueListUnit<T> that) {
-        return internalMergeOp(that, true);
-    }
-
     @Override
     public UniqueListUnit<T> unlimitedMerge(UniqueListUnit<T> that) {
         return internalMergeOp(that, true);
-    }
-
-    @Deprecated
-    private UniqueListUnit<T> internalMergeOp(
-        com.yanggu.metric_calculate.core.unit.obj.UniqueListUnit<T> that,
-        boolean hasLimit
-    ) {
-        if (that == null) {
-            return this;
-        }
-        return originalMerge(that.original(), that.limit(), hasLimit);
     }
 
     private UniqueListUnit<T> internalMergeOp(UniqueListUnit<T> that, boolean hasLimit) {
