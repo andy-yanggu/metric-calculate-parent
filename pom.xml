@@ -22,13 +22,14 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <aviator.version>5.3.3</aviator.version>
-        <hutool.version>5.8.10</hutool.version>
+        <hutool.version>5.8.11</hutool.version>
         <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
         <kryo.version>4.0.0</kryo.version>
         <spring-boot.version>2.7.6</spring-boot.version>
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
-        <mockito.version>4.8.0</mockito.version>
+        <mockito.version>4.11.0</mockito.version>
+        <maven-invoker.version>3.1.0</maven-invoker.version>
     </properties>
 
     <dependencyManagement>
