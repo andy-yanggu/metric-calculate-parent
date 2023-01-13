@@ -137,7 +137,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
     public List<DeriveMetricCalculateResult> query(TimedKVMetricCube newMetricCube) {
         String realKey = newMetricCube.getRealKey();
-        TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(realKey);
+        TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(newMetricCube);
         if (metricCube == null) {
             metricCube = newMetricCube;
         } else {
@@ -146,7 +146,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         //删除过期数据
         metricCube.eliminateExpiredData();
         //更新中间状态数据
-        deriveMetricMiddleStore.put(realKey, metricCube);
+        deriveMetricMiddleStore.put(metricCube);
 
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(metricCube.getReferenceTime());

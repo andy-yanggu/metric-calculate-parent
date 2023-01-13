@@ -16,13 +16,13 @@ public class DeriveMetricMiddleHashMapStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public MetricCube get(String realKey) {
-        return localMap.get(realKey);
+    public MetricCube get(MetricCube cube) {
+        return localMap.get(cube.getRealKey());
     }
 
     @Override
-    public void put(String realKey, MetricCube cube) {
-        localMap.put(realKey, cube);
+    public void put(MetricCube cube) {
+        localMap.put(cube.getRealKey(), cube);
     }
 
 }

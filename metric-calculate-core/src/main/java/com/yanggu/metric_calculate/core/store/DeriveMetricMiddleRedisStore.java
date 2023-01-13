@@ -33,8 +33,8 @@ public class DeriveMetricMiddleRedisStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public MetricCube get(String realKey) {
-        byte[] result = redisTemplate.opsForValue().get(realKey);
+    public MetricCube get(MetricCube cube) {
+        byte[] result = redisTemplate.opsForValue().get(cube.getRealKey());
         if (result == null) {
             return null;
         }
@@ -47,11 +47,11 @@ public class DeriveMetricMiddleRedisStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public void put(String realKey, MetricCube cube) {
+    public void put(MetricCube cube) {
         Kryo kryo = kryoPool.borrow();
         try {
             byte[] bytes = serialize(kryo, cube);
-            redisTemplate.opsForValue().set(realKey, bytes);
+            redisTemplate.opsForValue().set(cube.getRealKey(), bytes);
         } catch (IOException e) {
             throw new RuntimeException(e);
         } finally {

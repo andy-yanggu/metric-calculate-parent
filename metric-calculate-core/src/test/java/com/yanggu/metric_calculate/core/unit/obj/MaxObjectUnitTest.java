@@ -1,26 +1,41 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
-import com.yanggu.metric_calculate.core.value.KeyValue;
+import com.yanggu.metric_calculate.core.value.Key;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * MaxObjectUnit单元测试类
+ */
 public class MaxObjectUnitTest {
 
+    /**
+     * 验证空参构造、有参构造和merge方法
+     */
     @Test
     public void test01() {
-        KeyValue value1 = new KeyValue(1, 1);
-        KeyValue value2 = new KeyValue(2, 2);
-        KeyValue value3 = new KeyValue(2, 2);
-        KeyValue value4 = new KeyValue(3, 3);
-        MaxObjectUnit unit = new MaxObjectUnit<>(value1).value(value1);
-        assertEquals(value1.value(), unit.value());
-        unit.merge(new MaxObjectUnit().value(value2));
-        assertEquals(value2.value(), unit.value());
-        unit.merge(new MaxObjectUnit().value(value3));
-        assertEquals(value2.value(), unit.value());
-        unit.merge(new MaxObjectUnit().value(value4));
-        assertEquals(value4.value(), unit.value());
+        //验证空参构造
+        MaxObjectUnit<Key<Integer>> maxObjectUnit = new MaxObjectUnit<>();
+        Key<Integer> key = new Key<>(1);
+        maxObjectUnit.value(key);
+        assertEquals(key, maxObjectUnit.value());
+
+        //验证有参构造
+        maxObjectUnit = new MaxObjectUnit<>(key);
+        assertEquals(key, maxObjectUnit.value());
+
+        //验证merge方法
+        key = new Key<>(2);
+        maxObjectUnit.merge(new MaxObjectUnit<>(key));
+        assertEquals(key, maxObjectUnit.value());
+
+        key = new Key<>(3);
+        maxObjectUnit.merge(new MaxObjectUnit<>(key));
+        assertEquals(key, maxObjectUnit.value());
+
+        maxObjectUnit.merge(new MaxObjectUnit<>(new Key<>(2)));
+        assertEquals(key, maxObjectUnit.value());
     }
 
 }

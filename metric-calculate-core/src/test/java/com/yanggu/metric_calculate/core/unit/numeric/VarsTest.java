@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 import static org.junit.Assert.assertTrue;
 
-public class TestVars {
+public class VarsTest {
 
     @Test
     public void testVarsDecimal() {

@@ -1,26 +1,39 @@
 package com.yanggu.metric_calculate.core.unit.collect;
 
 import com.yanggu.metric_calculate.core.unit.collection.SortedListUnit;
+import com.yanggu.metric_calculate.core.value.Key;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * SortedList单元测试类
+ */
 public class SortedListUnitTest {
 
+    /**
+     * 验证空参构造、有参构造和merge方法
+     */
     @Test
     public void test01() {
-        KeyValue value1 = new KeyValue(1, 1);
-        KeyValue value2 = new KeyValue(2, 2);
-        KeyValue value3 = new KeyValue(0, 0);
-        SortedListUnit unit = new SortedListUnit<>();
-        unit.add(value1);
-        unit.add(value2);
-        unit.add(value3);
-        assertEquals(Arrays.asList(value2, value1, value3), unit.asList());
-        assertEquals(Arrays.asList(value2, value1, value3), unit.value());
+        //验证空参构造
+        SortedListUnit<Key<Integer>> sortedListUnit = new SortedListUnit<>();
+        Key<Integer> key = new Key<>(1);
+        sortedListUnit.add(key);
+        assertEquals(Collections.singletonList(key), sortedListUnit.value());
+
+        //验证有参构造
+        sortedListUnit = new SortedListUnit<>(key);
+        assertEquals(Collections.singletonList(key), sortedListUnit.value());
+
+        //验证merge方法
+        Key<Integer> key2 = new Key<>(2);
+        sortedListUnit.merge(new SortedListUnit<>(key2));
+        assertEquals(Arrays.asList(key2, key), sortedListUnit.value());
     }
 
 }

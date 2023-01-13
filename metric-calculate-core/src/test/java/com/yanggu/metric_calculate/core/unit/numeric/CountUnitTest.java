@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class TestCountUnit {
+public class CountUnitTest {
 
     @Test
     public void testAvgLong() {

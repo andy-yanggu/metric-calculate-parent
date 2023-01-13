@@ -1,29 +1,45 @@
 package com.yanggu.metric_calculate.core.unit.collect;
 
 import com.yanggu.metric_calculate.core.unit.collection.UniqueListUnit;
-import com.yanggu.metric_calculate.core.value.KeyValue;
+import com.yanggu.metric_calculate.core.value.Key;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * UniqueListUnit单元测试类
+ */
 public class UniqueListUnitTest {
 
+    /**
+     * 验证空参构造、有参构造和merge方法
+     */
     @Test
     public void test01() {
-        KeyValue value1 = new KeyValue(1, 1);
-        KeyValue value2 = new KeyValue(2, 2);
-        KeyValue value3 = new KeyValue(0, 0);
-        KeyValue value4 = new KeyValue(0, 0);
-        UniqueListUnit unit = new UniqueListUnit<>();
-        unit.add(value1);
-        unit.add(value2);
-        unit.add(value3);
-        unit.add(value4);
-        assertEquals(new HashSet<>(Arrays.asList(value1, value2, value3)), unit.asCollection());
-        assertEquals(new HashSet<>(Arrays.asList(value1, value2, value3)), unit.value());
+        //去重列表
+
+        //验证空参构造
+        UniqueListUnit<Key<String>> uniqueListUnit = new UniqueListUnit<>();
+        Key<String> key = new Key<>("test1");
+        uniqueListUnit.add(key);
+        assertEquals(new HashSet<>(Collections.singletonList(key)), uniqueListUnit.value());
+
+        //验证有参构造
+        uniqueListUnit = new UniqueListUnit<>(key);
+        assertEquals(new HashSet<>(Collections.singletonList(key)), uniqueListUnit.value());
+
+        //验证merge方法
+        uniqueListUnit.merge(new UniqueListUnit<>(key));
+        assertEquals(new HashSet<>(Collections.singletonList(key)), uniqueListUnit.value());
+
+        Key<String> key2 = new Key<>("test2");
+        uniqueListUnit.merge(new UniqueListUnit<>(key2));
+        assertEquals(new HashSet<>(Arrays.asList(key, key2)), uniqueListUnit.value());
+
     }
 
 }

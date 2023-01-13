@@ -11,9 +11,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+
 @Collective
 public class ListUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<ListUnit<T>>,
         CollectionUnit<T, ListUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
+
     private static final long serialVersionUID = -1300607404480893613L;
 
     private List<T> values = new ArrayList<>();
@@ -63,7 +65,6 @@ public class ListUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<Li
         return this.values;
     }
 
-    @Deprecated
     @Override
     public ListUnit<T> merge(ListUnit<T> that) {
         return merge(that, false);

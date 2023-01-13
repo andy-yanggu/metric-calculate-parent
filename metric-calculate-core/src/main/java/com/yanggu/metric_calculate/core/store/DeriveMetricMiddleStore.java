@@ -20,7 +20,7 @@ public interface DeriveMetricMiddleStore {
      * @param realKey
      * @return
      */
-    MetricCube get(String realKey);
+    MetricCube get(MetricCube cube);
 
     /**
      * 通过key进行更新
@@ -28,6 +28,6 @@ public interface DeriveMetricMiddleStore {
      * @param realKey
      * @param cube
      */
-    void put(String realKey, MetricCube cube);
+    void put(MetricCube cube);
 
 }
