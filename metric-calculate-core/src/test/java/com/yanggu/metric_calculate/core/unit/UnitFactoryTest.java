@@ -76,7 +76,7 @@ public class UnitFactoryTest {
     @Test
     public void testInit2() {
         UnitFactory unitFactory = new UnitFactory();
-        Map<String, Class<? extends MergedUnit>> unitMap = unitFactory.getUnitMap();
+        Map<String, Class<? extends MergedUnit<?>>> unitMap = unitFactory.getUnitMap();
         Class<CountUnit> countUnitClass = CountUnit.class;
         unitMap.put(countUnitClass.getAnnotation(MergeType.class).value(), countUnitClass);
 
@@ -95,7 +95,7 @@ public class UnitFactoryTest {
         UnitFactory unitFactory = new UnitFactory(Collections.singletonList(testJarPath));
         unitFactory.init();
 
-        Map<String, Class<? extends MergedUnit>> unitMap = unitFactory.getUnitMap();
+        Map<String, Class<? extends MergedUnit<?>>> unitMap = unitFactory.getUnitMap();
         //扫描有MergeType注解
         Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
         //扫描系统自带的聚合函数

@@ -11,32 +11,34 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 /**
- * 聚合字段处理器继承自度量字段处理器, 增加了聚合类型
+ * 聚合数值类型处理器继承自度量字段处理器, 增加了聚合类型
  */
 @Data
 @Slf4j
 @NoArgsConstructor
-public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<Object> {
+public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<Object> {
 
     /**
      * 聚合类型
      */
-    private String aggregateType;
+    protected String aggregateType;
+
+    protected Class<? extends MergedUnit<?>> mergeUnitClazz;
 
     /**
      * 是否是自定义udaf
      */
-    private Boolean isUdaf;
+    protected Boolean isUdaf;
 
     /**
      * 用户自定义聚合函数的参数
      */
-    private Map<String, Object> udafParams;
+    protected Map<String, Object> udafParams;
 
     /**
      * 用于生成MergeUnit
      */
-    private UnitFactory unitFactory;
+    protected UnitFactory unitFactory;
 
     @Override
     public void init() throws Exception {
@@ -54,14 +56,11 @@ public class AggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFiel
 
     @Override
     public M process(JSONObject input) throws Exception {
-        //获取度量值
-        Object execute = super.process(input);
-        if (execute == null) {
-            return null;
-        }
+        throw new RuntimeException("子类需要重写process方法");
+    }
 
-        //生成MergedUnit
-        return (M) unitFactory.initInstanceByValue(aggregateType, execute, udafParams);
+    public Object processSuper(JSONObject input) throws Exception {
+        return super.process(input);
     }
 
 }

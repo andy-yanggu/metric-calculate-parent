@@ -64,8 +64,8 @@ public class CoreKryoFactory extends BaseKryoFactory {
         //对象型和集合型
         kryo.register(MaxUnit.class);
         kryo.register(MinUnit.class);
-        kryo.register(ReplacedUnit.class);
-        kryo.register(OccupiedUnit.class);
+        kryo.register(ReplacedObjectUnit.class);
+        kryo.register(OccupiedObjectUnit.class);
         kryo.register(ListUnit.class);
         kryo.register(MapUnit.class);
         kryo.register(UniqueListUnit.class);

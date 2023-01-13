@@ -8,18 +8,18 @@ import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
-@Objective
-@MergeType("OCCUPIED")
-public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedUnit<T>>, Value<T>, Serializable {
+@Objective(useCompareField = false, retainObject = true)
+@MergeType("OCCUPIEDOBJECT")
+public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>, Value<T>, Serializable {
 
     private static final long serialVersionUID = -617729814303380664L;
 
     public T value;
 
-    public OccupiedUnit() {
+    public OccupiedObjectUnit() {
     }
 
-    public OccupiedUnit(T value) {
+    public OccupiedObjectUnit(T value) {
         this.value = value;
     }
 
@@ -32,7 +32,7 @@ public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, O
     }
 
     @Override
-    public OccupiedUnit<T> merge(OccupiedUnit<T> that) {
+    public OccupiedObjectUnit<T> merge(OccupiedObjectUnit<T> that) {
         if (that == null) {
             return this;
         }
@@ -53,14 +53,14 @@ public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, O
     }
 
     @Override
-    public OccupiedUnit<T> value(T object) {
+    public OccupiedObjectUnit<T> value(T object) {
         setValue(object);
         return this;
     }
 
     @Override
-    public OccupiedUnit<T> fastClone() {
-        return (OccupiedUnit<T>) new OccupiedUnit(value.fastClone());
+    public OccupiedObjectUnit<T> fastClone() {
+        return (OccupiedObjectUnit<T>) new OccupiedObjectUnit(value.fastClone());
     }
 
     @Override
@@ -74,7 +74,7 @@ public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, O
         if (getClass() != that.getClass()) {
             return false;
         }
-        OccupiedUnit<T> thatUnit = (OccupiedUnit) that;
+        OccupiedObjectUnit<T> thatUnit = (OccupiedObjectUnit) that;
         if (this.value == null) {
             if (thatUnit.value != null) {
                 return false;

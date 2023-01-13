@@ -26,7 +26,7 @@ import static org.mockito.Mockito.when;
  * 聚合字段处理器单元测试类
  */
 @RunWith(MockitoJUnitRunner.class)
-public class AggregateFieldProcessorTest {
+public class AggregateNumberFieldProcessorTest {
 
     @Mock
     private UnitFactory unitFactory;
@@ -65,15 +65,15 @@ public class AggregateFieldProcessorTest {
      */
     @Test
     public void testInit2() throws Exception {
-        AggregateFieldProcessor aggregateFieldProcessor = new AggregateFieldProcessor();
+        AggregateNumberFieldProcessor aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor();
 
-        aggregateFieldProcessor.setMetricExpress("amount");
+        aggregateNumberFieldProcessor.setMetricExpress("amount");
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
 
-        aggregateFieldProcessor.setFieldMap(fieldMap);
+        aggregateNumberFieldProcessor.setFieldMap(fieldMap);
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateNumberFieldProcessor::init);
         assertEquals("聚合类型为空", runtimeException.getMessage());
     }
 
@@ -84,16 +84,16 @@ public class AggregateFieldProcessorTest {
      */
     @Test
     public void testInit3() throws Exception {
-        AggregateFieldProcessor aggregateFieldProcessor = new AggregateFieldProcessor();
+        AggregateNumberFieldProcessor aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor();
 
-        aggregateFieldProcessor.setMetricExpress("amount");
+        aggregateNumberFieldProcessor.setMetricExpress("amount");
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
 
-        aggregateFieldProcessor.setFieldMap(fieldMap);
-        aggregateFieldProcessor.setAggregateType("COUNT");
+        aggregateNumberFieldProcessor.setFieldMap(fieldMap);
+        aggregateNumberFieldProcessor.setAggregateType("COUNT");
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateNumberFieldProcessor::init);
         assertEquals("UnitFactory为空", runtimeException.getMessage());
     }
 
@@ -104,20 +104,20 @@ public class AggregateFieldProcessorTest {
      */
     @Test
     public void testInit4() throws Exception {
-        AggregateFieldProcessor aggregateFieldProcessor = new AggregateFieldProcessor();
+        AggregateNumberFieldProcessor aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor();
 
-        aggregateFieldProcessor.setMetricExpress("amount");
+        aggregateNumberFieldProcessor.setMetricExpress("amount");
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
 
-        aggregateFieldProcessor.setFieldMap(fieldMap);
-        aggregateFieldProcessor.setAggregateType("COUNT");
-        aggregateFieldProcessor.setUnitFactory(unitFactory);
+        aggregateNumberFieldProcessor.setFieldMap(fieldMap);
+        aggregateNumberFieldProcessor.setAggregateType("COUNT");
+        aggregateNumberFieldProcessor.setUnitFactory(unitFactory);
 
-        aggregateFieldProcessor.init();
+        aggregateNumberFieldProcessor.init();
 
-        assertEquals("COUNT", aggregateFieldProcessor.getAggregateType());
-        assertEquals(unitFactory, aggregateFieldProcessor.getUnitFactory());
+        assertEquals("COUNT", aggregateNumberFieldProcessor.getAggregateType());
+        assertEquals(unitFactory, aggregateNumberFieldProcessor.getUnitFactory());
     }
 
     /**
@@ -127,22 +127,22 @@ public class AggregateFieldProcessorTest {
      */
     @Test
     public void testProcess1() throws Exception {
-        AggregateFieldProcessor aggregateFieldProcessor = new AggregateFieldProcessor();
+        AggregateNumberFieldProcessor aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor();
 
-        aggregateFieldProcessor.setMetricExpress("amount");
+        aggregateNumberFieldProcessor.setMetricExpress("amount");
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
 
-        aggregateFieldProcessor.setFieldMap(fieldMap);
-        aggregateFieldProcessor.setAggregateType("COUNT");
-        aggregateFieldProcessor.setUnitFactory(unitFactory);
+        aggregateNumberFieldProcessor.setFieldMap(fieldMap);
+        aggregateNumberFieldProcessor.setAggregateType("COUNT");
+        aggregateNumberFieldProcessor.setUnitFactory(unitFactory);
 
-        aggregateFieldProcessor.init();
+        aggregateNumberFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount2", "100");
 
-        MergedUnit process = aggregateFieldProcessor.process(jsonObject);
+        MergedUnit process = aggregateNumberFieldProcessor.process(jsonObject);
         assertNull(process);
     }
 
@@ -158,14 +158,14 @@ public class AggregateFieldProcessorTest {
         String value = "1.0";
 
         //构造AggregateFieldProcessor
-        AggregateFieldProcessor aggregateFieldProcessor = new AggregateFieldProcessor();
-        aggregateFieldProcessor.setMetricExpress(amount);
+        AggregateNumberFieldProcessor aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor();
+        aggregateNumberFieldProcessor.setMetricExpress(amount);
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put(amount, Double.class);
-        aggregateFieldProcessor.setFieldMap(fieldMap);
-        aggregateFieldProcessor.setAggregateType(aggregateType);
-        aggregateFieldProcessor.setUnitFactory(unitFactory);
-        aggregateFieldProcessor.init();
+        aggregateNumberFieldProcessor.setFieldMap(fieldMap);
+        aggregateNumberFieldProcessor.setAggregateType(aggregateType);
+        aggregateNumberFieldProcessor.setUnitFactory(unitFactory);
+        aggregateNumberFieldProcessor.init();
 
         //mock unitFactory的返回值
         SumUnit sumUnit = new SumUnit<>(CubeDecimal.of(value));
@@ -176,7 +176,7 @@ public class AggregateFieldProcessorTest {
         jsonObject.set(amount, value);
 
         //执行process方法
-        MergedUnit mergedUnit = aggregateFieldProcessor.process(jsonObject);
+        MergedUnit mergedUnit = aggregateNumberFieldProcessor.process(jsonObject);
 
         //验证数据
         assertEquals(sumUnit, mergedUnit);

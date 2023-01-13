@@ -8,17 +8,17 @@ import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
-@Objective
-@MergeType("REPLACED")
-public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value<T>, Serializable {
+@Objective(useCompareField = false)
+@MergeType("REPLACEDOBJECT")
+public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
     private static final long serialVersionUID = 5240954691662766328L;
 
     public T value;
 
-    public ReplacedUnit() {
+    public ReplacedObjectUnit() {
     }
 
-    public ReplacedUnit(T value) {
+    public ReplacedObjectUnit(T value) {
         this.value = value;
     }
 
@@ -36,7 +36,7 @@ public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value
      * @return MergedUnit Object
      */
     @Override
-    public ReplacedUnit<T> merge(ReplacedUnit<T> that) {
+    public ReplacedObjectUnit<T> merge(ReplacedObjectUnit<T> that) {
         if (that == null) {
             return this;
         }
@@ -50,7 +50,7 @@ public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value
     }
 
     @Override
-    public ReplacedUnit<T> value(T object) {
+    public ReplacedObjectUnit<T> value(T object) {
         setValue(object);
         return this;
     }
@@ -65,10 +65,10 @@ public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value
      * @return ReplacedUnit
      */
     @Override
-    public ReplacedUnit fastClone() {
-        ReplacedUnit replacedUnit = new ReplacedUnit(
+    public ReplacedObjectUnit fastClone() {
+        ReplacedObjectUnit replacedObjectUnit = new ReplacedObjectUnit(
             (this.value instanceof Cloneable2) ? ((Cloneable2) this.value).fastClone() : this.value);
-        return replacedUnit;
+        return replacedObjectUnit;
     }
 
     /**
@@ -87,7 +87,7 @@ public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value
         if (getClass() != that.getClass()) {
             return false;
         }
-        ReplacedUnit thatUnit = (ReplacedUnit) that;
+        ReplacedObjectUnit thatUnit = (ReplacedObjectUnit) that;
         if (this.value == null) {
             return thatUnit.value == null;
         } else {

@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
 
 @MergeType("MINOBJECT")
-@Objective
+@Objective(useCompareField = true, retainObject = true)
 public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
     private T value;
 

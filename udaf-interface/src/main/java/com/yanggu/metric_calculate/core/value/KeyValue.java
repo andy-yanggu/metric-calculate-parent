@@ -40,6 +40,10 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
         return result;
     }
 
+    public V getValue() {
+        return value;
+    }
+
     @Override
     public KeyValue<K, V> fastClone() {
         return new KeyValue<>(key.fastClone(), value.fastClone());

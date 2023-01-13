@@ -3,16 +3,25 @@ package com.yanggu.metric_calculate.core.unit.obj;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
-import com.yanggu.metric_calculate.core.value.NoneValue;
-import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.*;
 
-@MergeType("MAXOBJECT")
-@Objective
+import java.util.Map;
+
+@MergeType(value = "MAXOBJECT", useParam = true)
+@Objective(useCompareField = true, retainObject = true)
 public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MaxObjectUnit<T>>, Value {
     private T maxValue;
 
+    /**
+     * 是否只展示value, 不展示key
+     */
+    private boolean onlyShowValue;
+
     public MaxObjectUnit() {
+    }
+
+    public MaxObjectUnit(Map<String, Object> params) {
+        this.onlyShowValue = (boolean) params.get("onlyShowValue");
     }
 
     public MaxObjectUnit(T o) {
@@ -66,9 +75,13 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
     public Object value() {
         if (this.maxValue == null) {
             return NoneValue.INSTANCE;
-        }
-        if (this.maxValue instanceof Value) {
-            return ((Value) this.maxValue).value();
+        } else if (this.maxValue instanceof KeyValue && onlyShowValue) {
+            Cloneable2 value = ((KeyValue) maxValue).getValue();
+            if (value != null) {
+                return ValueMapper.value(((Value<?>) value));
+            }
+        } else if (this.maxValue instanceof Value) {
+            return ValueMapper.value(((Value<?>) maxValue));
         }
         return this.maxValue;
     }

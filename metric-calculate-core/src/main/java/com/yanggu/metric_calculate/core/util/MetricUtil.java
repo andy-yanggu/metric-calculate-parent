@@ -11,6 +11,9 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.Options;
+import com.yanggu.metric_calculate.core.annotation.Collective;
+import com.yanggu.metric_calculate.core.annotation.Numerical;
+import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.*;
@@ -19,6 +22,7 @@ import com.yanggu.metric_calculate.core.pojo.*;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -182,24 +186,49 @@ public class MetricUtil {
         //聚合字段处理器
         String columnName = tempDerive.getMetricColumn().getColumnName();
         //如果是计数, 度量值强制设定成1
-        if (StrUtil.equalsIgnoreCase(tempDerive.getCalculateLogic(), "COUNT")) {
+        String calculateLogic = tempDerive.getCalculateLogic();
+        if (StrUtil.equalsIgnoreCase(calculateLogic, "COUNT")) {
             columnName = "1";
         }
-
-        //聚合字段处理器
-        AggregateFieldProcessor<?> aggregateFieldProcessor = new AggregateFieldProcessor<>();
-        aggregateFieldProcessor.setMetricExpress(columnName);
-        aggregateFieldProcessor.setFieldMap(fieldMap);
-        aggregateFieldProcessor.setAggregateType(tempDerive.getCalculateLogic());
-        aggregateFieldProcessor.setIsUdaf(tempDerive.getIsUdaf());
-        aggregateFieldProcessor.setUdafParams(tempDerive.getUdafParams());
 
         //设置UnitFactory, 生成MergeUnit
         UnitFactory unitFactory = new UnitFactory(tempDerive.getUdafJarPathList());
         unitFactory.init();
 
+        BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
+        Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(calculateLogic);
+        if (mergeUnitClazz.isAnnotationPresent(Numerical.class)) {
+            aggregateFieldProcessor = new AggregateNumberFieldProcessor<>();
+        } else if (mergeUnitClazz.isAnnotationPresent(Objective.class)) {
+            aggregateFieldProcessor = new AggregateObjectFieldProcessor<>();
+
+            //设置保留字段处理器
+            boolean retainObject = mergeUnitClazz.getAnnotation(Objective.class).retainObject();
+            if (!retainObject) {
+                MetricFieldProcessor<?> retainFieldValueFieldProcessor = new MetricFieldProcessor<>();
+                retainFieldValueFieldProcessor.setMetricExpress("");
+                retainFieldValueFieldProcessor.setFieldMap(fieldMap);
+                retainFieldValueFieldProcessor.init();
+
+                ((AggregateObjectFieldProcessor<?>) aggregateFieldProcessor)
+                        .setRetainFieldValueFieldProcessor(retainFieldValueFieldProcessor);
+            }
+        } else if (mergeUnitClazz.isAnnotationPresent(Collective.class)) {
+            aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
+        } else {
+            throw new RuntimeException("不支持的聚合类型: " + calculateLogic);
+        }
+
+        //聚合字段处理器
+        aggregateFieldProcessor.setMetricExpress(columnName);
+        aggregateFieldProcessor.setFieldMap(fieldMap);
+        aggregateFieldProcessor.setAggregateType(calculateLogic);
+        aggregateFieldProcessor.setIsUdaf(tempDerive.getIsUdaf());
+        aggregateFieldProcessor.setUdafParams(tempDerive.getUdafParams());
         aggregateFieldProcessor.setUnitFactory(unitFactory);
+        aggregateFieldProcessor.setMergeUnitClazz(mergeUnitClazz);
         aggregateFieldProcessor.init();
+
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器

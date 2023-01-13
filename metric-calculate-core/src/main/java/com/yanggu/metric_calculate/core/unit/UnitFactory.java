@@ -42,7 +42,7 @@ public class UnitFactory {
      */
     public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core.unit";
 
-    private Map<String, Class<? extends MergedUnit>> unitMap = new HashMap<>();
+    private Map<String, Class<? extends MergedUnit<?>>> unitMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
@@ -99,6 +99,10 @@ public class UnitFactory {
         if (log.isDebugEnabled()) {
             log.debug("生成的unit: {}", JSONUtil.toJsonStr(unitMap));
         }
+    }
+
+    public Class<? extends MergedUnit<?>> getMergeableClass(String actionType) {
+        return unitMap.get(actionType.toUpperCase());
     }
 
     /**
@@ -212,7 +216,7 @@ public class UnitFactory {
 
     private void addClassToMap(Class<?> tempClazz) {
         MergeType annotation = tempClazz.getAnnotation(MergeType.class);
-        Class<? extends MergedUnit> put = unitMap.put(annotation.value(), (Class<? extends MergedUnit>) tempClazz);
+        Class<? extends MergedUnit<?>> put = unitMap.put(annotation.value(), (Class<? extends MergedUnit<?>>) tempClazz);
         if (put != null) {
             throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
         }

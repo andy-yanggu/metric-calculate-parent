@@ -48,7 +48,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     /**
      * 聚合字段处理器, 生成MergeUnit
      */
-    private AggregateFieldProcessor<M> aggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<M> aggregateFieldProcessor;
 
     /**
      * 时间字段, 提取出时间戳
