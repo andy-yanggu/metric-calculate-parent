@@ -8,8 +8,8 @@ import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
-@MergeType("REPLACED")
 @Objective
+@MergeType("REPLACED")
 public class ReplacedUnit<T> implements ObjectiveUnit<T, ReplacedUnit<T>>, Value<T>, Serializable {
     private static final long serialVersionUID = 5240954691662766328L;
 

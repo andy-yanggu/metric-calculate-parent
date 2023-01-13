@@ -33,7 +33,6 @@ public class MinUnit<N extends CubeNumber<N>> extends NumberUnit<N, MinUnit<N>> 
 
     @Override
     public MinUnit<N> fastClone() {
-        MinUnit<N> minUnit = new MinUnit<>(value.fastClone(), count.value());
-        return minUnit;
+        return new MinUnit<>(value.fastClone(), count.value());
     }
 }

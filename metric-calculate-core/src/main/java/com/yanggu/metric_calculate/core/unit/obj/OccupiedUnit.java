@@ -1,14 +1,17 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
+@Objective
 @MergeType("OCCUPIED")
 public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedUnit<T>>, Value<T>, Serializable {
+
     private static final long serialVersionUID = -617729814303380664L;
 
     public T value;
@@ -57,8 +60,7 @@ public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, O
 
     @Override
     public OccupiedUnit<T> fastClone() {
-        OccupiedUnit<T> occupiedUnit = new OccupiedUnit(value.fastClone());
-        return occupiedUnit;
+        return (OccupiedUnit<T>) new OccupiedUnit(value.fastClone());
     }
 
     @Override
@@ -82,4 +84,5 @@ public class OccupiedUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, O
         }
         return true;
     }
+
 }
