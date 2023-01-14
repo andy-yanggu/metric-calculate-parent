@@ -21,10 +21,6 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
     @Override
     public void init() throws Exception {
 
-        if (mergeUnitClazz == null) {
-            throw new RuntimeException("需要设置mergeUnitClazz");
-        }
-
         //如果是设置了比较字段
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
         if (objective.useCompareField()) {
@@ -51,18 +47,20 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
         //使用比较字段
         Object result;
         if (useCompareField) {
-            //获取度量值
-            Object compareFieldValue = super.processSuper(input);
+            //获取比较值
+            Object compareFieldValue = super.process(input);
             if (compareFieldValue == null) {
                 return null;
             }
 
+            //获取保留值
             Object value = getValue(input, retainObject);
             if (value == null) {
                 return null;
             }
             result = new KeyValue<>((Comparable<?>) compareFieldValue, value);
         } else {
+            //没有比较字段, 直接获取保留值
             Object value = getValue(input, retainObject);
             if (value == null) {
                 return null;

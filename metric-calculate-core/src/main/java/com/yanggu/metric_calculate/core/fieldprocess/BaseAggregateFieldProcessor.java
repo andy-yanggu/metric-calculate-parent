@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.Data;
@@ -52,15 +51,11 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
         if (unitFactory == null) {
             throw new RuntimeException("UnitFactory为空");
         }
-    }
 
-    @Override
-    public M process(JSONObject input) throws Exception {
-        throw new RuntimeException("子类需要重写process方法");
-    }
+        if (mergeUnitClazz == null) {
+            throw new RuntimeException("需要设置mergeUnitClazz");
+        }
 
-    public Object processSuper(JSONObject input) throws Exception {
-        return super.process(input);
     }
 
 }

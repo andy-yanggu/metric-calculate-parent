@@ -100,7 +100,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         }
 
         //执行聚合字段处理器, 生成MergeUnit
-        M process = aggregateFieldProcessor.process(input);
+        M process = (M) aggregateFieldProcessor.process(input);
         if (process == null) {
             if (log.isDebugEnabled()) {
                 log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(input));

@@ -7,9 +7,9 @@ import com.yanggu.metric_calculate.core.value.*;
 
 import java.util.Map;
 
-@MergeType(value = "MAXOBJECT", useParam = true)
-@Objective(useCompareField = true, retainObject = true)
-public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MaxObjectUnit<T>>, Value {
+@MergeType(value = "MAXFIELD", useParam = true)
+@Objective(useCompareField = true, retainObject = false)
+public class MaxFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MaxFieldUnit<T>>, Value {
     private T maxValue;
 
     /**
@@ -17,14 +17,14 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
      */
     private boolean onlyShowValue = true;
 
-    public MaxObjectUnit() {
+    public MaxFieldUnit() {
     }
 
-    public MaxObjectUnit(Map<String, Object> params) {
+    public MaxFieldUnit(Map<String, Object> params) {
         this.onlyShowValue = (boolean) params.get("onlyShowValue");
     }
 
-    public MaxObjectUnit(T o) {
+    public MaxFieldUnit(T o) {
         setValue(o);
     }
 
@@ -37,11 +37,11 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
     }
 
     @Override
-    public MaxObjectUnit<T> merge(MaxObjectUnit<T> that) {
+    public MaxFieldUnit<T> merge(MaxFieldUnit<T> that) {
         return maxValue(that);
     }
 
-    private MaxObjectUnit<T> maxValue(MaxObjectUnit<T> that) {
+    private MaxFieldUnit<T> maxValue(MaxFieldUnit<T> that) {
         if (that == null) {
             return this;
         }
@@ -56,13 +56,13 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
      * @return MaxUnit
      */
     @Override
-    public MaxObjectUnit<T> fastClone() {
-        MaxObjectUnit<T> maxUnit = new MaxObjectUnit<>(this.maxValue.fastClone());
+    public MaxFieldUnit<T> fastClone() {
+        MaxFieldUnit<T> maxUnit = new MaxFieldUnit<>(this.maxValue.fastClone());
         return maxUnit;
     }
 
     @Override
-    public MaxObjectUnit<T> value(T object) {
+    public MaxFieldUnit<T> value(T object) {
         setValue(object);
         return this;
     }
@@ -108,7 +108,7 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
         if (getClass() != that.getClass()) {
             return false;
         }
-        MaxObjectUnit<T> thatUnit = (MaxObjectUnit) that;
+        MaxFieldUnit<T> thatUnit = (MaxFieldUnit) that;
         if (this.maxValue == null) {
             if (thatUnit.maxValue != null) {
                 return false;

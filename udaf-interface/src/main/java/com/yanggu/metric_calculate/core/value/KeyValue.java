@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.StringJoiner;
 
 public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneable2<V> & Value>
-        implements Value<Map<String, Object>>, Cloneable2<KeyValue<K, V>>, Comparable<KeyValue<K, ?>> {
+        implements Value<Map<K, Object>>, Cloneable2<KeyValue<K, V>>, Comparable<KeyValue<K, V>> {
 
     private K key;
 
@@ -34,9 +34,9 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
     }
 
     @Override
-    public Map<String, Object> value() {
-        Map<String, Object> result = new HashMap<>();
-        result.put(key.toString(), value.value());
+    public Map<K, Object> value() {
+        Map<K, Object> result = new HashMap<>();
+        result.put(key, value.value());
         return result;
     }
 
@@ -50,7 +50,7 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
     }
 
     @Override
-    public int compareTo(KeyValue<K, ?> that) {
+    public int compareTo(KeyValue<K, V> that) {
         return key.compareTo(that.key);
     }
 

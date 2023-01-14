@@ -5,6 +5,7 @@ import java.util.Objects;
 public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneable2<Key<K>> {
 
     private K key;
+
     private Cloneable2<Cloneable2Wrapper<K>> cloneable2Key;
 
     public Key() {

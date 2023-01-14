@@ -102,7 +102,11 @@ public class UnitFactory {
     }
 
     public Class<? extends MergedUnit<?>> getMergeableClass(String actionType) {
-        return unitMap.get(actionType.toUpperCase());
+        Class<? extends MergedUnit<?>> clazz = unitMap.get(actionType.toUpperCase());
+        if (clazz == null) {
+            throw new RuntimeException("找不到聚合类型: " + actionType + "对应的clazz");
+        }
+        return clazz;
     }
 
     /**
@@ -140,7 +144,7 @@ public class UnitFactory {
                                            Object initValue,
                                            Map<String, Object> params) throws Exception {
         ObjectiveUnit objectiveUnit;
-        if (useParam(clazz)) {
+        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
             objectiveUnit = clazz.getConstructor(Map.class).newInstance(params);
         } else {
             objectiveUnit = clazz.getConstructor().newInstance();
@@ -153,7 +157,7 @@ public class UnitFactory {
      */
     private MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         CollectionUnit collectionUnit;
-        if (useParam(clazz)) {
+        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
             collectionUnit = clazz.getConstructor(Map.class).newInstance(params);
         } else {
             collectionUnit = clazz.getConstructor().newInstance();
@@ -167,7 +171,7 @@ public class UnitFactory {
     private NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         Constructor<NumberUnit> constructor;
         Object[] initArgs;
-        if (useParam(clazz)) {
+        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
             //构造函数, 如果使用自定义参数
             //对于数值型是两个参数, 第一个是CubeNumber, 第二个是Map
             constructor = clazz.getConstructor(CubeNumber.class, Map.class);

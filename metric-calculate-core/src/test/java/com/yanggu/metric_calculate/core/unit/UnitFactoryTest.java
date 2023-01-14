@@ -163,10 +163,11 @@ public class UnitFactoryTest {
      */
     @Test
     public void createObjectiveUnit() throws Exception {
-        KeyValue keyValue = new KeyValue(new Key(1), Cloneable2Wrapper.wrap(101));
-        MergedUnit unit = unitFactory.initInstanceByValue("MAXOBJECT", keyValue, null);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> keyValue =
+                new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(101));
+        MergedUnit<?> unit = unitFactory.initInstanceByValue("MAXOBJECT", keyValue, null);
         assertTrue(unit instanceof MaxObjectUnit);
-        assertEquals(keyValue.value(), ((MaxObjectUnit) unit).value());
+        assertEquals(keyValue.value().get(new Key<>(1)), ((MaxObjectUnit<?>) unit).value());
     }
 
     /**
