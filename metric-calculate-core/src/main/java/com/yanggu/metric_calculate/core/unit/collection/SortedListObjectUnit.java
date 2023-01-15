@@ -1,31 +1,58 @@
 package com.yanggu.metric_calculate.core.unit.collection;
 
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.KeyValue;
+import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
+import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
-@MergeType("SORTEDLISTOBJECT")
-@Collective
-public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
-        implements CollectionUnit<T, SortedListUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
+@FieldNameConstants
+@MergeType(value = "SORTEDLISTOBJECT", useParam = true)
+@Collective(useCompareField = true, retainObject = true)
+public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
+        implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>>, Serializable, Iterable<T> {
+
     private static final long serialVersionUID = -1300607404480893613L;
 
     public boolean desc = true;
+
+    /**
+     * 是否只展示value, 不展示key
+     */
+    private boolean onlyShowValue = true;
 
     public int limit = 0;
 
     private List<T> original = new ArrayList<>();
 
-    public SortedListUnit() {
+    public SortedListObjectUnit() {
     }
 
-    public SortedListUnit(T value) {
+    public SortedListObjectUnit(Map<String, Object> params) {
+        if (CollUtil.isEmpty(params)) {
+            return;
+        }
+        Object tempShowValue = params.get(Fields.onlyShowValue);
+        if (tempShowValue instanceof Boolean) {
+            this.onlyShowValue = (boolean) tempShowValue;
+        }
+        Object tempLimit = params.get(Fields.limit);
+        if (tempLimit instanceof Integer) {
+            this.limit = (int) tempLimit;
+        }
+        Object tempDesc = params.get(Fields.desc);
+        if (tempDesc instanceof Boolean) {
+            this.desc = (boolean) tempDesc;
+        }
+    }
+
+    public SortedListObjectUnit(T value) {
         this(value, 0, true);
     }
 
@@ -35,18 +62,18 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
      * @param limit list limit
      * @param desc des or not
      */
-    public SortedListUnit(T value, int limit, boolean desc) {
+    public SortedListObjectUnit(T value, int limit, boolean desc) {
         this();
         this.limit = limit;
         this.desc = desc;
         add(value);
     }
 
-    public SortedListUnit(T value, boolean desc) {
+    public SortedListObjectUnit(T value, boolean desc) {
         this(value, 0, desc);
     }
 
-    public SortedListUnit(T value, int limit) {
+    public SortedListObjectUnit(T value, int limit) {
         this(value, limit, true);
     }
 
@@ -68,7 +95,7 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
      * @return
      */
     @Override
-    public SortedListUnit<T> add(T value) {
+    public SortedListObjectUnit<T> add(T value) {
         if (this.original.isEmpty()) {
             this.original.add(value);
             return this;
@@ -102,11 +129,11 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
     }
 
     @Override
-    public SortedListUnit<T> merge(SortedListUnit<T> that) {
+    public SortedListObjectUnit<T> merge(SortedListObjectUnit<T> that) {
         return that == null ? this : internalMerge(that.desc(), that.limit(), that.original());
     }
 
-    private SortedListUnit<T> internalMerge(boolean desc, int limit, List<T> original) {
+    private SortedListObjectUnit<T> internalMerge(boolean desc, int limit, List<T> original) {
         this.desc = desc;
         this.limit = Math.max(this.limit, limit);
         ArrayList<T> arrayList = new ArrayList();
@@ -154,8 +181,8 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
     }
 
     @Override
-    public SortedListUnit<T> fastClone() {
-        SortedListUnit<T> mergeableSortedList = new SortedListUnit<>();
+    public SortedListObjectUnit<T> fastClone() {
+        SortedListObjectUnit<T> mergeableSortedList = new SortedListObjectUnit<>();
         mergeableSortedList.desc = this.desc;
         mergeableSortedList.limit = this.limit;
         for (T item : getList()) {
@@ -189,8 +216,21 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
     }
 
     @Override
-    public List<T> value() {
-        return original;
+    public List<Object> value() {
+        if (CollUtil.isEmpty(original)) {
+            return Collections.emptyList();
+        }
+        if (original.get(0) instanceof KeyValue && onlyShowValue) {
+            List<Object> returnList = new ArrayList<>(original.size());
+            original.forEach(temp -> {
+                Value<?> value = ((KeyValue<?, ?>) temp).getValue();
+                if (value != null) {
+                    returnList.add(ValueMapper.value(value));
+                }
+            });
+            return returnList;
+        }
+        return ((List) original);
     }
 
     public List<T> asList() {
@@ -213,7 +253,7 @@ public class SortedListUnit<T extends Comparable<T> & Cloneable2<T>>
         if (getClass() != that.getClass()) {
             return false;
         }
-        SortedListUnit<T> thatUnit = (SortedListUnit) that;
+        SortedListObjectUnit<T> thatUnit = (SortedListObjectUnit) that;
         if (this.desc != thatUnit.desc) {
             return false;
         }

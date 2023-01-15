@@ -9,27 +9,32 @@ import com.yanggu.metric_calculate.core.value.Value;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 
-@MergeType("DISTINCTCOUNT")
-@Collective
+@MergeType(value = "DISTINCTCOUNT", useParam = true)
+@Collective(useCompareField = true, retainObject = true)
 public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
         UnlimitedMergedUnit<UniqueCountUnit<T>>, Value<Number>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -5104878154756554088L;
 
-    private UniqueListUnit<T> original;
+    private UniqueListObjectUnit<T> original;
 
     public UniqueCountUnit() {
-        original = new UniqueListUnit<>();
+        original = new UniqueListObjectUnit<>();
+    }
+
+    public UniqueCountUnit(Map<String, Object> param) {
+        original = new UniqueListObjectUnit<>(param);
     }
 
     public UniqueCountUnit(T value) {
-        original = new UniqueListUnit<>(value);
+        original = new UniqueListObjectUnit<>(value);
     }
 
     public UniqueCountUnit(Collection<T> values) {
-        original = new UniqueListUnit<>(values);
+        original = new UniqueListObjectUnit<>(values);
     }
 
     /**
@@ -39,17 +44,17 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
      * @param limit limitCnt
      */
     public UniqueCountUnit(T value, int limit) {
-        original = new UniqueListUnit<>(value, limit);
+        original = new UniqueListObjectUnit<>(value, limit);
     }
 
     /**
      * Construct.
      */
     public UniqueCountUnit(Collection<T> values, int limit) {
-        original = new UniqueListUnit<>(values, limit);
+        original = new UniqueListObjectUnit<>(values, limit);
     }
 
-    public UniqueListUnit<T> original() {
+    public UniqueListObjectUnit<T> original() {
         return original;
     }
 

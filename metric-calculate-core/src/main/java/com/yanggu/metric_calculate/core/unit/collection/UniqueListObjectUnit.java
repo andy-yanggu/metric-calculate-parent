@@ -1,21 +1,22 @@
 package com.yanggu.metric_calculate.core.unit.collection;
 
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
+import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import java.util.*;
 
-@MergeType("DISTINCTLIST")
-@Collective
-public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListUnit<T>>,
-        UnlimitedMergedUnit<UniqueListUnit<T>>, Value<Collection<T>>, Serializable, Iterable<T> {
+import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
+
+@MergeType(value = "DISTINCTLISTOBJECT", useParam = true)
+@Collective(useCompareField = true, retainObject = true)
+public class UniqueListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListObjectUnit<T>>,
+        UnlimitedMergedUnit<UniqueListObjectUnit<T>>, Value<Set<Object>>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -5104878154756554088L;
 
@@ -23,15 +24,34 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
 
     private int limit = 0;
 
-    public UniqueListUnit() {
+    /**
+     * 是否只展示value, 不展示key
+     */
+    private boolean onlyShowValue = true;
+
+    public UniqueListObjectUnit() {
     }
 
-    public UniqueListUnit(T value) {
+    public UniqueListObjectUnit(Map<String, Object> param) {
+        if (CollUtil.isEmpty(param)) {
+            return;
+        }
+        Object tempShowValue = param.get(SortedListObjectUnit.Fields.onlyShowValue);
+        if (tempShowValue instanceof Boolean) {
+            this.onlyShowValue = (boolean) tempShowValue;
+        }
+        Object tempLimit = param.get(UniqueListFieldUnit.Fields.limit);
+        if (tempLimit instanceof Integer) {
+            this.limit = (int) tempLimit;
+        }
+    }
+
+    public UniqueListObjectUnit(T value) {
         this();
         add(value);
     }
 
-    public UniqueListUnit(Collection<T> values) {
+    public UniqueListObjectUnit(Collection<T> values) {
         this();
         addAll(values);
     }
@@ -42,7 +62,7 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
      * @param value input
      * @param limit    limitCnt
      */
-    public UniqueListUnit(T value, int limit) {
+    public UniqueListObjectUnit(T value, int limit) {
         this();
         add(value);
         this.limit = limit;
@@ -51,7 +71,7 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
     /**
      * Construct.
      */
-    public UniqueListUnit(Collection<T> values, int paramCnt) {
+    public UniqueListObjectUnit(Collection<T> values, int paramCnt) {
         this();
         addAll(values);
         this.limit = paramCnt;
@@ -66,23 +86,23 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
     }
 
     @Override
-    public UniqueListUnit<T> merge(UniqueListUnit<T> that) {
+    public UniqueListObjectUnit<T> merge(UniqueListObjectUnit<T> that) {
         return internalMergeOp(that, false);
     }
 
     @Override
-    public UniqueListUnit<T> unlimitedMerge(UniqueListUnit<T> that) {
+    public UniqueListObjectUnit<T> unlimitedMerge(UniqueListObjectUnit<T> that) {
         return internalMergeOp(that, true);
     }
 
-    private UniqueListUnit<T> internalMergeOp(UniqueListUnit<T> that, boolean hasLimit) {
+    private UniqueListObjectUnit<T> internalMergeOp(UniqueListObjectUnit<T> that, boolean hasLimit) {
         if (that == null) {
             return this;
         }
         return originalMerge(that.original, that.limit, hasLimit);
     }
 
-    private UniqueListUnit<T> originalMerge(Set<T> original, int limit, boolean hasLimit) {
+    private UniqueListObjectUnit<T> originalMerge(Set<T> original, int limit, boolean hasLimit) {
         this.original.addAll(original);
         if (!hasLimit) {
             this.limit = Math.max(this.limit, limit);
@@ -104,8 +124,21 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
     }
 
     @Override
-    public Collection<T> value() {
-        return this.original;
+    public Set<Object> value() {
+        if (CollUtil.isEmpty(original)) {
+            return Collections.emptySet();
+        }
+        if (CollUtil.getFirst(original) instanceof KeyValue && onlyShowValue) {
+            Set<Object> returnSet = new HashSet<>();
+            original.forEach(temp -> {
+                Value<?> value = ((KeyValue<?, ?>) temp).getValue();
+                if (value != null) {
+                    returnSet.add(ValueMapper.value(value));
+                }
+            });
+            return returnSet;
+        }
+        return ((Set) original);
     }
 
     public Collection<T> asCollection() {
@@ -118,7 +151,7 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
      * @return
      */
     @Override
-    public UniqueListUnit<T> add(T value) {
+    public UniqueListObjectUnit<T> add(T value) {
         this.original.add(value);
         if (this.limit > 0 && this.original.size() > this.limit) {
             this.original.remove(this.original.iterator().next());
@@ -147,13 +180,13 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
     }
 
     @Override
-    public UniqueListUnit<T> fastClone() {
-        UniqueListUnit<T> uniqueListUnit = new UniqueListUnit<>();
-        uniqueListUnit.limit = this.limit;
+    public UniqueListObjectUnit<T> fastClone() {
+        UniqueListObjectUnit<T> uniqueListObjectUnit = new UniqueListObjectUnit<>();
+        uniqueListObjectUnit.limit = this.limit;
         for (T item : getSet()) {
-            uniqueListUnit.getSet().add(item.fastClone());
+            uniqueListObjectUnit.getSet().add(item.fastClone());
         }
-        return uniqueListUnit;
+        return uniqueListObjectUnit;
     }
 
     @Override
@@ -167,7 +200,7 @@ public class UniqueListUnit<T extends Cloneable2<T>> implements CollectionUnit<T
         if (getClass() != that.getClass()) {
             return false;
         }
-        UniqueListUnit<T> thatUnit = (UniqueListUnit) that;
+        UniqueListObjectUnit<T> thatUnit = (UniqueListObjectUnit) that;
         if (this.limit != thatUnit.limit) {
             return false;
         }

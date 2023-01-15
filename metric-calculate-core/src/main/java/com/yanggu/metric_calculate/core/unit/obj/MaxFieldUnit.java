@@ -1,12 +1,15 @@
 package com.yanggu.metric_calculate.core.unit.obj;
 
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import com.yanggu.metric_calculate.core.value.*;
+import lombok.experimental.FieldNameConstants;
 
 import java.util.Map;
 
+@FieldNameConstants
 @MergeType(value = "MAXFIELD", useParam = true)
 @Objective(useCompareField = true, retainObject = false)
 public class MaxFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MaxFieldUnit<T>>, Value {
@@ -21,7 +24,13 @@ public class MaxFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements Ob
     }
 
     public MaxFieldUnit(Map<String, Object> params) {
-        this.onlyShowValue = (boolean) params.get("onlyShowValue");
+        if (CollUtil.isEmpty(params)) {
+            return;
+        }
+        Object tempShowValue = params.get(Fields.onlyShowValue);
+        if (tempShowValue instanceof Boolean) {
+            this.onlyShowValue = (boolean) tempShowValue;
+        }
     }
 
     public MaxFieldUnit(T o) {

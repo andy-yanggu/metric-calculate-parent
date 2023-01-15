@@ -79,6 +79,11 @@ public class Derive {
     private MetricColumn metricColumn;
 
     /**
+     * 对于集合型和对象型聚合类型, 不保留对象, 保留指定字段
+     */
+    private String retainExpress;
+
+    /**
      * 聚合时间长度
      */
     private Integer duration;

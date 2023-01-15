@@ -9,9 +9,9 @@ import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import com.yanggu.metric_calculate.core.kryo.serializer.*;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.collection.ListUnit;
-import com.yanggu.metric_calculate.core.unit.collection.SortedListUnit;
-import com.yanggu.metric_calculate.core.unit.collection.UniqueListUnit;
+import com.yanggu.metric_calculate.core.unit.collection.ListObjectUnit;
+import com.yanggu.metric_calculate.core.unit.collection.SortedListObjectUnit;
+import com.yanggu.metric_calculate.core.unit.collection.UniqueListObjectUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.*;
 import com.yanggu.metric_calculate.core.unit.obj.*;
 import com.yanggu.metric_calculate.core.unit.pattern.EventConnector;
@@ -66,10 +66,10 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(MinUnit.class);
         kryo.register(ReplacedObjectUnit.class);
         kryo.register(OccupiedObjectUnit.class);
-        kryo.register(ListUnit.class);
+        kryo.register(ListObjectUnit.class);
         kryo.register(MapUnit.class);
-        kryo.register(UniqueListUnit.class);
-        kryo.register(SortedListUnit.class);
+        kryo.register(UniqueListObjectUnit.class);
+        kryo.register(SortedListObjectUnit.class);
 
         kryo.register(TimeUnit.class);
 

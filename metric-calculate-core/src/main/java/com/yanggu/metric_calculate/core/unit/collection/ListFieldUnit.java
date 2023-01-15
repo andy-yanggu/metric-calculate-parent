@@ -1,0 +1,161 @@
+package com.yanggu.metric_calculate.core.unit.collection;
+
+
+import cn.hutool.core.collection.CollUtil;
+import com.yanggu.metric_calculate.core.annotation.Collective;
+import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
+import lombok.experimental.FieldNameConstants;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+@FieldNameConstants
+@MergeType(value = "LISTFIELD", useParam = true)
+@Collective(useCompareField = false, retainObject = false)
+public class ListFieldUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<ListFieldUnit<T>>,
+        CollectionUnit<T, ListFieldUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
+
+    private static final long serialVersionUID = -1300607404480893613L;
+
+    private List<T> values = new ArrayList<>();
+
+    public int limit = 0;
+
+    public ListFieldUnit() {
+    }
+
+    public ListFieldUnit(Map<String, Object> param) {
+        if (CollUtil.isEmpty(param)) {
+            return;
+        }
+        Object tempLimit = param.get(Fields.limit);
+        if (tempLimit instanceof Integer) {
+            this.limit = (int) tempLimit;
+        }
+    }
+
+    public ListFieldUnit(T value) {
+        this();
+        add(value);
+    }
+
+    /**
+     * Construct.
+     */
+    public ListFieldUnit(T value, int limit) {
+        this();
+        add(value);
+        this.limit = limit;
+    }
+
+    public List<T> getList() {
+        return this.values;
+    }
+
+    public void setList(List<T> paramList) {
+        this.values = paramList;
+    }
+
+    /**
+     * add.
+     *
+     * @return
+     */
+    @Override
+    public ListFieldUnit<T> add(T value) {
+        this.values.add(value);
+        if (this.limit > 0 && this.values.size() > this.limit) {
+            this.values.remove(0);
+        }
+        return this;
+    }
+
+    public List<T> asList() {
+        return this.values;
+    }
+
+    @Override
+    public ListFieldUnit<T> merge(ListFieldUnit<T> that) {
+        return merge(that, false);
+    }
+
+    @Deprecated
+    private ListFieldUnit<T> merge(ListFieldUnit<T> that, boolean useLimit) {
+        if (that == null) {
+            return this;
+        }
+        List<T> values = that.getList();
+        int limit = that.limit;
+        return internalMerge(values, useLimit, limit);
+    }
+
+    private ListFieldUnit<T> internalMerge(List<T> values, boolean useLimit, int limit) {
+        this.values.addAll(values);
+        if (!useLimit) {
+            this.limit = Math.max(this.limit, limit);
+            int i = this.values.size();
+            if (this.limit > 0 && i > this.limit) {
+                List<T> list = this.values.subList(i - this.limit, i);
+                this.values = new ArrayList<>(this.limit);
+                this.values.addAll(list);
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public ListFieldUnit<T> unlimitedMerge(ListFieldUnit<T> that) {
+        return merge(that, true);
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return this.values.iterator();
+    }
+
+    @Override
+    public List<T> value() {
+        return this.values;
+    }
+
+    @Override
+    public ListFieldUnit<T> fastClone() {
+        ListFieldUnit<T> mergeableListObject = new ListFieldUnit<>();
+        mergeableListObject.limit = this.limit;
+        for (T item : getList()) {
+            mergeableListObject.getList().add(item.fastClone());
+        }
+        return mergeableListObject;
+    }
+
+    @Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (that == null || getClass() != that.getClass()) {
+            return false;
+        }
+        ListFieldUnit<T> thatUnit = (ListFieldUnit) that;
+        if (this.values == null) {
+            if (thatUnit.values != null) {
+                return false;
+            }
+        } else if (!this.values.equals(thatUnit.values)) {
+            return false;
+        }
+        return this.limit == thatUnit.limit;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("{limit=%d, list=%s}", this.limit, this.values.toString());
+    }
+
+}

@@ -66,17 +66,11 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
 
         KeyValue<?, ?> that = (KeyValue<?, ?>) o;
 
-        if (!key.equals(that.key)) {
-            return false;
-        }
-
-        return true;
+        return this.key.equals(that.key);
     }
 
     @Override
     public int hashCode() {
-        /*int result = key.hashCode();
-        result = 31 * result + value.hashCode();*/
         return key.hashCode();
     }
 
@@ -88,4 +82,5 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
             .add("value=" + value)
             .toString();
     }
+
 }

@@ -201,12 +201,11 @@ public class MetricUtil {
             aggregateFieldProcessor = new AggregateNumberFieldProcessor<>();
         } else if (mergeUnitClazz.isAnnotationPresent(Objective.class)) {
             aggregateFieldProcessor = new AggregateObjectFieldProcessor<>();
-
             //设置保留字段处理器
             boolean retainObject = mergeUnitClazz.getAnnotation(Objective.class).retainObject();
             if (!retainObject) {
                 MetricFieldProcessor<?> retainFieldValueFieldProcessor = new MetricFieldProcessor<>();
-                retainFieldValueFieldProcessor.setMetricExpress("");
+                retainFieldValueFieldProcessor.setMetricExpress(tempDerive.getRetainExpress());
                 retainFieldValueFieldProcessor.setFieldMap(fieldMap);
                 retainFieldValueFieldProcessor.init();
 
@@ -215,6 +214,17 @@ public class MetricUtil {
             }
         } else if (mergeUnitClazz.isAnnotationPresent(Collective.class)) {
             aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
+            //设置保留字段处理器
+            boolean retainObject = mergeUnitClazz.getAnnotation(Collective.class).retainObject();
+            if (!retainObject) {
+                MetricFieldProcessor<?> retainFieldValueFieldProcessor = new MetricFieldProcessor<>();
+                retainFieldValueFieldProcessor.setMetricExpress(tempDerive.getRetainExpress());
+                retainFieldValueFieldProcessor.setFieldMap(fieldMap);
+                retainFieldValueFieldProcessor.init();
+
+                ((AggregateCollectionFieldProcessor<?>) aggregateFieldProcessor)
+                        .setRetainFieldValueFieldProcessor(retainFieldValueFieldProcessor);
+            }
         } else {
             throw new RuntimeException("不支持的聚合类型: " + calculateLogic);
         }

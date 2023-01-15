@@ -76,9 +76,9 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
         if (this.maxValue == null) {
             return NoneValue.INSTANCE;
         } else if (this.maxValue instanceof KeyValue && onlyShowValue) {
-            Cloneable2 value = ((KeyValue) maxValue).getValue();
+            Value<?> value = ((KeyValue<?, ?>) maxValue).getValue();
             if (value != null) {
-                return ValueMapper.value(((Value<?>) value));
+                return ValueMapper.value(value);
             }
         } else if (this.maxValue instanceof Value) {
             return ValueMapper.value(((Value<?>) maxValue));

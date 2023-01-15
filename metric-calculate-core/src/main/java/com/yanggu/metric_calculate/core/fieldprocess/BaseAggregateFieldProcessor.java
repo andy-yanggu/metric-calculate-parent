@@ -10,7 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Map;
 
 /**
- * 聚合数值类型处理器继承自度量字段处理器, 增加了聚合类型
+ * 聚合型处理器继承自度量字段处理器
+ * <p>数值型、对象型、集合型继承该抽象类</p>
  */
 @Data
 @Slf4j
@@ -55,7 +56,6 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
         if (mergeUnitClazz == null) {
             throw new RuntimeException("需要设置mergeUnitClazz");
         }
-
     }
 
 }

@@ -3,9 +3,8 @@ package com.yanggu.metric_calculate.core.cube;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.collection.ListUnit;
+import com.yanggu.metric_calculate.core.unit.collection.ListObjectUnit;
 import com.yanggu.metric_calculate.core.value.NoneValue;
-import com.yanggu.metric_calculate.core.value.TimeReferable;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
@@ -56,8 +55,8 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
             } else if (thisRow.getClass().equals(timeRow.getValue().getClass())) {
                 thisRow.merge(timeRow.getValue());
             }
-            if (thisRow instanceof ListUnit) {
-                Iterator<V> mergeableIterator = ((ListUnit) thisRow).iterator();
+            if (thisRow instanceof ListObjectUnit) {
+                Iterator<V> mergeableIterator = ((ListObjectUnit) thisRow).iterator();
                 V row = mergeableIterator.next();
                 while (mergeableIterator.hasNext()) {
                     row.merge(mergeableIterator.next());
