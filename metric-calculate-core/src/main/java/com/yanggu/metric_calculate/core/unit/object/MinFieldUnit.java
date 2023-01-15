@@ -1,15 +1,26 @@
 package com.yanggu.metric_calculate.core.unit.object;
 
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
-import com.yanggu.metric_calculate.core.value.NoneValue;
-import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.*;
+import lombok.Data;
+import lombok.experimental.FieldNameConstants;
 
-@MergeType("MINFIELD")
+import java.util.Map;
+
+@Data
+@FieldNameConstants
+@MergeType(value = "MINFIELD", useParam = true)
 @Objective(useCompareField = true, retainObject = false)
 public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinFieldUnit<T>>, Value {
+
     private T value;
+
+    /**
+     * 是否只展示value, 不展示key
+     */
+    private Boolean onlyShowValue = true;
 
     public MinFieldUnit() {
     }
@@ -18,12 +29,14 @@ public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements Ob
         setValue(value);
     }
 
-    public void setValue(T value) {
-        this.value = value;
-    }
-
-    public T getValue() {
-        return this.value;
+    public MinFieldUnit(Map<String, Object> params) {
+        if (CollUtil.isEmpty(params)) {
+            return;
+        }
+        Object tempShowValue = params.get(Fields.onlyShowValue);
+        if (tempShowValue instanceof Boolean) {
+            this.onlyShowValue = (Boolean) tempShowValue;
+        }
     }
 
     @Override
@@ -39,8 +52,7 @@ public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements Ob
 
     @Override
     public MinFieldUnit<T> fastClone() {
-        MinFieldUnit<T> minObjectUnit = new MinFieldUnit<>(value.fastClone());
-        return minObjectUnit;
+        return new MinFieldUnit<>(value.fastClone());
     }
 
     @Override
@@ -52,10 +64,12 @@ public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements Ob
     @Override
     public Object value() {
         if (this.value == null) {
-            return NoneValue.INSTANCE;
-        }
-        if (this.value instanceof Value) {
-            return ((Value) this.value).value();
+            return null;
+        } else if (this.value instanceof KeyValue && Boolean.TRUE.equals(onlyShowValue)) {
+            Value<?> tempValue = ((KeyValue<?, ?>) this.value).getValue();
+            return ValueMapper.value(tempValue);
+        } else if (this.value instanceof Value) {
+            return ValueMapper.value(((Value<?>) value));
         }
         return this.value;
     }
@@ -83,4 +97,5 @@ public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements Ob
             return this.value.equals(thatUnit.value);
         }
     }
+
 }

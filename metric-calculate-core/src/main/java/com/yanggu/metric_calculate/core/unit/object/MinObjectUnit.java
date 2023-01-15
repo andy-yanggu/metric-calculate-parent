@@ -2,16 +2,26 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.NoneValue;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
-import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.*;
 
-@MergeType("MINOBJECT")
+import java.util.Map;
+
+@MergeType(value = "MINOBJECT", useParam = true)
 @Objective(useCompareField = true, retainObject = true)
 public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
+
     private T value;
 
+    /**
+     * 是否只展示value, 不展示key
+     */
+    private boolean onlyShowValue = true;
+
     public MinObjectUnit() {
+    }
+
+    public MinObjectUnit(Map<String, Object> params) {
+        this.onlyShowValue = (boolean) params.get("onlyShowValue");
     }
 
     public MinObjectUnit(T value) {
@@ -53,9 +63,13 @@ public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
     public Object value() {
         if (this.value == null) {
             return NoneValue.INSTANCE;
-        }
-        if (this.value instanceof Value) {
-            return ((Value) this.value).value();
+        } else if (this.value instanceof KeyValue && onlyShowValue) {
+            Value<?> value = ((KeyValue<?, ?>) this.value).getValue();
+            if (value != null) {
+                return ValueMapper.value(value);
+            }
+        } else if (this.value instanceof Value) {
+            return ValueMapper.value(((Value<?>) value));
         }
         return this.value;
     }

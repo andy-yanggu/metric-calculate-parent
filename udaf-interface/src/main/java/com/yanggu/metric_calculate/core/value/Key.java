@@ -41,7 +41,7 @@ public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneab
 
     @Override
     public Key<K> fastClone() {
-        return new Key(cloneable2Key.fastClone().value());
+        return new Key<>(cloneable2Key.fastClone().value());
     }
 
     @Override
