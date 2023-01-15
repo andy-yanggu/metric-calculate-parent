@@ -5,10 +5,10 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.unit.obj.MaxFieldUnit;
-import com.yanggu.metric_calculate.core.unit.obj.MaxObjectUnit;
-import com.yanggu.metric_calculate.core.unit.obj.OccupiedFieldUnit;
-import com.yanggu.metric_calculate.core.unit.obj.OccupiedObjectUnit;
+import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
+import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
+import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
+import com.yanggu.metric_calculate.core.unit.object.OccupiedObjectUnit;
 import com.yanggu.metric_calculate.core.value.*;
 import org.junit.Test;
 

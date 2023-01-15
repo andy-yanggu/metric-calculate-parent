@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.unit.obj;
+package com.yanggu.metric_calculate.core.unit.object;
 
 public abstract class CompareUnit<K extends Comparable<K>, V, U extends CompareUnit<K, V, U>>
         extends KeyValueUnit<K, V, U> {

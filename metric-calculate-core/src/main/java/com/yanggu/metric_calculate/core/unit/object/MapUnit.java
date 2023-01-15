@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.unit.obj;
+package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;

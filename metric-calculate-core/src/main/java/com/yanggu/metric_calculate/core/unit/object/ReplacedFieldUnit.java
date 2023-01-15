@@ -1,24 +1,23 @@
-package com.yanggu.metric_calculate.core.unit.obj;
+package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
-import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
 
-@Objective(useCompareField = false)
-@MergeType("REPLACEDOBJECT")
-public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
+@MergeType("REPLACEDFIELD")
+@Objective(useCompareField = false, retainObject = false)
+public class ReplacedFieldUnit<T> implements ObjectiveUnit<T, ReplacedFieldUnit<T>>, Value<T>, Serializable {
     private static final long serialVersionUID = 5240954691662766328L;
 
     public T value;
 
-    public ReplacedObjectUnit() {
+    public ReplacedFieldUnit() {
     }
 
-    public ReplacedObjectUnit(T value) {
+    public ReplacedFieldUnit(T value) {
         this.value = value;
     }
 
@@ -36,7 +35,7 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
      * @return MergedUnit Object
      */
     @Override
-    public ReplacedObjectUnit<T> merge(ReplacedObjectUnit<T> that) {
+    public ReplacedFieldUnit<T> merge(ReplacedFieldUnit<T> that) {
         if (that == null) {
             return this;
         }
@@ -50,7 +49,7 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
     }
 
     @Override
-    public ReplacedObjectUnit<T> value(T object) {
+    public ReplacedFieldUnit<T> value(T object) {
         setValue(object);
         return this;
     }
@@ -65,8 +64,8 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
      * @return ReplacedUnit
      */
     @Override
-    public ReplacedObjectUnit fastClone() {
-        ReplacedObjectUnit replacedObjectUnit = new ReplacedObjectUnit(
+    public ReplacedFieldUnit fastClone() {
+        ReplacedFieldUnit replacedObjectUnit = new ReplacedFieldUnit(
             (this.value instanceof Cloneable2) ? ((Cloneable2) this.value).fastClone() : this.value);
         return replacedObjectUnit;
     }
@@ -87,7 +86,7 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
         if (getClass() != that.getClass()) {
             return false;
         }
-        ReplacedObjectUnit thatUnit = (ReplacedObjectUnit) that;
+        ReplacedFieldUnit thatUnit = (ReplacedFieldUnit) that;
         if (this.value == null) {
             return thatUnit.value == null;
         } else {
