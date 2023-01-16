@@ -136,7 +136,6 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     }
 
     public List<DeriveMetricCalculateResult> query(TimedKVMetricCube newMetricCube) {
-        String realKey = newMetricCube.getRealKey();
         TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(newMetricCube);
         if (metricCube == null) {
             metricCube = newMetricCube;

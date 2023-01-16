@@ -26,4 +26,8 @@ public class Constant {
      */
     public static final String COMPOSITE_METRIC_META_DATA = "COMPOSITE_METRIC_META_DATA";
 
+    public static final String UNIT_FACTORY = "UNIT_FACTORY";
+
+    public static final String COUNT_WINDOW_AGG_PARAM = "COUNT_WINDOW_AGG_PARAM";
+
 }

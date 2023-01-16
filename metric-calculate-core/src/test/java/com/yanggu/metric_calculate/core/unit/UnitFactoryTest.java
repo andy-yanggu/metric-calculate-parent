@@ -262,7 +262,7 @@ public class UnitFactoryTest {
      * @return jar路径
      * @throws Exception
      */
-    private String testJarPath() throws Exception {
+    public static String testJarPath() throws Exception {
 
         //找到udaf-test-*.jar路径
         String testModuleName = "udaf-test";

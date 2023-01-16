@@ -29,6 +29,7 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import static com.yanggu.metric_calculate.core.constant.Constant.UNIT_FACTORY;
 import static com.yanggu.metric_calculate.core.enums.BasicType.*;
 
 
@@ -158,6 +159,7 @@ public class UnitFactory {
     private MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         CollectionUnit collectionUnit;
         if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
+            params.put(UNIT_FACTORY, this);
             collectionUnit = clazz.getConstructor(Map.class).newInstance(params);
         } else {
             collectionUnit = clazz.getConstructor().newInstance();
