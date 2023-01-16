@@ -128,6 +128,4 @@ public class OccupiedObjectUnitTest {
         assertEquals(key, occupiedObjectUnit.getValue());
     }
 
-
-
 }
