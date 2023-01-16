@@ -201,5 +201,4 @@ public class MinFieldUnitTest {
         assertEquals(key, minFieldUnit.value());
     }
 
-
 }

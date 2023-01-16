@@ -39,7 +39,6 @@ public class TimeBaselineDimension {
      * 当前数据聚合的时间戳
      * 例如数据时间为2022-11-21 14:00:00, 时间单位为DAY, 返回2022-11-21 00:00:00的时间戳
      *
-     * @param jsonObject
      * @return
      */
     public Long getCurrentAggregateTimestamp(Long timestamp) {
