@@ -4,9 +4,11 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
 @Objective(useCompareField = false, retainObject = true)
 @MergeType("OCCUPIEDOBJECT")
 public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>, Value<T>, Serializable {
@@ -19,14 +21,6 @@ public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
     }
 
     public OccupiedObjectUnit(T value) {
-        this.value = value;
-    }
-
-    public T getValue() {
-        return this.value;
-    }
-
-    public void setValue(T value) {
         this.value = value;
     }
 
