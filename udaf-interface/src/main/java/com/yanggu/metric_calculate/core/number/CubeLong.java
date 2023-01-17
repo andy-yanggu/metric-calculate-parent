@@ -28,6 +28,18 @@ public class CubeLong implements CubeNumber<CubeLong> {
         return new CubeLong(cubeNumber.longValue());
     }
 
+    public static CubeLong of(Object value) {
+        if (value instanceof Long) {
+            return CubeLong.of(((Long) value));
+        } else if (value instanceof Number) {
+            return CubeLong.of(((Number) value));
+        } else if (value instanceof CubeNumber) {
+            return CubeLong.of(((CubeNumber<?>) value));
+        } else {
+            throw new RuntimeException("找不到转换的数据类型");
+        }
+    }
+
     /**
      * Set number value.
      */

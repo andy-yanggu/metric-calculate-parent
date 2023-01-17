@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.store;
+package com.yanggu.metric_calculate.core.middle_store;
 
 
 import com.esotericsoftware.kryo.Kryo;

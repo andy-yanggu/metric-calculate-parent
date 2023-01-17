@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.core.calculate;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
 import com.yanggu.metric_calculate.core.pojo.Store;
-import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.cube.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
@@ -76,19 +76,9 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     private Store store;
 
     /**
-     * 本地缓存, 用于批计算处理
-     */
-    private Map<DimensionSet, TimedKVMetricCube<M, ? extends TimedKVMetricCube<M, ?>>> cache;
-
-    /**
      * 派生指标中间结算结果类
      */
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
-
-    @Override
-    public void init(TaskContext taskContext) throws RuntimeException {
-        cache = taskContext.cache();
-    }
 
     @SneakyThrows
     @Override
@@ -114,29 +104,22 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         //维度数据
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
-        //生成cube, 并且放入缓存中, 如果缓存中存在之前的数据, 则进行合并
-        //本地缓存的目的是为了加快处理速度, 进行本地聚合操作
-        //可以对exec进行批量for循环调用, 进行本地批处理
-        return cache.compute(dimensionSet, (k, v) -> {
-            if (v == null) {
-                TimeSeriesKVTable<M> table = new TimeSeriesKVTable<>();
-                table.setTimeBaselineDimension(timeBaselineDimension);
-                v = new TimedKVMetricCube<>();
-                v.setName(name);
-                v.setKey(key);
-                v.setTimeBaselineDimension(timeBaselineDimension);
-                v.setDimensionSet(dimensionSet);
-                v.setTable(table);
-            }
-            //设置数据当前聚合时间
-            v.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
-            v.put(timestamp, process);
-            return v;
-        });
+        TimeSeriesKVTable<M> table = new TimeSeriesKVTable<>();
+        table.setTimeBaselineDimension(timeBaselineDimension);
+        TimedKVMetricCube v = new TimedKVMetricCube<>();
+        v.setName(name);
+        v.setKey(key);
+        v.setTimeBaselineDimension(timeBaselineDimension);
+        v.setDimensionSet(dimensionSet);
+        v.setTable(table);
+        //设置数据当前聚合时间
+        v.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
+        v.put(timestamp, process);
+        return v;
     }
 
-    public List<DeriveMetricCalculateResult> query(TimedKVMetricCube newMetricCube) {
-        TimedKVMetricCube metricCube = (TimedKVMetricCube) deriveMetricMiddleStore.get(newMetricCube);
+    public List<DeriveMetricCalculateResult> query(MetricCube newMetricCube) {
+        MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
         if (metricCube == null) {
             metricCube = newMetricCube;
         } else {
@@ -149,9 +132,6 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(metricCube.getReferenceTime());
-        Long startWindow = CollUtil.getFirst(timeWindowList).getStart();
-        Long endWindow = CollUtil.getLast(timeWindowList).getEnd();
-        TimeSeriesKVTable<?> timeSeriesKVTable = metricCube.getTable().subTable(startWindow, true, endWindow, false);
 
         List<DeriveMetricCalculateResult> list = new ArrayList<>();
         for (TimeWindow timeWindow : timeWindowList) {
@@ -159,13 +139,13 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             DeriveMetricCalculateResult result = new DeriveMetricCalculateResult();
             list.add(result);
             //指标名称
-            result.setName(metricCube.getName());
+            result.setName(metricCube.name());
 
             //指标key
-            result.setKey(metricCube.getKey());
+            result.setKey(metricCube.key());
 
             //指标维度
-            result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+            result.setDimensionMap(((LinkedHashMap) metricCube.dimensions().getDimensionMap()));
 
             //窗口开始时间
             long windowStart = timeWindow.getStart();
@@ -176,14 +156,14 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
 
             //聚合值
-            Object value = timeSeriesKVTable.query(windowStart, windowEnd).value();
+            Object value = metricCube.query(windowStart, true, windowEnd, false).value();
 
             //处理精度
             value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
             result.setResult(value);
 
             if (log.isDebugEnabled()) {
-                String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
+                String collect = metricCube.dimensions().getDimensionMap().entrySet().stream()
                         .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
                         .collect(Collectors.joining(","));
                 log.debug("指标名称: " + result.getName() +

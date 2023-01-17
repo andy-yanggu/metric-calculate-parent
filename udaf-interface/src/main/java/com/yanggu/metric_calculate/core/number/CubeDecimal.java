@@ -41,13 +41,27 @@ public class CubeDecimal implements CubeNumber<CubeDecimal> {
         return new CubeDecimal(new BigDecimal(cubeNumber.toString()));
     }
 
+    public static CubeDecimal of(Object value) {
+        if (value instanceof String) {
+            return CubeDecimal.of(value.toString());
+        } else if (value instanceof BigDecimal) {
+            return CubeDecimal.of(((BigDecimal) value));
+        } else if (value instanceof Number) {
+            return CubeDecimal.of(((Number) value));
+        } else if (value instanceof CubeNumber) {
+            return CubeDecimal.of(((CubeNumber<?>) value));
+        } else {
+            throw new RuntimeException("找不到转换的数据类型");
+        }
+    }
+
     /**
      * Add num.
      */
     @Override
     public CubeDecimal add(CubeNumber<?> num) {
         this.value = this.value.add(
-            num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
+                num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
         return this;
     }
 
@@ -57,7 +71,7 @@ public class CubeDecimal implements CubeNumber<CubeDecimal> {
     @Override
     public CubeDecimal subtract(CubeNumber<?> num) {
         this.value = this.value.subtract(
-            num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
+                num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
         return this;
     }
 
@@ -67,7 +81,7 @@ public class CubeDecimal implements CubeNumber<CubeDecimal> {
     @Override
     public CubeDecimal multiply(CubeNumber<?> num) {
         this.value = this.value.multiply(
-            num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
+                num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
         return this;
     }
 
@@ -77,9 +91,9 @@ public class CubeDecimal implements CubeNumber<CubeDecimal> {
     @Override
     public CubeDecimal divide(CubeNumber<?> num) {
         this.value = this.value.divide(
-            num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()),
-            16,
-            mode);
+                num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()),
+                16,
+                mode);
         return this;
     }
 
@@ -89,7 +103,7 @@ public class CubeDecimal implements CubeNumber<CubeDecimal> {
     @Override
     public CubeDecimal remainder(CubeNumber<?> num) {
         value = value.remainder(
-            num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
+                num instanceof CubeDecimal ? ((CubeDecimal) num).value : new BigDecimal(num.value().toString()));
         return this;
     }
 
@@ -153,7 +167,7 @@ public class CubeDecimal implements CubeNumber<CubeDecimal> {
     @Override
     public CubeDecimal value(Number value) {
         this.value = value instanceof BigDecimal
-                     ? (BigDecimal) value : new BigDecimal(value.toString()).setScale(scale, mode);
+                ? (BigDecimal) value : new BigDecimal(value.toString()).setScale(scale, mode);
         return this;
     }
 

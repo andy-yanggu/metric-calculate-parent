@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.store;
+package com.yanggu.metric_calculate.core.middle_store;
 
 import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
@@ -13,7 +13,6 @@ import org.apache.hadoop.hbase.CellUtil;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
-import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.List;
 

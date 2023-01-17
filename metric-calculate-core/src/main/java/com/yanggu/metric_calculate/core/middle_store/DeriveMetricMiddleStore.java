@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.store;
+package com.yanggu.metric_calculate.core.middle_store;
 
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 
@@ -17,7 +17,6 @@ public interface DeriveMetricMiddleStore {
     /**
      * 通过key查询
      *
-     * @param realKey
      * @return
      */
     MetricCube get(MetricCube cube);
@@ -25,7 +24,6 @@ public interface DeriveMetricMiddleStore {
     /**
      * 通过key进行更新
      *
-     * @param realKey
      * @param cube
      */
     void put(MetricCube cube);

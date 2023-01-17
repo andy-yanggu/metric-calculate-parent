@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.unit.collection;
+package com.yanggu.metric_calculate.core.unit.count_window;
 
 
 import cn.hutool.core.collection.CollUtil;
@@ -7,9 +7,11 @@ import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
+import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
+import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldNameConstants;
 
@@ -19,13 +21,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.constant.Constant.COUNT_WINDOW_AGG_PARAM;
-import static com.yanggu.metric_calculate.core.constant.Constant.UNIT_FACTORY;
-
+/**
+ * 滑动计数窗口, 窗口大小为limit, 滑动步长为1
+ *
+ * @param <T>
+ */
+@Data
 @FieldNameConstants
 @MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true)
 @Collective(useCompareField = false, retainObject = true)
-public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<ListObjectCountWindowUnit<T>>,
+public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<Object>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -1500607404480893613L;
@@ -43,7 +48,7 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements Unlim
     public ListObjectCountWindowUnit() {
     }
 
-    public ListObjectCountWindowUnit(Map<String, Object> param) throws Exception {
+    public ListObjectCountWindowUnit(Map<String, Object> param) {
         if (CollUtil.isEmpty(param)) {
             return;
         }
@@ -54,20 +59,23 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements Unlim
             throw new RuntimeException("需要设置计数窗口大小");
         }
 
-        Object aggregateType = param.get("aggregateType");
-        if (StrUtil.isBlankIfStr(aggregateType)) {
+        Object tempAggregateType = param.get(Fields.aggregateType);
+        if (StrUtil.isBlankIfStr(tempAggregateType)) {
             throw new RuntimeException("聚合类型为空");
+        } else {
+            aggregateType = tempAggregateType.toString();
         }
 
-        Object tempUnitFactory = param.get(UNIT_FACTORY);
+        Object tempUnitFactory = param.get(Fields.unitFactory);
         if (tempUnitFactory instanceof UnitFactory) {
-            Class<? extends MergedUnit<?>> mergeableClass = ((UnitFactory) tempUnitFactory)
-                    .getMergeableClass(aggregateType.toString());
-            Object tempCountWindowAggParam = param.get(COUNT_WINDOW_AGG_PARAM);
+            unitFactory = (UnitFactory) tempUnitFactory;
+            Object tempCountWindowAggParam = param.get(Fields.countWindowAggParams);
             if (tempCountWindowAggParam instanceof Map) {
+                countWindowAggParams = (Map<String, Object>) tempCountWindowAggParam;
             }
+        } else {
+            throw new RuntimeException("UnitFactory为空");
         }
-
     }
 
     public ListObjectCountWindowUnit(T value) {
@@ -84,14 +92,6 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements Unlim
         this.limit = limit;
     }
 
-    public List<T> getList() {
-        return this.values;
-    }
-
-    public void setList(List<T> paramList) {
-        this.values = paramList;
-    }
-
     /**
      * add.
      *
@@ -106,42 +106,15 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements Unlim
         return this;
     }
 
-    public List<T> asList() {
-        return this.values;
-    }
-
     @Override
     public ListObjectCountWindowUnit<T> merge(ListObjectCountWindowUnit<T> that) {
-        return merge(that, false);
-    }
-
-    @Deprecated
-    private ListObjectCountWindowUnit<T> merge(ListObjectCountWindowUnit<T> that, boolean useLimit) {
-        if (that == null) {
-            return this;
-        }
-        List<T> values = that.getList();
-        int limit = that.limit;
-        return internalMerge(values, useLimit, limit);
-    }
-
-    private ListObjectCountWindowUnit<T> internalMerge(List<T> values, boolean useLimit, int limit) {
-        this.values.addAll(values);
-        if (!useLimit) {
-            this.limit = Math.max(this.limit, limit);
-            int i = this.values.size();
-            if (this.limit > 0 && i > this.limit) {
-                List<T> list = this.values.subList(i - this.limit, i);
-                this.values = new ArrayList<>(this.limit);
-                this.values.addAll(list);
-            }
+        this.values.addAll(that.values);
+        int size = this.values.size();
+        if (size > limit) {
+            //将前面的数据移除掉
+            this.values = CollUtil.sub(this.values, size - limit, size);
         }
         return this;
-    }
-
-    @Override
-    public ListObjectCountWindowUnit<T> unlimitedMerge(ListObjectCountWindowUnit<T> that) {
-        return merge(that, true);
     }
 
     @Override
@@ -151,22 +124,23 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements Unlim
 
     @SneakyThrows
     @Override
-    public List<T> value() {
+    public Object value() {
         List<T> tempValueList = this.values;
-
         T first = CollUtil.getFirst(tempValueList);
         MergedUnit mergedUnit = unitFactory.initInstanceByValue(aggregateType, first, countWindowAggParams);
-
-
-        return tempValueList;
+        for (int i = 1; i < tempValueList.size(); i++) {
+            T t = tempValueList.get(i);
+            mergedUnit.merge(unitFactory.initInstanceByValue(aggregateType, t, countWindowAggParams));
+        }
+        return ValueMapper.value((Value<?>) mergedUnit);
     }
 
     @Override
     public ListObjectCountWindowUnit<T> fastClone() {
         ListObjectCountWindowUnit<T> mergeableListObject = new ListObjectCountWindowUnit<>();
         mergeableListObject.limit = this.limit;
-        for (T item : getList()) {
-            mergeableListObject.getList().add(item.fastClone());
+        for (T item : values) {
+            mergeableListObject.getValues().add(item.fastClone());
         }
         return mergeableListObject;
     }

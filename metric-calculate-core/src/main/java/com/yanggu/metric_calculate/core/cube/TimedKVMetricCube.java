@@ -17,7 +17,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Data
 @NoArgsConstructor
-public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>> implements MetricCube<TimeSeriesKVTable<V>, Long, V, C, TimeUnit> {
+public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>>
+        implements MetricCube<Table, Long, V, C> {
 
     public static final String PREFIX = "MC.T.KV.C";
 
@@ -49,7 +50,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     /**
      * 时间序列存储
      */
-    private TimeSeriesKVTable<V> table;
+    private Table table;
 
     @Override
     public String getPrefix() {
@@ -79,7 +80,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
 
     @Override
     public boolean isEmpty() {
-        return table.isEmpty();
+        return false;
     }
 
     @Override
@@ -103,38 +104,18 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public V put(Long key, V value) {
-        return table.putValue(key, value);
+    public void put(Long key, V value) {
+        table.putValue(key, null, value);
     }
 
     @Override
-    public TimeSeriesKVTable<V> table() {
+    public Table table() {
         return table;
     }
 
     @Override
-    public Value<V> query() {
-        return table.query(referenceTime - this.timeBaselineDimension.realLength(), false, referenceTime, true);
-    }
-
-    @Override
-    public Value<V> query(long end) {
-        return null;
-    }
-
-    @Override
-    public Value<V> query(long start, long end) {
-        return null;
-    }
-
-    @Override
-    public void expire(long expire) {
-
-    }
-
-    @Override
-    public long expire() {
-        return 0;
+    public Value query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+        return table.query(from, fromInclusive, to, toInclusive);
     }
 
     @Override
@@ -167,6 +148,16 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
         long windowEnd = DateUtil.ceiling(new Date(referenceTime), timeBaselineDimension.getUnit().getDateField()).getTime() + 1;
         long windowStart = windowEnd - timeBaselineDimension.realLength();
         return new Tuple(windowStart, windowEnd);
+    }
+
+    @Override
+    public long getReferenceTime() {
+        return 0;
+    }
+
+    @Override
+    public void setReferenceTime(long referenceTime) {
+
     }
 
 }

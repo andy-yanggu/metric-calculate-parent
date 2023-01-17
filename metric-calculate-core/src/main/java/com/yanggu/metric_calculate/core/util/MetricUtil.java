@@ -19,8 +19,8 @@ import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.*;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.*;
-import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core.store.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
@@ -165,11 +164,7 @@ public class MetricUtil {
     @SneakyThrows
     public static DeriveMetricCalculate initDerive(Derive tempDerive, MetricCalculate metricCalculate) {
         DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate();
-
-        //初始化上下文, 本地缓存
-        TimedKVMetricContext timedKVMetricContext = new TimedKVMetricContext();
-        timedKVMetricContext.setCache(new ConcurrentHashMap());
-        deriveMetricCalculate.init(timedKVMetricContext);
+        deriveMetricCalculate.init();
 
         //设置名称
         deriveMetricCalculate.setName(tempDerive.getName());

@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class TimeBaselineDimension {
+public class TimeBaselineDimension implements Serializable {
 
     /**
      * 时间长度

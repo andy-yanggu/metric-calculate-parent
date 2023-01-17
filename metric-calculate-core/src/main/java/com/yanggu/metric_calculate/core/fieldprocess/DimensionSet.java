@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.fieldprocess;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -11,7 +12,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @NoArgsConstructor
-public class DimensionSet {
+public class DimensionSet implements Serializable {
 
     /**
      * 指标名称

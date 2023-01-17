@@ -20,12 +20,12 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
 
     private static final long serialVersionUID = -1300607404480893613L;
 
-    public boolean desc = true;
+    public Boolean desc = true;
 
     /**
      * 是否只展示value, 不展示key
      */
-    private boolean onlyShowValue = true;
+    private Boolean onlyShowValue = true;
 
     public int limit = 0;
 

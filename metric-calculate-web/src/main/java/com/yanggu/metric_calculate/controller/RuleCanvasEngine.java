@@ -129,8 +129,6 @@ public class RuleCanvasEngine {
         }
         deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
             TimedKVMetricCube<?, ?> exec = deriveMetricCalculate.exec(message);
-            //清空本地缓存
-            deriveMetricCalculate.getCache().clear();
             if (exec != null) {
                 List<DeriveMetricCalculateResult> query = deriveMetricCalculate.query(exec);
                 if (CollUtil.isNotEmpty(query)) {

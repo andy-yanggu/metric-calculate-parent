@@ -17,8 +17,8 @@ import java.util.*;
  * @param <V>
  */
 @Data
-public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V> implements KVTable<Long, V, TimeSeriesKVTable<V>>, SortedTable<Long, V, Long, V, TimeSeriesKVTable<V>>,
-        TimeReferable {
+public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V>
+        implements KVTable<Long, V, TimeSeriesKVTable<V>>, TimeReferable {
 
     /**
      * 时间聚合粒度
@@ -68,16 +68,6 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     }
 
     @Override
-    public long count() {
-        return size();
-    }
-
-    @Override
-    public void truncate() {
-        clear();
-    }
-
-    @Override
     public TimeSeriesKVTable<V> cloneEmpty() {
         TimeSeriesKVTable<V> result = new TimeSeriesKVTable();
         result.timeBaselineDimension = timeBaselineDimension;
@@ -90,17 +80,7 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     }
 
     @Override
-    public Iterator iterator() {
-        return null;
-    }
-
-    @Override
-    public Value query(Long from, Long to) {
-        return query(from, true, to, false);
-    }
-
-    protected Value query(long from, boolean fromInclusive,
-                          long to, boolean toInclusive) {
+    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
         NavigableMap<Long, V> subMap = subMap(from, fromInclusive, to, toInclusive);
 
         Collection<V> values = subMap.values();
@@ -113,44 +93,13 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     }
 
     @Override
-    public V firstRow() {
-        return null;
-    }
-
-    @Override
-    public V lastRow() {
-        return null;
-    }
-
-    @Override
-    public Value first() {
-        return null;
-    }
-
-    @Override
-    public Value last() {
-        return null;
-    }
-
-    @Override
-    public TimeSeriesKVTable<V> subTable(Long from, Long to) {
-        return null;
-    }
-
-    @Override
-    public TimeSeriesKVTable<V> subTable(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        TimeSeriesKVTable<V> result = cloneEmpty();
-        subMap(from, fromInclusive, to, toInclusive).forEach((k, v) -> result.put(k, v.fastClone()));
-        return result;
-    }
-
-    @Override
-    public long referenceTime() {
+    public long getReferenceTime() {
         return lastKey();
     }
 
     @Override
-    public void referenceTime(long referenceTime) {
+    public void setReferenceTime(long referenceTime) {
 
     }
+
 }

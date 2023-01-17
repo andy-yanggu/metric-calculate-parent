@@ -4,7 +4,8 @@ import java.io.Serializable;
 
 public interface TimeReferable extends Serializable {
 
-    long referenceTime();
+    long getReferenceTime();
 
-    void referenceTime(long referenceTime);
+    void setReferenceTime(long referenceTime);
+
 }

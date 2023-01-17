@@ -10,9 +10,7 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.enums.BasicType;
-import com.yanggu.metric_calculate.core.number.CubeDecimal;
-import com.yanggu.metric_calculate.core.number.CubeLong;
-import com.yanggu.metric_calculate.core.number.CubeNumber;
+import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
@@ -21,6 +19,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.math.BigDecimal;
 import java.net.URL;
@@ -36,7 +35,7 @@ import static com.yanggu.metric_calculate.core.enums.BasicType.*;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class UnitFactory {
+public class UnitFactory implements Serializable {
 
     /**
      * 内置MergeUnit的包路径
@@ -187,10 +186,10 @@ public class UnitFactory {
         BasicType valueType = ofValue(initValue);
         switch (valueType) {
             case LONG:
-                initArgs[0] = CubeLong.of((Number) initValue);
+                initArgs[0] = CubeLong.of(initValue);
                 break;
             case DECIMAL:
-                initArgs[0] = CubeDecimal.of((Number) initValue);
+                initArgs[0] = CubeDecimal.of(initValue);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value type: " + valueType);
@@ -215,6 +214,16 @@ public class UnitFactory {
             return DECIMAL;
         } else if (value instanceof Double) {
             return DECIMAL;
+        } else if (value instanceof CubeDecimal) {
+            return DECIMAL;
+        } else if (value instanceof CubeDouble) {
+            return DECIMAL;
+        } else if (value instanceof CubeFloat) {
+            return DECIMAL;
+        } else if (value instanceof CubeLong) {
+            return LONG;
+        } else if (value instanceof CubeInteger) {
+            return LONG;
         } else {
             throw new IllegalArgumentException(String.format("Not support type: %s", value.getClass().getName()));
         }
