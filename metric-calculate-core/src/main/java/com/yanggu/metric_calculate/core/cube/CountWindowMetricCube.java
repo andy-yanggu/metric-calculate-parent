@@ -11,8 +11,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>, C extends CountWindowMetricCube<V, C>>
-        implements MetricCube<CountWindowTable<V>, Long, V, C> {
+public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
+        implements MetricCube<Table, Long, V, CountWindowMetricCube<V>> {
 
     public static final String PREFIX = "MC.T.KV.C";
 
@@ -63,16 +63,6 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>, C extends
     }
 
     @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public String key() {
-        return key;
-    }
-
-    @Override
     public void put(Long key, V value) {
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(key);
         if (CollUtil.isEmpty(timeWindow)) {
@@ -87,13 +77,13 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>, C extends
     }
 
     @Override
-    public C merge(C that) {
+    public CountWindowMetricCube<V> merge(CountWindowMetricCube<V> that) {
         table.merge(that.getTable());
-        return (C) this;
+        return this;
     }
 
     @Override
-    public CountWindowTable<V> table() {
+    public CountWindowTable<V> getTable() {
         return (CountWindowTable<V>) table;
     }
 
@@ -103,7 +93,7 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>, C extends
     }
 
     @Override
-    public C cloneEmpty() {
+    public CountWindowMetricCube<V> cloneEmpty() {
         return null;
     }
 
@@ -113,32 +103,22 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>, C extends
     }
 
     @Override
-    public DimensionSet dimensions() {
-        return dimensionSet;
-    }
-
-    @Override
-    public TimeBaselineDimension baselineDimension() {
-        return timeBaselineDimension;
-    }
-
-    @Override
     public int eliminateExpiredData() {
         return 0;
     }
 
     @Override
     public long getReferenceTime() {
-        return 0;
+        return this.referenceTime;
     }
 
     @Override
     public void setReferenceTime(long referenceTime) {
-
+        this.referenceTime = Math.max(this.referenceTime, referenceTime);
     }
 
     @Override
-    public C fastClone() {
+    public CountWindowMetricCube<V> fastClone() {
         return null;
     }
 

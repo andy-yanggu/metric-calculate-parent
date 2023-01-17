@@ -11,7 +11,6 @@ public interface Calculate<E, R> {
      * 初始化方法
      */
     default void init() throws RuntimeException {
-        throw new RuntimeException("需要重写init方法");
     }
 
     /**

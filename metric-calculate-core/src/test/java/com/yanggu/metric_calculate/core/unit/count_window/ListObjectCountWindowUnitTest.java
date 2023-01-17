@@ -21,11 +21,10 @@ public class ListObjectCountWindowUnitTest {
         //最近5条数据的求和
         Map<String, Object> param = new HashMap<>();
         param.put(Fields.limit, 5);
-        param.put(Fields.aggregateType, "SUM");
+        //param.put(Fields.aggregateFieldProcessor, )
 
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
-        param.put(Fields.unitFactory, unitFactory);
 
         ListObjectCountWindowUnit<CubeLong> countWindowUnit = new ListObjectCountWindowUnit<>(param);
         countWindowUnit.add(CubeLong.of(1L));

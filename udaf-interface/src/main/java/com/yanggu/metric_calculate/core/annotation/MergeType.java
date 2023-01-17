@@ -32,4 +32,11 @@ public @interface MergeType {
      */
     boolean useParam() default false;
 
+    /**
+     * 是否是计数窗口
+     *
+     * @return
+     */
+    boolean countWindow() default false;
+
 }

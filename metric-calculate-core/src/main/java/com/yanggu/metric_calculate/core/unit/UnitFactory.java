@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.enums.BasicType;
+import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
@@ -158,7 +159,6 @@ public class UnitFactory implements Serializable {
     private MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         CollectionUnit collectionUnit;
         if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
-            params.put(UNIT_FACTORY, this);
             collectionUnit = clazz.getConstructor(Map.class).newInstance(params);
         } else {
             collectionUnit = clazz.getConstructor().newInstance();

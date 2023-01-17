@@ -8,13 +8,20 @@ import com.yanggu.metric_calculate.core.value.Value;
 public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V, C>>
         extends Cube<C>, KeyReferable, MergedUnit<C>, TimeReferable {
 
-    DimensionSet dimensions();
+    DimensionSet getDimensionSet();
 
-    TimeBaselineDimension baselineDimension();
+    void setDimensionSet(DimensionSet dimensionSet);
+
+    TimeBaselineDimension getTimeBaselineDimension();
+
+    void setTimeBaselineDimension(TimeBaselineDimension timeBaselineDimension);
+
+    T getTable();
+
+    void setTable(T table);
 
     void put(K key, V value);
 
-    T table();
 
     /**
      * @param from          开始时间戳

@@ -14,12 +14,12 @@ public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
     @Override
     public void write(Kryo kryo, Output output, TimedKVMetricCube cube) {
 
-        kryo.writeObject(output, cube.name());
-        kryo.writeObject(output, cube.key());
+        kryo.writeObject(output, cube.getName());
+        kryo.writeObject(output, cube.getKey());
         kryo.writeObject(output, cube.getReferenceTime());
-        kryo.writeObject(output, cube.dimensions());
-        kryo.writeObject(output, cube.baselineDimension());
-        kryo.writeObject(output, cube.table());
+        kryo.writeObject(output, cube.getDimensionSet());
+        kryo.writeObject(output, cube.getTimeBaselineDimension());
+        kryo.writeObject(output, cube.getTable());
     }
 
     @Override

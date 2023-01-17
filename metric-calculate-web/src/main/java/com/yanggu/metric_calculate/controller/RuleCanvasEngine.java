@@ -6,6 +6,8 @@ import cn.hutool.json.JSONUtil;
 import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
 import com.yanggu.metric_calculate.core.calculate.*;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.cube.Table;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
@@ -128,7 +130,7 @@ public class RuleCanvasEngine {
             return;
         }
         deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
-            TimedKVMetricCube<?, ?> exec = deriveMetricCalculate.exec(message);
+            MetricCube<Table, Long, ?, ?> exec = deriveMetricCalculate.exec(message);
             if (exec != null) {
                 List<DeriveMetricCalculateResult> query = deriveMetricCalculate.query(exec);
                 if (CollUtil.isNotEmpty(query)) {

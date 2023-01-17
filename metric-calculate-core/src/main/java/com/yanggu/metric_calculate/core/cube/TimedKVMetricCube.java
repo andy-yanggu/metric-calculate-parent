@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @param <V>
@@ -69,16 +68,6 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public String name() {
-        return name;
-    }
-
-    @Override
-    public String key() {
-        return key;
-    }
-
-    @Override
     public boolean isEmpty() {
         return false;
     }
@@ -94,22 +83,12 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public DimensionSet dimensions() {
-        return dimensionSet;
-    }
-
-    @Override
-    public TimeBaselineDimension baselineDimension() {
-        return timeBaselineDimension;
-    }
-
-    @Override
     public void put(Long key, V value) {
         table.putValue(key, null, value);
     }
 
     @Override
-    public Table table() {
+    public Table getTable() {
         return table;
     }
 
@@ -152,12 +131,12 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
 
     @Override
     public long getReferenceTime() {
-        return 0;
+        return this.referenceTime;
     }
 
     @Override
     public void setReferenceTime(long referenceTime) {
-
+        this.referenceTime = Math.max(this.referenceTime, referenceTime);
     }
 
 }

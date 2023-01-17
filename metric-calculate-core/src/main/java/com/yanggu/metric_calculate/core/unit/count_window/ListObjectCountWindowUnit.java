@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.core.unit.count_window;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.fieldprocess.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
@@ -28,7 +30,7 @@ import java.util.Map;
  */
 @Data
 @FieldNameConstants
-@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true)
+@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, countWindow = true)
 @Collective(useCompareField = false, retainObject = true)
 public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<Object>, Serializable, Iterable<T> {
@@ -39,11 +41,7 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
 
     private Integer limit = 0;
 
-    private UnitFactory unitFactory;
-
-    private String aggregateType;
-
-    private Map<String, Object> countWindowAggParams;
+    private BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
 
     public ListObjectCountWindowUnit() {
     }
@@ -59,22 +57,11 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
             throw new RuntimeException("需要设置计数窗口大小");
         }
 
-        Object tempAggregateType = param.get(Fields.aggregateType);
-        if (StrUtil.isBlankIfStr(tempAggregateType)) {
-            throw new RuntimeException("聚合类型为空");
+        Object tempAggProcessor = param.get(Fields.aggregateFieldProcessor);
+        if (tempAggProcessor instanceof BaseAggregateFieldProcessor) {
+            this.aggregateFieldProcessor = ((BaseAggregateFieldProcessor<?>) tempAggProcessor);
         } else {
-            aggregateType = tempAggregateType.toString();
-        }
-
-        Object tempUnitFactory = param.get(Fields.unitFactory);
-        if (tempUnitFactory instanceof UnitFactory) {
-            unitFactory = (UnitFactory) tempUnitFactory;
-            Object tempCountWindowAggParam = param.get(Fields.countWindowAggParams);
-            if (tempCountWindowAggParam instanceof Map) {
-                countWindowAggParams = (Map<String, Object>) tempCountWindowAggParam;
-            }
-        } else {
-            throw new RuntimeException("UnitFactory为空");
+            throw new RuntimeException("需要设置聚合字段处理器");
         }
     }
 
@@ -127,10 +114,14 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
     public Object value() {
         List<T> tempValueList = this.values;
         T first = CollUtil.getFirst(tempValueList);
-        MergedUnit mergedUnit = unitFactory.initInstanceByValue(aggregateType, first, countWindowAggParams);
+        //TODO 这里不能直接使用unitFactory的initInstanceByValue方法
+        //TODO 因为initValue是由聚合字段处理器生成的, 而不是原始的T
+        //TOOD 这里有问题, 传入的可能是标量值(基本数据类型), 不能都当做聚合值, 例如java对象
+        //JSONUtil
+        MergedUnit mergedUnit = (MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(first.fastClone()));
         for (int i = 1; i < tempValueList.size(); i++) {
             T t = tempValueList.get(i);
-            mergedUnit.merge(unitFactory.initInstanceByValue(aggregateType, t, countWindowAggParams));
+            mergedUnit.merge((MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(t.fastClone())));
         }
         return ValueMapper.value((Value<?>) mergedUnit);
     }

@@ -751,6 +751,43 @@
         "length": null,
         "type": "NOT_HANDLE"
       }
+    },
+    {
+      "id": 7,
+      "name": "today_credit_count2",
+      "atom": "current_credit_count",
+      "displayName": "当天贷方笔数",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "LISTOBJECTCOUNTWINDOW",
+      "metricColumn": {
+        "columnName": "credit_amt_out",
+        "columnIndex": 5
+      },
+      "duration": 2,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "udafParams": {
+        "limit": 5,
+        "aggregateType": "SUM",
+        ,
+      }
     }
   ],
   "composite": [

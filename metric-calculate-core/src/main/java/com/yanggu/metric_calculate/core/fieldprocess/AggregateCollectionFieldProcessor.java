@@ -1,12 +1,22 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Collective;
+import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Numerical;
+import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
+import lombok.SneakyThrows;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.yanggu.metric_calculate.core.constant.Constant.UNIT_FACTORY;
 
 
 /**
@@ -68,6 +78,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
             }
             result = Cloneable2Wrapper.wrap(value);
         }
+        test(udafParams);
         return (M) unitFactory.initInstanceByValue(aggregateType, result, udafParams);
     }
 
@@ -83,6 +94,75 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
             value = retainField;
         }
         return value;
+    }
+
+    @SneakyThrows
+    private void test(Map<String, Object> udafParams) {
+        if (CollUtil.isEmpty(udafParams)) {
+            return;
+        }
+
+        //如果是计数窗口, 需要添加聚合字段处理器
+        MergeType annotation = mergeUnitClazz.getAnnotation(MergeType.class);
+        if (!annotation.countWindow()) {
+            return;
+        }
+
+        BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
+
+        String aggregateType = udafParams.get("aggregateType").toString();
+
+        Map<String, Class<?>> fieldMap = getFieldMap();
+        Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
+        if (mergeUnitClazz.isAnnotationPresent(Numerical.class)) {
+            aggregateFieldProcessor = new AggregateNumberFieldProcessor<>();
+            aggregateFieldProcessor.setMetricExpress(udafParams.get("metricExpress").toString());
+        } else if (mergeUnitClazz.isAnnotationPresent(Objective.class)) {
+            aggregateFieldProcessor = new AggregateObjectFieldProcessor<>();
+            //设置保留字段处理器
+            Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
+            if (objective.useCompareField()) {
+                aggregateFieldProcessor.setMetricExpress(udafParams.get("metricExpress").toString());
+            }
+            boolean retainObject = objective.retainObject();
+            if (!retainObject) {
+                MetricFieldProcessor<?> tempRetainFieldValueFieldProcessor = new MetricFieldProcessor<>();
+                tempRetainFieldValueFieldProcessor.setMetricExpress(udafParams.get("retainExpress").toString());
+                tempRetainFieldValueFieldProcessor.setFieldMap(fieldMap);
+                tempRetainFieldValueFieldProcessor.init();
+
+                ((AggregateObjectFieldProcessor<?>) aggregateFieldProcessor)
+                        .setRetainFieldValueFieldProcessor(tempRetainFieldValueFieldProcessor);
+            }
+        } else if (mergeUnitClazz.isAnnotationPresent(Collective.class)) {
+            aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
+            //设置保留字段处理器
+            Collective collective = mergeUnitClazz.getAnnotation(Collective.class);
+            if (collective.useCompareField()) {
+                aggregateFieldProcessor.setMetricExpress(udafParams.get("metricExpress").toString());
+            }
+            boolean retainObject = collective.retainObject();
+            if (!retainObject) {
+                MetricFieldProcessor<?> tempRetainFieldValueFieldProcessor = new MetricFieldProcessor<>();
+                tempRetainFieldValueFieldProcessor.setMetricExpress(udafParams.get("retainExpress").toString());
+                tempRetainFieldValueFieldProcessor.setFieldMap(fieldMap);
+                tempRetainFieldValueFieldProcessor.init();
+
+                ((AggregateCollectionFieldProcessor<?>) aggregateFieldProcessor)
+                        .setRetainFieldValueFieldProcessor(tempRetainFieldValueFieldProcessor);
+            }
+        } else {
+            throw new RuntimeException("不支持的聚合类型: " + aggregateType);
+        }
+
+        //聚合字段处理器
+        aggregateFieldProcessor.setFieldMap(fieldMap);
+        aggregateFieldProcessor.setAggregateType(aggregateType);
+        aggregateFieldProcessor.setUdafParams(((Map<String, Object>) udafParams.get("udafParams")));
+        aggregateFieldProcessor.setUnitFactory(unitFactory);
+        aggregateFieldProcessor.setMergeUnitClazz(mergeUnitClazz);
+        aggregateFieldProcessor.init();
+        udafParams.put("aggregateFieldProcessor", aggregateFieldProcessor);
     }
 
 }
