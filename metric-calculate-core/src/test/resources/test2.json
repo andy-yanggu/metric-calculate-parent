@@ -754,9 +754,9 @@
     },
     {
       "id": 7,
-      "name": "today_credit_count2",
+      "name": "today_credit_sum_5",
       "atom": "current_credit_count",
-      "displayName": "当天贷方笔数",
+      "displayName": "当天进5比交易贷方金额总和",
       "description": null,
       "dimension": [
         {
@@ -786,7 +786,7 @@
       "udafParams": {
         "limit": 5,
         "aggregateType": "SUM",
-        ,
+        "metricExpress": "debit_amt_out"
       }
     }
   ],

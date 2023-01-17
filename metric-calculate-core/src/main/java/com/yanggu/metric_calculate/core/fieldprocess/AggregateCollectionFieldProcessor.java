@@ -13,12 +13,9 @@ import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
 import lombok.SneakyThrows;
 
-import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.constant.Constant.UNIT_FACTORY;
-
-
+//TODO 增加kryo序列化器
 /**
  * 聚合集合型字段处理器
  *

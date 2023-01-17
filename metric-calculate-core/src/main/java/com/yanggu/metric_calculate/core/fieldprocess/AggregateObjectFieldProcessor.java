@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
 
+//TODO 增加kryo序列化器
 /**
  * 聚合对象型字段处理器
  *

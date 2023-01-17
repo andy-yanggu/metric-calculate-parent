@@ -2,13 +2,11 @@ package com.yanggu.metric_calculate.core.unit.count_window;
 
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.fieldprocess.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -113,15 +111,14 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
     @Override
     public Object value() {
         List<T> tempValueList = this.values;
-        T first = CollUtil.getFirst(tempValueList);
+        Value first = ((Value) CollUtil.getFirst(tempValueList));
         //TODO 这里不能直接使用unitFactory的initInstanceByValue方法
         //TODO 因为initValue是由聚合字段处理器生成的, 而不是原始的T
-        //TOOD 这里有问题, 传入的可能是标量值(基本数据类型), 不能都当做聚合值, 例如java对象
-        //JSONUtil
-        MergedUnit mergedUnit = (MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(first.fastClone()));
+        //TODO 这里有问题, 传入的可能是标量值(基本数据类型), 不能都当做聚合值, 例如java对象
+        MergedUnit mergedUnit = (MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(first.value()));
         for (int i = 1; i < tempValueList.size(); i++) {
             T t = tempValueList.get(i);
-            mergedUnit.merge((MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(t.fastClone())));
+            mergedUnit.merge((MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(((Value) t).value())));
         }
         return ValueMapper.value((Value<?>) mergedUnit);
     }
@@ -133,6 +130,7 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         for (T item : values) {
             mergeableListObject.getValues().add(item.fastClone());
         }
+        mergeableListObject.aggregateFieldProcessor = this.aggregateFieldProcessor;
         return mergeableListObject;
     }
 

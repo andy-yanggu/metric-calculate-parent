@@ -68,7 +68,7 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
         if (CollUtil.isEmpty(timeWindow)) {
             return;
         }
-        timeWindow.forEach(tempTimeWindow -> table.putValue(tempTimeWindow.getStart(), tempTimeWindow.getEnd(), value));
+        timeWindow.forEach(tempTimeWindow -> table.putValue(tempTimeWindow.getStart(), tempTimeWindow.getEnd(), value.fastClone()));
     }
 
     @Override

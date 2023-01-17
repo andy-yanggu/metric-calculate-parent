@@ -35,7 +35,14 @@ public class CountWindowTable<V extends MergedUnit<V> & Value<?>> implements Tab
 
     @Override
     public CountWindowTable<V> merge(CountWindowTable<V> that) {
-        that.twoKeyTable.forEach((tempTuple, value) -> twoKeyTable.merge(tempTuple, value, (k, v) -> v.merge(value)));
+        that.twoKeyTable.forEach((tempTuple, otherValue) -> {
+            V value = twoKeyTable.get(tempTuple);
+            if (value == null) {
+                twoKeyTable.put(tempTuple, otherValue);
+            } else {
+                value.merge(otherValue);
+            }
+        });
         return this;
     }
 
