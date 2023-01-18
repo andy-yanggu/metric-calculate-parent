@@ -1,8 +1,11 @@
 package com.yanggu.metric_calculate.core.unit.count_window;
 
-import com.yanggu.metric_calculate.core.number.CubeLong;
+import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core.fieldprocess.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.count_window.ListObjectCountWindowUnit.Fields;
+import com.yanggu.metric_calculate.core.util.MetricUtil;
+import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -21,37 +24,57 @@ public class ListObjectCountWindowUnitTest {
         //最近5条数据的求和
         Map<String, Object> param = new HashMap<>();
         param.put(Fields.limit, 5);
-        //param.put(Fields.aggregateFieldProcessor, )
 
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
 
-        ListObjectCountWindowUnit<CubeLong> countWindowUnit = new ListObjectCountWindowUnit<>(param);
-        countWindowUnit.add(CubeLong.of(1L));
+        Map<String, Object> udafParam = new HashMap<>();
+        udafParam.put(Fields.limit, 5);
+        udafParam.put("aggregateType", "SUM");
+
+        Map<String, Object> subUdafParam = new HashMap<>();
+        subUdafParam.put("metricExpress", "amount");
+        udafParam.put("udafParams", subUdafParam);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Long.class);
+
+        BaseAggregateFieldProcessor<?> aggregateFieldProcessor = MetricUtil.getAggregateFieldProcessor(
+                unitFactory, udafParam, fieldMap, "amount", "SUM");
+
+        param.put(Fields.aggregateFieldProcessor, aggregateFieldProcessor);
+        ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>> countWindowUnit = new ListObjectCountWindowUnit<>(param);
+        countWindowUnit.add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 1L)));
         Object value = countWindowUnit.value();
         assertEquals(1L, value);
 
-        countWindowUnit.merge(new ListObjectCountWindowUnit<CubeLong>(param).add(CubeLong.of(2L)));
+        countWindowUnit.merge(new ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>>(param)
+                .add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 2L))));
         value = countWindowUnit.value();
         assertEquals(3L, value);
 
-        countWindowUnit.merge(new ListObjectCountWindowUnit<CubeLong>(param).add(CubeLong.of(3L)));
+        countWindowUnit.merge(new ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>>(param)
+                .add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 3L))));
         value = countWindowUnit.value();
         assertEquals(6L, value);
 
-        countWindowUnit.merge(new ListObjectCountWindowUnit<CubeLong>(param).add(CubeLong.of(4L)));
+        countWindowUnit.merge(new ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>>(param)
+                .add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 4L))));
         value = countWindowUnit.value();
         assertEquals(10L, value);
 
-        countWindowUnit.merge(new ListObjectCountWindowUnit<CubeLong>(param).add(CubeLong.of(5L)));
+        countWindowUnit.merge(new ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>>(param)
+                .add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 5L))));
         value = countWindowUnit.value();
         assertEquals(15L, value);
 
-        countWindowUnit.merge(new ListObjectCountWindowUnit<CubeLong>(param).add(CubeLong.of(6L)));
+        countWindowUnit.merge(new ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>>(param)
+                .add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 6L))));
         value = countWindowUnit.value();
         assertEquals(20L, value);
 
-        countWindowUnit.merge(new ListObjectCountWindowUnit<CubeLong>(param).add(CubeLong.of(7L)));
+        countWindowUnit.merge(new ListObjectCountWindowUnit<Cloneable2Wrapper<JSONObject>>(param)
+                .add(Cloneable2Wrapper.wrap(new JSONObject().set("amount", 7L))));
         value = countWindowUnit.value();
         assertEquals(25L, value);
     }

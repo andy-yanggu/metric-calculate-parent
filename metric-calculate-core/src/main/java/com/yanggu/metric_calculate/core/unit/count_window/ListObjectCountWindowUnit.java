@@ -46,7 +46,7 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
 
     public ListObjectCountWindowUnit(Map<String, Object> param) {
         if (CollUtil.isEmpty(param)) {
-            return;
+            throw new RuntimeException("滑动计数窗口需要设置相关参数");
         }
         Object tempLimit = param.get(Fields.limit);
         if (tempLimit instanceof Integer) {
