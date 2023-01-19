@@ -2,24 +2,18 @@ package com.yanggu.metric_calculate.core.unit.count_window;
 
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.fieldprocess.BaseAggregateFieldProcessor;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.Data;
 import lombok.SneakyThrows;
 import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 滑动计数窗口, 窗口大小为limit, 滑动步长为1
@@ -39,8 +33,6 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
 
     private Integer limit = 0;
 
-    private BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
-
     public ListObjectCountWindowUnit() {
     }
 
@@ -53,13 +45,6 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
             this.limit = (Integer) tempLimit;
         } else {
             throw new RuntimeException("需要设置计数窗口大小");
-        }
-
-        Object tempAggProcessor = param.get(Fields.aggregateFieldProcessor);
-        if (tempAggProcessor instanceof BaseAggregateFieldProcessor) {
-            this.aggregateFieldProcessor = ((BaseAggregateFieldProcessor<?>) tempAggProcessor);
-        } else {
-            throw new RuntimeException("需要设置聚合字段处理器");
         }
     }
 
@@ -110,17 +95,9 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
     @SneakyThrows
     @Override
     public Object value() {
-        List<T> tempValueList = this.values;
-        Value first = ((Value) CollUtil.getFirst(tempValueList));
-        //TODO 这里不能直接使用unitFactory的initInstanceByValue方法
-        //TODO 因为initValue是由聚合字段处理器生成的, 而不是原始的T
-        //TODO 这里有问题, 传入的可能是标量值(基本数据类型), 不能都当做聚合值, 例如java对象
-        MergedUnit mergedUnit = (MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(first.value()));
-        for (int i = 1; i < tempValueList.size(); i++) {
-            T t = tempValueList.get(i);
-            mergedUnit.merge((MergedUnit) aggregateFieldProcessor.process(JSONUtil.parseObj(((Value) t).value())));
-        }
-        return ValueMapper.value((Value<?>) mergedUnit);
+        return this.values.stream()
+                .map(tempValue -> ((Value<?>) tempValue).value())
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -130,7 +107,6 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         for (T item : values) {
             mergeableListObject.getValues().add(item.fastClone());
         }
-        mergeableListObject.aggregateFieldProcessor = this.aggregateFieldProcessor;
         return mergeableListObject;
     }
 
@@ -150,7 +126,7 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         } else if (!this.values.equals(thatUnit.values)) {
             return false;
         }
-        return this.limit == thatUnit.limit;
+        return Objects.equals(this.limit, thatUnit.limit);
     }
 
     @Override

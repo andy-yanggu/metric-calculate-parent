@@ -17,12 +17,15 @@ import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
-import com.yanggu.metric_calculate.core.calculate.*;
+import com.yanggu.metric_calculate.core.calculate.AtomMetricCalculate;
+import com.yanggu.metric_calculate.core.calculate.CompositeMetricCalculate;
+import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core.pojo.*;
+import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.pojo.*;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
@@ -35,7 +38,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
-import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.GLOBAL;
 
 @Slf4j
 public class MetricUtil {
@@ -194,11 +196,51 @@ public class MetricUtil {
         BaseAggregateFieldProcessor<?> aggregateFieldProcessor =
                 getAggregateFieldProcessor(unitFactory, tempDerive.getUdafParams(), fieldMap, columnName, calculateLogic);
 
-        if (aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class).countWindow()) {
-
-        }
-
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
+
+        if (aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class).countWindow()) {
+            //如果是计数窗口, 需要添加子聚合字段处理器
+            //滑动计数窗口的udafParams参数
+            /*
+            {
+                "limit": 5, //滑动计数窗口大小
+                "aggregateType": "SUM", //聚合类型
+                "udafParams": { //自定义udaf参数
+                    "metricExpress": "amount", //度量字段(数值)、比较字段(排序或者去重) TODO 需要前端手动设置原子指标度量字段名
+                    "retainExpress": "", //保留字段名
+                }
+            }
+            */
+
+                //如果是一个普通的sortlistfield
+            /*
+            {
+              "desc": true, //升序还是降序
+              "limit": 10,  //限制大小
+              "retainExpress": "amount" //保留字段名
+            }
+            */
+
+            Map<String, Object> udafParams = tempDerive.getUdafParams();
+            Object aggregateType = udafParams.get("aggregateType");
+            if (StrUtil.isBlankIfStr(aggregateType)) {
+                throw new RuntimeException("滑动计数窗口需要设置聚合类型aggregateType");
+            }
+
+            Object subUdafParamsMapObject = udafParams.get("udafParams");
+            Map<String, Object> subUdafParams = new HashMap<>();
+            Object metricExpress = null;
+            if (subUdafParamsMapObject instanceof Map && CollUtil.isNotEmpty((Map<?, ?>) subUdafParamsMapObject)) {
+                subUdafParams = (Map<String, Object>) subUdafParamsMapObject;
+                metricExpress = subUdafParams.get("metricExpress");
+            }
+
+            BaseAggregateFieldProcessor<?> subAggregateFieldProcessor =
+                    MetricUtil.getAggregateFieldProcessor(unitFactory, subUdafParams, fieldMap, metricExpress, aggregateType.toString());
+
+            subAggregateFieldProcessor.setUdafParams(subUdafParams);
+            deriveMetricCalculate.setSubAggregateFieldProcessor(subAggregateFieldProcessor);
+        }
 
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();
@@ -252,7 +294,7 @@ public class MetricUtil {
      * @return
      * @throws Exception
      */
-    public static BaseAggregateFieldProcessor<?> getAggregateFieldProcessor(UnitFactory unitFactory,
+    private static BaseAggregateFieldProcessor<?> getAggregateFieldProcessor(UnitFactory unitFactory,
                                                                             Map<String, Object> udafParams,
                                                                             Map<String, Class<?>> fieldMap,
                                                                             Object metricExpress,
@@ -324,7 +366,7 @@ public class MetricUtil {
      * @param compositeMetric
      * @return
      */
-    public static List<CompositeMetricCalculate> initComposite(Composite compositeMetric, MetricCalculate metricCalculate) {
+    private static List<CompositeMetricCalculate> initComposite(Composite compositeMetric, MetricCalculate metricCalculate) {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<MultiDimensionCalculate> multiDimensionCalculateList = compositeMetric.getMultiDimensionCalculateList();
         if (CollUtil.isEmpty(multiDimensionCalculateList)) {

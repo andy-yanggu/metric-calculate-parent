@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-//TODO 增加kryo序列化器
 /**
  * 聚合数值类型处理器继承自度量字段处理器, 增加了聚合类型
  */

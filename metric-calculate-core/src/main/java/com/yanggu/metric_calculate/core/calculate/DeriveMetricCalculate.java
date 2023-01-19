@@ -1,14 +1,15 @@
 package com.yanggu.metric_calculate.core.calculate;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.cube.*;
+import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
 import com.yanggu.metric_calculate.core.pojo.Store;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.RoundAccuracyUtil;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -17,8 +18,10 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.security.acl.AclNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +52,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
      * 聚合字段处理器, 生成MergeUnit
      */
     private BaseAggregateFieldProcessor<M> aggregateFieldProcessor;
+
+    /**
+     * 对于滑动计数窗口函数, 需要进行二次聚合计算
+     */
+    private BaseAggregateFieldProcessor<?> subAggregateFieldProcessor;
 
     /**
      * 时间字段, 提取出时间戳
@@ -128,6 +136,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         return metricCube;
     }
 
+    @SneakyThrows
     public List<DeriveMetricCalculateResult> query(MetricCube newMetricCube) {
         MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
         if (metricCube == null) {
@@ -167,6 +176,18 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
             //聚合值
             Object value = metricCube.query(windowStart, true, windowEnd, false).value();
+
+            //如果是滑动计数窗口需要进行二次聚合处理
+            MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
+            if (annotation.countWindow() && value instanceof List) {
+                List<JSONObject> tempValueList = (List<JSONObject>) value;
+                JSONObject first = CollUtil.getFirst(tempValueList);
+                MergedUnit mergedUnit = (MergedUnit<?>) subAggregateFieldProcessor.process(first);
+                for (int i = 1; i < tempValueList.size(); i++) {
+                    mergedUnit.merge((MergedUnit<?>) subAggregateFieldProcessor.process(tempValueList.get(i)));
+                }
+                value = ((Value<?>) mergedUnit).value();
+            }
 
             //处理精度
             value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
