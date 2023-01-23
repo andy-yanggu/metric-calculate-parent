@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.CastUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
@@ -8,6 +9,8 @@ import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.Fields;
 import org.junit.Test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -47,9 +50,14 @@ public class MetricUtilTest {
      * @throws Exception
      */
     @Test
-    public void testGetFieldMap1() {
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> MetricUtil.getFieldMap(null));
-        assertEquals("传入的明细宽表为空", runtimeException.getMessage());
+    public void testGetFieldMap() throws Exception {
+        Method method = MetricUtil.class.getDeclaredMethod("getFieldMap", MetricCalculate.class);
+        method.setAccessible(true);
+        InvocationTargetException runtimeException =
+                assertThrows(InvocationTargetException.class, () -> method.invoke(null, (MetricCalculate) null));
+        Throwable targetException = runtimeException.getTargetException();
+        assertEquals(RuntimeException.class, targetException.getClass());
+        assertEquals("传入的明细宽表为空", targetException.getMessage());
     }
 
     /**
@@ -58,11 +66,15 @@ public class MetricUtilTest {
      * @throws Exception
      */
     @Test
-    public void testGetFieldMap2() {
+    public void testGetFieldMap2() throws Exception {
         MetricCalculate metricCalculate = new MetricCalculate();
-        RuntimeException runtimeException = assertThrows(RuntimeException.class,
-                () -> MetricUtil.getFieldMap(metricCalculate));
-        assertEquals("宽表字段为空, 宽表数据: " + JSONUtil.toJsonStr(metricCalculate), runtimeException.getMessage());
+        Method method = MetricUtil.class.getDeclaredMethod("getFieldMap", MetricCalculate.class);
+        method.setAccessible(true);
+        InvocationTargetException runtimeException =
+                assertThrows(InvocationTargetException.class, () -> method.invoke(null, metricCalculate));
+        Throwable targetException = runtimeException.getTargetException();
+        assertEquals(RuntimeException.class, targetException.getClass());
+        assertEquals("宽表字段为空, 宽表数据: " + JSONUtil.toJsonStr(metricCalculate), targetException.getMessage());
     }
 
     /**
@@ -71,9 +83,11 @@ public class MetricUtilTest {
      * @throws Exception
      */
     @Test
-    public void testGetFieldMap3() {
+    public void testGetFieldMap3() throws Exception {
         MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), MetricCalculate.class);
-        Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
+        Method method = MetricUtil.class.getDeclaredMethod("getFieldMap", MetricCalculate.class);
+        method.setAccessible(true);
+        Map<String, Class<?>> fieldMap = (Map<String, Class<?>>) method.invoke(null, metricCalculate);
 
         List<Fields> fields = metricCalculate.getFields();
         fields.forEach(tempField -> {

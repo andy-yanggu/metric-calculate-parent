@@ -1,8 +1,6 @@
-package com.yanggu.metric_calculate.core.unit.collect;
+package com.yanggu.metric_calculate.core.unit.collection;
 
-import com.yanggu.metric_calculate.core.unit.collection.UniqueCountUnit;
 import com.yanggu.metric_calculate.core.value.Key;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

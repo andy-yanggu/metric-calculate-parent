@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.cube;
 
 import com.yanggu.metric_calculate.core.fieldprocess.DimensionSet;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 

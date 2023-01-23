@@ -4,32 +4,34 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
-import com.yanggu.metric_calculate.core.cube.Table;
+import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * 派生指标计算类单元测试类
+ */
 public class DeriveMetricCalculateTest {
 
     private MetricCalculate metricCalculate;
 
     @Before
     public void init() {
-        MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), MetricCalculate.class);
-        Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
-        metricCalculate.setFieldMap(fieldMap);
-        this.metricCalculate = metricCalculate;
+        DataDetailsWideTable table =
+                JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), DataDetailsWideTable.class);
+        this.metricCalculate = MetricUtil.initMetricCalculate(table);
     }
 
     @Test
     public void test1() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = MetricUtil.initDerive(metricCalculate.getDerive().get(0), metricCalculate);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
         String jsonString =
                 "{\n" +
                         "    \"account_no_out\": \"000000000011\",\n" +
@@ -66,7 +68,7 @@ public class DeriveMetricCalculateTest {
 
     @Test
     public void test2() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = MetricUtil.initDerive(metricCalculate.getDerive().get(3), metricCalculate);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(3);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 

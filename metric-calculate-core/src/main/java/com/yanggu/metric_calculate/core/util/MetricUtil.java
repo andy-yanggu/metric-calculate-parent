@@ -79,8 +79,7 @@ public class MetricUtil {
                     .map(tempDerive -> {
                         metricTypeMap.put(tempDerive.getName(), DERIVE);
                         //初始化派生指标计算类
-                        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
-                        return deriveMetricCalculate;
+                        return MetricUtil.initDerive(tempDerive, metricCalculate);
                     })
                     .collect(Collectors.toList());
 
@@ -117,7 +116,7 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    public static AtomMetricCalculate initAtom(Atom atom, MetricCalculate metricCalculate) {
+    private static AtomMetricCalculate initAtom(Atom atom, MetricCalculate metricCalculate) {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         AtomMetricCalculate atomMetricCalculate = new AtomMetricCalculate<>();
 
@@ -165,7 +164,7 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    public static DeriveMetricCalculate initDerive(Derive tempDerive, MetricCalculate metricCalculate) {
+    private static DeriveMetricCalculate initDerive(Derive tempDerive, MetricCalculate metricCalculate) {
         DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate();
         deriveMetricCalculate.init();
 
@@ -394,6 +393,7 @@ public class MetricUtil {
                     //设置表达式字符串
                     String expression = temp.getCalculateExpression();
                     compositeMetricCalculate.setExpressString(expression);
+
                     //在Aviator中添加自定义函数
                     instance.addFunction(new GetFunction());
                     instance.addFunction(new CoalesceFunction());
@@ -422,7 +422,7 @@ public class MetricUtil {
      * @param metricCalculate
      * @return
      */
-    public static Map<String, Class<?>> getFieldMap(MetricCalculate metricCalculate) {
+    private static Map<String, Class<?>> getFieldMap(MetricCalculate metricCalculate) {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.cube;
+package com.yanggu.metric_calculate.core.table;
 
 import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;

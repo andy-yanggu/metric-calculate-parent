@@ -8,6 +8,7 @@ import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.junit.Assert;
 import org.junit.Before;
@@ -54,11 +55,10 @@ public class GetFunctionTest {
         env.put(DERIVE_METRIC_META_DATA, deriveMap);
 
         //衍生指标
-        MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test.json"), MetricCalculate.class);
-        Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
-        metricCalculate.setFieldMap(fieldMap);
+        DataDetailsWideTable table =
+                JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), DataDetailsWideTable.class);
 
-        derive = MetricUtil.initDerive(metricCalculate.getDerive().get(0), metricCalculate);
+        derive = MetricUtil.initMetricCalculate(table).getDeriveMetricCalculateList().get(0);
 
         deriveMap.put("out_amount_178_sum", derive);
 

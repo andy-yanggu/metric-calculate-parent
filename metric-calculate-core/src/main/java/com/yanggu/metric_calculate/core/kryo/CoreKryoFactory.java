@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.kryo;
 import cn.hutool.core.collection.CollUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
-import com.yanggu.metric_calculate.core.cube.TimeSeriesKVTable;
+import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import com.yanggu.metric_calculate.core.kryo.serializer.*;

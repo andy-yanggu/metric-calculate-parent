@@ -21,6 +21,7 @@ public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N
     private static final long serialVersionUID = -5364625944208766081L;
 
     protected CubeLong count;
+
     protected N value;
 
     /**

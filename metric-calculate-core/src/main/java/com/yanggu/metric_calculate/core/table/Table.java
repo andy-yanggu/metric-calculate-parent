@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.cube;
+package com.yanggu.metric_calculate.core.table;
 
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
