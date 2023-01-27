@@ -48,9 +48,9 @@ public class TimeBaselineDimension implements Serializable {
 
     /**
      * 包含左区间, 不包含右区间
-     * 例如数据时间为2022-11-21 14:00:00, 时间单位为DAY, 时间长度为7, 也就是过去7天
-     * 时间区间为[2022-11-15 00:00:00, 2022-11-22 00:00:00), 左闭右开
-     * 如果时间聚合粒度不是1, 就是滑动窗口, 窗口滑动步长就是1个时间单位
+     * <p>例如数据时间为2022-11-21 14:00:00, 时间单位为DAY, 时间长度为7, 也就是过去7天</p>
+     * <p>时间区间为[2022-11-15 00:00:00, 2022-11-22 00:00:00), 左闭右开</p>
+     * <p>如果时间聚合粒度不是1, 就是滑动窗口, 窗口滑动步长就是1个时间单位</p>
      */
     public List<TimeWindow> getTimeWindow(Long timestamp) {
         Long windowEnd = DateUtil.ceiling(new Date(timestamp), unit.getDateField()).getTime() + 1;
@@ -63,8 +63,8 @@ public class TimeBaselineDimension implements Serializable {
         }
         if (log.isDebugEnabled()) {
             for (TimeWindow window : windows) {
-                log.debug("窗口开始时间: {}, 结束时间: {}", DateUtil.formatDateTime(new Date(window.getStart())),
-                        DateUtil.formatDateTime(new Date(window.getEnd())));
+                log.debug("窗口开始时间: {}, 结束时间: {}", DateUtil.formatDateTime(new Date(window.getWindowStart())),
+                        DateUtil.formatDateTime(new Date(window.getWindowEnd())));
             }
         }
         return windows;

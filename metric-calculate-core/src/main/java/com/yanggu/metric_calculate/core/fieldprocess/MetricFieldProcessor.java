@@ -36,7 +36,7 @@ public class MetricFieldProcessor<R> implements FieldExtractProcessor<JSONObject
     /**
      * 度量字段表达式
      */
-    protected transient Expression metricExpression;
+    private Expression metricExpression;
 
     @Override
     public void init() throws Exception {

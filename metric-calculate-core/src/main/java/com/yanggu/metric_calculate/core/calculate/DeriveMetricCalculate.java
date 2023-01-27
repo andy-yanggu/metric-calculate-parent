@@ -21,10 +21,7 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -119,6 +116,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
         boolean countWindow = annotation.countWindow();
         MetricCube<Table, Long, M, ?> metricCube;
+        //如果是滑动计数窗口需要使用CountWindowMetricCube
         if (countWindow) {
             metricCube = new CountWindowMetricCube<>();
             CountWindowTable<M> table = new CountWindowTable<>();
@@ -154,6 +152,9 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(metricCube.getReferenceTime());
+        if (CollUtil.isEmpty(timeWindowList)) {
+            return Collections.emptyList();
+        }
 
         List<DeriveMetricCalculateResult> list = new ArrayList<>();
         for (TimeWindow timeWindow : timeWindowList) {
@@ -170,11 +171,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
 
             //窗口开始时间
-            long windowStart = timeWindow.getStart();
+            long windowStart = timeWindow.getWindowStart();
             result.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
 
             //窗口结束时间
-            long windowEnd = timeWindow.getEnd();
+            long windowEnd = timeWindow.getWindowEnd();
             result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
 
             //聚合值

@@ -1,8 +1,11 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -56,6 +59,56 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
         if (mergeUnitClazz == null) {
             throw new RuntimeException("需要设置mergeUnitClazz");
         }
+    }
+
+    /**
+     * @param useCompareField 是否使用比较字段
+     * @param retainObject    是否保留对象
+     * @param input           输入明细数据
+     * @return
+     */
+    protected M getResult(boolean useCompareField, boolean retainObject, JSONObject input) throws Exception {
+        Object result;
+        if (useCompareField) {
+            //获取比较值
+            Object compareFieldValue = super.process(input);
+            if (compareFieldValue == null) {
+                return null;
+            }
+
+            //获取保留值
+            Object value = getValue(input, retainObject);
+            if (value == null) {
+                return null;
+            }
+            result = new KeyValue<>((Comparable<?>) compareFieldValue, value);
+        } else {
+            //没有比较字段, 直接获取保留值
+            Object value = getValue(input, retainObject);
+            if (value == null) {
+                return null;
+            }
+            result = Cloneable2Wrapper.wrap(value);
+        }
+        return (M) unitFactory.initInstanceByValue(aggregateType, result, udafParams);
+    }
+
+    private Object getValue(JSONObject input, boolean retainObject) throws Exception {
+        Object value;
+        if (retainObject) {
+            value = input;
+        } else {
+            Object retainField = getRetainFieldValueFieldProcessor().process(input);
+            if (retainField == null) {
+                return null;
+            }
+            value = retainField;
+        }
+        return value;
+    }
+
+    protected MetricFieldProcessor<?> getRetainFieldValueFieldProcessor() {
+        throw new RuntimeException("需要重写getRetainFieldValueFieldProcessor方法");
     }
 
 }
