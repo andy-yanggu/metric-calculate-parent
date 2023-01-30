@@ -165,7 +165,7 @@ public class MetricUtil {
      */
     @SneakyThrows
     private static DeriveMetricCalculate initDerive(Derive tempDerive, MetricCalculate metricCalculate) {
-        DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate();
+        DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate<>();
         deriveMetricCalculate.init();
 
         //设置名称
@@ -211,7 +211,7 @@ public class MetricUtil {
             }
             */
 
-                //如果是一个普通的sortlistfield
+            //例如如果是一个普通的sortlistfield
             /*
             {
               "desc": true, //升序还是降序
@@ -283,7 +283,7 @@ public class MetricUtil {
     }
 
     /**
-     * 生成聚合字段处理器
+     * 生成聚合字段处理器, 包含数值型、集合型、对象型
      *
      * @param unitFactory
      * @param udafParams
@@ -294,10 +294,10 @@ public class MetricUtil {
      * @throws Exception
      */
     private static BaseAggregateFieldProcessor<?> getAggregateFieldProcessor(UnitFactory unitFactory,
-                                                                            Map<String, Object> udafParams,
-                                                                            Map<String, Class<?>> fieldMap,
-                                                                            Object metricExpress,
-                                                                            String calculateLogic) throws Exception {
+                                                                             Map<String, Object> udafParams,
+                                                                             Map<String, Class<?>> fieldMap,
+                                                                             Object metricExpress,
+                                                                             String calculateLogic) throws Exception {
 
         BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(calculateLogic);
@@ -350,7 +350,7 @@ public class MetricUtil {
                                                                              Map<String, Object> udafParams) throws Exception {
         MetricFieldProcessor<?> retainFieldValueFieldProcessor = new MetricFieldProcessor<>();
         Object retainExpress = udafParams.get("retainExpress");
-        if (!StrUtil.isBlankIfStr(retainExpress)) {
+        if (StrUtil.isBlankIfStr(retainExpress)) {
             throw new RuntimeException("需要指定字段需要设置保留表达式");
         }
         retainFieldValueFieldProcessor.setMetricExpress(retainExpress.toString());

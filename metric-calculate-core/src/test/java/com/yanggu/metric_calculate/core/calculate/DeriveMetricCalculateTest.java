@@ -11,6 +11,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -29,6 +31,9 @@ public class DeriveMetricCalculateTest {
         this.metricCalculate = MetricUtil.initMetricCalculate(table);
     }
 
+    /**
+     * 测试数值型
+     */
     @Test
     public void test1() {
         DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
@@ -66,8 +71,111 @@ public class DeriveMetricCalculateTest {
         System.out.println(query.get(0));
     }
 
+    /**
+     * 测试集合型
+     * 交易金额升序列表, 最多4个
+     */
     @Test
     public void test2() {
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(5);
+        MetricCube<Table, Long, ?, ?> exec;
+        List<DeriveMetricCalculateResult> query;
+
+        JSONObject input = new JSONObject();
+        input.set("account_no_in", "000000000012");
+        input.set("trans_timestamp", "1654768045000");
+        input.set("debit_amt_out", "800");
+        exec = deriveMetricCalculate.exec(input);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals(Collections.singletonList(new BigDecimal("800")), query.get(0).getResult());
+
+        JSONObject input2 = new JSONObject();
+        input2.set("account_no_in", "000000000012");
+        input2.set("trans_timestamp", "1654768045000");
+        input2.set("debit_amt_out", 900);
+        exec = deriveMetricCalculate.exec(input2);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals(Arrays.asList(new BigDecimal("800"), new BigDecimal("900")),
+                query.get(0).getResult());
+
+        JSONObject input3 = new JSONObject();
+        input3.set("account_no_in", "000000000012");
+        input3.set("trans_timestamp", "1654768045000");
+        input3.set("debit_amt_out", 700);
+        exec = deriveMetricCalculate.exec(input3);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals(Arrays.asList(new BigDecimal("700"),
+                        new BigDecimal("800"), new BigDecimal("900")),
+                query.get(0).getResult());
+
+        JSONObject input4 = new JSONObject();
+        input4.set("account_no_in", "000000000012");
+        input4.set("trans_timestamp", "1654768045000");
+        input4.set("debit_amt_out", 700);
+        exec = deriveMetricCalculate.exec(input4);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals(Arrays.asList(new BigDecimal("700"), new BigDecimal("700"),
+                new BigDecimal("800"), new BigDecimal("900")), query.get(0).getResult());
+
+        JSONObject input5 = new JSONObject();
+        input5.set("account_no_in", "000000000012");
+        input5.set("trans_timestamp", "1654768045000");
+        input5.set("debit_amt_out", 800);
+        exec = deriveMetricCalculate.exec(input5);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals(Arrays.asList(new BigDecimal("700"), new BigDecimal("800"),
+                new BigDecimal("800"), new BigDecimal("900")), query.get(0).getResult());
+
+    }
+
+    /**
+     * 测试对象型
+     * 最大交易的金额的交易时间戳
+     */
+    @Test
+    public void test3() {
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(4);
+        MetricCube<Table, Long, ?, ?> exec;
+        List<DeriveMetricCalculateResult> query;
+
+        JSONObject input = new JSONObject();
+        input.set("account_no_in", "000000000012");
+        input.set("trans_timestamp", "1654768045000");
+        input.set("debit_amt_out", "800");
+        exec = deriveMetricCalculate.exec(input);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals("1654768045000", query.get(0).getResult());
+
+        JSONObject input2 = new JSONObject();
+        input2.set("account_no_in", "000000000012");
+        input2.set("trans_timestamp", "1654768046000");
+        input2.set("debit_amt_out", 900);
+        exec = deriveMetricCalculate.exec(input2);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals("1654768046000", query.get(0).getResult());
+
+        JSONObject input3 = new JSONObject();
+        input3.set("account_no_in", "000000000012");
+        input3.set("trans_timestamp", "1654768045000");
+        input3.set("debit_amt_out", 800);
+        exec = deriveMetricCalculate.exec(input3);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals("1654768046000", query.get(0).getResult());
+
+        JSONObject input4 = new JSONObject();
+        input4.set("account_no_in", "000000000012");
+        input4.set("trans_timestamp", "1354768045000");
+        input4.set("debit_amt_out", 1100);
+        exec = deriveMetricCalculate.exec(input4);
+        query = deriveMetricCalculate.query(exec);
+        assertEquals("1354768045000", query.get(0).getResult());
+    }
+
+    /**
+     * 测试滑动计数窗口类
+     */
+    @Test
+    public void test4() {
         DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(3);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;

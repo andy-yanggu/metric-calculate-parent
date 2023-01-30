@@ -23,7 +23,6 @@ public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V,
 
     void put(K key, V value);
 
-
     /**
      * @param from          开始时间戳
      * @param fromInclusive 是否包含开始
@@ -33,6 +32,11 @@ public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V,
      */
     Value query(K from, boolean fromInclusive, K to, boolean toInclusive);
 
+    /**
+     * 删除过期数据
+     *
+     * @return
+     */
     int eliminateExpiredData();
 
 }

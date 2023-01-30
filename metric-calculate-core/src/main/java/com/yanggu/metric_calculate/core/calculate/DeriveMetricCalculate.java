@@ -185,11 +185,16 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
             if (annotation.countWindow() && value instanceof List) {
                 List<JSONObject> tempValueList = (List<JSONObject>) value;
-                JSONObject first = CollUtil.getFirst(tempValueList);
-                MergedUnit mergedUnit = (MergedUnit<?>) subAggregateFieldProcessor.process(first);
-                for (int i = 1; i < tempValueList.size(); i++) {
-                    mergedUnit.merge((MergedUnit<?>) subAggregateFieldProcessor.process(tempValueList.get(i)));
-                }
+                MergedUnit mergedUnit = tempValueList.stream()
+                        .map(tempValue -> {
+                            try {
+                                return (MergedUnit) subAggregateFieldProcessor.process(tempValue);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        })
+                        .reduce((a, b) -> a.merge(b))
+                        .orElseThrow(() -> new RuntimeException("mergeUnit的merge方法执行失败"));
                 value = ((Value<?>) mergedUnit).value();
             }
 

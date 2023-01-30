@@ -4,6 +4,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
@@ -68,6 +69,7 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
      * @return
      */
     protected M getResult(boolean useCompareField, boolean retainObject, JSONObject input) throws Exception {
+        //获取执行参数
         Object result;
         if (useCompareField) {
             //获取比较值

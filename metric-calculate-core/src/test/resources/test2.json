@@ -790,6 +790,78 @@
           "metricExpress": "debit_amt_out"
         }
       }
+    },
+    {
+      "id": 8,
+      "name": "max_amount_timestamp",
+      "atom": "current_credit_count",
+      "displayName": "最大交易的金额的交易时间戳",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "MAXFIELD",
+      "metricColumn": {
+        "columnName": "debit_amt_out",
+        "columnIndex": 5
+      },
+      "duration": 2,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "udafParams": {
+        "retainExpress": "trans_timestamp"
+      }
+    },
+    {
+      "id": 8,
+      "name": "max_amount_timestamp",
+      "atom": "current_credit_count",
+      "displayName": "交易金额升序列表, 最多4个",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "SORTEDLISTFIELD",
+      "metricColumn": {
+        "columnName": "debit_amt_out",
+        "columnIndex": 5
+      },
+      "duration": 2,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "udafParams": {
+        "retainExpress": "debit_amt_out",
+        "desc": false,
+        "limit": 4
+      }
     }
   ],
   "composite": [
