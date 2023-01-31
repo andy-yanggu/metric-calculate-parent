@@ -163,7 +163,6 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
         if (that == null) {
             return this;
         }
-        this.getTable().merge(that.getTable());
         that.nodeTables.forEach((k, v) -> nodeTables.get(k).merge(v));
         setReferenceTime(that.getReferenceTime());
         return this;
@@ -177,7 +176,6 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
     @Override
     public TimedKVPatternCube<T, E> fastClone() {
         TimedKVPatternCube<T, E> result = cloneEmpty();
-        result.setTable(getTable().fastClone());
         result.nodeTables.keySet().forEach(key -> result.nodeTables.put(key, nodeTables.get(key).fastClone()));
         return result;
     }

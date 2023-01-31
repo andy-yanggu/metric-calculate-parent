@@ -55,4 +55,5 @@ public class Cloneable2Wrapper<T> implements Cloneable2<Cloneable2Wrapper<T>>, V
     public String toString() {
         return wrapped == null ? "null" : wrapped.toString();
     }
+
 }

@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
@@ -11,8 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @MergeType("REPLACEDOBJECT")
 @Objective(useCompareField = false, retainObject = true)
-public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
-    private static final long serialVersionUID = 5240954691662766328L;
+public class ReplacedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
 
     public T value;
 
@@ -30,6 +29,7 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
 
     /**
      * merge object to this.
+     *
      * @param that param
      * @return MergedUnit Object
      */
@@ -60,16 +60,17 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
 
     /**
      * fastClone.
+     *
      * @return ReplacedUnit
      */
     @Override
     public ReplacedObjectUnit fastClone() {
-        return new ReplacedObjectUnit(
-            (this.value instanceof Cloneable2) ? ((Cloneable2) this.value).fastClone() : this.value);
+        return new ReplacedObjectUnit<>(value.fastClone());
     }
 
     /**
      * Equal or Not.
+     *
      * @param that param
      * @return true or false
      */

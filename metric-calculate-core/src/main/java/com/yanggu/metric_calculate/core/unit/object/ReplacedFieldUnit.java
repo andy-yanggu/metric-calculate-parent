@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @MergeType("REPLACEDFIELD")
 @Objective(useCompareField = false, retainObject = false)
-public class ReplacedFieldUnit<T> extends ReplacedObjectUnit<T> {
+public class ReplacedFieldUnit<T extends Cloneable2<T>> extends ReplacedObjectUnit<T> {
 
     public ReplacedFieldUnit(T value) {
         this.value = value;
@@ -20,9 +20,8 @@ public class ReplacedFieldUnit<T> extends ReplacedObjectUnit<T> {
      * @return ReplacedUnit
      */
     @Override
-    public ReplacedFieldUnit fastClone() {
-        return new ReplacedFieldUnit(
-                (this.value instanceof Cloneable2) ? ((Cloneable2) this.value).fastClone() : this.value);
+    public ReplacedFieldUnit<T> fastClone() {
+        return new ReplacedFieldUnit<>(value.fastClone());
     }
 
 }

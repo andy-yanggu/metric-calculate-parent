@@ -201,4 +201,5 @@ public class MaxFieldUnitTest {
         MaxFieldUnit<Key<String>> maxFieldUnit = new MaxFieldUnit<>(key);
         assertEquals(key, maxFieldUnit.value());
     }
+
 }
