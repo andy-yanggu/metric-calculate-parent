@@ -177,7 +177,7 @@ public class UnitFactoryTest {
      */
     @Test
     public void createCollectionUnit() throws Exception {
-        KeyValue keyValue = new KeyValue(new Key(1), Cloneable2Wrapper.wrap(101));
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(101));
         MergedUnit unit = unitFactory.initInstanceByValue("DISTINCTCOUNT", keyValue, null);
         assertTrue(unit instanceof UniqueCountUnit);
         assertEquals(new HashSet(Collections.singleton(keyValue)), ((UniqueCountUnit) unit).asCollection());
@@ -202,9 +202,9 @@ public class UnitFactoryTest {
         params.put("desc", true);
         params.put("limit", 2);
 
-        KeyValue value1 = new KeyValue(1, 1);
-        KeyValue value2 = new KeyValue(2, 2);
-        KeyValue value3 = new KeyValue(0, 0);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value1 = new KeyValue<>(1, 1);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value2 = new KeyValue<>(2, 2);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value3 = new KeyValue<>(0, 0);
 
         Value unit = (Value) unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value1, params);
         assertEquals(Collections.singletonList(value1), unit.value());
