@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.core.fieldprocess;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedObjectUnit;
@@ -41,7 +43,7 @@ public class AggregateObjectFieldProcessorTest {
         fieldMap.put("name", String.class);
 
         AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(MaxObjectUnit.class, "amount", null, fieldMap);
+                getObjectFieldProcessor(MaxFieldUnit.class, "amount", "name", fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -49,12 +51,12 @@ public class AggregateObjectFieldProcessorTest {
         input.set("name", "张三");
 
         MergedUnit process = objectFieldProcessor.process(input);
-        assertEquals(input, ValueMapper.value(((Value<?>) process)));
+        assertEquals("张三", ValueMapper.value(((Value<?>) process)));
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process.merge(objectFieldProcessor.process(input));
-        assertEquals(input, ValueMapper.value((Value<?>) process));
+        assertEquals("张三2", ValueMapper.value((Value<?>) process));
 
         input.set("amount", 50);
         input.set("name", "张三3");
@@ -178,6 +180,11 @@ public class AggregateObjectFieldProcessorTest {
         aggregateObjectFieldProcessor.setMergeUnitClazz(unitFactory.getMergeableClass(aggregateType));
 
         aggregateObjectFieldProcessor.setFieldMap(fieldMap);
+
+        Objective objective = clazz.getAnnotation(Objective.class);
+        if (!objective.retainObject() && StrUtil.isBlank(retainField)) {
+            throw new RuntimeException("需要设置保留字段");
+        }
 
         if (StrUtil.isNotBlank(retainField)) {
             MetricFieldProcessor<Object> retainFieldProcessor = new MetricFieldProcessor<>();
