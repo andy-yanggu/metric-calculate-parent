@@ -6,6 +6,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
 public class TimeBaselineCond implements Cond<Long> {
 
     private TimeBaselineDimension timeBaseline;
+
     private long expectInterval;
 
     public TimeBaselineCond() {
@@ -19,11 +20,6 @@ public class TimeBaselineCond implements Cond<Long> {
         return timeBaseline;
     }
 
-    public TimeBaselineCond timeBaseline(TimeBaselineDimension timeBaseline) {
-        setTimeBaseline(timeBaseline);
-        return this;
-    }
-
     protected void setTimeBaseline(TimeBaselineDimension timeBaseline) {
         this.timeBaseline = timeBaseline;
         this.expectInterval = timeBaseline.realLength();
@@ -33,4 +29,5 @@ public class TimeBaselineCond implements Cond<Long> {
     public boolean cond(Long realInterval) {
         return realInterval != null && (realInterval > 0 && realInterval <= expectInterval);
     }
+
 }

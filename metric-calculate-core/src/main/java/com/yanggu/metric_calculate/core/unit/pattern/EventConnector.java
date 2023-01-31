@@ -5,7 +5,9 @@ import java.io.Serializable;
 public class EventConnector implements Serializable {
 
     private String preNode;
+
     private String nextNode;
+
     private TimeBaselineCond cond;
 
     public EventConnector() {

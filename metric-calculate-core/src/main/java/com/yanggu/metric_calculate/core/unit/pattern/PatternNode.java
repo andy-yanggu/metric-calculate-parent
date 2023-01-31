@@ -12,23 +12,33 @@ import java.util.*;
 public class PatternNode<T extends EventState> implements MergedUnit<PatternNode<T>>, Value, Serializable {
 
     private String name;
+
     private Value value;
+
     private transient Cond<T> cond;
 
     private boolean saveDetails;
+
     private Collection<T> details;
+
     private long count;
 
     private boolean isStart;
+
     private boolean isEnd;
+
     private boolean triggered;
 
     private boolean merged;
+
     private MergedUnit mergeLimit;
+
     private MergedUnit currentState;
+
     private transient FieldExtractProcessor<T, MergedUnit> stateProcessor;
 
     private PatternNode<T> nextNode;
+
     private EventConnector connector;
 
     private transient FieldExtractProcessor<T, MergedUnit> fieldProcessor;

@@ -95,8 +95,7 @@ public class DeriveMetricCalculateTest {
         input2.set("debit_amt_out", 900);
         exec = deriveMetricCalculate.exec(input2);
         query = deriveMetricCalculate.query(exec);
-        assertEquals(Arrays.asList(new BigDecimal("800"), new BigDecimal("900")),
-                query.get(0).getResult());
+        assertEquals(Arrays.asList(new BigDecimal("800"), new BigDecimal("900")), query.get(0).getResult());
 
         JSONObject input3 = new JSONObject();
         input3.set("account_no_in", "000000000012");

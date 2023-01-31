@@ -7,8 +7,8 @@ import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 
-@Objective(useCompareField = false)
 @MergeType("REPLACEDOBJECT")
+@Objective(useCompareField = false, retainObject = true)
 public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
     private static final long serialVersionUID = 5240954691662766328L;
 

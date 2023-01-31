@@ -24,6 +24,8 @@ public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V,
     void put(K key, V value);
 
     /**
+     * 这里都是指窗口的开始时间和结束时间
+     *
      * @param from          开始时间戳
      * @param fromInclusive 是否包含开始
      * @param to            结束时间戳

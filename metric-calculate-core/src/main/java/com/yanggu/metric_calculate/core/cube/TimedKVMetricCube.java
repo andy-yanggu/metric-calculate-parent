@@ -1,16 +1,12 @@
 package com.yanggu.metric_calculate.core.cube;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.fieldprocess.DimensionSet;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.table.Table;
+import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 /**
  * @param <V>
@@ -18,7 +14,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>>
-        implements MetricCube<Table, Long, V, C> {
+        implements MetricCube<TimeSeriesKVTable<V>, Long, V, C> {
 
     public static final String PREFIX = "MC.T.KV.C";
 
@@ -50,7 +46,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     /**
      * 时间序列存储
      */
-    private Table table;
+    private TimeSeriesKVTable<V> table;
 
     @Override
     public String getPrefix() {
@@ -70,7 +66,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return table.isEmpty();
     }
 
     @Override
@@ -89,7 +85,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public Table getTable() {
+    public TimeSeriesKVTable<V> getTable() {
         return table;
     }
 
@@ -116,18 +112,6 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
         table.merge(that.getTable());
         this.referenceTime = that.getReferenceTime();
         return (C) this;
-    }
-
-    /**
-     * 获取时间窗口
-     * WindowStart和WindowEnd, 包含Start, 不包含End, 左闭右开
-     *
-     * @return
-     */
-    public Tuple getTimeWindow() {
-        long windowEnd = DateUtil.ceiling(new Date(referenceTime), timeBaselineDimension.getUnit().getDateField()).getTime() + 1;
-        long windowStart = windowEnd - timeBaselineDimension.realLength();
-        return new Tuple(windowStart, windowEnd);
     }
 
     @Override

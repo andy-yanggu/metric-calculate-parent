@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.pojo.Fields;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;

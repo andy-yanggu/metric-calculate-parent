@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.core.calculate.TimeWindow;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Data
 @Slf4j
+@Accessors(chain = true)
 @NoArgsConstructor
 public class TimeBaselineDimension implements Serializable {
 

@@ -9,8 +9,8 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-@Objective(useCompareField = false, retainObject = true)
 @MergeType("OCCUPIEDOBJECT")
+@Objective(useCompareField = false, retainObject = true)
 public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>, Value<T>, Serializable {
 
     private static final long serialVersionUID = -617729814303380664L;

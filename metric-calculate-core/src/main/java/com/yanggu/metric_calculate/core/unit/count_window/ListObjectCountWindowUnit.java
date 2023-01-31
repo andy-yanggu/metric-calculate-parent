@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
  */
 @Data
 @FieldNameConstants
-@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, countWindow = true)
 @Collective(useCompareField = false, retainObject = true)
+@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, countWindow = true)
 public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<Object>, Serializable, Iterable<T> {
 

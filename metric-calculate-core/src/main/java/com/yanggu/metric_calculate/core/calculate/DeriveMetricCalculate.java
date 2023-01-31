@@ -124,7 +124,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         } else {
             TimeSeriesKVTable<M> table = new TimeSeriesKVTable<>();
             table.setTimeBaselineDimension(timeBaselineDimension);
-            metricCube = new TimedKVMetricCube<>();
+            metricCube = new TimedKVMetricCube();
             metricCube.setTable(table);
         }
         metricCube.setName(name);
