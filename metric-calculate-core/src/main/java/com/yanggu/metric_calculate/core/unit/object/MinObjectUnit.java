@@ -16,12 +16,12 @@ import java.util.Map;
 @Objective(useCompareField = true, retainObject = true)
 public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
 
-    private T value;
+    protected T value;
 
     /**
      * 是否只展示value, 不展示key
      */
-    private Boolean onlyShowValue = true;
+    protected Boolean onlyShowValue = true;
 
     public MinObjectUnit() {
     }

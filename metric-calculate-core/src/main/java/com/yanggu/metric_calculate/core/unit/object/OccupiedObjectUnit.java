@@ -2,25 +2,29 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
-import lombok.Data;
+import com.yanggu.metric_calculate.core.value.Value;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-@Data
+@NoArgsConstructor
 @MergeType("OCCUPIEDOBJECT")
 @Objective(useCompareField = false, retainObject = true)
-public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>, Value<T>, Serializable {
+public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>,
+        Value<T>, Serializable {
 
-    private static final long serialVersionUID = -617729814303380664L;
-
-    public T value;
-
-    public OccupiedObjectUnit() {
-    }
+    protected T value;
 
     public OccupiedObjectUnit(T value) {
+        this.value = value;
+    }
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T value) {
         this.value = value;
     }
 
@@ -36,11 +40,6 @@ public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
     }
 
     @Override
-    public String toString() {
-        return String.format("%s {object=%s}", getClass().getSimpleName(), this.value);
-    }
-
-    @Override
     public T value() {
         return this.value;
     }
@@ -53,7 +52,12 @@ public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
 
     @Override
     public OccupiedObjectUnit<T> fastClone() {
-        return (OccupiedObjectUnit<T>) new OccupiedObjectUnit(value.fastClone());
+        return new OccupiedObjectUnit<>(value.fastClone());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s {object=%s}", getClass().getSimpleName(), this.value);
     }
 
     @Override

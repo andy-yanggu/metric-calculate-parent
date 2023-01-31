@@ -1,27 +1,32 @@
 package com.yanggu.metric_calculate.core.unit.object;
 
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.*;
+import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
+@NoArgsConstructor
 @MergeType(value = "MAXOBJECT", useParam = true)
 @Objective(useCompareField = true, retainObject = true)
 public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MaxObjectUnit<T>>, Value {
 
-    private T maxValue;
+    protected T maxValue;
 
     /**
      * 是否只展示value, 不展示key
      */
-    private boolean onlyShowValue = true;
-
-    public MaxObjectUnit() {
-    }
+    protected Boolean onlyShowValue = true;
 
     public MaxObjectUnit(Map<String, Object> params) {
-        this.onlyShowValue = (boolean) params.get("onlyShowValue");
+        if (CollUtil.isEmpty(params)) {
+            return;
+        }
+        if (params.get("onlyShowValue") instanceof Boolean) {
+            this.onlyShowValue = (boolean) params.get("onlyShowValue");
+        }
     }
 
     public MaxObjectUnit(T o) {
@@ -34,6 +39,14 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
 
     public T getValue() {
         return this.maxValue;
+    }
+
+    public Boolean getOnlyShowValue() {
+        return onlyShowValue;
+    }
+
+    public void setOnlyShowValue(Boolean onlyShowValue) {
+        this.onlyShowValue = onlyShowValue;
     }
 
     @Override
@@ -53,12 +66,12 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
 
     /**
      * FastClone.
+     *
      * @return MaxUnit
      */
     @Override
     public MaxObjectUnit<T> fastClone() {
-        MaxObjectUnit<T> maxUnit = new MaxObjectUnit<>(this.maxValue.fastClone());
-        return maxUnit;
+        return new MaxObjectUnit<>(this.maxValue.fastClone());
     }
 
     @Override
@@ -69,13 +82,14 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
 
     /**
      * getValue.
+     *
      * @return object value
      */
     @Override
     public Object value() {
         if (this.maxValue == null) {
-            return NoneValue.INSTANCE;
-        } else if (this.maxValue instanceof KeyValue && onlyShowValue) {
+            return null;
+        } else if (this.maxValue instanceof KeyValue && Boolean.TRUE.equals(onlyShowValue)) {
             Value<?> value = ((KeyValue<?, ?>) maxValue).getValue();
             if (value != null) {
                 return ValueMapper.value(value);
@@ -88,12 +102,12 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements O
 
     @Override
     public String toString() {
-        return String.format("%s {value=%s}", getClass().getSimpleName(),
-            maxValue instanceof Value ? maxValue : ((Value)maxValue).value());
+        return String.format("%s {value=%s}", getClass().getSimpleName(), maxValue instanceof Value ? maxValue : ((Value) maxValue).value());
     }
 
     /**
      * Equal or Not.
+     *
      * @param that paramObj
      * @return true or false
      */

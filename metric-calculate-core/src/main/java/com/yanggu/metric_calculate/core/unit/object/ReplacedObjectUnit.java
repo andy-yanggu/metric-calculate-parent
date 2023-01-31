@@ -4,18 +4,17 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@NoArgsConstructor
 @MergeType("REPLACEDOBJECT")
 @Objective(useCompareField = false, retainObject = true)
 public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
     private static final long serialVersionUID = 5240954691662766328L;
 
     public T value;
-
-    public ReplacedObjectUnit() {
-    }
 
     public ReplacedObjectUnit(T value) {
         this.value = value;
@@ -65,9 +64,8 @@ public class ReplacedObjectUnit<T> implements ObjectiveUnit<T, ReplacedObjectUni
      */
     @Override
     public ReplacedObjectUnit fastClone() {
-        ReplacedObjectUnit replacedObjectUnit = new ReplacedObjectUnit(
+        return new ReplacedObjectUnit(
             (this.value instanceof Cloneable2) ? ((Cloneable2) this.value).fastClone() : this.value);
-        return replacedObjectUnit;
     }
 
     /**
