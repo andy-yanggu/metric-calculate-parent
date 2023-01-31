@@ -4,7 +4,6 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
@@ -20,7 +19,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<Object> {
+public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<M> {
 
     /**
      * 聚合类型

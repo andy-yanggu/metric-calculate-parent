@@ -114,18 +114,18 @@ public class OccupiedObjectUnitTest {
         OccupiedObjectUnit<Key<Integer>> occupiedObjectUnit = (new OccupiedObjectUnit<>(key));
 
         occupiedObjectUnit.merge(null);
-        assertEquals(key, occupiedObjectUnit.getValue());
+        assertEquals(key, occupiedObjectUnit.value());
 
         occupiedObjectUnit.setValue(null);
         occupiedObjectUnit.merge(new OccupiedObjectUnit<>(new Key<>(-1)));
-        assertEquals(new Key<>(-1), occupiedObjectUnit.getValue());
+        assertEquals(new Key<>(-1), occupiedObjectUnit.value());
 
         occupiedObjectUnit.setValue(key);
         occupiedObjectUnit.merge(new OccupiedObjectUnit<>(new Key<>(-1)));
-        assertEquals(key, occupiedObjectUnit.getValue());
+        assertEquals(key, occupiedObjectUnit.value());
 
         occupiedObjectUnit.merge(new OccupiedObjectUnit<>(new Key<>(2)));
-        assertEquals(key, occupiedObjectUnit.getValue());
+        assertEquals(key, occupiedObjectUnit.value());
     }
 
 }

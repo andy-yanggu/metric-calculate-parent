@@ -72,7 +72,6 @@ public class MaxFieldUnitTest {
         assertTrue(maxFieldUnit.getOnlyShowValue());
         assertNull(maxFieldUnit.getValue());
 
-
         //验证param构造2
         param.put("onlyShowValue", null);
         maxFieldUnit = new MaxFieldUnit<>(param);
@@ -105,7 +104,7 @@ public class MaxFieldUnitTest {
     public void testMerge() {
         //验证merge方法
         Key<Integer> key = new Key<>(0);
-        MaxFieldUnit<Key<Integer>> maxFieldUnit = (new MaxFieldUnit<>(key));
+        MaxFieldUnit<Key<Integer>> maxFieldUnit = new MaxFieldUnit<>(key);
 
         maxFieldUnit.merge(null);
         assertEquals(key, maxFieldUnit.getValue());
@@ -128,6 +127,7 @@ public class MaxFieldUnitTest {
 
         MaxFieldUnit<Key<Integer>> fastClone = maxFieldUnit.fastClone();
 
+        assertNotSame(maxFieldUnit, fastClone);
         assertEquals(maxFieldUnit, fastClone);
         assertEquals(maxFieldUnit.getValue(), fastClone.getValue());
     }

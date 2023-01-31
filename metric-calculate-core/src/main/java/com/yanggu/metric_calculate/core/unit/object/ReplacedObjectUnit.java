@@ -64,7 +64,7 @@ public class ReplacedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
      * @return ReplacedUnit
      */
     @Override
-    public ReplacedObjectUnit fastClone() {
+    public ReplacedObjectUnit<T> fastClone() {
         return new ReplacedObjectUnit<>(value.fastClone());
     }
 

@@ -114,18 +114,18 @@ public class OccupiedFieldUnitTest {
         OccupiedFieldUnit<Key<Integer>> occupiedFieldUnit = (new OccupiedFieldUnit<>(key));
 
         occupiedFieldUnit.merge(null);
-        assertEquals(key, occupiedFieldUnit.getValue());
+        assertEquals(key, occupiedFieldUnit.value());
 
         occupiedFieldUnit.setValue(null);
         occupiedFieldUnit.merge(new OccupiedFieldUnit<>(new Key<>(-1)));
-        assertEquals(new Key<>(-1), occupiedFieldUnit.getValue());
+        assertEquals(new Key<>(-1), occupiedFieldUnit.value());
 
         occupiedFieldUnit.setValue(key);
         occupiedFieldUnit.merge(new OccupiedFieldUnit<>(new Key<>(-1)));
-        assertEquals(key, occupiedFieldUnit.getValue());
+        assertEquals(key, occupiedFieldUnit.value());
 
         occupiedFieldUnit.merge(new OccupiedFieldUnit<>(new Key<>(2)));
-        assertEquals(key, occupiedFieldUnit.getValue());
+        assertEquals(key, occupiedFieldUnit.value());
     }
 
 }

@@ -32,18 +32,6 @@ public class MetricUtilTest {
         assertEquals("明细宽表为空", runtimeException.getMessage());
     }
 
-    @Test
-    public void testInitAtom() throws Exception {
-    }
-
-    @Test
-    public void testInitDerive() throws Exception {
-    }
-
-    @Test
-    public void testInitComposite() throws Exception {
-    }
-
     /**
      * 验证是否校验metricCalculate为空
      *

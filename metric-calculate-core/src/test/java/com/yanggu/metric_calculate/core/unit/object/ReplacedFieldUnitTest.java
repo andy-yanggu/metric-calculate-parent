@@ -115,18 +115,18 @@ public class ReplacedFieldUnitTest {
         ReplacedFieldUnit<Key<Integer>> replacedFieldUnit = (new ReplacedFieldUnit<>(key));
 
         replacedFieldUnit.merge(null);
-        assertEquals(key, replacedFieldUnit.getValue());
+        assertEquals(key, replacedFieldUnit.value());
 
         replacedFieldUnit.setValue(null);
         replacedFieldUnit.merge(new ReplacedFieldUnit<>(new Key<>(-1)));
-        assertEquals(new Key<>(-1), replacedFieldUnit.getValue());
+        assertEquals(new Key<>(-1), replacedFieldUnit.value());
 
         replacedFieldUnit.setValue(key);
         replacedFieldUnit.merge(new ReplacedFieldUnit<>(new Key<>(-1)));
-        assertEquals(new Key<>(-1), replacedFieldUnit.getValue());
+        assertEquals(new Key<>(-1), replacedFieldUnit.value());
 
         replacedFieldUnit.merge(new ReplacedFieldUnit<>(new Key<>(2)));
-        assertEquals(new Key<>(2), replacedFieldUnit.getValue());
+        assertEquals(new Key<>(2), replacedFieldUnit.value());
     }
 
 }

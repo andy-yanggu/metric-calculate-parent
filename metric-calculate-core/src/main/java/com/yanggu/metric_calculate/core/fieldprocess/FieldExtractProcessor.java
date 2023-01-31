@@ -8,6 +8,11 @@ package com.yanggu.metric_calculate.core.fieldprocess;
  */
 public interface FieldExtractProcessor<T, R> {
 
+    /**
+     * 初始化方法, 实现类可以重写该方法
+     *
+     * @throws Exception
+     */
     default void init() throws Exception {
     }
 

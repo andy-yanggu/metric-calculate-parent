@@ -72,7 +72,6 @@ public class MaxObjectUnitTest {
         assertTrue(maxObjectUnit.getOnlyShowValue());
         assertNull(maxObjectUnit.getValue());
 
-
         //验证param构造2
         param.put("onlyShowValue", null);
         maxObjectUnit = new MaxObjectUnit<>(param);

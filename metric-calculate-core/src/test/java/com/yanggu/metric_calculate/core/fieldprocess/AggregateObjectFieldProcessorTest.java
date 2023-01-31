@@ -5,11 +5,11 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedObjectUnit;
-import com.yanggu.metric_calculate.core.value.*;
+import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class AggregateObjectFieldProcessorTest {
     }
 
     /**
-     * 测试MaxObject, 对象型, 需要比较字段以及保留原始对象数据
+     * 测试MAXFIELD, 对象型, 有比较字段以及保留指定字段
      *
      * @throws Exception
      */
@@ -36,33 +36,34 @@ public class AggregateObjectFieldProcessorTest {
     public void process1() throws Exception {
 
         //构造对象型字段处理器
-        String compareField = "amount";
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put(compareField, Double.class);
+        fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
 
         AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(MaxObjectUnit.class, compareField, null, fieldMap);
+                getObjectFieldProcessor(MaxObjectUnit.class, "amount", null, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
-        input.set(compareField, 100);
+        input.set("amount", 100);
         input.set("name", "张三");
 
         MergedUnit process = objectFieldProcessor.process(input);
         assertEquals(input, ValueMapper.value(((Value<?>) process)));
 
-        input.set(compareField, 200);
+        input.set("amount", 200);
+        input.set("name", "张三2");
         process.merge(objectFieldProcessor.process(input));
         assertEquals(input, ValueMapper.value((Value<?>) process));
 
-        input.set(compareField, 100);
+        input.set("amount", 50);
+        input.set("name", "张三3");
         process.merge(objectFieldProcessor.process(input));
-        assertEquals(input.set(compareField, 100), ValueMapper.value((Value<?>) process));
+        assertEquals("张三2", ValueMapper.value((Value<?>) process));
     }
 
     /**
-     * 测试OCCUPIEDOBJECT, 对象型, 没有比较字段以及保留原始对象数据
+     * 测试MaxObject, 对象型, 需要比较字段以及保留原始对象数据
      *
      * @throws Exception
      */
@@ -75,7 +76,7 @@ public class AggregateObjectFieldProcessorTest {
         fieldMap.put("name", String.class);
 
         AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(OccupiedObjectUnit.class, null, null, fieldMap);
+                getObjectFieldProcessor(MaxObjectUnit.class, "amount", null, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -86,45 +87,16 @@ public class AggregateObjectFieldProcessorTest {
         assertEquals(input, ValueMapper.value(((Value<?>) process)));
 
         JSONObject input2 = new JSONObject();
-        input2.set("amount", 100);
         input2.set("name", "张三");
+        input2.set("amount", 200);
         process.merge(objectFieldProcessor.process(input2));
-        assertEquals(input, ValueMapper.value((Value<?>) process));
-    }
+        assertEquals(input2, ValueMapper.value((Value<?>) process));
 
-    /**
-     * 测试MAXFIELD, 对象型, 有比较字段以及保留指定字段
-     *
-     * @throws Exception
-     */
-    @Test
-    public void process3() throws Exception {
-
-        //构造对象型字段处理器
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Double.class);
-        fieldMap.put("name", String.class);
-
-        AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(MaxFieldUnit.class, "amount", "name", fieldMap);
-
-        //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
-
-        MergedUnit process = objectFieldProcessor.process(input);
-        assertEquals("张三", ValueMapper.value(((Value<?>) process)));
-
-        input.set("amount", 200);
-        input.set("name", "张三2");
-        process.merge(objectFieldProcessor.process(input));
-        assertEquals("张三2", ValueMapper.value((Value<?>) process));
-
-        input.set("amount", 50);
-        input.set("name", "张三3");
-        process.merge(objectFieldProcessor.process(input));
-        assertEquals("张三2", ValueMapper.value((Value<?>) process));
+        JSONObject input3 = new JSONObject();
+        input3.set("name", "张三");
+        input3.set("amount", 100);
+        process.merge(objectFieldProcessor.process(input3));
+        assertEquals(input2, ValueMapper.value((Value<?>) process));
     }
 
     /**
@@ -133,7 +105,7 @@ public class AggregateObjectFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process4() throws Exception {
+    public void process5() throws Exception {
 
         //构造对象型字段处理器
         Map<String, Class<?>> fieldMap = new HashMap<>();
@@ -158,22 +130,52 @@ public class AggregateObjectFieldProcessorTest {
         assertEquals("张三", ValueMapper.value((Value<?>) process));
     }
 
+    /**
+     * 测试OCCUPIEDOBJECT, 对象型, 没有比较字段以及保留原始对象数据
+     *
+     * @throws Exception
+     */
+    @Test
+    public void process6() throws Exception {
+
+        //构造对象型字段处理器
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Double.class);
+        fieldMap.put("name", String.class);
+
+        AggregateObjectFieldProcessor<?> objectFieldProcessor =
+                getObjectFieldProcessor(OccupiedObjectUnit.class, null, null, fieldMap);
+
+        //构造原始数据
+        JSONObject input = new JSONObject();
+        input.set("amount", 100);
+        input.set("name", "张三");
+
+        MergedUnit process = objectFieldProcessor.process(input);
+        assertEquals(input, ValueMapper.value(((Value<?>) process)));
+
+        JSONObject input2 = new JSONObject();
+        input2.set("amount", 100);
+        input2.set("name", "张三");
+        process.merge(objectFieldProcessor.process(input2));
+        assertEquals(input, ValueMapper.value((Value<?>) process));
+    }
+
     private AggregateObjectFieldProcessor<?> getObjectFieldProcessor(Class<?> clazz,
                                                                      String compareField,
                                                                      String retainField,
                                                                      Map<String, Class<?>> fieldMap) throws Exception {
-        String maxObject = clazz.getAnnotation(MergeType.class).value();
+        String aggregateType = clazz.getAnnotation(MergeType.class).value();
 
         AggregateObjectFieldProcessor<?> aggregateObjectFieldProcessor = new AggregateObjectFieldProcessor<>();
-        aggregateObjectFieldProcessor.setAggregateType(maxObject);
+        aggregateObjectFieldProcessor.setAggregateType(aggregateType);
         aggregateObjectFieldProcessor.setMetricExpress(compareField);
 
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
         aggregateObjectFieldProcessor.setUnitFactory(unitFactory);
 
-        Class<? extends MergedUnit<?>> mergeableClass = unitFactory.getMergeableClass(maxObject);
-        aggregateObjectFieldProcessor.setMergeUnitClazz(mergeableClass);
+        aggregateObjectFieldProcessor.setMergeUnitClazz(unitFactory.getMergeableClass(aggregateType));
 
         aggregateObjectFieldProcessor.setFieldMap(fieldMap);
 

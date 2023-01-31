@@ -71,7 +71,6 @@ public class MinFieldUnitTest {
         assertTrue(minFieldUnit.getOnlyShowValue());
         assertNull(minFieldUnit.getValue());
 
-
         //验证param构造2
         param.put(MinFieldUnit.Fields.onlyShowValue, null);
         minFieldUnit = new MinFieldUnit<>(param);

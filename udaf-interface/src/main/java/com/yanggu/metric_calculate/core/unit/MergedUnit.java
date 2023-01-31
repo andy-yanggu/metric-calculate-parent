@@ -6,4 +6,7 @@ public interface MergedUnit<U extends MergedUnit<U> & Cloneable2<U>> extends Clo
 
     U merge(U that);
 
+    @Override
+    U fastClone();
+
 }

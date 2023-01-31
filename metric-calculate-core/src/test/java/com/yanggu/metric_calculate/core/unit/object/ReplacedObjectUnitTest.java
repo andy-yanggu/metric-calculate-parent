@@ -115,18 +115,18 @@ public class ReplacedObjectUnitTest {
         ReplacedObjectUnit<Key<Integer>> replacedObjectUnit = (new ReplacedObjectUnit<>(key));
 
         replacedObjectUnit.merge(null);
-        assertEquals(key, replacedObjectUnit.getValue());
+        assertEquals(key, replacedObjectUnit.value());
 
         replacedObjectUnit.setValue(null);
         replacedObjectUnit.merge(new ReplacedObjectUnit<>(new Key<>(-1)));
-        assertEquals(new Key<>(-1), replacedObjectUnit.getValue());
+        assertEquals(new Key<>(-1), replacedObjectUnit.value());
 
         replacedObjectUnit.setValue(key);
         replacedObjectUnit.merge(new ReplacedObjectUnit<>(new Key<>(-1)));
-        assertEquals(new Key<>(-1), replacedObjectUnit.getValue());
+        assertEquals(new Key<>(-1), replacedObjectUnit.value());
 
         replacedObjectUnit.merge(new ReplacedObjectUnit<>(new Key<>(2)));
-        assertEquals(new Key<>(2), replacedObjectUnit.getValue());
+        assertEquals(new Key<>(2), replacedObjectUnit.value());
     }
 
 }

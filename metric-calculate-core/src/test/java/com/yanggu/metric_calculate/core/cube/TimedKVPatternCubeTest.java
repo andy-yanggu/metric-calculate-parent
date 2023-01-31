@@ -23,6 +23,10 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+/**
+ * TimedKVPatternCube单元测试类
+ * <p>CEP事件模式进行单元测试</p>
+ */
 public class TimedKVPatternCubeTest {
 
     public static final String NAME = "TEST_CUBE";

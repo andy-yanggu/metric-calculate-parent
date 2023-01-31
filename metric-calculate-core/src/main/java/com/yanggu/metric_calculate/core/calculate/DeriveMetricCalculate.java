@@ -16,6 +16,7 @@ import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.RoundAccuracyUtil;
 import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -179,7 +180,8 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
 
             //聚合值
-            Object value = metricCube.query(windowStart, true, windowEnd, false).value();
+            Value<?> query = metricCube.query(windowStart, true, windowEnd, false);
+            Object value = ValueMapper.value(query);
 
             //如果是滑动计数窗口需要进行二次聚合处理
             MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
@@ -195,7 +197,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
                         })
                         .reduce((a, b) -> a.merge(b))
                         .orElseThrow(() -> new RuntimeException("mergeUnit的merge方法执行失败"));
-                value = ((Value<?>) mergedUnit).value();
+                value = ValueMapper.value(((Value<?>) mergedUnit));
             }
 
             //处理精度
