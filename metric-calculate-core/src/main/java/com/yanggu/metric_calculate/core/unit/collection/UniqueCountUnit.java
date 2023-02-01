@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
-import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
@@ -13,28 +12,26 @@ import java.util.Map;
 import java.util.Set;
 
 @MergeType(value = "DISTINCTCOUNT", useParam = true)
-@Collective(useCompareField = true, retainObject = false)
+@Collective(useCompareField = true, retainObject = true)
 public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
-        UnlimitedMergedUnit<UniqueCountUnit<T>>, Value<Number>, Serializable, Iterable<T> {
+        Value<Number> {
 
-    private static final long serialVersionUID = -5104878154756554088L;
-
-    private UniqueListFieldUnit<T> original;
+    private UniqueListObjectUnit<T> original;
 
     public UniqueCountUnit() {
-        original = new UniqueListFieldUnit<>();
+        original = new UniqueListObjectUnit<>();
     }
 
     public UniqueCountUnit(Map<String, Object> param) {
-        original = new UniqueListFieldUnit<>(param);
+        original = new UniqueListObjectUnit<>(param);
     }
 
     public UniqueCountUnit(T value) {
-        original = new UniqueListFieldUnit<>(value);
+        original = new UniqueListObjectUnit<>(value);
     }
 
     public UniqueCountUnit(Collection<T> values) {
-        original = new UniqueListFieldUnit<>(values);
+        original = new UniqueListObjectUnit<>(values);
     }
 
     /**
@@ -44,29 +41,23 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
      * @param limit limitCnt
      */
     public UniqueCountUnit(T value, int limit) {
-        original = new UniqueListFieldUnit<>(value, limit);
+        original = new UniqueListObjectUnit<>(value, limit);
     }
 
     /**
      * Construct.
      */
     public UniqueCountUnit(Collection<T> values, int limit) {
-        original = new UniqueListFieldUnit<>(values, limit);
+        original = new UniqueListObjectUnit<>(values, limit);
     }
 
-    public UniqueListFieldUnit<T> original() {
+    public UniqueListObjectUnit<T> original() {
         return original;
     }
 
     @Override
     public UniqueCountUnit<T> merge(UniqueCountUnit<T> that) {
         original.merge(that.original);
-        return this;
-    }
-
-    @Override
-    public UniqueCountUnit<T> unlimitedMerge(UniqueCountUnit<T> that) {
-        original.unlimitedMerge(that.original);
         return this;
     }
 
@@ -96,11 +87,6 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
      */
     public void addAll(Collection<T> values) {
         this.original.addAll(values);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return this.original.iterator();
     }
 
     @Override
@@ -144,14 +130,6 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
         } else {
             return this.original.equals(thatUnit.original);
         }
-    }
-
-    public Set<T> getSet() {
-        return this.original.getSet();
-    }
-
-    public void setSet(Set<T> originalSet) {
-        this.original.setSet(originalSet);
     }
 
 }

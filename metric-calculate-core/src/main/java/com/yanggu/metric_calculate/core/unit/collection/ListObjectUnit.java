@@ -4,24 +4,18 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
-import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 @NoArgsConstructor
-@FieldNameConstants
 @MergeType(value = "LISTOBJECT", useParam = true)
 @Collective(useCompareField = false, retainObject = true)
-public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<ListObjectUnit<T>>,
-        CollectionUnit<T, ListObjectUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
+public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, ListObjectUnit<T>>, Value<List<T>> {
 
     private List<T> values = new ArrayList<>();
 
@@ -31,7 +25,7 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
         if (CollUtil.isEmpty(param)) {
             return;
         }
-        Object tempLimit = param.get(Fields.limit);
+        Object tempLimit = param.get("limit");
         if (tempLimit instanceof Integer) {
             this.limit = (Integer) tempLimit;
         }
@@ -40,15 +34,6 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
     public ListObjectUnit(T value) {
         this();
         add(value);
-    }
-
-    /**
-     * Construct.
-     */
-    public ListObjectUnit(T value, int limit) {
-        this();
-        add(value);
-        this.limit = limit;
     }
 
     public List<T> getValues() {
@@ -83,40 +68,18 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
 
     @Override
     public ListObjectUnit<T> merge(ListObjectUnit<T> that) {
-        return merge(that, false);
-    }
-
-    private ListObjectUnit<T> merge(ListObjectUnit<T> that, boolean useLimit) {
         if (that == null) {
             return this;
         }
-        List<T> values = that.values;
-        int limit = that.limit;
-        return internalMerge(values, useLimit, limit);
-    }
-
-    private ListObjectUnit<T> internalMerge(List<T> values, boolean useLimit, int limit) {
-        this.values.addAll(values);
-        if (!useLimit) {
-            this.limit = Math.max(this.limit, limit);
-            int i = this.values.size();
-            if (this.limit > 0 && i > this.limit) {
-                List<T> list = this.values.subList(i - this.limit, i);
-                this.values = new ArrayList<>(this.limit);
-                this.values.addAll(list);
-            }
+        this.values.addAll(that.values);
+        this.limit = Math.max(this.limit, that.limit);
+        int i = this.values.size();
+        if (this.limit > 0 && i > this.limit) {
+            List<T> list = this.values.subList(i - this.limit, i);
+            this.values = new ArrayList<>(this.limit);
+            this.values.addAll(list);
         }
         return this;
-    }
-
-    @Override
-    public ListObjectUnit<T> unlimitedMerge(ListObjectUnit<T> that) {
-        return merge(that, true);
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return this.values.iterator();
     }
 
     @Override

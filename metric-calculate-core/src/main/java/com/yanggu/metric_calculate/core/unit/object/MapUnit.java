@@ -1,20 +1,15 @@
 package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
 
-import java.io.Serializable;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneable2<V> & Value>
-        implements UnlimitedMergedUnit<MapUnit<K, V>>, Value<Map<K, V>>, Serializable, Iterable<Map.Entry<K, V>> {
-
-    private static final long serialVersionUID = -1300607404480893613L;
+        implements MergedUnit<MapUnit<K, V>>, Value<Map<K, V>> {
 
     public int limit = 0;
 
@@ -77,7 +72,7 @@ public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneabl
             return this;
         }
         this.limit = Math.max(this.limit, that.limit);
-        for (Map.Entry<K, V> entry : that) {
+        for (Map.Entry<K, V> entry : that.details.entrySet()) {
             V thisValue = this.details.get(entry.getKey());
             if (thisValue != null) {
                 if (thisValue instanceof MergedUnit && entry.getValue().getClass().equals(thisValue.getClass())) {
@@ -95,16 +90,6 @@ public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneabl
             put(key, value);
         }
         return this;
-    }
-
-    @Override
-    public MapUnit<K, V> unlimitedMerge(MapUnit<K, V> that) {
-        return merge(that, true);
-    }
-
-    @Override
-    public Iterator<Map.Entry<K, V>> iterator() {
-        return this.details.entrySet().iterator();
     }
 
     @Override
@@ -153,4 +138,5 @@ public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneabl
         }
         return true;
     }
+
 }

@@ -67,7 +67,7 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
                 thisRow.merge(timeRow.getValue());
             }
             if (thisRow instanceof ListObjectUnit) {
-                Iterator<V> mergeableIterator = ((ListObjectUnit) thisRow).iterator();
+                Iterator<V> mergeableIterator = ((ListObjectUnit) thisRow).getValues().iterator();
                 V row = mergeableIterator.next();
                 while (mergeableIterator.hasNext()) {
                     row.merge(mergeableIterator.next());

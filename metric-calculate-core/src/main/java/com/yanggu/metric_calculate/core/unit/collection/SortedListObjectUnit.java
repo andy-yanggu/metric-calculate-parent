@@ -18,9 +18,7 @@ import java.util.*;
 @MergeType(value = "SORTEDLISTOBJECT", useParam = true)
 @Collective(useCompareField = true, retainObject = true)
 public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
-        implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>>, Serializable, Iterable<T> {
-
-    private static final long serialVersionUID = -1300607404480893613L;
+        implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>> {
 
     protected Boolean desc = true;
 
@@ -84,6 +82,10 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
         return original;
     }
 
+    public List<T> getList() {
+        return this.original;
+    }
+
     public boolean desc() {
         return desc;
     }
@@ -123,7 +125,7 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
         }
         if (this.limit > 0 && this.original.size() > this.limit) {
             //如果是升序, 移除开头的
-            if (!desc) {
+            if (Boolean.FALSE.equals(desc)) {
                 this.original.remove(0);
             } else {
                 //如果是降序, 移除结尾的
@@ -135,13 +137,16 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
 
     @Override
     public SortedListObjectUnit<T> merge(SortedListObjectUnit<T> that) {
-        return that == null ? this : internalMerge(that.desc(), that.limit(), that.original());
+        if (that == null) {
+            return this;
+        }
+        return internalMerge(that.desc(), that.limit(), that.original());
     }
 
     private SortedListObjectUnit<T> internalMerge(boolean desc, int limit, List<T> original) {
         this.desc = desc;
         this.limit = Math.max(this.limit, limit);
-        ArrayList<T> arrayList = new ArrayList();
+        ArrayList<T> arrayList = new ArrayList<>();
         byte b1 = 0;
         byte b2 = 0;
         int i = this.original.size();
@@ -202,36 +207,12 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
         return mergeableSortedList;
     }
 
-    public List<T> getList() {
-        return this.original;
-    }
-
-    public void setList(ArrayList<T> paramArrayList) {
-        this.original = paramArrayList;
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return this.original.iterator();
-    }
-
-    /**
-     * Get median of the list.
-     */
-    public T getMedian() {
-        int i = original.size();
-        if (i == 0) {
-            return null;
-        }
-        return original.get(i / 2);
-    }
-
     @Override
     public List<Object> value() {
         if (CollUtil.isEmpty(original)) {
             return Collections.emptyList();
         }
-        if (original.get(0) instanceof KeyValue && onlyShowValue) {
+        if (original.get(0) instanceof KeyValue && Boolean.TRUE.equals(onlyShowValue)) {
             List<Object> returnList = new ArrayList<>(original.size());
             original.forEach(temp -> {
                 Value<?> value = ((KeyValue<?, ?>) temp).getValue();
@@ -242,10 +223,6 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
             return returnList;
         }
         return ((List) original);
-    }
-
-    public List<T> asList() {
-        return original;
     }
 
     /**
@@ -278,12 +255,9 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
         }
     }
 
-    /**
-     * toString.
-     * @return String
-     */
     @Override
     public String toString() {
         return String.format("%s{limit=%s, desc=%s, list=%s}", getClass().getSimpleName(), limit, desc, original);
     }
+
 }

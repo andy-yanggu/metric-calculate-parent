@@ -3,8 +3,6 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
 import com.yanggu.metric_calculate.core.value.Key;
 import org.junit.Test;
 
@@ -132,6 +130,49 @@ public class ListFieldUnitTest {
         //当加入第4个数据, 会超过长度, 进行移除, 只存储3个
         listFieldUnit.add(key);
         assertEquals(Arrays.asList(key, key, key), listFieldUnit.getValues());
+    }
+
+    /**
+     * 测试merge方法
+     */
+    @Test
+    public void testMerge() {
+        Map<String, Object> param = new HashMap<>();
+        param.put("limit", 3);
+        ListFieldUnit<Key<Integer>> listFieldUnit = new ListFieldUnit<>(param);
+
+        listFieldUnit.add(new Key<>(1));
+        listFieldUnit.add(new Key<>(2));
+        listFieldUnit.add(new Key<>(3));
+
+        ListFieldUnit<Key<Integer>> listFieldUnit2 = new ListFieldUnit<>(param);
+        listFieldUnit2.add(new Key<>(4));
+        listFieldUnit2.add(new Key<>(5));
+
+        listFieldUnit.merge(listFieldUnit2);
+        assertEquals(Arrays.asList(new Key<>(3), new Key<>(4), new Key<>(5)), listFieldUnit.getValues());
+    }
+
+    /**
+     * 测试value()方法
+     */
+    @Test
+    public void testValue() {
+        ListFieldUnit<Key<Integer>> listFieldUnit = new ListFieldUnit<>();
+        assertSame(listFieldUnit.getValues(), listFieldUnit.value());
+    }
+
+    /**
+     * 测试fastClone方法
+     */
+    @Test
+    public void testFastClone() {
+        ListFieldUnit<Key<Integer>> listFieldUnit = new ListFieldUnit<>();
+        listFieldUnit.add(new Key<>(1));
+
+        ListFieldUnit<Key<Integer>> fastClone = listFieldUnit.fastClone();
+        assertNotSame(listFieldUnit, fastClone);
+        assertEquals(listFieldUnit, fastClone);
     }
 
 }

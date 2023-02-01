@@ -21,7 +21,6 @@ public class ListFieldUnit<T extends Cloneable2<T>> extends ListObjectUnit<T> {
         super(param);
     }
 
-
     @Override
     public ListFieldUnit<T> fastClone() {
         ListFieldUnit<T> mergeableListObject = new ListFieldUnit<>();

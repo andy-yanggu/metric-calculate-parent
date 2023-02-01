@@ -3,22 +3,19 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
-
-import java.io.Serializable;
-import java.util.*;
-
-import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.NoArgsConstructor;
+
+import java.util.*;
 
 @NoArgsConstructor
 @MergeType(value = "DISTINCTLISTOBJECT", useParam = true)
 @Collective(useCompareField = true, retainObject = true)
 public class UniqueListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListObjectUnit<T>>,
-        UnlimitedMergedUnit<UniqueListObjectUnit<T>>, Value<Set<Object>>, Serializable, Iterable<T> {
+        Value<Set<Object>> {
 
     protected Set<T> original = new HashSet<>();
 
@@ -85,11 +82,6 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
     @Override
     public UniqueListObjectUnit<T> merge(UniqueListObjectUnit<T> that) {
         return internalMergeOp(that, false);
-    }
-
-    @Override
-    public UniqueListObjectUnit<T> unlimitedMerge(UniqueListObjectUnit<T> that) {
-        return internalMergeOp(that, true);
     }
 
     private UniqueListObjectUnit<T> internalMergeOp(UniqueListObjectUnit<T> that, boolean hasLimit) {
@@ -164,11 +156,6 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
         while (this.limit > 0 && this.original.size() > this.limit) {
             this.original.remove(this.original.iterator().next());
         }
-    }
-
-    @Override
-    public Iterator<T> iterator() {
-        return this.original.iterator();
     }
 
     @Override
