@@ -5,8 +5,8 @@ import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
-@MergeType("COUNT")
 @Numerical
+@MergeType("COUNT")
 public class CountUnit extends NumberUnit<CubeLong, CountUnit> {
 
     private static final long serialVersionUID = -8427535031107918740L;

@@ -4,8 +4,8 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
-@MergeType("MIN")
 @Numerical
+@MergeType("MIN")
 public class MinUnit<N extends CubeNumber<N>> extends NumberUnit<N, MinUnit<N>> {
     private static final long serialVersionUID = -3661833176927111287L;
 

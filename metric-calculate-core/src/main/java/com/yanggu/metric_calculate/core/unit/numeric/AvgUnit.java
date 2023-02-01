@@ -5,8 +5,8 @@ import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
-@MergeType("AVG")
 @Numerical
+@MergeType("AVG")
 public class AvgUnit<N extends CubeNumber<N>> extends NumberUnit<N, AvgUnit<N>> {
     private static final long serialVersionUID = 2047476248685393133L;
 

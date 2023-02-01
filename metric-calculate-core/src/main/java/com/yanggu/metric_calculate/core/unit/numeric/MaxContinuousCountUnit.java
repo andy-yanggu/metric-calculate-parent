@@ -6,8 +6,8 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 
 import java.util.Objects;
 
-@MergeType("MAXCONTINUOUSCOUNT")
 @Numerical
+@MergeType("MAXCONTINUOUSCOUNT")
 public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousCountUnit> {
     private static final long serialVersionUID = -3396993409877201343L;
 

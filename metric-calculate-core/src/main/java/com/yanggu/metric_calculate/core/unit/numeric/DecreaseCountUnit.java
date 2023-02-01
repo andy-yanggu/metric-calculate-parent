@@ -5,8 +5,8 @@ import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
-@MergeType("DECREASECOUNT")
 @Numerical
+@MergeType("DECREASECOUNT")
 public class DecreaseCountUnit<M extends DecreaseCountUnit<M>> extends BoundaryUnit<CubeNumber, M> {
     private static final long serialVersionUID = 1473285508708052617L;
 

@@ -5,11 +5,8 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
 
-import java.io.Serializable;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 @MergeType(value = "DISTINCTCOUNT", useParam = true)
 @Collective(useCompareField = true, retainObject = true)

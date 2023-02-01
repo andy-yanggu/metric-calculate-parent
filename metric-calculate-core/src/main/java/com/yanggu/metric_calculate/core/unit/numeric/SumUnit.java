@@ -4,8 +4,8 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
-@MergeType("SUM")
 @Numerical
+@MergeType("SUM")
 public class SumUnit<N extends CubeNumber<N>> extends NumberUnit<N, SumUnit<N>> {
     private static final long serialVersionUID = -1402152321834257837L;
 

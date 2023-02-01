@@ -5,8 +5,8 @@ import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 
-@MergeType("MAXDECREASECOUNT")
 @Numerical
+@MergeType("MAXDECREASECOUNT")
 public class MaxDecreaseCountUnit extends DecreaseCountUnit<MaxDecreaseCountUnit> {
 
     private static final long serialVersionUID = -5069152371923805623L;

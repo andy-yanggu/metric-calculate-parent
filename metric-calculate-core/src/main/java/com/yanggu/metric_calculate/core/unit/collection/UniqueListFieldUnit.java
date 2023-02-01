@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import lombok.NoArgsConstructor;
-import lombok.experimental.FieldNameConstants;
 
 import java.util.Collection;
 import java.util.Map;

@@ -7,8 +7,8 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.number.CubeZero;
 
-@MergeType("VARS")
 @Numerical
+@MergeType("VARS")
 public class VarsUnit extends VarpUnit<VarsUnit> {
     private static final long serialVersionUID = 914745812510434980L;
 
