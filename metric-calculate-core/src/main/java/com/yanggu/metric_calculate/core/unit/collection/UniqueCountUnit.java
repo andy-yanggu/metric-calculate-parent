@@ -13,28 +13,28 @@ import java.util.Map;
 import java.util.Set;
 
 @MergeType(value = "DISTINCTCOUNT", useParam = true)
-@Collective(useCompareField = true, retainObject = true)
+@Collective(useCompareField = true, retainObject = false)
 public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
         UnlimitedMergedUnit<UniqueCountUnit<T>>, Value<Number>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -5104878154756554088L;
 
-    private UniqueListObjectUnit<T> original;
+    private UniqueListFieldUnit<T> original;
 
     public UniqueCountUnit() {
-        original = new UniqueListObjectUnit<>();
+        original = new UniqueListFieldUnit<>();
     }
 
     public UniqueCountUnit(Map<String, Object> param) {
-        original = new UniqueListObjectUnit<>(param);
+        original = new UniqueListFieldUnit<>(param);
     }
 
     public UniqueCountUnit(T value) {
-        original = new UniqueListObjectUnit<>(value);
+        original = new UniqueListFieldUnit<>(value);
     }
 
     public UniqueCountUnit(Collection<T> values) {
-        original = new UniqueListObjectUnit<>(values);
+        original = new UniqueListFieldUnit<>(values);
     }
 
     /**
@@ -44,17 +44,17 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
      * @param limit limitCnt
      */
     public UniqueCountUnit(T value, int limit) {
-        original = new UniqueListObjectUnit<>(value, limit);
+        original = new UniqueListFieldUnit<>(value, limit);
     }
 
     /**
      * Construct.
      */
     public UniqueCountUnit(Collection<T> values, int limit) {
-        original = new UniqueListObjectUnit<>(values, limit);
+        original = new UniqueListFieldUnit<>(values, limit);
     }
 
-    public UniqueListObjectUnit<T> original() {
+    public UniqueListFieldUnit<T> original() {
         return original;
     }
 

@@ -30,11 +30,6 @@ public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> extends MinOb
     }
 
     @Override
-    public String toString() {
-        return String.format("%s {value=%s}", getClass().getSimpleName(), this.value);
-    }
-
-    @Override
     public boolean equals(Object that) {
         if (this == that) {
             return true;

@@ -7,11 +7,13 @@ import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
 import java.util.*;
 
+@NoArgsConstructor
 @FieldNameConstants
 @MergeType(value = "SORTEDLISTOBJECT", useParam = true)
 @Collective(useCompareField = true, retainObject = true)
@@ -20,19 +22,16 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
 
     private static final long serialVersionUID = -1300607404480893613L;
 
-    public Boolean desc = true;
+    protected Boolean desc = true;
 
     /**
      * 是否只展示value, 不展示key
      */
-    private Boolean onlyShowValue = true;
+    protected Boolean onlyShowValue = true;
 
-    public int limit = 0;
+    protected int limit = 0;
 
     private List<T> original = new ArrayList<>();
-
-    public SortedListObjectUnit() {
-    }
 
     public SortedListObjectUnit(Map<String, Object> params) {
         if (CollUtil.isEmpty(params)) {
@@ -123,7 +122,13 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
             this.original.add(i + 1, value);
         }
         if (this.limit > 0 && this.original.size() > this.limit) {
-            this.original.remove(this.original.size() - 1);
+            //如果是升序, 移除开头的
+            if (!desc) {
+                this.original.remove(0);
+            } else {
+                //如果是降序, 移除结尾的
+                this.original.remove(this.original.size() - 1);
+            }
         }
         return this;
     }
@@ -172,7 +177,13 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
         }
         if (this.limit > 0 && arrayList.size() > this.limit) {
             ArrayList<T> arrayList1 = new ArrayList<>(this.limit);
-            arrayList1.addAll(arrayList.subList(0, this.limit));
+            //如果是升序, 移除开头的
+            if (!desc) {
+                arrayList1.addAll(arrayList.subList(arrayList.size() - this.limit, arrayList.size()));
+            } else {
+                //如果是降序, 移除结尾的
+                arrayList1.addAll(arrayList.subList(0, this.limit));
+            }
             this.original = arrayList1;
         } else {
             this.original = arrayList;

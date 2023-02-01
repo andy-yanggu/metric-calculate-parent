@@ -7,6 +7,7 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.UnlimitedMergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
@@ -15,20 +16,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+@NoArgsConstructor
 @FieldNameConstants
 @MergeType(value = "LISTOBJECT", useParam = true)
 @Collective(useCompareField = false, retainObject = true)
 public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedUnit<ListObjectUnit<T>>,
         CollectionUnit<T, ListObjectUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
 
-    private static final long serialVersionUID = -1300607404480893613L;
-
     private List<T> values = new ArrayList<>();
 
-    public int limit = 0;
-
-    public ListObjectUnit() {
-    }
+    private Integer limit = 0;
 
     public ListObjectUnit(Map<String, Object> param) {
         if (CollUtil.isEmpty(param)) {
@@ -36,7 +33,7 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
         }
         Object tempLimit = param.get(Fields.limit);
         if (tempLimit instanceof Integer) {
-            this.limit = (int) tempLimit;
+            this.limit = (Integer) tempLimit;
         }
     }
 
@@ -54,12 +51,20 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
         this.limit = limit;
     }
 
-    public List<T> getList() {
-        return this.values;
+    public List<T> getValues() {
+        return values;
     }
 
-    public void setList(List<T> paramList) {
-        this.values = paramList;
+    public void setValues(List<T> values) {
+        this.values = values;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 
     /**
@@ -76,21 +81,16 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
         return this;
     }
 
-    public List<T> asList() {
-        return this.values;
-    }
-
     @Override
     public ListObjectUnit<T> merge(ListObjectUnit<T> that) {
         return merge(that, false);
     }
 
-    @Deprecated
     private ListObjectUnit<T> merge(ListObjectUnit<T> that, boolean useLimit) {
         if (that == null) {
             return this;
         }
-        List<T> values = that.getList();
+        List<T> values = that.values;
         int limit = that.limit;
         return internalMerge(values, useLimit, limit);
     }
@@ -128,8 +128,8 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements UnlimitedMergedU
     public ListObjectUnit<T> fastClone() {
         ListObjectUnit<T> mergeableListObject = new ListObjectUnit<>();
         mergeableListObject.limit = this.limit;
-        for (T item : getList()) {
-            mergeableListObject.getList().add(item.fastClone());
+        for (T item : values) {
+            mergeableListObject.values.add(item.fastClone());
         }
         return mergeableListObject;
     }

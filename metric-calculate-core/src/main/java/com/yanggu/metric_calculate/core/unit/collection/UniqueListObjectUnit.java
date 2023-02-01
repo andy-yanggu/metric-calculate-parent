@@ -12,25 +12,22 @@ import java.util.*;
 
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @MergeType(value = "DISTINCTLISTOBJECT", useParam = true)
 @Collective(useCompareField = true, retainObject = true)
 public class UniqueListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListObjectUnit<T>>,
         UnlimitedMergedUnit<UniqueListObjectUnit<T>>, Value<Set<Object>>, Serializable, Iterable<T> {
 
-    private static final long serialVersionUID = -5104878154756554088L;
+    protected Set<T> original = new HashSet<>();
 
-    private Set<T> original = new HashSet<>();
-
-    private int limit = 0;
+    protected int limit = 0;
 
     /**
      * 是否只展示value, 不展示key
      */
     private boolean onlyShowValue = true;
-
-    public UniqueListObjectUnit() {
-    }
 
     public UniqueListObjectUnit(Map<String, Object> param) {
         if (CollUtil.isEmpty(param)) {
@@ -40,7 +37,7 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
         if (tempShowValue instanceof Boolean) {
             this.onlyShowValue = (boolean) tempShowValue;
         }
-        Object tempLimit = param.get(UniqueListFieldUnit.Fields.limit);
+        Object tempLimit = param.get("limit");
         if (tempLimit instanceof Integer) {
             this.limit = (int) tempLimit;
         }
