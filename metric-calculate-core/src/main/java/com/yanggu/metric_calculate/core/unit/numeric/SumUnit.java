@@ -33,8 +33,7 @@ public class SumUnit<N extends CubeNumber<N>> extends NumberUnit<N, SumUnit<N>> 
 
     @Override
     public SumUnit<N> fastClone() {
-        SumUnit<N> sumUnit = new SumUnit<>(value.fastClone(), count.value());
-        return sumUnit;
+        return new SumUnit<>(value.fastClone(), count.value());
     }
 }
 

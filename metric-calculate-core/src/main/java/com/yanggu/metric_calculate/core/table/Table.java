@@ -3,6 +3,14 @@ package com.yanggu.metric_calculate.core.table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
+/**
+ *
+ * @param <K>
+ * @param <R>
+ * @param <C>
+ * @param <V>
+ * @param <T>
+ */
 public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends MergedUnit<T> {
 
     /**

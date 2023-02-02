@@ -17,9 +17,9 @@ import java.util.Map;
 public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
         implements CollectionUnit<T, SortedListUnit2<T>>, Value<List<T>>, Serializable, Iterable<T> {
 
-    public boolean desc = true;
+    private boolean desc = true;
 
-    public int limit = 0;
+    private int limit = 0;
 
     private List<T> original = new ArrayList<>();
 
@@ -115,7 +115,7 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
     private SortedListUnit2<T> internalMerge(boolean desc, int limit, List<T> original) {
         this.desc = desc;
         this.limit = Math.max(this.limit, limit);
-        ArrayList<T> arrayList = new ArrayList();
+        ArrayList<T> arrayList = new ArrayList<>();
         byte b1 = 0;
         byte b2 = 0;
         int i = this.original.size();

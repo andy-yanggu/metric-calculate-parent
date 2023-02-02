@@ -15,6 +15,8 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING_WINDOW;
+
 /**
  * 滑动计数窗口, 窗口大小为limit, 滑动步长为1
  *
@@ -23,7 +25,7 @@ import java.util.stream.Collectors;
 @Data
 @FieldNameConstants
 @Collective(useCompareField = false, retainObject = true)
-@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, countWindow = true)
+@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, useSubAgg = true, timeWindowType = TIME_SLIDING_WINDOW)
 public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<Object>, Serializable, Iterable<T> {
 

@@ -1,9 +1,13 @@
 package com.yanggu.metric_calculate.core.annotation;
 
+import com.yanggu.metric_calculate.core.enums.TimeWindowEnum;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SPLIT_WINDOW;
 
 /**
  * 聚合函数元数据
@@ -33,10 +37,17 @@ public @interface MergeType {
     boolean useParam() default false;
 
     /**
-     * 是否是计数窗口
+     * 是否使用子聚合函数
      *
      * @return
      */
-    boolean countWindow() default false;
+    boolean useSubAgg() default false;
+
+    /**
+     * 时间区间类型
+     *
+     * @return
+     */
+    TimeWindowEnum timeWindowType() default TIME_SPLIT_WINDOW;
 
 }

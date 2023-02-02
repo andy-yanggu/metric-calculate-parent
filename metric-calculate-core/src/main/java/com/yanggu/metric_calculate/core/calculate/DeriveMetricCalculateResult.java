@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.LinkedHashMap;
 
 /**
- * 派生指标计算类
+ * 派生指标计算结果类
  */
 @Data
 public class DeriveMetricCalculateResult {

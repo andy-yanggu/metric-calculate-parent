@@ -86,7 +86,7 @@ public class CubeZero<N extends CubeNumber<N>> implements CubeNumber<N> {
 
     @Override
     public N fastClone() {
-        return (N) new CubeZero();
+        return (N) new CubeZero<>();
     }
 
     @Override

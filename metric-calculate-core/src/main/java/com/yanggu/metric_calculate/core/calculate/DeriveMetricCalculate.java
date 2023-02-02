@@ -5,14 +5,13 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.cube.*;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
 import com.yanggu.metric_calculate.core.pojo.Store;
-import com.yanggu.metric_calculate.core.table.CountWindowTable;
 import com.yanggu.metric_calculate.core.table.Table;
-import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.RoundAccuracyUtil;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -89,6 +88,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
      */
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
+    /**
+     * 用于生成cube的工厂类
+     */
+    private MetricCubeFactory<M> metricCubeFactory;
+
     @SneakyThrows
     @Override
     public MetricCube<Table, Long, M, ?> exec(JSONObject input) {
@@ -99,7 +103,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         }
 
         //执行聚合字段处理器, 生成MergeUnit
-        M process = (M) aggregateFieldProcessor.process(input);
+        M process = aggregateFieldProcessor.process(input);
         if (process == null) {
             if (log.isDebugEnabled()) {
                 log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(input));
@@ -113,27 +117,13 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         //维度数据
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
-        MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
+        //当前数据的聚合时间戳
+        Long referenceTime = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
 
-        boolean countWindow = annotation.countWindow();
-        MetricCube<Table, Long, M, ?> metricCube;
-        //如果是滑动计数窗口需要使用CountWindowMetricCube
-        if (countWindow) {
-            metricCube = new CountWindowMetricCube<>();
-            CountWindowTable<M> table = new CountWindowTable<>();
-            metricCube.setTable(table);
-        } else {
-            TimeSeriesKVTable<M> table = new TimeSeriesKVTable<>();
-            table.setTimeBaselineDimension(timeBaselineDimension);
-            metricCube = new TimedKVMetricCube();
-            metricCube.setTable(table);
-        }
-        metricCube.setName(name);
-        metricCube.setKey(key);
-        metricCube.setTimeBaselineDimension(timeBaselineDimension);
-        metricCube.setDimensionSet(dimensionSet);
-        //设置数据当前聚合时间
-        metricCube.setReferenceTime(timeBaselineDimension.getCurrentAggregateTimestamp(timestamp));
+        //生成cube
+        MetricCube<Table, Long, M, ?> metricCube = metricCubeFactory.createMetricCube(dimensionSet, referenceTime);
+
+        //放入生成的MergeUnit
         metricCube.put(timestamp, process);
         return metricCube;
     }
@@ -185,7 +175,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
             //如果是滑动计数窗口需要进行二次聚合处理
             MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
-            if (annotation.countWindow() && value instanceof List) {
+            if (annotation.useSubAgg() && value instanceof List) {
                 List<JSONObject> tempValueList = (List<JSONObject>) value;
                 MergedUnit mergedUnit = tempValueList.stream()
                         .map(tempValue -> {

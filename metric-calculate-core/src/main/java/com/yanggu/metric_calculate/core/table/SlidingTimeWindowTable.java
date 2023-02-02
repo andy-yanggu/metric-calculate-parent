@@ -8,7 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class CountWindowTable<V extends MergedUnit<V> & Value<?>> implements Table<Long, V, Long, V, CountWindowTable<V>> {
+public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
+        implements Table<Long, V, Long, V, SlidingTimeWindowTable<V>> {
 
     private final Map<Tuple, V> twoKeyTable = new HashMap<>();
 
@@ -24,7 +25,7 @@ public class CountWindowTable<V extends MergedUnit<V> & Value<?>> implements Tab
     }
 
     @Override
-    public Table<Long, V, Long, V, CountWindowTable<V>> cloneEmpty() {
+    public Table<Long, V, Long, V, SlidingTimeWindowTable<V>> cloneEmpty() {
         return null;
     }
 
@@ -34,7 +35,7 @@ public class CountWindowTable<V extends MergedUnit<V> & Value<?>> implements Tab
     }
 
     @Override
-    public CountWindowTable<V> merge(CountWindowTable<V> that) {
+    public SlidingTimeWindowTable<V> merge(SlidingTimeWindowTable<V> that) {
         that.twoKeyTable.forEach((tempTuple, otherValue) -> {
             V value = twoKeyTable.get(tempTuple);
             if (value == null) {
@@ -47,7 +48,7 @@ public class CountWindowTable<V extends MergedUnit<V> & Value<?>> implements Tab
     }
 
     @Override
-    public CountWindowTable<V> fastClone() {
+    public SlidingTimeWindowTable<V> fastClone() {
         return null;
     }
 

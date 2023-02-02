@@ -14,7 +14,7 @@ import java.util.Map;
 @FieldNameConstants
 @MergeType(value = "MINOBJECT", useParam = true)
 @Objective(useCompareField = true, retainObject = true)
-public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value {
+public class MinObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MinObjectUnit<T>>, Value<Object> {
 
     protected T value;
 

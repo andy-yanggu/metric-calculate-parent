@@ -4,8 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.calculate.TimeWindow;
 import com.yanggu.metric_calculate.core.fieldprocess.DimensionSet;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.table.CountWindowTable;
-import com.yanggu.metric_calculate.core.table.Table;
+import com.yanggu.metric_calculate.core.table.SlidingTimeWindowTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
@@ -13,8 +12,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
-        implements MetricCube<Table, Long, V, CountWindowMetricCube<V>> {
+public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
+        implements MetricCube<SlidingTimeWindowTable<V>, Long, V, SlidingTimeWindowMetricCube<V>> {
 
     public static final String PREFIX = "MC.T.KV.C";
 
@@ -46,7 +45,7 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     /**
      * 时间序列存储
      */
-    private Table table;
+    private SlidingTimeWindowTable<V> table;
 
     @Override
     public String getPrefix() {
@@ -79,14 +78,14 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public CountWindowMetricCube<V> merge(CountWindowMetricCube<V> that) {
+    public SlidingTimeWindowMetricCube<V> merge(SlidingTimeWindowMetricCube<V> that) {
         table.merge(that.getTable());
         return this;
     }
 
     @Override
-    public CountWindowTable<V> getTable() {
-        return (CountWindowTable<V>) table;
+    public SlidingTimeWindowTable<V> getTable() {
+        return table;
     }
 
     @Override
@@ -95,7 +94,7 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public CountWindowMetricCube<V> cloneEmpty() {
+    public SlidingTimeWindowMetricCube<V> cloneEmpty() {
         return null;
     }
 
@@ -120,7 +119,7 @@ public class CountWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public CountWindowMetricCube<V> fastClone() {
+    public SlidingTimeWindowMetricCube<V> fastClone() {
         return null;
     }
 

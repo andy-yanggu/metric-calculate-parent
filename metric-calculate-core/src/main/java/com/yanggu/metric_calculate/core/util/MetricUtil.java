@@ -21,6 +21,7 @@ import com.yanggu.metric_calculate.core.calculate.AtomMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.CompositeMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
@@ -197,7 +198,8 @@ public class MetricUtil {
 
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
-        if (aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class).countWindow()) {
+        Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
+        if (mergeUnitClazz.getAnnotation(MergeType.class).useSubAgg()) {
             //如果是计数窗口, 需要添加子聚合字段处理器
             //滑动计数窗口的udafParams参数
             /*
@@ -265,6 +267,15 @@ public class MetricUtil {
 
         //存储宽表
         deriveMetricCalculate.setStore(tempDerive.getStore());
+
+        //设置MetricCubeFactory
+        MetricCubeFactory metricCubeFactory = new MetricCubeFactory();
+        metricCubeFactory.setKey(deriveMetricCalculate.getKey());
+        metricCubeFactory.setName(deriveMetricCalculate.getName());
+        metricCubeFactory.setTimeBaselineDimension(timeBaselineDimension);
+        metricCubeFactory.setMergeUnitClazz(mergeUnitClazz);
+
+        deriveMetricCalculate.setMetricCubeFactory(metricCubeFactory);
 
         //派生指标中间结算结果存储接口
         //并发HashMap存储中间数据
