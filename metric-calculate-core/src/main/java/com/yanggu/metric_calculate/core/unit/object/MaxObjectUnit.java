@@ -11,7 +11,8 @@ import java.util.Map;
 @NoArgsConstructor
 @MergeType(value = "MAXOBJECT", useParam = true)
 @Objective(useCompareField = true, retainObject = true)
-public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements ObjectiveUnit<T, MaxObjectUnit<T>>, Value {
+public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements
+        ObjectiveUnit<T, MaxObjectUnit<T>>, Value<Object> {
 
     protected T maxValue;
 

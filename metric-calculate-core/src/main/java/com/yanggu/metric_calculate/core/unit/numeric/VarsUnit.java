@@ -44,8 +44,8 @@ public class VarsUnit extends VarpUnit<VarsUnit> {
         CubeDecimal oldSum = this.sum.fastClone();
         CubeDecimal thatSum = that.sum.fastClone();
 
-        CubeNumber<?> oldAvg = (oldCount.value() == 0L) ? new CubeZero() : oldSum.fastClone().divide(oldCount);
-        CubeNumber<?> thatAvg = (thatCount.value() == 0L) ? new CubeZero() : thatSum.fastClone().divide(thatCount);
+        CubeNumber<?> oldAvg = (oldCount.value() == 0L) ? new CubeZero<>() : oldSum.fastClone().divide(oldCount);
+        CubeNumber<?> thatAvg = (thatCount.value() == 0L) ? new CubeZero<>() : thatSum.fastClone().divide(thatCount);
 
         CubeDecimal thisValue = value.fastClone();
         CubeDecimal thatValue = that.value.fastClone();

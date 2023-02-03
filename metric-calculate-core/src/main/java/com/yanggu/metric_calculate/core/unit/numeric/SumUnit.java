@@ -14,7 +14,7 @@ public class SumUnit<N extends CubeNumber<N>> extends NumberUnit<N, SumUnit<N>> 
     }
 
     public SumUnit(N value) {
-        super(value, (value == null) ? 0L : ((value.doubleValue() < 0.0D) ? -1 : 1));
+        super(value, (value == null) ? 0L : 1);
     }
 
     public SumUnit(N value, long count) {

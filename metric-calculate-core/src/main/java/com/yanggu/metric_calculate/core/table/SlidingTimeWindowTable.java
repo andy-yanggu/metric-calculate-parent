@@ -31,7 +31,7 @@ public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public Value query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
         return twoKeyTable.get(new Tuple(from, to));
     }
 

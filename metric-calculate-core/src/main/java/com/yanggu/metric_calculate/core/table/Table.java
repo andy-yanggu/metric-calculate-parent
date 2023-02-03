@@ -8,8 +8,8 @@ import com.yanggu.metric_calculate.core.value.Value;
  * @param <K> rowKey
  * @param <R>
  * @param <C> column
- * @param <V>
- * @param <T> MergedUnit
+ * @param <V> MergedUnit
+ * @param <T>
  */
 public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends MergedUnit<T> {
 
@@ -23,7 +23,7 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
      */
     Table<K, R, C, V, T> cloneEmpty();
 
-    Value query(K from, boolean fromInclusive, K to, boolean toInclusive);
+    Value<?> query(K from, boolean fromInclusive, K to, boolean toInclusive);
 
     @Override
     T merge(T that);

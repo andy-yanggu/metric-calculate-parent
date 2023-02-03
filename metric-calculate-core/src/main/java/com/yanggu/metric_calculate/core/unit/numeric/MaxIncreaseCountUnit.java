@@ -72,9 +72,8 @@ public class MaxIncreaseCountUnit extends IncreaseCountUnit<MaxIncreaseCountUnit
      */
     @Override
     public MaxIncreaseCountUnit fastClone() {
-        MaxIncreaseCountUnit maxIncreaseCountNumber = new MaxIncreaseCountUnit(
+        return new MaxIncreaseCountUnit(
                 this.head, this.tail, this.value, this.count.value(), this.headCount, this.tailCount);
-        return maxIncreaseCountNumber;
     }
 
     /**

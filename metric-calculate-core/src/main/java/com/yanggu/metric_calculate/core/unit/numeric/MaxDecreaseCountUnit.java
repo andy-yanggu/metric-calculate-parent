@@ -74,9 +74,8 @@ public class MaxDecreaseCountUnit extends DecreaseCountUnit<MaxDecreaseCountUnit
      */
     @Override
     public MaxDecreaseCountUnit fastClone() {
-        MaxDecreaseCountUnit maxDecreaseCountNumber = new MaxDecreaseCountUnit(
+        return new MaxDecreaseCountUnit(
                 this.head, this.tail, this.value, this.count.value(), this.headCount, this.tailCount);
-        return maxDecreaseCountNumber;
     }
 
     /**

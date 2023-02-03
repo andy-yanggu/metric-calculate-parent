@@ -94,13 +94,6 @@ public interface CubeNumber<N extends CubeNumber<N>> extends Cloneable2<N>, Valu
     }
 
     /**
-     * Return cube number for cls.
-     */
-    default <N extends CubeNumber<N>> N cast(Class<N> cls) throws Exception {
-        return cls.newInstance().value(this.value());
-    }
-
-    /**
      * Return short value.
      */
     default short shortValue() {

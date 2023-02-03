@@ -44,7 +44,6 @@ public class MaxUnit<N extends CubeNumber<N>> extends NumberUnit<N, MaxUnit<N>> 
      */
     @Override
     public MaxUnit<N> fastClone() {
-        MaxUnit<N> maxUnit = new MaxUnit<>(value.fastClone(), count.value());
-        return maxUnit;
+        return new MaxUnit<>(value.fastClone(), count.value());
     }
 }

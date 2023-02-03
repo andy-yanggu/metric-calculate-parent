@@ -94,7 +94,14 @@ public class CubeInteger implements CubeNumber<CubeInteger> {
      */
     @Override
     public int signum() {
-        return value > 0 ? 1 : value == 0 ? 0 : -1;
+        if (value > 0) {
+            return 1;
+        } else {
+            if (value == 0) {
+                return 0;
+            }
+            return -1;
+        }
     }
 
     /**

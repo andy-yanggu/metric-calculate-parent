@@ -108,7 +108,7 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
         return value;
     }
 
-    protected MetricFieldProcessor<?> getRetainFieldValueFieldProcessor() {
+    protected MetricFieldProcessor<Object> getRetainFieldValueFieldProcessor() {
         throw new RuntimeException("需要重写getRetainFieldValueFieldProcessor方法");
     }
 

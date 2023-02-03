@@ -16,7 +16,7 @@ public class ApiResponse<T> {
         this.data = data;
     }
 
-    public static ApiResponse success() {
+    public static ApiResponse<Object> success() {
         return new ApiResponse<>();
     }
 

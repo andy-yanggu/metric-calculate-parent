@@ -1,8 +1,10 @@
 package com.yanggu.metric_calculate.error;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum ErrorCode {
 
     ;
@@ -14,13 +16,6 @@ public enum ErrorCode {
     private final String info;
 
     private final String format;
-
-    ErrorCode(Integer httpStatus, Integer code, String info, String format) {
-        this.httpStatus = httpStatus;
-        this.code = code;
-        this.info = info;
-        this.format = format;
-    }
 
     public ErrorCodeException formatAsException(Object... args) {
         String errorMessage;

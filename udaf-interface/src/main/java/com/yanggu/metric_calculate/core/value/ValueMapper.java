@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 
 public class ValueMapper {
 
+    private ValueMapper() {
+    }
+
     /**
      * Return value string.
      */

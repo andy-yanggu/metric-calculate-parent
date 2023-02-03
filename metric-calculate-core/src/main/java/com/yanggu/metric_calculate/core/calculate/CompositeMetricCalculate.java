@@ -85,8 +85,8 @@ public class CompositeMetricCalculate implements Calculate<Map<String, Object>, 
             return;
         }
 
-        List<StoreTable> storeTableList = store.getStoreTableList();
-        StoreTable storeTable = storeTableList.get(0);
+        //List<StoreTable> storeTableList = store.getStoreTableList();
+        //StoreTable storeTable = storeTableList.get(0);
         //System.out.println(storeTable);
 
 

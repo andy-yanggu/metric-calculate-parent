@@ -54,13 +54,13 @@ public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> 
         N thatSum2 = that.sum2;
         N oldSumAll = oldSum2.fastClone().add(oldSum1);
         N thatSumAll = thatSum2.fastClone().add(thatSum1);
-        CubeNumber<?> oldAvg1 = oldCount.value() == 0 ? new CubeZero() : oldSum1.fastClone().divide(oldCount);
-        CubeNumber<?> thatAvg1 = thatCount.value() == 0 ? new CubeZero() : thatSum1.fastClone().divide(thatCount);
-        CubeNumber<?> oldAvg2 = oldCount.value() == 0 ? new CubeZero() : oldSum2.fastClone().divide(oldCount);
-        CubeNumber<?> thatAvg2 = thatCount.value() == 0 ? new CubeZero() : thatSum2.fastClone().divide(thatCount);
-        CubeNumber<?> oldAvgAll = oldCount.value() == 0 ? new CubeZero() : oldSumAll.fastClone().divide(oldCount);
+        CubeNumber<?> oldAvg1 = oldCount.value() == 0 ? new CubeZero<>() : oldSum1.fastClone().divide(oldCount);
+        CubeNumber<?> thatAvg1 = thatCount.value() == 0 ? new CubeZero<>() : thatSum1.fastClone().divide(thatCount);
+        CubeNumber<?> oldAvg2 = oldCount.value() == 0 ? new CubeZero<>() : oldSum2.fastClone().divide(oldCount);
+        CubeNumber<?> thatAvg2 = thatCount.value() == 0 ? new CubeZero<>() : thatSum2.fastClone().divide(thatCount);
+        CubeNumber<?> oldAvgAll = oldCount.value() == 0 ? new CubeZero<>() : oldSumAll.fastClone().divide(oldCount);
         CubeNumber<?> thatAvgAll =
-            thatCount.value() == 0 ? new CubeZero() : thatSumAll.fastClone().divide(thatCount);
+            thatCount.value() == 0 ? new CubeZero<>() : thatSumAll.fastClone().divide(thatCount);
         CubeNumber<?> oldVarpValue1 = varpValue1();
         CubeNumber<?> thatVarpValue1 = that.varpValue1();
         CubeNumber<?> oldVarpValue2 = varpValue2();
@@ -123,27 +123,26 @@ public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> 
 
 
     public CubeNumber<?> varpValue1() {
-        return (this.value == null) ? new CubeZero() : this.value.fastClone();
+        return (this.value == null) ? new CubeZero<>() : this.value.fastClone();
     }
 
     public CubeNumber<?> varpValue2() {
-        return (this.value2 == null) ? new CubeZero() : this.value2.fastClone();
+        return (this.value2 == null) ? new CubeZero<>() : this.value2.fastClone();
     }
 
     public CubeNumber<?> varpValue3() {
-        return (this.value3 == null) ? new CubeZero() : this.value3.fastClone();
+        return (this.value3 == null) ? new CubeZero<>() : this.value3.fastClone();
     }
 
     @Override
     public CovUnit<N> fastClone() {
-        CovUnit<N> covUnit = new CovUnit(
+        return new CovUnit(
             varpValue1(),
             sum1.fastClone(),
             varpValue2(),
             sum2,
             varpValue3(),
             count.longValue());
-        return covUnit;
     }
 
     @Override

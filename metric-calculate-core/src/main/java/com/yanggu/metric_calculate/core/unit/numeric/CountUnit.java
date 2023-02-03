@@ -15,7 +15,7 @@ public class CountUnit extends NumberUnit<CubeLong, CountUnit> {
         super();
     }
 
-    public CountUnit(CubeNumber value) {
+    public CountUnit(CubeNumber<?> value) {
         this(value instanceof CubeLong ? (CubeLong) value : CubeLong.of(value));
     }
 
@@ -44,8 +44,7 @@ public class CountUnit extends NumberUnit<CubeLong, CountUnit> {
 
     @Override
     public CountUnit fastClone() {
-        CountUnit countUnit = new CountUnit(value.fastClone(), count.longValue());
-        return countUnit;
+        return new CountUnit(value.fastClone(), count.longValue());
     }
 }
 

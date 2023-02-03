@@ -23,10 +23,10 @@ public class KryoClassResolver extends DefaultClassResolver {
      */
     public KryoClassResolver() {
         super();
-        nameToClass = new ObjectMap();
-        nameIdToClass = new IntMap();
-        classToNameId = new IdentityObjectIntMap();
-        classNameToRegistration = new ConcurrentHashMap();
+        nameToClass = new ObjectMap<>();
+        nameIdToClass = new IntMap<>();
+        classToNameId = new IdentityObjectIntMap<>();
+        classNameToRegistration = new ConcurrentHashMap<>();
     }
 
     @Override

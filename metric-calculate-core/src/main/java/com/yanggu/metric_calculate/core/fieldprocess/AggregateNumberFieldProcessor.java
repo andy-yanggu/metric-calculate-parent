@@ -14,11 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @NoArgsConstructor
 public class AggregateNumberFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
 
-    @Override
-    public void init() throws Exception {
-        //初始化度量字段表达式
-        super.init();
-    }
+    //@Override
+    //public void init() throws Exception {
+    //    //初始化度量字段表达式
+    //    super.init();
+    //}
 
     @Override
     public M process(JSONObject input) throws Exception {

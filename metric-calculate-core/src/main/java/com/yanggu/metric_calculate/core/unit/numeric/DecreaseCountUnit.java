@@ -36,7 +36,7 @@ public class DecreaseCountUnit<M extends DecreaseCountUnit<M>> extends BoundaryU
 
     @Override
     public M fastClone() {
-        DecreaseCountUnit<M> decreaseCountNumber = new DecreaseCountUnit(
+        DecreaseCountUnit<M> decreaseCountNumber = new DecreaseCountUnit<>(
                 this.head,
                 this.tail,
                 this.value,

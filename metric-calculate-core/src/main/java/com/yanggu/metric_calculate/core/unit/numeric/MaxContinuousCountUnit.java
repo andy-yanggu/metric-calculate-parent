@@ -68,9 +68,8 @@ public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousC
 
     @Override
     public MaxContinuousCountUnit fastClone() {
-        MaxContinuousCountUnit result = new MaxContinuousCountUnit(
+        return new MaxContinuousCountUnit(
                 this.head, this.tail, this.value, this.count.value(), this.headCount, this.tailCount);
-        return result;
     }
 
     @Override

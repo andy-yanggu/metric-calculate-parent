@@ -36,7 +36,7 @@ public class FilterProcessor implements FieldExtractProcessor<JSONObject, Boolea
     /**
      * 前置过滤表达式
      */
-    private transient Expression filterExpression;
+    private Expression filterExpression;
 
     public FilterProcessor(Map<String, Class<?>> fieldMap, String filterExpress) {
         this.fieldMap = fieldMap;

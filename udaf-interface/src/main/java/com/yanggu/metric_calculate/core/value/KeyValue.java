@@ -20,7 +20,7 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
     }
 
     public KeyValue(Comparable key, Object value) {
-        this.key = (K) new Key(key);
+        this.key = (K) new Key<>(key);
         this.value = (V) Cloneable2Wrapper.wrap(value);
     }
 

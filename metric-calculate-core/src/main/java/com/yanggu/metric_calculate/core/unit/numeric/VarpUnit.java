@@ -18,7 +18,7 @@ public class VarpUnit<V extends VarpUnit<V>> extends NumberUnit<CubeDecimal, V> 
         super();
     }
 
-    public VarpUnit(CubeNumber sum) {
+    public VarpUnit(CubeNumber<?> sum) {
         this(CubeDecimal.of(0), 1, CubeDecimal.of(sum));
     }
 
@@ -45,8 +45,8 @@ public class VarpUnit<V extends VarpUnit<V>> extends NumberUnit<CubeDecimal, V> 
         CubeDecimal oldSum = this.sum.fastClone();
         CubeDecimal thatSum = that.sum.fastClone();
 
-        CubeNumber<?> oldAvg = (oldCount.value() == 0L) ? new CubeZero() : oldSum.fastClone().divide(oldCount);
-        CubeNumber<?> thatAvg = (thatCount.value() == 0L) ? new CubeZero() : thatSum.fastClone().divide(thatCount);
+        CubeNumber<?> oldAvg = (oldCount.value() == 0L) ? new CubeZero<>() : oldSum.fastClone().divide(oldCount);
+        CubeNumber<?> thatAvg = (thatCount.value() == 0L) ? new CubeZero<>() : thatSum.fastClone().divide(thatCount);
 
         CubeDecimal thisValue = value.fastClone();
         CubeDecimal thatValue = that.value.fastClone();
@@ -73,7 +73,7 @@ public class VarpUnit<V extends VarpUnit<V>> extends NumberUnit<CubeDecimal, V> 
      */
     @Override
     public V fastClone() {
-        return (V) new VarpUnit(value.fastClone(), count.value(), sum.fastClone());
+        return (V) new VarpUnit<>(value.fastClone(), count.value(), sum.fastClone());
     }
 
     @Override
