@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING_WINDOW;
 
@@ -97,6 +98,11 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T
             mergeableListObject.values.add(item.fastClone());
         }
         return mergeableListObject;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(values);
     }
 
     @Override

@@ -7,12 +7,13 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.number.CubeZero;
 
+import java.util.Objects;
+
 @Numerical
 @MergeType("VARP")
 public class VarpUnit<V extends VarpUnit<V>> extends NumberUnit<CubeDecimal, V> {
-    private static final long serialVersionUID = -2932063628549881110L;
 
-    public CubeDecimal sum;
+    protected CubeDecimal sum;
 
     public VarpUnit() {
         super();
@@ -81,6 +82,11 @@ public class VarpUnit<V extends VarpUnit<V>> extends NumberUnit<CubeDecimal, V> 
         return getClass().getName() + " [count=" + this.count + ", sum=" + this.sum + ", value=" + this.value + "]";
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(count, sum, value);
+    }
+
     /**
      * isEqual or Not.
      * @param other input param
@@ -107,4 +113,5 @@ public class VarpUnit<V extends VarpUnit<V>> extends NumberUnit<CubeDecimal, V> 
         }
         return super.equals(other);
     }
+
 }

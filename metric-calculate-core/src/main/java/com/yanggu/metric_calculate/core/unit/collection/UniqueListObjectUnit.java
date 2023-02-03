@@ -174,6 +174,11 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(original, limit);
+    }
+
+    @Override
     public boolean equals(Object that) {
         if (this == that) {
             return true;
