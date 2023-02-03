@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.calculate;
 
 /**
  * 原子指标计算、派生指标计算、复合指标计算接口
+ *
  * @param <E> 输入数据
  * @param <R> 输出数据
  */

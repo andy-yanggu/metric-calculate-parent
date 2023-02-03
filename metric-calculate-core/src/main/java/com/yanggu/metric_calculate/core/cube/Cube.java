@@ -14,6 +14,6 @@ public interface Cube<C extends Cube> {
 
     C cloneEmpty();
 
-    Cube init();
+    C init();
 
 }

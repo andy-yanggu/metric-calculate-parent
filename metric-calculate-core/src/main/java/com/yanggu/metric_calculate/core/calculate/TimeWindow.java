@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**
- * 包含start, 不包含end
+ * 包含windowStart, 不包含windowEnd
  */
 @Data
 @AllArgsConstructor

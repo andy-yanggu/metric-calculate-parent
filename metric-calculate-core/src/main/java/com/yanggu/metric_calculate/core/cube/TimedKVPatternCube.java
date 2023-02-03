@@ -19,7 +19,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
-public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMetricCube<E, TimedKVPatternCube<T, E>> {
+public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMetricCube<E> {
 
     /**
      * Magic Cube . Timed . Key Value . Pattern . Cube.
@@ -32,12 +32,12 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
 
     /**
      * 放入对应满足过滤条件的数据
-     * <p>key是节点名称, value的map, 内层map的key是数据的时间戳, value是原始数据</p>
+     * <p>key是节点名称, value的map</p>
+     * <p>内层map的key是数据的时间戳, value是原始数据</p>
      */
     private Map<String, TimeSeriesKVTable<E>> nodeTables;
 
     private SortedMap<Integer, String> sortedNodes;
-
 
     public TimedKVPatternCube() {
     }
@@ -159,11 +159,12 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
     }
 
     @Override
-    public TimedKVPatternCube<T, E> merge(TimedKVPatternCube<T, E> that) {
+    public TimedKVMetricCube<E> merge(TimedKVMetricCube<E> that) {
         if (that == null) {
             return this;
         }
-        that.nodeTables.forEach((k, v) -> nodeTables.get(k).merge(v));
+
+        ((TimedKVPatternCube<T, E>) that).getNodeTables().forEach((k, v) -> this.nodeTables.get(k).merge(v));
         setReferenceTime(that.getReferenceTime());
         return this;
     }

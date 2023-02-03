@@ -8,9 +8,11 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING_WINDOW;
+
 @NoArgsConstructor
-@MergeType("OCCUPIEDOBJECT")
 @Objective(useCompareField = false, retainObject = true)
+@MergeType(value = "OCCUPIEDOBJECT", timeWindowType = TIME_SLIDING_WINDOW)
 public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>,
         Value<T>, Serializable {
 

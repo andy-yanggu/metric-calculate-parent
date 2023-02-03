@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING_WINDOW;
+
 @NoArgsConstructor
-@MergeType(value = "LISTOBJECT", useParam = true)
 @Collective(useCompareField = false, retainObject = true)
+@MergeType(value = "LISTOBJECT", useParam = true, timeWindowType = TIME_SLIDING_WINDOW)
 public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, ListObjectUnit<T>>, Value<List<T>> {
 
     private List<T> values = new ArrayList<>();

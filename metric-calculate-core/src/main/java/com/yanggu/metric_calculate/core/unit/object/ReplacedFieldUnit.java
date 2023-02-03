@@ -5,9 +5,11 @@ import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import lombok.NoArgsConstructor;
 
+import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING_WINDOW;
+
 @NoArgsConstructor
-@MergeType("REPLACEDFIELD")
 @Objective(useCompareField = false, retainObject = false)
+@MergeType(value = "REPLACEDFIELD", timeWindowType = TIME_SLIDING_WINDOW)
 public class ReplacedFieldUnit<T extends Cloneable2<T>> extends ReplacedObjectUnit<T> {
 
     public ReplacedFieldUnit(T value) {

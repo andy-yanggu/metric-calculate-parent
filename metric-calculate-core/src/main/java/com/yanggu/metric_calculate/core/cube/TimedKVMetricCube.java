@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @NoArgsConstructor
-public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends TimedKVMetricCube<V, C>>
-        implements MetricCube<TimeSeriesKVTable<V>, Long, V, C> {
+public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
+        implements MetricCube<TimeSeriesKVTable<V>, Long, V, TimedKVMetricCube<V>> {
 
     public static final String PREFIX = "MC.T.KV.C";
 
@@ -70,12 +70,12 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public C cloneEmpty() {
+    public TimedKVMetricCube<V> cloneEmpty() {
         return null;
     }
 
     @Override
-    public Cube init() {
+    public TimedKVMetricCube<V> init() {
         return null;
     }
 
@@ -100,18 +100,18 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>, C extends Tim
     }
 
     @Override
-    public C fastClone() {
+    public TimedKVMetricCube<V> fastClone() {
         return null;
     }
 
     @Override
-    public C merge(C that) {
+    public TimedKVMetricCube<V> merge(TimedKVMetricCube<V> that) {
         if (that == null) {
-            return (C) this;
+            return this;
         }
         table.merge(that.getTable());
         this.referenceTime = that.getReferenceTime();
-        return (C) this;
+        return this;
     }
 
     @Override

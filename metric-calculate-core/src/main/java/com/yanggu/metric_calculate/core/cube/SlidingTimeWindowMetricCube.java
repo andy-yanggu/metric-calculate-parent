@@ -15,7 +15,7 @@ import java.util.List;
 public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
         implements MetricCube<SlidingTimeWindowTable<V>, Long, V, SlidingTimeWindowMetricCube<V>> {
 
-    public static final String PREFIX = "MC.T.KV.C";
+    public static final String PREFIX = "MC.S.TW.C";
 
     /**
      * 指标名称
@@ -48,6 +48,11 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     private SlidingTimeWindowTable<V> table;
 
     @Override
+    public SlidingTimeWindowMetricCube<V> init() {
+        return null;
+    }
+
+    @Override
     public String getPrefix() {
         return PREFIX;
     }
@@ -69,7 +74,11 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
         if (CollUtil.isEmpty(timeWindow)) {
             return;
         }
-        timeWindow.forEach(tempTimeWindow -> table.putValue(tempTimeWindow.getWindowStart(), tempTimeWindow.getWindowEnd(), value.fastClone()));
+        timeWindow.forEach(tempTimeWindow -> {
+            long windowStart = tempTimeWindow.getWindowStart();
+            long windowEnd = tempTimeWindow.getWindowEnd();
+            table.putValue(windowStart, windowEnd, value.fastClone());
+        });
     }
 
     @Override
@@ -95,11 +104,6 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public SlidingTimeWindowMetricCube<V> cloneEmpty() {
-        return null;
-    }
-
-    @Override
-    public Cube init() {
         return null;
     }
 
