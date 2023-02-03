@@ -76,12 +76,15 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public TimedKVMetricCube<V> init() {
-        return null;
+        TimeSeriesKVTable<V> timeSeriesKVTable = new TimeSeriesKVTable<>();
+        timeSeriesKVTable.setTimeBaselineDimension(timeBaselineDimension);
+        table = timeSeriesKVTable;
+        return this;
     }
 
     @Override
     public void put(Long key, V value) {
-        table.putValue(key, null, value);
+        table.putValue(key, value);
     }
 
     @Override

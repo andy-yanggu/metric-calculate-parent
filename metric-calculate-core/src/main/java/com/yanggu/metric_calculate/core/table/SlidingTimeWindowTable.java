@@ -4,12 +4,13 @@ import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
-        implements Table<Long, V, Long, V, SlidingTimeWindowTable<V>> {
+        implements Table<Long, V, Long, V, SlidingTimeWindowTable<V>>, Serializable {
 
     private final Map<Tuple, V> twoKeyTable = new HashMap<>();
 

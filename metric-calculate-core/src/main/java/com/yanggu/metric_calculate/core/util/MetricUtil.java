@@ -46,6 +46,12 @@ public class MetricUtil {
     private MetricUtil() {
     }
 
+    /**
+     * 根据指标定义元数据, 初始化指标计算类
+     *
+     * @param tableData
+     * @return
+     */
     public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
         if (tableData == null) {
             throw new RuntimeException("明细宽表为空");
@@ -57,7 +63,7 @@ public class MetricUtil {
         metricCalculate.setMetricTypeMap(metricTypeMap);
 
         //宽表字段
-        Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(metricCalculate);
+        Map<String, Class<?>> fieldMap = getFieldMap(metricCalculate);
         metricCalculate.setFieldMap(fieldMap);
 
         //原子指标
@@ -67,7 +73,7 @@ public class MetricUtil {
                     .map(tempAtom -> {
                         metricTypeMap.put(tempAtom.getName(), ATOM);
                         //初始化原子指标计算类
-                        return MetricUtil.initAtom(tempAtom, metricCalculate);
+                        return initAtom(tempAtom, metricCalculate);
                     })
                     .collect(Collectors.toList());
             metricCalculate.setAtomMetricCalculateList(collect);
@@ -139,8 +145,8 @@ public class MetricUtil {
 
         //时间字段处理器
         TimeColumn timeColumn = atom.getTimeColumn();
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(),
-                timeColumn.getColumnName());
+        TimeFieldProcessor timeFieldProcessor =
+                new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
         timeFieldProcessor.init();
         atomMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
@@ -173,7 +179,8 @@ public class MetricUtil {
         deriveMetricCalculate.setName(tempDerive.getName());
 
         //设置key
-        deriveMetricCalculate.setKey(metricCalculate.getId() + "_" + tempDerive.getId());
+        String key = metricCalculate.getId() + "_" + tempDerive.getId();
+        deriveMetricCalculate.setKey(key);
 
         //设置前置过滤条件处理器
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
@@ -196,68 +203,28 @@ public class MetricUtil {
         BaseAggregateFieldProcessor<?> aggregateFieldProcessor =
                 getAggregateFieldProcessor(unitFactory, tempDerive.getUdafParams(), fieldMap, columnName, calculateLogic);
 
+        //设置聚合字段处理器
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
-        Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
-        if (mergeUnitClazz.getAnnotation(MergeType.class).useSubAgg()) {
-            //如果是计数窗口, 需要添加子聚合字段处理器
-            //滑动计数窗口的udafParams参数
-            /*
-            {
-                "limit": 5, //滑动计数窗口大小
-                "aggregateType": "SUM", //聚合类型
-                "udafParams": { //自定义udaf参数
-                    "metricExpress": "amount", //度量字段(数值)、比较字段(排序或者去重) TODO 需要前端手动设置原子指标度量字段名
-                    "retainExpress": "", //保留字段名
-                }
-            }
-            */
-
-            //例如如果是一个普通的sortlistfield
-            /*
-            {
-              "desc": true, //升序还是降序
-              "limit": 10,  //限制大小
-              "retainExpress": "amount" //保留字段名
-            }
-            */
-
-            Map<String, Object> udafParams = tempDerive.getUdafParams();
-            Object aggregateType = udafParams.get("aggregateType");
-            if (StrUtil.isBlankIfStr(aggregateType)) {
-                throw new RuntimeException("滑动计数窗口需要设置聚合类型aggregateType");
-            }
-
-            Object subUdafParamsMapObject = udafParams.get("udafParams");
-            Map<String, Object> subUdafParams = new HashMap<>();
-            Object metricExpress = null;
-            if (subUdafParamsMapObject instanceof Map && CollUtil.isNotEmpty((Map<?, ?>) subUdafParamsMapObject)) {
-                subUdafParams = (Map<String, Object>) subUdafParamsMapObject;
-                metricExpress = subUdafParams.get("metricExpress");
-            }
-
-            BaseAggregateFieldProcessor<?> subAggregateFieldProcessor =
-                    MetricUtil.getAggregateFieldProcessor(unitFactory, subUdafParams, fieldMap, metricExpress, aggregateType.toString());
-
-            subAggregateFieldProcessor.setUdafParams(subUdafParams);
-            deriveMetricCalculate.setSubAggregateFieldProcessor(subAggregateFieldProcessor);
-        }
+        //设置子聚合处理器
+        setSubAggFieldProcessor(deriveMetricCalculate);
 
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(),
-                timeColumn.getColumnName());
+        TimeFieldProcessor timeFieldProcessor =
+                new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
         timeFieldProcessor.init();
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(tempDerive.getDuration(), tempDerive.getTimeUnit());
+        TimeBaselineDimension timeBaselineDimension =
+                new TimeBaselineDimension(tempDerive.getDuration(), tempDerive.getTimeUnit());
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(tempDerive.getDimension());
         dimensionSetProcessor.setMetricName(tempDerive.getName());
-        dimensionSetProcessor.setKey(metricCalculate.getId() + "_" + tempDerive.getId());
+        dimensionSetProcessor.setKey(key);
         dimensionSetProcessor.setFieldMap(fieldMap);
         dimensionSetProcessor.init();
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
@@ -269,10 +236,11 @@ public class MetricUtil {
         deriveMetricCalculate.setStore(tempDerive.getStore());
 
         //设置MetricCubeFactory
-        MetricCubeFactory metricCubeFactory = new MetricCubeFactory();
+        MetricCubeFactory metricCubeFactory = new MetricCubeFactory<>();
         metricCubeFactory.setKey(deriveMetricCalculate.getKey());
         metricCubeFactory.setName(deriveMetricCalculate.getName());
         metricCubeFactory.setTimeBaselineDimension(timeBaselineDimension);
+        Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
         metricCubeFactory.setMergeUnitClazz(mergeUnitClazz);
 
         deriveMetricCalculate.setMetricCubeFactory(metricCubeFactory);
@@ -280,7 +248,6 @@ public class MetricUtil {
         //派生指标中间结算结果存储接口
         //并发HashMap存储中间数据
         DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
-
         //redis存储中间数据
         //DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
         //RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
@@ -293,8 +260,57 @@ public class MetricUtil {
         return deriveMetricCalculate;
     }
 
+    private static void setSubAggFieldProcessor(DeriveMetricCalculate deriveMetricCalculate) throws Exception {
+        BaseAggregateFieldProcessor aggregateFieldProcessor = deriveMetricCalculate.getAggregateFieldProcessor();
+        Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
+
+        //判断是否需要子聚合处理器
+        if (!mergeUnitClazz.getAnnotation(MergeType.class).useSubAgg()) {
+            return;
+        }
+        /*
+        如果是滑动计数窗口, 需要添加子聚合字段处理器
+        滑动计数窗口的udafParams参数
+        {
+            "limit": 5, //滑动计数窗口大小
+            "aggregateType": "SUM", //聚合类型
+            "udafParams": { //自定义udaf参数
+                "metricExpress": "amount", //度量字段(数值)、比较字段(排序或者去重) TODO 需要前端手动设置原子指标度量字段名
+                "retainExpress": "", //保留字段名
+            }
+        }
+        */
+
+        Map<String, Object> udafParams = aggregateFieldProcessor.getUdafParams();
+        Object aggregateType = udafParams.get("aggregateType");
+        if (StrUtil.isBlankIfStr(aggregateType)) {
+            throw new RuntimeException("需要设置聚合类型aggregateType");
+        }
+
+        Object subUdafParamsMapObject = udafParams.get("udafParams");
+        Map<String, Object> subUdafParams = new HashMap<>();
+        Object metricExpress = null;
+        if (subUdafParamsMapObject instanceof Map && CollUtil.isNotEmpty((Map<?, ?>) subUdafParamsMapObject)) {
+            subUdafParams = (Map<String, Object>) subUdafParamsMapObject;
+            metricExpress = subUdafParams.get("metricExpress");
+        }
+
+        BaseAggregateFieldProcessor<?> subAggregateFieldProcessor =
+                getAggregateFieldProcessor(aggregateFieldProcessor.getUnitFactory(),
+                        subUdafParams, aggregateFieldProcessor.getFieldMap(), metricExpress, aggregateType.toString());
+
+        deriveMetricCalculate.setSubAggregateFieldProcessor(subAggregateFieldProcessor);
+    }
+
     /**
      * 生成聚合字段处理器, 包含数值型、集合型、对象型
+     * <p>udafParams中的数据</p>
+     * <p>例如如果是一个普通的sortlistfield</p>
+     * {
+     *   "desc": true, //升序还是降序
+     *   "limit": 10,  //限制大小
+     *   "retainExpress": "amount" //保留字段名
+     * }
      *
      * @param unitFactory
      * @param udafParams
@@ -396,22 +412,24 @@ public class MetricUtil {
 
                     //设置时间字段处理器
                     TimeColumn timeColumn = compositeMetric.getTimeColumn();
-                    TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+                    TimeFieldProcessor timeFieldProcessor =
+                            new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
                     timeFieldProcessor.init();
                     compositeMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
-                    AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
 
                     //设置表达式字符串
                     String expression = temp.getCalculateExpression();
                     compositeMetricCalculate.setExpressString(expression);
 
                     //在Aviator中添加自定义函数
+                    AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
                     instance.addFunction(new GetFunction());
                     instance.addFunction(new CoalesceFunction());
                     instance.setOption(Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY, false);
                     Expression compile = instance.compile(expression, true);
                     compositeMetricCalculate.setExpression(compile);
 
+                    //设置变量名
                     List<String> variableNames = compile.getVariableNames();
                     compositeMetricCalculate.setParamList(variableNames);
 

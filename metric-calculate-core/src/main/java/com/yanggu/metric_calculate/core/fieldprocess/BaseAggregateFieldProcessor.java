@@ -19,7 +19,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<M> {
+public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<Object> {
 
     /**
      * 聚合类型

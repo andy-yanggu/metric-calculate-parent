@@ -23,6 +23,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         //如果是设置了比较字段
         Collective objective = mergeUnitClazz.getAnnotation(Collective.class);
         if (objective.useCompareField()) {
+            //初始化
             super.init();
         }
 

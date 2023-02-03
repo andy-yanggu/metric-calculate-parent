@@ -5,11 +5,11 @@ import com.yanggu.metric_calculate.core.value.Value;
 
 /**
  *
- * @param <K>
+ * @param <K> rowKey
  * @param <R>
- * @param <C>
+ * @param <C> column
  * @param <V>
- * @param <T>
+ * @param <T> MergedUnit
  */
 public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends MergedUnit<T> {
 

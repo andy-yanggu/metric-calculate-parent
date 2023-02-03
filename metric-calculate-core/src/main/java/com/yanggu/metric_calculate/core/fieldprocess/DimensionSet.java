@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
 public class DimensionSet implements Serializable {
 
     /**
-     * 指标名称
-     */
-    private String metricName;
-
-    /**
      * 指标标识(数据明细宽表id-指标id)
      */
     private String key;
+
+    /**
+     * 指标名称
+     */
+    private String metricName;
 
     /**
      * 维度kv
@@ -38,10 +38,13 @@ public class DimensionSet implements Serializable {
 
     /**
      * 获取唯一的key
+     *
      * @return
      */
     public String realKey() {
-        return key + ":" + metricName + ":" + dimensionMap.values().stream().map(Object::toString).collect(Collectors.joining(":"));
+        return key + ":" + metricName + ":" + dimensionMap.values().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(":"));
     }
 
 }

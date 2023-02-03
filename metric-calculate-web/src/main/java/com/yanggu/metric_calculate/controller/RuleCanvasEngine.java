@@ -67,8 +67,8 @@ public class RuleCanvasEngine {
         return ApiResponse.success();
     }
 
-    @ApiOperation("执行接口")
-    @PostMapping("/execute")
+    @ApiOperation("计算接口")
+    @PostMapping("/calculate")
     public ApiResponse<Map<String, Object>> execute(@ApiParam("明细宽表数据") @RequestBody JSONObject message) throws Exception {
         ApiResponse<Map<String, Object>> response = new ApiResponse<>();
 
@@ -87,6 +87,7 @@ public class RuleCanvasEngine {
         //原子指标计算结果
         Map<String, Object> atomicResultMap = new ConcurrentHashMap<>();
         returnData.put("ATOM", atomicResultMap);
+
         //计算原子指标
         calcAtom(message, dataWideTable, atomicResultMap);
 

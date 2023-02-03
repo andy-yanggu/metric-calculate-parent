@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.fieldprocess;
 
+import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
 import com.yanggu.metric_calculate.core.calculate.TimeWindow;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
@@ -19,4 +20,13 @@ public class TimeBaselineDimensionTest {
                     + ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(temp.getWindowEnd())));
         });
     }
+
+    @Test
+    public void test2() {
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(7, TimeUnit.MILLS);
+        DateTime parse = DateUtil.parse("2022-02-03 12:00:00");
+        Long timestamp = timeBaselineDimension.getCurrentAggregateTimestamp(parse.getTime());
+        System.out.println(DateUtil.formatDateTime(new Date(timestamp)));
+    }
+
 }

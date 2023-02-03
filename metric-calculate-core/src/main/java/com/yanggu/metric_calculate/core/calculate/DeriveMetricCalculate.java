@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.calculate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
@@ -34,14 +33,14 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         implements Calculate<JSONObject, MetricCube<Table, Long, M, ?>> {
 
     /**
-     * 指标名称
-     */
-    private String name;
-
-    /**
      * 指标标识(数据明细宽表id-指标id)
      */
     private String key;
+
+    /**
+     * 指标名称
+     */
+    private String name;
 
     /**
      * 前置过滤条件处理器, 进行过滤处理
@@ -54,7 +53,9 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     private BaseAggregateFieldProcessor<M> aggregateFieldProcessor;
 
     /**
-     * 对于滑动计数窗口函数, 需要进行二次聚合计算
+     * 需要进行二次聚合计算
+     * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
+     * <p>CEP, 按照最后一条数据进行聚合计算</p>
      */
     private BaseAggregateFieldProcessor<?> subAggregateFieldProcessor;
 
@@ -103,11 +104,8 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         }
 
         //执行聚合字段处理器, 生成MergeUnit
-        M process = aggregateFieldProcessor.process(input);
+        M process = (M) aggregateFieldProcessor.process(input);
         if (process == null) {
-            if (log.isDebugEnabled()) {
-                log.debug("Get unit from input, but get null, input = {}", JSONUtil.toJsonStr(input));
-            }
             return null;
         }
 

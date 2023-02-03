@@ -19,8 +19,8 @@ import java.util.List;
  */
 @Data
 @Slf4j
-@Accessors(chain = true)
 @NoArgsConstructor
+@Accessors(chain = true)
 public class TimeBaselineDimension implements Serializable {
 
     /**
