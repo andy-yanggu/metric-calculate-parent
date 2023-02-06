@@ -94,18 +94,19 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public SlidingTimeWindowTable<V> getTable() {
-        return table;
-    }
-
-    @Override
     public boolean isEmpty() {
-        return false;
+        return table.isEmpty();
     }
 
     @Override
     public SlidingTimeWindowMetricCube<V> cloneEmpty() {
-        return null;
+        SlidingTimeWindowMetricCube<V> metricCube = new SlidingTimeWindowMetricCube<>();
+        metricCube.setKey(key);
+        metricCube.setName(name);
+        metricCube.setDimensionSet(dimensionSet);
+        metricCube.setTimeBaselineDimension(timeBaselineDimension);
+        metricCube.init();
+        return metricCube;
     }
 
     @Override
@@ -125,7 +126,10 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public SlidingTimeWindowMetricCube<V> fastClone() {
-        return null;
+        SlidingTimeWindowMetricCube<V> metricCube = cloneEmpty();
+        metricCube.setReferenceTime(referenceTime);
+        metricCube.setTable(table.fastClone());
+        return metricCube;
     }
 
 }

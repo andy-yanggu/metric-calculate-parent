@@ -31,4 +31,6 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
     @Override
     T fastClone();
 
+    boolean isEmpty();
+
 }

@@ -49,6 +49,34 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
     private TimeSeriesKVTable<V> table;
 
     @Override
+    public TimedKVMetricCube<V> init() {
+        TimeSeriesKVTable<V> timeSeriesKVTable = new TimeSeriesKVTable<>();
+        timeSeriesKVTable.setTimeBaselineDimension(timeBaselineDimension);
+        table = timeSeriesKVTable;
+        return this;
+    }
+
+    @Override
+    public TimedKVMetricCube<V> merge(TimedKVMetricCube<V> that) {
+        if (that == null) {
+            return this;
+        }
+        table.merge(that.getTable());
+        this.referenceTime = that.getReferenceTime();
+        return this;
+    }
+
+    @Override
+    public Value query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+        return table.query(from, fromInclusive, to, toInclusive);
+    }
+
+    @Override
+    public int eliminateExpiredData() {
+        return 0;
+    }
+
+    @Override
     public String getPrefix() {
         return PREFIX;
     }
@@ -75,14 +103,6 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public TimedKVMetricCube<V> init() {
-        TimeSeriesKVTable<V> timeSeriesKVTable = new TimeSeriesKVTable<>();
-        timeSeriesKVTable.setTimeBaselineDimension(timeBaselineDimension);
-        table = timeSeriesKVTable;
-        return this;
-    }
-
-    @Override
     public void put(Long key, V value) {
         table.putValue(key, value);
     }
@@ -93,28 +113,8 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public Value query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return table.query(from, fromInclusive, to, toInclusive);
-    }
-
-    @Override
-    public int eliminateExpiredData() {
-        return 0;
-    }
-
-    @Override
     public TimedKVMetricCube<V> fastClone() {
         return null;
-    }
-
-    @Override
-    public TimedKVMetricCube<V> merge(TimedKVMetricCube<V> that) {
-        if (that == null) {
-            return this;
-        }
-        table.merge(that.getTable());
-        this.referenceTime = that.getReferenceTime();
-        return this;
     }
 
     @Override

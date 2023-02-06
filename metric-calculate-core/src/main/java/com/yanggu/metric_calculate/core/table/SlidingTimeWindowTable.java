@@ -53,4 +53,9 @@ public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
         return null;
     }
 
+    @Override
+    public boolean isEmpty() {
+        return twoKeyTable.isEmpty();
+    }
+
 }

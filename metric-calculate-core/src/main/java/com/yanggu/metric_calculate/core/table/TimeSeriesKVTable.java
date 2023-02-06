@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.*;
 
 import static com.yanggu.metric_calculate.core.enums.TimeUnit.MILLS;
@@ -21,7 +22,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeUnit.MILLS;
  */
 @Data
 public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V>
-        implements KVTable<Long, V, TimeSeriesKVTable<V>>, TimeReferable {
+        implements KVTable<Long, V, TimeSeriesKVTable<V>>, TimeReferable, Serializable {
 
     /**
      * 时间聚合粒度
