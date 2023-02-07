@@ -196,8 +196,8 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
                 String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
                         .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
                         .collect(Collectors.joining(","));
-                log.debug("指标名称: " + result.getName() +
-                        ", 指标key: " + result.getKey() +
+                log.debug("指标key: " + result.getKey() +
+                        ", 指标名称: " + result.getName() +
                         ", 指标维度: " + collect +
                         ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(windowStart)) +
                         ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(windowEnd)) +

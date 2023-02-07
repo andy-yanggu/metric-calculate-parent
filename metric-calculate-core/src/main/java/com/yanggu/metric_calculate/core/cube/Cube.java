@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core.cube;
 
-public interface Cube<C extends Cube> {
+public interface Cube<C extends Cube<?>> {
+
+    C init();
 
     String getName();
 
@@ -13,7 +15,5 @@ public interface Cube<C extends Cube> {
     boolean isEmpty();
 
     C cloneEmpty();
-
-    C init();
 
 }
