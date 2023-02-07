@@ -150,7 +150,7 @@ public class ListFieldUnitTest {
         listFieldUnit2.add(new Key<>(5));
 
         listFieldUnit.merge(listFieldUnit2);
-        assertEquals(Arrays.asList(new Key<>(3), new Key<>(4), new Key<>(5)), listFieldUnit.getValues());
+        assertEquals(Arrays.asList(new Key<>(1), new Key<>(2), new Key<>(3)), listFieldUnit.getValues());
     }
 
     /**

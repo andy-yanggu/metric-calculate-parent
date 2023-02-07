@@ -62,9 +62,13 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T
      */
     @Override
     public ListObjectUnit<T> add(T value) {
-        this.values.add(value);
-        if (this.limit > 0 && this.values.size() > this.limit) {
-            this.values.remove(0);
+        if (this.limit.equals(0)) {
+            this.values.add(value);
+            return this;
+        }
+        if (this.limit > 0 && this.limit > this.values.size()) {
+            this.values.add(value);
+            return this;
         }
         return this;
     }
@@ -74,14 +78,8 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T
         if (that == null) {
             return this;
         }
-        this.values.addAll(that.values);
         this.limit = Math.max(this.limit, that.limit);
-        int i = this.values.size();
-        if (this.limit > 0 && i > this.limit) {
-            List<T> list = this.values.subList(i - this.limit, i);
-            this.values = new ArrayList<>(this.limit);
-            this.values.addAll(list);
-        }
+        that.values.forEach(this::add);
         return this;
     }
 

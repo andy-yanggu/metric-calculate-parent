@@ -16,22 +16,12 @@ import lombok.NoArgsConstructor;
 public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
         implements MetricCube<TimeSeriesKVTable<V>, Long, V, TimedKVMetricCube<V>> {
 
-    public static final String PREFIX = "MC.T.KV.C";
-
-    /**
-     * 指标名称
-     */
-    private String name;
+    private static final String PREFIX = "MC.T.KV.C";
 
     /**
      * 指标标识(数据明细宽表id-指标id)
      */
     private String key;
-
-    /**
-     * 当前数据聚合时间戳
-     */
-    private long referenceTime;
 
     /**
      * 指标维度
@@ -44,6 +34,16 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
     private TimeBaselineDimension timeBaselineDimension;
 
     /**
+     * 指标名称
+     */
+    private String name;
+
+    /**
+     * 当前数据聚合时间戳
+     */
+    private long referenceTime;
+
+    /**
      * 时间序列存储
      */
     private TimeSeriesKVTable<V> table;
@@ -54,6 +54,11 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
         timeSeriesKVTable.setTimeBaselineDimension(timeBaselineDimension);
         table = timeSeriesKVTable;
         return this;
+    }
+
+    @Override
+    public void put(Long key, V value) {
+        table.putValue(key, value);
     }
 
     @Override
@@ -73,7 +78,8 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public int eliminateExpiredData() {
-        return 0;
+        long minTimestamp = getReferenceTime() - 2 * timeBaselineDimension.realLength();
+        return table.eliminateExpiredData(minTimestamp);
     }
 
     @Override
@@ -99,12 +105,13 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public TimedKVMetricCube<V> cloneEmpty() {
-        return null;
-    }
-
-    @Override
-    public void put(Long key, V value) {
-        table.putValue(key, value);
+        TimedKVMetricCube<V> metricCube = new TimedKVMetricCube<>();
+        metricCube.setKey(key);
+        metricCube.setName(name);
+        metricCube.setDimensionSet(dimensionSet);
+        metricCube.setTimeBaselineDimension(timeBaselineDimension);
+        metricCube.init();
+        return metricCube;
     }
 
     @Override
@@ -114,7 +121,10 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public TimedKVMetricCube<V> fastClone() {
-        return null;
+        TimedKVMetricCube<V> metricCube = cloneEmpty();
+        metricCube.setReferenceTime(referenceTime);
+        metricCube.setTable(table.fastClone());
+        return metricCube;
     }
 
     @Override

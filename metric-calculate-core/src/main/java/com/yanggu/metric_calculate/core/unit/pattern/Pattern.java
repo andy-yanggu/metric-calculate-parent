@@ -1,12 +1,10 @@
 package com.yanggu.metric_calculate.core.unit.pattern;
 
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.enums.TimeWindowEnum;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldExtractProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,7 +12,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Stream;
 
-@MergeType(value = "pattern", timeWindowType = TimeWindowEnum.PATTERN)
+
 public class Pattern<T extends EventState> implements MergedUnit<Pattern<T>>, Value, Serializable {
 
     private boolean merged;

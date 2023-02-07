@@ -23,7 +23,7 @@ public enum TimeWindowEnum {
     /**
      * CEP事件模式
      */
-    PATTERN
+    PATTERN,
 
     ;
 

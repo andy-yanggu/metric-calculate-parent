@@ -151,7 +151,7 @@ public class ListObjectUnitTest {
         listObjectUnit2.add(new Key<>(5));
 
         listObjectUnit.merge(listObjectUnit2);
-        assertEquals(Arrays.asList(new Key<>(3), new Key<>(4), new Key<>(5)), listObjectUnit.getValues());
+        assertEquals(Arrays.asList(new Key<>(1), new Key<>(2), new Key<>(3)), listObjectUnit.getValues());
     }
 
     /**

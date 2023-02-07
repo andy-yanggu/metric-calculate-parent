@@ -15,7 +15,7 @@ import java.util.List;
 public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
         implements MetricCube<SlidingTimeWindowTable<V>, Long, V, SlidingTimeWindowMetricCube<V>> {
 
-    public static final String PREFIX = "MC.S.TW.C";
+    private static final String PREFIX = "MC.S.TW.C";
 
     /**
      * 指标标识(数据明细宽表id-指标id)
@@ -67,14 +67,14 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return table.query(from, fromInclusive, to, toInclusive);
-    }
-
-    @Override
     public SlidingTimeWindowMetricCube<V> merge(SlidingTimeWindowMetricCube<V> that) {
         table.merge(that.getTable());
         return this;
+    }
+
+    @Override
+    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+        return table.query(from, fromInclusive, to, toInclusive);
     }
 
     @Override
@@ -111,7 +111,8 @@ public class SlidingTimeWindowMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public int eliminateExpiredData() {
-        return 0;
+        long minTimestamp = getReferenceTime() - 2 * timeBaselineDimension.realLength();
+        return table.eliminateExpiredData(minTimestamp);
     }
 
     @Override

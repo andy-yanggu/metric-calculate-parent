@@ -10,15 +10,21 @@ import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
-import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
+/**
+ * 和SQL中的ORDER BY 排序字段 DESC/ASC LIMIT 5语义一致
+ *
+ * @param <T>
+ */
 @NoArgsConstructor
 @FieldNameConstants
 @MergeType(value = "SORTEDLISTOBJECT", useParam = true)
 @Collective(useCompareField = true, retainObject = true)
-public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
-        implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>> {
+public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>> {
 
     protected Boolean desc = true;
 
@@ -55,9 +61,10 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
 
     /**
      * Constructor.
-     * @param value  value
+     *
+     * @param value value
      * @param limit list limit
-     * @param desc des or not
+     * @param desc  des or not
      */
     public SortedListObjectUnit(T value, int limit, boolean desc) {
         this();
@@ -92,6 +99,7 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
 
     /**
      * add element.
+     *
      * @param value value
      * @return
      */
@@ -117,20 +125,13 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
             }
             i = k;
         }
-        if ((this.desc && this.original.get(i).compareTo(value) <= 0)
-                || (!this.desc && this.original.get(i).compareTo(value) >= 0)) {
+        if ((this.desc && this.original.get(i).compareTo(value) <= 0) || (!this.desc && this.original.get(i).compareTo(value) >= 0)) {
             this.original.add(i, value);
         } else {
             this.original.add(i + 1, value);
         }
         if (this.limit > 0 && this.original.size() > this.limit) {
-            //如果是升序, 移除开头的
-            if (Boolean.FALSE.equals(desc)) {
-                this.original.remove(0);
-            } else {
-                //如果是降序, 移除结尾的
-                this.original.remove(this.original.size() - 1);
-            }
+            this.original.remove(this.original.size() - 1);
         }
         return this;
     }
@@ -182,13 +183,7 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
         }
         if (this.limit > 0 && arrayList.size() > this.limit) {
             ArrayList<T> arrayList1 = new ArrayList<>(this.limit);
-            //如果是升序, 移除开头的
-            if (!desc) {
-                arrayList1.addAll(arrayList.subList(arrayList.size() - this.limit, arrayList.size()));
-            } else {
-                //如果是降序, 移除结尾的
-                arrayList1.addAll(arrayList.subList(0, this.limit));
-            }
+            arrayList1.addAll(arrayList.subList(0, this.limit));
             this.original = arrayList1;
         } else {
             this.original = arrayList;
@@ -227,6 +222,7 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>>
 
     /**
      * IsEqual or Not.
+     *
      * @param that param
      * @return ture or false
      */

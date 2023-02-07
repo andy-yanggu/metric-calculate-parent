@@ -11,10 +11,7 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.Options;
-import com.yanggu.metric_calculate.core.annotation.Collective;
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-import com.yanggu.metric_calculate.core.annotation.Objective;
+import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.AtomMetricCalculate;
@@ -358,6 +355,9 @@ public class MetricUtil {
                 ((AggregateCollectionFieldProcessor<?>) aggregateFieldProcessor)
                         .setRetainFieldValueFieldProcessor(getRetainFieldValueFieldProcessor(fieldMap, udafParams));
             }
+        } else if (mergeUnitClazz.isAnnotationPresent(Pattern.class)) {
+            //如果是模式匹配, CEP类型
+            aggregateFieldProcessor = new EventStateExtractor();
         } else {
             throw new RuntimeException("不支持的聚合类型: " + calculateLogic);
         }

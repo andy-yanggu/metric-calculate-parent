@@ -1,18 +1,20 @@
 package com.yanggu.metric_calculate.core.table;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 
 public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
         implements Table<Long, V, Long, V, SlidingTimeWindowTable<V>>, Serializable {
 
-    private final Map<Tuple, V> twoKeyTable = new HashMap<>();
+    private Map<Tuple, V> twoKeyTable = new HashMap<>();
 
     @Override
     public V putValue(Long rowKey, Long column, V value) {
@@ -23,11 +25,6 @@ public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
         }
         twoKeyTable.put(key, value);
         return value;
-    }
-
-    @Override
-    public Table<Long, V, Long, V, SlidingTimeWindowTable<V>> cloneEmpty() {
-        return null;
     }
 
     @Override
@@ -50,12 +47,37 @@ public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public SlidingTimeWindowTable<V> fastClone() {
-        return null;
+        Map<Tuple, V> newMap = new HashMap<>();
+        twoKeyTable.forEach((k, v) -> newMap.put(k, v.fastClone()));
+        SlidingTimeWindowTable<V> windowTable = new SlidingTimeWindowTable<>();
+        windowTable.twoKeyTable = newMap;
+        return windowTable;
     }
 
     @Override
     public boolean isEmpty() {
         return twoKeyTable.isEmpty();
+    }
+
+    @Override
+    public Table<Long, V, Long, V, SlidingTimeWindowTable<V>> cloneEmpty() {
+        return new SlidingTimeWindowTable<>();
+    }
+
+    public int eliminateExpiredData(long minTimestamp) {
+        int count = 0;
+        if (CollUtil.isEmpty(twoKeyTable)) {
+            return count;
+        }
+        Iterator<Map.Entry<Tuple, V>> iterator = twoKeyTable.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Long windowStart = iterator.next().getKey().get(0);
+            if (windowStart < minTimestamp) {
+                iterator.remove();
+                count++;
+            }
+        }
+        return count;
     }
 
 }

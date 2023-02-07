@@ -37,7 +37,7 @@ public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V,
     /**
      * 删除过期数据
      *
-     * @return
+     * @return 删除的过期数据的数量
      */
     int eliminateExpiredData();
 

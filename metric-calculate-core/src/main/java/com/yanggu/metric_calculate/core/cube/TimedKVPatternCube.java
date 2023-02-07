@@ -16,7 +16,6 @@ import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
 public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMetricCube<E> {
@@ -24,7 +23,7 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
     /**
      * Magic Cube . Timed . Key Value . Pattern . Cube.
      */
-    public static final String PREFIX = "MC.T.KV.P.C";
+    private static final String PREFIX = "MC.T.KV.P.C";
 
     private Pattern<E> pattern;
 
@@ -36,8 +35,6 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
      * <p>内层map的key是数据的时间戳, value是原始数据</p>
      */
     private Map<String, TimeSeriesKVTable<E>> nodeTables;
-
-    private SortedMap<Integer, String> sortedNodes;
 
     public TimedKVPatternCube() {
     }
@@ -58,16 +55,13 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
         }
         nodeTables = new HashMap<>();
         nodes = new HashMap<>();
-        sortedNodes = new TreeMap<>();
         pattern = pattern.fastClone();
-        AtomicInteger nodeOrder = new AtomicInteger(0);
         pattern.stream().forEach(node -> {
             TimeSeriesKVTable<E> nodeTable = new TimeSeriesKVTable<>();
             nodeTable.setTimeBaselineDimension(getTimeBaselineDimension());
 
             nodes.put(node.getName(), node);
             nodeTables.put(node.getName(), nodeTable);
-            sortedNodes.put(nodeOrder.getAndIncrement(), node.getName());
         });
         return this;
     }
@@ -104,10 +98,6 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
         }
 
         MergedUnit result;
-        if (sortedNodes.size() == 1) {
-            result = reduceTable(endTable.subTable(start, fromInclusive, end, toInclusive));
-            return result instanceof Value ? (Value) result : NoneValue.INSTANCE;
-        }
 
         TimeSeriesKVTable<E> nodeTable = nodeTables.get(pattern.getRootNode().getName()).subTable(start, fromInclusive, end, toInclusive);
         TimeSeriesKVTable<E> nextTable = null;
@@ -123,7 +113,7 @@ public class TimedKVPatternCube<T, E extends EventState<T, E>> extends TimedKVMe
                 Long timestamp = entry.getKey();
                 nextTable.putAll(nextNodeTable.subTable(timestamp, true,Math.min(timestamp + size, end), false));
                 //判断和是否超过当前节点的最大时间戳, 如果超过没有必要继续遍历了
-                if (timestamp + size > nextNodeTable.getReferenceTime()) {
+                if (timestamp + size > nextNodeTable.lastKey()) {
                     break;
                 }
             }

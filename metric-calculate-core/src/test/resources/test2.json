@@ -827,7 +827,7 @@
       }
     },
     {
-      "id": 8,
+      "id": 9,
       "name": "max_amount_timestamp",
       "atom": "current_credit_count",
       "displayName": "交易金额升序列表, 最多4个",
@@ -859,8 +859,79 @@
       },
       "udafParams": {
         "retainExpress": "debit_amt_out",
-        "desc": false,
+        "desc": true,
         "limit": 4
+      }
+    },
+    {
+      "id": 10,
+      "name": "test_list_object",
+      "atom": "list_object",
+      "displayName": "测试list_object",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "LISTOBJECT",
+      "metricColumn": {
+        "columnName": "debit_amt_out",
+        "columnIndex": 5
+      },
+      "duration": 2,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "udafParams": {
+        "limit": 5
+      }
+    },
+    {
+      "id": 11,
+      "name": "test_sort_list_object",
+      "atom": "test_sort_list_object",
+      "displayName": "测试sort_list_object",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "SORTEDLISTOBJECT",
+      "metricColumn": {
+        "columnName": "debit_amt_out",
+        "columnIndex": 5
+      },
+      "duration": 2,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "udafParams": {
+        "limit": 5,
+        "desc": false
       }
     }
   ],

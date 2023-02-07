@@ -22,7 +22,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeUnit.MILLS;
  */
 @Data
 public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V>
-        implements KVTable<Long, V, TimeSeriesKVTable<V>>, TimeReferable, Serializable {
+        implements KVTable<Long, V, TimeSeriesKVTable<V>>, Serializable {
 
     /**
      * 时间聚合粒度
@@ -33,6 +33,46 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     public V putValue(Long key, V value) {
         key = getActual(key);
         return compute(key, (k, v) -> v == null ? value : v.merge(value));
+    }
+
+    @Override
+    public TimeSeriesKVTable<V> merge(TimeSeriesKVTable<V> that) {
+        for (Map.Entry<Long, V> timeRow : that.entrySet()) {
+            MergedUnit thisRow = get(timeRow.getKey());
+            if (thisRow == null) {
+                put(timeRow.getKey(), timeRow.getValue());
+            } else if (thisRow.getClass().equals(timeRow.getValue().getClass())) {
+                thisRow.merge(timeRow.getValue());
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+        NavigableMap<Long, V> subMap = subMap(from, fromInclusive, to, toInclusive);
+
+        Collection<V> values = subMap.values();
+
+        if (CollUtil.isEmpty(values)) {
+            return null;
+        }
+
+        return values.stream()
+                .reduce(MergedUnit::merge)
+                .orElseThrow(() -> new RuntimeException("merge失败"));
+    }
+
+    public int eliminateExpiredData(long minTimestamp) {
+        int dataCount = 0;
+        Iterator<Map.Entry<Long, V>> iterator = this.entrySet().iterator();
+        while (iterator.hasNext()) {
+            if (iterator.next().getKey() < minTimestamp) {
+                iterator.remove();
+                dataCount++;
+            }
+        }
+        return dataCount;
     }
 
     @Override
@@ -56,51 +96,6 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
             timestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         }
         return timestamp;
-    }
-
-    @Override
-    public TimeSeriesKVTable<V> merge(TimeSeriesKVTable<V> that) {
-        for (Map.Entry<Long, V> timeRow : that.entrySet()) {
-            MergedUnit thisRow = get(timeRow.getKey());
-            if (thisRow == null) {
-                put(timeRow.getKey(), timeRow.getValue());
-            } else if (thisRow.getClass().equals(timeRow.getValue().getClass())) {
-                thisRow.merge(timeRow.getValue());
-            }
-            if (thisRow instanceof ListObjectUnit) {
-                Iterator<V> mergeableIterator = ((ListObjectUnit) thisRow).getValues().iterator();
-                V row = mergeableIterator.next();
-                while (mergeableIterator.hasNext()) {
-                    row.merge(mergeableIterator.next());
-                }
-                put(timeRow.getKey(), row);
-            }
-        }
-        return this;
-    }
-
-    @Override
-    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        NavigableMap<Long, V> subMap = subMap(from, fromInclusive, to, toInclusive);
-
-        Collection<V> values = subMap.values();
-
-        if (CollUtil.isEmpty(values)) {
-            return NoneValue.INSTANCE;
-        }
-
-        return values.stream()
-                .reduce(MergedUnit::merge)
-                .orElseThrow(() -> new RuntimeException("merge失败"));
-    }
-
-    @Override
-    public long getReferenceTime() {
-        return lastKey();
-    }
-
-    @Override
-    public void setReferenceTime(long referenceTime) {
     }
 
     @Override
