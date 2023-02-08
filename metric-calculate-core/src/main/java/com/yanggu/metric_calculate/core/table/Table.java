@@ -6,10 +6,10 @@ import com.yanggu.metric_calculate.core.value.Value;
 /**
  *
  * @param <K> rowKey
- * @param <R>
+ * @param <R> 查询得到的数据MeredUnit
  * @param <C> column
  * @param <V> MergedUnit
- * @param <T>
+ * @param <T> 实现Table类型
  */
 public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends MergedUnit<T> {
 
@@ -23,7 +23,7 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
      */
     Table<K, R, C, V, T> cloneEmpty();
 
-    Value<?> query(K from, boolean fromInclusive, K to, boolean toInclusive);
+    R query(K from, boolean fromInclusive, K to, boolean toInclusive);
 
     @Override
     T merge(T that);

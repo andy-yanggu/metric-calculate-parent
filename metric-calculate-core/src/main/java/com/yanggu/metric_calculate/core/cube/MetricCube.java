@@ -6,6 +6,13 @@ import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
+/**
+ *
+ * @param <T> 底层存储的table
+ * @param <K> KEY的类型
+ * @param <V> MergedUnit类型
+ * @param <C> MetricCube实现类
+ */
 public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V, C>>
         extends Cube<C>, KeyReferable, MergedUnit<C>, TimeReferable {
 

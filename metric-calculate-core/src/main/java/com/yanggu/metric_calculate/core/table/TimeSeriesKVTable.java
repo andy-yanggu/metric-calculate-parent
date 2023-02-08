@@ -49,7 +49,7 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     }
 
     @Override
-    public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+    public V query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
         NavigableMap<Long, V> subMap = subMap(from, fromInclusive, to, toInclusive);
 
         Collection<V> values = subMap.values();

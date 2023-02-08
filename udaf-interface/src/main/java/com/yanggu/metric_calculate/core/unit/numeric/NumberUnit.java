@@ -191,4 +191,10 @@ public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N
     public int compareTo(M that) {
         return value.compareTo(that.value);
     }
+
+    @Override
+    public String toString() {
+        return String.format("%s {count=%s, value=%s}", getClass().getSimpleName(), this.count.value(), this.value);
+    }
+
 }

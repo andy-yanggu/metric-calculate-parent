@@ -5,12 +5,16 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.json.JSONUtil;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.enums.BasicType;
-import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
+import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
@@ -29,7 +33,6 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import static com.yanggu.metric_calculate.core.constant.Constant.UNIT_FACTORY;
 import static com.yanggu.metric_calculate.core.enums.BasicType.*;
 
 
@@ -235,6 +238,36 @@ public class UnitFactory implements Serializable {
         if (put != null) {
             throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
         }
+    }
+
+    public static void main(String[] args) throws Exception {
+        String canonicalPath = new File("").getCanonicalPath();
+        String pathname = canonicalPath + "/udaf-test/target/udaf-test-1.0.0-SNAPSHOT.jar";
+        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
+        unitFactory.init();
+        MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L, null);
+        count2.merge(count2.fastClone());
+        System.out.println("count2 = " + count2);
+
+        //测试Kryo序列化和反序列化自定义的udaf
+        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory());
+
+        Kryo kryo = kryoPool.borrow();
+        unitFactory.getUnitMap().values().forEach(kryo::register);
+
+        //count2序列化生成的字节数组
+        String string = "[1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,116,101,115,116,95,117,110,105,116,46,67,111,117,110,116,85,110,105,116,-78,2,99,111,117,110,-12,118,97,108,117,-27,58,1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,110,117,109,98,101,114,46,67,117,98,101,76,111,110,-25,1,118,97,108,117,-27,2,1,4,1,0,0,52,1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,110,117,109,98,101,114,46,67,117,98,101,76,111,110,-25,2,1,4,1,0,0]";
+        List<Byte> byteList = JSONUtil.toList(string, Byte.class);
+        byte[] bytes = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            bytes[i] = byteList.get(i);
+        }
+
+        Input input = new Input(bytes);
+        Object result = kryo.readClassAndObject(input);
+        System.out.println(result);
+        MergedUnit mergedUnit = ((MergedUnit) result).merge(count2);
+        System.out.println(mergedUnit);
     }
 
 }

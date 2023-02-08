@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.unit;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.json.JSONUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -245,14 +246,53 @@ public class UnitFactoryTest {
         byte[] bytes;
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
             Output output = new Output(byteArrayOutputStream);
-            kryo.writeClassAndObject(output, count2);
+            kryo.writeClassAndObject(output, count2That);
             output.close();
             bytes = byteArrayOutputStream.toByteArray();
+        }
+
+        System.out.println(JSONUtil.toJsonStr(bytes));
+
+        Input input = new Input(bytes);
+        Object result = kryo.readClassAndObject(input);
+
+        assertEquals(count2That, result);
+    }
+
+    /**
+     * 测试自定义udaf
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testUDAF2() throws Exception {
+        //初始化UnitFactory
+        String pathname = testJarPath();
+        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
+        unitFactory.init();
+
+        //COUNT2和COUNT逻辑一致, 计数的逻辑
+        NumberUnit count2 = (NumberUnit) unitFactory.initInstanceByValue("COUNT2", 1L, null);
+        count2.merge(count2.fastClone());
+        assertEquals(2L, count2.value());
+
+        //测试Kryo序列化和反序列化自定义的udaf
+        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(new ArrayList<>(unitFactory.getUnitMap().values())));
+        Kryo kryo = kryoPool.borrow();
+
+        //count2That序列化生成的字节数组
+        String string = "[1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,116,101,115,116,95,117,110,105,116,46,67,111,117,110,116,85,110,105,116,-78,2,99,111,117,110,-12,118,97,108,117,-27,58,1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,110,117,109,98,101,114,46,67,117,98,101,76,111,110,-25,1,118,97,108,117,-27,2,1,4,1,0,0,52,1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,110,117,109,98,101,114,46,67,117,98,101,76,111,110,-25,2,1,4,1,0,0]";
+        List<Byte> byteList = JSONUtil.toList(string, Byte.class);
+        byte[] bytes = new byte[byteList.size()];
+        for (int i = 0; i < byteList.size(); i++) {
+            bytes[i] = byteList.get(i);
         }
 
         Input input = new Input(bytes);
         Object result = kryo.readClassAndObject(input);
 
+        //System.out.println(result);
+        assertEquals("COUNT2", result.getClass().getAnnotation(MergeType.class).value());
         assertEquals(count2, result);
     }
 
