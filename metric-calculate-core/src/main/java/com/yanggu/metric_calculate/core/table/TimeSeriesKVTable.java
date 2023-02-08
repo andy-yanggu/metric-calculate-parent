@@ -22,7 +22,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeUnit.MILLS;
  */
 @Data
 public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V>
-        implements KVTable<Long, V, TimeSeriesKVTable<V>>, Serializable {
+        implements Table<Long, V, Long, V, TimeSeriesKVTable<V>>, Serializable {
 
     /**
      * 时间聚合粒度
@@ -30,9 +30,9 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     private TimeBaselineDimension timeBaselineDimension;
 
     @Override
-    public V putValue(Long key, V value) {
-        key = getActual(key);
-        return compute(key, (k, v) -> v == null ? value : v.merge(value));
+    public V putValue(Long rowKey, Long column, V value) {
+        rowKey = getActual(rowKey);
+        return compute(rowKey, (k, v) -> v == null ? value : v.merge(value));
     }
 
     @Override
@@ -73,21 +73,6 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
             }
         }
         return dataCount;
-    }
-
-    @Override
-    public V getValue(Long key) {
-        return get(getActual(key));
-    }
-
-    @Override
-    public boolean existValue(Long key) {
-        return containsKey(getActual(key));
-    }
-
-    @Override
-    public V removeValue(Long key) {
-        return remove(getActual(key));
     }
 
     private Long getActual(Long timestamp) {

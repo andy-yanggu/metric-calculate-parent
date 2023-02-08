@@ -72,7 +72,7 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
     @Override
     public ListObjectCountWindowUnit<T> add(T value) {
         this.values.add(value);
-        if (this.limit > 0 && this.values.size() > this.limit) {
+        if (this.values.size() > this.limit) {
             this.values.remove(0);
         }
         return this;

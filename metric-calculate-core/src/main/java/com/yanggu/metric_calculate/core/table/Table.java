@@ -18,15 +18,15 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
      */
     V putValue(K rowKey, C column, V value);
 
-    /**
-     * Clone empty table for this table.
-     */
-    Table<K, R, C, V, T> cloneEmpty();
-
     R query(K from, boolean fromInclusive, K to, boolean toInclusive);
 
     @Override
     T merge(T that);
+
+    /**
+     * Clone empty table for this table.
+     */
+    Table<K, R, C, V, T> cloneEmpty();
 
     @Override
     T fastClone();
