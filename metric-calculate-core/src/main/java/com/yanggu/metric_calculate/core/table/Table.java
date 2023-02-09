@@ -25,7 +25,7 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
     /**
      * Clone empty table for this table.
      */
-    Table<K, R, C, V, T> cloneEmpty();
+    T cloneEmpty();
 
     @Override
     T fastClone();
