@@ -28,7 +28,7 @@ public class Cloneable2Wrapper<T> implements Cloneable2<Cloneable2Wrapper<T>>, V
      */
     public static <W> Cloneable2Wrapper<W> wrap(W wrapped) {
         if (wrapped instanceof Cloneable2) {
-            return new Cloneable2Wrapper(((Cloneable2) wrapped).fastClone());
+            return new Cloneable2Wrapper(((Cloneable2<?>) wrapped).fastClone());
         }
         return new Cloneable2Wrapper<>(wrapped);
     }

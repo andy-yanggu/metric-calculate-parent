@@ -41,7 +41,7 @@ public class ReplacedFieldUnitTest {
     public void testConstructor1() {
         //验证空参构造
         ReplacedFieldUnit<Key<Integer>> replacedFieldUnit = new ReplacedFieldUnit<>();
-        assertNull(replacedFieldUnit.getValue());
+        assertNull(replacedFieldUnit.getValueData());
     }
 
     /**
@@ -52,7 +52,7 @@ public class ReplacedFieldUnitTest {
         //验证有参构造
         Key<Integer> key = new Key<>(1);
         ReplacedFieldUnit<Key<Integer>> replacedFieldUnit = new ReplacedFieldUnit<>(key);
-        assertEquals(key, replacedFieldUnit.getValue());
+        assertEquals(key, replacedFieldUnit.getValueData());
     }
 
     /**
@@ -67,7 +67,7 @@ public class ReplacedFieldUnitTest {
 
         assertNotSame(replacedFieldUnit, fastClone);
         assertEquals(replacedFieldUnit, fastClone);
-        assertEquals(replacedFieldUnit.getValue(), fastClone.getValue());
+        assertEquals(replacedFieldUnit.getValueData(), fastClone.getValueData());
     }
 
     /**
@@ -79,7 +79,7 @@ public class ReplacedFieldUnitTest {
         Key<Integer> key = new Key<>(1);
         replacedFieldUnit.value(key);
 
-        assertEquals(key, replacedFieldUnit.getValue());
+        assertEquals(key, replacedFieldUnit.getValueData());
     }
 
     /**
@@ -117,11 +117,11 @@ public class ReplacedFieldUnitTest {
         replacedFieldUnit.merge(null);
         assertEquals(key, replacedFieldUnit.value());
 
-        replacedFieldUnit.setValue(null);
+        replacedFieldUnit.setValueData(null);
         replacedFieldUnit.merge(new ReplacedFieldUnit<>(new Key<>(-1)));
         assertEquals(new Key<>(-1), replacedFieldUnit.value());
 
-        replacedFieldUnit.setValue(key);
+        replacedFieldUnit.setValueData(key);
         replacedFieldUnit.merge(new ReplacedFieldUnit<>(new Key<>(-1)));
         assertEquals(new Key<>(-1), replacedFieldUnit.value());
 

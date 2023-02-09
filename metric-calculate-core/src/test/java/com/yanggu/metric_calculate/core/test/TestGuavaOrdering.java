@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.core.test;
 
 
-import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
-import com.google.common.base.Function;
 import com.google.common.collect.Ordering;
 import lombok.AllArgsConstructor;
 import lombok.Data;

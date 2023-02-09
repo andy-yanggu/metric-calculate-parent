@@ -11,9 +11,9 @@ public class MaxDecreaseCountUnit extends DecreaseCountUnit<MaxDecreaseCountUnit
 
     private static final long serialVersionUID = -5069152371923805623L;
 
-    public long headCount = 0L;
+    private long headCount = 0L;
 
-    public long tailCount = 0L;
+    private long tailCount = 0L;
 
     public MaxDecreaseCountUnit() {
     }

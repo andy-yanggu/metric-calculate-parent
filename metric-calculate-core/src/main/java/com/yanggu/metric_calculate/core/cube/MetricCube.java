@@ -39,7 +39,7 @@ public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V,
      * @param toInclusive   是否包含开始
      * @return
      */
-    Value query(K from, boolean fromInclusive, K to, boolean toInclusive);
+    Value<?> query(K from, boolean fromInclusive, K to, boolean toInclusive);
 
     /**
      * 删除过期数据

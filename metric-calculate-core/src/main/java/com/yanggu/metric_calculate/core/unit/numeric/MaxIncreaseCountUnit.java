@@ -8,11 +8,12 @@ import com.yanggu.metric_calculate.core.number.CubeNumber;
 @Numerical
 @MergeType("MAXINCREASECOUNT")
 public class MaxIncreaseCountUnit extends IncreaseCountUnit<MaxIncreaseCountUnit> {
+
     private static final long serialVersionUID = -5871264256583642034L;
 
-    public long headCount = 0L;
+    private long headCount = 0L;
 
-    public long tailCount = 0L;
+    private long tailCount = 0L;
 
     public MaxIncreaseCountUnit() {
     }

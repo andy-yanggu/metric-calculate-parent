@@ -36,9 +36,10 @@ public class IncreaseCountUnit<M extends IncreaseCountUnit<M>> extends BoundaryU
 
     @Override
     public M fastClone() {
-        IncreaseCountUnit increaseCountNumber = new IncreaseCountUnit<>(
+        IncreaseCountUnit<M> increaseCountNumber = new IncreaseCountUnit<>(
                     this.head, this.tail, this.value, this.count.value());
         return (M) increaseCountNumber;
     }
+
 }
 

@@ -15,18 +15,18 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @MergeType(value = "REPLACEDOBJECT", timeWindowType = TIME_SLIDING_WINDOW)
 public class ReplacedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, ReplacedObjectUnit<T>>, Value<T>, Serializable {
 
-    public T value;
+    protected T valueData;
 
-    public ReplacedObjectUnit(T value) {
-        this.value = value;
+    public ReplacedObjectUnit(T valueData) {
+        this.valueData = valueData;
     }
 
-    public T getValue() {
-        return this.value;
+    public T getValueData() {
+        return this.valueData;
     }
 
-    public void setValue(T value) {
-        this.value = value;
+    public void setValueData(T valueData) {
+        this.valueData = valueData;
     }
 
     /**
@@ -40,24 +40,24 @@ public class ReplacedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
         if (that == null) {
             return this;
         }
-        this.value = that.value;
+        this.valueData = that.valueData;
         return this;
     }
 
     @Override
     public String toString() {
-        return String.format("%s {object=%s}", getClass().getSimpleName(), this.value);
+        return String.format("%s {object=%s}", getClass().getSimpleName(), this.valueData);
     }
 
     @Override
     public ReplacedObjectUnit<T> value(T object) {
-        setValue(object);
+        setValueData(object);
         return this;
     }
 
     @Override
     public T value() {
-        return this.value;
+        return this.valueData;
     }
 
     /**
@@ -67,7 +67,7 @@ public class ReplacedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
      */
     @Override
     public ReplacedObjectUnit<T> fastClone() {
-        return new ReplacedObjectUnit<>(value.fastClone());
+        return new ReplacedObjectUnit<>(valueData.fastClone());
     }
 
     /**
@@ -88,10 +88,10 @@ public class ReplacedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUni
             return false;
         }
         ReplacedObjectUnit thatUnit = (ReplacedObjectUnit) that;
-        if (this.value == null) {
-            return thatUnit.value == null;
+        if (this.valueData == null) {
+            return thatUnit.valueData == null;
         } else {
-            return this.value.equals(thatUnit.value);
+            return this.valueData.equals(thatUnit.valueData);
         }
     }
 }

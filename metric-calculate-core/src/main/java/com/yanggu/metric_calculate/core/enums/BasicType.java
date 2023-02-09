@@ -2,11 +2,12 @@ package com.yanggu.metric_calculate.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import java.util.List;
 
 import java.math.BigDecimal;
 
 /**
- * 数据明细宽表字段数据类型
+ * 字段数据类型
  */
 @Getter
 @AllArgsConstructor
@@ -30,7 +31,29 @@ public enum BasicType {
     /**
      * 小数型
      */
-    DECIMAL(BigDecimal.class);
+    DECIMAL(BigDecimal.class),
+
+    /**
+     * 字符串集合
+     */
+    LIST_STRING(List.class),
+
+    /**
+     * 布尔集合
+     */
+    LIST_BOOLEAN(List.class),
+
+    /**
+     * 数值集合
+     */
+    LIST_LONG(List.class),
+
+    /**
+     * 小数集合
+     */
+    LIST_DECIMAL(List.class),
+
+    ;
 
     /**
      * Java的数据类型

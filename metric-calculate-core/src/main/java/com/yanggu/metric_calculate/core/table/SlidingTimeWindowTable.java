@@ -17,14 +17,13 @@ public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
     private Map<Tuple, V> twoKeyTable = new HashMap<>();
 
     @Override
-    public V putValue(Long rowKey, Long column, V value) {
+    public void putValue(Long rowKey, Long column, V value) {
         Tuple key = new Tuple(rowKey, column);
         if (twoKeyTable.containsKey(key)) {
             V v = twoKeyTable.get(key);
             value.merge(v);
         }
         twoKeyTable.put(key, value);
-        return value;
     }
 
     @Override

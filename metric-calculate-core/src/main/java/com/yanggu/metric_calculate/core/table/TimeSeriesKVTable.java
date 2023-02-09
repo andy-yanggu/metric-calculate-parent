@@ -1,11 +1,8 @@
 package com.yanggu.metric_calculate.core.table;
 
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core.cube.TimeReferable;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.collection.ListObjectUnit;
-import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
@@ -30,15 +27,15 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     private TimeBaselineDimension timeBaselineDimension;
 
     @Override
-    public V putValue(Long rowKey, Long column, V value) {
+    public void putValue(Long rowKey, Long column, V value) {
         rowKey = getActual(rowKey);
-        return compute(rowKey, (k, v) -> v == null ? value : v.merge(value));
+        compute(rowKey, (k, v) -> v == null ? value : v.merge(value));
     }
 
     @Override
     public TimeSeriesKVTable<V> merge(TimeSeriesKVTable<V> that) {
         for (Map.Entry<Long, V> timeRow : that.entrySet()) {
-            MergedUnit thisRow = get(timeRow.getKey());
+            V thisRow = get(timeRow.getKey());
             if (thisRow == null) {
                 put(timeRow.getKey(), timeRow.getValue());
             } else if (thisRow.getClass().equals(timeRow.getValue().getClass())) {
@@ -102,6 +99,11 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
         TimeSeriesKVTable<V> cloneEmpty = cloneEmpty();
         subMap.forEach((k, v) -> cloneEmpty.put(k, v.fastClone()));
         return cloneEmpty;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o) && timeBaselineDimension.equals(((TimeSeriesKVTable<V>) o).timeBaselineDimension);
     }
 
 }

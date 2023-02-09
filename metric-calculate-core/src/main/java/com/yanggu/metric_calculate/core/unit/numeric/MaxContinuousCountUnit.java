@@ -9,11 +9,12 @@ import java.util.Objects;
 @Numerical
 @MergeType("MAXCONTINUOUSCOUNT")
 public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousCountUnit> {
+
     private static final long serialVersionUID = -3396993409877201343L;
 
-    public long headCount = 0;
+    private long headCount = 0;
 
-    public long tailCount = 0;
+    private long tailCount = 0;
 
     public MaxContinuousCountUnit() {
     }
@@ -22,7 +23,7 @@ public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousC
      * Constructor.
      */
     public MaxContinuousCountUnit(Boolean center) {
-        this(center, center, CubeLong.of(center ? 1L : 0L), 1L, center ? 1L : 0L, center ? 1L : 0L);
+        this(center, center, CubeLong.of(Boolean.TRUE.equals(center) ? 1L : 0L), 1L, Boolean.TRUE.equals(center) ? 1L : 0L, Boolean.TRUE.equals(center) ? 1L : 0L);
     }
 
     /**

@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
 /**
- *
  * @param <K> rowKey
  * @param <R> 查询得到的数据MeredUnit
  * @param <C> column
@@ -16,7 +15,7 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
     /**
      * Put the {@param column} {@param value} in row that from table by {@param rowKey}, and return the value.
      */
-    V putValue(K rowKey, C column, V value);
+    void putValue(K rowKey, C column, V value);
 
     R query(K from, boolean fromInclusive, K to, boolean toInclusive);
 

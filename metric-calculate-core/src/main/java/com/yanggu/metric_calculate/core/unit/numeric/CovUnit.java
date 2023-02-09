@@ -7,15 +7,16 @@ import com.yanggu.metric_calculate.core.number.*;
 @Numerical
 @MergeType("COV")
 public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> {
+
     private static final long serialVersionUID = -3797610254543124206L;
 
-    public N sum1;
+    private N sum1;
 
-    public N sum2;
+    private N sum2;
 
-    public N value2;
+    private N value2;
 
-    public N value3;
+    private N value3;
 
     public CovUnit() {
         super();
@@ -118,7 +119,7 @@ public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> 
 
     @Override
     public Number value() {
-        return (Number) varpValue3().subtract(varpValue2()).subtract(varpValue1()).divide(CubeInteger.of(2)).value();
+        return varpValue3().subtract(varpValue2()).subtract(varpValue1()).divide(CubeInteger.of(2)).value();
     }
 
 

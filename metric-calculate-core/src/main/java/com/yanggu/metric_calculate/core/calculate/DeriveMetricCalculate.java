@@ -183,7 +183,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
                                 throw new RuntimeException(e);
                             }
                         })
-                        .reduce((a, b) -> a.merge(b))
+                        .reduce(MergedUnit::merge)
                         .orElseThrow(() -> new RuntimeException("mergeUnit的merge方法执行失败"));
                 value = ValueMapper.value(((Value<?>) mergedUnit));
             }

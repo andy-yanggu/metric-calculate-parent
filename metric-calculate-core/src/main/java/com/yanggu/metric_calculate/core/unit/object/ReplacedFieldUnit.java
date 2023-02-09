@@ -13,7 +13,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 public class ReplacedFieldUnit<T extends Cloneable2<T>> extends ReplacedObjectUnit<T> {
 
     public ReplacedFieldUnit(T value) {
-        this.value = value;
+        this.valueData = value;
     }
 
     /**
@@ -23,7 +23,7 @@ public class ReplacedFieldUnit<T extends Cloneable2<T>> extends ReplacedObjectUn
      */
     @Override
     public ReplacedFieldUnit<T> fastClone() {
-        return new ReplacedFieldUnit<>(value.fastClone());
+        return new ReplacedFieldUnit<>(valueData.fastClone());
     }
 
 }

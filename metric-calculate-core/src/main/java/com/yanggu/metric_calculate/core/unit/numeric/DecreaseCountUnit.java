@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core.number.CubeNumber;
 @Numerical
 @MergeType("DECREASECOUNT")
 public class DecreaseCountUnit<M extends DecreaseCountUnit<M>> extends BoundaryUnit<CubeNumber, M> {
+
     private static final long serialVersionUID = 1473285508708052617L;
 
     public DecreaseCountUnit() {
