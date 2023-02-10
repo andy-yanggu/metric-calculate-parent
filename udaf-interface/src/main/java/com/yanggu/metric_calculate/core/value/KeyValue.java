@@ -74,7 +74,6 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
         return key.hashCode();
     }
 
-
     @Override
     public String toString() {
         return new StringJoiner(", ", KeyValue.class.getSimpleName() + "[", "]")

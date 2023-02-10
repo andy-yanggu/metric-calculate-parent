@@ -6,7 +6,7 @@ public class Cloneable2Wrapper<T> implements Cloneable2<Cloneable2Wrapper<T>>, V
 
     private T wrapped;
 
-    public Cloneable2Wrapper() {
+    private Cloneable2Wrapper() {
     }
 
     private Cloneable2Wrapper(T wrapped) {

@@ -13,7 +13,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeUnit.MILLS;
 
 /**
  * 时间序列存储
- * key是聚合后的时间戳, value是MergedUnit
+ * <p>key是聚合后的时间戳, value是MergedUnit</p>
  *
  * @param <V>
  */
@@ -49,13 +49,11 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
     public V query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
         NavigableMap<Long, V> subMap = subMap(from, fromInclusive, to, toInclusive);
 
-        Collection<V> values = subMap.values();
-
-        if (CollUtil.isEmpty(values)) {
+        if (CollUtil.isEmpty(subMap)) {
             return null;
         }
 
-        return values.stream()
+        return subMap.values().stream()
                 .reduce(MergedUnit::merge)
                 .orElseThrow(() -> new RuntimeException("merge失败"));
     }
@@ -99,6 +97,11 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
         TimeSeriesKVTable<V> cloneEmpty = cloneEmpty();
         subMap.forEach((k, v) -> cloneEmpty.put(k, v.fastClone()));
         return cloneEmpty;
+    }
+
+    @Override
+    public int hashCode() {
+        return timeBaselineDimension.hashCode() * 31  + super.hashCode();
     }
 
     @Override

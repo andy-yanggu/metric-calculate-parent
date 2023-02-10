@@ -10,16 +10,17 @@ import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
 import java.util.Map;
 
 public class TimeSeriesKVTableSerializer extends MapSerializer {
+
     @Override
     public void write(Kryo kryo, Output output, Map map) {
         super.write(kryo, output, map);
-        TimeSeriesKVTable table = (TimeSeriesKVTable) map;
+        TimeSeriesKVTable<?> table = (TimeSeriesKVTable<?>) map;
         kryo.writeObject(output, table.getTimeBaselineDimension());
     }
 
     @Override
-    public TimeSeriesKVTable read(Kryo kryo, Input input, Class<Map> type) {
-        TimeSeriesKVTable table = (TimeSeriesKVTable) super.read(kryo, input, type);
+    public TimeSeriesKVTable<?> read(Kryo kryo, Input input, Class<Map> type) {
+        TimeSeriesKVTable<?> table = (TimeSeriesKVTable<?>) super.read(kryo, input, type);
         table.setTimeBaselineDimension(kryo.readObject(input, TimeBaselineDimension.class));
         return table;
     }
