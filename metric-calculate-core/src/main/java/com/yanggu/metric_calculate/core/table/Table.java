@@ -4,17 +4,16 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 
 /**
- * @param <K> rowKey
- * @param <R> 查询得到的数据MeredUnit
- * @param <C> column
- * @param <V> MergedUnit
+ * 底层存储MergedUnit数据结构
+ *
+ * @param <K> windowStartTime
+ * @param <R> 查询的MeredUnit
+ * @param <C> windowEndTime
+ * @param <V> 生成的MergedUnit
  * @param <T> 实现Table类型
  */
 public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends MergedUnit<T> {
 
-    /**
-     * Put the {@param column} {@param value} in row that from table by {@param rowKey}, and return the value.
-     */
     void putValue(K rowKey, C column, V value);
 
     R query(K from, boolean fromInclusive, K to, boolean toInclusive);
@@ -22,9 +21,6 @@ public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, 
     @Override
     T merge(T that);
 
-    /**
-     * Clone empty table for this table.
-     */
     T cloneEmpty();
 
     @Override

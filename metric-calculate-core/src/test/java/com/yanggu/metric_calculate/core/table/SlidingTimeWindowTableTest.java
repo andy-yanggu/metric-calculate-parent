@@ -8,6 +8,8 @@ import com.yanggu.metric_calculate.core.unit.numeric.CountUnit;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 /**
@@ -62,10 +64,46 @@ public class SlidingTimeWindowTableTest {
 
     /**
      * 测试merge方法
+     * <p>场景1, 原有的twoKeyTable中不存在对应的数据, 需要放入</p>
      */
     @Test
-    public void merge() {
-        //slidingTimeWindowTable.merge()
+    public void merge1() {
+        CountUnit countUnit1 = new CountUnit(CubeLong.of(1L));
+        slidingTimeWindowTable.putValue(0L, 10L, countUnit1);
+
+        SlidingTimeWindowTable<CountUnit> table = new SlidingTimeWindowTable<>();
+        CountUnit countUnit2 = new CountUnit(CubeLong.of(1L));
+        table.putValue(1L, 11L, countUnit2);
+
+        slidingTimeWindowTable.merge(table);
+
+        Map<Tuple, CountUnit> twoKeyTable = slidingTimeWindowTable.getTwoKeyTable();
+
+        assertEquals(2, twoKeyTable.size());
+        assertEquals(countUnit1, twoKeyTable.get(new Tuple(0L, 10L)));
+        assertEquals(countUnit2, twoKeyTable.get(new Tuple(1L, 11L)));
+    }
+
+    /**
+     * 测试merge方法
+     * <p>场景2, 原有的twoKeyTable中存在对应的数据, 进行merge操作</p>
+     */
+    @Test
+    public void merge2() {
+        CountUnit countUnit1 = new CountUnit(CubeLong.of(1L));
+        slidingTimeWindowTable.putValue(0L, 10L, countUnit1);
+
+        SlidingTimeWindowTable<CountUnit> table = new SlidingTimeWindowTable<>();
+        CountUnit countUnit2 = new CountUnit(CubeLong.of(4L), 3L);
+        table.putValue(0L, 10L, countUnit2);
+
+        slidingTimeWindowTable.merge(table);
+
+        Map<Tuple, CountUnit> twoKeyTable = slidingTimeWindowTable.getTwoKeyTable();
+
+        assertEquals(1, twoKeyTable.size());
+        assertSame(countUnit1, twoKeyTable.get(new Tuple(0L, 10L)));
+        assertEquals(countUnit1, new CountUnit(CubeLong.of(5L), 4L));
     }
 
     /**
