@@ -12,14 +12,14 @@ import java.util.List;
  * 多字段排序
  */
 @Data
-public class MultiFieldCompareKey implements Comparable<JSONObject>, Cloneable2<MultiFieldCompareKey> {
+public class MultiFieldCompareKey implements Comparable<MultiFieldCompareKey>, Cloneable2<MultiFieldCompareKey> {
 
     private List<FieldOrder> fieldOrderList;
 
     private JSONObject inputData;
 
     @Override
-    public int compareTo(@NonNull JSONObject that) {
+    public int compareTo(@NonNull MultiFieldCompareKey that) {
         List<Ordering<JSONObject>> orderingList = new ArrayList<>();
         for (FieldOrder fieldOrder : fieldOrderList) {
             Ordering<Comparable<?>> comparableOrdering;
@@ -37,7 +37,7 @@ public class MultiFieldCompareKey implements Comparable<JSONObject>, Cloneable2<
 
         //合并多个比较器
         Ordering<JSONObject> userOrdering = Ordering.compound(orderingList);
-        return userOrdering.compare(inputData, that);
+        return userOrdering.compare(inputData, that.inputData);
     }
 
     @Override

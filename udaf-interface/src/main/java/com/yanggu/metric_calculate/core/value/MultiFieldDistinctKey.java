@@ -11,7 +11,7 @@ import java.util.Objects;
  * 多字段去重
  */
 @Data
-public class MultiFieldDistinctKey {
+public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey> {
 
     private List<String> fieldList;
 
@@ -35,6 +35,19 @@ public class MultiFieldDistinctKey {
         Object[] thisObjects = fieldList.stream().map(tempField -> inputData.get(tempField)).toArray();
         Object[] thatObjects = thatData.fieldList.stream().map(tempField -> thatData.inputData.get(tempField)).toArray();
         return Arrays.equals(thisObjects, thatObjects);
+    }
+
+    @Override
+    public MultiFieldDistinctKey fastClone() {
+        MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey();
+        multiFieldDistinctKey.setFieldList(this.fieldList);
+        multiFieldDistinctKey.setInputData(this.getInputData());
+        return multiFieldDistinctKey;
+    }
+
+    @Override
+    public int compareTo(MultiFieldDistinctKey that) {
+        return 0;
     }
 
 }
