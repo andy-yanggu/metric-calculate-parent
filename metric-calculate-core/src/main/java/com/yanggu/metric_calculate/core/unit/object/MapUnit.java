@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core.value.Value;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneable2<V> & Value>
+public class MapUnit<K extends Cloneable2<K> & Comparable<K>, V extends Cloneable2<V> & Value<?>>
         implements MergedUnit<MapUnit<K, V>>, Value<Map<K, V>> {
 
     public int limit = 0;
