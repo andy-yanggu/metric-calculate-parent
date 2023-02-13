@@ -21,7 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class FilterProcessor implements FieldExtractProcessor<JSONObject, Boolean> {
+public class FilterFieldProcessor implements FieldExtractProcessor<JSONObject, Boolean> {
 
     /**
      * 宽表字段
@@ -38,7 +38,7 @@ public class FilterProcessor implements FieldExtractProcessor<JSONObject, Boolea
      */
     private Expression filterExpression;
 
-    public FilterProcessor(Map<String, Class<?>> fieldMap, String filterExpress) {
+    public FilterFieldProcessor(Map<String, Class<?>> fieldMap, String filterExpress) {
         this.fieldMap = fieldMap;
         this.filterExpress = filterExpress;
     }

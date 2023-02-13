@@ -45,7 +45,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     /**
      * 前置过滤条件处理器, 进行过滤处理
      */
-    private FilterProcessor filterProcessor;
+    private FilterFieldProcessor filterFieldProcessor;
 
     /**
      * 聚合字段处理器, 生成MergeUnit
@@ -98,7 +98,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     @Override
     public MetricCube<Table, Long, M, ?> exec(JSONObject input) {
         //执行前置过滤条件
-        Boolean filter = filterProcessor.process(input);
+        Boolean filter = filterFieldProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
             return null;
         }

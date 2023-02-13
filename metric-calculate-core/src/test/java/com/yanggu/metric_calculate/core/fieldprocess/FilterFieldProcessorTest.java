@@ -5,7 +5,6 @@ import com.googlecode.aviator.AviatorEvaluator;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,7 +13,7 @@ import static org.junit.Assert.*;
 /**
  * 前置过滤条件字段处理器单元测试类
  */
-public class FilterProcessorTest {
+public class FilterFieldProcessorTest {
 
     /**
      * 如果没有设置前置过滤条件和fieldMap应该正常执行
@@ -23,10 +22,10 @@ public class FilterProcessorTest {
      */
     @Test
     public void init1() throws Exception {
-        FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
+        filterFieldProcessor.init();
 
-        assertNull(filterProcessor.getFilterExpression());
+        assertNull(filterFieldProcessor.getFilterExpression());
     }
 
     /**
@@ -37,10 +36,10 @@ public class FilterProcessorTest {
     @Test
     public void init2() throws Exception {
         String filterExpress = "true";
-        FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.setFilterExpress(filterExpress);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
+        filterFieldProcessor.setFilterExpress(filterExpress);
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterFieldProcessor::init);
         assertEquals("明细宽表字段map为空", runtimeException.getMessage());
     }
 
@@ -53,13 +52,13 @@ public class FilterProcessorTest {
     public void init3() throws Exception {
         String filterExpress = "true";
 
-        FilterProcessor filterProcessor = new FilterProcessor();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
         }};
-        filterProcessor.setFieldMap(fieldMap);
-        filterProcessor.setFilterExpress(filterExpress);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
+        filterFieldProcessor.setFieldMap(fieldMap);
+        filterFieldProcessor.setFilterExpress(filterExpress);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterFieldProcessor::init);
 
         assertEquals("过滤条件为常量表达式, 没有意义: " + filterExpress, runtimeException.getMessage());
     }
@@ -73,13 +72,13 @@ public class FilterProcessorTest {
     public void init4() throws Exception {
         String filterExpress = "amount > 100.00";
 
-        FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.setFilterExpress(filterExpress);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
+        filterFieldProcessor.setFilterExpress(filterExpress);
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount2", BigDecimal.class);
         }};
-        filterProcessor.setFieldMap(fieldMap);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterProcessor::init);
+        filterFieldProcessor.setFieldMap(fieldMap);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, filterFieldProcessor::init);
 
         assertEquals("数据明细宽表中没有该字段: amount", runtimeException.getMessage());
     }
@@ -93,17 +92,17 @@ public class FilterProcessorTest {
     public void init5() throws Exception {
         String filterExpress = "amount > 100.00";
 
-        FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.setFilterExpress(filterExpress);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
+        filterFieldProcessor.setFilterExpress(filterExpress);
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
         }};
-        filterProcessor.setFieldMap(fieldMap);
-        filterProcessor.init();
+        filterFieldProcessor.setFieldMap(fieldMap);
+        filterFieldProcessor.init();
 
-        assertEquals(AviatorEvaluator.compile(filterExpress, true).toString(), filterProcessor.getFilterExpression().toString());
-        assertEquals(filterExpress, filterProcessor.getFilterExpress());
-        assertEquals(fieldMap, filterProcessor.getFieldMap());
+        assertEquals(AviatorEvaluator.compile(filterExpress, true).toString(), filterFieldProcessor.getFilterExpression().toString());
+        assertEquals(filterExpress, filterFieldProcessor.getFilterExpress());
+        assertEquals(fieldMap, filterFieldProcessor.getFieldMap());
     }
 
     /**
@@ -118,16 +117,16 @@ public class FilterProcessorTest {
             put("amount", BigDecimal.class);
         }};
 
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, express);
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", 50);
-        Boolean result = filterProcessor.process(jsonObject);
+        Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
         jsonObject.set("amount", 120);
-        result = filterProcessor.process(jsonObject);
+        result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
 
@@ -143,16 +142,16 @@ public class FilterProcessorTest {
             put("name", String.class);
         }};
 
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, express);
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("name", "李四");
-        Boolean result = filterProcessor.process(jsonObject);
+        Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
         jsonObject.set("name", "张三");
-        result = filterProcessor.process(jsonObject);
+        result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
 
@@ -168,16 +167,16 @@ public class FilterProcessorTest {
             put("amount", Long.class);
         }};
 
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, express);
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", 50L);
-        Boolean result = filterProcessor.process(jsonObject);
+        Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
         jsonObject.set("amount", 600L);
-        result = filterProcessor.process(jsonObject);
+        result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
 
@@ -193,16 +192,16 @@ public class FilterProcessorTest {
             put("result", Boolean.class);
         }};
 
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, express);
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("result", false);
-        Boolean result = filterProcessor.process(jsonObject);
+        Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
         jsonObject.set("result", true);
-        result = filterProcessor.process(jsonObject);
+        result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
 
@@ -219,17 +218,17 @@ public class FilterProcessorTest {
             put("age", Long.class);
         }};
 
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, express);
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", 50);
         jsonObject.set("age", 21);
-        Boolean result = filterProcessor.process(jsonObject);
+        Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
         jsonObject.set("amount", 120);
-        result = filterProcessor.process(jsonObject);
+        result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
 
@@ -246,16 +245,16 @@ public class FilterProcessorTest {
             put("amount", BigDecimal.class);
         }};
 
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, express);
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", "50");
-        Boolean result = filterProcessor.process(jsonObject);
+        Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
         jsonObject.set("amount", "120");
-        result = filterProcessor.process(jsonObject);
+        result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
 
@@ -266,10 +265,10 @@ public class FilterProcessorTest {
      */
     @Test
     public void test6() throws Exception {
-        FilterProcessor filterProcessor = new FilterProcessor();
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
+        filterFieldProcessor.init();
 
-        Boolean process = filterProcessor.process(null);
+        Boolean process = filterFieldProcessor.process(null);
         assertTrue(process);
 
     }

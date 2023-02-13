@@ -131,10 +131,10 @@ public class MetricUtil {
         atomMetricCalculate.setName(atom.getName());
 
         //设置前置过滤条件处理器
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, atom.getFilter());
-        filterProcessor.init();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, atom.getFilter());
+        filterFieldProcessor.init();
 
-        atomMetricCalculate.setFilterProcessor(filterProcessor);
+        atomMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //度量字段处理器
         MetricFieldProcessor<?> metricFieldProcessor = new MetricFieldProcessor<>();
@@ -183,9 +183,9 @@ public class MetricUtil {
 
         //设置前置过滤条件处理器
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
-        FilterProcessor filterProcessor = new FilterProcessor(fieldMap, tempDerive.getFilter());
-        filterProcessor.init();
-        deriveMetricCalculate.setFilterProcessor(filterProcessor);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, tempDerive.getFilter());
+        filterFieldProcessor.init();
+        deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //聚合字段处理器
         String columnName = tempDerive.getMetricColumn().getColumnName();

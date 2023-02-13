@@ -34,11 +34,6 @@ public class Derive {
     private String description;
 
     /**
-     * 引用的原子指标名
-     */
-    private String atom;
-
-    /**
      * 维度字段
      */
     private List<Dimension> dimension;

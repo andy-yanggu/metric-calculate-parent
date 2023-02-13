@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.calculate;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.DimensionSetProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.FilterProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.Store;
@@ -27,7 +27,7 @@ public class AtomMetricCalculate<E> implements Calculate<JSONObject, E> {
     /**
      * 前置过滤条件处理器, 进行过滤处理
      */
-    private FilterProcessor filterProcessor;
+    private FilterFieldProcessor filterFieldProcessor;
 
     /**
      * 度量字段处理器, 提取出度量值
@@ -53,7 +53,7 @@ public class AtomMetricCalculate<E> implements Calculate<JSONObject, E> {
     @Override
     public E exec(JSONObject jsonObject) {
         //执行前置过滤条件
-        if (Boolean.FALSE.equals(filterProcessor.process(jsonObject))) {
+        if (Boolean.FALSE.equals(filterFieldProcessor.process(jsonObject))) {
             return null;
         }
 
