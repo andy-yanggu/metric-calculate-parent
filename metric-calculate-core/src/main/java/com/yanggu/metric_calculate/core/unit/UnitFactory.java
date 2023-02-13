@@ -3,20 +3,19 @@ package com.yanggu.metric_calculate.core.unit;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.json.JSONUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.pool.KryoPool;
-import com.yanggu.metric_calculate.core.annotation.Collective;
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-import com.yanggu.metric_calculate.core.annotation.Objective;
+import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.enums.BasicType;
 import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
 import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
+import com.yanggu.metric_calculate.core.unit.map.MapUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import lombok.Data;
@@ -127,18 +126,33 @@ public class UnitFactory implements Serializable {
         if (clazz == null) {
             throw new NullPointerException("MergedUnit class not found.");
         }
-        //数值型
         if (clazz.isAnnotationPresent(Numerical.class)) {
+            //数值型
             return createNumericUnit(clazz, initValue, params);
-            //集合型
         } else if (clazz.isAnnotationPresent(Collective.class)) {
+            //集合型
             return createCollectiveUnit(clazz, initValue, params);
-            //对象型
         } else if (clazz.isAnnotationPresent(Objective.class)) {
+            //对象型
             return createObjectiveUnit(clazz, initValue, params);
+        } else if (clazz.isAnnotationPresent(MapType.class)) {
+            //映射型
+            return createMapUnit(clazz, initValue, params);
         } else {
             throw new RuntimeException(clazz.getName() + " not support.");
         }
+    }
+
+    private MergedUnit createMapUnit(Class<MapUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+        MapUnit mapUnit;
+        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
+            mapUnit = clazz.getConstructor(Map.class).newInstance(params);
+        } else {
+            mapUnit = clazz.getConstructor().newInstance();
+        }
+        Tuple tuple = (Tuple) initValue;
+        mapUnit.put(tuple.get(0), tuple.get(1));
+        return mapUnit;
     }
 
     /**
