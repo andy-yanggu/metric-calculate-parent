@@ -69,22 +69,26 @@ public class MetricUtil {
         //原子指标
         List<Atom> atomList = tableData.getAtom();
         if (CollUtil.isNotEmpty(atomList)) {
-            List<AtomMetricCalculate> collect = atomList.stream().map(tempAtom -> {
-                metricTypeMap.put(tempAtom.getName(), ATOM);
-                //初始化原子指标计算类
-                return initAtom(tempAtom, metricCalculate);
-            }).collect(Collectors.toList());
+            List<AtomMetricCalculate> collect = atomList.stream()
+                    .map(tempAtom -> {
+                        metricTypeMap.put(tempAtom.getName(), ATOM);
+                        //初始化原子指标计算类
+                        return initAtom(tempAtom, metricCalculate);
+                    })
+                    .collect(Collectors.toList());
             metricCalculate.setAtomMetricCalculateList(collect);
         }
 
         //派生指标
         List<Derive> deriveList = tableData.getDerive();
         if (CollUtil.isNotEmpty(deriveList)) {
-            List<DeriveMetricCalculate> collect = deriveList.stream().map(tempDerive -> {
-                metricTypeMap.put(tempDerive.getName(), DERIVE);
-                //初始化派生指标计算类
-                return MetricUtil.initDerive(tempDerive, metricCalculate);
-            }).collect(Collectors.toList());
+            List<DeriveMetricCalculate> collect = deriveList.stream()
+                    .map(tempDerive -> {
+                        metricTypeMap.put(tempDerive.getName(), DERIVE);
+                        //初始化派生指标计算类
+                        return MetricUtil.initDerive(tempDerive, metricCalculate);
+                    })
+                    .collect(Collectors.toList());
 
             metricCalculate.setDeriveMetricCalculateList(collect);
         }
@@ -97,7 +101,8 @@ public class MetricUtil {
                 metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
 
                 //初始化复合指标计算类
-                List<CompositeMetricCalculate> compositeMetricCalculateList = MetricUtil.initComposite(compositeMetric, metricCalculate);
+                List<CompositeMetricCalculate> compositeMetricCalculateList =
+                        MetricUtil.initComposite(compositeMetric, metricCalculate);
                 collect.addAll(compositeMetricCalculateList);
             });
             metricCalculate.setCompositeMetricCalculateList(collect);

@@ -4,6 +4,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 
 /**
  * 集合型
+ *
  * @param <T>
  * @param <U>
  */

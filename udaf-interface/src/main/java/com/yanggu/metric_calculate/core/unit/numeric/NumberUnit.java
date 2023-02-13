@@ -11,8 +11,8 @@ import java.util.Objects;
 /**
  * 数值型
  *
- * @param <N>
- * @param <M>
+ * @param <N> CubeNumber具体的实现类
+ * @param <M> NumberUnit具体的实现类
  */
 @Numerical
 public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N, M>>
