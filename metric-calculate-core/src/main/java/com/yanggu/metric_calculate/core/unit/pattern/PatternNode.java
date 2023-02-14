@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.unit.pattern;
 
 import com.yanggu.metric_calculate.core.fieldprocess.Cond;
-import com.yanggu.metric_calculate.core.fieldprocess.FieldExtractProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -35,13 +35,13 @@ public class PatternNode<T extends EventState> implements MergedUnit<PatternNode
 
     private MergedUnit currentState;
 
-    private transient FieldExtractProcessor<T, MergedUnit> stateProcessor;
+    private transient FieldProcessor<T, MergedUnit> stateProcessor;
 
     private PatternNode<T> nextNode;
 
     private EventConnector connector;
 
-    private transient FieldExtractProcessor<T, MergedUnit> fieldProcessor;
+    private transient FieldProcessor<T, MergedUnit> fieldProcessor;
 
     private long referenceTime;
 
@@ -207,7 +207,7 @@ public class PatternNode<T extends EventState> implements MergedUnit<PatternNode
         this.currentState = currentState;
     }
 
-    public void setStateProcessor(FieldExtractProcessor<T, MergedUnit> stateProcessor) {
+    public void setStateProcessor(FieldProcessor<T, MergedUnit> stateProcessor) {
         this.stateProcessor = stateProcessor;
     }
 
@@ -215,7 +215,7 @@ public class PatternNode<T extends EventState> implements MergedUnit<PatternNode
         this.nextNode = nextNode;
     }
 
-    public void setFieldProcessor(FieldExtractProcessor<T, MergedUnit> fieldProcessor) {
+    public void setFieldProcessor(FieldProcessor<T, MergedUnit> fieldProcessor) {
         this.fieldProcessor = fieldProcessor;
     }
 
@@ -267,7 +267,7 @@ public class PatternNode<T extends EventState> implements MergedUnit<PatternNode
         return currentState;
     }
 
-    public FieldExtractProcessor<T, MergedUnit> getStateProcessor() {
+    public FieldProcessor<T, MergedUnit> getStateProcessor() {
         return stateProcessor;
     }
 
@@ -279,7 +279,7 @@ public class PatternNode<T extends EventState> implements MergedUnit<PatternNode
         return connector;
     }
 
-    public FieldExtractProcessor<T, MergedUnit> getFieldProcessor() {
+    public FieldProcessor<T, MergedUnit> getFieldProcessor() {
         return fieldProcessor;
     }
 

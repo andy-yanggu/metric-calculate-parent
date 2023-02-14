@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.calculate.TimeWindow;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import com.yanggu.metric_calculate.core.fieldprocess.DimensionSet;
-import com.yanggu.metric_calculate.core.fieldprocess.FieldExtractProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
@@ -90,7 +90,7 @@ public class TimedKVPatternCubeTest {
 
         List<EventConnector> connectors = Arrays.asList(startConnectMid, midConnectEnd);
 
-        pattern = new Pattern<>(start, connectors, (FieldExtractProcessor<EventState<Trade, ?>, Long>) input -> input.value().getTime());
+        pattern = new Pattern<>(start, connectors, (FieldProcessor<EventState<Trade, ?>, Long>) input -> input.value().getTime());
         pattern.setValue(new CountUnit(CubeLong.of(1)));
 
         dimensionSet = new DimensionSet();

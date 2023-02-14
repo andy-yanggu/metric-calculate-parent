@@ -15,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class TimeFieldProcessor implements FieldExtractProcessor<JSONObject, Long> {
+public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
 
     private static final String TIMESTAMP = "TIMESTAMP";
 

@@ -1,16 +1,16 @@
-package com.yanggu.metric_calculate.core.value;
+package com.yanggu.metric_calculate.core.fieldprocess;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FieldOrder {
+public class FieldOrderParam {
 
     /**
-     * 字段名
+     * 计算表达式
      */
-    private String fieldName;
+    private String express;
 
     /**
      * 是否降序, true降序, false升序

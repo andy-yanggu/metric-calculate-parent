@@ -21,7 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class MetricFieldProcessor<R> implements FieldExtractProcessor<JSONObject, R> {
+public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
 
     /**
      * 宽表字段

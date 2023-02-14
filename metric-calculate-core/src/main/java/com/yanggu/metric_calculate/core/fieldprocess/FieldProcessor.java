@@ -6,7 +6,7 @@ package com.yanggu.metric_calculate.core.fieldprocess;
  * @param <T> 输入数据
  * @param <R> 从输入数据中提取的数据
  */
-public interface FieldExtractProcessor<T, R> {
+public interface FieldProcessor<T, R> {
 
     /**
      * 初始化方法, 实现类可以重写该方法

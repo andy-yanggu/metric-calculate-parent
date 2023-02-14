@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.yanggu.metric_calculate.core.fieldprocess.FieldExtractProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.pattern.EventConnector;
 import com.yanggu.metric_calculate.core.unit.pattern.PatternNode;
@@ -55,7 +55,7 @@ public class PatternNodeSerializer extends Serializer<PatternNode> {
         node.setMerged(kryo.readObject(input, Boolean.class));
         node.setMergeLimit((MergedUnit) kryo.readClassAndObject(input));
         node.setCurrentState((MergedUnit) kryo.readClassAndObject(input));
-        node.setStateProcessor((FieldExtractProcessor) kryo.readClassAndObject(input));
+        node.setStateProcessor((FieldProcessor) kryo.readClassAndObject(input));
 
         PatternNode nextNode = kryo.readObjectOrNull(input, PatternNode.class);
         node.setNextNode(nextNode);

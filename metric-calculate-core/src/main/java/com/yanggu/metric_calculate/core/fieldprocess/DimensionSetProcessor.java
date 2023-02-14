@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DimensionSetProcessor implements FieldExtractProcessor<JSONObject, DimensionSet> {
+public class DimensionSetProcessor implements FieldProcessor<JSONObject, DimensionSet> {
 
     /**
      * 指标名称

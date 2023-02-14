@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.unit.pattern;
 
-import com.yanggu.metric_calculate.core.fieldprocess.FieldExtractProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.NoneValue;
@@ -31,7 +31,7 @@ public class Pattern<T extends EventState> implements MergedUnit<Pattern<T>>, Va
     private boolean matchEnd;
     private boolean matchFinish;
 
-    private transient FieldExtractProcessor<T, Long> timeProcessor;
+    private transient FieldProcessor<T, Long> timeProcessor;
 
     private Object value;
 
@@ -53,7 +53,7 @@ public class Pattern<T extends EventState> implements MergedUnit<Pattern<T>>, Va
     public Pattern(
             PatternNode rootNode,
             List<EventConnector> connectors,
-            FieldExtractProcessor<T, Long> timeProcessor) {
+            FieldProcessor<T, Long> timeProcessor) {
         this();
         this.rootNode = rootNode;
         this.connectors = connectors;
@@ -289,7 +289,7 @@ public class Pattern<T extends EventState> implements MergedUnit<Pattern<T>>, Va
         this.matchFinish = matchFinish;
     }
 
-    public void setTimeProcessor(FieldExtractProcessor<T, Long> timeProcessor) {
+    public void setTimeProcessor(FieldProcessor<T, Long> timeProcessor) {
         this.timeProcessor = timeProcessor;
     }
 
@@ -372,7 +372,7 @@ public class Pattern<T extends EventState> implements MergedUnit<Pattern<T>>, Va
         return matchFinish;
     }
 
-    public FieldExtractProcessor<T, Long> getTimeProcessor() {
+    public FieldProcessor<T, Long> getTimeProcessor() {
         return timeProcessor;
     }
 
