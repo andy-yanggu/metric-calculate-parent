@@ -1,20 +1,20 @@
 package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
+import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedObjectUnit;
+import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,8 +43,15 @@ public class AggregateObjectFieldProcessorTest {
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
 
-        AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(MaxFieldUnit.class, "amount", "name", fieldMap);
+        UnitFactory unitFactory = new UnitFactory();
+        unitFactory.init();
+
+        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+        udafParam.setRetainExpress("name");
+        udafParam.setSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
+
+        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "MAXFIELD");
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -78,8 +85,14 @@ public class AggregateObjectFieldProcessorTest {
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
 
-        AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(MaxObjectUnit.class, "amount", null, fieldMap);
+        UnitFactory unitFactory = new UnitFactory();
+        unitFactory.init();
+
+        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+        udafParam.setSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
+
+        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "MAXOBJECT");
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -115,8 +128,14 @@ public class AggregateObjectFieldProcessorTest {
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
 
-        AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(OccupiedFieldUnit.class, null, "name", fieldMap);
+        UnitFactory unitFactory = new UnitFactory();
+        unitFactory.init();
+
+        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+        udafParam.setRetainExpress("name");
+
+        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "OCCUPIEDFIELD");
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -146,8 +165,13 @@ public class AggregateObjectFieldProcessorTest {
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
 
-        AggregateObjectFieldProcessor<?> objectFieldProcessor =
-                getObjectFieldProcessor(OccupiedObjectUnit.class, null, null, fieldMap);
+        UnitFactory unitFactory = new UnitFactory();
+        unitFactory.init();
+
+        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+
+        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "OCCUPIEDOBJECT");
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -162,42 +186,6 @@ public class AggregateObjectFieldProcessorTest {
         input2.set("name", "张三");
         process.merge(objectFieldProcessor.process(input2));
         assertEquals(input, ValueMapper.value((Value<?>) process));
-    }
-
-    private AggregateObjectFieldProcessor<?> getObjectFieldProcessor(Class<?> clazz,
-                                                                     String compareField,
-                                                                     String retainField,
-                                                                     Map<String, Class<?>> fieldMap) throws Exception {
-        String aggregateType = clazz.getAnnotation(MergeType.class).value();
-
-        AggregateObjectFieldProcessor<?> aggregateObjectFieldProcessor = new AggregateObjectFieldProcessor<>();
-        aggregateObjectFieldProcessor.setAggregateType(aggregateType);
-        aggregateObjectFieldProcessor.setMetricExpress(compareField);
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
-        aggregateObjectFieldProcessor.setUnitFactory(unitFactory);
-
-        aggregateObjectFieldProcessor.setMergeUnitClazz(unitFactory.getMergeableClass(aggregateType));
-
-        aggregateObjectFieldProcessor.setFieldMap(fieldMap);
-
-        Objective objective = clazz.getAnnotation(Objective.class);
-        if (!objective.retainObject() && StrUtil.isBlank(retainField)) {
-            throw new RuntimeException("需要设置保留字段");
-        }
-
-        if (StrUtil.isNotBlank(retainField)) {
-            MetricFieldProcessor<Object> retainFieldProcessor = new MetricFieldProcessor<>();
-            retainFieldProcessor.setMetricExpress(retainField);
-            retainFieldProcessor.setFieldMap(fieldMap);
-            retainFieldProcessor.init();
-            aggregateObjectFieldProcessor.setRetainFieldValueFieldProcessor(retainFieldProcessor);
-        }
-
-        //执行初始化操作
-        aggregateObjectFieldProcessor.init();
-        return aggregateObjectFieldProcessor;
     }
 
 }

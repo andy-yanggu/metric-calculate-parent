@@ -34,11 +34,12 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
 
     @Override
     public void init() throws Exception {
+        super.init();
 
-        //如果是设置了比较字段
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 
         Map<String, Class<?>> fieldMap = getFieldMap();
+        //如果是设置了排序字段
         if (objective.useSortedField()) {
             this.multiFieldOrderFieldProcessor =
                     FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getSortFieldList());

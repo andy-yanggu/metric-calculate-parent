@@ -43,6 +43,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
 
     @Override
     public void init() throws Exception {
+        super.init();
 
         Collective collective = mergeUnitClazz.getAnnotation(Collective.class);
 

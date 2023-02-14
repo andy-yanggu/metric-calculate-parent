@@ -21,7 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> implements FieldProcessor<JSONObject, M> {
+public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
 
     protected NumberObjectCollectionUdafParam udafParam;
 
@@ -36,11 +36,6 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> imple
      * 用于生成MergeUnit
      */
     protected UnitFactory unitFactory;
-
-    /**
-     * 是否是自定义udaf
-     */
-    protected Boolean isUdaf;
 
     /**
      * 宽表字段

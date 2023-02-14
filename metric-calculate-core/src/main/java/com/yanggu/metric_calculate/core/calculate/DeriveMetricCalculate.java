@@ -7,6 +7,7 @@ import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
@@ -54,7 +55,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     /**
      * 聚合字段处理器, 生成MergeUnit
      */
-    private BaseAggregateFieldProcessor<M> aggregateFieldProcessor;
+    private AggregateFieldProcessor<M> aggregateFieldProcessor;
 
     /**
      * 需要进行二次聚合计算
@@ -108,7 +109,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         }
 
         //执行聚合字段处理器, 生成MergeUnit
-        M process = (M) aggregateFieldProcessor.process(input);
+        M process = aggregateFieldProcessor.process(input);
         if (process == null) {
             return null;
         }

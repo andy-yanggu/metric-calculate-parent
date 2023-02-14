@@ -64,14 +64,14 @@ public class Derive {
     private List<String> udafJarPathList;
 
     /**
-     * 用户自定义聚合函数的参数
+     * 基本类型聚合函数参数
      */
-    private Map<String, Object> udafParams;
+    private NumberObjectCollectionUdafParam baseUdafParam;
 
     /**
-     * 度量字段
+     * 映射类型聚合函数参数
      */
-    private MetricColumn metricColumn;
+    private MapUnitUdafParam mapUdafParam;
 
     /**
      * 对于集合型和对象型聚合类型, 不保留对象, 保留指定字段

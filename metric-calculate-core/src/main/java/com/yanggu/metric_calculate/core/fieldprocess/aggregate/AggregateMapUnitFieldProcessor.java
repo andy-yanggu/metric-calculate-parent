@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiF
 import com.yanggu.metric_calculate.core.pojo.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.unit.map.MapUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import lombok.Data;
 
@@ -20,11 +21,13 @@ import java.util.Map;
  *
  */
 @Data
-public class AggregateMapUnitFieldProcessor implements FieldProcessor<JSONObject, MergedUnit<?>> {
+public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
 
     private MapUnitUdafParam mapUnitUdafParam;
 
     private String aggregateType;
+
+    private Class<? extends MergedUnit<?>> mergeUnitClazz;
 
     private Map<String, Class<?>> fieldMap;
 
@@ -35,6 +38,9 @@ public class AggregateMapUnitFieldProcessor implements FieldProcessor<JSONObject
      */
     private MultiFieldDistinctFieldProcessor keyFieldProcessor;
 
+    /**
+     * value生成字段处理器
+     */
     private BaseAggregateFieldProcessor<?> valueAggregateFieldProcessor;
 
     @Override
@@ -51,12 +57,17 @@ public class AggregateMapUnitFieldProcessor implements FieldProcessor<JSONObject
     }
 
     @Override
-    public MergedUnit<?> process(JSONObject input) throws Exception {
+    public M process(JSONObject input) throws Exception {
         MultiFieldDistinctKey key = keyFieldProcessor.process(input);
 
         MergedUnit<?> value = valueAggregateFieldProcessor.process(input);
         Tuple tuple = new Tuple(key, value);
-        return unitFactory.initInstanceByValue(aggregateType, tuple, mapUnitUdafParam.getParam());
+        return (M) unitFactory.initInstanceByValue(aggregateType, tuple, mapUnitUdafParam.getParam());
+    }
+
+    @Override
+    public Class<? extends MergedUnit<?>> getMergeUnitClazz() {
+        return null;
     }
 
 }

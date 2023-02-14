@@ -20,6 +20,7 @@ public class AggregateNumberFieldProcessor<M extends MergedUnit<M>> extends Base
 
     @Override
     public void init() throws Exception {
+        super.init();
         this.metricFieldProcessor =
                 FieldProcessorUtil.getMetricFieldProcessor(getFieldMap(), udafParam.getMetricExpress());
     }

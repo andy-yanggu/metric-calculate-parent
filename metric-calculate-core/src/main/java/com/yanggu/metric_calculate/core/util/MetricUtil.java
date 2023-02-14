@@ -24,10 +24,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.EventStateExtractor;
 import com.yanggu.metric_calculate.core.fieldprocess.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateCollectionFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateNumberFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateObjectFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.aggregate.*;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
@@ -195,19 +192,13 @@ public class MetricUtil {
         filterFieldProcessor.init();
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
-        //聚合字段处理器
-        String columnName = tempDerive.getMetricColumn().getColumnName();
-        //如果是计数, 度量值强制设定成1
-        String calculateLogic = tempDerive.getCalculateLogic();
-        if (StrUtil.equalsIgnoreCase(calculateLogic, "COUNT")) {
-            columnName = "1";
-        }
-
         //设置UnitFactory, 生成MergeUnit
         UnitFactory unitFactory = new UnitFactory(tempDerive.getUdafJarPathList());
         unitFactory.init();
 
-        BaseAggregateFieldProcessor<?> aggregateFieldProcessor = getAggregateFieldProcessor(unitFactory, tempDerive.getUdafParams(), fieldMap, columnName, calculateLogic);
+        AggregateFieldProcessor<?> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
+                tempDerive.getBaseUdafParam(), tempDerive.getMapUdafParam(), tempDerive.getCalculateLogic(),
+                fieldMap, unitFactory);
 
         //设置聚合字段处理器
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
@@ -244,8 +235,7 @@ public class MetricUtil {
         metricCubeFactory.setKey(deriveMetricCalculate.getKey());
         metricCubeFactory.setName(deriveMetricCalculate.getName());
         metricCubeFactory.setTimeBaselineDimension(timeBaselineDimension);
-        Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
-        metricCubeFactory.setMergeUnitClazz(mergeUnitClazz);
+        metricCubeFactory.setMergeUnitClazz(aggregateFieldProcessor.getMergeUnitClazz());
 
         deriveMetricCalculate.setMetricCubeFactory(metricCubeFactory);
 
@@ -265,7 +255,7 @@ public class MetricUtil {
     }
 
     private static void setSubAggFieldProcessor(DeriveMetricCalculate deriveMetricCalculate) throws Exception {
-        BaseAggregateFieldProcessor aggregateFieldProcessor = deriveMetricCalculate.getAggregateFieldProcessor();
+        BaseAggregateFieldProcessor aggregateFieldProcessor = (BaseAggregateFieldProcessor) deriveMetricCalculate.getAggregateFieldProcessor();
         Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
 
         //判断是否需要子聚合处理器
@@ -299,88 +289,9 @@ public class MetricUtil {
             metricExpress = subUdafParams.get("metricExpress");
         }
 
-        BaseAggregateFieldProcessor<?> subAggregateFieldProcessor = getAggregateFieldProcessor(aggregateFieldProcessor.getUnitFactory(), subUdafParams, aggregateFieldProcessor.getFieldMap(), metricExpress, aggregateType.toString());
+        BaseAggregateFieldProcessor<?> subAggregateFieldProcessor = null;
 
         deriveMetricCalculate.setSubAggregateFieldProcessor(subAggregateFieldProcessor);
-    }
-
-    /**
-     * 生成聚合字段处理器, 包含数值型、集合型、对象型
-     * <p>udafParams中的数据</p>
-     * <p>例如如果是一个普通的sortlistfield</p>
-     * {
-     * "desc": true, //升序还是降序
-     * "limit": 10,  //限制大小
-     * "retainExpress": "amount" //保留字段名
-     * }
-     *
-     * @param unitFactory
-     * @param udafParams
-     * @param fieldMap
-     * @param metricExpress
-     * @param calculateLogic
-     * @return
-     * @throws Exception
-     */
-    private static BaseAggregateFieldProcessor<?> getAggregateFieldProcessor(UnitFactory unitFactory, Map<String, Object> udafParams, Map<String, Class<?>> fieldMap, Object metricExpress, String calculateLogic) throws Exception {
-
-        BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
-        Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(calculateLogic);
-        //数值型, 把原子指标度量字段当成聚合的字段
-        if (mergeUnitClazz.isAnnotationPresent(Numerical.class)) {
-            aggregateFieldProcessor = new AggregateNumberFieldProcessor<>();
-            //aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
-        } else if (mergeUnitClazz.isAnnotationPresent(Objective.class)) {
-            //对象型
-            aggregateFieldProcessor = new AggregateObjectFieldProcessor<>();
-            Objective annotation = mergeUnitClazz.getAnnotation(Objective.class);
-            //对象型如果需要比较字段, 把原子指标的度量字段当成比较字段
-            if (annotation.useCompareField()) {
-                //aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
-            }
-            if (!annotation.retainObject()) {
-                //设置保留字段处理器
-                ((AggregateObjectFieldProcessor<?>) aggregateFieldProcessor).setRetainFieldValueFieldProcessor(getRetainFieldValueFieldProcessor(fieldMap, udafParams));
-            }
-        } else if (mergeUnitClazz.isAnnotationPresent(Collective.class)) {
-            //集合型
-            aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
-            Collective annotation = mergeUnitClazz.getAnnotation(Collective.class);
-            //集合型如果需要比较字段, 把原子指标的度量字段当成比较字段
-            if (annotation.useCompareField()) {
-                //aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
-            }
-            if (!annotation.retainObject()) {
-                //设置保留字段处理器
-                ((AggregateCollectionFieldProcessor<?>) aggregateFieldProcessor).setRetainFieldValueFieldProcessor(getRetainFieldValueFieldProcessor(fieldMap, udafParams));
-            }
-        } else if (mergeUnitClazz.isAnnotationPresent(Pattern.class)) {
-            //如果是模式匹配, CEP类型
-            aggregateFieldProcessor = new EventStateExtractor();
-        } else {
-            throw new RuntimeException("不支持的聚合类型: " + calculateLogic);
-        }
-
-        //聚合字段处理器
-        aggregateFieldProcessor.setFieldMap(fieldMap);
-        aggregateFieldProcessor.setAggregateType(calculateLogic);
-        aggregateFieldProcessor.setIsUdaf(false);
-        aggregateFieldProcessor.setUnitFactory(unitFactory);
-        aggregateFieldProcessor.setMergeUnitClazz(mergeUnitClazz);
-        aggregateFieldProcessor.init();
-        return aggregateFieldProcessor;
-    }
-
-    private static MetricFieldProcessor<?> getRetainFieldValueFieldProcessor(Map<String, Class<?>> fieldMap, Map<String, Object> udafParams) throws Exception {
-        MetricFieldProcessor<?> retainFieldValueFieldProcessor = new MetricFieldProcessor<>();
-        Object retainExpress = udafParams.get("retainExpress");
-        if (StrUtil.isBlankIfStr(retainExpress)) {
-            throw new RuntimeException("需要指定字段需要设置保留表达式");
-        }
-        retainFieldValueFieldProcessor.setMetricExpress(retainExpress.toString());
-        retainFieldValueFieldProcessor.setFieldMap(fieldMap);
-        retainFieldValueFieldProcessor.init();
-        return retainFieldValueFieldProcessor;
     }
 
     /**
