@@ -20,7 +20,10 @@ import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core.fieldprocess.*;
+import com.yanggu.metric_calculate.core.fieldprocess.EventStateExtractor;
+import com.yanggu.metric_calculate.core.fieldprocess.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateCollectionFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateNumberFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateObjectFieldProcessor;
@@ -282,7 +285,7 @@ public class MetricUtil {
         }
         */
 
-        Map<String, Object> udafParams = aggregateFieldProcessor.getUdafParams();
+        Map<String, Object> udafParams = null;
         Object aggregateType = udafParams.get("aggregateType");
         if (StrUtil.isBlankIfStr(aggregateType)) {
             throw new RuntimeException("需要设置聚合类型aggregateType");
@@ -326,14 +329,14 @@ public class MetricUtil {
         //数值型, 把原子指标度量字段当成聚合的字段
         if (mergeUnitClazz.isAnnotationPresent(Numerical.class)) {
             aggregateFieldProcessor = new AggregateNumberFieldProcessor<>();
-            aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
+            //aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
         } else if (mergeUnitClazz.isAnnotationPresent(Objective.class)) {
             //对象型
             aggregateFieldProcessor = new AggregateObjectFieldProcessor<>();
             Objective annotation = mergeUnitClazz.getAnnotation(Objective.class);
             //对象型如果需要比较字段, 把原子指标的度量字段当成比较字段
             if (annotation.useCompareField()) {
-                aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
+                //aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
             }
             if (!annotation.retainObject()) {
                 //设置保留字段处理器
@@ -345,7 +348,7 @@ public class MetricUtil {
             Collective annotation = mergeUnitClazz.getAnnotation(Collective.class);
             //集合型如果需要比较字段, 把原子指标的度量字段当成比较字段
             if (annotation.useCompareField()) {
-                aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
+                //aggregateFieldProcessor.setMetricExpress(metricExpress.toString());
             }
             if (!annotation.retainObject()) {
                 //设置保留字段处理器
@@ -362,7 +365,6 @@ public class MetricUtil {
         aggregateFieldProcessor.setFieldMap(fieldMap);
         aggregateFieldProcessor.setAggregateType(calculateLogic);
         aggregateFieldProcessor.setIsUdaf(false);
-        aggregateFieldProcessor.setUdafParams(udafParams);
         aggregateFieldProcessor.setUnitFactory(unitFactory);
         aggregateFieldProcessor.setMergeUnitClazz(mergeUnitClazz);
         aggregateFieldProcessor.init();

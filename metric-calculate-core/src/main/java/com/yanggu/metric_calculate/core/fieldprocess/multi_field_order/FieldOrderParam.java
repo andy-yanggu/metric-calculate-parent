@@ -14,7 +14,8 @@ public class FieldOrderParam {
 
     /**
      * 是否降序, true降序, false升序
+     * <p>默认升序</p>
      */
-    private Boolean desc = true;
+    private Boolean desc = false;
 
 }

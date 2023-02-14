@@ -18,6 +18,20 @@ public @interface Collective {
     boolean useCompareField() default true;
 
     /**
+     * 是否使用去重字段
+     *
+     * @return
+     */
+    boolean useDistinctField() default false;
+
+    /**
+     * 是否使用排序字段
+     *
+     * @return
+     */
+    boolean useSortedField() default false;
+
+    /**
      * 是否保留对象
      *
      * @return true保留对象, false保留字段

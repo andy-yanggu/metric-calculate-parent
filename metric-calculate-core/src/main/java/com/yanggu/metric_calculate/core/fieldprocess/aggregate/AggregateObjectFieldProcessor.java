@@ -4,8 +4,15 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderCompareKey;
+import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
+import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
+
+import java.util.Map;
 
 /**
  * 聚合对象型字段处理器
@@ -15,6 +22,14 @@ import lombok.Data;
 @Data
 public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
 
+    /**
+     * 多字段排序字段处理器
+     */
+    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
+
+    /**
+     * 保留字段字段处理器
+     */
     private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
 
     @Override
@@ -22,13 +37,17 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
 
         //如果是设置了比较字段
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
-        if (objective.useCompareField()) {
-            super.init();
+
+        Map<String, Class<?>> fieldMap = getFieldMap();
+        if (objective.useSortedField()) {
+            this.multiFieldOrderFieldProcessor =
+                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getSortFieldList());
         }
 
         //如果设置了保留字段
-        if (!objective.retainObject() && retainFieldValueFieldProcessor == null) {
-            throw new RuntimeException("保留字段处理器为空");
+        if (!objective.retainObject()) {
+            this.retainFieldValueFieldProcessor =
+                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpress());
         }
     }
 
@@ -37,13 +56,20 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
 
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 
-        //是否使用比较字段
-        boolean useCompareField = objective.useCompareField();
+        //获取保留字段或者原始数据
+        Cloneable2Wrapper<Object> retainFieldValue = getRetainFieldValue(input, objective.retainObject());
 
-        //是否保留对象
-        boolean retainObject = objective.retainObject();
+        //默认没有排序字段
+        Object result = retainFieldValue;
 
-        return super.getResult(useCompareField, retainObject, input);
+        if (objective.useSortedField()) {
+            MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
+            if (multiFieldOrderCompareKey == null) {
+                return null;
+            }
+            result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValue);
+        }
+        return (M) unitFactory.initInstanceByValue(aggregateType, result, udafParam.getParam());
     }
 
 }

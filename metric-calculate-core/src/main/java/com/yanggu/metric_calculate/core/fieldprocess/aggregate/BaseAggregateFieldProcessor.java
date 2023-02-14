@@ -2,11 +2,12 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
-import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +21,9 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> extends MetricFieldProcessor<Object> {
+public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> implements FieldProcessor<JSONObject, M> {
+
+    protected NumberObjectCollectionUdafParam udafParam;
 
     /**
      * 聚合类型
@@ -30,25 +33,22 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
     protected Class<? extends MergedUnit<?>> mergeUnitClazz;
 
     /**
+     * 用于生成MergeUnit
+     */
+    protected UnitFactory unitFactory;
+
+    /**
      * 是否是自定义udaf
      */
     protected Boolean isUdaf;
 
     /**
-     * 用户自定义聚合函数的参数
+     * 宽表字段
      */
-    protected Map<String, Object> udafParams;
-
-    /**
-     * 用于生成MergeUnit
-     */
-    protected UnitFactory unitFactory;
+    protected Map<String, Class<?>> fieldMap;
 
     @Override
     public void init() throws Exception {
-        //初始化度量字段表达式
-        super.init();
-
         if (StrUtil.isBlank(aggregateType)) {
             throw new RuntimeException("聚合类型为空");
         }
@@ -62,40 +62,7 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
         }
     }
 
-    /**
-     * @param useCompareField 是否使用比较字段
-     * @param retainObject    是否保留对象
-     * @param input           输入明细数据
-     * @return
-     */
-    protected M getResult(boolean useCompareField, boolean retainObject, JSONObject input) throws Exception {
-        //获取执行参数
-        Object result;
-        if (useCompareField) {
-            //获取比较值
-            Object compareFieldValue = super.process(input);
-            if (compareFieldValue == null) {
-                return null;
-            }
-
-            //获取保留值
-            Object value = getValue(input, retainObject);
-            if (value == null) {
-                return null;
-            }
-            result = new KeyValue<>((Comparable<?>) compareFieldValue, value);
-        } else {
-            //没有比较字段, 直接获取保留值
-            Object value = getValue(input, retainObject);
-            if (value == null) {
-                return null;
-            }
-            result = Cloneable2Wrapper.wrap(value);
-        }
-        return (M) unitFactory.initInstanceByValue(aggregateType, result, udafParams);
-    }
-
-    private Object getValue(JSONObject input, boolean retainObject) throws Exception {
+    protected Cloneable2Wrapper<Object> getRetainFieldValue(JSONObject input, boolean retainObject) throws Exception {
         Object value;
         if (retainObject) {
             value = input;
@@ -106,7 +73,7 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> exten
             }
             value = retainField;
         }
-        return value;
+        return Cloneable2Wrapper.wrap(value);
     }
 
     protected MetricFieldProcessor<?> getRetainFieldValueFieldProcessor() {
