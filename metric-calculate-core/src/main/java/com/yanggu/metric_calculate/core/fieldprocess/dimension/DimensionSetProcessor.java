@@ -1,9 +1,10 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.dimension;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.Dimension;
 import lombok.Data;
 import lombok.NoArgsConstructor;

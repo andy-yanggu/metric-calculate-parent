@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.dimension;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.Dimension;
@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * 维度字段处理器单元测试类

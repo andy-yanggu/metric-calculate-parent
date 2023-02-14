@@ -1,19 +1,19 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.annotation.Collective;
+import com.yanggu.metric_calculate.core.annotation.Objective;
+import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import lombok.Data;
 
-
 /**
- * 聚合集合型字段处理器
+ * 聚合对象型字段处理器
  *
  * @param <M>
  */
 @Data
-public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
+public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
 
     private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
 
@@ -21,9 +21,8 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
     public void init() throws Exception {
 
         //如果是设置了比较字段
-        Collective objective = mergeUnitClazz.getAnnotation(Collective.class);
+        Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
         if (objective.useCompareField()) {
-            //初始化
             super.init();
         }
 
@@ -36,7 +35,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
     @Override
     public M process(JSONObject input) throws Exception {
 
-        Collective objective = mergeUnitClazz.getAnnotation(Collective.class);
+        Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 
         //是否使用比较字段
         boolean useCompareField = objective.useCompareField();

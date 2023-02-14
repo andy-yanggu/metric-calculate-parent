@@ -1,9 +1,10 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MapType;
+import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import lombok.Data;
 

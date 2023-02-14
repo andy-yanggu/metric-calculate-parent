@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.calculate;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.fieldprocess.DimensionSetProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeFieldProcessor;

@@ -3,7 +3,7 @@
 //import com.yanggu.metric_calculate.core.number.CubeLong;
 //import com.yanggu.metric_calculate.core.value.KeyValue;
 //import com.yanggu.metric_calculate.core.value.MultiFieldCompareKey;
-//import com.yanggu.metric_calculate.core.value.MultiFieldDistinctKey;
+//import com.yanggu.metric_calculate.core.fieldprocess.MultiFieldDistinctKey;
 //
 //
 //public class Test {

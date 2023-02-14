@@ -1,6 +1,6 @@
-package com.yanggu.metric_calculate.core.value;
+package com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct;
 
-import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core.value.Cloneable2;
 import lombok.Data;
 
 import java.util.Arrays;
@@ -13,14 +13,11 @@ import java.util.Objects;
 @Data
 public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey> {
 
-    private List<String> fieldList;
-
-    private JSONObject inputData;
+    private List<Object> fieldList;
 
     @Override
     public int hashCode() {
-        Object[] objects = fieldList.stream().map(tempField -> inputData.get(tempField)).toArray();
-        return Objects.hash(objects);
+        return Objects.hash(fieldList.toArray());
     }
 
     @Override
@@ -32,8 +29,8 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>,
             return false;
         }
         MultiFieldDistinctKey thatData = (MultiFieldDistinctKey) that;
-        Object[] thisObjects = fieldList.stream().map(tempField -> inputData.get(tempField)).toArray();
-        Object[] thatObjects = thatData.fieldList.stream().map(tempField -> thatData.inputData.get(tempField)).toArray();
+        Object[] thisObjects = fieldList.toArray();
+        Object[] thatObjects = thatData.fieldList.toArray();
         return Arrays.equals(thisObjects, thatObjects);
     }
 
@@ -41,7 +38,6 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>,
     public MultiFieldDistinctKey fastClone() {
         MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey();
         multiFieldDistinctKey.setFieldList(this.fieldList);
-        multiFieldDistinctKey.setInputData(this.getInputData());
         return multiFieldDistinctKey;
     }
 

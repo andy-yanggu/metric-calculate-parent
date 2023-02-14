@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.multi_field_order;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

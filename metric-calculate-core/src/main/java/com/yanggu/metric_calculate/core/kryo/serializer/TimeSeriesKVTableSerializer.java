@@ -5,7 +5,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
-import com.yanggu.metric_calculate.core.fieldprocess.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
 
 import java.util.Map;
 

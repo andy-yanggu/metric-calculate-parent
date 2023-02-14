@@ -1,12 +1,9 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.multi_field_order;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
-import com.googlecode.aviator.Expression;
-import com.yanggu.metric_calculate.core.util.MetricUtil;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -24,7 +21,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
 
     private List<FieldOrderParam> fieldOrderParamList;
 
-    private List<Expression> expressionList;
+    private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
     @Override
     public void init() throws Exception {
@@ -35,39 +32,30 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
         if (CollUtil.isEmpty(fieldOrderParamList)) {
             throw new RuntimeException("排序字段为空");
         }
-        this.expressionList = fieldOrderParamList.stream()
+        this.metricFieldProcessorList = fieldOrderParamList.stream()
                 .map(tempFieldOrderParam -> {
-                    String metricExpress = tempFieldOrderParam.getExpress();
-                    if (StrUtil.isBlank(metricExpress)) {
-                        throw new RuntimeException("度量表达式为空");
+                    MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
+                    metricFieldProcessor.setMetricExpress(tempFieldOrderParam.getExpress());
+                    metricFieldProcessor.setFieldMap(fieldMap);
+                    try {
+                        metricFieldProcessor.init();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
-                    AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
-                    //编译度量字段表达式
-                    Expression tempMetricExpression = instance.compile(metricExpress, true);
-                    List<String> variableNames = tempMetricExpression.getVariableNames();
-                    //检查数据明细宽表中是否包含当前参数
-                    if (CollUtil.isNotEmpty(variableNames)) {
-                        variableNames.forEach(tempName -> {
-                            if (!fieldMap.containsKey(tempName)) {
-                                throw new RuntimeException("数据明细宽表中没有该度量字段: " + tempName);
-                            }
-                        });
-                    }
-                    return tempMetricExpression;
+                    return metricFieldProcessor;
                 })
                 .collect(Collectors.toList());
     }
 
     @Override
     public MultiFieldOrderCompareKey process(JSONObject input) throws Exception {
-        Map<String, Object> param = MetricUtil.getParam(input, fieldMap);
 
         int size = fieldOrderParamList.size();
         List<FieldOrder> fieldOrderList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             FieldOrderParam fieldOrderParam = fieldOrderParamList.get(i);
-            Expression expression = expressionList.get(i);
-            Object execute = expression.execute(param);
+            MetricFieldProcessor<Object> expression = metricFieldProcessorList.get(i);
+            Object execute = expression.process(input);
             FieldOrder fieldOrder = new FieldOrder();
             fieldOrder.setResult(execute);
             fieldOrder.setDesc(fieldOrderParam.getDesc());
