@@ -138,7 +138,9 @@ public class UnitFactory implements Serializable {
         } else if (clazz.isAnnotationPresent(MapType.class)) {
             //映射型
             return createMapUnit(clazz, initValue, params);
-        } else {
+        } /*else if (clazz.isAnnotationPresent()) {
+            
+        }*/ else {
             throw new RuntimeException(clazz.getName() + " not support.");
         }
     }
