@@ -16,6 +16,7 @@ import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.map.MapUnit;
+import com.yanggu.metric_calculate.core.unit.mix_unit.MixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import lombok.Data;
@@ -138,11 +139,22 @@ public class UnitFactory implements Serializable {
         } else if (clazz.isAnnotationPresent(MapType.class)) {
             //映射型
             return createMapUnit(clazz, initValue, params);
-        } /*else if (clazz.isAnnotationPresent()) {
-            
-        }*/ else {
+        } else if (clazz.isAnnotationPresent(Mix.class)) {
+            return createMixUnit(clazz, initValue, params);
+        } else {
             throw new RuntimeException(clazz.getName() + " not support.");
         }
+    }
+
+    private MergedUnit createMixUnit(Class<MixedUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
+        MixedUnit mixedUnit;
+        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
+            mixedUnit = clazz.getConstructor(Map.class).newInstance(params);
+        } else {
+            mixedUnit = clazz.getConstructor().newInstance();
+        }
+        mixedUnit.addMergeUnit((Map<String, MergedUnit<?>>) initValue);
+        return mixedUnit;
     }
 
     private MergedUnit createMapUnit(Class<MapUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
@@ -160,9 +172,7 @@ public class UnitFactory implements Serializable {
     /**
      * Create unit.
      */
-    private MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz,
-                                           Object initValue,
-                                           Map<String, Object> params) throws Exception {
+    private MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
         ObjectiveUnit objectiveUnit;
         if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
             objectiveUnit = clazz.getConstructor(Map.class).newInstance(params);

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.mix_unit;
 
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  * 混合类型的聚合函数
@@ -13,6 +13,6 @@ import java.util.List;
  */
 public interface MixedUnit<U extends MixedUnit<U>> extends MergedUnit<U> {
 
-    U addMergeUnit(List<MergedUnit<?>> list);
+    U addMergeUnit(Map<String, MergedUnit<?>> unitMap);
 
 }

@@ -24,9 +24,7 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
 
     private UnitFactory unitFactory;
 
-    //private Map<String, >
-
-    private Map<String, BaseAggregateFieldProcessor<?>> mixBaseAggregateFieldProcessorMap;
+    private Map<String, BaseAggregateFieldProcessor<?>> multiBaseAggProcessorMap;
 
     private Expression expression;
 
@@ -43,7 +41,7 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
             map.put(paramName, baseAggregateFieldProcessor);
         }
 
-        this.mixBaseAggregateFieldProcessorMap = map;
+        this.multiBaseAggProcessorMap = map;
 
         AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
         Expression compile = instance.compile(mixUnitUdafParam.getExpress(), true);
@@ -53,10 +51,12 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
     @Override
     public M process(JSONObject input) throws Exception {
         Map<String, MergedUnit<?>> dataMap = new HashMap<>();
-        for (Map.Entry<String, BaseAggregateFieldProcessor<?>> entry : mixBaseAggregateFieldProcessorMap.entrySet()) {
+        for (Map.Entry<String, BaseAggregateFieldProcessor<?>> entry : multiBaseAggProcessorMap.entrySet()) {
             String key = entry.getKey();
             MergedUnit<?> process = entry.getValue().process(input);
-            dataMap.put(key, process);
+            if (process != null) {
+                dataMap.put(key, process);
+            }
         }
         return (M) unitFactory.initInstanceByValue(mixUnitUdafParam.getAggregateType(), dataMap, mixUnitUdafParam.getParam());
     }

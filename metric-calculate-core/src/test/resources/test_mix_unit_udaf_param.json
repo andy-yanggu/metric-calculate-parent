@@ -1,0 +1,14 @@
+{
+  "aggregateType": "BASEMIXUNIT",
+  "mixAggMap": {
+    "上海_sum": {
+      "aggregateType": "SUM",
+      "metricExpress": "city == '上海' ? amount : 0"
+    },
+    "全国_sum": {
+      "aggregateType": "SUM",
+      "metricExpress": "amount"
+    }
+  },
+  "express": "上海_sum / 全国_sum"
+}
