@@ -11,13 +11,6 @@ import java.lang.annotation.*;
 public @interface Collective {
 
     /**
-     * 是否需要指定比较参数
-     *
-     * @return true需要配置比较字段, false不需要配置比较字段
-     */
-    boolean useCompareField() default true;
-
-    /**
      * 是否使用去重字段
      *
      * @return

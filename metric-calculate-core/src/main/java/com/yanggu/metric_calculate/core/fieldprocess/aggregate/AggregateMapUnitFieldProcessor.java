@@ -52,8 +52,7 @@ public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements 
 
         //map的value字段处理器
         this.valueAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(mapUnitUdafParam.getValueAggParam(), unitFactory,
-                                fieldMap, mapUnitUdafParam.getValueAggregateType());
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(mapUnitUdafParam.getValueAggParam(), unitFactory, fieldMap);
     }
 
     @Override
@@ -67,7 +66,7 @@ public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements 
 
     @Override
     public Class<? extends MergedUnit<?>> getMergeUnitClazz() {
-        return null;
+        return mergeUnitClazz;
     }
 
 }

@@ -4,14 +4,13 @@ package com.yanggu.metric_calculate.core.util;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.Options;
-import com.yanggu.metric_calculate.core.annotation.*;
+import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
 import com.yanggu.metric_calculate.core.calculate.AtomMetricCalculate;
@@ -20,16 +19,15 @@ import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core.fieldprocess.EventStateExtractor;
 import com.yanggu.metric_calculate.core.fieldprocess.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.*;
+import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.*;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -203,8 +201,12 @@ public class MetricUtil {
         //设置聚合字段处理器
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
-        //设置子聚合处理器
-        setSubAggFieldProcessor(deriveMetricCalculate);
+        //判断是否需要额外聚合处理器
+        if (aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class).useExternalAgg()) {
+            BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor =
+                    FieldProcessorUtil.getBaseAggregateFieldProcessor(tempDerive.getExternalBaseUdafParam(), unitFactory, fieldMap);
+            deriveMetricCalculate.setExternalAggregateFieldProcessor(externalAggregateFieldProcessor);
+        }
 
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();
@@ -252,46 +254,6 @@ public class MetricUtil {
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 
         return deriveMetricCalculate;
-    }
-
-    private static void setSubAggFieldProcessor(DeriveMetricCalculate deriveMetricCalculate) throws Exception {
-        BaseAggregateFieldProcessor aggregateFieldProcessor = (BaseAggregateFieldProcessor) deriveMetricCalculate.getAggregateFieldProcessor();
-        Class<? extends MergedUnit<?>> mergeUnitClazz = aggregateFieldProcessor.getMergeUnitClazz();
-
-        //判断是否需要子聚合处理器
-        if (!mergeUnitClazz.getAnnotation(MergeType.class).useSubAgg()) {
-            return;
-        }
-        /*
-        如果是滑动计数窗口, 需要添加子聚合字段处理器
-        滑动计数窗口的udafParams参数
-        {
-            "limit": 5, //滑动计数窗口大小
-            "aggregateType": "SUM", //聚合类型
-            "udafParams": { //自定义udaf参数
-                "metricExpress": "amount", //度量字段(数值)、比较字段(排序或者去重) TODO 需要前端手动设置原子指标度量字段名
-                "retainExpress": "", //保留字段名
-            }
-        }
-        */
-
-        Map<String, Object> udafParams = null;
-        Object aggregateType = udafParams.get("aggregateType");
-        if (StrUtil.isBlankIfStr(aggregateType)) {
-            throw new RuntimeException("需要设置聚合类型aggregateType");
-        }
-
-        Object subUdafParamsMapObject = udafParams.get("udafParams");
-        Map<String, Object> subUdafParams = new HashMap<>();
-        Object metricExpress = null;
-        if (subUdafParamsMapObject instanceof Map && CollUtil.isNotEmpty((Map<?, ?>) subUdafParamsMapObject)) {
-            subUdafParams = (Map<String, Object>) subUdafParamsMapObject;
-            metricExpress = subUdafParams.get("metricExpress");
-        }
-
-        BaseAggregateFieldProcessor<?> subAggregateFieldProcessor = null;
-
-        deriveMetricCalculate.setSubAggregateFieldProcessor(subAggregateFieldProcessor);
     }
 
     /**

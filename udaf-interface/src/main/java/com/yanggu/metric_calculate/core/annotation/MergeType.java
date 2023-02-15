@@ -41,7 +41,7 @@ public @interface MergeType {
      *
      * @return
      */
-    boolean useSubAgg() default false;
+    boolean useExternalAgg() default false;
 
     /**
      * 时间区间类型

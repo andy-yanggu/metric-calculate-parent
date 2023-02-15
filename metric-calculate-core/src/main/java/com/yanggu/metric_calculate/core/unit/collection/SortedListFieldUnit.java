@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.unit.collection;
 
+import cn.hutool.core.collection.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
@@ -9,7 +10,7 @@ import java.util.Map;
 
 @NoArgsConstructor
 @MergeType(value = "SORTEDLISTFIELD", useParam = true)
-@Collective(useCompareField = true, retainObject = false)
+@Collective(useSortedField = true, retainObject = false)
 public class SortedListFieldUnit<T extends Comparable<T> & Cloneable2<T>> extends SortedListObjectUnit<T> {
 
     public SortedListFieldUnit(Map<String, Object> params) {
@@ -29,7 +30,6 @@ public class SortedListFieldUnit<T extends Comparable<T> & Cloneable2<T>> extend
     public SortedListFieldUnit(T value, int limit, boolean desc) {
         this();
         this.limit = limit;
-        this.desc = desc;
         add(value);
     }
 
@@ -44,10 +44,11 @@ public class SortedListFieldUnit<T extends Comparable<T> & Cloneable2<T>> extend
     @Override
     public SortedListFieldUnit<T> fastClone() {
         SortedListFieldUnit<T> mergeableSortedList = new SortedListFieldUnit<>();
-        mergeableSortedList.desc = this.desc;
         mergeableSortedList.limit = this.limit;
+        mergeableSortedList.boundedPriorityQueue = new BoundedPriorityQueue<>(this.limit);
+
         for (T item : getList()) {
-            mergeableSortedList.getList().add(item.fastClone());
+            mergeableSortedList.add(item);
         }
         return mergeableSortedList;
     }

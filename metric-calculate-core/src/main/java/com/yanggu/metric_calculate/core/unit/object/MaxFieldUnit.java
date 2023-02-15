@@ -9,7 +9,7 @@ import java.util.Map;
 
 @NoArgsConstructor
 @MergeType(value = "MAXFIELD", useParam = true)
-@Objective(useCompareField = true, useSortedField = true, retainObject = false)
+@Objective(useCompareField = true, retainObject = false)
 public class MaxFieldUnit<T extends Comparable<T> & Cloneable2<T>> extends MaxObjectUnit<T> {
 
     public MaxFieldUnit(Map<String, Object> params) {

@@ -34,9 +34,10 @@ public class ListObjectUnitTest {
      */
     @Test
     public void testCollective() {
-        Collective objective = ListObjectUnit.class.getAnnotation(Collective.class);
-        assertFalse(objective.useCompareField());
-        assertTrue(objective.retainObject());
+        Collective collective = ListObjectUnit.class.getAnnotation(Collective.class);
+        assertFalse(collective.useDistinctField());
+        assertFalse(collective.useSortedField());
+        assertTrue(collective.retainObject());
     }
 
     /**

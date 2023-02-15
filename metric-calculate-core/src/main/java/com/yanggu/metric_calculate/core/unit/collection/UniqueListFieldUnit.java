@@ -10,7 +10,7 @@ import java.util.Map;
 
 @NoArgsConstructor
 @MergeType(value = "DISTINCTLISTFIELD", useParam = true)
-@Collective(useCompareField = true, retainObject = false)
+@Collective(useDistinctField = true, retainObject = false)
 public class UniqueListFieldUnit<T extends Cloneable2<T>> extends UniqueListObjectUnit<T> {
 
     public UniqueListFieldUnit(Map<String, Object> param) {

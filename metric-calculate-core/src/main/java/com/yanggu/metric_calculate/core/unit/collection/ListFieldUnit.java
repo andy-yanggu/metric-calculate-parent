@@ -11,8 +11,8 @@ import java.util.Map;
 import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING_WINDOW;
 
 @NoArgsConstructor
+@Collective(retainObject = false)
 @MergeType(value = "LISTFIELD", useParam = true, timeWindowType = TIME_SLIDING_WINDOW)
-@Collective(useCompareField = false, retainObject = false)
 public class ListFieldUnit<T extends Cloneable2<T>> extends ListObjectUnit<T> {
 
     public ListFieldUnit(T value) {

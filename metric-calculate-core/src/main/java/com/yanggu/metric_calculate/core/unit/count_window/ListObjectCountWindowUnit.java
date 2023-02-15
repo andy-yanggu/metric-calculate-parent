@@ -24,8 +24,8 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
  */
 @Data
 @FieldNameConstants
-@Collective(useCompareField = false, retainObject = true)
-@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, useSubAgg = true, timeWindowType = TIME_SLIDING_WINDOW)
+@Collective(retainObject = true)
+@MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, useExternalAgg = true, timeWindowType = TIME_SLIDING_WINDOW)
 public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<Object>, Serializable, Iterable<T> {
 

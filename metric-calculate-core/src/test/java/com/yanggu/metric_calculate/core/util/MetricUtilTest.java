@@ -72,7 +72,7 @@ public class MetricUtilTest {
      */
     @Test
     public void testGetFieldMap3() throws Exception {
-        MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), MetricCalculate.class);
+        MetricCalculate metricCalculate = JSONUtil.toBean(FileUtil.readUtf8String("test3.json"), MetricCalculate.class);
         Method method = MetricUtil.class.getDeclaredMethod("getFieldMap", MetricCalculate.class);
         method.setAccessible(true);
         Map<String, Class<?>> fieldMap = (Map<String, Class<?>>) method.invoke(null, metricCalculate);

@@ -10,7 +10,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiF
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.MapUnitUdafParam;
-import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
+import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 
@@ -78,16 +78,15 @@ public class FieldProcessorUtil {
      * @param baseUdafParam
      * @param unitFactory
      * @param fieldMap
-     * @param aggregateType
      * @return
      * @throws Exception
      */
-    public static BaseAggregateFieldProcessor<?> getBaseAggregateFieldProcessor(NumberObjectCollectionUdafParam baseUdafParam,
+    public static BaseAggregateFieldProcessor<?> getBaseAggregateFieldProcessor(BaseUdafParam baseUdafParam,
                                                                                 UnitFactory unitFactory,
-                                                                                Map<String, Class<?>> fieldMap,
-                                                                                String aggregateType) throws Exception {
+                                                                                Map<String, Class<?>> fieldMap) throws Exception {
 
         BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
+        String aggregateType = baseUdafParam.getAggregateType();
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
         if (mergeUnitClazz.isAnnotationPresent(Numerical.class)) {
             //数值型
@@ -113,12 +112,12 @@ public class FieldProcessorUtil {
     }
 
     public static AggregateMapUnitFieldProcessor<?> getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
-                                                                                      String aggregateType,
                                                                                       Map<String, Class<?>> fieldMap,
                                                                                       UnitFactory unitFactory) throws Exception {
         AggregateMapUnitFieldProcessor<?> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
         aggregateMapUnitFieldProcessor.setMapUnitUdafParam(mapUnitUdafParam);
         aggregateMapUnitFieldProcessor.setUnitFactory(unitFactory);
+        String aggregateType = mapUnitUdafParam.getAggregateType();
         aggregateMapUnitFieldProcessor.setAggregateType(aggregateType);
         aggregateMapUnitFieldProcessor.setMergeUnitClazz(unitFactory.getMergeableClass(aggregateType));
         aggregateMapUnitFieldProcessor.setFieldMap(fieldMap);
@@ -127,7 +126,7 @@ public class FieldProcessorUtil {
         return aggregateMapUnitFieldProcessor;
     }
 
-    public static AggregateFieldProcessor<?> getAggregateFieldProcessor(NumberObjectCollectionUdafParam baseUdafParam,
+    public static AggregateFieldProcessor<?> getAggregateFieldProcessor(BaseUdafParam baseUdafParam,
                                                                         MapUnitUdafParam mapUdafParam,
                                                                         String aggregateType,
                                                                         Map<String, Class<?>> fieldMap,
@@ -137,12 +136,12 @@ public class FieldProcessorUtil {
         //如果是基本聚合类型(数值型、集合型、对象型)
         if (mergeUnitClazz.isAnnotationPresent(Numerical.class) || mergeUnitClazz.isAnnotationPresent(Objective.class)
                 || mergeUnitClazz.isAnnotationPresent(Collective.class)) {
-            return getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap, aggregateType);
+            return getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
         }
 
         //如果是映射类型
         if (mergeUnitClazz.isAnnotationPresent(MapType.class)) {
-            return getAggregateMapUnitFieldProcessor(mapUdafParam, aggregateType, fieldMap, unitFactory);
+            return getAggregateMapUnitFieldProcessor(mapUdafParam, fieldMap, unitFactory);
         }
 
         throw new RuntimeException("暂不支持聚合类型: " + mergeUnitClazz.getName());

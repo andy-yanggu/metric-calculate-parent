@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.fieldprocess.multi_field_order;
 
 import com.google.common.collect.Ordering;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 import lombok.NonNull;
 
@@ -12,7 +13,8 @@ import java.util.List;
  * 多字段排序
  */
 @Data
-public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderCompareKey>, Cloneable2<MultiFieldOrderCompareKey> {
+public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderCompareKey>,
+        Cloneable2<MultiFieldOrderCompareKey>, Value<List<FieldOrder>> {
 
     private List<FieldOrder> fieldOrderList;
 
@@ -23,7 +25,7 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
             FieldOrder fieldOrder = fieldOrderList.get(i);
             Ordering<Comparable<?>> comparableOrdering;
             //降序排序
-            if (Boolean.TRUE.equals(fieldOrder.getDesc())) {
+            if (Boolean.FALSE.equals(fieldOrder.getAsc())) {
                 //降序时, null放在最后面
                 comparableOrdering = Ordering.natural().reverse().nullsLast();
             } else {
@@ -45,6 +47,11 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
         multiFieldOrderCompareKey.setFieldOrderList(fieldOrderList);
         return multiFieldOrderCompareKey;
+    }
+
+    @Override
+    public List<FieldOrder> value() {
+        return fieldOrderList;
     }
 
 }

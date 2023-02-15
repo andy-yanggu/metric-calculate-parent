@@ -58,7 +58,7 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
 
     @Override
     public void put(Long key, V value) {
-        table.putValue(key, null, value);
+        table.putValue(key, null, value.fastClone());
     }
 
     @Override

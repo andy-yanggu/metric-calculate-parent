@@ -1,14 +1,9 @@
 package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
-import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
+import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
-import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
-import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
-import com.yanggu.metric_calculate.core.unit.object.OccupiedObjectUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
@@ -46,12 +41,14 @@ public class AggregateObjectFieldProcessorTest {
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
 
-        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+        BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("MAXFIELD");
         udafParam.setRetainExpress("name");
-        udafParam.setSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
+        //金额作为比较字段
+        udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "MAXFIELD");
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -88,11 +85,12 @@ public class AggregateObjectFieldProcessorTest {
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
 
-        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
-        udafParam.setSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
+        BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("MAXOBJECT");
+        udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "MAXOBJECT");
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -100,19 +98,19 @@ public class AggregateObjectFieldProcessorTest {
         input.set("name", "张三");
 
         MergedUnit process = objectFieldProcessor.process(input);
-        assertEquals(input, ValueMapper.value(((Value<?>) process)));
+        assertEquals(new HashMap<>(input), ValueMapper.value(((Value<?>) process)));
 
         JSONObject input2 = new JSONObject();
         input2.set("name", "张三");
         input2.set("amount", 200);
         process.merge(objectFieldProcessor.process(input2));
-        assertEquals(input2, ValueMapper.value((Value<?>) process));
+        assertEquals(new HashMap<>(input2), ValueMapper.value((Value<?>) process));
 
         JSONObject input3 = new JSONObject();
         input3.set("name", "张三");
         input3.set("amount", 100);
         process.merge(objectFieldProcessor.process(input3));
-        assertEquals(input2, ValueMapper.value((Value<?>) process));
+        assertEquals(new HashMap<>(input2), ValueMapper.value((Value<?>) process));
     }
 
     /**
@@ -131,11 +129,12 @@ public class AggregateObjectFieldProcessorTest {
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
 
-        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+        BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setRetainExpress("name");
+        udafParam.setAggregateType("OCCUPIEDFIELD");
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "OCCUPIEDFIELD");
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -168,10 +167,11 @@ public class AggregateObjectFieldProcessorTest {
         UnitFactory unitFactory = new UnitFactory();
         unitFactory.init();
 
-        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
+        BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("OCCUPIEDOBJECT");
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, "OCCUPIEDOBJECT");
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -179,13 +179,13 @@ public class AggregateObjectFieldProcessorTest {
         input.set("name", "张三");
 
         MergedUnit process = objectFieldProcessor.process(input);
-        assertEquals(input, ValueMapper.value(((Value<?>) process)));
+        assertEquals(new HashMap<>(input), ValueMapper.value(((Value<?>) process)));
 
         JSONObject input2 = new JSONObject();
         input2.set("amount", 100);
         input2.set("name", "张三");
         process.merge(objectFieldProcessor.process(input2));
-        assertEquals(input, ValueMapper.value((Value<?>) process));
+        assertEquals(new HashMap<>(input), ValueMapper.value((Value<?>) process));
     }
 
 }

@@ -2,9 +2,8 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
+import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
@@ -23,7 +22,7 @@ import java.util.Map;
 @NoArgsConstructor
 public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
 
-    protected NumberObjectCollectionUdafParam udafParam;
+    protected BaseUdafParam udafParam;
 
     /**
      * 聚合类型

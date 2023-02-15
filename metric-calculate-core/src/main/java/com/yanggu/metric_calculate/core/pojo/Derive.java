@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -66,17 +65,17 @@ public class Derive {
     /**
      * 基本类型聚合函数参数
      */
-    private NumberObjectCollectionUdafParam baseUdafParam;
+    private BaseUdafParam baseUdafParam;
+
+    /**
+     * 对于滑动计数窗口和CEP类型, 需要额外的聚合处理器
+     */
+    private BaseUdafParam externalBaseUdafParam;
 
     /**
      * 映射类型聚合函数参数
      */
     private MapUnitUdafParam mapUdafParam;
-
-    /**
-     * 对于集合型和对象型聚合类型, 不保留对象, 保留指定字段
-     */
-    private String retainExpress;
 
     /**
      * 聚合时间长度

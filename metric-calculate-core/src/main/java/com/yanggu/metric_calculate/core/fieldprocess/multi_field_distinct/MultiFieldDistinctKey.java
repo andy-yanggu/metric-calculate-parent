@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct;
 
+import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
 import java.util.Arrays;
@@ -11,7 +13,7 @@ import java.util.Objects;
  * 多字段去重
  */
 @Data
-public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey> {
+public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey>, Value<List<Object>> {
 
     private List<Object> fieldList;
 
@@ -35,6 +37,11 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>,
     }
 
     @Override
+    public String toString() {
+        return JSONUtil.toJsonStr(fieldList);
+    }
+
+    @Override
     public MultiFieldDistinctKey fastClone() {
         MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey();
         multiFieldDistinctKey.setFieldList(this.fieldList);
@@ -44,6 +51,11 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>,
     @Override
     public int compareTo(MultiFieldDistinctKey that) {
         return 0;
+    }
+
+    @Override
+    public List<Object> value() {
+        return fieldList;
     }
 
 }

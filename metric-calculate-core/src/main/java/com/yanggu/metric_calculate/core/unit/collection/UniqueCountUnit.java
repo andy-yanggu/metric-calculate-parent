@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 @MergeType(value = "DISTINCTCOUNT", useParam = true)
-@Collective(useCompareField = true, retainObject = true)
+@Collective(useDistinctField = true, retainObject = true)
 public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
         Value<Number> {
 

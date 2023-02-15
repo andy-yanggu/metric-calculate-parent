@@ -58,7 +58,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
             Object execute = expression.process(input);
             FieldOrder fieldOrder = new FieldOrder();
             fieldOrder.setResult(execute);
-            fieldOrder.setDesc(fieldOrderParam.getDesc());
+            fieldOrder.setAsc(fieldOrderParam.getAsc());
             fieldOrderList.add(fieldOrder);
         }
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();

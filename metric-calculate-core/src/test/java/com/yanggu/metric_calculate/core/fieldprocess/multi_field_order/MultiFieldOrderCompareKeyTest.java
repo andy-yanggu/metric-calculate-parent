@@ -16,14 +16,14 @@ public class MultiFieldOrderCompareKeyTest {
     public void compareTo() {
         MultiFieldOrderCompareKey multiFieldOrderCompareKey1 = new MultiFieldOrderCompareKey();
         List<FieldOrder> fieldOrderList1 = new ArrayList<>();
-        fieldOrderList1.add(new FieldOrder().setResult(1).setDesc(false));
-        fieldOrderList1.add(new FieldOrder().setResult(20).setDesc(true));
+        fieldOrderList1.add(new FieldOrder().setResult(1).setAsc(true));
+        fieldOrderList1.add(new FieldOrder().setResult(20).setAsc(false));
         multiFieldOrderCompareKey1.setFieldOrderList(fieldOrderList1);
 
         MultiFieldOrderCompareKey multiFieldOrderCompareKey2 = new MultiFieldOrderCompareKey();
         List<FieldOrder> fieldOrderList2 = new ArrayList<>();
-        fieldOrderList2.add(new FieldOrder().setResult(1).setDesc(false));
-        fieldOrderList2.add(new FieldOrder().setResult(30).setDesc(true));
+        fieldOrderList2.add(new FieldOrder().setResult(1).setAsc(true));
+        fieldOrderList2.add(new FieldOrder().setResult(30).setAsc(false));
         multiFieldOrderCompareKey2.setFieldOrderList(fieldOrderList2);
 
         int i = multiFieldOrderCompareKey1.compareTo(multiFieldOrderCompareKey2);

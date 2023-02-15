@@ -62,7 +62,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
      * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
      * <p>CEP, 按照最后一条数据进行聚合计算</p>
      */
-    private BaseAggregateFieldProcessor<?> subAggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor;
 
     /**
      * 时间字段, 提取出时间戳
@@ -178,18 +178,18 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
             //如果是滑动计数窗口需要进行二次聚合处理
             MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
-            if (annotation.useSubAgg() && value instanceof List) {
+            if (annotation.useExternalAgg() && value instanceof List) {
                 List<JSONObject> tempValueList = (List<JSONObject>) value;
                 MergedUnit mergedUnit = tempValueList.stream()
                         .map(tempValue -> {
                             try {
-                                return (MergedUnit) subAggregateFieldProcessor.process(tempValue);
+                                return (MergedUnit) externalAggregateFieldProcessor.process(tempValue);
                             } catch (Exception e) {
                                 throw new RuntimeException(e);
                             }
                         })
                         .reduce(MergedUnit::merge)
-                        .orElseThrow(() -> new RuntimeException("mergeUnit的merge方法执行失败"));
+                        .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
                 value = ValueMapper.value(((Value<?>) mergedUnit));
             }
 

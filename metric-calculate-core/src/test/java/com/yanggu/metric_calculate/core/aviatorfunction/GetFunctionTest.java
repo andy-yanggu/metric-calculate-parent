@@ -56,7 +56,7 @@ public class GetFunctionTest {
 
         //衍生指标
         DataDetailsWideTable table =
-                JSONUtil.toBean(FileUtil.readUtf8String("test2.json"), DataDetailsWideTable.class);
+                JSONUtil.toBean(FileUtil.readUtf8String("test3.json"), DataDetailsWideTable.class);
 
         derive = MetricUtil.initMetricCalculate(table).getDeriveMetricCalculateList().get(0);
 

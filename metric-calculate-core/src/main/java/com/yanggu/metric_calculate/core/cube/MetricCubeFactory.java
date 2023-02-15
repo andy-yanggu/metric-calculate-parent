@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.cube;
 
+import com.yanggu.metric_calculate.core.annotation.MapType;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.enums.TimeWindowEnum;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
@@ -40,6 +41,11 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
         MergeType annotation = mergeUnitClazz.getAnnotation(MergeType.class);
 
         TimeWindowEnum timeWindowEnum = annotation.timeWindowType();
+
+        //TODO 如果是MapType类型的需要根据子聚合类型进行判断
+        if (mergeUnitClazz.isAnnotationPresent(MapType.class)) {
+
+        }
         MetricCube<Table, Long, M, ?> metricCube;
         //如果是滑动计数窗口需要使用SlidingTimeWindowMetricCube
         if (TimeWindowEnum.TIME_SLIDING_WINDOW.equals(timeWindowEnum)) {

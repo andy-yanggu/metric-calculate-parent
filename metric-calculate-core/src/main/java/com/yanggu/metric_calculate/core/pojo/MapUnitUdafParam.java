@@ -12,20 +12,23 @@ import java.util.Map;
 public class MapUnitUdafParam {
 
     /**
+     * 聚合类型
+     */
+    private String aggregateType;
+
+    /**
      * key的生成逻辑(去重字段列表)
      */
     private List<String> distinctFieldList;
 
     /**
-     * value的聚合逻辑
-     */
-    private String valueAggregateType;
-
-    /**
      * value的聚合函数参数。只能是数值型、集合型、对象型
      */
-    private NumberObjectCollectionUdafParam valueAggParam;
+    private BaseUdafParam valueAggParam;
 
+    /**
+     * 相关参数
+     */
     private Map<String, Object> param;
 
 }

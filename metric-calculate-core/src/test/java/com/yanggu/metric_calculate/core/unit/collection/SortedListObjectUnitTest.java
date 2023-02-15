@@ -31,7 +31,7 @@ public class SortedListObjectUnitTest {
         //验证merge方法
         Key<Integer> key2 = new Key<>(2);
         sortedListObjectUnit.merge(new SortedListObjectUnit<>(key2));
-        assertEquals(Arrays.asList(key2, key), sortedListObjectUnit.value());
+        assertEquals(Arrays.asList(key, key2), sortedListObjectUnit.value());
     }
 
 }

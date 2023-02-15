@@ -12,7 +12,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.collection.ListObjectUnit;
 import com.yanggu.metric_calculate.core.unit.collection.SortedListObjectUnit;
 import com.yanggu.metric_calculate.core.unit.collection.UniqueListObjectUnit;
-import com.yanggu.metric_calculate.core.unit.map.OrderLimitMapUnit;
+import com.yanggu.metric_calculate.core.unit.map.BaseMapUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.*;
 import com.yanggu.metric_calculate.core.unit.object.*;
 import com.yanggu.metric_calculate.core.unit.pattern.EventConnector;
@@ -68,7 +68,7 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(ReplacedObjectUnit.class);
         kryo.register(OccupiedObjectUnit.class);
         kryo.register(ListObjectUnit.class);
-        kryo.register(OrderLimitMapUnit.class);
+        kryo.register(BaseMapUnit.class);
         kryo.register(UniqueListObjectUnit.class);
         kryo.register(SortedListObjectUnit.class);
 

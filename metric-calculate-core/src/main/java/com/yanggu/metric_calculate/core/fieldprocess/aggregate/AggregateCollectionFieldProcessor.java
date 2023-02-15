@@ -8,7 +8,6 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiF
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
@@ -57,7 +56,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         //设置了排序字段
         if (collective.useSortedField()) {
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getSortFieldList());
+                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList());
         }
 
         //设置了保留字段

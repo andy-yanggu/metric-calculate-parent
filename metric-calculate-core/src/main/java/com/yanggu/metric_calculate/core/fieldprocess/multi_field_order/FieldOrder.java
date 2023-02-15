@@ -13,8 +13,9 @@ public class FieldOrder {
     private Object result;
 
     /**
-     * 是否降序, true降序, false升序
+     * 是否升序, true升序, false降序
+     * <p>默认升序</p>
      */
-    private Boolean desc;
+    private Boolean asc = true;
 
 }

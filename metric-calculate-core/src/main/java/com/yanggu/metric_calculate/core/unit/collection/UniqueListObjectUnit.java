@@ -13,7 +13,7 @@ import java.util.*;
 
 @NoArgsConstructor
 @MergeType(value = "DISTINCTLISTOBJECT", useParam = true)
-@Collective(useCompareField = true, retainObject = true)
+@Collective(useDistinctField = true, retainObject = true)
 public class UniqueListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListObjectUnit<T>>,
         Value<Set<Object>> {
 

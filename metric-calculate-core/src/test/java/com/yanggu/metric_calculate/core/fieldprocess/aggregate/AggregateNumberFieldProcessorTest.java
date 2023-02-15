@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessorTest;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
-import com.yanggu.metric_calculate.core.pojo.NumberObjectCollectionUdafParam;
+import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.numeric.CountUnit;
@@ -132,15 +132,15 @@ public class AggregateNumberFieldProcessorTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
 
-        NumberObjectCollectionUdafParam udafParam = new NumberObjectCollectionUdafParam();
-        udafParam.setMetricExpress("amount");
-
         String aggregateType = "SUM";
+        BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setMetricExpress("amount");
+        udafParam.setAggregateType(aggregateType);
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
                 (AggregateNumberFieldProcessor<SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap, aggregateType);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
 
 
         assertEquals(aggregateType, aggregateNumberFieldProcessor.getAggregateType());
@@ -159,14 +159,15 @@ public class AggregateNumberFieldProcessorTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
 
-        NumberObjectCollectionUdafParam baseUdafParam = new NumberObjectCollectionUdafParam();
-        baseUdafParam.setMetricExpress("amount");
-
         String aggregateType = "SUM";
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setMetricExpress("amount");
+        baseUdafParam.setAggregateType(aggregateType);
+
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         BaseAggregateFieldProcessor<?> aggregateNumberFieldProcessor =
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap, aggregateType);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount2", "100");
@@ -190,13 +191,14 @@ public class AggregateNumberFieldProcessorTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put(amount, Double.class);
 
-        NumberObjectCollectionUdafParam baseUdafParam = new NumberObjectCollectionUdafParam();
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setMetricExpress(amount);
+        baseUdafParam.setAggregateType(aggregateType);
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
                 (AggregateNumberFieldProcessor<SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap, aggregateType);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
 
         //mock unitFactory的返回值
         SumUnit<CubeDecimal> sumUnit = new SumUnit<>(CubeDecimal.of(value));
