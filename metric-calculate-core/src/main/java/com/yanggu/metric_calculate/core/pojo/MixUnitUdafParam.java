@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.util.Map;
 
+/**
+ * 混合聚合类型参数
+ */
 @Data
 public class MixUnitUdafParam {
 
@@ -13,7 +16,8 @@ public class MixUnitUdafParam {
     private String aggregateType;
 
     /**
-     * k是名字, value是基本聚合类型的参数, 用于定义聚合计算逻辑
+     * 混合聚合类型定义
+     * <p>k是名字, value是基本聚合类型的参数, 用于定义聚合计算逻辑</p>
      */
     private Map<String, BaseUdafParam> mixAggMap;
 
@@ -22,6 +26,9 @@ public class MixUnitUdafParam {
      */
     private String express;
 
+    /**
+     * udaf函数中的参数
+     */
     private Map<String, Object> param;
 
 }

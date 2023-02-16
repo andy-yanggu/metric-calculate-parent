@@ -44,8 +44,7 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
         this.multiBaseAggProcessorMap = map;
 
         AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
-        Expression compile = instance.compile(mixUnitUdafParam.getExpress(), true);
-        this.expression = compile;
+        this.expression = instance.compile(mixUnitUdafParam.getExpress(), true);
     }
 
     @Override

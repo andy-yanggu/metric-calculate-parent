@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.filter;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -67,7 +68,7 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
             }
         });
 
-        filterExpression = tempFilterExpression;
+        this.filterExpression = tempFilterExpression;
     }
 
     @Override

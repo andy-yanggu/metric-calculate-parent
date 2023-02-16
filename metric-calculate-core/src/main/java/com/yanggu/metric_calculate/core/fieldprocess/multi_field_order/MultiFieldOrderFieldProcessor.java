@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.fieldprocess.multi_field_order;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import lombok.Data;
 
 import java.util.ArrayList;

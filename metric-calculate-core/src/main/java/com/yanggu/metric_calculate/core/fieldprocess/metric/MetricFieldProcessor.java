@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.metric;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
@@ -7,6 +7,7 @@ import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
+import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 度量字段处理器, 从输入的明细数据中，提取出度量值
+ * 度量值字段处理器, 从输入的明细数据中，提取出度量值
  */
 @Data
 @Slf4j

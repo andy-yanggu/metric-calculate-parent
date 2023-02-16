@@ -14,6 +14,7 @@ public interface FieldProcessor<T, R> {
      * @throws Exception
      */
     default void init() throws Exception {
+        throw new RuntimeException("子类需要手动实现init方法");
     }
 
     R process(T input) throws Exception;

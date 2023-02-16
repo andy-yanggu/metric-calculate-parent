@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 从原始数据中提取出维度数据
+ * 维度字段处理器，从原始数据中提取出维度数据
  */
 @Data
 @Slf4j

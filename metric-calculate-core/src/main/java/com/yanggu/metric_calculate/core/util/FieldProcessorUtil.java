@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MapType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.*;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;

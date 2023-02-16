@@ -1,10 +1,11 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.time;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 /**
  * 时间字段处理器

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.fieldprocess;
+package com.yanggu.metric_calculate.core.fieldprocess.metric;
 
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -8,7 +8,8 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 /**
  * 度量字段处理器单元测试类

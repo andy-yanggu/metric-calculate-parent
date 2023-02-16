@@ -2,9 +2,9 @@ package com.yanggu.metric_calculate.core.calculate;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.FilterFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.Store;
 import lombok.Data;
 import lombok.NoArgsConstructor;
