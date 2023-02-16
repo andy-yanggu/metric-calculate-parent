@@ -5,7 +5,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.number.CubeLong;
-import com.yanggu.metric_calculate.core.pojo.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.map.BaseMapUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.SumUnit;

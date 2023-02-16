@@ -5,7 +5,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProce
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.Store;
+import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -47,7 +47,7 @@ public class AtomMetricCalculate<E> implements Calculate<JSONObject, E> {
     /**
      * 存储宽表
      */
-    private Store store;
+    private StoreInfo storeInfo;
 
     @SneakyThrows
     @Override

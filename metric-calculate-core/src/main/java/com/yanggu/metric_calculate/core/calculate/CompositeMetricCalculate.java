@@ -5,7 +5,7 @@ import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
-import com.yanggu.metric_calculate.core.pojo.Store;
+import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
 import com.yanggu.metric_calculate.core.util.RoundAccuracyUtil;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -58,7 +58,7 @@ public class CompositeMetricCalculate implements Calculate<Map<String, Object>, 
     /**
      * 存储相关信息
      */
-    private Store store;
+    private StoreInfo storeInfo;
 
     @Override
     public Object exec(Map<String, Object> env) {
@@ -80,7 +80,7 @@ public class CompositeMetricCalculate implements Calculate<Map<String, Object>, 
 
     @Override
     public void save(Object result) throws RuntimeException {
-        if (Boolean.FALSE.equals(store.getIsStore())) {
+        if (Boolean.FALSE.equals(storeInfo.getIsStore())) {
             return;
         }
 

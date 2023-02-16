@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -33,17 +34,8 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
             throw new RuntimeException("排序字段为空");
         }
         this.metricFieldProcessorList = fieldOrderParamList.stream()
-                .map(tempFieldOrderParam -> {
-                    MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
-                    metricFieldProcessor.setMetricExpress(tempFieldOrderParam.getExpress());
-                    metricFieldProcessor.setFieldMap(fieldMap);
-                    try {
-                        metricFieldProcessor.init();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return metricFieldProcessor;
-                })
+                .map(tempFieldOrderParam ->
+                        FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
                 .collect(Collectors.toList());
     }
 

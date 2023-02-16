@@ -58,7 +58,7 @@ public class DeriveMetricMiddleHbaseStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public void put(MetricCube cube) {
+    public void update(MetricCube cube) {
 
     }
 }

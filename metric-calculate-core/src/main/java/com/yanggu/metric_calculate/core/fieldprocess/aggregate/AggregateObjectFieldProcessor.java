@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -63,7 +64,8 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
     }
 
     @Override
-    public M process(JSONObject input) throws Exception {
+    @SneakyThrows
+    public M process(JSONObject input) {
 
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 

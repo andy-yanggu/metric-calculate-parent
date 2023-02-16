@@ -4,6 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.Objects;
  * 多字段去重列表
  */
 @Data
-public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey>, Value<Object> {
+@NoArgsConstructor
+public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>,
+        Cloneable2<MultiFieldDistinctKey>, Value<Object> {
 
     private List<Object> fieldList;
 

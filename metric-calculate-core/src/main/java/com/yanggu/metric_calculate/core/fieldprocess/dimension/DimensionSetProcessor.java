@@ -25,14 +25,14 @@ import java.util.stream.Collectors;
 public class DimensionSetProcessor implements FieldProcessor<JSONObject, DimensionSet> {
 
     /**
-     * 指标名称
-     */
-    private String metricName;
-
-    /**
      * 指标标识(数据明细宽表id-指标id)
      */
     private String key;
+
+    /**
+     * 指标名称
+     */
+    private String metricName;
 
     /**
      * 维度字段

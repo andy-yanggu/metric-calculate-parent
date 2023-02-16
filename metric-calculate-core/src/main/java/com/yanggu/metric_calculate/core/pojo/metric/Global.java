@@ -1,5 +1,6 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.metric;
 
+import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
 import lombok.Data;
 
 /**
@@ -26,6 +27,6 @@ public class Global {
     /**
      * 指标存储相关信息
      */
-    private Store store;
+    private StoreInfo storeInfo;
 
 }

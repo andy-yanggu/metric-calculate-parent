@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.cube;
 
-public interface Cube<C extends Cube<?>> {
+public interface Cube<C extends Cube<C>> {
 
     C init();
 

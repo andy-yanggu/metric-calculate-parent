@@ -11,9 +11,8 @@ import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProce
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
-import com.yanggu.metric_calculate.core.pojo.Store;
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.*;
+import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
 import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.RoundAccuracyUtil;
@@ -72,17 +71,12 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
     private DimensionSetProcessor dimensionSetProcessor;
 
     /**
-     * 精度数据
+     * 是否包含当前笔, 默认包含
      */
-    private RoundAccuracy roundAccuracy;
+    private Boolean includeCurrent = true;
 
     /**
-     * 存储宽表, 用于指标存储相关信息
-     */
-    private Store store;
-
-    /**
-     * 派生指标中间结算结果类
+     * 派生指标中间结算结果存储
      */
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
@@ -90,6 +84,16 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
      * 用于生成cube的工厂类
      */
     private MetricCubeFactory<M> metricCubeFactory;
+
+    /**
+     * 精度数据
+     */
+    private RoundAccuracy roundAccuracy;
+
+    /**
+     * 存储宽表, 用于指标存储相关信息
+     */
+    private StoreInfo storeInfo;
 
     @SneakyThrows
     @Override
@@ -123,18 +127,59 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
         return metricCube;
     }
 
-    @SneakyThrows
-    public List<DeriveMetricCalculateResult> query(MetricCube newMetricCube) {
+    /**
+     * 无状态查询
+     *
+     * @param newMetricCube
+     * @return
+     */
+    public MetricCube noState(MetricCube newMetricCube) {
+        //调用中计算结果存储的查询方法
         MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
+        //如果不包含当前笔, 直接返回历史数据
+        if (Boolean.FALSE.equals(includeCurrent)) {
+            return metricCube;
+        }
+        //包含当前笔, 需要进行merge
         if (metricCube == null) {
             metricCube = newMetricCube;
         } else {
             metricCube.merge(newMetricCube);
         }
-        //删除过期数据
-        metricCube.eliminateExpiredData();
+        return metricCube;
+    }
+
+    /**
+     * 更新状态
+     *
+     * @param newMetricCube
+     * @return
+     */
+    public MetricCube updateState(MetricCube newMetricCube) {
+        //调用中计算结果存储的查询方法
+        MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
+        if (metricCube == null) {
+            metricCube = newMetricCube;
+        } else {
+            metricCube.merge(newMetricCube);
+            //删除过期数据
+            metricCube.eliminateExpiredData();
+        }
         //更新中间状态数据
-        deriveMetricMiddleStore.put(metricCube);
+        deriveMetricMiddleStore.update(metricCube);
+        return metricCube;
+    }
+
+    /**
+     * 查询操作, 查询出指标数据
+     *
+     * @param metricCube
+     * @return
+     */
+    public List<DeriveMetricCalculateResult> query(MetricCube metricCube) {
+        if (metricCube == null) {
+            return Collections.emptyList();
+        }
 
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(metricCube.getReferenceTime());
@@ -147,11 +192,11 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
 
             DeriveMetricCalculateResult result = new DeriveMetricCalculateResult();
             list.add(result);
-            //指标名称
-            result.setName(metricCube.getName());
-
             //指标key
             result.setKey(metricCube.getKey());
+
+            //指标名称
+            result.setName(metricCube.getName());
 
             //指标维度
             result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
@@ -167,6 +212,12 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             //聚合值
             Value<?> query = metricCube.query(windowStart, true, windowEnd, false);
             Object value = ValueMapper.value(query);
+
+            if (value == null) {
+                continue;
+            }
+
+            //进行回调, 对于滑动计数窗口和CEP需要额外的处理
             value = aggregateFieldProcessor.callBack(value);
 
             //处理精度
@@ -174,6 +225,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             result.setResult(value);
 
             if (log.isDebugEnabled()) {
+                //拼接维度数据
                 String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
                         .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
                         .collect(Collectors.joining(","));

@@ -2,23 +2,80 @@ package com.yanggu.metric_calculate.core.util;
 
 import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.*;
+import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
-import com.yanggu.metric_calculate.core.pojo.MapUnitUdafParam;
-import com.yanggu.metric_calculate.core.pojo.MixUnitUdafParam;
+import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core.pojo.*;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Map;
 
-
+/**
+ * 字段处理器工具类
+ */
 public class FieldProcessorUtil {
 
     private FieldProcessorUtil() {
+    }
+
+    /**
+     * 生成前置过滤条件字段字段处理器
+     *
+     * @param fieldMap
+     * @param filterExpress
+     * @return
+     * @throws Exception
+     */
+    @SneakyThrows
+    public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                               String filterExpress) {
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, filterExpress);
+        filterFieldProcessor.init();
+        return filterFieldProcessor;
+    }
+
+    /**
+     * 生成时间字段处理器
+     *
+     * @param timeColumn
+     * @return
+     */
+    public static TimeFieldProcessor getTimeFieldProcessor(TimeColumn timeColumn) {
+        TimeFieldProcessor timeFieldProcessor =
+                new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+        timeFieldProcessor.init();
+        return timeFieldProcessor;
+    }
+
+    /**
+     * 生成维度字段处理器
+     *
+     * @param key
+     * @param metricName
+     * @param fieldMap
+     * @param dimensionList
+     * @return
+     */
+    public static DimensionSetProcessor getDimensionSetProcessor(String key,
+                                                                 String metricName,
+                                                                 Map<String, Class<?>> fieldMap,
+                                                                 List<Dimension> dimensionList) {
+        DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(dimensionList);
+        dimensionSetProcessor.setKey(key);
+        dimensionSetProcessor.setMetricName(metricName);
+        dimensionSetProcessor.setFieldMap(fieldMap);
+        dimensionSetProcessor.init();
+        return dimensionSetProcessor;
     }
 
     /**
@@ -29,8 +86,9 @@ public class FieldProcessorUtil {
      * @return
      * @throws Exception
      */
+    @SneakyThrows
     public static MetricFieldProcessor<Object> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                       String metricExpress) throws Exception {
+                                                                       String metricExpress) {
         MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setFieldMap(fieldMap);
         metricFieldProcessor.setMetricExpress(metricExpress);
@@ -46,8 +104,9 @@ public class FieldProcessorUtil {
      * @return
      * @throws Exception
      */
+    @SneakyThrows
     public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                                  List<String> metricExpressList) throws Exception {
+                                                                                  List<String> metricExpressList) {
         MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
         tempMultiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldDistinctFieldProcessor.setMetricExpressList(metricExpressList);
@@ -63,8 +122,9 @@ public class FieldProcessorUtil {
      * @return
      * @throws Exception
      */
+    @SneakyThrows
     public static MultiFieldOrderFieldProcessor getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                       List<FieldOrderParam> fieldOrderParamList) throws Exception {
+                                                                       List<FieldOrderParam> fieldOrderParamList) {
         MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
         tempMultiFieldOrderFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
@@ -73,15 +133,18 @@ public class FieldProcessorUtil {
     }
 
     /**
+     * 生成基础聚合字段处理器（数值型、对象型和集合型）
+     *
      * @param baseUdafParamList
      * @param unitFactory
      * @param fieldMap
      * @return
      * @throws Exception
      */
+    @SneakyThrows
     public static BaseAggregateFieldProcessor<?> getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
                                                                                 UnitFactory unitFactory,
-                                                                                Map<String, Class<?>> fieldMap) throws Exception {
+                                                                                Map<String, Class<?>> fieldMap) {
 
         BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
         BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
@@ -114,9 +177,19 @@ public class FieldProcessorUtil {
         return aggregateFieldProcessor;
     }
 
+    /**
+     * 生成映射类型聚合字段处理器
+     *
+     * @param mapUnitUdafParam
+     * @param fieldMap
+     * @param unitFactory
+     * @return
+     * @throws Exception
+     */
+    @SneakyThrows
     public static AggregateMapUnitFieldProcessor<?> getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
                                                                                       Map<String, Class<?>> fieldMap,
-                                                                                      UnitFactory unitFactory) throws Exception {
+                                                                                      UnitFactory unitFactory) {
         AggregateMapUnitFieldProcessor<?> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
         aggregateMapUnitFieldProcessor.setMapUnitUdafParam(mapUnitUdafParam);
         aggregateMapUnitFieldProcessor.setUnitFactory(unitFactory);
@@ -129,9 +202,19 @@ public class FieldProcessorUtil {
         return aggregateMapUnitFieldProcessor;
     }
 
+    /**
+     * 生成混合型聚合字段处理器
+     *
+     * @param mixUnitUdafParam
+     * @param fieldMap
+     * @param unitFactory
+     * @return
+     * @throws Exception
+     */
+    @SneakyThrows
     public static AggregateFieldProcessor<?> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
                                                                                Map<String, Class<?>> fieldMap,
-                                                                               UnitFactory unitFactory) throws Exception {
+                                                                               UnitFactory unitFactory) {
 
         AggregateMixUnitFieldProcessor<?> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
@@ -141,12 +224,24 @@ public class FieldProcessorUtil {
         return mixUnitFieldProcessor;
     }
 
+    /**
+     * 生成聚合字段处理器
+     *
+     * @param baseUdafParamList
+     * @param mapUdafParam
+     * @param mixUnitUdafParam
+     * @param aggregateType
+     * @param fieldMap
+     * @param unitFactory
+     * @return
+     * @throws Exception
+     */
     public static AggregateFieldProcessor<?> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
                                                                         MapUnitUdafParam mapUdafParam,
                                                                         MixUnitUdafParam mixUnitUdafParam,
                                                                         String aggregateType,
                                                                         Map<String, Class<?>> fieldMap,
-                                                                        UnitFactory unitFactory) throws Exception {
+                                                                        UnitFactory unitFactory) {
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
 
         //如果是基本聚合类型(数值型、集合型、对象型)

@@ -1,6 +1,11 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.metric;
 
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
+import com.yanggu.metric_calculate.core.pojo.*;
+import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
 import lombok.Data;
 
 import java.util.List;
@@ -95,7 +100,7 @@ public class Derive {
     /**
      * 存储宽表
      */
-    private Store store;
+    private StoreInfo storeInfo;
 
     /**
      * 精度相关

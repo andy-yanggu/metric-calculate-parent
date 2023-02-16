@@ -6,6 +6,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -26,7 +27,8 @@ public class AggregateNumberFieldProcessor<M extends MergedUnit<M>> extends Base
     }
 
     @Override
-    public M process(JSONObject input) throws Exception {
+    @SneakyThrows
+    public M process(JSONObject input) {
         Object process = metricFieldProcessor.process(input);
         if (process == null) {
             return null;

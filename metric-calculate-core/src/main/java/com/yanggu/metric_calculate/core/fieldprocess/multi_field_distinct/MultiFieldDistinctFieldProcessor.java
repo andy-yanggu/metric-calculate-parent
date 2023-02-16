@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 import java.util.Map;
@@ -14,6 +16,7 @@ import java.util.stream.Collectors;
  * 多字段去重字段处理器
  */
 @Data
+@NoArgsConstructor
 public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObject, MultiFieldDistinctKey> {
 
     private List<String> metricExpressList;
@@ -32,30 +35,14 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
             throw new RuntimeException("去重字段表达式列表为空");
         }
         this.metricFieldProcessorList = metricExpressList.stream()
-                .map(tempExpress -> {
-                    MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
-                    metricFieldProcessor.setMetricExpress(tempExpress);
-                    metricFieldProcessor.setFieldMap(fieldMap);
-                    try {
-                        metricFieldProcessor.init();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                    return metricFieldProcessor;
-                })
+                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
                 .collect(Collectors.toList());
     }
 
     @Override
     public MultiFieldDistinctKey process(JSONObject input) throws Exception {
         List<Object> collect = metricFieldProcessorList.stream()
-                .map(tempMetricExpress -> {
-                    try {
-                        return tempMetricExpress.process(input);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(tempMetricExpress -> tempMetricExpress.process(input))
                 .collect(Collectors.toList());
         MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey();
         multiFieldDistinctKey.setFieldList(collect);

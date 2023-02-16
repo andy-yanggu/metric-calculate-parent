@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.store;
 
 import lombok.Data;
 
@@ -8,7 +8,7 @@ import java.util.List;
  * 存储相关信息
  */
 @Data
-public class Store {
+public class StoreInfo {
 
     /**
      * 是否存储, true存储、false不存储

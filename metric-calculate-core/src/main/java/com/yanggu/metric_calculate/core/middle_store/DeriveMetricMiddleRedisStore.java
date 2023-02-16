@@ -47,7 +47,7 @@ public class DeriveMetricMiddleRedisStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public void put(MetricCube cube) {
+    public void update(MetricCube cube) {
         Kryo kryo = kryoPool.borrow();
         try {
             byte[] bytes = serialize(kryo, cube);

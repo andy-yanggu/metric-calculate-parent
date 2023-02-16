@@ -1,5 +1,9 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.metric;
 
+import com.yanggu.metric_calculate.core.pojo.Dimension;
+import com.yanggu.metric_calculate.core.pojo.MetricColumn;
+import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
+import com.yanggu.metric_calculate.core.pojo.TimeColumn;
 import lombok.Data;
 
 import java.util.List;
@@ -48,6 +52,6 @@ public class Atom {
     /**
      * 指标存储相关信息
      */
-    private Store store;
+    private StoreInfo storeInfo;
 
 }

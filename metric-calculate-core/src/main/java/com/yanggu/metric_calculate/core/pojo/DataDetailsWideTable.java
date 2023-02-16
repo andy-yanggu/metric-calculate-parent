@@ -1,5 +1,9 @@
 package com.yanggu.metric_calculate.core.pojo;
 
+import com.yanggu.metric_calculate.core.pojo.metric.Atom;
+import com.yanggu.metric_calculate.core.pojo.metric.Composite;
+import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.Global;
 import lombok.Data;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.udaf_param;
 
 
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;

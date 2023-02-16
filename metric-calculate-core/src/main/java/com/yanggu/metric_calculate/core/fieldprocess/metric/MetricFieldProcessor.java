@@ -11,6 +11,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
@@ -63,7 +64,8 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
     }
 
     @Override
-    public R process(JSONObject input) throws Exception {
+    @SneakyThrows
+    public R process(JSONObject input) {
         //获取执行参数
         Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
 

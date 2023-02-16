@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiF
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
@@ -17,6 +17,7 @@ import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,7 +93,8 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
     }
 
     @Override
-    public M process(JSONObject input) throws Exception {
+    @SneakyThrows
+    public M process(JSONObject input) {
 
         Collective collective = mergeUnitClazz.getAnnotation(Collective.class);
 
@@ -101,6 +103,8 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
 
         //默认没有去重字段或者排序字段
         Object result = retainFieldValue;
+
+        //使用了去重字段
         if (collective.useDistinctField()) {
             MultiFieldDistinctKey distinctKey = multiFieldDistinctFieldProcessor.process(input);
             if (distinctKey == null) {
@@ -109,6 +113,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
             result = new KeyValue<>(distinctKey, retainFieldValue);
         }
 
+        //使用了排序字段
         if (collective.useSortedField()) {
             MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
@@ -128,13 +133,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         }
         List<JSONObject> tempValueList = (List<JSONObject>) input;
         MergedUnit mergedUnit = tempValueList.stream()
-                .map(tempValue -> {
-                    try {
-                        return (MergedUnit) externalAggregateFieldProcessor.process(tempValue);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                })
+                .map(tempValue -> (MergedUnit) externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)
                 .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
         return ValueMapper.value(((Value<?>) mergedUnit));

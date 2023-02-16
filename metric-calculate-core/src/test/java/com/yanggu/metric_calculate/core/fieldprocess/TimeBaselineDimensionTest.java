@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.fieldprocess;
 
 import cn.hutool.core.date.DateTime;
 import cn.hutool.core.date.DateUtil;
-import com.yanggu.metric_calculate.core.calculate.TimeWindow;
+import com.yanggu.metric_calculate.core.pojo.TimeWindow;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
 import org.junit.Test;

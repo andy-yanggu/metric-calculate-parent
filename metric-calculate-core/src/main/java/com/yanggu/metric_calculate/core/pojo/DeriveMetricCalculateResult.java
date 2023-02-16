@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.calculate;
+package com.yanggu.metric_calculate.core.pojo;
 
 import lombok.Data;
 
@@ -11,14 +11,14 @@ import java.util.LinkedHashMap;
 public class DeriveMetricCalculateResult {
 
     /**
-     * 指标名称
-     */
-    private String name;
-
-    /**
      * 指标标识(数据明细宽表id-指标id)
      */
     private String key;
+
+    /**
+     * 指标名称
+     */
+    private String name;
 
     /**
      * 开始时间

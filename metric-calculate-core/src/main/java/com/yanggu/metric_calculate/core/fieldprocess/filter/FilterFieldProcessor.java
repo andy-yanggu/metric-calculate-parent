@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 前置过滤表达式处理器
+ * 前置过滤表达式处理器, 输入明细数据, 执行表达式, 返回Boolean
  */
 @Data
 @Slf4j

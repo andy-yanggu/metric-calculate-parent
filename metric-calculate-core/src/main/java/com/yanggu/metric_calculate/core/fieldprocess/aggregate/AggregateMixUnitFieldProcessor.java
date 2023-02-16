@@ -4,8 +4,8 @@ import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
-import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
-import com.yanggu.metric_calculate.core.pojo.MixUnitUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
@@ -13,6 +13,7 @@ import lombok.Data;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -36,9 +37,9 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
         Map<String, BaseAggregateFieldProcessor<?>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             String paramName = entry.getKey();
-            BaseUdafParam baseUdafParam = entry.getValue();
+            List<BaseUdafParam> baseUdafParamList = Collections.singletonList(entry.getValue());
             BaseAggregateFieldProcessor<?> baseAggregateFieldProcessor =
-                    FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
+                    FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, unitFactory, fieldMap);
             map.put(paramName, baseAggregateFieldProcessor);
         }
 
@@ -61,6 +62,12 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
         return (M) unitFactory.initInstanceByValue(mixUnitUdafParam.getAggregateType(), dataMap, mixUnitUdafParam.getParam());
     }
 
+    /**
+     * 混合类型的进行表达式计算
+     *
+     * @param input
+     * @return
+     */
     @Override
     public Object callBack(Object input) {
         return expression.execute((Map<String, Object>) input);

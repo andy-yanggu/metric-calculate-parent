@@ -3,12 +3,13 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
@@ -54,6 +55,12 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> imple
         if (mergeUnitClazz == null) {
             throw new RuntimeException("需要设置mergeUnitClazz");
         }
+    }
+
+    @Override
+    @SneakyThrows
+    public M process(JSONObject input) {
+        throw new RuntimeException("子类需要重写process方法");
     }
 
     protected Cloneable2Wrapper<Object> getRetainFieldValue(JSONObject input, boolean retainObject) throws Exception {

@@ -21,7 +21,7 @@ public class DeriveMetricMiddleHashMapStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public void put(MetricCube cube) {
+    public void update(MetricCube cube) {
         localMap.put(cube.getRealKey(), cube);
     }
 

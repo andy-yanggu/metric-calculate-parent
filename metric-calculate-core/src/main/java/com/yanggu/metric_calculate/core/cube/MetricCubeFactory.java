@@ -42,7 +42,8 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
 
         TimeWindowEnum timeWindowEnum = annotation.timeWindowType();
 
-        //TODO 如果是MapType类型的需要根据子聚合类型进行判断
+        //TODO 如果是MapType类型的需要根据value的聚合类型进行判断
+        //TODO 对于混合类型的, 也需要进行判断
         if (mergeUnitClazz.isAnnotationPresent(MapType.class)) {
 
         }
