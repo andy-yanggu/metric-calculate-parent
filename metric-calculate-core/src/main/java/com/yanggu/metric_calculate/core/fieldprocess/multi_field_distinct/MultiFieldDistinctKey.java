@@ -13,7 +13,7 @@ import java.util.Objects;
  * 多字段去重列表
  */
 @Data
-public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey>, Value<List<Object>> {
+public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>, Cloneable2<MultiFieldDistinctKey>, Value<Object> {
 
     private List<Object> fieldList;
 

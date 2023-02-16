@@ -20,8 +20,7 @@ import java.util.Map;
  */
 @MapType
 @MergeType(value = "BASEMAP", useParam = false)
-public class BaseMapUnit<K extends Cloneable2<K> & Comparable<K> & Value<Object>,
-        V extends Cloneable2<V> & Value<Object> & MergedUnit<V>>
+public class BaseMapUnit<K extends Cloneable2<K> & Value<Object>, V extends Cloneable2<V> & MergedUnit<V>>
         implements MapUnit<K, V, BaseMapUnit<K, V>>, Value<Map<Object, Object>> {
 
     private Map<K, V> details = new HashMap<>();
@@ -39,16 +38,18 @@ public class BaseMapUnit<K extends Cloneable2<K> & Comparable<K> & Value<Object>
      */
     @Override
     public BaseMapUnit<K, V> put(K key, V value) {
-        this.details.put(key, value);
+        V thisValue = this.details.get(key);
+        if (thisValue != null) {
+            thisValue.merge(value);
+            this.details.put(key, thisValue);
+        } else {
+            this.details.put(key, value);
+        }
         return this;
     }
 
     public Map<K, V> getMap() {
         return this.details;
-    }
-
-    public V get(K key) {
-        return this.details.get(key);
     }
 
     public void setMap(Map<K, V> paramMap) {
@@ -58,13 +59,6 @@ public class BaseMapUnit<K extends Cloneable2<K> & Comparable<K> & Value<Object>
     @Override
     public BaseMapUnit<K, V> merge(BaseMapUnit<K, V> that) {
         for (Map.Entry<K, V> entry : that.details.entrySet()) {
-            V thisValue = this.details.get(entry.getKey());
-            if (thisValue != null) {
-                if (entry.getValue().getClass().equals(thisValue.getClass())) {
-                    thisValue.merge(entry.getValue());
-                }
-                continue;
-            }
             K key = entry.getKey().fastClone();
             V value = entry.getValue().fastClone();
             put(key, value);
@@ -75,7 +69,7 @@ public class BaseMapUnit<K extends Cloneable2<K> & Comparable<K> & Value<Object>
     @Override
     public Map<Object, Object> value() {
         Map<Object, Object> returnMap = new HashMap<>();
-        details.forEach((k, v) -> returnMap.put(k.fastClone().value(), v.fastClone().value()));
+        details.forEach((k, v) -> returnMap.put(k.fastClone().value(), ((Value<?>) v.fastClone()).value()));
         return returnMap;
     }
 
