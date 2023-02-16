@@ -1,5 +1,5 @@
 {
-  "aggregateType": "BASEMIXUNIT",
+  "aggregateType": "BASEMIX",
   "mixAggMap": {
     "上海_sum": {
       "aggregateType": "SUM",
