@@ -78,6 +78,11 @@ public class Derive {
     private MapUnitUdafParam mapUdafParam;
 
     /**
+     * 混合类型聚合函数参数
+     */
+    private MixUnitUdafParam mixUnitUdafParam;
+
+    /**
      * 聚合时间长度
      */
     private Integer duration;

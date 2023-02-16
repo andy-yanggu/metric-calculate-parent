@@ -145,7 +145,7 @@
       }
     },
     {
-      "id": 6,
+      "id": 5,
       "name": "test_list_object",
       "displayName": "测试list_object",
       "description": null,
@@ -178,7 +178,7 @@
       }
     },
     {
-      "id": 11,
+      "id": 6,
       "name": "test_sort_list_object",
       "displayName": "测试sort_list_object",
       "description": null,
@@ -217,7 +217,7 @@
       }
     },
     {
-      "id": 11,
+      "id": 7,
       "name": "test_base_map_unit_sum",
       "displayName": "所有交易账号的累计交易金额",
       "description": "账号为key, value是对金额求和",
@@ -251,6 +251,47 @@
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
         }
+      }
+    },
+    {
+      "id": 7,
+      "name": "张三_transfer_amount_proportion",
+      "displayName": "给张三转账的金额占给所有交易对象转账金额的比例",
+      "description": "",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "BASEMIX",
+      "duration": 1,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "mixUnitUdafParam": {
+        "aggregateType": "BASEMIX",
+        "mixAggMap": {
+          "zhangsan_sum_amount": {
+            "aggregateType": "SUM",
+            "metricExpress": "account_no_in == '张三' ? debit_amt_out : 0"
+          },
+          "total_sum_amount": {
+            "aggregateType": "SUM",
+            "metricExpress": "debit_amt_out"
+          }
+        },
+        "express": "zhangsan_sum_amount / total_sum_amount"
       }
     }
   ],

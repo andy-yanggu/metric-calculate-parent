@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.Map;
 
 
@@ -55,7 +56,8 @@ public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements 
 
         //map的value字段处理器
         this.valueAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(mapUnitUdafParam.getValueAggParam(), unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(
+                        Collections.singletonList(mapUnitUdafParam.getValueAggParam()), unitFactory, fieldMap);
     }
 
     @Override

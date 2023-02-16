@@ -1,16 +1,14 @@
 package com.yanggu.metric_calculate.core.util;
 
-import com.yanggu.metric_calculate.core.annotation.Collective;
-import com.yanggu.metric_calculate.core.annotation.MapType;
-import com.yanggu.metric_calculate.core.annotation.Numerical;
-import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.*;
+import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core.pojo.MixUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 
@@ -75,17 +73,18 @@ public class FieldProcessorUtil {
     }
 
     /**
-     * @param baseUdafParam
+     * @param baseUdafParamList
      * @param unitFactory
      * @param fieldMap
      * @return
      * @throws Exception
      */
-    public static BaseAggregateFieldProcessor<?> getBaseAggregateFieldProcessor(BaseUdafParam baseUdafParam,
+    public static BaseAggregateFieldProcessor<?> getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
                                                                                 UnitFactory unitFactory,
                                                                                 Map<String, Class<?>> fieldMap) throws Exception {
 
         BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
+        BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
         String aggregateType = baseUdafParam.getAggregateType();
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
         if (mergeUnitClazz.isAnnotationPresent(Numerical.class)) {
@@ -97,6 +96,10 @@ public class FieldProcessorUtil {
         } else if (mergeUnitClazz.isAnnotationPresent(Collective.class)) {
             //集合型
             aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
+            if (mergeUnitClazz.getAnnotation(MergeType.class).useExternalAgg()) {
+                ((AggregateCollectionFieldProcessor<?>) aggregateFieldProcessor)
+                        .setExternalBaseUdafParam(baseUdafParamList.get(1));
+            }
         } else {
             throw new RuntimeException("不支持的聚合类型: " + aggregateType);
         }
@@ -126,8 +129,21 @@ public class FieldProcessorUtil {
         return aggregateMapUnitFieldProcessor;
     }
 
-    public static AggregateFieldProcessor<?> getAggregateFieldProcessor(BaseUdafParam baseUdafParam,
+    public static AggregateFieldProcessor<?> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
+                                                                               Map<String, Class<?>> fieldMap,
+                                                                               UnitFactory unitFactory) throws Exception {
+
+        AggregateMixUnitFieldProcessor<?> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
+        mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
+        mixUnitFieldProcessor.setFieldMap(fieldMap);
+        mixUnitFieldProcessor.setUnitFactory(unitFactory);
+        mixUnitFieldProcessor.init();
+        return mixUnitFieldProcessor;
+    }
+
+    public static AggregateFieldProcessor<?> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
                                                                         MapUnitUdafParam mapUdafParam,
+                                                                        MixUnitUdafParam mixUnitUdafParam,
                                                                         String aggregateType,
                                                                         Map<String, Class<?>> fieldMap,
                                                                         UnitFactory unitFactory) throws Exception {
@@ -136,12 +152,16 @@ public class FieldProcessorUtil {
         //如果是基本聚合类型(数值型、集合型、对象型)
         if (mergeUnitClazz.isAnnotationPresent(Numerical.class) || mergeUnitClazz.isAnnotationPresent(Objective.class)
                 || mergeUnitClazz.isAnnotationPresent(Collective.class)) {
-            return getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+            return getBaseAggregateFieldProcessor(baseUdafParamList, unitFactory, fieldMap);
         }
 
         //如果是映射类型
         if (mergeUnitClazz.isAnnotationPresent(MapType.class)) {
             return getAggregateMapUnitFieldProcessor(mapUdafParam, fieldMap, unitFactory);
+        }
+
+        if (mergeUnitClazz.isAnnotationPresent(Mix.class)) {
+            return getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, unitFactory);
         }
 
         throw new RuntimeException("暂不支持聚合类型: " + mergeUnitClazz.getName());

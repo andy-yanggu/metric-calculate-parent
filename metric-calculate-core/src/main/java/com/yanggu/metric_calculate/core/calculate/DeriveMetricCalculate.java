@@ -3,11 +3,9 @@ package com.yanggu.metric_calculate.core.calculate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
@@ -57,13 +55,6 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
      * 聚合字段处理器, 生成MergeUnit
      */
     private AggregateFieldProcessor<M> aggregateFieldProcessor;
-
-    /**
-     * 需要进行二次聚合计算
-     * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
-     * <p>CEP, 按照最后一条数据进行聚合计算</p>
-     */
-    private BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor;
 
     /**
      * 时间字段, 提取出时间戳
@@ -176,23 +167,7 @@ public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
             //聚合值
             Value<?> query = metricCube.query(windowStart, true, windowEnd, false);
             Object value = ValueMapper.value(query);
-
-            //如果是滑动计数窗口需要进行二次聚合处理
-            MergeType annotation = aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class);
-            if (annotation.useExternalAgg() && value instanceof List) {
-                List<JSONObject> tempValueList = (List<JSONObject>) value;
-                MergedUnit mergedUnit = tempValueList.stream()
-                        .map(tempValue -> {
-                            try {
-                                return (MergedUnit) externalAggregateFieldProcessor.process(tempValue);
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        })
-                        .reduce(MergedUnit::merge)
-                        .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
-                value = ValueMapper.value(((Value<?>) mergedUnit));
-            }
+            value = aggregateFieldProcessor.callBack(value);
 
             //处理精度
             value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);

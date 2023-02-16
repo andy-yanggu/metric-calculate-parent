@@ -58,7 +58,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setRetainExpress("name");
 
         BaseAggregateFieldProcessor<?> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -90,7 +90,7 @@ public class AggregateCollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
         BaseAggregateFieldProcessor<?> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -126,7 +126,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setCollectiveSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
 
         BaseAggregateFieldProcessor<?> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -162,7 +162,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setRetainExpress("name");
 
         BaseAggregateFieldProcessor<?> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();

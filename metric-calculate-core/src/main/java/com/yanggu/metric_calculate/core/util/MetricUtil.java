@@ -32,10 +32,7 @@ import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
@@ -195,18 +192,12 @@ public class MetricUtil {
         unitFactory.init();
 
         AggregateFieldProcessor<?> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
-                tempDerive.getBaseUdafParam(), tempDerive.getMapUdafParam(), tempDerive.getCalculateLogic(),
+                Arrays.asList(tempDerive.getBaseUdafParam(), tempDerive.getExternalBaseUdafParam()),
+                tempDerive.getMapUdafParam(), tempDerive.getMixUnitUdafParam(), tempDerive.getCalculateLogic(),
                 fieldMap, unitFactory);
 
         //设置聚合字段处理器
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
-
-        //判断是否需要额外聚合处理器
-        if (aggregateFieldProcessor.getMergeUnitClazz().getAnnotation(MergeType.class).useExternalAgg()) {
-            BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor =
-                    FieldProcessorUtil.getBaseAggregateFieldProcessor(tempDerive.getExternalBaseUdafParam(), unitFactory, fieldMap);
-            deriveMetricCalculate.setExternalAggregateFieldProcessor(externalAggregateFieldProcessor);
-        }
 
         //时间字段处理器
         TimeColumn timeColumn = tempDerive.getTimeColumn();

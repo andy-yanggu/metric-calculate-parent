@@ -11,6 +11,7 @@ import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import lombok.Data;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -35,9 +36,9 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
         Map<String, BaseAggregateFieldProcessor<?>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             String paramName = entry.getKey();
-            BaseUdafParam baseUdafParm = entry.getValue();
+            BaseUdafParam baseUdafParam = entry.getValue();
             BaseAggregateFieldProcessor<?> baseAggregateFieldProcessor =
-                    FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParm, unitFactory, fieldMap);
+                    FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
             map.put(paramName, baseAggregateFieldProcessor);
         }
 
@@ -58,6 +59,11 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
             }
         }
         return (M) unitFactory.initInstanceByValue(mixUnitUdafParam.getAggregateType(), dataMap, mixUnitUdafParam.getParam());
+    }
+
+    @Override
+    public Object callBack(Object input) {
+        return expression.execute((Map<String, Object>) input);
     }
 
     @Override

@@ -14,7 +14,7 @@ import java.util.Map;
 
 @Mix
 @Data
-@MergeType(value = "BASEMIXUNIT")
+@MergeType(value = "BASEMIX")
 public class BaseMixedUnit implements MixedUnit<BaseMixedUnit>, Value<Map<String, Object>> {
 
     private Map<String, MergedUnit<?>> dataMap;
@@ -49,7 +49,11 @@ public class BaseMixedUnit implements MixedUnit<BaseMixedUnit>, Value<Map<String
 
     @Override
     public BaseMixedUnit fastClone() {
-        return null;
+        Map<String, MergedUnit<?>> newMap = new HashMap<>();
+        this.dataMap.forEach((k, v) -> newMap.put(k, v.fastClone()));
+        BaseMixedUnit baseMixedUnit = new BaseMixedUnit();
+        baseMixedUnit.setDataMap(newMap);
+        return baseMixedUnit;
     }
 
     @Override

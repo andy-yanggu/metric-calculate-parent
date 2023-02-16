@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -140,7 +141,7 @@ public class AggregateNumberFieldProcessorTest {
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
                 (AggregateNumberFieldProcessor<SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
 
         assertEquals(aggregateType, aggregateNumberFieldProcessor.getAggregateType());
@@ -167,7 +168,7 @@ public class AggregateNumberFieldProcessorTest {
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         BaseAggregateFieldProcessor<?> aggregateNumberFieldProcessor =
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount2", "100");
@@ -198,7 +199,7 @@ public class AggregateNumberFieldProcessorTest {
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
                 (AggregateNumberFieldProcessor<SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParam, unitFactory, fieldMap);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //mock unitFactory的返回值
         SumUnit<CubeDecimal> sumUnit = new SumUnit<>(CubeDecimal.of(value));

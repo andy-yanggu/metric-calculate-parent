@@ -3,17 +3,23 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Collective;
+import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
+import com.yanggu.metric_calculate.core.pojo.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
+import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.Data;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 
@@ -24,6 +30,11 @@ import java.util.Map;
  */
 @Data
 public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
+
+    /**
+     * 对于滑动计数窗口和CEP类型, 需要额外的聚合处理器
+     */
+    private BaseUdafParam externalBaseUdafParam;
 
     /**
      * 多字段去重字段处理器
@@ -39,6 +50,13 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
      * 保留字段字段处理器
      */
     private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
+
+    /**
+     * 需要进行二次聚合计算
+     * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
+     * <p>CEP, 按照最后一条数据进行聚合计算</p>
+     */
+    private BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -63,6 +81,13 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         if (!collective.retainObject()) {
             this.retainFieldValueFieldProcessor =
                     FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpress());
+        }
+
+        //判断是否需要额外聚合处理器
+        if (getMergeUnitClazz().getAnnotation(MergeType.class).useExternalAgg()) {
+            this.externalAggregateFieldProcessor =
+                    FieldProcessorUtil.getBaseAggregateFieldProcessor(
+                            Collections.singletonList(externalBaseUdafParam), unitFactory, fieldMap);
         }
     }
 
@@ -93,6 +118,26 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         }
 
         return (M) unitFactory.initInstanceByValue(aggregateType, result, udafParam.getParam());
+    }
+
+    @Override
+    public Object callBack(Object input) {
+        MergeType annotation = getMergeUnitClazz().getAnnotation(MergeType.class);
+        if (!annotation.useExternalAgg() || !(input instanceof List)) {
+            return input;
+        }
+        List<JSONObject> tempValueList = (List<JSONObject>) input;
+        MergedUnit mergedUnit = tempValueList.stream()
+                .map(tempValue -> {
+                    try {
+                        return (MergedUnit) externalAggregateFieldProcessor.process(tempValue);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .reduce(MergedUnit::merge)
+                .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
+        return ValueMapper.value(((Value<?>) mergedUnit));
     }
 
 }

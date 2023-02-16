@@ -48,7 +48,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -90,7 +90,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -134,7 +134,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("OCCUPIEDFIELD");
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -171,7 +171,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("OCCUPIEDOBJECT");
 
         BaseAggregateFieldProcessor<?> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(udafParam, unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
