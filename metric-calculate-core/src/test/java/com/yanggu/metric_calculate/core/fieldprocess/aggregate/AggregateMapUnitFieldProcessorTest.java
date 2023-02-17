@@ -25,7 +25,7 @@ import static org.junit.Assert.assertNotNull;
  */
 public class AggregateMapUnitFieldProcessorTest {
 
-    private AggregateMapUnitFieldProcessor<BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> fieldProcessor;
+    private AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> fieldProcessor;
 
     private UnitFactory unitFactory;
 
@@ -57,9 +57,8 @@ public class AggregateMapUnitFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUnitUdafParam mapUnitUdafParam = JSONUtil.toBean(jsonString, MapUnitUdafParam.class);
 
-        AggregateMapUnitFieldProcessor<BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
-                (AggregateMapUnitFieldProcessor<BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>>)
-                        FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, unitFactory);
+        AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
+                (AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>>) FieldProcessorUtil.<JSONObject>getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, unitFactory);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");

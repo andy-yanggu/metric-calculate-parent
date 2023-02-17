@@ -47,7 +47,7 @@ public class AggregateObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -89,7 +89,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("MAXOBJECT");
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -133,7 +133,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("OCCUPIEDFIELD");
 
-        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -170,7 +170,7 @@ public class AggregateObjectFieldProcessorTest {
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("OCCUPIEDOBJECT");
 
-        BaseAggregateFieldProcessor<?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据

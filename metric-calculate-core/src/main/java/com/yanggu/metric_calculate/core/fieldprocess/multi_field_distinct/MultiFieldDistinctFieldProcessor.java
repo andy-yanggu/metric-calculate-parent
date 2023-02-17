@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
@@ -17,13 +16,13 @@ import java.util.stream.Collectors;
  */
 @Data
 @NoArgsConstructor
-public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObject, MultiFieldDistinctKey> {
+public class MultiFieldDistinctFieldProcessor<T> implements FieldProcessor<T, MultiFieldDistinctKey> {
 
     private List<String> metricExpressList;
 
     private Map<String, Class<?>> fieldMap;
 
-    private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
+    private List<MetricFieldProcessor<T, Object>> metricFieldProcessorList;
 
     @Override
     public void init() throws Exception {
@@ -35,12 +34,12 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
             throw new RuntimeException("去重字段表达式列表为空");
         }
         this.metricFieldProcessorList = metricExpressList.stream()
-                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
+                .map(tempExpress -> FieldProcessorUtil.<T>getMetricFieldProcessor(fieldMap, tempExpress))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MultiFieldDistinctKey process(JSONObject input) throws Exception {
+    public MultiFieldDistinctKey process(T input) throws Exception {
         List<Object> collect = metricFieldProcessorList.stream()
                 .map(tempMetricExpress -> tempMetricExpress.process(input))
                 .collect(Collectors.toList());

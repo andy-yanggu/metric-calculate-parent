@@ -70,7 +70,7 @@ public class AggregateNumberFieldProcessorTest {
      */
     @Test
     public void testInit2() throws Exception {
-        AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor<>();
+        AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>> aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor<>();
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
@@ -88,7 +88,7 @@ public class AggregateNumberFieldProcessorTest {
      */
     @Test
     public void testInit3() throws Exception {
-        AggregateNumberFieldProcessor<CountUnit> aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor<>();
+        AggregateNumberFieldProcessor<JSONObject, CountUnit> aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor<>();
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
@@ -107,7 +107,7 @@ public class AggregateNumberFieldProcessorTest {
      */
     @Test
     public void testInit4() throws Exception {
-        AggregateNumberFieldProcessor<CountUnit> aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor<>();
+        AggregateNumberFieldProcessor<JSONObject, CountUnit> aggregateNumberFieldProcessor = new AggregateNumberFieldProcessor<>();
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
@@ -139,9 +139,9 @@ public class AggregateNumberFieldProcessorTest {
         udafParam.setAggregateType(aggregateType);
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
-        AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
-                (AggregateNumberFieldProcessor<SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
+        AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
+                (AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>>)
+                        FieldProcessorUtil.<JSONObject>getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
 
         assertEquals(aggregateType, aggregateNumberFieldProcessor.getAggregateType());
@@ -167,7 +167,7 @@ public class AggregateNumberFieldProcessorTest {
 
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
-        BaseAggregateFieldProcessor<?> aggregateNumberFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> aggregateNumberFieldProcessor =
                         FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         JSONObject jsonObject = new JSONObject();
@@ -197,9 +197,9 @@ public class AggregateNumberFieldProcessorTest {
         baseUdafParam.setAggregateType(aggregateType);
 
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
-        AggregateNumberFieldProcessor<SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
-                (AggregateNumberFieldProcessor<SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
+        AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
+                (AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>>)
+                        FieldProcessorUtil.<JSONObject>getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //mock unitFactory的返回值
         SumUnit<CubeDecimal> sumUnit = new SumUnit<>(CubeDecimal.of(value));

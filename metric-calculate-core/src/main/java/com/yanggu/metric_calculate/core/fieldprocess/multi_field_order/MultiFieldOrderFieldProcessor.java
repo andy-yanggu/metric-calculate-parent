@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
  * 多字段排序字段处理器
  */
 @Data
-public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject, MultiFieldOrderCompareKey> {
+public class MultiFieldOrderFieldProcessor<T> implements FieldProcessor<T, MultiFieldOrderCompareKey> {
 
     private Map<String, Class<?>> fieldMap;
 
     private List<FieldOrderParam> fieldOrderParamList;
 
-    private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
+    private List<MetricFieldProcessor<T, Object>> metricFieldProcessorList;
 
     @Override
     public void init() throws Exception {
@@ -35,18 +35,18 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
         }
         this.metricFieldProcessorList = fieldOrderParamList.stream()
                 .map(tempFieldOrderParam ->
-                        FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
+                        FieldProcessorUtil.<T>getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MultiFieldOrderCompareKey process(JSONObject input) throws Exception {
+    public MultiFieldOrderCompareKey process(T input) throws Exception {
 
         int size = fieldOrderParamList.size();
         List<FieldOrder> fieldOrderList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             FieldOrderParam fieldOrderParam = fieldOrderParamList.get(i);
-            MetricFieldProcessor<Object> expression = metricFieldProcessorList.get(i);
+            MetricFieldProcessor<T, Object> expression = metricFieldProcessorList.get(i);
             Object execute = expression.process(input);
             FieldOrder fieldOrder = new FieldOrder();
             fieldOrder.setResult(execute);

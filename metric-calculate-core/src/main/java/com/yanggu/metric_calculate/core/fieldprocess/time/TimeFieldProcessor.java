@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.fieldprocess.time;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import lombok.Data;
@@ -16,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
+public class TimeFieldProcessor<T> implements FieldProcessor<T, Long> {
 
     private static final String TIMESTAMP = "TIMESTAMP";
 
@@ -46,8 +45,8 @@ public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
     }
 
     @Override
-    public Long process(JSONObject input) {
-        Object data = input.get(timeColumnName);
+    public Long process(T input) {
+        Object data = JSONUtil.parseObj(input).get(timeColumnName);
         if (data == null) {
             throw new RuntimeException(StrUtil.format("时间字段没有值, "
                     + "时间字段名: {}, 原始数据: {}", timeColumnName, JSONUtil.toJsonStr(input)));

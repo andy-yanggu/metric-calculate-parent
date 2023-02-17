@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class DeriveMetricCalculateTest {
 
-    private MetricCalculate metricCalculate;
+    private MetricCalculate<JSONObject> metricCalculate;
 
     @Before
     public void init() {
@@ -35,7 +35,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test1() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
         String jsonString =
                 "{\n" +
                         "    \"account_no_out\": \"000000000011\",\n" +
@@ -76,7 +76,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test2() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(1);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(1);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
@@ -130,7 +130,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test3() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(2);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(2);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
@@ -173,7 +173,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test4() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(3);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(3);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
@@ -260,7 +260,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test5() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(4);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(4);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
@@ -347,7 +347,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test6() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(5);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(5);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
@@ -435,7 +435,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test7() {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(6);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(6);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
@@ -530,7 +530,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test8() throws Exception {
-        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(7);
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(7);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 

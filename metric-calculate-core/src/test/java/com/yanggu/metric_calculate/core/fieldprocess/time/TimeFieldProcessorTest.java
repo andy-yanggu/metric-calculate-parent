@@ -17,7 +17,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void init1() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
+        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>();
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
         assertEquals("时间字段的值为空", runtimeException.getMessage());
     }

@@ -30,7 +30,7 @@ import java.util.Map;
  * @param <M>
  */
 @Data
-public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
+public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {
 
     /**
      * 对于滑动计数窗口和CEP类型, 需要额外的聚合处理器
@@ -40,24 +40,24 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
     /**
      * 多字段去重字段处理器
      */
-    private MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor;
+    private MultiFieldDistinctFieldProcessor<T> multiFieldDistinctFieldProcessor;
 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldOrderFieldProcessor<T> multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
      */
-    private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
+    private MetricFieldProcessor<T, ?> retainFieldValueFieldProcessor;
 
     /**
      * 需要进行二次聚合计算
      * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
      * <p>CEP, 按照最后一条数据进行聚合计算</p>
      */
-    private BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<T, ?> externalAggregateFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -69,7 +69,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         //设置了去重字段
         if (collective.useDistinctField()) {
             this.multiFieldDistinctFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldList());
+                    FieldProcessorUtil.<T>getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldList());
         }
 
         //设置了排序字段
@@ -94,7 +94,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
 
     @Override
     @SneakyThrows
-    public M process(JSONObject input) {
+    public M process(T input) {
 
         Collective collective = mergeUnitClazz.getAnnotation(Collective.class);
 
@@ -131,7 +131,7 @@ public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends 
         if (!annotation.useExternalAgg() || !(input instanceof List)) {
             return input;
         }
-        List<JSONObject> tempValueList = (List<JSONObject>) input;
+        List<T> tempValueList = (List<T>) input;
         MergedUnit mergedUnit = tempValueList.stream()
                 .map(tempValue -> (MergedUnit) externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)

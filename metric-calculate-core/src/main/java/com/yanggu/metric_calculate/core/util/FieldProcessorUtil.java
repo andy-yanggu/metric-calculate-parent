@@ -37,9 +37,9 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                               String filterExpress) {
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, filterExpress);
+    public static <T> FilterFieldProcessor<T> getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                      String filterExpress) {
+        FilterFieldProcessor<T> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, filterExpress);
         filterFieldProcessor.init();
         return filterFieldProcessor;
     }
@@ -50,9 +50,9 @@ public class FieldProcessorUtil {
      * @param timeColumn
      * @return
      */
-    public static TimeFieldProcessor getTimeFieldProcessor(TimeColumn timeColumn) {
-        TimeFieldProcessor timeFieldProcessor =
-                new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+    public static <T> TimeFieldProcessor<T> getTimeFieldProcessor(TimeColumn timeColumn) {
+        TimeFieldProcessor<T> timeFieldProcessor =
+                new TimeFieldProcessor<>(timeColumn.getTimeFormat(), timeColumn.getColumnName());
         timeFieldProcessor.init();
         return timeFieldProcessor;
     }
@@ -66,11 +66,11 @@ public class FieldProcessorUtil {
      * @param dimensionList
      * @return
      */
-    public static DimensionSetProcessor getDimensionSetProcessor(String key,
-                                                                 String metricName,
-                                                                 Map<String, Class<?>> fieldMap,
-                                                                 List<Dimension> dimensionList) {
-        DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(dimensionList);
+    public static <T> DimensionSetProcessor<T> getDimensionSetProcessor(String key,
+                                                                        String metricName,
+                                                                        Map<String, Class<?>> fieldMap,
+                                                                        List<Dimension> dimensionList) {
+        DimensionSetProcessor<T> dimensionSetProcessor = new DimensionSetProcessor<>(dimensionList);
         dimensionSetProcessor.setKey(key);
         dimensionSetProcessor.setMetricName(metricName);
         dimensionSetProcessor.setFieldMap(fieldMap);
@@ -87,9 +87,9 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static MetricFieldProcessor<Object> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                       String metricExpress) {
-        MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
+    public static <T> MetricFieldProcessor<T, Object> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                              String metricExpress) {
+        MetricFieldProcessor<T, Object> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setFieldMap(fieldMap);
         metricFieldProcessor.setMetricExpress(metricExpress);
         metricFieldProcessor.init();
@@ -105,9 +105,9 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                                  List<String> metricExpressList) {
-        MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
+    public static <T> MultiFieldDistinctFieldProcessor<T> getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                                         List<String> metricExpressList) {
+        MultiFieldDistinctFieldProcessor<T> tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor<>();
         tempMultiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldDistinctFieldProcessor.setMetricExpressList(metricExpressList);
         tempMultiFieldDistinctFieldProcessor.init();
@@ -123,9 +123,9 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static MultiFieldOrderFieldProcessor getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                       List<FieldOrderParam> fieldOrderParamList) {
-        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
+    public static <T> MultiFieldOrderFieldProcessor<T> getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                              List<FieldOrderParam> fieldOrderParamList) {
+        MultiFieldOrderFieldProcessor<T> tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor<>();
         tempMultiFieldOrderFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
         tempMultiFieldOrderFieldProcessor.init();
@@ -142,11 +142,11 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static BaseAggregateFieldProcessor<?> getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
-                                                                                UnitFactory unitFactory,
-                                                                                Map<String, Class<?>> fieldMap) {
+    public static <T> BaseAggregateFieldProcessor<T, ?> getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
+                                                                                       UnitFactory unitFactory,
+                                                                                       Map<String, Class<?>> fieldMap) {
 
-        BaseAggregateFieldProcessor<?> aggregateFieldProcessor;
+        BaseAggregateFieldProcessor<T, ?> aggregateFieldProcessor;
         BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
         String aggregateType = baseUdafParam.getAggregateType();
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
@@ -160,7 +160,7 @@ public class FieldProcessorUtil {
             //集合型
             aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
             if (mergeUnitClazz.getAnnotation(MergeType.class).useExternalAgg()) {
-                ((AggregateCollectionFieldProcessor<?>) aggregateFieldProcessor)
+                ((AggregateCollectionFieldProcessor<T, ?>) aggregateFieldProcessor)
                         .setExternalBaseUdafParam(baseUdafParamList.get(1));
             }
         } else {
@@ -187,10 +187,10 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static AggregateMapUnitFieldProcessor<?> getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
-                                                                                      Map<String, Class<?>> fieldMap,
-                                                                                      UnitFactory unitFactory) {
-        AggregateMapUnitFieldProcessor<?> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
+    public static <T> AggregateMapUnitFieldProcessor<T, ?> getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
+                                                                                             Map<String, Class<?>> fieldMap,
+                                                                                             UnitFactory unitFactory) {
+        AggregateMapUnitFieldProcessor<T, ?> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
         aggregateMapUnitFieldProcessor.setMapUnitUdafParam(mapUnitUdafParam);
         aggregateMapUnitFieldProcessor.setUnitFactory(unitFactory);
         String aggregateType = mapUnitUdafParam.getAggregateType();
@@ -212,11 +212,11 @@ public class FieldProcessorUtil {
      * @throws Exception
      */
     @SneakyThrows
-    public static AggregateFieldProcessor<?> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
-                                                                               Map<String, Class<?>> fieldMap,
-                                                                               UnitFactory unitFactory) {
+    public static <T> AggregateFieldProcessor<T, ?> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
+                                                                                      Map<String, Class<?>> fieldMap,
+                                                                                      UnitFactory unitFactory) {
 
-        AggregateMixUnitFieldProcessor<?> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
+        AggregateMixUnitFieldProcessor<T, ?> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
         mixUnitFieldProcessor.setFieldMap(fieldMap);
         mixUnitFieldProcessor.setUnitFactory(unitFactory);
@@ -236,12 +236,12 @@ public class FieldProcessorUtil {
      * @return
      * @throws Exception
      */
-    public static AggregateFieldProcessor<?> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
-                                                                        MapUnitUdafParam mapUdafParam,
-                                                                        MixUnitUdafParam mixUnitUdafParam,
-                                                                        String aggregateType,
-                                                                        Map<String, Class<?>> fieldMap,
-                                                                        UnitFactory unitFactory) {
+    public static <T> AggregateFieldProcessor<T, ?> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
+                                                                               MapUnitUdafParam mapUdafParam,
+                                                                               MixUnitUdafParam mixUnitUdafParam,
+                                                                               String aggregateType,
+                                                                               Map<String, Class<?>> fieldMap,
+                                                                               UnitFactory unitFactory) {
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
 
         //如果是基本聚合类型(数值型、集合型、对象型)

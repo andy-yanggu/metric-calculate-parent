@@ -22,7 +22,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean> {
+public class FilterFieldProcessor<T> implements FieldProcessor<T, Boolean> {
 
     /**
      * 宽表字段
@@ -72,13 +72,13 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
     }
 
     @Override
-    public Boolean process(JSONObject input) {
+    public Boolean process(T input) {
         //如果表达式为空, 直接return true
         if (StrUtil.isBlank(filterExpress)) {
             return true;
         }
         //获取执行参数
-        Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
+        Map<String, Object> params = MetricUtil.getParam(JSONUtil.parseObj(input), fieldMap);
 
         //执行过滤表达式
         boolean result = (boolean) filterExpression.execute(params);

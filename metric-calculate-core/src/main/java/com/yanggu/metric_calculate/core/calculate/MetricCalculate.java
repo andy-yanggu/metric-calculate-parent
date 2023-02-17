@@ -13,22 +13,22 @@ import java.util.Map;
  * <p>包含了原子指标、衍生指标、复合指标、全局指标</p>
  */
 @Data
-public class MetricCalculate extends DataDetailsWideTable {
+public class MetricCalculate<T> extends DataDetailsWideTable {
 
     /**
      * 原子指标计算类
      */
-    private List<AtomMetricCalculate> atomMetricCalculateList;
+    private List<AtomMetricCalculate<T, ?>> atomMetricCalculateList;
 
     /**
      * 派生指标计算类
      */
-    private List<DeriveMetricCalculate> deriveMetricCalculateList;
+    private List<DeriveMetricCalculate<T, ?>> deriveMetricCalculateList;
 
     /**
      * 复合指标计算类
      */
-    private List<CompositeMetricCalculate> compositeMetricCalculateList;
+    private List<CompositeMetricCalculate<T>> compositeMetricCalculateList;
 
     /**
      * 指标名称和指标类型映射

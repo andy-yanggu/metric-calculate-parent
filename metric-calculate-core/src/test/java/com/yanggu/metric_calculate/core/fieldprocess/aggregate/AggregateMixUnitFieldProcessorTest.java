@@ -42,7 +42,7 @@ public class AggregateMixUnitFieldProcessorTest {
 
     @Test
     public void process() throws Exception {
-        AggregateMixUnitFieldProcessor<BaseMixedUnit> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
+        AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
 
         mixUnitFieldProcessor.setFieldMap(fieldMap);
         mixUnitFieldProcessor.setUnitFactory(unitFactory);

@@ -57,7 +57,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("LISTFIELD");
         baseUdafParam.setRetainExpress("name");
 
-        BaseAggregateFieldProcessor<?> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -89,7 +89,7 @@ public class AggregateCollectionFieldProcessorTest {
 
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
-        BaseAggregateFieldProcessor<?> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -125,7 +125,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLISTOBJECT");
         baseUdafParam.setCollectiveSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
 
-        BaseAggregateFieldProcessor<?> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -161,7 +161,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setDistinctFieldList(Collections.singletonList("amount"));
         baseUdafParam.setRetainExpress("name");
 
-        BaseAggregateFieldProcessor<?> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, ?> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //构造原始数据

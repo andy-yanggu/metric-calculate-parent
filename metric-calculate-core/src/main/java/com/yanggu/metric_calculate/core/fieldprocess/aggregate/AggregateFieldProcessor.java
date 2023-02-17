@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
  *
  * @param <M> 生成MergeUnit
  */
-public interface AggregateFieldProcessor<M extends MergedUnit<M>> extends FieldProcessor<JSONObject, M> {
+public interface AggregateFieldProcessor<T, M extends MergedUnit<M>> extends FieldProcessor<T, M> {
 
     String getAggregateType();
 

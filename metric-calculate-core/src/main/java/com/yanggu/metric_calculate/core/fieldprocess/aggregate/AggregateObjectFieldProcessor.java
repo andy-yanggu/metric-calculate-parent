@@ -25,17 +25,17 @@ import java.util.stream.Collectors;
  * @param <M>
  */
 @Data
-public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
+public class AggregateObjectFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {
 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldOrderFieldProcessor<T> multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
      */
-    private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
+    private MetricFieldProcessor<T, ?> retainFieldValueFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -65,7 +65,7 @@ public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends Base
 
     @Override
     @SneakyThrows
-    public M process(JSONObject input) {
+    public M process(T input) {
 
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 

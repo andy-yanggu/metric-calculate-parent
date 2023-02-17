@@ -219,7 +219,7 @@ public class MetricCalculateController {
                 log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
                 throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
             }
-            MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tableData);
+            MetricCalculate<JSONObject> metricCalculate = MetricUtil.initMetricCalculate(tableData);
             metricMap.put(tableId, metricCalculate);
             return metricCalculate;
         } finally {

@@ -54,12 +54,12 @@ public class MetricUtil {
      * @param tableData
      * @return
      */
-    public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
+    public static <T> MetricCalculate<T> initMetricCalculate(DataDetailsWideTable tableData) {
         if (tableData == null) {
             throw new RuntimeException("明细宽表为空");
         }
 
-        MetricCalculate metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
+        MetricCalculate<T> metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
 
         Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
         metricCalculate.setMetricTypeMap(metricTypeMap);
@@ -71,7 +71,7 @@ public class MetricUtil {
         //原子指标
         List<Atom> atomList = tableData.getAtom();
         if (CollUtil.isNotEmpty(atomList)) {
-            List<AtomMetricCalculate> collect = atomList.stream()
+            List<AtomMetricCalculate<T, ?>> collect = atomList.stream()
                     .map(tempAtom -> {
                         metricTypeMap.put(tempAtom.getName(), ATOM);
                         //初始化原子指标计算类
@@ -84,11 +84,11 @@ public class MetricUtil {
         //派生指标
         List<Derive> deriveList = tableData.getDerive();
         if (CollUtil.isNotEmpty(deriveList)) {
-            List<DeriveMetricCalculate> collect = deriveList.stream()
+            List<DeriveMetricCalculate<T, ?>> collect = deriveList.stream()
                     .map(tempDerive -> {
                         metricTypeMap.put(tempDerive.getName(), DERIVE);
                         //初始化派生指标计算类
-                        return MetricUtil.initDerive(tempDerive, metricCalculate);
+                        return MetricUtil.<T>initDerive(tempDerive, metricCalculate);
                     })
                     .collect(Collectors.toList());
 
@@ -98,12 +98,12 @@ public class MetricUtil {
         //复合指标
         List<Composite> compositeList = tableData.getComposite();
         if (CollUtil.isNotEmpty(compositeList)) {
-            List<CompositeMetricCalculate> collect = new ArrayList<>();
+            List<CompositeMetricCalculate<T>> collect = new ArrayList<>();
             compositeList.forEach(compositeMetric -> {
                 metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
 
                 //初始化复合指标计算类
-                List<CompositeMetricCalculate> compositeMetricCalculateList =
+                List<CompositeMetricCalculate<T>> compositeMetricCalculateList =
                         MetricUtil.initComposite(compositeMetric, metricCalculate);
                 collect.addAll(compositeMetricCalculateList);
             });
@@ -125,31 +125,31 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    private static AtomMetricCalculate initAtom(Atom atom, MetricCalculate metricCalculate) {
+    private static <T> AtomMetricCalculate<T, Object> initAtom(Atom atom, MetricCalculate<T> metricCalculate) {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
-        AtomMetricCalculate atomMetricCalculate = new AtomMetricCalculate<>();
+        AtomMetricCalculate<T, Object> atomMetricCalculate = new AtomMetricCalculate<>();
 
         //设置名称
         atomMetricCalculate.setName(atom.getName());
 
         //设置前置过滤条件处理器
-        FilterFieldProcessor filterFieldProcessor =
+        FilterFieldProcessor<T> filterFieldProcessor =
                 FieldProcessorUtil.getFilterFieldProcessor(fieldMap, atom.getFilter());
 
         atomMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //度量字段处理器
-        MetricFieldProcessor<?> metricFieldProcessor =
+        MetricFieldProcessor<T, Object> metricFieldProcessor =
                 FieldProcessorUtil.getMetricFieldProcessor(fieldMap, atom.getMetricColumn().getColumnName());
         atomMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
 
         //时间字段处理器
-        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(atom.getTimeColumn());
+        TimeFieldProcessor<T> timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(atom.getTimeColumn());
         atomMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //维度字段处理器
         String key = metricCalculate.getId() + "_" + atom.getId();
-        DimensionSetProcessor dimensionSetProcessor =
+        DimensionSetProcessor<T> dimensionSetProcessor =
                 FieldProcessorUtil.getDimensionSetProcessor(key, atom.getName(), fieldMap, atom.getDimension());
         atomMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
@@ -166,8 +166,8 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    private static DeriveMetricCalculate initDerive(Derive tempDerive, MetricCalculate metricCalculate) {
-        DeriveMetricCalculate deriveMetricCalculate = new DeriveMetricCalculate<>();
+    private static <T> DeriveMetricCalculate<T, ?> initDerive(Derive tempDerive, MetricCalculate<T> metricCalculate) {
+        DeriveMetricCalculate<T, ?> deriveMetricCalculate = new DeriveMetricCalculate<>();
         deriveMetricCalculate.init();
 
         //设置名称
@@ -181,7 +181,7 @@ public class MetricUtil {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
 
         //设置前置过滤条件处理器
-        FilterFieldProcessor filterFieldProcessor =
+        FilterFieldProcessor<T> filterFieldProcessor =
                 FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilter());
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
@@ -190,7 +190,7 @@ public class MetricUtil {
         unitFactory.init();
 
         //设置聚合字段处理器
-        AggregateFieldProcessor<?> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
+        AggregateFieldProcessor aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
                 Arrays.asList(tempDerive.getBaseUdafParam(), tempDerive.getExternalBaseUdafParam()),
                 tempDerive.getMapUdafParam(), tempDerive.getMixUnitUdafParam(), tempDerive.getCalculateLogic(),
                 fieldMap, unitFactory);
@@ -198,7 +198,7 @@ public class MetricUtil {
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
-        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
+        TimeFieldProcessor<T> timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
@@ -206,7 +206,7 @@ public class MetricUtil {
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器
-        DimensionSetProcessor dimensionSetProcessor =
+        DimensionSetProcessor<T> dimensionSetProcessor =
                 FieldProcessorUtil.getDimensionSetProcessor(key, name, fieldMap, tempDerive.getDimension());
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
@@ -245,25 +245,25 @@ public class MetricUtil {
      * @param compositeMetric
      * @return
      */
-    private static List<CompositeMetricCalculate> initComposite(Composite compositeMetric, MetricCalculate metricCalculate) {
+    private static <T> List<CompositeMetricCalculate<T>> initComposite(Composite compositeMetric, MetricCalculate<T> metricCalculate) {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<MultiDimensionCalculate> multiDimensionCalculateList = compositeMetric.getMultiDimensionCalculateList();
         if (CollUtil.isEmpty(multiDimensionCalculateList)) {
             throw new RuntimeException("复合指标多维度计算为空, 复合指标元数据: " + JSONUtil.toJsonStr(compositeMetric));
         }
         return multiDimensionCalculateList.stream().map(temp -> {
-            CompositeMetricCalculate compositeMetricCalculate = new CompositeMetricCalculate();
+            CompositeMetricCalculate<T> compositeMetricCalculate = new CompositeMetricCalculate<>();
 
             //设置维度字段处理器
             String key = metricCalculate.getId() + "_" + compositeMetric.getId();
             String name = compositeMetric.getName();
 
-            DimensionSetProcessor dimensionSetProcessor =
+            DimensionSetProcessor<T> dimensionSetProcessor =
                     FieldProcessorUtil.getDimensionSetProcessor(key, name, fieldMap, temp.getDimension());
             compositeMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
             //设置时间字段处理器
-            TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(compositeMetric.getTimeColumn());
+            TimeFieldProcessor<T> timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(compositeMetric.getTimeColumn());
             compositeMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
             //设置表达式字符串
@@ -299,7 +299,7 @@ public class MetricUtil {
      * @param metricCalculate
      * @return 字段名和数据类型的映射
      */
-    private static Map<String, Class<?>> getFieldMap(MetricCalculate metricCalculate) {
+    private static <T> Map<String, Class<?>> getFieldMap(MetricCalculate<T> metricCalculate) {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }

@@ -21,7 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
+public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> implements AggregateFieldProcessor<T, M> {
 
     protected BaseUdafParam udafParam;
 
@@ -59,11 +59,11 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> imple
 
     @Override
     @SneakyThrows
-    public M process(JSONObject input) {
+    public M process(T input) {
         throw new RuntimeException("子类需要重写process方法");
     }
 
-    protected Cloneable2Wrapper<Object> getRetainFieldValue(JSONObject input, boolean retainObject) throws Exception {
+    protected Cloneable2Wrapper<Object> getRetainFieldValue(T input, boolean retainObject) throws Exception {
         Object value;
         if (retainObject) {
             value = input;
@@ -77,7 +77,7 @@ public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> imple
         return Cloneable2Wrapper.wrap(value);
     }
 
-    protected MetricFieldProcessor<?> getRetainFieldValueFieldProcessor() {
+    protected MetricFieldProcessor<T, ?> getRetainFieldValueFieldProcessor() {
         throw new RuntimeException("需要重写getRetainFieldValueFieldProcessor方法");
     }
 

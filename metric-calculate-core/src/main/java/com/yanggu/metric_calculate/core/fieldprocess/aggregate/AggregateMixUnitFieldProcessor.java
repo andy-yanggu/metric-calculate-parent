@@ -18,7 +18,7 @@ import java.util.Map;
 
 
 @Data
-public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
+public class AggregateMixUnitFieldProcessor<T, M extends MergedUnit<M>> implements AggregateFieldProcessor<T, M> {
 
     private MixUnitUdafParam mixUnitUdafParam;
 
@@ -26,7 +26,7 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
 
     private UnitFactory unitFactory;
 
-    private Map<String, BaseAggregateFieldProcessor<?>> multiBaseAggProcessorMap;
+    private Map<String, BaseAggregateFieldProcessor<T, ?>> multiBaseAggProcessorMap;
 
     private Expression expression;
 
@@ -34,11 +34,11 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
     public void init() throws Exception {
         Map<String, BaseUdafParam> mixAggMap = mixUnitUdafParam.getMixAggMap();
 
-        Map<String, BaseAggregateFieldProcessor<?>> map = new HashMap<>();
+        Map<String, BaseAggregateFieldProcessor<T, ?>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             String paramName = entry.getKey();
             List<BaseUdafParam> baseUdafParamList = Collections.singletonList(entry.getValue());
-            BaseAggregateFieldProcessor<?> baseAggregateFieldProcessor =
+            BaseAggregateFieldProcessor<T, ?> baseAggregateFieldProcessor =
                     FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, unitFactory, fieldMap);
             map.put(paramName, baseAggregateFieldProcessor);
         }
@@ -50,9 +50,9 @@ public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements 
     }
 
     @Override
-    public M process(JSONObject input) throws Exception {
+    public M process(T input) throws Exception {
         Map<String, MergedUnit<?>> dataMap = new HashMap<>();
-        for (Map.Entry<String, BaseAggregateFieldProcessor<?>> entry : multiBaseAggProcessorMap.entrySet()) {
+        for (Map.Entry<String, BaseAggregateFieldProcessor<T, ?>> entry : multiBaseAggProcessorMap.entrySet()) {
             String key = entry.getKey();
             MergedUnit<?> process = entry.getValue().process(input);
             if (process != null) {

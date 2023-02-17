@@ -22,7 +22,7 @@ import java.util.Map;
  *
  */
 @Data
-public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
+public class AggregateMapUnitFieldProcessor<T, M extends MergedUnit<M>> implements AggregateFieldProcessor<T, M> {
 
     private MapUnitUdafParam mapUnitUdafParam;
 
@@ -37,12 +37,12 @@ public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements 
     /**
      * key生成字段处理器
      */
-    private MultiFieldDistinctFieldProcessor keyFieldProcessor;
+    private MultiFieldDistinctFieldProcessor<T> keyFieldProcessor;
 
     /**
      * value生成字段处理器
      */
-    private BaseAggregateFieldProcessor<?> valueAggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<T, ?> valueAggregateFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -61,7 +61,7 @@ public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements 
     }
 
     @Override
-    public M process(JSONObject input) throws Exception {
+    public M process(T input) throws Exception {
         MultiFieldDistinctKey key = keyFieldProcessor.process(input);
 
         MergedUnit<?> value = valueAggregateFieldProcessor.process(input);

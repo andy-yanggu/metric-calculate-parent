@@ -1,14 +1,13 @@
 package com.yanggu.metric_calculate.core.fieldprocess.pattern;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.pattern.MatchState;
 
-public class EventStateExtractor implements AggregateFieldProcessor<MatchState<JSONObject>> {
+public class EventStateExtractor<T> implements AggregateFieldProcessor<T, MatchState<T>> {
 
     @Override
-    public MatchState<JSONObject> process(JSONObject event) {
+    public MatchState<T> process(T event) {
         return new MatchState<>(event);
     }
 

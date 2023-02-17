@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class AggregateNumberFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
+public class AggregateNumberFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {
 
-    private MetricFieldProcessor<Object> metricFieldProcessor;
+    private MetricFieldProcessor<T, Object> metricFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -28,7 +28,7 @@ public class AggregateNumberFieldProcessor<M extends MergedUnit<M>> extends Base
 
     @Override
     @SneakyThrows
-    public M process(JSONObject input) {
+    public M process(T input) {
         Object process = metricFieldProcessor.process(input);
         if (process == null) {
             return null;
