@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;

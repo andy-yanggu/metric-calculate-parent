@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
@@ -69,7 +68,7 @@ public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> exten
         //设置了去重字段
         if (collective.useDistinctField()) {
             this.multiFieldDistinctFieldProcessor =
-                    FieldProcessorUtil.<T>getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldList());
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldList());
         }
 
         //设置了排序字段

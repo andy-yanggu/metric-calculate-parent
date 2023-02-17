@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
@@ -63,7 +62,7 @@ public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> im
         throw new RuntimeException("子类需要重写process方法");
     }
 
-    protected Cloneable2Wrapper<Object> getRetainFieldValue(T input, boolean retainObject) throws Exception {
+    protected Cloneable2Wrapper<Object> getRetainFieldValue(T input, boolean retainObject) {
         Object value;
         if (retainObject) {
             value = input;

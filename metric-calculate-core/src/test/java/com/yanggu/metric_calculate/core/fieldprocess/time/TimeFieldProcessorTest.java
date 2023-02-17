@@ -27,7 +27,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void init2() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
+        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>();
         timeFieldProcessor.setTimeColumnName("TimeColumnName");
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
         assertEquals("时间格式为空", runtimeException.getMessage());
@@ -38,7 +38,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void init3() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timeFormat", "TimeColumnName");
+        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>("timeFormat", "TimeColumnName");
         timeFieldProcessor.init();
 
         assertEquals("timeFormat", timeFieldProcessor.getTimeFormat());
@@ -50,7 +50,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void process1() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timestamp", "tran_timestamp");
+        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>("timestamp", "tran_timestamp");
 
         JSONObject jsonObject = new JSONObject();
         long currentTimeMillis = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class TimeFieldProcessorTest {
     @Test
     public void process2() {
 
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("yyyyMMdd", "tran_date");
+        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>("yyyyMMdd", "tran_date");
 
         String date = "20221124";
         JSONObject jsonObject = new JSONObject();
