@@ -39,7 +39,7 @@ import static com.yanggu.metric_calculate.core.constant.Constant.*;
 @RequestMapping("/metric-calculate")
 public class MetricCalculateController {
 
-    private final Map<Long, MetricCalculate> metricMap = new ConcurrentHashMap<>();
+    private final Map<Long, MetricCalculate<JSONObject>> metricMap = new ConcurrentHashMap<>();
 
     private final Striped<Lock> lockStriped = Striped.lazyWeakLock(20);
 
@@ -68,7 +68,7 @@ public class MetricCalculateController {
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId");
         }
-        MetricCalculate dataWideTable = metricMap.get(tableId);
+        MetricCalculate<JSONObject> dataWideTable = metricMap.get(tableId);
         if (dataWideTable == null) {
             dataWideTable = buildMetric(tableId);
         }
@@ -93,7 +93,7 @@ public class MetricCalculateController {
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId");
         }
-        MetricCalculate dataWideTable = metricMap.get(tableId);
+        MetricCalculate<JSONObject> dataWideTable = metricMap.get(tableId);
         if (dataWideTable == null) {
             dataWideTable = buildMetric(tableId);
         }
@@ -209,7 +209,7 @@ public class MetricCalculateController {
         tableIdSet.parallelStream().forEach(this::buildMetric);
     }
 
-    private MetricCalculate buildMetric(Long tableId) {
+    private MetricCalculate<JSONObject> buildMetric(Long tableId) {
         Lock lock = lockStriped.get(tableId);
         lock.lock();
         try {
