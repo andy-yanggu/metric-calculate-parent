@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessorTest;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
+import com.yanggu.metric_calculate.core.number.CubeDouble;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
@@ -141,7 +142,7 @@ public class AggregateNumberFieldProcessorTest {
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
                 (AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.<JSONObject>getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
+                        FieldProcessorUtil.<JSONObject, SumUnit<CubeDecimal>>getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
 
         assertEquals(aggregateType, aggregateNumberFieldProcessor.getAggregateType());
@@ -199,7 +200,7 @@ public class AggregateNumberFieldProcessorTest {
         doReturn(SumUnit.class).when(unitFactory).getMergeableClass(aggregateType);
         AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>> aggregateNumberFieldProcessor =
                 (AggregateNumberFieldProcessor<JSONObject, SumUnit<CubeDecimal>>)
-                        FieldProcessorUtil.<JSONObject>getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
+                        FieldProcessorUtil.<JSONObject, SumUnit<CubeDecimal>>getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
         //mock unitFactory的返回值
         SumUnit<CubeDecimal> sumUnit = new SumUnit<>(CubeDecimal.of(value));

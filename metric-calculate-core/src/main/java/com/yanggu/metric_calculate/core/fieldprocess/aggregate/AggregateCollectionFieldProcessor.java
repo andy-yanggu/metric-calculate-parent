@@ -24,9 +24,10 @@ import java.util.Map;
 
 
 /**
- * 聚合集合型字段处理器
+ * 集合型聚合字段处理器
  *
- * @param <M>
+ * @param <T> 输入数据类型
+ * @param <M> 生成{@link com.yanggu.metric_calculate.core.unit.MergedUnit}
  */
 @Data
 public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {

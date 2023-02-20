@@ -137,11 +137,12 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <T> BaseAggregateFieldProcessor<T, ?> getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
-                                                                                       UnitFactory unitFactory,
-                                                                                       Map<String, Class<?>> fieldMap) {
+    public static <T, M extends MergedUnit<M>> BaseAggregateFieldProcessor<T, M>
+            getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
+                                        UnitFactory unitFactory,
+                                        Map<String, Class<?>> fieldMap) {
 
-        BaseAggregateFieldProcessor<T, ?> aggregateFieldProcessor;
+        BaseAggregateFieldProcessor<T, M> aggregateFieldProcessor;
         BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
         String aggregateType = baseUdafParam.getAggregateType();
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
@@ -181,10 +182,11 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <T> AggregateMapUnitFieldProcessor<T, ?> getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
-                                                                                             Map<String, Class<?>> fieldMap,
-                                                                                             UnitFactory unitFactory) {
-        AggregateMapUnitFieldProcessor<T, ?> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
+    public static <T, M extends MergedUnit<M>> AggregateMapUnitFieldProcessor<T, M>
+                getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
+                                                  Map<String, Class<?>> fieldMap,
+                                                  UnitFactory unitFactory) {
+        AggregateMapUnitFieldProcessor<T, M> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
         aggregateMapUnitFieldProcessor.setMapUnitUdafParam(mapUnitUdafParam);
         aggregateMapUnitFieldProcessor.setUnitFactory(unitFactory);
         String aggregateType = mapUnitUdafParam.getAggregateType();
@@ -205,11 +207,11 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <T> AggregateFieldProcessor<T, ?> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
+    public static <T, M extends MergedUnit<M>> AggregateFieldProcessor<T, M> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
                                                                                       Map<String, Class<?>> fieldMap,
                                                                                       UnitFactory unitFactory) {
 
-        AggregateMixUnitFieldProcessor<T, ?> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
+        AggregateMixUnitFieldProcessor<T, M> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
         mixUnitFieldProcessor.setFieldMap(fieldMap);
         mixUnitFieldProcessor.setUnitFactory(unitFactory);
@@ -228,7 +230,7 @@ public class FieldProcessorUtil {
      * @param unitFactory
      * @return
      */
-    public static <T> AggregateFieldProcessor<T, ?> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
+    public static <T, M extends MergedUnit<M>> AggregateFieldProcessor<T, M> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
                                                                                MapUnitUdafParam mapUdafParam,
                                                                                MixUnitUdafParam mixUnitUdafParam,
                                                                                String aggregateType,

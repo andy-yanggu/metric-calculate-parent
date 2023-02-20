@@ -46,6 +46,9 @@ public class AggregateMapUnitFieldProcessorTest {
         this.fieldMap = fieldMap;
     }
 
+    /**
+     * 测试init方法
+     */
     @Test
     public void testInit() {
     }
@@ -58,7 +61,7 @@ public class AggregateMapUnitFieldProcessorTest {
         MapUnitUdafParam mapUnitUdafParam = JSONUtil.toBean(jsonString, MapUnitUdafParam.class);
 
         AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
-                (AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>>) FieldProcessorUtil.<JSONObject>getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, unitFactory);
+                        FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, unitFactory);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");

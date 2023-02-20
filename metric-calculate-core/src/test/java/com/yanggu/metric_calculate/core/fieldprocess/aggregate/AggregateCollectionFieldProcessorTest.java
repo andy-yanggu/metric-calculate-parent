@@ -5,7 +5,9 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrde
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.unit.collection.ListFieldUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
 import org.junit.Before;
@@ -56,6 +58,8 @@ public class AggregateCollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTFIELD");
         baseUdafParam.setRetainExpress("name");
+
+        ListFieldUnit<Cloneable2Wrapper<JSONObject>> listFieldUnit = new ListFieldUnit<>();
 
         BaseAggregateFieldProcessor<JSONObject, ?> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);

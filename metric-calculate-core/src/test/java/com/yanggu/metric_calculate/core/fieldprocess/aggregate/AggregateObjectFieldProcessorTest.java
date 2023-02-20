@@ -1,10 +1,15 @@
 package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
+import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
+import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
 import org.junit.Test;
@@ -47,7 +52,7 @@ public class AggregateObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, MaxFieldUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -55,7 +60,7 @@ public class AggregateObjectFieldProcessorTest {
         input.set("amount", 100);
         input.set("name", "张三");
 
-        MergedUnit process = objectFieldProcessor.process(input);
+        MergedUnit<MaxFieldUnit<MultiFieldOrderCompareKey>> process = objectFieldProcessor.process(input);
         assertEquals("张三", ValueMapper.value(((Value<?>) process)));
 
         input.set("amount", 200);
@@ -89,7 +94,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("MAXOBJECT");
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, MaxObjectUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -97,7 +102,7 @@ public class AggregateObjectFieldProcessorTest {
         input.set("amount", 100);
         input.set("name", "张三");
 
-        MergedUnit process = objectFieldProcessor.process(input);
+        MergedUnit<MaxObjectUnit<MultiFieldOrderCompareKey>> process = objectFieldProcessor.process(input);
         assertEquals(new HashMap<>(input), ValueMapper.value(((Value<?>) process)));
 
         JSONObject input2 = new JSONObject();
@@ -133,7 +138,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("OCCUPIEDFIELD");
 
-        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<Cloneable2Wrapper<String>>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -141,7 +146,7 @@ public class AggregateObjectFieldProcessorTest {
         input.set("amount", 100);
         input.set("name", "张三");
 
-        MergedUnit process = objectFieldProcessor.process(input);
+        MergedUnit<OccupiedFieldUnit<Cloneable2Wrapper<String>>> process = objectFieldProcessor.process(input);
         assertEquals("张三", ValueMapper.value(((Value<?>) process)));
 
         JSONObject input2 = new JSONObject();
@@ -170,7 +175,7 @@ public class AggregateObjectFieldProcessorTest {
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("OCCUPIEDOBJECT");
 
-        BaseAggregateFieldProcessor<JSONObject, ?> objectFieldProcessor =
+        BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<Cloneable2Wrapper<JSONObject>>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
 
         //构造原始数据
@@ -178,7 +183,7 @@ public class AggregateObjectFieldProcessorTest {
         input.set("amount", 100);
         input.set("name", "张三");
 
-        MergedUnit process = objectFieldProcessor.process(input);
+        MergedUnit<OccupiedFieldUnit<Cloneable2Wrapper<JSONObject>>> process = objectFieldProcessor.process(input);
         assertEquals(new HashMap<>(input), ValueMapper.value(((Value<?>) process)));
 
         JSONObject input2 = new JSONObject();

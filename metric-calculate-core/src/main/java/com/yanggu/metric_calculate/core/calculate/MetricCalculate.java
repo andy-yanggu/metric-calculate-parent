@@ -16,11 +16,6 @@ import java.util.Map;
 public class MetricCalculate<T> extends DataDetailsWideTable {
 
     /**
-     * 原子指标计算类
-     */
-    //private List<AtomMetricCalculate<T, ?>> atomMetricCalculateList;
-
-    /**
      * 派生指标计算类
      */
     private List<DeriveMetricCalculate<T, ?>> deriveMetricCalculateList;

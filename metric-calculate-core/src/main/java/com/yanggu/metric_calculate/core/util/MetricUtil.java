@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -12,7 +12,6 @@ import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.Options;
 import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
 import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
-import com.yanggu.metric_calculate.core.calculate.AtomMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.CompositeMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
@@ -21,16 +20,19 @@ import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.pojo.*;
-import com.yanggu.metric_calculate.core.pojo.metric.Atom;
+import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core.pojo.Fields;
+import com.yanggu.metric_calculate.core.pojo.MultiDimensionCalculate;
+import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.pojo.metric.Composite;
 import com.yanggu.metric_calculate.core.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core.pojo.metric.Global;
+import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.value.Value;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -59,7 +61,9 @@ public class MetricUtil {
             throw new RuntimeException("明细宽表为空");
         }
 
-        MetricCalculate<T> metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
+        String jsonString = JSONUtil.toJsonStr(tableData);
+        MetricCalculate<T> metricCalculate =
+                JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate<T>>() {}, false);
 
         Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
         metricCalculate.setMetricTypeMap(metricTypeMap);
@@ -68,19 +72,6 @@ public class MetricUtil {
         Map<String, Class<?>> fieldMap = getFieldMap(metricCalculate);
         metricCalculate.setFieldMap(fieldMap);
 
-        //原子指标
-        //List<Atom> atomList = tableData.getAtom();
-        //if (CollUtil.isNotEmpty(atomList)) {
-        //    List<AtomMetricCalculate<T, ?>> collect = atomList.stream()
-        //            .map(tempAtom -> {
-        //                metricTypeMap.put(tempAtom.getName(), ATOM);
-        //                //初始化原子指标计算类
-        //                return initAtom(tempAtom, metricCalculate);
-        //            })
-        //            .collect(Collectors.toList());
-        //    metricCalculate.setAtomMetricCalculateList(collect);
-        //}
-
         //派生指标
         List<Derive> deriveList = tableData.getDerive();
         if (CollUtil.isNotEmpty(deriveList)) {
@@ -88,7 +79,7 @@ public class MetricUtil {
                     .map(tempDerive -> {
                         metricTypeMap.put(tempDerive.getName(), DERIVE);
                         //初始化派生指标计算类
-                        return MetricUtil.<T>initDerive(tempDerive, metricCalculate);
+                        return MetricUtil.initDerive(tempDerive, metricCalculate);
                     })
                     .collect(Collectors.toList());
 
@@ -119,55 +110,14 @@ public class MetricUtil {
     }
 
     /**
-     * 初始化原子指标计算类
-     *
-     * @param atom
-     * @return
-     */
-    @SneakyThrows
-    private static <T> AtomMetricCalculate<T, Object> initAtom(Atom atom, MetricCalculate<T> metricCalculate) {
-        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
-        AtomMetricCalculate<T, Object> atomMetricCalculate = new AtomMetricCalculate<>();
-
-        //设置名称
-        atomMetricCalculate.setName(atom.getName());
-
-        //设置前置过滤条件处理器
-        FilterFieldProcessor<T> filterFieldProcessor =
-                FieldProcessorUtil.getFilterFieldProcessor(fieldMap, atom.getFilter());
-
-        atomMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
-
-        //度量字段处理器
-        MetricFieldProcessor<T, Object> metricFieldProcessor =
-                FieldProcessorUtil.getMetricFieldProcessor(fieldMap, atom.getMetricColumn().getColumnName());
-        atomMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
-
-        //时间字段处理器
-        TimeFieldProcessor<T> timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(atom.getTimeColumn());
-        atomMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
-
-        //维度字段处理器
-        String key = metricCalculate.getId() + "_" + atom.getId();
-        DimensionSetProcessor<T> dimensionSetProcessor =
-                FieldProcessorUtil.getDimensionSetProcessor(key, atom.getName(), fieldMap, atom.getDimension());
-        atomMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
-
-        //存储宽表
-        atomMetricCalculate.setStoreInfo(atom.getStoreInfo());
-
-        return atomMetricCalculate;
-    }
-
-    /**
      * 初始化派生指标
      *
      * @param tempDerive
      * @return
      */
     @SneakyThrows
-    private static <T> DeriveMetricCalculate<T, ?> initDerive(Derive tempDerive, MetricCalculate<T> metricCalculate) {
-        DeriveMetricCalculate<T, ?> deriveMetricCalculate = new DeriveMetricCalculate<>();
+    private static <T, M extends MergedUnit<M> & Value<?>> DeriveMetricCalculate<T, M> initDerive(Derive tempDerive, MetricCalculate<T> metricCalculate) {
+        DeriveMetricCalculate<T, M> deriveMetricCalculate = new DeriveMetricCalculate<>();
         deriveMetricCalculate.init();
 
         //设置名称
@@ -190,7 +140,7 @@ public class MetricUtil {
         unitFactory.init();
 
         //设置聚合字段处理器
-        AggregateFieldProcessor aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
+        AggregateFieldProcessor<T, M> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
                 Arrays.asList(tempDerive.getBaseUdafParam(), tempDerive.getExternalBaseUdafParam()),
                 tempDerive.getMapUdafParam(), tempDerive.getMixUnitUdafParam(), tempDerive.getCalculateLogic(),
                 fieldMap, unitFactory);
@@ -245,7 +195,8 @@ public class MetricUtil {
      * @param compositeMetric
      * @return
      */
-    private static <T> List<CompositeMetricCalculate<T>> initComposite(Composite compositeMetric, MetricCalculate<T> metricCalculate) {
+    private static <T> List<CompositeMetricCalculate<T>> initComposite(Composite compositeMetric,
+                                                                       MetricCalculate<T> metricCalculate) {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<MultiDimensionCalculate> multiDimensionCalculateList = compositeMetric.getMultiDimensionCalculateList();
         if (CollUtil.isEmpty(multiDimensionCalculateList)) {

@@ -6,7 +6,8 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 /**
  * 聚合字段处理器
  *
- * @param <M> 生成MergeUnit
+ * @param <T> 输入数据类型
+ * @param <M> 生成{@link com.yanggu.metric_calculate.core.unit.MergedUnit}
  */
 public interface AggregateFieldProcessor<T, M extends MergedUnit<M>> extends FieldProcessor<T, M> {
 

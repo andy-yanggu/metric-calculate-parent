@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.mix.BaseMixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.SumUnit;
+import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,13 +43,13 @@ public class AggregateMixUnitFieldProcessorTest {
 
     @Test
     public void process() throws Exception {
-        AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
-
-        mixUnitFieldProcessor.setFieldMap(fieldMap);
-        mixUnitFieldProcessor.setUnitFactory(unitFactory);
 
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
+
+        AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit> mixUnitFieldProcessor =
+                (AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit>)
+                        FieldProcessorUtil.<JSONObject, BaseMixedUnit>getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, unitFactory);
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
 
         mixUnitFieldProcessor.init();

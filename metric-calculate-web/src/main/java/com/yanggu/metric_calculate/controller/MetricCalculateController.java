@@ -5,7 +5,6 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
-import com.yanggu.metric_calculate.core.calculate.AtomMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.CompositeMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
@@ -109,26 +108,10 @@ public class MetricCalculateController {
         return response;
     }
 
-    private void calcAtom(JSONObject message, MetricCalculate dataWideTable, Map<String, Object> atomicResultMap) {
-        List<AtomMetricCalculate> atomMetricCalculateList = dataWideTable.getAtomMetricCalculateList();
-        if (CollUtil.isEmpty(atomMetricCalculateList)) {
-            return;
-        }
-        atomMetricCalculateList.parallelStream().forEach(atomMetricCalculate -> {
-            Object exec = atomMetricCalculate.exec(message);
-            if (exec != null) {
-                atomicResultMap.put(atomMetricCalculate.getName(), exec);
-            }
-        });
-        if (log.isDebugEnabled()) {
-            log.debug("原子指标计算后的数据: {}", JSONUtil.toJsonStr(atomicResultMap));
-        }
-    }
-
     private void calcDeriveState(JSONObject message,
-                                 MetricCalculate dataWideTable,
+                                 MetricCalculate<JSONObject> dataWideTable,
                                  List<DeriveMetricCalculateResult> deriveMetricCalculateResultList) {
-        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return;
         }
@@ -147,9 +130,9 @@ public class MetricCalculateController {
     }
 
     private void calcDeriveNoState(JSONObject message,
-                            MetricCalculate dataWideTable,
+                            MetricCalculate<JSONObject> dataWideTable,
                             List<DeriveMetricCalculateResult> deriveMetricCalculateResultList) {
-        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return;
         }

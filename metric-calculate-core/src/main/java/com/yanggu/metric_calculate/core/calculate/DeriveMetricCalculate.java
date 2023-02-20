@@ -193,7 +193,6 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         for (TimeWindow timeWindow : timeWindowList) {
 
             DeriveMetricCalculateResult result = new DeriveMetricCalculateResult();
-            list.add(result);
             //指标key
             result.setKey(metricCube.getKey());
 
@@ -221,11 +220,15 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
 
             //进行回调, 对于滑动计数窗口和CEP需要额外的处理
             value = aggregateFieldProcessor.callBack(value);
+            if (value == null) {
+                continue;
+            }
 
             //处理精度
             value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
             result.setResult(value);
 
+            list.add(result);
             if (log.isDebugEnabled()) {
                 //拼接维度数据
                 String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
