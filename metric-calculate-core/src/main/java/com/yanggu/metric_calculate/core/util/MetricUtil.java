@@ -69,17 +69,17 @@ public class MetricUtil {
         metricCalculate.setFieldMap(fieldMap);
 
         //原子指标
-        List<Atom> atomList = tableData.getAtom();
-        if (CollUtil.isNotEmpty(atomList)) {
-            List<AtomMetricCalculate<T, ?>> collect = atomList.stream()
-                    .map(tempAtom -> {
-                        metricTypeMap.put(tempAtom.getName(), ATOM);
-                        //初始化原子指标计算类
-                        return initAtom(tempAtom, metricCalculate);
-                    })
-                    .collect(Collectors.toList());
-            metricCalculate.setAtomMetricCalculateList(collect);
-        }
+        //List<Atom> atomList = tableData.getAtom();
+        //if (CollUtil.isNotEmpty(atomList)) {
+        //    List<AtomMetricCalculate<T, ?>> collect = atomList.stream()
+        //            .map(tempAtom -> {
+        //                metricTypeMap.put(tempAtom.getName(), ATOM);
+        //                //初始化原子指标计算类
+        //                return initAtom(tempAtom, metricCalculate);
+        //            })
+        //            .collect(Collectors.toList());
+        //    metricCalculate.setAtomMetricCalculateList(collect);
+        //}
 
         //派生指标
         List<Derive> deriveList = tableData.getDerive();
