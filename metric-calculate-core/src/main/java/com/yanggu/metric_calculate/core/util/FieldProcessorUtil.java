@@ -9,7 +9,8 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiF
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.*;
+import com.yanggu.metric_calculate.core.pojo.Dimension;
+import com.yanggu.metric_calculate.core.pojo.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
@@ -31,10 +32,9 @@ public class FieldProcessorUtil {
     /**
      * 生成前置过滤条件字段字段处理器
      *
-     * @param fieldMap
-     * @param filterExpress
-     * @return
-     * @throws Exception
+     * @param fieldMap      宽表字段
+     * @param filterExpress 过滤表达式
+     * @return 前置过滤条件字段处理器
      */
     @SneakyThrows
     public static <T> FilterFieldProcessor<T> getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
@@ -47,8 +47,8 @@ public class FieldProcessorUtil {
     /**
      * 生成时间字段处理器
      *
-     * @param timeColumn
-     * @return
+     * @param timeColumn 时间字段(字段字段名和时间格式)
+     * @return 时间字段处理器
      */
     public static <T> TimeFieldProcessor<T> getTimeFieldProcessor(TimeColumn timeColumn) {
         TimeFieldProcessor<T> timeFieldProcessor =
@@ -60,14 +60,13 @@ public class FieldProcessorUtil {
     /**
      * 生成维度字段处理器
      *
-     * @param key
-     * @param metricName
-     * @param fieldMap
-     * @param dimensionList
-     * @return
+     * @param key           指标唯一标识
+     * @param metricName    指标名称
+     * @param fieldMap      宽表字段
+     * @param dimensionList 维度列表
+     * @return 维度字段处理器
      */
-    public static <T> DimensionSetProcessor<T> getDimensionSetProcessor(String key,
-                                                                        String metricName,
+    public static <T> DimensionSetProcessor<T> getDimensionSetProcessor(String key, String metricName,
                                                                         Map<String, Class<?>> fieldMap,
                                                                         List<Dimension> dimensionList) {
         DimensionSetProcessor<T> dimensionSetProcessor = new DimensionSetProcessor<>(dimensionList);
@@ -81,10 +80,9 @@ public class FieldProcessorUtil {
     /**
      * 生成度量值字段处理器
      *
-     * @param fieldMap
-     * @param metricExpress
-     * @return
-     * @throws Exception
+     * @param fieldMap 宽表字段
+     * @param metricExpress 度量表达式
+     * @return 度量值字段处理器
      */
     @SneakyThrows
     public static <T> MetricFieldProcessor<T, Object> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
@@ -99,10 +97,9 @@ public class FieldProcessorUtil {
     /**
      * 生成多字段去重字段处理器
      *
-     * @param fieldMap
-     * @param metricExpressList
-     * @return
-     * @throws Exception
+     * @param fieldMap 宽表字段
+     * @param metricExpressList 维度表达式列表
+     * @return 多字段去重字段处理器
      */
     @SneakyThrows
     public static <T> MultiFieldDistinctFieldProcessor<T> getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
@@ -117,10 +114,9 @@ public class FieldProcessorUtil {
     /**
      * 生成多字段排序字段处理器
      *
-     * @param fieldMap
-     * @param fieldOrderParamList
-     * @return
-     * @throws Exception
+     * @param fieldMap 宽表字段
+     * @param fieldOrderParamList 多字段排序列表
+     * @return 多字段排序字段处理器
      */
     @SneakyThrows
     public static <T> MultiFieldOrderFieldProcessor<T> getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
@@ -139,7 +135,6 @@ public class FieldProcessorUtil {
      * @param unitFactory
      * @param fieldMap
      * @return
-     * @throws Exception
      */
     @SneakyThrows
     public static <T> BaseAggregateFieldProcessor<T, ?> getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
@@ -184,7 +179,6 @@ public class FieldProcessorUtil {
      * @param fieldMap
      * @param unitFactory
      * @return
-     * @throws Exception
      */
     @SneakyThrows
     public static <T> AggregateMapUnitFieldProcessor<T, ?> getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
@@ -209,7 +203,6 @@ public class FieldProcessorUtil {
      * @param fieldMap
      * @param unitFactory
      * @return
-     * @throws Exception
      */
     @SneakyThrows
     public static <T> AggregateFieldProcessor<T, ?> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
@@ -234,7 +227,6 @@ public class FieldProcessorUtil {
      * @param fieldMap
      * @param unitFactory
      * @return
-     * @throws Exception
      */
     public static <T> AggregateFieldProcessor<T, ?> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
                                                                                MapUnitUdafParam mapUdafParam,

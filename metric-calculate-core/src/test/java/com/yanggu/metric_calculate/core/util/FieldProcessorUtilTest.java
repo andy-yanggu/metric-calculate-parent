@@ -4,10 +4,20 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-/**
- * 字段处理器工具类单元测试类
- */
 public class FieldProcessorUtilTest {
+
+    @Test
+    public void testGetFilterFieldProcessor() {
+        FieldProcessorUtil.getFilterFieldProcessor(null, null);
+    }
+
+    @Test
+    public void getTimeFieldProcessor() {
+    }
+
+    @Test
+    public void getDimensionSetProcessor() {
+    }
 
     @Test
     public void getMetricFieldProcessor() {
@@ -27,6 +37,10 @@ public class FieldProcessorUtilTest {
 
     @Test
     public void getAggregateMapUnitFieldProcessor() {
+    }
+
+    @Test
+    public void getAggregateMixUnitFieldProcessor() {
     }
 
     @Test
