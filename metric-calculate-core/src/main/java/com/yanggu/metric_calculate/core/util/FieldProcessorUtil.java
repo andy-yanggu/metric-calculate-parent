@@ -9,8 +9,8 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiF
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.Dimension;
-import com.yanggu.metric_calculate.core.pojo.TimeColumn;
+import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;

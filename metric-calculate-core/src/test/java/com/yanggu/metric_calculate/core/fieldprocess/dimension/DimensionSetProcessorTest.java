@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.fieldprocess.dimension;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.pojo.Dimension;
+import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
 import org.junit.Test;
 
 import java.util.*;

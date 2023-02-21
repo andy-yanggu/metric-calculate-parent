@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.core.util.NumberUtil;
 import com.yanggu.metric_calculate.core.enums.AccuracyEnum;
-import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
+import com.yanggu.metric_calculate.core.pojo.metric.RoundAccuracy;
 import lombok.extern.slf4j.Slf4j;
 
 import java.math.BigDecimal;

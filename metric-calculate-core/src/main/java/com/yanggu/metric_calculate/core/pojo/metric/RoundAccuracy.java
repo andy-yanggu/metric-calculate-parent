@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.metric;
 
 import com.yanggu.metric_calculate.core.enums.AccuracyEnum;
 import lombok.Data;

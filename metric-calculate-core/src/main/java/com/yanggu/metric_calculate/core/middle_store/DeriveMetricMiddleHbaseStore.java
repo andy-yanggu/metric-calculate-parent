@@ -16,12 +16,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 import java.util.List;
 
-/**
- * @version V1.0
- * @author: YangGu
- * @date: 2023/1/12 18:18
- * @description:
- */
+
 public class DeriveMetricMiddleHbaseStore implements DeriveMetricMiddleStore {
 
     private Table testTable;

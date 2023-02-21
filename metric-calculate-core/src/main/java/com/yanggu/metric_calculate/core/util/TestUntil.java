@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.unit.pattern.*;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

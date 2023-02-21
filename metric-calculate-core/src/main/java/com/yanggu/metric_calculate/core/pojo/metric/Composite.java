@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.core.pojo.metric;
 
-import com.yanggu.metric_calculate.core.pojo.MultiDimensionCalculate;
-import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
 import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
-import com.yanggu.metric_calculate.core.pojo.TimeColumn;
 import lombok.Data;
 
 import java.util.List;

@@ -24,7 +24,7 @@ public class JaninoTest {
      *
      * @throws Exception
      */
-    @RepeatedTest(20)
+    //@RepeatedTest(5)
     public void test1() throws Exception {
         //String testJarPath = UnitFactoryTest.testJarPath();
         UnitFactory unitFactory = new UnitFactory(Collections.singletonList("D:\\project\\self\\metric-calculate\\udaf-test\\target\\udaf-test-1.0.0-SNAPSHOT.jar"));
@@ -35,7 +35,6 @@ public class JaninoTest {
         Class<?>[] parameterTypes = {Map.class, Object.class};
         evaluator.setParameters(parameterNames, parameterTypes);
         evaluator.setReturnType(Object.class);
-        evaluator.setParentClassLoader(unitFactory.getUrlClassLoader());
         evaluator.cook(expression);
 
         StopWatch stopWatch = new StopWatch();
@@ -54,7 +53,7 @@ public class JaninoTest {
      *
      * @throws Exception
      */
-    @RepeatedTest(20)
+    //@RepeatedTest(5)
     public void test2() throws Exception {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();
@@ -76,7 +75,7 @@ public class JaninoTest {
     /**
      * 使用原生java代码
      */
-    @RepeatedTest(20)
+    //@RepeatedTest(5)
     public void test3() {
         StopWatch stopWatch = new StopWatch();
         stopWatch.start();

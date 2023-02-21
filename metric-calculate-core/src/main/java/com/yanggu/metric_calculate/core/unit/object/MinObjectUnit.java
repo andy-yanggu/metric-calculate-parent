@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.unit.object;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.pojo.Fields;
 import com.yanggu.metric_calculate.core.value.*;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;

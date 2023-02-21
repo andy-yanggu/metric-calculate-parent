@@ -1,12 +1,11 @@
 package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.CastUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core.pojo.Fields;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Fields;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;

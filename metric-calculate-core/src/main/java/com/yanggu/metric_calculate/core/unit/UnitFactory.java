@@ -63,8 +63,6 @@ public class UnitFactory implements Serializable {
      */
     private List<String> udafJarPathList;
 
-    private ClassLoader urlClassLoader = ClassLoader.getSystemClassLoader();
-
     public UnitFactory(List<String> udafJarPathList) {
         this.udafJarPathList = udafJarPathList;
     }
@@ -104,7 +102,6 @@ public class UnitFactory implements Serializable {
         //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类,
         //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
         URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader());
-        this.urlClassLoader = urlClassLoader;
         for (JarEntry entry : jarEntries) {
             if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
                 String entryName = entry.getName().substring(0, entry.getName().indexOf(".class")).replace("/", ".");
@@ -123,7 +120,7 @@ public class UnitFactory implements Serializable {
     }
 
     /**
-     * 使用freemarker动态生成Java代码
+     * 使用Freemarker动态生成Java代码
      * <p>使用Janino进行编译, 避免反射生成MergedUnit</p>
      *
      * @param tempClass
@@ -135,7 +132,7 @@ public class UnitFactory implements Serializable {
         configuration.setDefaultEncoding("utf-8");
 
         Class<?> returnClass;
-        Integer unitType;
+        int unitType;
         MergeType mergeType = tempClass.getAnnotation(MergeType.class);
         if (tempClass.isAnnotationPresent(Numerical.class)) {
             //数值型

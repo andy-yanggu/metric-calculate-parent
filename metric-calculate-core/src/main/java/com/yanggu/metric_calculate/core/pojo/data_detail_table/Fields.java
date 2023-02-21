@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.data_detail_table;
 
 
 import com.yanggu.metric_calculate.core.enums.BasicType;
@@ -15,14 +15,10 @@ public class Fields {
      */
     private String className;
 
-    private String labels;
-
     /**
      * 字段名
      */
     private String name;
-
-    private String properties;
 
     /**
      * 字段数据类型

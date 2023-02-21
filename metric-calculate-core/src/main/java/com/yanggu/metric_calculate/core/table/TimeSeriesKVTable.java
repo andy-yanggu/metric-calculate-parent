@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.table;
 
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;

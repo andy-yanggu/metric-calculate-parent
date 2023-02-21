@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.calculate;
 
 
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import lombok.Data;
 
 import java.util.List;

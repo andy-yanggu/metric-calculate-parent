@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.util;
 
 
 import com.yanggu.metric_calculate.core.enums.AccuracyEnum;
-import com.yanggu.metric_calculate.core.pojo.RoundAccuracy;
+import com.yanggu.metric_calculate.core.pojo.metric.RoundAccuracy;
 import org.junit.Test;
 
 import static com.yanggu.metric_calculate.core.util.RoundAccuracyUtil.handlerRoundAccuracy;

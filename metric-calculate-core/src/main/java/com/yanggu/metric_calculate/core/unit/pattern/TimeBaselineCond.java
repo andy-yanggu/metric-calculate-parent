@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.unit.pattern;
 
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 
 public class TimeBaselineCond implements Cond<Long> {
 

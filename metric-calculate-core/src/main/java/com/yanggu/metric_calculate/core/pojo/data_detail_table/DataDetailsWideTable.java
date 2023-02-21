@@ -1,6 +1,5 @@
-package com.yanggu.metric_calculate.core.pojo;
+package com.yanggu.metric_calculate.core.pojo.data_detail_table;
 
-import com.yanggu.metric_calculate.core.pojo.metric.Atom;
 import com.yanggu.metric_calculate.core.pojo.metric.Composite;
 import com.yanggu.metric_calculate.core.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core.pojo.metric.Global;
@@ -29,11 +28,6 @@ public class DataDetailsWideTable {
      * 中文名
      */
     private String displayName;
-
-    /**
-     * 原子指标
-     */
-    private List<Atom> atom;
 
     /**
      * 派生指标

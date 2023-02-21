@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.annotation.MapType;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.enums.TimeWindowEnum;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.pattern.Pattern;

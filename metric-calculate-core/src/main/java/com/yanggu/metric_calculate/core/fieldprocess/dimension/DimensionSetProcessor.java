@@ -5,7 +5,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.Dimension;
+import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

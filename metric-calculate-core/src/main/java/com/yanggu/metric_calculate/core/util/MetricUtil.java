@@ -23,10 +23,10 @@ import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.pojo.DataDetailsWideTable;
-import com.yanggu.metric_calculate.core.pojo.Fields;
-import com.yanggu.metric_calculate.core.pojo.MultiDimensionCalculate;
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Fields;
+import com.yanggu.metric_calculate.core.pojo.metric.MultiDimensionCalculate;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.pojo.metric.Composite;
 import com.yanggu.metric_calculate.core.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core.pojo.metric.Global;

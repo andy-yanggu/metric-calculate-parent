@@ -7,7 +7,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.pojo.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 
 
 public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
