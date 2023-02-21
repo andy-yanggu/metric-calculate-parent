@@ -36,10 +36,9 @@ public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>> imple
     /**
      * 有界有限队列
      */
-    protected BoundedPriorityQueue<T> boundedPriorityQueue;
+    protected BoundedPriorityQueue<T> boundedPriorityQueue = new BoundedPriorityQueue<>(limit);
 
     public SortedListObjectUnit() {
-        this.boundedPriorityQueue = new BoundedPriorityQueue<>(this.limit);
     }
 
     public SortedListObjectUnit(Map<String, Object> params) {
