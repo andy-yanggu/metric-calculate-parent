@@ -133,7 +133,7 @@ public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> exten
         }
         List<T> tempValueList = (List<T>) input;
         MergedUnit mergedUnit = tempValueList.stream()
-                .map(tempValue -> (MergedUnit) externalAggregateFieldProcessor.process(tempValue))
+                .map(tempValue -> externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)
                 .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
         return ValueMapper.value(((Value<?>) mergedUnit));

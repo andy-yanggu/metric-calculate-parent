@@ -130,8 +130,8 @@ public class MetricCalculateController {
     }
 
     private void calcDeriveNoState(JSONObject message,
-                            MetricCalculate<JSONObject> dataWideTable,
-                            List<DeriveMetricCalculateResult> deriveMetricCalculateResultList) {
+                                   MetricCalculate<JSONObject> dataWideTable,
+                                   List<DeriveMetricCalculateResult> deriveMetricCalculateResultList) {
         List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return;
@@ -151,10 +151,10 @@ public class MetricCalculateController {
     }
 
     private void calcComposite(JSONObject message,
-                               MetricCalculate dataWideTable,
+                               MetricCalculate<JSONObject> dataWideTable,
                                Map<String, Object> compositeResultMap) {
 
-        List<CompositeMetricCalculate> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
+        List<CompositeMetricCalculate<JSONObject>> compositeMetricCalculateList = dataWideTable.getCompositeMetricCalculateList();
         if (CollUtil.isEmpty(compositeMetricCalculateList)) {
             return;
         }

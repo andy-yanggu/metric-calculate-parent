@@ -56,7 +56,7 @@ public class UnitFactory implements Serializable {
 
     private Map<String, Class<? extends MergedUnit<?>>> unitMap = new HashMap<>();
 
-    private Map<String, ScriptEvaluator> evaluatorMap = new HashMap<>();
+    private transient Map<String, ScriptEvaluator> evaluatorMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
@@ -220,7 +220,7 @@ public class UnitFactory implements Serializable {
      * @return
      */
     @SneakyThrows
-    public static CubeNumber createCubeNumber(Object initValue) {
+    public static CubeNumber<?> createCubeNumber(Object initValue) {
         if (!NumberUtil.isNumber(initValue.toString())) {
             throw new Exception("传入的不是数值");
         }
@@ -297,7 +297,7 @@ public class UnitFactory implements Serializable {
         unitFactory.init();
         MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L, null);
         count2.merge(count2.fastClone());
-        System.out.println("count2 = " + count2);
+        log.info("count2 = {}", count2);
 
         //测试Kryo序列化和反序列化自定义的udaf
         KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory());
@@ -315,9 +315,9 @@ public class UnitFactory implements Serializable {
 
         Input input = new Input(bytes);
         Object result = kryo.readClassAndObject(input);
-        System.out.println(result);
-        MergedUnit mergedUnit = ((MergedUnit) result).merge(count2);
-        System.out.println(mergedUnit);
+        log.info(result.toString());
+        MergedUnit<?> mergedUnit = ((MergedUnit) result).merge(count2);
+        log.info(mergedUnit.toString());
     }
 
 }

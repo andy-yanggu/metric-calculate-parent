@@ -22,6 +22,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProce
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Fields;
@@ -167,7 +168,7 @@ public class MetricUtil {
         deriveMetricCalculate.setStoreInfo(tempDerive.getStoreInfo());
 
         //设置MetricCubeFactory
-        MetricCubeFactory metricCubeFactory = new MetricCubeFactory<>();
+        MetricCubeFactory<M> metricCubeFactory = new MetricCubeFactory<>();
         metricCubeFactory.setKey(key);
         metricCubeFactory.setName(name);
         metricCubeFactory.setTimeBaselineDimension(timeBaselineDimension);
@@ -178,11 +179,11 @@ public class MetricUtil {
         //并发HashMap存储中间数据
         DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         //redis存储中间数据
-        //DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
-        //RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
-        //List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getMethodReflection().values());
-        //deriveMetricMiddleStore.setClassList(classList);
-        //deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
+        /*DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+        RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
+        List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getMethodReflection().values());
+        deriveMetricMiddleStore.setClassList(classList);
+        deriveMetricMiddleStore.setRedisTemplate(redisTemplate);*/
         deriveMetricMiddleStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 
