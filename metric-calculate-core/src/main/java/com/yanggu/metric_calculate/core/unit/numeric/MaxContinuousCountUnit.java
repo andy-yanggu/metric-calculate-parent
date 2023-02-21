@@ -7,7 +7,7 @@ import com.yanggu.metric_calculate.core.number.CubeLong;
 import java.util.Objects;
 
 @Numerical
-@MergeType("MAXCONTINUOUSCOUNT")
+//@MergeType("MAXCONTINUOUSCOUNT")
 public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousCountUnit> {
 
     private static final long serialVersionUID = -3396993409877201343L;
@@ -30,10 +30,10 @@ public class MaxContinuousCountUnit extends BoundaryUnit<Boolean, MaxContinuousC
      * Constructor.
      */
     public MaxContinuousCountUnit(Boolean head,
-                                    Boolean tail,
-                                    CubeLong value,
-                                    long count,
-                                    long headCount, long tailCount) {
+                                  Boolean tail,
+                                  CubeLong value,
+                                  long count,
+                                  long headCount, long tailCount) {
         super(head, tail, value, count);
         this.headCount = headCount;
         this.tailCount = tailCount;

@@ -122,7 +122,7 @@ public class UnitFactoryTest {
         assertTrue(unit instanceof SumUnit);
         assertEquals(100L, ((SumUnit) unit).value());
 
-        MergedUnit unit2 = (MergedUnit) unit.fastClone();
+        MergedUnit unit2 = unit.fastClone();
         unit.merge(unit2);
 
         assertEquals(200L, ((SumUnit<?>) unit).value());
@@ -294,6 +294,14 @@ public class UnitFactoryTest {
         //System.out.println(result);
         assertEquals("COUNT2", result.getClass().getAnnotation(MergeType.class).value());
         assertEquals(count2, result);
+    }
+
+    @Test
+    public void testUDAF3() throws Exception {
+        UnitFactory unitFactory1 = new UnitFactory();
+        unitFactory1.init();
+
+        System.out.println(unitFactory1);
     }
 
     /**

@@ -1,16 +1,15 @@
 import ${fullName};
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
+import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import java.util.Map;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 
 
 MergeType mergeType = (MergeType) ${fullName}.class.getAnnotation(MergeType.class);
-CollectionUnit collectionUnit;
+NumberUnit numberUnit;
 <#if useParam == true>
-    collectionUnit = new ${fullName}<>(param);
+    numberUnit = new ${fullName}<>(initValue, param);
 <#else>
-    collectionUnit = new ${fullName}<>();
+    numberUnit = new ${fullName}<>(initValue);
 </#if>
-collectionUnit.add(initValue);
-return collectionUnit;
+return numberUnit;

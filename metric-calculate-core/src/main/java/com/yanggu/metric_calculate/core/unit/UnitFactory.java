@@ -2,9 +2,11 @@ package com.yanggu.metric_calculate.core.unit;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.ClassUtil;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.NumberUtil;
 import cn.hutool.json.JSONUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
@@ -19,13 +21,19 @@ import com.yanggu.metric_calculate.core.unit.map.MapUnit;
 import com.yanggu.metric_calculate.core.unit.mix_unit.MixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.Version;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.codehaus.janino.ScriptEvaluator;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
-import java.lang.reflect.Constructor;
+import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -47,6 +55,8 @@ public class UnitFactory implements Serializable {
     public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core.unit";
 
     private Map<String, Class<? extends MergedUnit<?>>> unitMap = new HashMap<>();
+
+    private Map<String, ScriptEvaluator> evaluatorMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
@@ -72,6 +82,8 @@ public class UnitFactory implements Serializable {
         classSet.forEach(this::addClassToMap);
 
         if (CollUtil.isEmpty(udafJarPathList)) {
+            //动态生成Java代码和编译生成Janino表达式
+            unitMap.values().forEach(this::createJaninoExpress);
             return;
         }
         //支持添加自定义的聚合函数
@@ -105,6 +117,80 @@ public class UnitFactory implements Serializable {
         if (log.isDebugEnabled()) {
             log.debug("生成的unit: {}", JSONUtil.toJsonStr(unitMap));
         }
+
+        //动态生成Java代码和编译生成Janino表达式
+        unitMap.values().forEach(this::createJaninoExpress);
+    }
+
+    /**
+     * 使用freemarker动态生成Java代码
+     * <p>使用Janino进行编译, 避免反射生成MergedUnit</p>
+     *
+     * @param tempClass
+     */
+    @SneakyThrows
+    private void createJaninoExpress(Class<? extends MergedUnit<?>> tempClass) {
+        Version version = new Version("2.3.28");
+        Configuration configuration = new Configuration(version);
+        configuration.setDefaultEncoding("utf-8");
+
+        Class<?> returnClass;
+        Integer unitType;
+        MergeType mergeType = tempClass.getAnnotation(MergeType.class);
+        if (tempClass.isAnnotationPresent(Numerical.class)) {
+            //数值型
+            returnClass = NumberUnit.class;
+            unitType = 0;
+        } else if (tempClass.isAnnotationPresent(Collective.class)) {
+            //集合型
+            returnClass = CollectionUnit.class;
+            unitType = 1;
+        } else if (tempClass.isAnnotationPresent(Objective.class)) {
+            //对象型
+            returnClass = ObjectiveUnit.class;
+            unitType = 2;
+        } else if (tempClass.isAnnotationPresent(MapType.class)) {
+            //映射型
+            returnClass = MapUnit.class;
+            unitType = 3;
+        } else if (tempClass.isAnnotationPresent(Mix.class)) {
+            //混合型
+            returnClass = MixedUnit.class;
+            unitType = 4;
+        } else {
+            throw new RuntimeException(tempClass.getName() + " not support.");
+        }
+
+        //模板文件路径
+        String fileName = "merged_unit.ftl";
+        configuration.setDirectoryForTemplateLoading(new File(getTemplatePath(fileName)));
+        StringWriter stringWriter = new StringWriter();
+        Template template = configuration.getTemplate(fileName);
+
+        Map<String, Object> param = new HashMap<>();
+
+        //放入全类名
+        param.put("fullName", tempClass.getName());
+        //放入是否使用自定义参数
+        param.put("useParam", mergeType.useParam());
+        //放入聚合类型
+        param.put("unitType", unitType);
+
+        //生成模板代码
+        template.process(param, stringWriter);
+        log.info("{}类生成的模板代码: {}\n", tempClass.getName(), stringWriter);
+
+        //编译表达式
+        ScriptEvaluator evaluator = new ScriptEvaluator();
+        String expression = stringWriter.toString();
+        String[] parameterNames = {"param", "initValue"};
+        Class<?>[] parameterTypes = {Map.class, Object.class};
+        evaluator.setParameters(parameterNames, parameterTypes);
+        evaluator.setReturnType(returnClass);
+        evaluator.setParentClassLoader(tempClass.getClassLoader());
+        evaluator.cook(expression);
+
+        evaluatorMap.put(mergeType.value(), evaluator);
     }
 
     public Class<? extends MergedUnit<?>> getMergeableClass(String actionType) {
@@ -116,7 +202,8 @@ public class UnitFactory implements Serializable {
     }
 
     /**
-     * 生成mergeUnit
+     * 使用Janino编译生成.class文件, 然后生成MergeUnit
+     * <p>避免反射调用</p>
      *
      * @param aggregateType 聚合类型
      * @param initValue     度量值
@@ -125,116 +212,33 @@ public class UnitFactory implements Serializable {
      * @throws Exception
      */
     public MergedUnit initInstanceByValue(String aggregateType, Object initValue, Map<String, Object> params) throws Exception {
-        Class clazz = unitMap.get(aggregateType);
-        if (clazz == null) {
-            throw new NullPointerException("MergedUnit class not found.");
-        }
-        if (clazz.isAnnotationPresent(Numerical.class)) {
-            //数值型
-            return createNumericUnit(clazz, initValue, params);
-        } else if (clazz.isAnnotationPresent(Collective.class)) {
-            //集合型
-            return createCollectiveUnit(clazz, initValue, params);
-        } else if (clazz.isAnnotationPresent(Objective.class)) {
-            //对象型
-            return createObjectiveUnit(clazz, initValue, params);
-        } else if (clazz.isAnnotationPresent(MapType.class)) {
-            //映射型
-            return createMapUnit(clazz, initValue, params);
-        } else if (clazz.isAnnotationPresent(Mix.class)) {
-            return createMixUnit(clazz, initValue, params);
-        } else {
-            throw new RuntimeException(clazz.getName() + " not support.");
-        }
-    }
-
-    private MergedUnit createMixUnit(Class<MixedUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        MixedUnit mixedUnit;
-        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
-            mixedUnit = clazz.getConstructor(Map.class).newInstance(params);
-        } else {
-            mixedUnit = clazz.getConstructor().newInstance();
-        }
-        mixedUnit.addMergeUnit((Map<String, MergedUnit<?>>) initValue);
-        return mixedUnit;
-    }
-
-    private MergedUnit createMapUnit(Class<MapUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        MapUnit mapUnit;
-        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
-            mapUnit = clazz.getConstructor(Map.class).newInstance(params);
-        } else {
-            mapUnit = clazz.getConstructor().newInstance();
-        }
-        Tuple tuple = (Tuple) initValue;
-        mapUnit.put(tuple.get(0), tuple.get(1));
-        return mapUnit;
+        ScriptEvaluator scriptEvaluator = evaluatorMap.get(aggregateType);
+        return (MergedUnit) scriptEvaluator.evaluate(params, initValue);
     }
 
     /**
-     * Create unit.
+     * 请注意, 该方法请不要删除和修改
+     *
+     * @param initValue
+     * @return
      */
-    private MergedUnit createObjectiveUnit(Class<ObjectiveUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        ObjectiveUnit objectiveUnit;
-        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
-            objectiveUnit = clazz.getConstructor(Map.class).newInstance(params);
-        } else {
-            objectiveUnit = clazz.getConstructor().newInstance();
+    @SneakyThrows
+    public static CubeNumber createCubeNumber(Object initValue) {
+        if (!NumberUtil.isNumber(initValue.toString())) {
+            throw new Exception("传入的不是数值");
         }
-        return objectiveUnit.value(initValue);
-    }
-
-    /**
-     * Create collective unit.
-     */
-    private MergedUnit createCollectiveUnit(Class<CollectionUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        CollectionUnit collectionUnit;
-        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
-            collectionUnit = clazz.getConstructor(Map.class).newInstance(params);
-        } else {
-            collectionUnit = clazz.getConstructor().newInstance();
-        }
-        return collectionUnit.add(initValue);
-    }
-
-    /**
-     * Create number unit.
-     */
-    private NumberUnit createNumericUnit(Class<NumberUnit> clazz, Object initValue, Map<String, Object> params) throws Exception {
-        Constructor<NumberUnit> constructor;
-        Object[] initArgs;
-        if (useParam(clazz) && CollUtil.isNotEmpty(params)) {
-            //构造函数, 如果使用自定义参数
-            //对于数值型是两个参数, 第一个是CubeNumber, 第二个是Map
-            constructor = clazz.getConstructor(CubeNumber.class, Map.class);
-            initArgs = new Object[2];
-            initArgs[1] = params;
-        } else {
-            constructor = clazz.getConstructor(CubeNumber.class);
-            initArgs = new Object[1];
-        }
-        //判断数据类型
         BasicType valueType = ofValue(initValue);
         switch (valueType) {
             case LONG:
-                initArgs[0] = CubeLong.of(initValue);
-                break;
+                return CubeLong.of(initValue);
             case DECIMAL:
-                initArgs[0] = CubeDecimal.of(initValue);
-                break;
+                return CubeDecimal.of(initValue);
             default:
                 throw new IllegalStateException("Unexpected value type: " + valueType);
         }
-        return constructor.newInstance(initArgs);
     }
 
-    private boolean useParam(Class<?> clazz) {
-        MergeType mergeType = clazz.getAnnotation(MergeType.class);
-        //是否使用自定义参数
-        return mergeType.useParam();
-    }
-
-    private BasicType ofValue(Object value) {
+    public static BasicType ofValue(Object value) {
         if (value instanceof Long) {
             return LONG;
         } else if (value instanceof String) {
@@ -266,6 +270,27 @@ public class UnitFactory implements Serializable {
         if (put != null) {
             throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
         }
+    }
+
+    private String getTemplatePath(String fileName) {
+        //返回读取指定资源的输入流
+        InputStream is = this.getClass().getResourceAsStream("/merged_unit_template/" + fileName);
+        String path = System.getProperty("java.io.tmpdir");
+        String dirPath = path + File.separator + IdUtil.fastSimpleUUID() + "/templates";
+        log.info("生成merged_unit模板全路径: {}", dirPath);
+        File dir = new File(dirPath);
+        //create folder
+        if (!dir.mkdirs()) {
+            return dirPath;
+        }
+        String filePath = dirPath + File.separator + fileName;
+        File file = new File(filePath);
+        if (file.exists()) {
+            return dirPath;
+        }
+        //文件不存在，则创建流输入默认数据到新文件
+        FileUtil.writeFromStream(is, file, true);
+        return dirPath;
     }
 
     public static void main(String[] args) throws Exception {

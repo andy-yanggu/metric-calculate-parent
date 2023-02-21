@@ -9,7 +9,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 @Pattern
-@MergeType(value = "pattern", timeWindowType = TimeWindowEnum.PATTERN)
+//@MergeType(value = "pattern", timeWindowType = TimeWindowEnum.PATTERN)
 public class MatchState<E> implements EventState<E, MatchState<E>> {
 
     private E event;

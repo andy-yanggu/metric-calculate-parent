@@ -22,6 +22,10 @@ public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> 
         super();
     }
 
+    public CovUnit(N value) {
+        super(value);
+    }
+
     /**
      * Constructor.
      */
