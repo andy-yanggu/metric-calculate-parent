@@ -1,12 +1,9 @@
-import ${fullName};
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.map.MapUnit;
 import com.yanggu.metric_calculate.core.unit.mix_unit.MixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
-import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import java.util.Map;

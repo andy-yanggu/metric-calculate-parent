@@ -27,7 +27,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @Collective(retainObject = true)
 @MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, useExternalAgg = true, timeWindowType = TIME_SLIDING_WINDOW)
 public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
-        CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<Object>, Serializable, Iterable<T> {
+        CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<List<Object>>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -1500607404480893613L;
 
@@ -94,9 +94,8 @@ public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
         return this.values.iterator();
     }
 
-    @SneakyThrows
     @Override
-    public Object value() {
+    public List<Object> value() {
         return this.values.stream()
                 .map(tempValue -> ((Value<?>) tempValue).value())
                 .collect(Collectors.toList());

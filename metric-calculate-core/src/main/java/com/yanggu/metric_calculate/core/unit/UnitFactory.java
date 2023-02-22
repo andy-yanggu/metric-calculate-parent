@@ -158,10 +158,12 @@ public class UnitFactory implements Serializable {
             //映射型
             returnClass = MapUnit.class;
             unitType = 3;
+            paramType = Tuple.class;
         } else if (tempClass.isAnnotationPresent(Mix.class)) {
             //混合型
             returnClass = MixedUnit.class;
             unitType = 4;
+            paramType = Map.class;
         } else {
             throw new RuntimeException(tempClass.getName() + " not support.");
         }
