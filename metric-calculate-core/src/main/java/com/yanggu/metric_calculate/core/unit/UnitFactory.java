@@ -55,6 +55,16 @@ public class UnitFactory implements Serializable {
      */
     public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core.unit";
 
+    /**
+     * 内置的MergeUnit
+     */
+    private static final Map<String, Class<? extends MergedUnit<?>>> BUILT_IN_UNIT_MAP = new HashMap<>();
+
+    /**
+     * 内置的静态编译代码
+     */
+    private static final Map<String, ScriptEvaluator> BUILT_IN_EVALUATOR_MAP = new HashMap<>();
+
     private Map<String, Class<? extends MergedUnit<?>>> unitMap = new HashMap<>();
 
     private transient Map<String, ScriptEvaluator> evaluatorMap = new HashMap<>();
@@ -68,21 +78,43 @@ public class UnitFactory implements Serializable {
         this.udafJarPathList = udafJarPathList;
     }
 
+    //静态代码块只执行一次
+    static {
+        //扫描有MergeType注解
+        Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class)
+                && MergedUnit.class.isAssignableFrom(clazz);
+        //扫描系统自带的聚合函数
+        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, classFilter);
+        for (Class<?> tempClazz : classSet) {
+            MergeType annotation = tempClazz.getAnnotation(MergeType.class);
+            String value = annotation.value();
+            Class<? extends MergedUnit<?>> put = BUILT_IN_UNIT_MAP.put(value, (Class<? extends MergedUnit<?>>) tempClazz);
+            if (put != null) {
+                throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
+            }
+            ScriptEvaluator janinoExpress = createJaninoExpress(tempClazz);
+            BUILT_IN_EVALUATOR_MAP.put(value, janinoExpress);
+        }
+    }
+
+
     /**
      * 添加系统自带的聚合函数和用户自定义的聚合函数
      *
      * @throws Exception
      */
     public void init() throws Exception {
-        //扫描有MergeType注解
-        Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
-        //扫描系统自带的聚合函数
-        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, classFilter);
-        classSet.forEach(this::addClassToMap);
+        //放入内置的BUILT_IN_UNIT_MAP
+        BUILT_IN_UNIT_MAP.forEach((aggregateType, clazz) -> {
+            Class<? extends MergedUnit<?>> put = unitMap.put(aggregateType, clazz);
+            if (put != null) {
+                throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
+            }
+        });
+        //放入内置的BUILT_IN_EVALUATOR_MAP
+        evaluatorMap.putAll(BUILT_IN_EVALUATOR_MAP);
 
         if (CollUtil.isEmpty(udafJarPathList)) {
-            //动态生成Java代码和编译生成Janino表达式
-            unitMap.values().forEach(this::createJaninoExpress);
             return;
         }
         //支持添加自定义的聚合函数
@@ -102,22 +134,26 @@ public class UnitFactory implements Serializable {
 
         //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类,
         //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
-        URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader());
-        for (JarEntry entry : jarEntries) {
-            if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
-                String entryName = entry.getName().substring(0, entry.getName().indexOf(".class")).replace("/", ".");
-                Class<?> loadClass = urlClassLoader.loadClass(entryName);
-                if (classFilter.accept(loadClass)) {
-                    addClassToMap(loadClass);
+        try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
+            //扫描有MergeType注解
+            Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
+            for (JarEntry entry : jarEntries) {
+                if (!entry.isDirectory() && entry.getName().endsWith(".class") && !entry.getName().contains("$")) {
+                    String entryName = entry.getName().substring(0, entry.getName().indexOf(".class")).replace("/", ".");
+                    Class<?> loadClass = urlClassLoader.loadClass(entryName);
+                    if (classFilter.accept(loadClass)) {
+                        addClassToMap(loadClass);
+                        //动态生成Java代码和编译生成Janino表达式
+                        ScriptEvaluator janinoExpress = createJaninoExpress(loadClass);
+                        MergeType annotation = loadClass.getAnnotation(MergeType.class);
+                        evaluatorMap.put(annotation.value(), janinoExpress);
+                    }
                 }
             }
         }
         if (log.isDebugEnabled()) {
             log.debug("生成的unit: {}", JSONUtil.toJsonStr(unitMap));
         }
-
-        //动态生成Java代码和编译生成Janino表达式
-        unitMap.values().forEach(this::createJaninoExpress);
     }
 
     /**
@@ -125,9 +161,10 @@ public class UnitFactory implements Serializable {
      * <p>使用Janino进行编译, 避免反射生成MergedUnit</p>
      *
      * @param tempClass
+     * @return
      */
     @SneakyThrows
-    private void createJaninoExpress(Class<? extends MergedUnit<?>> tempClass) {
+    private static ScriptEvaluator createJaninoExpress(Class<?> tempClass) {
         Version version = new Version("2.3.28");
         Configuration configuration = new Configuration(version);
         configuration.setDefaultEncoding("utf-8");
@@ -199,7 +236,7 @@ public class UnitFactory implements Serializable {
         evaluator.setParentClassLoader(tempClass.getClassLoader());
         evaluator.cook(expression);
 
-        evaluatorMap.put(mergeType.value(), evaluator);
+        return evaluator;
     }
 
     public Class<? extends MergedUnit<?>> getMergeableClass(String actionType) {
@@ -283,9 +320,9 @@ public class UnitFactory implements Serializable {
         }
     }
 
-    private String getTemplatePath(String fileName) {
+    private static String getTemplatePath(String fileName) {
         //返回读取指定资源的输入流
-        InputStream is = this.getClass().getResourceAsStream("/merged_unit_template/" + fileName);
+        InputStream is = UnitFactory.class.getResourceAsStream("/merged_unit_template/" + fileName);
         String path = System.getProperty("java.io.tmpdir");
         String dirPath = path + IdUtil.fastSimpleUUID() + "/templates";
         log.info("生成merged_unit模板全路径: {}", dirPath);

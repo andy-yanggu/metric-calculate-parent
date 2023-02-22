@@ -4,13 +4,10 @@ package com.yanggu.metric_calculate.core.test;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.StopWatch;
 import cn.hutool.core.io.FileUtil;
-import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.collection.ListObjectUnit;
 import com.yanggu.metric_calculate.core.value.Key;
 import org.codehaus.janino.ScriptEvaluator;
-import org.junit.jupiter.api.RepeatedTest;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +23,6 @@ public class JaninoTest {
      */
     //@RepeatedTest(5)
     public void test1() throws Exception {
-        //String testJarPath = UnitFactoryTest.testJarPath();
-        UnitFactory unitFactory = new UnitFactory(Collections.singletonList("D:\\project\\self\\metric-calculate\\udaf-test\\target\\udaf-test-1.0.0-SNAPSHOT.jar"));
-
         ScriptEvaluator evaluator = new ScriptEvaluator();
         String expression = FileUtil.readUtf8String("test_janino");
         String[] parameterNames = {"param", "initValue"};
@@ -60,7 +54,7 @@ public class JaninoTest {
         for (int i = 0; i < count; i++) {
             Map<String, Object> param = new HashMap<>();
             param.put("limit", 10);
-            ListObjectUnit listObjectUnit;
+            ListObjectUnit<Key<Integer>> listObjectUnit;
             if (CollUtil.isNotEmpty(param)) {
                 listObjectUnit = ListObjectUnit.class.getConstructor(Map.class).newInstance(param);
             } else {
@@ -82,7 +76,7 @@ public class JaninoTest {
         for (int i = 0; i < count; i++) {
             Map<String, Object> param = new HashMap<>();
             param.put("limit", 10);
-            ListObjectUnit listObjectUnit;
+            ListObjectUnit<Key<Integer>> listObjectUnit;
             if (CollUtil.isEmpty(param)) {
                 listObjectUnit = new ListObjectUnit<>();
             } else {

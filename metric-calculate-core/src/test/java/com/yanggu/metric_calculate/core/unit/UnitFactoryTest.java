@@ -20,8 +20,8 @@ import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.Key;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
+import lombok.SneakyThrows;
 import org.apache.maven.shared.invoker.*;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -37,13 +37,22 @@ import static org.junit.Assert.*;
  */
 public class UnitFactoryTest {
 
-    private UnitFactory unitFactory;
+    private static volatile UnitFactory unitFactory;
 
-    @Before
-    public void init() throws Exception {
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
-        this.unitFactory = unitFactory;
+    @SneakyThrows
+    public static synchronized UnitFactory getUnitFactory() {
+        if (unitFactory == null) {
+            UnitFactory tempUnitFactory = new UnitFactory(Collections.singletonList(UnitFactoryTest.testJarPath()));
+            tempUnitFactory.init();
+            unitFactory = tempUnitFactory;
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            for (StackTraceElement stackTraceElement : stackTrace) {
+                String className = stackTraceElement.getClassName();
+                String methodName = stackTraceElement.getMethodName();
+                System.out.println("className: " + className + ", methodName: " + methodName + "invoke");
+            }
+        }
+        return unitFactory;
     }
 
     /**
@@ -118,7 +127,7 @@ public class UnitFactoryTest {
      */
     @Test
     public void createNumericUnit() throws Exception {
-        MergedUnit unit = unitFactory.initInstanceByValue("SUM", 100L, null);
+        MergedUnit unit = getUnitFactory().initInstanceByValue("SUM", 100L, null);
         assertTrue(unit instanceof SumUnit);
         assertEquals(100L, ((SumUnit) unit).value());
 
@@ -135,19 +144,15 @@ public class UnitFactoryTest {
      */
     @Test
     public void createNumericUnit2() throws Exception {
-        //初始化UnitFactory
-        String pathname = testJarPath();
-        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
-        unitFactory.init();
 
         Map<String, Object> params = new HashMap<>();
         //限定最大值200, 不能等于
         params.put("maxValue", 200.0D);
 
-        MergedUnit unit = unitFactory.initInstanceByValue("SUM2", 100.0D, params);
+        MergedUnit unit = getUnitFactory().initInstanceByValue("SUM2", 100.0D, params);
         assertEquals(100.0D, ((Value) unit).value());
 
-        MergedUnit unit2 = unitFactory.initInstanceByValue("SUM2", 100.0D, params);
+        MergedUnit unit2 = getUnitFactory().initInstanceByValue("SUM2", 100.0D, params);
         unit.merge(unit2);
         assertEquals(200.0D, ((Value) unit).value());
 
@@ -166,7 +171,7 @@ public class UnitFactoryTest {
     public void createObjectiveUnit() throws Exception {
         KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> keyValue =
                 new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(101));
-        MergedUnit<?> unit = unitFactory.initInstanceByValue("MAXOBJECT", keyValue, null);
+        MergedUnit<?> unit = getUnitFactory().initInstanceByValue("MAXOBJECT", keyValue, null);
         assertTrue(unit instanceof MaxObjectUnit);
         assertEquals(keyValue.value().get(new Key<>(1)), ((MaxObjectUnit<?>) unit).value());
     }
@@ -179,7 +184,7 @@ public class UnitFactoryTest {
     @Test
     public void createCollectionUnit() throws Exception {
         KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(101));
-        MergedUnit unit = unitFactory.initInstanceByValue("DISTINCTCOUNT", keyValue, null);
+        MergedUnit unit = getUnitFactory().initInstanceByValue("DISTINCTCOUNT", keyValue, null);
         assertTrue(unit instanceof UniqueCountUnit);
         assertEquals(new HashSet(Collections.singleton(keyValue)), ((UniqueCountUnit) unit).asCollection());
         assertEquals(1, ((UniqueCountUnit) unit).value());
@@ -193,10 +198,6 @@ public class UnitFactoryTest {
      */
     @Test
     public void createCollectionUnit2() throws Exception {
-        //初始化UnitFactory
-        String pathname = testJarPath();
-        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
-        unitFactory.init();
 
         Map<String, Object> params = new HashMap<>();
         //降序, 最多2个
@@ -207,15 +208,15 @@ public class UnitFactoryTest {
         KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value2 = new KeyValue<>(2, 2);
         KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value3 = new KeyValue<>(0, 0);
 
-        Value unit = (Value) unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value1, params);
+        Value unit = (Value) getUnitFactory().initInstanceByValue("SORTEDLISTOBJECT2", value1, params);
         assertEquals(Collections.singletonList(value1), unit.value());
 
         //按照key降序排序 value2, value1
-        unit = (Value) ((MergedUnit) unit).merge(unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value2, params));
+        unit = (Value) ((MergedUnit) unit).merge(getUnitFactory().initInstanceByValue("SORTEDLISTOBJECT2", value2, params));
         assertEquals(Arrays.asList(value2, value1), unit.value());
 
         //最多只能有2个
-        unit = (Value) ((MergedUnit) unit).merge(unitFactory.initInstanceByValue("SORTEDLISTOBJECT2", value3, params));
+        unit = (Value) ((MergedUnit) unit).merge(getUnitFactory().initInstanceByValue("SORTEDLISTOBJECT2", value3, params));
         assertEquals(Arrays.asList(value2, value1), unit.value());
     }
 
@@ -226,13 +227,9 @@ public class UnitFactoryTest {
      */
     @Test
     public void testUDAF() throws Exception {
-        //初始化UnitFactory
-        String pathname = testJarPath();
-        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
-        unitFactory.init();
 
         //COUNT2和COUNT逻辑一致, 计数的逻辑
-        NumberUnit count2 = (NumberUnit) unitFactory.initInstanceByValue("COUNT2", 1L, null);
+        NumberUnit count2 = (NumberUnit) getUnitFactory().initInstanceByValue("COUNT2", 1L, null);
         assertEquals(1L, count2.value());
 
         NumberUnit count2That = (NumberUnit) count2.fastClone();
@@ -240,7 +237,7 @@ public class UnitFactoryTest {
         assertEquals(2L, count2.value());
 
         //测试Kryo序列化和反序列化自定义的udaf
-        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(new ArrayList<>(unitFactory.getUnitMap().values())));
+        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(new ArrayList<>(getUnitFactory().getUnitMap().values())));
         Kryo kryo = kryoPool.borrow();
 
         byte[] bytes;
@@ -266,18 +263,14 @@ public class UnitFactoryTest {
      */
     @Test
     public void testUDAF2() throws Exception {
-        //初始化UnitFactory
-        String pathname = testJarPath();
-        UnitFactory unitFactory = new UnitFactory(Collections.singletonList(pathname));
-        unitFactory.init();
 
         //COUNT2和COUNT逻辑一致, 计数的逻辑
-        NumberUnit count2 = (NumberUnit) unitFactory.initInstanceByValue("COUNT2", 1L, null);
+        NumberUnit count2 = (NumberUnit) getUnitFactory().initInstanceByValue("COUNT2", 1L, null);
         count2.merge(count2.fastClone());
         assertEquals(2L, count2.value());
 
         //测试Kryo序列化和反序列化自定义的udaf
-        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(new ArrayList<>(unitFactory.getUnitMap().values())));
+        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(new ArrayList<>(getUnitFactory().getUnitMap().values())));
         Kryo kryo = kryoPool.borrow();
 
         //count2That序列化生成的字节数组
@@ -298,10 +291,6 @@ public class UnitFactoryTest {
 
     @Test
     public void testUDAF3() throws Exception {
-        UnitFactory unitFactory1 = new UnitFactory();
-        unitFactory1.init();
-
-        System.out.println(unitFactory1);
     }
 
     /**
@@ -343,7 +332,7 @@ public class UnitFactoryTest {
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(canonicalPath + separator + "pom.xml"));
         //System.out.println(canonicalPath + separator + "pom.xml");
-        request.setGoals(Arrays.asList("clean", "package"));
+        request.setGoals(Arrays.asList("package"));
         request.setProjects(Collections.singletonList(testModuleName));
         request.setAlsoMake(true);
         request.setThreads("2.0C");

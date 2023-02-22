@@ -6,7 +6,6 @@ import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.mix.BaseMixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.SumUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
@@ -17,13 +16,13 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class AggregateMixUnitFieldProcessorTest {
 
     private Map<String, Class<?>> fieldMap;
-
-    private UnitFactory unitFactory;
 
     @Before
     public void init() throws Exception {
@@ -31,10 +30,6 @@ public class AggregateMixUnitFieldProcessorTest {
         fieldMap.put("amount", Double.class);
         fieldMap.put("city", String.class);
         this.fieldMap = fieldMap;
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
-        this.unitFactory = unitFactory;
     }
 
     @Test
@@ -48,8 +43,7 @@ public class AggregateMixUnitFieldProcessorTest {
         MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
 
         AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit> mixUnitFieldProcessor =
-                (AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit>)
-                        FieldProcessorUtil.<JSONObject, BaseMixedUnit>getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, unitFactory);
+                        FieldProcessorUtil.getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, getUnitFactory());
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
 
         mixUnitFieldProcessor.init();

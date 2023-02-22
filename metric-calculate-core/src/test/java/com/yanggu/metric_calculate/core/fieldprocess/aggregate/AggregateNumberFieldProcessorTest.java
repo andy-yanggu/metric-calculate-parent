@@ -21,6 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -115,9 +116,7 @@ public class AggregateNumberFieldProcessorTest {
         aggregateNumberFieldProcessor.setFieldMap(fieldMap);
         aggregateNumberFieldProcessor.setAggregateType("COUNT");
 
-        UnitFactory unitFactory1 = new UnitFactory();
-        unitFactory1.init();
-        aggregateNumberFieldProcessor.setUnitFactory(unitFactory1);
+        aggregateNumberFieldProcessor.setUnitFactory(getUnitFactory());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateNumberFieldProcessor::init);
         assertEquals("需要设置mergeUnitClazz", runtimeException.getMessage());
@@ -234,15 +233,12 @@ public class AggregateNumberFieldProcessorTest {
         baseUdafParam.setMetricExpressList(Arrays.asList("amount", "amount1"));
         List<BaseUdafParam> baseUdafParamList = Collections.singletonList(baseUdafParam);
 
-        UnitFactory unitFactory1 = new UnitFactory();
-        unitFactory1.init();
-
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Integer.class);
         fieldMap.put("amount1", Integer.class);
 
-        AggregateNumberFieldProcessor<JSONObject, CovUnit<CubeLong>> numberAggregateFieldProcessor =
-                (AggregateNumberFieldProcessor<JSONObject, CovUnit<CubeLong>>) FieldProcessorUtil.<JSONObject, CovUnit<CubeLong>>getBaseAggregateFieldProcessor(baseUdafParamList, unitFactory1, fieldMap);
+        BaseAggregateFieldProcessor<JSONObject, CovUnit<CubeLong>> numberAggregateFieldProcessor =
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, getUnitFactory(), fieldMap);
 
         JSONObject input = new JSONObject();
         input.set("amount", 1);

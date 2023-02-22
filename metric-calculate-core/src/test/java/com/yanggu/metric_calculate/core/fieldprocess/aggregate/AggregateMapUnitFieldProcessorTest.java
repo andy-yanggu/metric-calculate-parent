@@ -6,7 +6,6 @@ import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
-import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.map.BaseMapUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.SumUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
@@ -17,6 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -25,20 +25,10 @@ import static org.junit.Assert.assertNotNull;
  */
 public class AggregateMapUnitFieldProcessorTest {
 
-    private AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> fieldProcessor;
-
-    private UnitFactory unitFactory;
-
     private Map<String, Class<?>> fieldMap;
 
     @Before
     public void init() throws Exception {
-        this.fieldProcessor = new AggregateMapUnitFieldProcessor<>();
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
-        this.unitFactory = unitFactory;
-
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("account_no_out", String.class);
         fieldMap.put("account_no_in", String.class);
@@ -61,7 +51,7 @@ public class AggregateMapUnitFieldProcessorTest {
         MapUnitUdafParam mapUnitUdafParam = JSONUtil.toBean(jsonString, MapUnitUdafParam.class);
 
         AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
-                        FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, unitFactory);
+                        FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, getUnitFactory());
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");

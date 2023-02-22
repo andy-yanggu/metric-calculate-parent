@@ -4,7 +4,6 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.object.MaxFieldUnit;
 import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedFieldUnit;
@@ -12,12 +11,14 @@ import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -26,25 +27,24 @@ import static org.junit.Assert.assertEquals;
  */
 public class AggregateObjectFieldProcessorTest {
 
+    private final Map<String, Class<?>> fieldMap = new HashMap<>();
+
+
+    @Before
+    public void before() {
+        fieldMap.put("amount", Double.class);
+        fieldMap.put("name", String.class);
+    }
+
     @Test
     public void init() {
     }
 
     /**
      * 测试MAXFIELD, 对象型, 有比较字段以及保留指定字段
-     *
-     * @throws Exception
      */
     @Test
-    public void process1() throws Exception {
-
-        //构造对象型字段处理器
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Double.class);
-        fieldMap.put("name", String.class);
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
+    public void process1() {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("MAXFIELD");
@@ -53,7 +53,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<JSONObject, MaxFieldUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -76,26 +76,16 @@ public class AggregateObjectFieldProcessorTest {
 
     /**
      * 测试MaxObject, 对象型, 需要比较字段以及保留原始对象数据
-     *
-     * @throws Exception
      */
     @Test
-    public void process2() throws Exception {
-
-        //构造对象型字段处理器
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Double.class);
-        fieldMap.put("name", String.class);
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
+    public void process2() {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("MAXOBJECT");
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<JSONObject, MaxObjectUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -120,26 +110,16 @@ public class AggregateObjectFieldProcessorTest {
 
     /**
      * 测试OccupiedFieldUnit, 对象型, 没有比较字段以及保留指定字段
-     *
-     * @throws Exception
      */
     @Test
-    public void process5() throws Exception {
-
-        //构造对象型字段处理器
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Double.class);
-        fieldMap.put("name", String.class);
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
+    public void process5() {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("OCCUPIEDFIELD");
 
         BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<Cloneable2Wrapper<String>>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -159,24 +139,15 @@ public class AggregateObjectFieldProcessorTest {
     /**
      * 测试OCCUPIEDOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      *
-     * @throws Exception
      */
     @Test
-    public void process6() throws Exception {
-
-        //构造对象型字段处理器
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Double.class);
-        fieldMap.put("name", String.class);
-
-        UnitFactory unitFactory = new UnitFactory();
-        unitFactory.init();
+    public void process6() {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("OCCUPIEDOBJECT");
 
         BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<Cloneable2Wrapper<JSONObject>>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), unitFactory, fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();

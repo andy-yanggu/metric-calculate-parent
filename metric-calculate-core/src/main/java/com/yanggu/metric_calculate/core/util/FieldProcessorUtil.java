@@ -66,7 +66,8 @@ public class FieldProcessorUtil {
      * @param dimensionList 维度列表
      * @return 维度字段处理器
      */
-    public static <T> DimensionSetProcessor<T> getDimensionSetProcessor(String key, String metricName,
+    public static <T> DimensionSetProcessor<T> getDimensionSetProcessor(String key,
+                                                                        String metricName,
                                                                         Map<String, Class<?>> fieldMap,
                                                                         List<Dimension> dimensionList) {
         DimensionSetProcessor<T> dimensionSetProcessor = new DimensionSetProcessor<>(dimensionList);
@@ -137,11 +138,10 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <T, M extends MergedUnit<M>> BaseAggregateFieldProcessor<T, M>
-            getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
-                                           UnitFactory unitFactory,
-                                           Map<String, Class<?>> fieldMap) {
-
+    public static <T, M extends MergedUnit<M>> BaseAggregateFieldProcessor<T, M> getBaseAggregateFieldProcessor(
+                                                        List<BaseUdafParam> baseUdafParamList,
+                                                        UnitFactory unitFactory,
+                                                        Map<String, Class<?>> fieldMap) {
         BaseAggregateFieldProcessor<T, M> aggregateFieldProcessor;
         BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
         String aggregateType = baseUdafParam.getAggregateType();
@@ -182,8 +182,8 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <T, M extends MergedUnit<M>> AggregateMapUnitFieldProcessor<T, M>
-                getAggregateMapUnitFieldProcessor(MapUnitUdafParam mapUnitUdafParam,
+    public static <T, M extends MergedUnit<M>> AggregateMapUnitFieldProcessor<T, M> getAggregateMapUnitFieldProcessor(
+                                                  MapUnitUdafParam mapUnitUdafParam,
                                                   Map<String, Class<?>> fieldMap,
                                                   UnitFactory unitFactory) {
         AggregateMapUnitFieldProcessor<T, M> aggregateMapUnitFieldProcessor = new AggregateMapUnitFieldProcessor<>();
@@ -207,9 +207,10 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <T, M extends MergedUnit<M>> AggregateFieldProcessor<T, M> getAggregateMixUnitFieldProcessor(MixUnitUdafParam mixUnitUdafParam,
-                                                                                      Map<String, Class<?>> fieldMap,
-                                                                                      UnitFactory unitFactory) {
+    public static <T, M extends MergedUnit<M>> AggregateMixUnitFieldProcessor<T, M> getAggregateMixUnitFieldProcessor(
+                                                          MixUnitUdafParam mixUnitUdafParam,
+                                                          Map<String, Class<?>> fieldMap,
+                                                          UnitFactory unitFactory) {
 
         AggregateMixUnitFieldProcessor<T, M> mixUnitFieldProcessor = new AggregateMixUnitFieldProcessor<>();
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
@@ -230,12 +231,13 @@ public class FieldProcessorUtil {
      * @param unitFactory
      * @return
      */
-    public static <T, M extends MergedUnit<M>> AggregateFieldProcessor<T, M> getAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
-                                                                               MapUnitUdafParam mapUdafParam,
-                                                                               MixUnitUdafParam mixUnitUdafParam,
-                                                                               String aggregateType,
-                                                                               Map<String, Class<?>> fieldMap,
-                                                                               UnitFactory unitFactory) {
+    public static <T, M extends MergedUnit<M>> AggregateFieldProcessor<T, M> getAggregateFieldProcessor(
+                                                                    List<BaseUdafParam> baseUdafParamList,
+                                                                    MapUnitUdafParam mapUdafParam,
+                                                                    MixUnitUdafParam mixUnitUdafParam,
+                                                                    String aggregateType,
+                                                                    Map<String, Class<?>> fieldMap,
+                                                                    UnitFactory unitFactory) {
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
 
         //如果是基本聚合类型(数值型、集合型、对象型)
