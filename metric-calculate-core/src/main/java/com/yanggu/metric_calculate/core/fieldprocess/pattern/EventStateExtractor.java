@@ -5,11 +5,13 @@ import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFiel
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
+import com.yanggu.metric_calculate.core.unit.pattern.FinishState;
 import com.yanggu.metric_calculate.core.unit.pattern.MatchState;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -77,8 +79,8 @@ public class EventStateExtractor<T> implements AggregateFieldProcessor<T, MatchS
 
     @Override
     public Object callBack(Object input) {
-        List<T> tempValueList = (List<T>) input;
-        MergedUnit mergedUnit = tempValueList.stream()
+        List<T> tempValueList = new ArrayList<>(((TreeMap<Long, T>) input).values());
+        MergedUnit<?> mergedUnit = tempValueList.stream()
                 .map(tempValue -> externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)
                 .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
