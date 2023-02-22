@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
+import com.yanggu.metric_calculate.core.annotation.UdafCustomParam;
 import com.yanggu.metric_calculate.core.value.*;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ public class MaxObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements
     /**
      * 是否只展示value, 不展示key
      */
+    @UdafCustomParam
     protected Boolean onlyShowValue = true;
 
     public MaxObjectUnit(Map<String, Object> params) {

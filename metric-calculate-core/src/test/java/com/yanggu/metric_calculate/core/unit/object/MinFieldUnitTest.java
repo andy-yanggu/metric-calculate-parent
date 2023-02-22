@@ -44,8 +44,8 @@ public class MinFieldUnitTest {
     public void testConstructor1() {
         //验证空参构造
         MinFieldUnit<Key<Integer>> minFieldUnit = new MinFieldUnit<>();
-        assertTrue(minFieldUnit.getOnlyShowValue());
-        assertNull(minFieldUnit.getValue());
+        assertTrue(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertNull(minFieldUnit.getMinObjectUnit().getValue());
     }
 
     /**
@@ -56,8 +56,8 @@ public class MinFieldUnitTest {
         //验证有参构造
         Key<Integer> key = new Key<>(1);
         MinFieldUnit<Key<Integer>> minFieldUnit = new MinFieldUnit<>(key);
-        assertTrue(minFieldUnit.getOnlyShowValue());
-        assertEquals(key, minFieldUnit.getValue());
+        assertTrue(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertEquals(key, minFieldUnit.getMinObjectUnit().getValue());
     }
 
     /**
@@ -68,32 +68,32 @@ public class MinFieldUnitTest {
         //验证param构造1
         Map<String, Object> param = new HashMap<>();
         MinFieldUnit<Key<Integer>> minFieldUnit = new MinFieldUnit<>(param);
-        assertTrue(minFieldUnit.getOnlyShowValue());
-        assertNull(minFieldUnit.getValue());
+        assertTrue(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertNull(minFieldUnit.getMinObjectUnit().getValue());
 
         //验证param构造2
-        param.put(MinFieldUnit.Fields.onlyShowValue, null);
+        param.put("onlyShowValue", null);
         minFieldUnit = new MinFieldUnit<>(param);
-        assertTrue(minFieldUnit.getOnlyShowValue());
-        assertNull(minFieldUnit.getValue());
+        assertTrue(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertNull(minFieldUnit.getMinObjectUnit().getValue());
 
         //验证param构造3
-        param.put(MinFieldUnit.Fields.onlyShowValue, "test");
+        param.put("onlyShowValue", "test");
         minFieldUnit = new MinFieldUnit<>(param);
-        assertTrue(minFieldUnit.getOnlyShowValue());
-        assertNull(minFieldUnit.getValue());
+        assertTrue(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertNull(minFieldUnit.getMinObjectUnit().getValue());
 
         //验证param构造4
-        param.put(MinFieldUnit.Fields.onlyShowValue, true);
+        param.put("onlyShowValue", true);
         minFieldUnit = new MinFieldUnit<>(param);
-        assertTrue(minFieldUnit.getOnlyShowValue());
-        assertNull(minFieldUnit.getValue());
+        assertTrue(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertNull(minFieldUnit.getMinObjectUnit().getValue());
 
         //验证param构造5
-        param.put(MinFieldUnit.Fields.onlyShowValue, false);
+        param.put("onlyShowValue", false);
         minFieldUnit = new MinFieldUnit<>(param);
-        assertFalse(minFieldUnit.getOnlyShowValue());
-        assertNull(minFieldUnit.getValue());
+        assertFalse(minFieldUnit.getMinObjectUnit().getOnlyShowValue());
+        assertNull(minFieldUnit.getMinObjectUnit().getValue());
     }
 
     /**
@@ -106,14 +106,14 @@ public class MinFieldUnitTest {
         MinFieldUnit<Key<Integer>> minFieldUnit = (new MinFieldUnit<>(key));
 
         minFieldUnit.merge(null);
-        assertEquals(key, minFieldUnit.getValue());
+        assertEquals(key, minFieldUnit.getMinObjectUnit().getValue());
 
         key = new Key<>(-1);
         minFieldUnit.merge(new MinFieldUnit<>(key));
-        assertEquals(key, minFieldUnit.getValue());
+        assertEquals(key, minFieldUnit.getMinObjectUnit().getValue());
 
         minFieldUnit.merge(new MinFieldUnit<>(new Key<>(2)));
-        assertEquals(key, minFieldUnit.getValue());
+        assertEquals(key, minFieldUnit.getMinObjectUnit().getValue());
     }
 
     /**
@@ -127,7 +127,7 @@ public class MinFieldUnitTest {
         MinFieldUnit<Key<Integer>> fastClone = minFieldUnit.fastClone();
 
         assertEquals(minFieldUnit, fastClone);
-        assertEquals(minFieldUnit.getValue(), fastClone.getValue());
+        assertEquals(minFieldUnit.getMinObjectUnit().getValue(), fastClone.getMinObjectUnit().getValue());
     }
 
     /**
@@ -139,7 +139,7 @@ public class MinFieldUnitTest {
         Key<Integer> key = new Key<>(1);
         minFieldUnit.value(key);
 
-        assertEquals(key, minFieldUnit.getValue());
+        assertEquals(key, minFieldUnit.getMinObjectUnit().getValue());
     }
 
     /**
@@ -161,7 +161,7 @@ public class MinFieldUnitTest {
     public void testValue2() {
         KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, "张三");
         MinFieldUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minFieldUnit = new MinFieldUnit<>(keyValue);
-        minFieldUnit.setOnlyShowValue(false);
+        minFieldUnit.getMinObjectUnit().setOnlyShowValue(false);
         assertEquals(keyValue.value(), minFieldUnit.value());
     }
 

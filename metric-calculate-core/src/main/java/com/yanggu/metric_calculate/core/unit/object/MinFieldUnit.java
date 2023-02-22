@@ -3,49 +3,79 @@ package com.yanggu.metric_calculate.core.unit.object;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.experimental.FieldNameConstants;
 
 import java.util.Map;
+import java.util.Objects;
 
 @Data
-@NoArgsConstructor
 @FieldNameConstants
 @MergeType(value = "MINFIELD", useParam = true)
 @Objective(useCompareField = true, retainObject = false)
-public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>> extends MinObjectUnit<T> {
+public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>>
+        implements ObjectiveUnit<T, MinFieldUnit<T>>, Value<Object> {
 
-    public MinFieldUnit(T value) {
-        setValue(value);
+    private MinObjectUnit<T> minObjectUnit;
+
+    public MinFieldUnit() {
+        this.minObjectUnit = new MinObjectUnit<>();
     }
 
     public MinFieldUnit(Map<String, Object> params) {
-        super(params);
+        this.minObjectUnit = new MinObjectUnit<>(params);
+    }
+
+    public MinFieldUnit(T value) {
+        this();
+        value(value);
+    }
+
+    @Override
+    public MinFieldUnit<T> value(T object) {
+        this.minObjectUnit.value(object);
+        return this;
+    }
+
+    @Override
+    public MinFieldUnit<T> merge(MinFieldUnit<T> that) {
+        if (that == null) {
+            return this;
+        }
+        this.minObjectUnit.merge(that.minObjectUnit);
+        return this;
+    }
+
+    @Override
+    public Object value() {
+        return this.minObjectUnit.value();
     }
 
     @Override
     public MinFieldUnit<T> fastClone() {
-        return new MinFieldUnit<>(value.fastClone());
+        MinFieldUnit<T> minFieldUnit = new MinFieldUnit<>();
+        minFieldUnit.minObjectUnit = this.minObjectUnit.fastClone();
+        return minFieldUnit;
     }
 
     @Override
-    public boolean equals(Object that) {
-        if (this == that) {
+    public int hashCode() {
+        return minObjectUnit != null ? minObjectUnit.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (that == null) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        MinFieldUnit<T> thatUnit = (MinFieldUnit) that;
-        if (this.value == null) {
-            return thatUnit.value == null;
-        } else {
-            return this.value.equals(thatUnit.value);
-        }
+
+        MinFieldUnit<?> that = (MinFieldUnit<?>) o;
+
+        return Objects.equals(minObjectUnit, that.minObjectUnit);
     }
 
 }

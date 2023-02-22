@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @MergeType(value = "DISTINCTLISTOBJECT", useParam = true)
 @Collective(useDistinctField = true, retainObject = true)
-public class UniqueListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueListObjectUnit<T>>,
+public class DistinctListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, DistinctListObjectUnit<T>>,
         Value<Set<Object>> {
 
     protected Set<T> original = new HashSet<>();
@@ -26,7 +26,7 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
      */
     private boolean onlyShowValue = true;
 
-    public UniqueListObjectUnit(Map<String, Object> param) {
+    public DistinctListObjectUnit(Map<String, Object> param) {
         if (CollUtil.isEmpty(param)) {
             return;
         }
@@ -40,12 +40,12 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
         }
     }
 
-    public UniqueListObjectUnit(T value) {
+    public DistinctListObjectUnit(T value) {
         this();
         add(value);
     }
 
-    public UniqueListObjectUnit(Collection<T> values) {
+    public DistinctListObjectUnit(Collection<T> values) {
         this();
         addAll(values);
     }
@@ -56,7 +56,7 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
      * @param value input
      * @param limit    limitCnt
      */
-    public UniqueListObjectUnit(T value, int limit) {
+    public DistinctListObjectUnit(T value, int limit) {
         this();
         add(value);
         this.limit = limit;
@@ -65,7 +65,7 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
     /**
      * Construct.
      */
-    public UniqueListObjectUnit(Collection<T> values, int paramCnt) {
+    public DistinctListObjectUnit(Collection<T> values, int paramCnt) {
         this();
         addAll(values);
         this.limit = paramCnt;
@@ -80,18 +80,18 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
     }
 
     @Override
-    public UniqueListObjectUnit<T> merge(UniqueListObjectUnit<T> that) {
+    public DistinctListObjectUnit<T> merge(DistinctListObjectUnit<T> that) {
         return internalMergeOp(that, false);
     }
 
-    private UniqueListObjectUnit<T> internalMergeOp(UniqueListObjectUnit<T> that, boolean hasLimit) {
+    private DistinctListObjectUnit<T> internalMergeOp(DistinctListObjectUnit<T> that, boolean hasLimit) {
         if (that == null) {
             return this;
         }
         return originalMerge(that.original, that.limit, hasLimit);
     }
 
-    private UniqueListObjectUnit<T> originalMerge(Set<T> original, int limit, boolean hasLimit) {
+    private DistinctListObjectUnit<T> originalMerge(Set<T> original, int limit, boolean hasLimit) {
         this.original.addAll(original);
         if (!hasLimit) {
             this.limit = Math.max(this.limit, limit);
@@ -140,7 +140,7 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
      * @return
      */
     @Override
-    public UniqueListObjectUnit<T> add(T value) {
+    public DistinctListObjectUnit<T> add(T value) {
         this.original.add(value);
         if (this.limit > 0 && this.original.size() > this.limit) {
             this.original.remove(this.original.iterator().next());
@@ -164,13 +164,13 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
     }
 
     @Override
-    public UniqueListObjectUnit<T> fastClone() {
-        UniqueListObjectUnit<T> uniqueListObjectUnit = new UniqueListObjectUnit<>();
-        uniqueListObjectUnit.limit = this.limit;
+    public DistinctListObjectUnit<T> fastClone() {
+        DistinctListObjectUnit<T> distinctListObjectUnit = new DistinctListObjectUnit<>();
+        distinctListObjectUnit.limit = this.limit;
         for (T item : getSet()) {
-            uniqueListObjectUnit.getSet().add(item.fastClone());
+            distinctListObjectUnit.getSet().add(item.fastClone());
         }
-        return uniqueListObjectUnit;
+        return distinctListObjectUnit;
     }
 
     @Override
@@ -189,7 +189,7 @@ public class UniqueListObjectUnit<T extends Cloneable2<T>> implements Collection
         if (getClass() != that.getClass()) {
             return false;
         }
-        UniqueListObjectUnit<T> thatUnit = (UniqueListObjectUnit) that;
+        DistinctListObjectUnit<T> thatUnit = (DistinctListObjectUnit) that;
         if (this.limit != thatUnit.limit) {
             return false;
         }

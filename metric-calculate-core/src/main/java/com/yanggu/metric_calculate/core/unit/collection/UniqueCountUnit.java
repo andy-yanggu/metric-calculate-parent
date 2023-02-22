@@ -14,22 +14,22 @@ import java.util.Objects;
 public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
         Value<Number> {
 
-    private UniqueListObjectUnit<T> original;
+    private DistinctListObjectUnit<T> original;
 
     public UniqueCountUnit() {
-        original = new UniqueListObjectUnit<>();
+        original = new DistinctListObjectUnit<>();
     }
 
     public UniqueCountUnit(Map<String, Object> param) {
-        original = new UniqueListObjectUnit<>(param);
+        original = new DistinctListObjectUnit<>(param);
     }
 
     public UniqueCountUnit(T value) {
-        original = new UniqueListObjectUnit<>(value);
+        original = new DistinctListObjectUnit<>(value);
     }
 
     public UniqueCountUnit(Collection<T> values) {
-        original = new UniqueListObjectUnit<>(values);
+        original = new DistinctListObjectUnit<>(values);
     }
 
     /**
@@ -39,17 +39,17 @@ public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<
      * @param limit limitCnt
      */
     public UniqueCountUnit(T value, int limit) {
-        original = new UniqueListObjectUnit<>(value, limit);
+        original = new DistinctListObjectUnit<>(value, limit);
     }
 
     /**
      * Construct.
      */
     public UniqueCountUnit(Collection<T> values, int limit) {
-        original = new UniqueListObjectUnit<>(values, limit);
+        original = new DistinctListObjectUnit<>(values, limit);
     }
 
-    public UniqueListObjectUnit<T> original() {
+    public DistinctListObjectUnit<T> original() {
         return original;
     }
 

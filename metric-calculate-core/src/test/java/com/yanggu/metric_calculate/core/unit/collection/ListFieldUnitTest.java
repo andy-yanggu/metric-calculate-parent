@@ -160,7 +160,7 @@ public class ListFieldUnitTest {
     @Test
     public void testValue() {
         ListFieldUnit<Key<Integer>> listFieldUnit = new ListFieldUnit<>();
-        assertSame(listFieldUnit.getValues(), listFieldUnit.value());
+        assertSame(listFieldUnit.getListObjectUnit().value(), listFieldUnit.value());
     }
 
     /**

@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
+import com.yanggu.metric_calculate.core.annotation.UdafCustomParam;
 import com.yanggu.metric_calculate.core.value.Cloneable2;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T
 
     private List<T> values = new ArrayList<>();
 
+    @UdafCustomParam
     private Integer limit = 0;
 
     public ListObjectUnit(Map<String, Object> param) {
