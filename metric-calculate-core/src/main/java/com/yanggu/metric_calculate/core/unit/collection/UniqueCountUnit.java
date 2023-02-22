@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.Collection;
@@ -11,7 +11,7 @@ import java.util.Objects;
 
 @MergeType(value = "DISTINCTCOUNT", useParam = true)
 @Collective(useDistinctField = true, retainObject = true)
-public class UniqueCountUnit<T extends Cloneable2<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
+public class UniqueCountUnit<T extends Clone<T>> implements CollectionUnit<T, UniqueCountUnit<T>>,
         Value<Number> {
 
     private DistinctListObjectUnit<T> original;

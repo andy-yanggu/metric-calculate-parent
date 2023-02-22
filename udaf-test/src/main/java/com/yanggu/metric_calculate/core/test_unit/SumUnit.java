@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.test_unit;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
-import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.number.CubeNumber;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 
@@ -16,24 +15,24 @@ import java.util.Map;
  */
 @MergeType(value = "SUM2", useParam = true)
 @Numerical
-public class SumUnit2 extends NumberUnit<CubeDecimal, SumUnit2> {
+public class SumUnit extends NumberUnit<CubeDecimal, SumUnit> {
 
     private Double maxValue;
 
-    public SumUnit2() {
+    public SumUnit() {
         super();
     }
 
-    public SumUnit2(CubeNumber value, Map<String, Object> params) {
+    public SumUnit(CubeNumber value, Map<String, Object> params) {
         this(CubeDecimal.of(value));
         this.maxValue = Double.parseDouble(params.get("maxValue").toString());
     }
 
-    public SumUnit2(CubeDecimal value) {
+    public SumUnit(CubeDecimal value) {
         super(value, 1L);
     }
 
-    public SumUnit2(CubeDecimal value, long count) {
+    public SumUnit(CubeDecimal value, long count) {
         super(value, count);
     }
 
@@ -43,7 +42,7 @@ public class SumUnit2 extends NumberUnit<CubeDecimal, SumUnit2> {
     }
 
     @Override
-    public SumUnit2 merge(SumUnit2 that) {
+    public SumUnit merge(SumUnit that) {
         if (that == null) {
             return this;
         }
@@ -57,8 +56,8 @@ public class SumUnit2 extends NumberUnit<CubeDecimal, SumUnit2> {
     }
 
     @Override
-    public SumUnit2 fastClone() {
-        return new SumUnit2(value.fastClone(), count.longValue());
+    public SumUnit fastClone() {
+        return new SumUnit(value.fastClone(), count.longValue());
     }
 
 }

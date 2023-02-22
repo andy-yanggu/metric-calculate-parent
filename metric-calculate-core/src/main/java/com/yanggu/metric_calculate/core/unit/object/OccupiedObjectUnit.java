@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +13,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @NoArgsConstructor
 @Objective(useCompareField = false, retainObject = true)
 @MergeType(value = "OCCUPIEDOBJECT", timeWindowType = TIME_SLIDING_WINDOW)
-public class OccupiedObjectUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>,
+public class OccupiedObjectUnit<T extends Clone<T>> implements ObjectiveUnit<T, OccupiedObjectUnit<T>>,
         Value<T>, Serializable {
 
     protected T value;

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import com.yanggu.metric_calculate.core.value.Key;
 import com.yanggu.metric_calculate.core.unit.object.MinObjectUnit.Fields;
 import com.yanggu.metric_calculate.core.value.KeyValue;
@@ -161,8 +161,8 @@ public class MinObjectUnitTest {
      */
     @Test
     public void testValue2() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
-        MinObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
+        KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(1), CloneWrapper.wrap("张三"));
+        MinObjectUnit<KeyValue<Key<Integer>, CloneWrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
         minObjectUnit.setOnlyShowValue(false);
         assertEquals(keyValue.value(), minObjectUnit.value());
     }
@@ -174,8 +174,8 @@ public class MinObjectUnitTest {
      */
     @Test
     public void testValue3() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
-        MinObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
+        KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(1), CloneWrapper.wrap("张三"));
+        MinObjectUnit<KeyValue<Key<Integer>, CloneWrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
         assertEquals(keyValue.getValue().value(), minObjectUnit.value());
     }
 
@@ -186,8 +186,8 @@ public class MinObjectUnitTest {
      */
     @Test
     public void testValue4() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), null);
-        MinObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
+        KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(1), null);
+        MinObjectUnit<KeyValue<Key<Integer>, CloneWrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
         assertNull(minObjectUnit.value());
     }
 

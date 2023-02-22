@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.test_unit;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.io.Serializable;
@@ -14,8 +14,8 @@ import java.util.Map;
 
 @MergeType(value = "SORTEDLISTOBJECT2", useParam = true)
 @Collective
-public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
-        implements CollectionUnit<T, SortedListUnit2<T>>, Value<List<T>>, Serializable, Iterable<T> {
+public class SortedListUnit<T extends Comparable<T> & Clone<T>>
+        implements CollectionUnit<T, SortedListUnit<T>>, Value<List<T>>, Serializable, Iterable<T> {
 
     private boolean desc = true;
 
@@ -23,15 +23,15 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
 
     private List<T> original = new ArrayList<>();
 
-    public SortedListUnit2() {
+    public SortedListUnit() {
     }
 
-    public SortedListUnit2(Map<String, Object> params) {
+    public SortedListUnit(Map<String, Object> params) {
         this.desc = (boolean) params.get("desc");
         this.limit = (int) params.get("limit");
     }
 
-    public SortedListUnit2(T value) {
+    public SortedListUnit(T value) {
         this(value, 0, true);
     }
 
@@ -41,18 +41,18 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
      * @param limit list limit
      * @param desc des or not
      */
-    public SortedListUnit2(T value, int limit, boolean desc) {
+    public SortedListUnit(T value, int limit, boolean desc) {
         this();
         this.limit = limit;
         this.desc = desc;
         add(value);
     }
 
-    public SortedListUnit2(T value, boolean desc) {
+    public SortedListUnit(T value, boolean desc) {
         this(value, 0, desc);
     }
 
-    public SortedListUnit2(T value, int limit) {
+    public SortedListUnit(T value, int limit) {
         this(value, limit, true);
     }
 
@@ -74,7 +74,7 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
      * @return
      */
     @Override
-    public SortedListUnit2<T> add(T value) {
+    public SortedListUnit<T> add(T value) {
         if (this.original.isEmpty()) {
             this.original.add(value);
             return this;
@@ -108,11 +108,11 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
     }
 
     @Override
-    public SortedListUnit2<T> merge(SortedListUnit2<T> that) {
+    public SortedListUnit<T> merge(SortedListUnit<T> that) {
         return that == null ? this : internalMerge(that.desc(), that.limit(), that.original());
     }
 
-    private SortedListUnit2<T> internalMerge(boolean desc, int limit, List<T> original) {
+    private SortedListUnit<T> internalMerge(boolean desc, int limit, List<T> original) {
         this.desc = desc;
         this.limit = Math.max(this.limit, limit);
         ArrayList<T> arrayList = new ArrayList<>();
@@ -160,8 +160,8 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
     }
 
     @Override
-    public SortedListUnit2<T> fastClone() {
-        SortedListUnit2<T> mergeableSortedList = new SortedListUnit2<>();
+    public SortedListUnit<T> fastClone() {
+        SortedListUnit<T> mergeableSortedList = new SortedListUnit<>();
         mergeableSortedList.desc = this.desc;
         mergeableSortedList.limit = this.limit;
         for (T item : getList()) {
@@ -219,7 +219,7 @@ public class SortedListUnit2<T extends Comparable<T> & Cloneable2<T>>
         if (getClass() != that.getClass()) {
             return false;
         }
-        SortedListUnit2<T> thatUnit = (SortedListUnit2) that;
+        SortedListUnit<T> thatUnit = (SortedListUnit) that;
         if (this.desc != thatUnit.desc) {
             return false;
         }

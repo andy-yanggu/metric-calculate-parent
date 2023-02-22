@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.value;
 
-public interface Cloneable2<C extends Cloneable2<?>> {
+public interface Clone<C extends Clone<?>> {
 
     C fastClone();
 

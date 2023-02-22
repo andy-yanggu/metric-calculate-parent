@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +12,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @MergeType(value = "MAXFIELD", useParam = true)
 @Objective(useCompareField = true, retainObject = false)
-public class MaxFieldUnit<T extends Comparable<T> & Cloneable2<T>> implements
+public class MaxFieldUnit<T extends Comparable<T> & Clone<T>> implements
         ObjectiveUnit<T, MaxFieldUnit<T>>, Value<Object> {
 
     private MaxObjectUnit<T> maxObjectUnit = new MaxObjectUnit<>();

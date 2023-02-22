@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.StringJoiner;
 
-public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneable2<V> & Value<?>>
-        implements Value<Map<K, Object>>, Cloneable2<KeyValue<K, V>>, Comparable<KeyValue<K, V>> {
+public class KeyValue<K extends Comparable<K> & Clone<K>, V extends Clone<V> & Value<?>>
+        implements Value<Map<K, Object>>, Clone<KeyValue<K, V>>, Comparable<KeyValue<K, V>> {
 
     private K key;
 

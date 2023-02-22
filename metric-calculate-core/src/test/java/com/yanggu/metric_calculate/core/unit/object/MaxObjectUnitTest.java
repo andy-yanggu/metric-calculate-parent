@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import com.yanggu.metric_calculate.core.value.Key;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import org.junit.Test;
@@ -160,8 +160,8 @@ public class MaxObjectUnitTest {
      */
     @Test
     public void testValue2() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
-        MaxObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> maxObjectUnit = new MaxObjectUnit<>(keyValue);
+        KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(1), CloneWrapper.wrap("张三"));
+        MaxObjectUnit<KeyValue<Key<Integer>, CloneWrapper<String>>> maxObjectUnit = new MaxObjectUnit<>(keyValue);
         maxObjectUnit.setOnlyShowValue(false);
         assertEquals(keyValue.value(), maxObjectUnit.value());
     }
@@ -173,8 +173,8 @@ public class MaxObjectUnitTest {
      */
     @Test
     public void testValue3() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
-        MaxObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> maxObjectUnit = new MaxObjectUnit<>(keyValue);
+        KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(1), CloneWrapper.wrap("张三"));
+        MaxObjectUnit<KeyValue<Key<Integer>, CloneWrapper<String>>> maxObjectUnit = new MaxObjectUnit<>(keyValue);
         assertEquals(keyValue.getValue().value(), maxObjectUnit.value());
     }
 
@@ -185,8 +185,8 @@ public class MaxObjectUnitTest {
      */
     @Test
     public void testValue4() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), null);
-        MaxObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> maxObjectUnit = new MaxObjectUnit<>(keyValue);
+        KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(1), null);
+        MaxObjectUnit<KeyValue<Key<Integer>, CloneWrapper<String>>> maxObjectUnit = new MaxObjectUnit<>(keyValue);
         assertNull(maxObjectUnit.value());
     }
 

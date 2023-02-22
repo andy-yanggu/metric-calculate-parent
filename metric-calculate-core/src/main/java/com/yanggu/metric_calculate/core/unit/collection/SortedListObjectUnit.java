@@ -4,7 +4,7 @@ import cn.hutool.core.collection.BoundedPriorityQueue;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
@@ -24,7 +24,7 @@ import java.util.Map;
 @FieldNameConstants
 @MergeType(value = "SORTEDLISTOBJECT", useParam = true)
 @Collective(useSortedField = true, retainObject = true)
-public class SortedListObjectUnit<T extends Comparable<T> & Cloneable2<T>> implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>> {
+public class SortedListObjectUnit<T extends Comparable<T> & Clone<T>> implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>> {
 
     /**
      * 是否只展示value, 不展示key

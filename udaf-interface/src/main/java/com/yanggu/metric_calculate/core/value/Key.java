@@ -2,23 +2,23 @@ package com.yanggu.metric_calculate.core.value;
 
 import java.util.Objects;
 
-public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneable2<Key<K>> {
+public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Clone<Key<K>> {
 
     private K data;
 
-    private Cloneable2<Cloneable2Wrapper<K>> cloneable2Key;
+    private Clone<CloneWrapper<K>> cloneKey;
 
     public Key() {
     }
 
     public Key(K data) {
         this.data = data;
-        this.cloneable2Key = Cloneable2Wrapper.wrap(data);
+        this.cloneKey = CloneWrapper.wrap(data);
     }
 
     @Override
     public Key<K> fastClone() {
-        return new Key<>(cloneable2Key.fastClone().value());
+        return new Key<>(cloneKey.fastClone().value());
     }
 
     @Override
@@ -40,7 +40,7 @@ public class Key<K extends Comparable<K>> implements Comparable<Key<K>>, Cloneab
 
     @Override
     public int hashCode() {
-        return Objects.hash(data, cloneable2Key);
+        return Objects.hash(data, cloneKey);
     }
 
     @Override

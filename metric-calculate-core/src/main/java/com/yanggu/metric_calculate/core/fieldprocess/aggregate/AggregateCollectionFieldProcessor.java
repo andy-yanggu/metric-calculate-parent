@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFiel
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
@@ -99,7 +99,7 @@ public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> exten
         Collective collective = mergeUnitClazz.getAnnotation(Collective.class);
 
         //获取保留字段或者原始数据
-        Cloneable2Wrapper<Object> retainFieldValue = getRetainFieldValue(input, collective.retainObject());
+        CloneWrapper<Object> retainFieldValue = getRetainFieldValue(input, collective.retainObject());
 
         //默认没有去重字段或者排序字段
         Object result = retainFieldValue;

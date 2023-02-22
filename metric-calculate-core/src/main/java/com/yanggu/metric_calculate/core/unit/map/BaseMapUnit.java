@@ -4,7 +4,7 @@ import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.MapType;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ import java.util.Map;
  */
 @MapType
 @MergeType(value = "BASEMAP", useParam = false)
-public class BaseMapUnit<K extends Cloneable2<K> & Value<Object>, V extends Cloneable2<V> & MergedUnit<V>>
+public class BaseMapUnit<K extends Clone<K> & Value<Object>, V extends Clone<V> & MergedUnit<V>>
         implements MapUnit<K, V, BaseMapUnit<K, V>>, Value<Map<Object, Object>> {
 
     private Map<K, V> details = new HashMap<>();

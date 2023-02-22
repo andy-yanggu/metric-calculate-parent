@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFiel
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -69,7 +69,7 @@ public class AggregateObjectFieldProcessor<T, M extends MergedUnit<M>> extends B
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 
         //获取保留字段或者原始数据
-        Cloneable2Wrapper<Object> retainFieldValue = getRetainFieldValue(input, objective.retainObject());
+        CloneWrapper<Object> retainFieldValue = getRetainFieldValue(input, objective.retainObject());
 
         //默认没有排序字段
         Object result = retainFieldValue;

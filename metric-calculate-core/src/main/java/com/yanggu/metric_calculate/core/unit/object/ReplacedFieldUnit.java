@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
@@ -11,7 +11,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @Data
 @Objective(useCompareField = false, retainObject = false)
 @MergeType(value = "REPLACEDFIELD", timeWindowType = TIME_SLIDING_WINDOW)
-public class ReplacedFieldUnit<T extends Cloneable2<T>> implements ObjectiveUnit<T, ReplacedFieldUnit<T>>, Value<T> {
+public class ReplacedFieldUnit<T extends Clone<T>> implements ObjectiveUnit<T, ReplacedFieldUnit<T>>, Value<T> {
 
     private ReplacedObjectUnit<T> replacedObjectUnit;
 

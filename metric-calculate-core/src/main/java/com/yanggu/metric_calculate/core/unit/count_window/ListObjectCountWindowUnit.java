@@ -5,10 +5,9 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldNameConstants;
 
 import java.io.Serializable;
@@ -26,7 +25,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @FieldNameConstants
 @Collective(retainObject = true)
 @MergeType(value = "LISTOBJECTCOUNTWINDOW", useParam = true, useExternalAgg = true, timeWindowType = TIME_SLIDING_WINDOW)
-public class ListObjectCountWindowUnit<T extends Cloneable2<T>> implements
+public class ListObjectCountWindowUnit<T extends Clone<T>> implements
         CollectionUnit<T, ListObjectCountWindowUnit<T>>, Value<List<Object>>, Serializable, Iterable<T> {
 
     private static final long serialVersionUID = -1500607404480893613L;

@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
@@ -16,7 +16,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @Data
 @Collective(retainObject = false)
 @MergeType(value = "LISTFIELD", useParam = true, timeWindowType = TIME_SLIDING_WINDOW)
-public class ListFieldUnit<T extends Cloneable2<T>> implements CollectionUnit<T, ListFieldUnit<T>>, Value<List<T>> {
+public class ListFieldUnit<T extends Clone<T>> implements CollectionUnit<T, ListFieldUnit<T>>, Value<List<T>> {
 
     private ListObjectUnit<T> listObjectUnit;
 

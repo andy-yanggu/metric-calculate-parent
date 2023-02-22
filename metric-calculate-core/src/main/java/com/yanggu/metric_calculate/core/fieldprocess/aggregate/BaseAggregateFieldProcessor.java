@@ -5,7 +5,7 @@ import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -62,7 +62,7 @@ public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> im
         throw new RuntimeException("子类需要重写process方法");
     }
 
-    protected Cloneable2Wrapper<Object> getRetainFieldValue(T input, boolean retainObject) {
+    protected CloneWrapper<Object> getRetainFieldValue(T input, boolean retainObject) {
         Object value;
         if (retainObject) {
             value = input;
@@ -73,7 +73,7 @@ public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> im
             }
             value = retainField;
         }
-        return Cloneable2Wrapper.wrap(value);
+        return CloneWrapper.wrap(value);
     }
 
     protected MetricFieldProcessor<T, ?> getRetainFieldValueFieldProcessor() {

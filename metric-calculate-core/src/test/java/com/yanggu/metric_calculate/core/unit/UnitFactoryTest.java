@@ -16,7 +16,7 @@ import com.yanggu.metric_calculate.core.unit.numeric.CountUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.SumUnit;
 import com.yanggu.metric_calculate.core.unit.object.MaxObjectUnit;
-import com.yanggu.metric_calculate.core.value.Cloneable2Wrapper;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import com.yanggu.metric_calculate.core.value.Key;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -169,8 +169,8 @@ public class UnitFactoryTest {
      */
     @Test
     public void createObjectiveUnit() throws Exception {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> keyValue =
-                new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(101));
+        KeyValue<Key<Integer>, CloneWrapper<Integer>> keyValue =
+                new KeyValue<>(new Key<>(1), CloneWrapper.wrap(101));
         MergedUnit<?> unit = getUnitFactory().initInstanceByValue("MAXOBJECT", keyValue, null);
         assertTrue(unit instanceof MaxObjectUnit);
         assertEquals(keyValue.value().get(new Key<>(1)), ((MaxObjectUnit<?>) unit).value());
@@ -183,7 +183,7 @@ public class UnitFactoryTest {
      */
     @Test
     public void createCollectionUnit() throws Exception {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(101));
+        KeyValue<Key<Integer>, CloneWrapper<Integer>> keyValue = new KeyValue<>(new Key<>(1), CloneWrapper.wrap(101));
         MergedUnit unit = getUnitFactory().initInstanceByValue("DISTINCTCOUNT", keyValue, null);
         assertTrue(unit instanceof UniqueCountUnit);
         assertEquals(new HashSet(Collections.singleton(keyValue)), ((UniqueCountUnit) unit).asCollection());
@@ -204,9 +204,9 @@ public class UnitFactoryTest {
         params.put("desc", true);
         params.put("limit", 2);
 
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value1 = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(1));
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value2 = new KeyValue<>(new Key<>(2), Cloneable2Wrapper.wrap(2));
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value3 = new KeyValue<>(new Key<>(0), Cloneable2Wrapper.wrap(0));
+        KeyValue<Key<Integer>, CloneWrapper<Integer>> value1 = new KeyValue<>(new Key<>(1), CloneWrapper.wrap(1));
+        KeyValue<Key<Integer>, CloneWrapper<Integer>> value2 = new KeyValue<>(new Key<>(2), CloneWrapper.wrap(2));
+        KeyValue<Key<Integer>, CloneWrapper<Integer>> value3 = new KeyValue<>(new Key<>(0), CloneWrapper.wrap(0));
 
         Value unit = (Value) getUnitFactory().initInstanceByValue("SORTEDLISTOBJECT2", value1, params);
         assertEquals(Collections.singletonList(value1), unit.value());

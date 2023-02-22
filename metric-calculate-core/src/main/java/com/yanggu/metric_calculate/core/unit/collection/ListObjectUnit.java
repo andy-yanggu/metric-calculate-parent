@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.UdafCustomParam;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.NoArgsConstructor;
 
@@ -19,7 +19,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 @NoArgsConstructor
 @Collective(retainObject = true)
 @MergeType(value = "LISTOBJECT", useParam = true, timeWindowType = TIME_SLIDING_WINDOW)
-public class ListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, ListObjectUnit<T>>, Value<List<T>> {
+public class ListObjectUnit<T extends Clone<T>> implements CollectionUnit<T, ListObjectUnit<T>>, Value<List<T>> {
 
     private List<T> values = new ArrayList<>();
 

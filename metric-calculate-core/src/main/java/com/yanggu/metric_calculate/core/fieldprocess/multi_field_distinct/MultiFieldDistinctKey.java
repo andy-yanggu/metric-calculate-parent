@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct;
 
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import java.util.Objects;
 @Data
 @NoArgsConstructor
 public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey>,
-        Cloneable2<MultiFieldDistinctKey>, Value<Object> {
+        Clone<MultiFieldDistinctKey>, Value<Object> {
 
     private List<Object> fieldList;
 

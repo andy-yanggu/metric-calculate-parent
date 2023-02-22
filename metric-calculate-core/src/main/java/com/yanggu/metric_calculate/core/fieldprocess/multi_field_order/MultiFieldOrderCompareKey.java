@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.fieldprocess.multi_field_order;
 
 import com.google.common.collect.Ordering;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 import lombok.NonNull;
@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Data
 public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderCompareKey>,
-        Cloneable2<MultiFieldOrderCompareKey>, Value<List<FieldOrder>> {
+        Clone<MultiFieldOrderCompareKey>, Value<List<FieldOrder>> {
 
     private List<FieldOrder> fieldOrderList;
 

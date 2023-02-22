@@ -11,21 +11,21 @@ import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
  */
 @MergeType("COUNT2")
 @Numerical
-public class CountUnit2 extends NumberUnit<CubeLong, CountUnit2> {
+public class CountUnit extends NumberUnit<CubeLong, CountUnit> {
 
-    public CountUnit2() {
+    public CountUnit() {
         super();
     }
 
-    public CountUnit2(CubeNumber value) {
+    public CountUnit(CubeNumber value) {
         this(value instanceof CubeLong ? (CubeLong) value : CubeLong.of(value));
     }
 
-    public CountUnit2(CubeLong value) {
+    public CountUnit(CubeLong value) {
         super(value, value.fastClone());
     }
 
-    public CountUnit2(CubeLong value, long count) {
+    public CountUnit(CubeLong value, long count) {
         super(value, count);
     }
 
@@ -35,7 +35,7 @@ public class CountUnit2 extends NumberUnit<CubeLong, CountUnit2> {
     }
 
     @Override
-    public CountUnit2 merge(CountUnit2 that) {
+    public CountUnit merge(CountUnit that) {
         if (that == null) {
             return this;
         }
@@ -45,8 +45,8 @@ public class CountUnit2 extends NumberUnit<CubeLong, CountUnit2> {
     }
 
     @Override
-    public CountUnit2 fastClone() {
-        return new CountUnit2(value.fastClone(), count.longValue());
+    public CountUnit fastClone() {
+        return new CountUnit(value.fastClone(), count.longValue());
     }
 
 }

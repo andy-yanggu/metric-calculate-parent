@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.Map;
@@ -11,7 +11,7 @@ import java.util.Set;
 
 @MergeType(value = "DISTINCTLISTFIELD", useParam = true)
 @Collective(useDistinctField = true, retainObject = false)
-public class DistinctListFieldUnit<T extends Cloneable2<T>> implements CollectionUnit<T, DistinctListFieldUnit<T>>,
+public class DistinctListFieldUnit<T extends Clone<T>> implements CollectionUnit<T, DistinctListFieldUnit<T>>,
         Value<Set<Object>> {
 
     private DistinctListObjectUnit<T> distinctListObjectUnit;

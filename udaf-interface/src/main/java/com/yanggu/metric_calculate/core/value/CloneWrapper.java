@@ -2,19 +2,19 @@ package com.yanggu.metric_calculate.core.value;
 
 import java.util.Objects;
 
-public class Cloneable2Wrapper<T> implements Cloneable2<Cloneable2Wrapper<T>>, Value<T> {
+public class CloneWrapper<T> implements Clone<CloneWrapper<T>>, Value<T> {
 
     private T wrapped;
 
-    private Cloneable2Wrapper() {
+    public CloneWrapper() {
     }
 
-    private Cloneable2Wrapper(T wrapped) {
+    public CloneWrapper(T wrapped) {
         this.wrapped = wrapped;
     }
 
     @Override
-    public Cloneable2Wrapper<T> fastClone() {
+    public CloneWrapper<T> fastClone() {
         return wrap(wrapped);
     }
 
@@ -26,11 +26,11 @@ public class Cloneable2Wrapper<T> implements Cloneable2<Cloneable2Wrapper<T>>, V
     /**
      * Wrap object with cloneable.
      */
-    public static <W> Cloneable2Wrapper<W> wrap(W wrapped) {
-        if (wrapped instanceof Cloneable2) {
-            return new Cloneable2Wrapper(((Cloneable2<?>) wrapped).fastClone());
+    public static <W> CloneWrapper<W> wrap(W wrapped) {
+        if (wrapped instanceof Clone) {
+            return new CloneWrapper(((Clone<?>) wrapped).fastClone());
         }
-        return new Cloneable2Wrapper<>(wrapped);
+        return new CloneWrapper<>(wrapped);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Cloneable2Wrapper<T> implements Cloneable2<Cloneable2Wrapper<T>>, V
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Cloneable2Wrapper<?> that = (Cloneable2Wrapper<?>) o;
+        CloneWrapper<?> that = (CloneWrapper<?>) o;
         return Objects.equals(wrapped, that.wrapped);
     }
 

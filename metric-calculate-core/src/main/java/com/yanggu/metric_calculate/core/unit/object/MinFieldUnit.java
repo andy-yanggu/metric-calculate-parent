@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.object;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Objective;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 import lombok.experimental.FieldNameConstants;
@@ -14,7 +14,7 @@ import java.util.Objects;
 @FieldNameConstants
 @MergeType(value = "MINFIELD", useParam = true)
 @Objective(useCompareField = true, retainObject = false)
-public class MinFieldUnit<T extends Comparable<T> & Cloneable2<T>>
+public class MinFieldUnit<T extends Comparable<T> & Clone<T>>
         implements ObjectiveUnit<T, MinFieldUnit<T>>, Value<Object> {
 
     private MinObjectUnit<T> minObjectUnit;

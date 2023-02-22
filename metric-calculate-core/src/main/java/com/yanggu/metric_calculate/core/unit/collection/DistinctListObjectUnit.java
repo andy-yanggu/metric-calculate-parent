@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.KeyValue;
 import com.yanggu.metric_calculate.core.value.Value;
 import com.yanggu.metric_calculate.core.value.ValueMapper;
@@ -14,7 +14,7 @@ import java.util.*;
 @NoArgsConstructor
 @MergeType(value = "DISTINCTLISTOBJECT", useParam = true)
 @Collective(useDistinctField = true, retainObject = true)
-public class DistinctListObjectUnit<T extends Cloneable2<T>> implements CollectionUnit<T, DistinctListObjectUnit<T>>,
+public class DistinctListObjectUnit<T extends Clone<T>> implements CollectionUnit<T, DistinctListObjectUnit<T>>,
         Value<Set<Object>> {
 
     protected Set<T> original = new HashSet<>();

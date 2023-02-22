@@ -4,11 +4,15 @@ import com.yanggu.metric_calculate.core.fieldprocess.FieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.NoneValue;
 import com.yanggu.metric_calculate.core.value.Value;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.*;
 
+@Data
 public class PatternNode<T extends EventState> implements MergedUnit<PatternNode<T>>, Value, Serializable {
+
+    private Integer index;
 
     private String name;
 

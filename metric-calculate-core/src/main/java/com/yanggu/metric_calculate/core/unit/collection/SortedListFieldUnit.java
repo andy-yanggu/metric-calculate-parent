@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.unit.collection;
 
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.value.Cloneable2;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 @MergeType(value = "SORTEDLISTFIELD", useParam = true)
 @Collective(useSortedField = true, retainObject = false)
-public class SortedListFieldUnit<T extends Comparable<T> & Cloneable2<T>>
+public class SortedListFieldUnit<T extends Comparable<T> & Clone<T>>
         implements CollectionUnit<T, SortedListFieldUnit<T>>, Value<List<Object>> {
 
     private SortedListObjectUnit<T> sortedListObjectUnit;
