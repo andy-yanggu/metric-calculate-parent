@@ -161,7 +161,7 @@ public class MinObjectUnitTest {
      */
     @Test
     public void testValue2() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, "张三");
+        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
         MinObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
         minObjectUnit.setOnlyShowValue(false);
         assertEquals(keyValue.value(), minObjectUnit.value());
@@ -174,7 +174,7 @@ public class MinObjectUnitTest {
      */
     @Test
     public void testValue3() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, "张三");
+        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
         MinObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
         assertEquals(keyValue.getValue().value(), minObjectUnit.value());
     }
@@ -186,7 +186,7 @@ public class MinObjectUnitTest {
      */
     @Test
     public void testValue4() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, null);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), null);
         MinObjectUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> minObjectUnit = new MinObjectUnit<>(keyValue);
         assertNull(minObjectUnit.value());
     }

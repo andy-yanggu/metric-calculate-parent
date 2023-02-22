@@ -204,9 +204,9 @@ public class UnitFactoryTest {
         params.put("desc", true);
         params.put("limit", 2);
 
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value1 = new KeyValue<>(1, 1);
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value2 = new KeyValue<>(2, 2);
-        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value3 = new KeyValue<>(0, 0);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value1 = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap(1));
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value2 = new KeyValue<>(new Key<>(2), Cloneable2Wrapper.wrap(2));
+        KeyValue<Key<Integer>, Cloneable2Wrapper<Integer>> value3 = new KeyValue<>(new Key<>(0), Cloneable2Wrapper.wrap(0));
 
         Value unit = (Value) getUnitFactory().initInstanceByValue("SORTEDLISTOBJECT2", value1, params);
         assertEquals(Collections.singletonList(value1), unit.value());

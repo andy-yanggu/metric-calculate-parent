@@ -161,7 +161,7 @@ public class MaxFieldUnitTest {
      */
     @Test
     public void testValue2() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, "张三");
+        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
         MaxFieldUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> maxFieldUnit = new MaxFieldUnit<>(keyValue);
         maxFieldUnit.setOnlyShowValue(false);
         assertEquals(keyValue.value(), maxFieldUnit.value());
@@ -174,7 +174,7 @@ public class MaxFieldUnitTest {
      */
     @Test
     public void testValue3() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, "张三");
+        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), Cloneable2Wrapper.wrap("张三"));
         MaxFieldUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> maxFieldUnit = new MaxFieldUnit<>(keyValue);
         assertEquals(keyValue.getValue().value(), maxFieldUnit.value());
     }
@@ -186,7 +186,7 @@ public class MaxFieldUnitTest {
      */
     @Test
     public void testValue4() {
-        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(1, null);
+        KeyValue<Key<Integer>, Cloneable2Wrapper<String>> keyValue = new KeyValue<>(new Key<>(1), null);
         MaxFieldUnit<KeyValue<Key<Integer>, Cloneable2Wrapper<String>>> maxFieldUnit = new MaxFieldUnit<>(keyValue);
         assertNull(maxFieldUnit.value());
     }

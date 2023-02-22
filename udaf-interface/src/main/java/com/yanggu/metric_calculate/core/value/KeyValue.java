@@ -19,11 +19,6 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
         this.value = value;
     }
 
-    public KeyValue(Comparable key, Object value) {
-        this.key = (K) new Key<>(key);
-        this.value = (V) Cloneable2Wrapper.wrap(value);
-    }
-
     public K key() {
         return key;
     }
@@ -77,9 +72,9 @@ public class KeyValue<K extends Comparable<K> & Cloneable2<K>, V extends Cloneab
     @Override
     public String toString() {
         return new StringJoiner(", ", KeyValue.class.getSimpleName() + "[", "]")
-            .add("key=" + key)
-            .add("value=" + value)
-            .toString();
+                .add("key=" + key)
+                .add("value=" + value)
+                .toString();
     }
 
 }
