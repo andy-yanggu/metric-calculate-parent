@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core.unit;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
+import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -133,11 +134,18 @@ public class UnitFactory implements Serializable {
 
         Class<?> returnClass;
         int unitType;
+        boolean multiNumber = false;
+        Class<?> paramType = Object.class;
+
         MergeType mergeType = tempClass.getAnnotation(MergeType.class);
         if (tempClass.isAnnotationPresent(Numerical.class)) {
             //数值型
             returnClass = NumberUnit.class;
             unitType = 0;
+            multiNumber = tempClass.getAnnotation(Numerical.class).multiNumber();
+            if (multiNumber) {
+                paramType = Tuple.class;
+            }
         } else if (tempClass.isAnnotationPresent(Collective.class)) {
             //集合型
             returnClass = CollectionUnit.class;
@@ -172,6 +180,8 @@ public class UnitFactory implements Serializable {
         param.put("useParam", mergeType.useParam());
         //放入聚合类型
         param.put("unitType", unitType);
+        //放入数值型是否使用多参数
+        param.put("multiNumber", multiNumber);
 
         //生成模板代码
         template.process(param, stringWriter);
@@ -181,7 +191,7 @@ public class UnitFactory implements Serializable {
         ScriptEvaluator evaluator = new ScriptEvaluator();
         String expression = stringWriter.toString();
         String[] parameterNames = {"param", "initValue"};
-        Class<?>[] parameterTypes = {Map.class, Object.class};
+        Class<?>[] parameterTypes = {Map.class, paramType};
         evaluator.setParameters(parameterNames, parameterTypes);
         evaluator.setReturnType(returnClass);
         evaluator.setParentClassLoader(tempClass.getClassLoader());
@@ -236,7 +246,9 @@ public class UnitFactory implements Serializable {
     }
 
     public static BasicType ofValue(Object value) {
-        if (value instanceof Long) {
+        if (value instanceof Integer) {
+            return LONG;
+        } else if (value instanceof Long) {
             return LONG;
         } else if (value instanceof String) {
             return STRING;
@@ -273,7 +285,7 @@ public class UnitFactory implements Serializable {
         //返回读取指定资源的输入流
         InputStream is = this.getClass().getResourceAsStream("/merged_unit_template/" + fileName);
         String path = System.getProperty("java.io.tmpdir");
-        String dirPath = path + File.separator + IdUtil.fastSimpleUUID() + "/templates";
+        String dirPath = path + IdUtil.fastSimpleUUID() + "/templates";
         log.info("生成merged_unit模板全路径: {}", dirPath);
         File dir = new File(dirPath);
         //create folder

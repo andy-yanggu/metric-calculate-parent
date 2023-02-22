@@ -24,6 +24,11 @@ public class BaseUdafParam {
     private String metricExpress;
 
     /**
+     * 多字段度量字段表达式：数值型需要。例如协方差需要两个参数
+     */
+    private List<String> metricExpressList;
+
+    /**
      * 保留字段表达式（retainExpress）：对象型和集合型只保留指定字段的值
      */
     private String retainExpress;

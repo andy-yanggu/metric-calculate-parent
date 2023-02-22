@@ -3,11 +3,12 @@ package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessorTest;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
-import com.yanggu.metric_calculate.core.number.CubeDouble;
+import com.yanggu.metric_calculate.core.number.CubeLong;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.numeric.CountUnit;
+import com.yanggu.metric_calculate.core.unit.numeric.CovUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.SumUnit;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import org.junit.Test;
@@ -18,9 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
@@ -222,6 +221,36 @@ public class AggregateNumberFieldProcessorTest {
         assertEquals(aggregateType, aggregateTypeCaptor.getValue());
         assertEquals(Double.parseDouble(value), resultCaptor.getValue(), Double.MIN_VALUE);
         assertNull(paramMapCaptor.getValue());
+    }
+
+    /**
+     * 测试协方差CovUnit
+     * @throws Exception
+     */
+    @Test
+    public void testProcess_CovUnit() throws Exception {
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("COV");
+        baseUdafParam.setMetricExpressList(Arrays.asList("amount", "amount1"));
+        List<BaseUdafParam> baseUdafParamList = Collections.singletonList(baseUdafParam);
+
+        UnitFactory unitFactory1 = new UnitFactory();
+        unitFactory1.init();
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Integer.class);
+        fieldMap.put("amount1", Integer.class);
+
+        AggregateNumberFieldProcessor<JSONObject, CovUnit<CubeLong>> numberAggregateFieldProcessor =
+                (AggregateNumberFieldProcessor<JSONObject, CovUnit<CubeLong>>) FieldProcessorUtil.<JSONObject, CovUnit<CubeLong>>getBaseAggregateFieldProcessor(baseUdafParamList, unitFactory1, fieldMap);
+
+        JSONObject input = new JSONObject();
+        input.set("amount", 1);
+        input.set("amount1", 2);
+
+        CovUnit<CubeLong> process = numberAggregateFieldProcessor.process(input);
+        Number value = process.value();
+        assertEquals(0, value);
     }
 
 }

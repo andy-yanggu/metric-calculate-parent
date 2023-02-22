@@ -14,9 +14,17 @@ import java.util.Map;
     //数值型
     NumberUnit numberUnit;
     <#if useParam == true>
-        numberUnit = new ${fullName}<>(UnitFactory.createCubeNumber(initValue), param);
+        <#if multiNumber == true>
+            numberUnit = new ${fullName}<>(initValue, param);
+        <#else>
+            numberUnit = new ${fullName}<>(UnitFactory.createCubeNumber(initValue), param);
+        </#if>
     <#else>
-        numberUnit = new ${fullName}<>(UnitFactory.createCubeNumber(initValue));
+        <#if multiNumber == true>
+            numberUnit = new ${fullName}<>(initValue);
+        <#else>
+            numberUnit = new ${fullName}<>(UnitFactory.createCubeNumber(initValue));
+        </#if>
     </#if>
     return numberUnit;
 <#elseif unitType == 1>

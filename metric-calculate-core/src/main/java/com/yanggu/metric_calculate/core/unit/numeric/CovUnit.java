@@ -1,11 +1,12 @@
 package com.yanggu.metric_calculate.core.unit.numeric;
 
+import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.number.*;
 
-@Numerical
 @MergeType("COV")
+@Numerical(multiNumber = true)
 public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> {
 
     private static final long serialVersionUID = -3797610254543124206L;
@@ -22,17 +23,13 @@ public class CovUnit<N extends CubeNumber<N>> extends NumberUnit<N, CovUnit<N>> 
         super();
     }
 
-    public CovUnit(N value) {
-        super(value);
-    }
-
     /**
      * Constructor.
      */
-    public CovUnit(N sum1, N sum2) {
+    public CovUnit(Tuple tuple) {
         super(null);
-        this.sum1 = sum1;
-        this.sum2 = sum2;
+        this.sum1 = tuple.get(0);
+        this.sum2 = tuple.get(1);
     }
 
     /**

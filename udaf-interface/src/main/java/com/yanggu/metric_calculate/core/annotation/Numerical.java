@@ -10,4 +10,13 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Objective
 public @interface Numerical {
+
+    /**
+     * 是否需要多个参数
+     * <p>主要是协方差需要多个参数</p>
+     *
+     * @return
+     */
+    boolean multiNumber() default false;
+
 }

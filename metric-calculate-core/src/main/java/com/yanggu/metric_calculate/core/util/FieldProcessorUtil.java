@@ -139,8 +139,8 @@ public class FieldProcessorUtil {
     @SneakyThrows
     public static <T, M extends MergedUnit<M>> BaseAggregateFieldProcessor<T, M>
             getBaseAggregateFieldProcessor(List<BaseUdafParam> baseUdafParamList,
-                                        UnitFactory unitFactory,
-                                        Map<String, Class<?>> fieldMap) {
+                                           UnitFactory unitFactory,
+                                           Map<String, Class<?>> fieldMap) {
 
         BaseAggregateFieldProcessor<T, M> aggregateFieldProcessor;
         BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
