@@ -3,29 +3,31 @@ package com.yanggu.metric_calculate.core.fieldprocess.pattern;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.ChainPattern;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
-import com.yanggu.metric_calculate.core.unit.pattern.FinishState;
 import com.yanggu.metric_calculate.core.unit.pattern.MatchState;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.value.*;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Data
-public class EventStateExtractor<T> implements AggregateFieldProcessor<T, MatchState<TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, CloneWrapper<T>>>> {
-
-    private UnitFactory unitFactory;
+public class EventStateExtractor<T, M extends MergedUnit<M>>
+        implements AggregateFieldProcessor<T, M> {
 
     private ChainPattern chainPattern;
 
+    private BaseUdafParam baseUdafParam;
+
+    private UnitFactory unitFactory;
+
     private Map<String, Class<?>> fieldMap;
 
-    private TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, FilterFieldProcessor<T>> filterFieldProcessorMap;
+    private TreeMap<NodePattern, FilterFieldProcessor<T>> filterFieldProcessorMap;
 
     /**
      * 需要进行二次聚合计算
@@ -36,35 +38,32 @@ public class EventStateExtractor<T> implements AggregateFieldProcessor<T, MatchS
 
     @Override
     public void init() throws Exception {
-        List<ChainPattern.Node> nodes = chainPattern.getNodes();
-        TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, FilterFieldProcessor<T>> tempFilterFieldProcessorMap =
-                new TreeMap<>();
+        TreeMap<NodePattern, FilterFieldProcessor<T>> tempFilterFieldProcessorMap = new TreeMap<>();
 
-        for (int i = 0; i < nodes.size(); i++) {
-            ChainPattern.Node node = nodes.get(i);
-            String name = node.getName();
+        List<NodePattern> nodePatternList = chainPattern.getNodePatternList();
+        for (NodePattern node : nodePatternList) {
             FilterFieldProcessor<T> filterFieldProcessor =
                     FieldProcessorUtil.getFilterFieldProcessor(fieldMap, node.getMatchExpress());
-            KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(i), CloneWrapper.wrap(name));
-            tempFilterFieldProcessorMap.put(keyValue, filterFieldProcessor);
+            tempFilterFieldProcessorMap.put(node, filterFieldProcessor);
         }
         this.filterFieldProcessorMap = tempFilterFieldProcessorMap;
 
-        //TODO 配置额外字段处理器
+        this.externalAggregateFieldProcessor = FieldProcessorUtil
+                .getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), unitFactory, fieldMap);
 
     }
 
     @Override
-    public MatchState<TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, CloneWrapper<T>>> process(T event) {
-        TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, CloneWrapper<T>> dataMap = new TreeMap<>();
-        filterFieldProcessorMap.forEach((keyValue, filterProcessor) -> {
+    public M process(T event) {
+        TreeMap<NodePattern, CloneWrapper<T>> dataMap = new TreeMap<>();
+        filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
             Boolean process = filterProcessor.process(event);
             if (process.equals(true)) {
-                dataMap.put(keyValue, CloneWrapper.wrap(event));
+                dataMap.put(nodePattern, CloneWrapper.wrap(event));
             }
         });
 
-        return new MatchState<>(dataMap);
+        return ((M) new MatchState<>(dataMap));
     }
 
     @Override

@@ -8,10 +8,12 @@ import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
+import com.yanggu.metric_calculate.core.fieldprocess.pattern.EventStateExtractor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.ChainPattern;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
@@ -155,6 +157,7 @@ public class FieldProcessorUtil {
         } else if (mergeUnitClazz.isAnnotationPresent(Collective.class)) {
             //集合型
             aggregateFieldProcessor = new AggregateCollectionFieldProcessor<>();
+            //如果使用额外的聚合逻辑
             if (mergeUnitClazz.getAnnotation(MergeType.class).useExternalAgg()) {
                 ((AggregateCollectionFieldProcessor<T, ?>) aggregateFieldProcessor)
                         .setExternalBaseUdafParam(baseUdafParamList.get(1));
@@ -220,6 +223,21 @@ public class FieldProcessorUtil {
         return mixUnitFieldProcessor;
     }
 
+    @SneakyThrows
+    public static <T, M extends MergedUnit<M>> EventStateExtractor<T, M> getEventStateExtractor(
+                                                        ChainPattern chainPattern,
+                                                        BaseUdafParam baseUdafParam,
+                                                        Map<String, Class<?>> fieldMap,
+                                                        UnitFactory unitFactory) {
+        EventStateExtractor<T, M> eventStateExtractor = new EventStateExtractor<>();
+        eventStateExtractor.setChainPattern(chainPattern);
+        eventStateExtractor.setBaseUdafParam(baseUdafParam);
+        eventStateExtractor.setUnitFactory(unitFactory);
+        eventStateExtractor.setFieldMap(fieldMap);
+        eventStateExtractor.init();
+        return eventStateExtractor;
+    }
+
     /**
      * 生成聚合字段处理器
      *
@@ -251,8 +269,15 @@ public class FieldProcessorUtil {
             return getAggregateMapUnitFieldProcessor(mapUdafParam, fieldMap, unitFactory);
         }
 
+        //如果是混合类型
         if (mergeUnitClazz.isAnnotationPresent(Mix.class)) {
             return getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, unitFactory);
+        }
+
+        //如果是CEP类型
+        if (mergeUnitClazz.isAnnotationPresent(Pattern.class)) {
+            ChainPattern chainPattern = null;
+            return getEventStateExtractor(chainPattern, baseUdafParamList.get(0), fieldMap, unitFactory);
         }
 
         throw new RuntimeException("暂不支持聚合类型: " + mergeUnitClazz.getName());

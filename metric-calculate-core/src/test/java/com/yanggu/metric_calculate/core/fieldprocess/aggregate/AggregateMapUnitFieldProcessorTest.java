@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getTestUnitFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -51,7 +51,7 @@ public class AggregateMapUnitFieldProcessorTest {
         MapUnitUdafParam mapUnitUdafParam = JSONUtil.toBean(jsonString, MapUnitUdafParam.class);
 
         AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
-                        FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, getUnitFactory());
+                        FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, getTestUnitFactory());
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");

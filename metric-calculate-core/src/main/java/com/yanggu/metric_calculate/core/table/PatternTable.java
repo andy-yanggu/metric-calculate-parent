@@ -1,55 +1,60 @@
 package com.yanggu.metric_calculate.core.table;
 
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.collection.ListObjectUnit;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core.unit.pattern.FinishState;
 import com.yanggu.metric_calculate.core.unit.pattern.MatchState;
-import com.yanggu.metric_calculate.core.unit.pattern.Pattern;
-import com.yanggu.metric_calculate.core.unit.pattern.PatternNode;
-import com.yanggu.metric_calculate.core.value.*;
-import org.springframework.data.redis.connection.ReturnType;
+import com.yanggu.metric_calculate.core.value.Clone;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
+import lombok.Data;
 
-import java.util.LinkedHashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
-
+@Data
 public class PatternTable<T extends Clone<T>> implements
-        Table<Long, FinishState<T>, Long , MatchState<TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, CloneWrapper<T>>>, PatternTable<T>> {
+        Table<Long, FinishState<T>, Long , MatchState<TreeMap<NodePattern, CloneWrapper<T>>>, PatternTable<T>> {
 
-    private Pattern pattern;
-
-    private TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, TimeSeriesKVTable<MatchState<T>>> dataMap;
+    private TreeMap<NodePattern, TimeSeriesKVTable<MatchState<T>>> dataMap;
 
     @Override
-    public void putValue(Long startTime, Long endTime, MatchState<TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, CloneWrapper<T>>> value) {
-        TreeMap<KeyValue<Key<Integer>, CloneWrapper<String>>, CloneWrapper<T>> data = value.value();
+    public void putValue(Long timestamp, Long noneUse, MatchState<TreeMap<NodePattern, CloneWrapper<T>>> value) {
+        TreeMap<NodePattern, CloneWrapper<T>> data = value.value();
         data.forEach((keyValue, tempData) -> {
             TimeSeriesKVTable<MatchState<T>> table = dataMap.get(keyValue);
-            table.put(startTime, new MatchState<>(tempData.value()));
+            table.put(timestamp, new MatchState<>(tempData.value()));
         });
     }
 
     @Override
     public FinishState<T> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        TimeSeriesKVTable<MatchState<T>> endTable = dataMap.lastEntry().getValue().subTable(from, fromInclusive, to, toInclusive);
+
+        //判断最后一个节点是否有数据
+        TimeSeriesKVTable<MatchState<T>> endTable = dataMap.lastEntry().getValue()
+                .subTable(from, fromInclusive, to, toInclusive);
         if (endTable.isEmpty()) {
             return null;
         }
 
-        MergedUnit result;
+        //从第一个节点进行截取数据
+        TimeSeriesKVTable<MatchState<T>> nodeTable = dataMap.firstEntry().getValue()
+                .subTable(from, fromInclusive, to, toInclusive);
 
-        TimeSeriesKVTable<MatchState<T>> nodeTable = dataMap.firstEntry().getValue().subTable(from, fromInclusive, to, toInclusive);
+        //判断第一个节点是否有数据
+        if (nodeTable.isEmpty()) {
+            return null;
+        }
+
         TimeSeriesKVTable<MatchState<T>> nextTable = null;
 
-        PatternNode node = pattern.getRootNode();
-        PatternNode nextNode;
+        Iterator<NodePattern> iterator = dataMap.keySet().iterator();
+        iterator.next();
+        NodePattern nextNode;
 
-        while ((nextNode = node.getNextNode()) != null) {
-            Long size = node.getConnector().getCond().timeBaseline().realLength();
-            KeyValue<Key<Integer>, CloneWrapper<String>> keyValue = new KeyValue<>(new Key<>(nextNode.getIndex()), CloneWrapper.wrap(nextNode.getName()));
-            TimeSeriesKVTable<MatchState<T>> nextNodeTable = dataMap.get(keyValue);
+        while (iterator.hasNext()) {
+            nextNode = iterator.next();
+            Long size = nextNode.getInterval();
+            TimeSeriesKVTable<MatchState<T>> nextNodeTable = dataMap.get(nextNode);
             nextTable = nextNodeTable.cloneEmpty();
             for (Map.Entry<Long, MatchState<T>> entry : nodeTable.entrySet()) {
                 Long timestamp = entry.getKey();
@@ -60,7 +65,6 @@ public class PatternTable<T extends Clone<T>> implements
                 }
             }
             nodeTable = nextTable;
-            node = nextNode;
         }
 
         TreeMap<Long, T> returnDataMap = new TreeMap<>();

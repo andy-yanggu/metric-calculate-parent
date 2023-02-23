@@ -1,13 +1,15 @@
 package com.yanggu.metric_calculate.core.unit.pattern;
 
+import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Pattern;
+import com.yanggu.metric_calculate.core.enums.TimeWindowEnum;
 import com.yanggu.metric_calculate.core.value.Clone;
 
 import java.util.Objects;
 import java.util.StringJoiner;
 
 @Pattern
-//@MergeType(value = "pattern", timeWindowType = TimeWindowEnum.PATTERN)
+@MergeType(value = "pattern", timeWindowType = TimeWindowEnum.PATTERN)
 public class MatchState<E> implements EventState<E, MatchState<E>> {
 
     private E event;

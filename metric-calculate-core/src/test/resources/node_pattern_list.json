@@ -1,0 +1,20 @@
+[
+  {
+    "index": 0,
+    "name": "start",
+    "matchExpress": "amt > 100",
+    "interval": 0
+  },
+  {
+    "index": 1,
+    "name": "mid",
+    "matchExpress": "amt > 200",
+    "interval": 10
+  },
+  {
+    "index": 2,
+    "name": "end",
+    "matchExpress": "amt > 300",
+    "interval": 10
+  }
+]

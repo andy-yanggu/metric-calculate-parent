@@ -1,5 +1,6 @@
-package com.yanggu.metric_calculate.core.cube;
+package com.yanggu.metric_calculate.core.test;
 
+import com.yanggu.metric_calculate.core.value.Clone;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Trade {
+public class Trade implements Clone<Trade> {
 
     private long id;
 
@@ -31,6 +32,11 @@ public class Trade {
         this.city = city;
         this.exchangeRate = 1.0;
         this.stat = 1;
+    }
+
+    @Override
+    public Trade fastClone() {
+        return this;
     }
 
 }

@@ -18,7 +18,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getTestUnitFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -53,7 +53,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<JSONObject, MaxFieldUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -85,7 +85,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
         BaseAggregateFieldProcessor<JSONObject, MaxObjectUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -119,7 +119,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("OCCUPIEDFIELD");
 
         BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<CloneWrapper<String>>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -147,7 +147,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("OCCUPIEDOBJECT");
 
         BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<CloneWrapper<JSONObject>>> objectFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();

@@ -1,12 +1,10 @@
-import ${fullName};
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.map.MapUnit;
 import com.yanggu.metric_calculate.core.unit.mix_unit.MixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
-import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
+import com.yanggu.metric_calculate.core.unit.pattern.EventState;
 import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import java.util.Map;
@@ -68,6 +66,11 @@ import java.util.Map;
     </#if>
     mixedUnit.addMergeUnit((Map) initValue);
     return mixedUnit;
+<#elseif unitType == 5>
+    //CEP类型
+    EventState eventState;
+    eventState = new ${fullName}<>(initValue);
+    return eventState;
 <#else>
     throw new RuntimeException(clazz.getName() + " not support.");
 </#if>

@@ -7,7 +7,6 @@ import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.unit.pattern.Pattern;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
@@ -34,8 +33,6 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
      */
     private Class<? extends MergedUnit<?>> mergeUnitClazz;
 
-    private Pattern pattern;
-
     public MetricCube<Table, Long, M, ?> createMetricCube(DimensionSet dimensionSet, Long referenceTime) {
 
         MergeType annotation = mergeUnitClazz.getAnnotation(MergeType.class);
@@ -47,15 +44,15 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
         if (mergeUnitClazz.isAnnotationPresent(MapType.class)) {
 
         }
-        MetricCube<Table, Long, M, ?> metricCube;
+        MetricCube<Table, Long, M, ?> metricCube = null;
         //如果是滑动计数窗口需要使用SlidingTimeWindowMetricCube
         if (TimeWindowEnum.TIME_SLIDING_WINDOW.equals(timeWindowEnum)) {
             metricCube = new SlidingTimeWindowMetricCube();
         } else if (TimeWindowEnum.TIME_SPLIT_WINDOW.equals(timeWindowEnum)) {
             metricCube = new TimedKVMetricCube();
         } else if (TimeWindowEnum.PATTERN.equals(timeWindowEnum)) {
-            metricCube = new TimedKVPatternCube();
-            ((TimedKVPatternCube) metricCube).setPattern(pattern);
+            //metricCube = new TimedKVPatternCube();
+            //((TimedKVPatternCube) metricCube).setPattern(pattern);
         } else {
             throw new RuntimeException("timeWindowEnum数据错误");
         }

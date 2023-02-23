@@ -101,12 +101,24 @@ public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeM
 
     @Override
     public int hashCode() {
-        return timeBaselineDimension.hashCode() * 31  + super.hashCode();
+        int result = super.hashCode();
+        result = 31 * result + (timeBaselineDimension != null ? timeBaselineDimension.hashCode() : 0);
+        return result;
     }
 
     @Override
     public boolean equals(Object o) {
-        return super.equals(o) && timeBaselineDimension.equals(((TimeSeriesKVTable<V>) o).timeBaselineDimension);
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+        TimeSeriesKVTable<?> that = (TimeSeriesKVTable<?>) o;
+        return Objects.equals(timeBaselineDimension, that.timeBaselineDimension);
     }
 
 }

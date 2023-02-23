@@ -22,6 +22,7 @@ import com.yanggu.metric_calculate.core.unit.map.MapUnit;
 import com.yanggu.metric_calculate.core.unit.mix_unit.MixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
+import com.yanggu.metric_calculate.core.unit.pattern.EventState;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.Version;
@@ -201,6 +202,10 @@ public class UnitFactory implements Serializable {
             returnClass = MixedUnit.class;
             unitType = 4;
             paramType = Map.class;
+        } else if (tempClass.isAnnotationPresent(Pattern.class)) {
+            //CEP类型
+            returnClass = EventState.class;
+            unitType = 5;
         } else {
             throw new RuntimeException(tempClass.getName() + " not support.");
         }
@@ -349,26 +354,6 @@ public class UnitFactory implements Serializable {
         MergedUnit count2 = unitFactory.initInstanceByValue("COUNT2", 1L, null);
         count2.merge(count2.fastClone());
         log.info("count2 = {}", count2);
-
-        //测试Kryo序列化和反序列化自定义的udaf
-        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory());
-
-        Kryo kryo = kryoPool.borrow();
-        unitFactory.getUnitMap().values().forEach(kryo::register);
-
-        //count2序列化生成的字节数组
-        String string = "[1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,116,101,115,116,95,117,110,105,116,46,67,111,117,110,116,85,110,105,116,-78,2,99,111,117,110,-12,118,97,108,117,-27,58,1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,110,117,109,98,101,114,46,67,117,98,101,76,111,110,-25,1,118,97,108,117,-27,2,1,4,1,0,0,52,1,99,111,109,46,121,97,110,103,103,117,46,109,101,116,114,105,99,95,99,97,108,99,117,108,97,116,101,46,99,111,114,101,46,110,117,109,98,101,114,46,67,117,98,101,76,111,110,-25,2,1,4,1,0,0]";
-        List<Byte> byteList = JSONUtil.toList(string, Byte.class);
-        byte[] bytes = new byte[byteList.size()];
-        for (int i = 0; i < byteList.size(); i++) {
-            bytes[i] = byteList.get(i);
-        }
-
-        Input input = new Input(bytes);
-        Object result = kryo.readClassAndObject(input);
-        log.info(result.toString());
-        MergedUnit<?> mergedUnit = ((MergedUnit) result).merge(count2);
-        log.info(mergedUnit.toString());
     }
 
 }

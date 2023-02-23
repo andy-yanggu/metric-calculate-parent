@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getTestUnitFactory;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -43,7 +43,7 @@ public class AggregateMixUnitFieldProcessorTest {
         MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
 
         AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit> mixUnitFieldProcessor =
-                        FieldProcessorUtil.getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, getUnitFactory());
+                        FieldProcessorUtil.getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, getTestUnitFactory());
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
 
         mixUnitFieldProcessor.init();

@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import java.util.*;
 
-import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getTestUnitFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -55,7 +55,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setRetainExpress("name");
 
         BaseAggregateFieldProcessor<JSONObject, ListFieldUnit<CloneWrapper<String>>> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -86,7 +86,7 @@ public class AggregateCollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
         BaseAggregateFieldProcessor<JSONObject, ListObjectUnit<CloneWrapper<JSONObject>>> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -122,7 +122,7 @@ public class AggregateCollectionFieldProcessorTest {
 
         List<BaseUdafParam> baseUdafParamList = Collections.singletonList(baseUdafParam);
         BaseAggregateFieldProcessor<JSONObject, SortedListObjectUnit<KeyValue<MultiFieldOrderCompareKey, CloneWrapper<JSONObject>>>> collectionFieldProcessor =
-                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, getUnitFactory(), fieldMap);
+                        FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -157,7 +157,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setRetainExpress("name");
 
         BaseAggregateFieldProcessor<JSONObject, DistinctListFieldUnit<KeyValue<MultiFieldDistinctKey, CloneWrapper<String>>>> collectionFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
         JSONObject input = new JSONObject();

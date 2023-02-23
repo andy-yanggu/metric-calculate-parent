@@ -21,7 +21,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getUnitFactory;
+import static com.yanggu.metric_calculate.core.unit.UnitFactoryTest.getTestUnitFactory;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
@@ -116,7 +116,7 @@ public class AggregateNumberFieldProcessorTest {
         aggregateNumberFieldProcessor.setFieldMap(fieldMap);
         aggregateNumberFieldProcessor.setAggregateType("COUNT");
 
-        aggregateNumberFieldProcessor.setUnitFactory(getUnitFactory());
+        aggregateNumberFieldProcessor.setUnitFactory(getTestUnitFactory());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, aggregateNumberFieldProcessor::init);
         assertEquals("需要设置mergeUnitClazz", runtimeException.getMessage());
@@ -238,7 +238,7 @@ public class AggregateNumberFieldProcessorTest {
         fieldMap.put("amount1", Integer.class);
 
         BaseAggregateFieldProcessor<JSONObject, CovUnit<CubeLong>> numberAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, getUnitFactory(), fieldMap);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, getTestUnitFactory(), fieldMap);
 
         JSONObject input = new JSONObject();
         input.set("amount", 1);
