@@ -565,4 +565,40 @@ public class DeriveMetricCalculateTest {
         assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
     }
 
+    //@Test
+    public void test9() throws Exception {
+        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(8);
+        MetricCube<Table, Long, ?, ?> exec;
+        List<DeriveMetricCalculateResult> query;
+
+        JSONObject input = new JSONObject();
+        input.set("account_no_out", "000000000011");
+        input.set("account_no_in", "000000000012");
+        input.set("trans_timestamp", "1654768045000");
+        input.set("credit_amt_in", "100");
+        input.set("trans_date", "20220609");
+        input.set("debit_amt_out", "800");
+        exec = deriveMetricCalculate.exec(input);
+        query = deriveMetricCalculate.query(deriveMetricCalculate.updateState(exec));
+
+        Object result = query.get(0).getResult();
+        //0 / 800
+        assertEquals(BigDecimal.ZERO, result);
+
+        JSONObject input2 = input.clone();
+        input2.set("account_no_in", "张三");
+        exec = deriveMetricCalculate.exec(input2);
+        query = deriveMetricCalculate.query(deriveMetricCalculate.updateState(exec));
+        result = query.get(0).getResult();
+        //800 / 1600
+        assertEquals(new BigDecimal("0.5"), result);
+
+        JSONObject input3 = input.clone();
+        input3.set("account_no_in", "张三");
+        exec = deriveMetricCalculate.exec(input3);
+        query = deriveMetricCalculate.query(deriveMetricCalculate.updateState(exec));
+        result = query.get(0).getResult();
+        //1600 / 2400
+        assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
+    }
 }

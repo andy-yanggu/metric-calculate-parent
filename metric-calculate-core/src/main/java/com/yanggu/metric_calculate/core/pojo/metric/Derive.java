@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.pojo.metric;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
 import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.ChainPattern;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUnitUdafParam;
 import lombok.Data;
@@ -85,6 +86,11 @@ public class Derive {
      * 混合类型聚合函数参数
      */
     private MixUnitUdafParam mixUnitUdafParam;
+
+    /**
+     * CEP, 事件模式配置数据
+     */
+    private ChainPattern chainPattern;
 
     /**
      * 聚合时间长度

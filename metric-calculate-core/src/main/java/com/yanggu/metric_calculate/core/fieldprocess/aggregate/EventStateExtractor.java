@@ -1,7 +1,6 @@
-package com.yanggu.metric_calculate.core.fieldprocess.pattern;
+package com.yanggu.metric_calculate.core.fieldprocess.aggregate;
 
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.AggregateFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.aggregate.BaseAggregateFieldProcessor;
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.ChainPattern;
@@ -10,7 +9,9 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.unit.pattern.MatchState;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.value.*;
+import com.yanggu.metric_calculate.core.value.CloneWrapper;
+import com.yanggu.metric_calculate.core.value.Value;
+import com.yanggu.metric_calculate.core.value.ValueMapper;
 import lombok.Data;
 
 import java.util.*;
@@ -38,9 +39,16 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
 
     @Override
     public void init() throws Exception {
+        if (this.chainPattern == null) {
+            throw new RuntimeException("传入的CEP配置数据为空");
+        }
+        List<NodePattern> nodePatternList = this.chainPattern.getNodePatternList();
+        if (CollUtil.isEmpty(nodePatternList)) {
+            throw new RuntimeException("传入的CEP链为空");
+        }
+
         TreeMap<NodePattern, FilterFieldProcessor<T>> tempFilterFieldProcessorMap = new TreeMap<>();
 
-        List<NodePattern> nodePatternList = chainPattern.getNodePatternList();
         for (NodePattern node : nodePatternList) {
             FilterFieldProcessor<T> filterFieldProcessor =
                     FieldProcessorUtil.getFilterFieldProcessor(fieldMap, node.getMatchExpress());
@@ -68,19 +76,19 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
 
     @Override
     public String getAggregateType() {
-        return null;
+        return this.chainPattern.getAggregateType();
     }
 
     @Override
     public Class<? extends MergedUnit<?>> getMergeUnitClazz() {
-        return null;
+        return this.unitFactory.getMergeableClass(this.chainPattern.getAggregateType());
     }
 
     @Override
     public Object callBack(Object input) {
         List<T> tempValueList = new ArrayList<>(((TreeMap<Long, T>) input).values());
         MergedUnit<?> mergedUnit = tempValueList.stream()
-                .map(tempValue -> externalAggregateFieldProcessor.process(tempValue))
+                .map(tempValue -> this.externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)
                 .orElseThrow(() -> new RuntimeException("MergeUnit的merge方法执行失败"));
         return ValueMapper.value(((Value<?>) mergedUnit));

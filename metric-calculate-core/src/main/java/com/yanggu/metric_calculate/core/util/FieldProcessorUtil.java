@@ -8,8 +8,9 @@ import com.yanggu.metric_calculate.core.fieldprocess.metric.MetricFieldProcessor
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.MultiFieldOrderFieldProcessor;
-import com.yanggu.metric_calculate.core.fieldprocess.pattern.EventStateExtractor;
+import com.yanggu.metric_calculate.core.fieldprocess.aggregate.EventStateExtractor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
@@ -20,6 +21,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import lombok.SneakyThrows;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -241,21 +243,19 @@ public class FieldProcessorUtil {
     /**
      * 生成聚合字段处理器
      *
-     * @param baseUdafParamList
-     * @param mapUdafParam
-     * @param mixUnitUdafParam
-     * @param aggregateType
      * @param fieldMap
      * @param unitFactory
      * @return
      */
     public static <T, M extends MergedUnit<M>> AggregateFieldProcessor<T, M> getAggregateFieldProcessor(
-                                                                    List<BaseUdafParam> baseUdafParamList,
-                                                                    MapUnitUdafParam mapUdafParam,
-                                                                    MixUnitUdafParam mixUnitUdafParam,
-                                                                    String aggregateType,
+                                                                    Derive derive,
                                                                     Map<String, Class<?>> fieldMap,
                                                                     UnitFactory unitFactory) {
+
+        List<BaseUdafParam> baseUdafParamList = Arrays.asList(derive.getBaseUdafParam(), derive.getExternalBaseUdafParam());
+        MapUnitUdafParam mapUdafParam = derive.getMapUdafParam();
+        MixUnitUdafParam mixUnitUdafParam = derive.getMixUnitUdafParam();
+        String aggregateType = derive.getCalculateLogic();
         Class<? extends MergedUnit<?>> mergeUnitClazz = unitFactory.getMergeableClass(aggregateType);
 
         //如果是基本聚合类型(数值型、集合型、对象型)
@@ -276,8 +276,7 @@ public class FieldProcessorUtil {
 
         //如果是CEP类型
         if (mergeUnitClazz.isAnnotationPresent(Pattern.class)) {
-            ChainPattern chainPattern = null;
-            return getEventStateExtractor(chainPattern, baseUdafParamList.get(0), fieldMap, unitFactory);
+            return getEventStateExtractor(derive.getChainPattern(), derive.getExternalBaseUdafParam(), fieldMap, unitFactory);
         }
 
         throw new RuntimeException("暂不支持聚合类型: " + mergeUnitClazz.getName());

@@ -22,15 +22,10 @@ import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSetProce
 import com.yanggu.metric_calculate.core.fieldprocess.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.fieldprocess.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Fields;
-import com.yanggu.metric_calculate.core.pojo.metric.MultiDimensionCalculate;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.pojo.metric.Composite;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
-import com.yanggu.metric_calculate.core.pojo.metric.Global;
+import com.yanggu.metric_calculate.core.pojo.metric.*;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -117,7 +112,8 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    private static <T, M extends MergedUnit<M> & Value<?>> DeriveMetricCalculate<T, M> initDerive(Derive tempDerive, MetricCalculate<T> metricCalculate) {
+    private static <T, M extends MergedUnit<M> & Value<?>> DeriveMetricCalculate<T, M> initDerive(Derive tempDerive,
+                                                                                                  MetricCalculate<T> metricCalculate) {
         DeriveMetricCalculate<T, M> deriveMetricCalculate = new DeriveMetricCalculate<>();
         deriveMetricCalculate.init();
 
@@ -142,9 +138,7 @@ public class MetricUtil {
 
         //设置聚合字段处理器
         AggregateFieldProcessor<T, M> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
-                Arrays.asList(tempDerive.getBaseUdafParam(), tempDerive.getExternalBaseUdafParam()),
-                tempDerive.getMapUdafParam(), tempDerive.getMixUnitUdafParam(), tempDerive.getCalculateLogic(),
-                fieldMap, unitFactory);
+                tempDerive, fieldMap, unitFactory);
 
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
@@ -248,7 +242,7 @@ public class MetricUtil {
     /**
      * 获取宽表字段
      *
-     * @param metricCalculate
+     * @param metricCalculate 计算类
      * @return 字段名和数据类型的映射
      */
     private static <T> Map<String, Class<?>> getFieldMap(MetricCalculate<T> metricCalculate) {
