@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.cube;
 
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeWindow;
-import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.table.SlidingTimeWindowTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;

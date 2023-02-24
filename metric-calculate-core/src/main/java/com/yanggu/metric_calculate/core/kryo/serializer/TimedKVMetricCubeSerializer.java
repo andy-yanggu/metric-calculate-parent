@@ -6,7 +6,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
-import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 
 

@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.pojo.udaf_param;
 
 
-import com.yanggu.metric_calculate.core.fieldprocess.multi_field_order.FieldOrderParam;
+import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import lombok.Data;
 
 import java.util.List;

@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.cube;
 import com.yanggu.metric_calculate.core.annotation.MapType;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.enums.TimeWindowEnum;
-import com.yanggu.metric_calculate.core.fieldprocess.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.table.Table;
