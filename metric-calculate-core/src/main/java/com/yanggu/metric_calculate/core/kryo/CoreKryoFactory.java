@@ -53,8 +53,8 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(AvgUnit.class);
         kryo.register(CountUnit.class);
         kryo.register(SumUnit.class);
-        kryo.register(MaxObjectUnit.class);
-        kryo.register(MinObjectUnit.class);
+        kryo.register(MaxUnit.class);
+        kryo.register(MinUnit.class);
         kryo.register(VarpUnit.class);
         kryo.register(VarsUnit.class);
         kryo.register(IncreaseCountUnit.class);
@@ -63,15 +63,19 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(MaxDecreaseCountUnit.class);
         kryo.register(MaxContinuousCountUnit.class);
 
-        //对象型和集合型
-        kryo.register(MaxUnit.class);
-        kryo.register(MinUnit.class);
+        //对象型
+        kryo.register(MaxObjectUnit.class);
+        kryo.register(MinObjectUnit.class);
         kryo.register(ReplacedObjectUnit.class);
         kryo.register(OccupiedObjectUnit.class);
+
+        //集合型
         kryo.register(ListObjectUnit.class);
-        kryo.register(BaseMapUnit.class);
         kryo.register(DistinctListObjectUnit.class);
         kryo.register(SortedListObjectUnit.class);
+
+        //映射型
+        kryo.register(BaseMapUnit.class);
 
         kryo.register(TimeUnit.class);
 
