@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * 同一账户过去30天所有交易账号的累计交易金额
@@ -90,25 +91,22 @@ public class BaseMapUnit<K extends Clone<K> & Value<Object>, V extends Clone<V> 
     }
 
     @Override
-    public boolean equals(Object that) {
-        if (this == that) {
+    public int hashCode() {
+        return details != null ? details.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if (that == null) {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if (getClass() != that.getClass()) {
-            return false;
-        }
-        BaseMapUnit<K, V> thatUnit = (BaseMapUnit) that;
-        if (this.details == null) {
-            if (thatUnit.details != null) {
-                return false;
-            }
-        } else if (!this.details.equals(thatUnit.details)) {
-            return false;
-        }
-        return true;
+
+        BaseMapUnit<?, ?> that = (BaseMapUnit<?, ?>) o;
+
+        return Objects.equals(details, that.details);
     }
 
 }

@@ -27,28 +27,28 @@ public abstract class NumberUnit<N extends CubeNumber<N>, M extends NumberUnit<N
     /**
      * Construct.
      */
-    public NumberUnit() {
+    protected NumberUnit() {
         this(null, 0);
     }
 
     /**
      * Construct.
      */
-    public NumberUnit(N value) {
+    protected NumberUnit(N value) {
         this(value, 1);
     }
 
     /**
      * Construct.
      */
-    public NumberUnit(N value, long count) {
+    protected NumberUnit(N value, long count) {
         this(value, CubeLong.of(count));
     }
 
     /**
      * Construct.
      */
-    public NumberUnit(N value, CubeLong count) {
+    protected NumberUnit(N value, CubeLong count) {
         this.value = value;
         this.count = count;
     }

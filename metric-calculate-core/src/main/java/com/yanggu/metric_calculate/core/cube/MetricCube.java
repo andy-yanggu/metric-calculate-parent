@@ -1,9 +1,10 @@
 package com.yanggu.metric_calculate.core.cube;
 
+import com.yanggu.metric_calculate.core.Mergeable;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.table.Table;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 /**
@@ -14,7 +15,7 @@ import com.yanggu.metric_calculate.core.value.Value;
  * @param <C> MetricCube实现类
  */
 public interface MetricCube<T extends Table, K, V, C extends MetricCube<T, K, V, C>>
-        extends Cube<C>, KeyReferable, MergedUnit<C>, TimeReferable {
+        extends Cube<C>, KeyReferable, Mergeable<C>, Clone<C>, TimeReferable {
 
     DimensionSet getDimensionSet();
 

@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.table;
 
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
+import com.yanggu.metric_calculate.core.Mergeable;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.Value;
 
 /**
@@ -12,7 +13,7 @@ import com.yanggu.metric_calculate.core.value.Value;
  * @param <V> 传入的MergedUnit
  * @param <T> 实现Table类型
  */
-public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends MergedUnit<T> {
+public interface Table<K, R extends Value<?>, C, V, T extends Table<K, R, C, V, T>> extends Mergeable<T>, Clone<T> {
 
     void putValue(K rowKey, C column, V value);
 

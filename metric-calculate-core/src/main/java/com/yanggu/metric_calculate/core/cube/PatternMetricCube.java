@@ -6,8 +6,8 @@ import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core.table.PatternTable;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.pattern.MatchState;
+import com.yanggu.metric_calculate.core.value.Clone;
 import com.yanggu.metric_calculate.core.value.CloneWrapper;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
@@ -15,9 +15,13 @@ import lombok.Data;
 import java.util.List;
 import java.util.TreeMap;
 
+/**
+ *
+ * @param <T> 输入的明细数据类型
+ */
 @Data
-public class PatternMetricCube<V extends MergedUnit<V> & Value<?>>
-        implements MetricCube<PatternTable<V>, Long, V, PatternMetricCube<V>> {
+public class PatternMetricCube<T extends Clone<T>> implements
+        MetricCube<PatternTable<T>, Long, MatchState<TreeMap<NodePattern, CloneWrapper<T>>>, PatternMetricCube<T>> {
 
     private static final String PREFIX = "MC.S.PATTERN.C";
 
@@ -54,13 +58,14 @@ public class PatternMetricCube<V extends MergedUnit<V> & Value<?>>
     /**
      * 时间序列表
      */
-    private PatternTable<V> table;
+    private PatternTable<T> table;
 
     @Override
-    public PatternMetricCube<V> init() {
-        PatternTable<V> patternTable = new PatternTable<>();
+    public PatternMetricCube<T> init() {
+
+        PatternTable<T> patternTable = new PatternTable<>();
         //dataMap进行默认初始化
-        TreeMap<NodePattern, TimeSeriesKVTable<MatchState<V>>> dataMap = new TreeMap<>();
+        TreeMap<NodePattern, TimeSeriesKVTable<MatchState<T>>> dataMap = new TreeMap<>();
         nodePatternList.forEach(tempPattern -> dataMap.put(tempPattern, new TimeSeriesKVTable<>()));
         patternTable.setDataMap(dataMap);
 
@@ -69,16 +74,15 @@ public class PatternMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public void put(Long key, V value) {
-        table.putValue(key, null, (MatchState<TreeMap<NodePattern, CloneWrapper<V>>>) value);
+    public void put(Long key, MatchState<TreeMap<NodePattern, CloneWrapper<T>>> value) {
+        this.table.putValue(key, null, value);
     }
 
     @Override
-    public PatternMetricCube<V> merge(PatternMetricCube<V> that) {
+    public PatternMetricCube<T> merge(PatternMetricCube<T> that) {
         this.table.merge(that.table);
         return this;
     }
-
 
     @Override
     public Value<?> query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
@@ -91,8 +95,8 @@ public class PatternMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public PatternMetricCube<V> cloneEmpty() {
-        PatternMetricCube<V> metricCube = new PatternMetricCube<>();
+    public PatternMetricCube<T> cloneEmpty() {
+        PatternMetricCube<T> metricCube = new PatternMetricCube<>();
         metricCube.setKey(this.key);
         metricCube.setName(this.name);
         metricCube.setDimensionSet(this.dimensionSet);
@@ -103,8 +107,8 @@ public class PatternMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public PatternMetricCube<V> fastClone() {
-        PatternMetricCube<V> patternMetricCube = cloneEmpty();
+    public PatternMetricCube<T> fastClone() {
+        PatternMetricCube<T> patternMetricCube = cloneEmpty();
         patternMetricCube.setTable(this.table.fastClone());
         return patternMetricCube;
     }
