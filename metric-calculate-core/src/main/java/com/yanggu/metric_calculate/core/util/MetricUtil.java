@@ -167,6 +167,8 @@ public class MetricUtil {
         metricCubeFactory.setName(name);
         metricCubeFactory.setTimeBaselineDimension(timeBaselineDimension);
         metricCubeFactory.setMergeUnitClazz(aggregateFieldProcessor.getMergeUnitClazz());
+        metricCubeFactory.setDerive(tempDerive);
+
         deriveMetricCalculate.setMetricCubeFactory(metricCubeFactory);
 
         //派生指标中间结算结果存储接口

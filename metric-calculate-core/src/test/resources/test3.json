@@ -254,7 +254,7 @@
       }
     },
     {
-      "id": 7,
+      "id": 8,
       "name": "张三_transfer_amount_proportion",
       "displayName": "给张三转账的金额占给所有交易对象转账金额的比例",
       "description": "",
@@ -292,6 +292,60 @@
           }
         },
         "express": "zhangsan_sum_amount / total_sum_amount"
+      }
+    },
+    {
+      "id": 9,
+      "name": "pattern_test",
+      "displayName": "cep类型的指标测试",
+      "description": "",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "PATTERN",
+      "duration": 1,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "chainPattern": {
+        "aggregateType": "PATTERN",
+        "nodePatternList": [
+          {
+            "index": 0,
+            "name": "start",
+            "matchExpress": "debit_amt_out > 100",
+            "interval": 0
+          },
+          {
+            "index": 1,
+            "name": "mid",
+            "matchExpress": "debit_amt_out > 200",
+            "interval": 10
+          },
+          {
+            "index": 2,
+            "name": "end",
+            "matchExpress": "debit_amt_out > 300",
+            "interval": 10
+          }
+        ]
+      },
+      "externalBaseUdafParam": {
+        "aggregateType": "SUM",
+        "metricExpress": "debit_amt_out"
       }
     }
   ],

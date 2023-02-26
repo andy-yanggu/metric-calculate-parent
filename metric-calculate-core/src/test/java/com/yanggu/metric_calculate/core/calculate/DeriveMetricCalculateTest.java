@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * 派生指标计算类单元测试类
@@ -565,8 +566,17 @@ public class DeriveMetricCalculateTest {
         assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
     }
 
-    //@Test
+    /**
+     * 测试CEP类型的指标
+     *
+     * @throws Exception
+     */
+    @Test
     public void test9() throws Exception {
+        //CEP链
+        //start     debit_amt_out > 100
+        //mid       debit_amt_out > 200   不超过10ms(start和mid之间时间差)
+        //end       debit_amt_out > 300   不超过10ms(mid和end之间时间差)
         DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(8);
         MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
@@ -580,25 +590,6 @@ public class DeriveMetricCalculateTest {
         input.set("debit_amt_out", "800");
         exec = deriveMetricCalculate.exec(input);
         query = deriveMetricCalculate.query(deriveMetricCalculate.updateState(exec));
-
-        Object result = query.get(0).getResult();
-        //0 / 800
-        assertEquals(BigDecimal.ZERO, result);
-
-        JSONObject input2 = input.clone();
-        input2.set("account_no_in", "张三");
-        exec = deriveMetricCalculate.exec(input2);
-        query = deriveMetricCalculate.query(deriveMetricCalculate.updateState(exec));
-        result = query.get(0).getResult();
-        //800 / 1600
-        assertEquals(new BigDecimal("0.5"), result);
-
-        JSONObject input3 = input.clone();
-        input3.set("account_no_in", "张三");
-        exec = deriveMetricCalculate.exec(input3);
-        query = deriveMetricCalculate.query(deriveMetricCalculate.updateState(exec));
-        result = query.get(0).getResult();
-        //1600 / 2400
-        assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
+        System.out.println(query);
     }
 }

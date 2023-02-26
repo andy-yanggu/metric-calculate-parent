@@ -11,6 +11,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * 输入的明细数据类型
+ *
+ * @param <T>
+ */
 @Data
 public class PatternTable<T extends Clone<T>> implements
         Table<Long, FinishState<T>, Long , MatchState<TreeMap<NodePattern, CloneWrapper<T>>>, PatternTable<T>> {
@@ -58,7 +63,7 @@ public class PatternTable<T extends Clone<T>> implements
             nextTable = nextNodeTable.cloneEmpty();
             for (Map.Entry<Long, MatchState<T>> entry : nodeTable.entrySet()) {
                 Long timestamp = entry.getKey();
-                nextTable.putAll(nextNodeTable.subTable(timestamp, true,Math.min(timestamp + size, to), false));
+                nextTable.putAll(nextNodeTable.subTable(timestamp, false,Math.min(timestamp + size, to), true));
                 //判断和是否超过当前节点的最大时间戳, 如果超过没有必要继续遍历了
                 if (timestamp + size > nextNodeTable.lastKey()) {
                     break;
@@ -68,7 +73,7 @@ public class PatternTable<T extends Clone<T>> implements
         }
 
         TreeMap<Long, T> returnDataMap = new TreeMap<>();
-        if (nextTable != null) {
+        if (nextTable != null && !nextTable.isEmpty()) {
             nextTable.forEach((key, value) -> returnDataMap.put(key, value.value()));
         }
         return new FinishState<>(returnDataMap);
@@ -89,12 +94,16 @@ public class PatternTable<T extends Clone<T>> implements
 
     @Override
     public PatternTable<T> fastClone() {
-        return null;
+        PatternTable<T> patternTable = cloneEmpty();
+        TreeMap<NodePattern, TimeSeriesKVTable<MatchState<T>>> newDataMap = new TreeMap<>();
+        this.dataMap.forEach((k, v) -> newDataMap.put(k, v.fastClone()));
+        patternTable.dataMap = newDataMap;
+        return patternTable;
     }
 
     @Override
     public boolean isEmpty() {
-        return false;
+        return dataMap.values().stream().allMatch(TimeSeriesKVTable::isEmpty);
     }
 
 }

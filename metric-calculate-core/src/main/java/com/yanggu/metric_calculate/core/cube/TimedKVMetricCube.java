@@ -128,11 +128,6 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
     }
 
     @Override
-    public long getReferenceTime() {
-        return this.referenceTime;
-    }
-
-    @Override
     public void setReferenceTime(long referenceTime) {
         this.referenceTime = Math.max(this.referenceTime, referenceTime);
     }

@@ -93,6 +93,7 @@ public class UnitFactory implements Serializable {
             if (put != null) {
                 throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
             }
+            //进行静态编译, 避免反射提高性能
             ScriptEvaluator janinoExpress = createJaninoExpress(tempClazz);
             BUILT_IN_EVALUATOR_MAP.put(value, janinoExpress);
         }

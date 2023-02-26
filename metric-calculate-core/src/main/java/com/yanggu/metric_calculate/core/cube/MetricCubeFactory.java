@@ -47,20 +47,20 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
         if (mergeUnitClazz.isAnnotationPresent(MapType.class)) {
 
         }
-        MetricCube<Table, Long, M, ?> metricCube = null;
+        MetricCube<Table, Long, M, ?> metricCube;
         //如果是滑动计数窗口需要使用SlidingTimeWindowMetricCube
         if (TimeWindowEnum.TIME_SLIDING_WINDOW.equals(timeWindowEnum)) {
             metricCube = new SlidingTimeWindowMetricCube();
         } else if (TimeWindowEnum.TIME_SPLIT_WINDOW.equals(timeWindowEnum)) {
             metricCube = new TimedKVMetricCube();
         } else if (TimeWindowEnum.PATTERN.equals(timeWindowEnum)) {
-            //metricCube = new TimedKVPatternCube();
-            //((TimedKVPatternCube) metricCube).setPattern(pattern);
+            metricCube = new PatternMetricCube();
+            ((PatternMetricCube) metricCube).setNodePatternList(derive.getChainPattern().getNodePatternList());
         } else {
             throw new RuntimeException("timeWindowEnum数据错误");
         }
-        metricCube.setName(name);
         metricCube.setKey(key);
+        metricCube.setName(name);
         metricCube.setTimeBaselineDimension(timeBaselineDimension);
         metricCube.setDimensionSet(dimensionSet);
         //设置数据当前聚合时间

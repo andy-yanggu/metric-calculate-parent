@@ -86,7 +86,10 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
 
     @Override
     public Object callBack(Object input) {
-        List<T> tempValueList = new ArrayList<>(((TreeMap<Long, T>) input).values());
+        List<T> tempValueList = new ArrayList<>(((Map<Long, T>) input).values());
+        if (CollUtil.isEmpty(tempValueList)) {
+            return null;
+        }
         MergedUnit<?> mergedUnit = tempValueList.stream()
                 .map(tempValue -> this.externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)
