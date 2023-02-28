@@ -1,7 +1,8 @@
 package com.yanggu.metric_calculate.controller;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.system.SystemUtil;
+import com.yanggu.metric_calculate.util.AccumulateBatchComponent;
 import io.swagger.annotations.Api;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -11,10 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 @Slf4j
 @Api(tags = "测试接口")
@@ -22,18 +22,16 @@ import java.util.concurrent.*;
 @RequestMapping("/test")
 public class TestController {
 
-    private final Integer length = 200;
-
-    private Integer intervalTime = 50;
-
-    private final Queue<Request<String>> queue = new LinkedBlockingQueue<>();
-
-    private final ScheduledExecutorService scheduledExecutorService = new ScheduledThreadPoolExecutor(10);
+    private AccumulateBatchComponent<Request<String>> component;
 
     @PostConstruct
     public void init() {
-        this.scheduledExecutorService.scheduleAtFixedRate(() -> this.flush(false),
-                intervalTime, intervalTime, TimeUnit.MILLISECONDS);
+        Consumer<List<Request<String>>> consumer = requests -> {
+            for (TestController.Request<String> request : requests) {
+                request.getCompletableFuture().complete(request.getUuid());
+            }
+        };
+        this.component = new AccumulateBatchComponent<>(SystemUtil.getTotalThreadCount(), 100, 2000, 200, consumer);
     }
 
     /**
@@ -50,37 +48,11 @@ public class TestController {
         CompletableFuture<String> completableFuture = new CompletableFuture<>();
         request.setCompletableFuture(completableFuture);
 
-        addRequest(request);
+        //进行攒批处理
+        component.add(request);
 
         completableFuture.whenComplete((result, throwable) -> deferredResult.setResult(result));
         return deferredResult;
-    }
-
-    private void addRequest(Request<String> request) {
-        queue.offer(request);
-        if (queue.size() >= length) {
-            flush(true);
-        }
-    }
-
-    private void flush(boolean lengthMatch) {
-        Request<String> request;
-        List<Request<String>> requestList = new ArrayList<>();
-        while ((request = queue.poll()) != null) {
-            requestList.add(request);
-        }
-        if (CollUtil.isEmpty(requestList)) {
-            return;
-        }
-        if (lengthMatch) {
-            log.info("满足数量, 攒批的数据大小: {}, 线程: {}", requestList.size(), Thread.currentThread().getName());
-        } else {
-            log.info("到达时间, 攒批的数据大小: {}, 线程: {}", requestList.size(), Thread.currentThread().getName());
-        }
-        for (Request<String> stringRequest : requestList) {
-            //设置完成的标志
-            stringRequest.getCompletableFuture().complete(stringRequest.getUuid());
-        }
     }
 
     @Data
