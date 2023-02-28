@@ -138,7 +138,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
     public MetricCube noState(MetricCube newMetricCube) {
         //调用中计算结果存储的查询方法
         MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
-        //如果不包含当前笔, 直接返回历史数据
+        //如果无状态且不包含当前笔, 直接返回历史数据
         if (Boolean.FALSE.equals(includeCurrent)) {
             return metricCube;
         }

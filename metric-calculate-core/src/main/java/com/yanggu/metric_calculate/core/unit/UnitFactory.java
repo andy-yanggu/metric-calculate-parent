@@ -2,20 +2,17 @@ package com.yanggu.metric_calculate.core.unit;
 
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Filter;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.NumberUtil;
+import cn.hutool.extra.template.Template;
+import cn.hutool.extra.template.TemplateConfig;
+import cn.hutool.extra.template.TemplateEngine;
+import cn.hutool.extra.template.TemplateUtil;
 import cn.hutool.json.JSONUtil;
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.enums.BasicType;
-import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
-import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.unit.collection.CollectionUnit;
 import com.yanggu.metric_calculate.core.unit.map.MapUnit;
@@ -23,9 +20,6 @@ import com.yanggu.metric_calculate.core.unit.mix_unit.MixedUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
 import com.yanggu.metric_calculate.core.unit.object.ObjectiveUnit;
 import com.yanggu.metric_calculate.core.unit.pattern.EventState;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-import freemarker.template.Version;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -33,9 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.codehaus.janino.ScriptEvaluator;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.Serializable;
-import java.io.StringWriter;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -167,9 +159,6 @@ public class UnitFactory implements Serializable {
      */
     @SneakyThrows
     private static ScriptEvaluator createJaninoExpress(Class<?> tempClass) {
-        Version version = new Version("2.3.28");
-        Configuration configuration = new Configuration(version);
-        configuration.setDefaultEncoding("utf-8");
 
         Class<?> returnClass;
         int unitType;
@@ -212,10 +201,9 @@ public class UnitFactory implements Serializable {
         }
 
         //模板文件路径
-        String fileName = "merged_unit.ftl";
-        configuration.setDirectoryForTemplateLoading(new File(getTemplatePath(fileName)));
-        StringWriter stringWriter = new StringWriter();
-        Template template = configuration.getTemplate(fileName);
+        TemplateConfig templateConfig = new TemplateConfig("merged_unit_template", TemplateConfig.ResourceMode.CLASSPATH);
+        TemplateEngine engine = TemplateUtil.createEngine(templateConfig);
+        Template template = engine.getTemplate("merged_unit.ftl");
 
         Map<String, Object> param = new HashMap<>();
 
@@ -229,18 +217,17 @@ public class UnitFactory implements Serializable {
         param.put("multiNumber", multiNumber);
 
         //生成模板代码
-        template.process(param, stringWriter);
-        log.info("{}类生成的模板代码: {}\n", tempClass.getName(), stringWriter);
+        String templateCode = template.render(param);
+        log.info("{}类生成的模板代码: {}\n", tempClass.getName(), templateCode);
 
         //编译表达式
         ScriptEvaluator evaluator = new ScriptEvaluator();
-        String expression = stringWriter.toString();
         String[] parameterNames = {"param", "initValue"};
         Class<?>[] parameterTypes = {Map.class, paramType};
         evaluator.setParameters(parameterNames, parameterTypes);
         evaluator.setReturnType(returnClass);
         evaluator.setParentClassLoader(tempClass.getClassLoader());
-        evaluator.cook(expression);
+        evaluator.cook(templateCode);
 
         return evaluator;
     }
@@ -324,27 +311,6 @@ public class UnitFactory implements Serializable {
         if (put != null) {
             throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
         }
-    }
-
-    private static String getTemplatePath(String fileName) {
-        //返回读取指定资源的输入流
-        InputStream is = UnitFactory.class.getResourceAsStream("/merged_unit_template/" + fileName);
-        String path = System.getProperty("java.io.tmpdir");
-        String dirPath = path + IdUtil.fastSimpleUUID() + "/templates";
-        log.info("生成merged_unit模板全路径: {}", dirPath);
-        File dir = new File(dirPath);
-        //create folder
-        if (!dir.mkdirs()) {
-            return dirPath;
-        }
-        String filePath = dirPath + File.separator + fileName;
-        File file = new File(filePath);
-        if (file.exists()) {
-            return dirPath;
-        }
-        //文件不存在，则创建流输入默认数据到新文件
-        FileUtil.writeFromStream(is, file, true);
-        return dirPath;
     }
 
     public static void main(String[] args) throws Exception {
