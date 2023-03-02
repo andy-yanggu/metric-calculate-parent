@@ -4,7 +4,9 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.*;
@@ -18,6 +20,8 @@ import static com.yanggu.metric_calculate.core.enums.TimeUnit.MILLS;
  * @param <V>
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TimeSeriesKVTable<V extends MergedUnit<V> & Value<?>> extends TreeMap<Long, V>
         implements Table<Long, V, Long, V, TimeSeriesKVTable<V>>, Serializable {
 

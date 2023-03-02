@@ -1,12 +1,16 @@
 package com.yanggu.metric_calculate.core.kryo;
 
+import cn.hutool.core.collection.BoundedPriorityQueue;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Tuple;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
+import com.yanggu.metric_calculate.core.kryo.serializer.BoundedPriorityQueueSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.TimeSeriesKVTableSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.TimedKVMetricCubeSerializer;
+import com.yanggu.metric_calculate.core.kryo.serializer.TupleSerializer;
 import com.yanggu.metric_calculate.core.number.*;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
@@ -83,6 +87,8 @@ public class CoreKryoFactory extends BaseKryoFactory {
 
         kryo.register(TimedKVMetricCube.class, new TimedKVMetricCubeSerializer());
         kryo.register(TimeSeriesKVTable.class, new TimeSeriesKVTableSerializer());
+        kryo.register(Tuple.class, new TupleSerializer());
+        kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer());
 
         //这里主要是注册自定义的MergeUnit
         if (CollUtil.isNotEmpty(classList)) {

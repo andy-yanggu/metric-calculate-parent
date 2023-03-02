@@ -66,7 +66,7 @@ public class PatternMetricCube<T extends Clone<T>> implements
         PatternTable<T> patternTable = new PatternTable<>();
         //dataMap进行默认初始化
         TreeMap<NodePattern, TimeSeriesKVTable<MatchState<T>>> dataMap = new TreeMap<>();
-        nodePatternList.forEach(tempPattern -> dataMap.put(tempPattern, new TimeSeriesKVTable<>()));
+        nodePatternList.forEach(tempPattern -> dataMap.put(tempPattern, new TimeSeriesKVTable<>(timeBaselineDimension)));
         patternTable.setDataMap(dataMap);
 
         this.table = patternTable;

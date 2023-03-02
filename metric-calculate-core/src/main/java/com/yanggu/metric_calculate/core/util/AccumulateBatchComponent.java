@@ -222,8 +222,8 @@ public class AccumulateBatchComponent<T> {
                 try {
                     //执行回调函数
                     this.consumer.accept(temp);
-                } catch (Throwable var4) {
-                    System.out.println("process error");
+                } catch (Throwable error) {
+                    log.error("批处理发生异常", error);
                 }
             }
         }

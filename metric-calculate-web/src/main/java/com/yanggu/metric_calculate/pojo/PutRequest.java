@@ -16,6 +16,6 @@ public class PutRequest {
 
     private DeriveMetricCalculate deriveMetricCalculate;
 
-    private CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture;
+    private CompletableFuture<List<DeriveMetricCalculateResult>> resultFuture;
 
 }

@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
@@ -22,6 +23,7 @@ import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProc
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Fields;
@@ -31,6 +33,7 @@ import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +46,30 @@ public class DimensionSet implements Serializable {
         return key + ":" + metricName + ":" + dimensionMap.values().stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(":"));
+    }
+
+    @Override
+    public int hashCode() {
+        int result = key != null ? key.hashCode() : 0;
+        result = 31 * result + (dimensionMap != null ? dimensionMap.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        DimensionSet that = (DimensionSet) o;
+
+        if (!Objects.equals(key, that.key)) {
+            return false;
+        }
+        return Objects.equals(dimensionMap, that.dimensionMap);
     }
 
 }

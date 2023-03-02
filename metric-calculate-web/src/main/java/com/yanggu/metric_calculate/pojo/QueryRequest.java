@@ -12,6 +12,6 @@ public class QueryRequest {
 
     private MetricCube<Table, Long, ?, ?> metricCube;
 
-    private CompletableFuture<MetricCube<Table, Long, ?, ?>> completableFuture;
+    private CompletableFuture<MetricCube<Table, Long, ?, ?>> queryFuture;
 
 }

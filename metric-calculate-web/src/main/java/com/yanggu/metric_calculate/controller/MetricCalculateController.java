@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
+import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.common.util.concurrent.Striped;
@@ -30,7 +31,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.stream.Collectors;
 
@@ -63,7 +67,7 @@ public class MetricCalculateController {
         deriveMetricMiddleHashMapStore.init();
 
         //批量查询组件
-        queryComponent = new AccumulateBatchComponent<>(1, 100, 2000, 300,
+        queryComponent = new AccumulateBatchComponent<>(RuntimeUtil.getProcessorCount(), 20, 50, 200,
                 queryRequests -> {
                     List<MetricCube<Table, Long, ?, ?>> collect = queryRequests.stream()
                             .map(QueryRequest::getMetricCube)
@@ -74,7 +78,6 @@ public class MetricCalculateController {
 
                     //批量查询完成后, 进行回调通知
                     for (QueryRequest queryRequest : queryRequests) {
-                        CompletableFuture<MetricCube<Table, Long, ?, ?>> completableFuture = queryRequest.getCompletableFuture();
                         MetricCube historyMetricCube = map.get(queryRequest.getMetricCube().getDimensionSet());
                         MetricCube<Table, Long, ?, ?> newMetricCube = queryRequest.getMetricCube();
                         if (historyMetricCube == null) {
@@ -84,12 +87,12 @@ public class MetricCalculateController {
                             //删除过期数据
                             historyMetricCube.eliminateExpiredData();
                         }
-                        completableFuture.complete(historyMetricCube);
+                        queryRequest.getQueryFuture().complete(historyMetricCube);
                     }
                 });
 
         //批量更新组件
-        putComponent = new AccumulateBatchComponent<>(1, 100, 2000, 300,
+        putComponent = new AccumulateBatchComponent<>(RuntimeUtil.getProcessorCount(), 20, 50, 200,
                 putRequests -> {
                     List<MetricCube<Table, Long, ?, ?>> collect = putRequests.stream()
                             .map(PutRequest::getMetricCube)
@@ -99,7 +102,7 @@ public class MetricCalculateController {
                     deriveMetricMiddleHashMapStore.batchUpdate(collect);
                     //批量更新完成后, 进行回调通知
                     for (PutRequest putRequest : putRequests) {
-                        CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture = putRequest.getCompletableFuture();
+                        CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture = putRequest.getResultFuture();
                         completableFuture.complete(putRequest.getDeriveMetricCalculate().query(putRequest.getMetricCube()));
                     }
                 });
@@ -133,7 +136,7 @@ public class MetricCalculateController {
         return response;
     }
 
-    @ApiOperation("有状态-计算接口-攒批处理")
+    @ApiOperation("有状态-计算接口（攒批查询和攒批更新）")
     @PostMapping("/state-calculate-accumulate-batch")
     public DeferredResult<List<DeriveMetricCalculateResult>> stateExecuteAccumulateBatch(
             @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
@@ -157,42 +160,46 @@ public class MetricCalculateController {
         }
 
         //进行攒批查询
-        List<CompletableFuture<List<DeriveMetricCalculateResult>>> futureList = new ArrayList<>();
+        List<CompletableFuture<List<DeriveMetricCalculateResult>>> resultFutureList = new ArrayList<>();
         for (Tuple tuple : tupleList) {
             DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = tuple.get(0);
             MetricCube<Table, Long, ?, ?> metricCube = tuple.get(1);
             QueryRequest queryRequest = new QueryRequest();
             queryRequest.setMetricCube(metricCube);
-            CompletableFuture<MetricCube<Table, Long, ?, ?>> completableFuture = new CompletableFuture<>();
-            queryRequest.setCompletableFuture(completableFuture);
+            queryRequest.setQueryFuture(new CompletableFuture<>());
             //进行攒批查询
             queryComponent.add(queryRequest);
-            CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture2 = new CompletableFuture<>();
-            completableFuture.thenAccept(v1 -> {
-                PutRequest putRequest = new PutRequest();
-                putRequest.setMetricCube(v1);
-                putRequest.setDeriveMetricCalculate(deriveMetricCalculate);
-                //进行攒批更新
-                putRequest.setCompletableFuture(completableFuture2);
-                putComponent.add(putRequest);
-            });
-            futureList.add(completableFuture2);
+            CompletableFuture<List<DeriveMetricCalculateResult>> resultFuture = queryRequest.getQueryFuture()
+                    .thenCompose(v1 -> {
+                        PutRequest putRequest = new PutRequest();
+                        putRequest.setMetricCube(v1);
+                        putRequest.setDeriveMetricCalculate(deriveMetricCalculate);
+                        putRequest.setResultFuture(new CompletableFuture<>());
+                        //进行攒批更新
+                        putComponent.add(putRequest);
+                        return putRequest.getResultFuture();
+                    });
+            resultFutureList.add(resultFuture);
         }
 
-        //当所有的更新都完成时, 进行输入
-        CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0])).whenComplete((data, exception) -> {
-            List<DeriveMetricCalculateResult> collect = futureList.stream().flatMap(temp -> {
-                try {
-                    return temp.get().stream();
-                } catch (InterruptedException | ExecutionException e) {
-                    throw new RuntimeException(e);
-                }
-            }).collect(Collectors.toList());
-            if (CollUtil.isNotEmpty(collect)) {
-                collect.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
-            }
-            deferredResult.setResult(collect);
-        });
+        //当所有的更新都完成时, 进行输出
+        CompletableFuture.allOf(resultFutureList.toArray(new CompletableFuture[0]))
+                .whenComplete((data, exception) -> {
+                    List<DeriveMetricCalculateResult> collect = resultFutureList.stream()
+                            .flatMap(temp -> {
+                                try {
+                                    return temp.get().stream();
+                                } catch (Throwable e) {
+                                    throw new RuntimeException(e);
+                                }
+                            })
+                            .collect(Collectors.toList());
+                    if (CollUtil.isNotEmpty(collect)) {
+                        //按照key进行排序
+                        collect.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
+                    }
+                    deferredResult.setResult(collect);
+                });
         return deferredResult;
     }
 
