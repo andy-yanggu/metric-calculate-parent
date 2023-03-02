@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.util;
+package com.yanggu.metric_calculate.core.util;
 
 import cn.hutool.core.util.RandomUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /**
  * 攒批组件
  *
- * @param <T>
+ * @param <T> 攒批的数据类型
  */
 @Slf4j
 public class AccumulateBatchComponent<T> {
@@ -21,19 +21,19 @@ public class AccumulateBatchComponent<T> {
     /**
      * 组件持有一个工作线程对象数组
      */
-    private final WorkThread[] workThreads;
+    private final List<WorkThread<T>> workThreads;
 
     private AtomicInteger index;
 
     /**
      * 任务定时器
      */
-    private static ScheduledThreadPoolExecutor scheduleThreadPool = new ScheduledThreadPoolExecutor(1);
+    private static final ScheduledThreadPoolExecutor scheduleThreadPool = new ScheduledThreadPoolExecutor(1);
 
     /**
      * 组件初始化完成工作线程的新建
      */
-    private static ExecutorService executorService = Executors.newCachedThreadPool();
+    private static final ExecutorService executorService = Executors.newCachedThreadPool();
 
     /**
      * 构造器
@@ -45,13 +45,13 @@ public class AccumulateBatchComponent<T> {
      * @param consumer  回调接口(初始化组价实例的时候需要传递)
      */
     public AccumulateBatchComponent(int threadNum, int limitSize, int period, int capacity, Consumer<List<T>> consumer) {
-        this.workThreads = new WorkThread[threadNum];
+        this.workThreads = new ArrayList<>(threadNum);
         if (threadNum > 1) {
             this.index = new AtomicInteger();
         }
         for (int i = 0; i < threadNum; ++i) {
             WorkThread<T> workThread = new WorkThread<>("workThread" + "_" + i, limitSize, period, capacity, consumer);
-            this.workThreads[i] = workThread;
+            this.workThreads.add(workThread);
 
             executorService.submit(workThread);
             //开启threadNum个定时任务，每个任务各自检查各个工作线程对象内部的timeout方法，查看前后两次的timeout方法执行周期
@@ -68,14 +68,14 @@ public class AccumulateBatchComponent<T> {
      */
     public boolean add(T item) {
         // log.info("add item={}",item);
-        int len = this.workThreads.length;
+        int len = this.workThreads.size();
         //log.info("add len..."+len);
         if (len == 1) {
-            return this.workThreads[0].add(item);
+            return this.workThreads.get(0).add(item);
         } else {
             int mod = this.index.incrementAndGet() % len;
             // log.info("路由到this.workThreads[mod]={}",mod);
-            return this.workThreads[mod].add(item);
+            return this.workThreads.get(mod).add(item);
         }
     }
 
@@ -98,7 +98,7 @@ public class AccumulateBatchComponent<T> {
         /**
          * 前后两个任务的执行周期
          */
-        private int period;
+        private final long period;
 
         /**
          * 用来记录任务的即时处理时间
@@ -179,15 +179,19 @@ public class AccumulateBatchComponent<T> {
             // log.info("{}====check timeout",currentThread.getName());
             if (System.currentTimeMillis() - this.lastFlushTime >= this.period) {
                 //log.info("当前时间={}距离上次任务处理时间={}周期={}超出指定阈值={}", System.currentTimeMillis(), lastFlushTime, (System.currentTimeMillis() - this.lastFlushTime), period);
-                this.start();
+                this.start(false);
             }
         }
 
         /**
          * 唤醒被阻塞的工作线程
          */
-        private void start() {
-            //log.info("执行start方法，唤醒被阻塞的线程" + currentThread.getName());
+        private void start(boolean matchLength) {
+            if (matchLength) {
+                //log.info("攒批大小匹配, 执行start方法，唤醒被阻塞的线程" + currentThread.getName());
+            } else {
+                //log.info("攒批时间到, 执行start方法，唤醒被阻塞的线程" + currentThread.getName());
+            }
             LockSupport.unpark(this.currentThread);
         }
 
@@ -197,7 +201,7 @@ public class AccumulateBatchComponent<T> {
         private void checkQueueSize() {
             if (this.queue.size() > this.queueSizeLimit) {
                 log.info("{}队列大小={}超出指定阈值={}", currentThread.getName(), this.queue.size(), queueSizeLimit);
-                this.start();
+                this.start(true);
             }
         }
 

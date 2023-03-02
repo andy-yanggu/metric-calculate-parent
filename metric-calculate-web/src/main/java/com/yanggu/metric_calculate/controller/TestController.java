@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.system.SystemUtil;
-import com.yanggu.metric_calculate.util.AccumulateBatchComponent;
+import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
 import io.swagger.annotations.Api;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -63,6 +63,5 @@ public class TestController {
         private CompletableFuture<T> completableFuture;
 
     }
-
 
 }

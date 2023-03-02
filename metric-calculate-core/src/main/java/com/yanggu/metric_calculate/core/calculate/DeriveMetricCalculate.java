@@ -80,7 +80,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
     /**
      * 派生指标中间结算结果存储
      */
-    private DeriveMetricMiddleStore deriveMetricMiddleStore;
+    private DeriveMetricMiddleStore<M> deriveMetricMiddleStore;
 
     /**
      * 用于生成cube的工厂类
@@ -118,11 +118,8 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         //维度数据
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
-        //当前数据的聚合时间戳
-        Long referenceTime = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
-
         //生成cube
-        MetricCube<Table, Long, M, ?> metricCube = metricCubeFactory.createMetricCube(dimensionSet, referenceTime);
+        MetricCube<Table, Long, M, ?> metricCube = metricCubeFactory.createMetricCube(dimensionSet, timestamp);
 
         //放入生成的MergeUnit
         metricCube.put(timestamp, process);
@@ -130,34 +127,52 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
     }
 
     /**
-     * 无状态查询
+     * 无状态计算(考虑是否包含当前笔配置)<br>
+     * 不会更新中间数据到外部存储中
      *
-     * @param newMetricCube
+     * @param input 输入的明细数据
      * @return
      */
-    public MetricCube noState(MetricCube newMetricCube) {
-        //调用中计算结果存储的查询方法
-        MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
-        //如果无状态且不包含当前笔, 直接返回历史数据
-        if (Boolean.FALSE.equals(includeCurrent)) {
-            return metricCube;
+    @SneakyThrows
+    public List<DeriveMetricCalculateResult> noStateCalc(T input) {
+        //数据的时间戳
+        Long timestamp = timeFieldProcessor.process(input);
+
+        //维度数据
+        DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+
+        //生成cube
+        MetricCube<Table, Long, M, ?> newMetricCube = metricCubeFactory.createMetricCube(dimensionSet, timestamp);
+
+        //查询历史数据
+        MetricCube historyMetricCube = deriveMetricMiddleStore.get(newMetricCube);
+        //如果无状态且包含当前笔, 先生成当前数据, 然后和历史数据进行merge
+        //包含当前笔需要执行前置过滤条件
+        if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
+            M mergedUnit = aggregateFieldProcessor.process(input);
+            if (mergedUnit != null) {
+                newMetricCube.put(timestamp, mergedUnit);
+                historyMetricCube.merge(newMetricCube);
+            }
         }
-        //包含当前笔, 需要进行merge
-        if (metricCube == null) {
-            metricCube = newMetricCube;
-        } else {
-            metricCube.merge(newMetricCube);
-        }
-        return metricCube;
+        //查询指标数据
+        return query(historyMetricCube);
     }
 
     /**
-     * 更新状态
+     * 更新指标数据<br>
+     * 会更新中间数据到外部存储中
      *
-     * @param newMetricCube
+     * @param input 明细数据
      * @return
      */
-    public MetricCube updateState(MetricCube newMetricCube) {
+    @SneakyThrows
+    public List<DeriveMetricCalculateResult> updateMetricCube(T input) {
+        MetricCube<Table, Long, M, ?> newMetricCube = this.exec(input);
+        if (newMetricCube == null) {
+            return Collections.emptyList();
+        }
+        //更新状态数据
         //调用中计算结果存储的查询方法
         MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
         if (metricCube == null) {
@@ -169,7 +184,8 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         }
         //更新中间状态数据
         deriveMetricMiddleStore.update(metricCube);
-        return metricCube;
+        //返回计算后的指标数据
+        return query(metricCube);
     }
 
     /**
@@ -192,23 +208,10 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         List<DeriveMetricCalculateResult> list = new ArrayList<>();
         for (TimeWindow timeWindow : timeWindowList) {
 
-            DeriveMetricCalculateResult result = new DeriveMetricCalculateResult();
-            //指标key
-            result.setKey(metricCube.getKey());
-
-            //指标名称
-            result.setName(metricCube.getName());
-
-            //指标维度
-            result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
-
             //窗口开始时间
             long windowStart = timeWindow.getWindowStart();
-            result.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
-
             //窗口结束时间
             long windowEnd = timeWindow.getWindowEnd();
-            result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
 
             //聚合值
             Value<?> query = metricCube.query(windowStart, true, windowEnd, false);
@@ -226,6 +229,22 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
 
             //处理精度
             value = RoundAccuracyUtil.handlerRoundAccuracy(value, roundAccuracy);
+
+            DeriveMetricCalculateResult result = new DeriveMetricCalculateResult();
+            //指标key
+            result.setKey(metricCube.getKey());
+
+            //指标名称
+            result.setName(metricCube.getName());
+
+            //指标维度
+            result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+
+            result.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
+
+            result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
+
+            //聚合值
             result.setResult(value);
 
             list.add(result);

@@ -17,4 +17,4 @@ spring:
 
 feign:
   magiccube-api:
-    host: http://172.20.7.146:13611
+    host: http://localhost:8888

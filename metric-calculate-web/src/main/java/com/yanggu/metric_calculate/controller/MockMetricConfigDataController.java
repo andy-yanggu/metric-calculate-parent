@@ -1,0 +1,29 @@
+package com.yanggu.metric_calculate.controller;
+
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.json.JSONUtil;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**
+ * 模拟指标配置数据
+ */
+@RestController
+@RequestMapping("/model")
+@Api(tags = "模拟指标配置数据")
+public class MockMetricConfigDataController {
+
+    @ApiOperation("返回指标配置数据")
+    @GetMapping("/{tableId}")
+    public DataDetailsWideTable getTableAndMetricByTableId(@ApiParam("明细宽表id") @PathVariable("tableId") Long tableId) {
+        String jsonString = FileUtil.readUtf8String("mock_metric_config/" + tableId + ".json");
+        return JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
+    }
+
+}

@@ -36,7 +36,7 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
 
     private Derive derive;
 
-    public MetricCube<Table, Long, M, ?> createMetricCube(DimensionSet dimensionSet, Long referenceTime) {
+    public MetricCube<Table, Long, M, ?> createMetricCube(DimensionSet dimensionSet, Long timestamp) {
 
         MergeType annotation = mergeUnitClazz.getAnnotation(MergeType.class);
 
@@ -63,7 +63,8 @@ public class MetricCubeFactory<M extends MergedUnit<M> & Value<?>> {
         metricCube.setName(name);
         metricCube.setTimeBaselineDimension(timeBaselineDimension);
         metricCube.setDimensionSet(dimensionSet);
-        //设置数据当前聚合时间
+        //当前数据的聚合时间戳
+        Long referenceTime = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         metricCube.setReferenceTime(referenceTime);
         metricCube.init();
         return metricCube;

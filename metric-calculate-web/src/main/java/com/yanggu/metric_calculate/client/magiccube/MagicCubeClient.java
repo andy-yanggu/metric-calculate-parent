@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 public interface MagicCubeClient {
 
     /**
-     * 根据数据明细宽表id获取明细宽表以及原子指标、派生指标和复合指标
+     * 根据数据明细宽表id获取明细宽表以及派生指标和复合指标
      *
      * @param tableId 数据明细宽表的id
      * @return
      */
-    @GetMapping("/model/getUsedInfoById/{tableId}")
-    DataDetailsWideTable getTableAndMetricById(@PathVariable("tableId") Long tableId);
+    @GetMapping("/model/{tableId}")
+    DataDetailsWideTable getTableAndMetricByTableId(@PathVariable("tableId") Long tableId);
 
 }
