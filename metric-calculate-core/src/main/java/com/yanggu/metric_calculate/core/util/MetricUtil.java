@@ -176,13 +176,13 @@ public class MetricUtil {
 
         //派生指标中间结算结果存储接口
         //并发HashMap存储中间数据
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        //DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         //redis存储中间数据
-        /*DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
         RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
-        List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getMethodReflection().values());
+        List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getUnitMap().values());
         deriveMetricMiddleStore.setClassList(classList);
-        deriveMetricMiddleStore.setRedisTemplate(redisTemplate);*/
+        deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
         deriveMetricMiddleStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 

@@ -152,7 +152,11 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
             M mergedUnit = aggregateFieldProcessor.process(input);
             if (mergedUnit != null) {
                 newMetricCube.put(timestamp, mergedUnit);
-                historyMetricCube.merge(newMetricCube);
+                if (historyMetricCube == null) {
+                    historyMetricCube = newMetricCube;
+                } else {
+                    historyMetricCube.merge(newMetricCube);
+                }
             }
         }
         //查询指标数据

@@ -10,11 +10,11 @@ spring:
       # 配置策略
       matching-strategy: ant-path-matcher
   redis:
-    host: 172.20.7.106
-    port: 16379
+    host: 127.0.0.1
+    port: 6379
     client-type: lettuce
     database: 1
-    password: Redis6379
+#    password: Redis6379
 
 feign:
   magiccube-api:

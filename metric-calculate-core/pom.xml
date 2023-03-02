@@ -17,6 +17,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>Central Repository</id>
+            <url>https://repo1.maven.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -98,11 +108,11 @@
             <artifactId>freemarker</artifactId>
         </dependency>
         <!-- https://mvnrepository.com/artifact/org.opendaylight.odlparent/odl-lmax-3 -->
-<!--        <dependency>-->
-<!--            <groupId>org.opendaylight.odlparent</groupId>-->
-<!--            <artifactId>odl-lmax-3</artifactId>-->
-<!--            <version>12.0.3</version>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>org.opendaylight.odlparent</groupId>
+            <artifactId>odl-lmax-3</artifactId>
+            <version>12.0.3</version>
+        </dependency>
     </dependencies>
 
 </project>
