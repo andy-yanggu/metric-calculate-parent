@@ -80,7 +80,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
     /**
      * 派生指标中间结算结果存储
      */
-    private DeriveMetricMiddleStore<M> deriveMetricMiddleStore;
+    private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     /**
      * 用于生成cube的工厂类

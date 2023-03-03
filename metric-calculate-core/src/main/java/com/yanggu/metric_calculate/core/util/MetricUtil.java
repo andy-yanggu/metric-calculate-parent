@@ -5,7 +5,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.esotericsoftware.kryo.pool.KryoPool;
@@ -26,8 +25,7 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
 import com.yanggu.metric_calculate.core.kryo.KryoUtils;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
+import com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Fields;
@@ -37,14 +35,12 @@ import com.yanggu.metric_calculate.core.unit.UnitFactory;
 import com.yanggu.metric_calculate.core.value.Value;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.RedisTemplate;
-import reactor.util.function.Tuple2;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
-import static com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore.DEFAULT_IMPL;
+import static com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore.DEFAULT_IMPL;
 
 /**
  * 指标工具类
@@ -96,7 +92,7 @@ public class MetricUtil {
                 }
             }
             //派生指标中间结算结果存储接口
-            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap = DeriveMetricMiddleStore.MAP;
+            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap = AbstractDeriveMetricMiddleStore.STORE_MAP;
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
             if (metricMiddleStoreMap.size() != 1) {

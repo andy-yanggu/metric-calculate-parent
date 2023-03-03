@@ -39,8 +39,8 @@ public class DeriveMetricMiddleHbaseStore implements DeriveMetricMiddleStore {
 
     @SneakyThrows
     @Override
-    public MetricCube get(MetricCube cube) {
-        Get get = new Get(Bytes.toBytes(cube.getRealKey())).addFamily(Bytes.toBytes("testFamily"));
+    public MetricCube get(MetricCube queryMetricCube) {
+        Get get = new Get(Bytes.toBytes(queryMetricCube.getRealKey())).addFamily(Bytes.toBytes("testFamily"));
         Result result = testTable.get(get);
         for (Cell cell : result.rawCells()) {
             long key = Bytes.toLong(CellUtil.cloneQualifier(cell));
@@ -53,7 +53,7 @@ public class DeriveMetricMiddleHbaseStore implements DeriveMetricMiddleStore {
     }
 
     @Override
-    public void update(MetricCube cube) {
+    public void update(MetricCube updateMetricCube) {
 
     }
 }

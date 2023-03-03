@@ -3,9 +3,6 @@ package com.yanggu.metric_calculate.core.middle_store;
 import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.table.Table;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.value.Value;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,19 +12,7 @@ import java.util.Map;
  * 派生指标中间结算结果存储接口
  * 可以实现远端存储和本地存储
  */
-public interface DeriveMetricMiddleStore<M extends MergedUnit<M> & Value<?>> {
-
-    String DEFAULT_IMPL = "MEMORY";
-
-    /**
-     * DeriveMetricMiddleStore实现类初始化完成后, 需要放入其中
-     */
-    Map<String, DeriveMetricMiddleStore> MAP = new HashMap() {{
-        //默认放入memory
-        DeriveMetricMiddleHashMapStore memory = new DeriveMetricMiddleHashMapStore();
-        memory.init();
-        put(DEFAULT_IMPL, memory);
-    }};
+public interface DeriveMetricMiddleStore {
 
     /**
      * 初始化方法<br>
@@ -43,14 +28,14 @@ public interface DeriveMetricMiddleStore<M extends MergedUnit<M> & Value<?>> {
      *
      * @return
      */
-    MetricCube<Table, Long, M, ?> get(MetricCube<Table, Long, M, ?> cube);
+    MetricCube get(MetricCube queryMetricCube);
 
     /**
      * 通过key进行更新
      *
-     * @param cube
+     * @param updateMetricCube
      */
-    void update(MetricCube<Table, Long, M, ?> cube);
+    void update(MetricCube updateMetricCube);
 
     /**
      * 批量查询, 默认实现是for循环调用get
@@ -59,10 +44,10 @@ public interface DeriveMetricMiddleStore<M extends MergedUnit<M> & Value<?>> {
      * @param cubeList
      * @return
      */
-    default Map<DimensionSet, MetricCube<Table, Long, ?, ?>> batchGet(List<MetricCube<Table, Long, M, ?>> cubeList) {
-        Map<DimensionSet, MetricCube<Table, Long, ?, ?>> map = new HashMap<>();
-        for (MetricCube<Table, Long, M, ?> metricCube : cubeList) {
-            MetricCube<Table, Long, M, ?> historyMetricCube = get(metricCube);
+    default Map<DimensionSet, MetricCube> batchGet(List<MetricCube> cubeList) {
+        Map<DimensionSet, MetricCube> map = new HashMap<>();
+        for (MetricCube metricCube : cubeList) {
+            MetricCube historyMetricCube = get(metricCube);
             if (historyMetricCube != null) {
                 map.put(metricCube.getDimensionSet(), historyMetricCube);
             }
@@ -76,7 +61,7 @@ public interface DeriveMetricMiddleStore<M extends MergedUnit<M> & Value<?>> {
      *
      * @param cubeList
      */
-    default void batchUpdate(List<MetricCube<Table, Long, M, ?>> cubeList) {
+    default void batchUpdate(List<MetricCube> cubeList) {
         cubeList.forEach(this::update);
     }
 

@@ -70,12 +70,12 @@ public class MetricCalculateController {
         //批量查询组件
         queryComponent = new AccumulateBatchComponent<>(RuntimeUtil.getProcessorCount(), 20, 50, 200,
                 queryRequests -> {
-                    List<MetricCube<Table, Long, ?, ?>> collect = queryRequests.stream()
+                    List<MetricCube> collect = queryRequests.stream()
                             .map(QueryRequest::getMetricCube)
                             .collect(Collectors.toList());
 
                     //批量查询
-                    Map<DimensionSet, MetricCube<Table, Long, ?, ?>> map = deriveMetricMiddleHashMapStore.batchGet(collect);
+                    Map<DimensionSet, MetricCube> map = deriveMetricMiddleHashMapStore.batchGet(collect);
 
                     //批量查询完成后, 进行回调通知
                     for (QueryRequest queryRequest : queryRequests) {
@@ -95,7 +95,7 @@ public class MetricCalculateController {
         //批量更新组件
         putComponent = new AccumulateBatchComponent<>(RuntimeUtil.getProcessorCount(), 20, 50, 200,
                 putRequests -> {
-                    List<MetricCube<Table, Long, ?, ?>> collect = putRequests.stream()
+                    List<MetricCube> collect = putRequests.stream()
                             .map(PutRequest::getMetricCube)
                             .collect(Collectors.toList());
 
@@ -298,7 +298,7 @@ public class MetricCalculateController {
                 throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
             }
             //使用redis作为中间存储
-            DeriveMetricMiddleRedisStore deriveMetricMiddleRedisStore = new DeriveMetricMiddleRedisStore<>();
+            DeriveMetricMiddleRedisStore deriveMetricMiddleRedisStore = new DeriveMetricMiddleRedisStore();
             deriveMetricMiddleRedisStore.init();
             MetricCalculate<JSONObject> metricCalculate = MetricUtil.initMetricCalculate(tableData);
             metricMap.put(tableId, metricCalculate);

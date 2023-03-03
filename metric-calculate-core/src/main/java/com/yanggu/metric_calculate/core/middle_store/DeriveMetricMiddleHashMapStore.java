@@ -3,15 +3,13 @@ package com.yanggu.metric_calculate.core.middle_store;
 
 import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
-import com.yanggu.metric_calculate.core.unit.MergedUnit;
-import com.yanggu.metric_calculate.core.value.Value;
 import lombok.Data;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Data
-public class DeriveMetricMiddleHashMapStore<M extends MergedUnit<M> & Value<?>> implements DeriveMetricMiddleStore<M> {
+public class DeriveMetricMiddleHashMapStore implements DeriveMetricMiddleStore {
 
     private KryoPool kryoPool;
 
