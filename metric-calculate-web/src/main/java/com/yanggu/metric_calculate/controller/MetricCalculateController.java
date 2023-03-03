@@ -16,7 +16,7 @@ import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStor
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.table.Table;
-import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
+import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent2;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
@@ -55,12 +55,12 @@ public class MetricCalculateController {
     /**
      * 攒批查询
      */
-    private AccumulateBatchComponent<QueryRequest> queryComponent;
+    private AccumulateBatchComponent2<QueryRequest> queryComponent;
 
     /**
      * 攒批更新
      */
-    private AccumulateBatchComponent<PutRequest> putComponent;
+    private AccumulateBatchComponent2<PutRequest> putComponent;
 
     @PostConstruct
     public void init() {
@@ -68,7 +68,7 @@ public class MetricCalculateController {
         deriveMetricMiddleHashMapStore.init();
 
         //批量查询组件
-        queryComponent = new AccumulateBatchComponent<>(RuntimeUtil.getProcessorCount(), 20, 50, 200,
+        queryComponent = new AccumulateBatchComponent2<>("赞批读组件", RuntimeUtil.getProcessorCount(), 20, 2000,
                 queryRequests -> {
                     List<MetricCube> collect = queryRequests.stream()
                             .map(QueryRequest::getMetricCube)
@@ -93,7 +93,7 @@ public class MetricCalculateController {
                 });
 
         //批量更新组件
-        putComponent = new AccumulateBatchComponent<>(RuntimeUtil.getProcessorCount(), 20, 50, 200,
+        putComponent = new AccumulateBatchComponent2<>("攒批写组件", RuntimeUtil.getProcessorCount(), 20, 2000,
                 putRequests -> {
                     List<MetricCube> collect = putRequests.stream()
                             .map(PutRequest::getMetricCube)
