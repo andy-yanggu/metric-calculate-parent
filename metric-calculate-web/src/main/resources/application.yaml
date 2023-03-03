@@ -18,4 +18,4 @@ spring:
 
 feign:
   magiccube-api:
-    host: http://localhost:8888
+    host: http://localhost:${server.port}

@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Slf4j
 @Api(tags = "测试接口")
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/test1")
 public class TestController {
 
     private AccumulateBatchComponent<Request<String>> component;
@@ -31,7 +31,7 @@ public class TestController {
                 request.getCompletableFuture().complete(request.getUuid());
             }
         };
-        this.component = new AccumulateBatchComponent<>(SystemUtil.getTotalThreadCount(), 100, 2000, 200, consumer);
+        this.component = new AccumulateBatchComponent<>(1, 10, 2000, 20, consumer);
     }
 
     /**

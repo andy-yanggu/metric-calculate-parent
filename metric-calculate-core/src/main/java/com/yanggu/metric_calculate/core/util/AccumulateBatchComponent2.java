@@ -71,10 +71,10 @@ public class AccumulateBatchComponent2<T> {
     public boolean add(T item) {
         int len = this.workThreads.size();
         if (len == 1) {
-            return this.workThreads.get(0).queue.add(item);
+            return this.workThreads.get(0).queue.offer(item);
         } else {
             int mod = this.index.incrementAndGet() % len;
-            return this.workThreads.get(mod).queue.add(item);
+            return this.workThreads.get(mod).queue.offer(item);
         }
     }
 
