@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.middle_store;
 
+import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.table.Table;
@@ -16,11 +17,25 @@ import java.util.Map;
  */
 public interface DeriveMetricMiddleStore<M extends MergedUnit<M> & Value<?>> {
 
+    String DEFAULT_IMPL = "MEMORY";
+
     /**
-     * 初始化方法
+     * DeriveMetricMiddleStore实现类初始化完成后, 需要放入其中
      */
-    default void init() {
-        throw new RuntimeException("需要手动实现init方法");
+    Map<String, DeriveMetricMiddleStore> MAP = new HashMap() {{
+        //默认放入memory
+        DeriveMetricMiddleHashMapStore memory = new DeriveMetricMiddleHashMapStore();
+        memory.init();
+        put(DEFAULT_IMPL, memory);
+    }};
+
+    /**
+     * 初始化方法<br>
+     * 需要将初始化完成后的实现类放入map中
+     */
+    void init();
+
+    default void setKryoPool(KryoPool kryoPool) {
     }
 
     /**

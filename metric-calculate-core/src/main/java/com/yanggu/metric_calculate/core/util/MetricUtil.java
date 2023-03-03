@@ -4,9 +4,11 @@ package com.yanggu.metric_calculate.core.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.esotericsoftware.kryo.pool.KryoPool;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
@@ -22,6 +24,8 @@ import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldPr
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
+import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
@@ -34,11 +38,13 @@ import com.yanggu.metric_calculate.core.value.Value;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import reactor.util.function.Tuple2;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
+import static com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore.DEFAULT_IMPL;
 
 /**
  * 指标工具类
@@ -82,6 +88,30 @@ public class MetricUtil {
                     })
                     .collect(Collectors.toList());
 
+            List<Class<? extends MergedUnit>> classList = new ArrayList<>();
+            for (DeriveMetricCalculate<T, ?> deriveMetricCalculate : collect) {
+                if (Boolean.TRUE.equals(deriveMetricCalculate.getIsUdaf())) {
+                    Class<? extends MergedUnit> mergeUnitClazz = deriveMetricCalculate.getAggregateFieldProcessor().getMergeUnitClazz();
+                    classList.add(mergeUnitClazz);
+                }
+            }
+            //派生指标中间结算结果存储接口
+            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap = DeriveMetricMiddleStore.MAP;
+            //默认是内存的并发HashMap
+            DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
+            if (metricMiddleStoreMap.size() != 1) {
+                for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
+                    if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
+                        deriveMetricMiddleStore = middleStoreEntry.getValue();
+                        //初始化KryoPool
+                        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
+                        deriveMetricMiddleStore.setKryoPool(kryoPool);
+                        break;
+                    }
+                }
+            }
+            DeriveMetricMiddleStore finalDeriveMetricMiddleStore = deriveMetricMiddleStore;
+            collect.forEach(temp -> temp.setDeriveMetricMiddleStore(finalDeriveMetricMiddleStore));
             metricCalculate.setDeriveMetricCalculateList(collect);
         }
 
@@ -140,8 +170,8 @@ public class MetricUtil {
         unitFactory.init();
 
         //设置聚合字段处理器
-        AggregateFieldProcessor<T, M> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(
-                tempDerive, fieldMap, unitFactory);
+        AggregateFieldProcessor<T, M> aggregateFieldProcessor =
+                FieldProcessorUtil.getAggregateFieldProcessor(tempDerive, fieldMap, unitFactory);
 
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
@@ -173,18 +203,6 @@ public class MetricUtil {
         metricCubeFactory.setDerive(tempDerive);
 
         deriveMetricCalculate.setMetricCubeFactory(metricCubeFactory);
-
-        //派生指标中间结算结果存储接口
-        //并发HashMap存储中间数据
-        //DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
-        //redis存储中间数据
-        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
-        RedisTemplate<String, byte[]> redisTemplate = SpringUtil.getBean("kryoRedisTemplate");
-        List<Class<? extends MergedUnit>> classList = new ArrayList<>(unitFactory.getUnitMap().values());
-        deriveMetricMiddleStore.setClassList(classList);
-        deriveMetricMiddleStore.setRedisTemplate(redisTemplate);
-        deriveMetricMiddleStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 
         return deriveMetricCalculate;
     }

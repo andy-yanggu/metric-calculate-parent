@@ -12,6 +12,7 @@ import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.table.Table;
@@ -296,6 +297,9 @@ public class MetricCalculateController {
                 log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
                 throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
             }
+            //使用redis作为中间存储
+            DeriveMetricMiddleRedisStore deriveMetricMiddleRedisStore = new DeriveMetricMiddleRedisStore<>();
+            deriveMetricMiddleRedisStore.init();
             MetricCalculate<JSONObject> metricCalculate = MetricUtil.initMetricCalculate(tableData);
             metricMap.put(tableId, metricCalculate);
             return metricCalculate;

@@ -1,14 +1,13 @@
 package com.yanggu.metric_calculate.core.middle_store;
 
 
+import cn.hutool.extra.spring.SpringUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
-import com.yanggu.metric_calculate.core.kryo.KryoUtils;
 import com.yanggu.metric_calculate.core.table.Table;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.value.Value;
@@ -31,11 +30,11 @@ public class DeriveMetricMiddleRedisStore<M extends MergedUnit<M> & Value<?>> im
 
     private RedisTemplate<String, byte[]> redisTemplate;
 
-    private List<Class<? extends MergedUnit>> classList;
-
     @Override
     public void init() {
-        kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
+        RedisTemplate<String, byte[]> kryoRedisTemplate = SpringUtil.getBean("kryoRedisTemplate");
+        this.setRedisTemplate(kryoRedisTemplate);
+        DeriveMetricMiddleStore.MAP.put("REDIS_STRING", this);
     }
 
     @Override

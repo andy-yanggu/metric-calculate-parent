@@ -97,6 +97,11 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
      */
     private StoreInfo storeInfo;
 
+    /**
+     * 是否是自定义udaf
+     */
+    private Boolean isUdaf;
+
     @SneakyThrows
     @Override
     public MetricCube<Table, Long, M, ?> exec(T input) {
