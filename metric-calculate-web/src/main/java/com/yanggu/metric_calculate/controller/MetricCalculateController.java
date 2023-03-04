@@ -9,9 +9,9 @@ import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core.cube.KeyReferable;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
@@ -37,6 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -64,18 +65,20 @@ public class MetricCalculateController {
 
     @PostConstruct
     public void init() {
-        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleHashMapStore.init();
+        //使用redis作为中间存储
+        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+        deriveMetricMiddleStore.init();
 
         //批量查询组件
-        queryComponent = new AccumulateBatchComponent2<>("赞批读组件", RuntimeUtil.getProcessorCount(), 20, 2000,
+        queryComponent = new AccumulateBatchComponent2<>("攒批读组件", RuntimeUtil.getProcessorCount(), 20, 2000,
                 queryRequests -> {
                     List<MetricCube> collect = queryRequests.stream()
                             .map(QueryRequest::getMetricCube)
                             .collect(Collectors.toList());
 
+                    //TODO 需要考虑请求合并
                     //批量查询
-                    Map<DimensionSet, MetricCube> map = deriveMetricMiddleHashMapStore.batchGet(collect);
+                    Map<DimensionSet, MetricCube> map = deriveMetricMiddleStore.batchGet(collect);
 
                     //批量查询完成后, 进行回调通知
                     for (QueryRequest queryRequest : queryRequests) {
@@ -99,8 +102,12 @@ public class MetricCalculateController {
                             .map(PutRequest::getMetricCube)
                             .collect(Collectors.toList());
 
+                    //TODO 需要考虑请求合并
+                    //Map<String, Optional<MetricCube>> collect1 = collect.stream().collect(Collectors.groupingBy(KeyReferable::getRealKey,
+                            //Collectors.reducing((metricCube, metricCube2) -> (MetricCube) metricCube.merge(metricCube2))));
+
                     //批量更新
-                    deriveMetricMiddleHashMapStore.batchUpdate(collect);
+                    deriveMetricMiddleStore.batchUpdate(collect);
                     //批量更新完成后, 进行回调通知
                     for (PutRequest putRequest : putRequests) {
                         CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture = putRequest.getResultFuture();
@@ -297,9 +304,6 @@ public class MetricCalculateController {
                 log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
                 throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
             }
-            //使用redis作为中间存储
-            DeriveMetricMiddleRedisStore deriveMetricMiddleRedisStore = new DeriveMetricMiddleRedisStore();
-            deriveMetricMiddleRedisStore.init();
             MetricCalculate<JSONObject> metricCalculate = MetricUtil.initMetricCalculate(tableData);
             metricMap.put(tableId, metricCalculate);
             return metricCalculate;

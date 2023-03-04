@@ -37,7 +37,7 @@ public class SlidingTimeWindowTable<V extends MergedUnit<V> & Value<?>>
             } else {
                 value.merge(otherValue);
             }
-            twoKeyTable.put(tempTuple, value.fastClone());
+            twoKeyTable.put(tempTuple, value);
         });
         return this;
     }
