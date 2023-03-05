@@ -36,7 +36,7 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
     }
 
     protected <T> T deserialize(byte[] bytes) {
-        if (bytes == null || ArrayUtil.isEmpty(bytes) || bytes.length <= 5) {
+        if (ArrayUtil.isEmpty(bytes)) {
             return null;
         }
         Kryo kryo = kryoPool.borrow();
@@ -50,10 +50,9 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
     @SneakyThrows
     protected byte[] serialize(Object object) {
         Kryo kryo = kryoPool.borrow();
-        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {
-            Output output = new Output(byteArrayOutputStream);
+        try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+             Output output = new Output(byteArrayOutputStream)) {
             kryo.writeClassAndObject(output, object);
-            output.close();
             return byteArrayOutputStream.toByteArray();
         } finally {
             kryoPool.release(kryo);

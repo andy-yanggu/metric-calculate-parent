@@ -9,7 +9,6 @@ import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core.cube.KeyReferable;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
@@ -37,7 +36,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -226,17 +224,28 @@ public class MetricCalculateController {
         return response;
     }
 
-    private MetricCalculate<JSONObject> getMetricCalculate(JSONObject detail) {
-        Long tableId = detail.getLong("tableId");
-        if (tableId == null) {
-            throw new RuntimeException("没有传入tableId");
+    @ApiOperation("无状态-计算接口（攒批查询）")
+    @PostMapping("/no-state-calculate-accumulate-batch")
+    public ApiResponse<List<DeriveMetricCalculateResult>> noStateExecuteAccumulateBatch(
+                                                    @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
+        //获取指标计算类
+        MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
+        ApiResponse<List<DeriveMetricCalculateResult>> apiResponse = new ApiResponse<>();
+        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            return apiResponse;
         }
-        MetricCalculate<JSONObject> dataWideTable = metricMap.get(tableId);
-        if (dataWideTable == null) {
-            dataWideTable = buildMetric(tableId);
-        }
-        return dataWideTable;
+
+        List<MetricCube> collect = deriveMetricCalculateList.parallelStream()
+                .map(tempDerive -> tempDerive.getQueryMetricCube(detail))
+                .collect(Collectors.toList());
+
+
+
+
+        return null;
     }
+
 
     private List<DeriveMetricCalculateResult> calcDeriveState(JSONObject detail,
                                                               MetricCalculate<JSONObject> dataWideTable) {
@@ -282,16 +291,16 @@ public class MetricCalculateController {
         return deriveDataList;
     }
 
-    /**
-     * 从数据库加载指标定义
-     */
-    private void queryMetric() {
-        log.info("load metric from DB");
-        if (CollUtil.isEmpty(metricMap)) {
-            return;
+    private MetricCalculate<JSONObject> getMetricCalculate(JSONObject detail) {
+        Long tableId = detail.getLong("tableId");
+        if (tableId == null) {
+            throw new RuntimeException("没有传入tableId");
         }
-        Set<Long> tableIdSet = metricMap.keySet();
-        tableIdSet.parallelStream().forEach(this::buildMetric);
+        MetricCalculate<JSONObject> dataWideTable = metricMap.get(tableId);
+        if (dataWideTable == null) {
+            dataWideTable = buildMetric(tableId);
+        }
+        return dataWideTable;
     }
 
     private MetricCalculate<JSONObject> buildMetric(Long tableId) {
@@ -310,6 +319,18 @@ public class MetricCalculateController {
         } finally {
             lock.unlock();
         }
+    }
+
+    /**
+     * 从数据库加载指标定义
+     */
+    private void queryMetric() {
+        log.info("load metric from DB");
+        if (CollUtil.isEmpty(metricMap)) {
+            return;
+        }
+        Set<Long> tableIdSet = metricMap.keySet();
+        tableIdSet.parallelStream().forEach(this::buildMetric);
     }
 
 }

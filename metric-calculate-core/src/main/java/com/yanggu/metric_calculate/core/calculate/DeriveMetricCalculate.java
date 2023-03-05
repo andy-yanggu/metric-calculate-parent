@@ -168,6 +168,17 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         return query(historyMetricCube);
     }
 
+    public MetricCube getQueryMetricCube(T input) {
+        //数据的时间戳
+        Long timestamp = timeFieldProcessor.process(input);
+
+        //维度数据
+        DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+
+        //生成查询的MetricCube
+        return metricCubeFactory.createMetricCube(dimensionSet, timestamp);
+    }
+
     /**
      * 更新指标数据<br>
      * 会更新中间数据到外部存储中
@@ -181,20 +192,20 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         if (newMetricCube == null) {
             return Collections.emptyList();
         }
-        //更新状态数据
-        //调用中计算结果存储的查询方法
-        MetricCube metricCube = deriveMetricMiddleStore.get(newMetricCube);
-        if (metricCube == null) {
-            metricCube = newMetricCube;
+        //查询历史数据
+        MetricCube historyMetricCube = deriveMetricMiddleStore.get(newMetricCube);
+        if (historyMetricCube == null) {
+            historyMetricCube = newMetricCube;
         } else {
-            metricCube.merge(newMetricCube);
+            //历史数据和当前数据进行合并
+            historyMetricCube.merge(newMetricCube);
             //删除过期数据
-            metricCube.eliminateExpiredData();
+            historyMetricCube.eliminateExpiredData();
         }
         //更新中间状态数据
-        deriveMetricMiddleStore.update(metricCube);
+        deriveMetricMiddleStore.update(historyMetricCube);
         //返回计算后的指标数据
-        return query(metricCube);
+        return query(historyMetricCube);
     }
 
     /**
