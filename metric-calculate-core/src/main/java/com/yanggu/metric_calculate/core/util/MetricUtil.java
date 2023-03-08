@@ -95,12 +95,13 @@ public class MetricUtil {
             Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap = AbstractDeriveMetricMiddleStore.STORE_MAP;
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
+            //初始化KryoPool
+            KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
+            deriveMetricMiddleStore.setKryoPool(kryoPool);
             if (metricMiddleStoreMap.size() != 1) {
                 for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
                     if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
                         deriveMetricMiddleStore = middleStoreEntry.getValue();
-                        //初始化KryoPool
-                        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
                         deriveMetricMiddleStore.setKryoPool(kryoPool);
                         break;
                     }

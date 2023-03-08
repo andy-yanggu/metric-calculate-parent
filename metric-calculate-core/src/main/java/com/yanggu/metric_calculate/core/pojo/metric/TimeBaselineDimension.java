@@ -62,12 +62,12 @@ public class TimeBaselineDimension implements Serializable {
         for (int i = 0; i < length; i++) {
             windows.add(new TimeWindow(windowStart + i * slidingSize, windowStart + i * slidingSize + windowSize));
         }
-        if (log.isDebugEnabled()) {
-            for (TimeWindow window : windows) {
-                log.debug("窗口开始时间: {}, 结束时间: {}", DateUtil.formatDateTime(new Date(window.getWindowStart())),
-                        DateUtil.formatDateTime(new Date(window.getWindowEnd())));
-            }
-        }
+        //if (log.isDebugEnabled()) {
+        //    for (TimeWindow window : windows) {
+        //        log.debug("窗口开始时间: {}, 结束时间: {}", DateUtil.formatDateTime(new Date(window.getWindowStart())),
+        //                DateUtil.formatDateTime(new Date(window.getWindowEnd())));
+        //    }
+        //}
         return windows;
     }
 

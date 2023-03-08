@@ -268,19 +268,19 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
             result.setResult(value);
 
             list.add(result);
-            if (log.isDebugEnabled()) {
-                //拼接维度数据
-                String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
-                        .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
-                        .collect(Collectors.joining(","));
-                log.debug("指标key: " + result.getKey() +
-                        ", 指标名称: " + result.getName() +
-                        ", 指标维度: " + collect +
-                        ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(windowStart)) +
-                        ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(windowEnd)) +
-                        ", 聚合方式: " + aggregateFieldProcessor.getAggregateType() +
-                        ", 聚合值: " + value);
-            }
+            //if (log.isDebugEnabled()) {
+            //    //拼接维度数据
+            //    String collect = metricCube.getDimensionSet().getDimensionMap().entrySet().stream()
+            //            .map(tempEntry -> tempEntry.getKey() + ":" + tempEntry.getValue())
+            //            .collect(Collectors.joining(","));
+            //    log.debug("指标key: " + result.getKey() +
+            //            ", 指标名称: " + result.getName() +
+            //            ", 指标维度: " + collect +
+            //            ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(windowStart)) +
+            //            ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(windowEnd)) +
+            //            ", 聚合方式: " + aggregateFieldProcessor.getAggregateType() +
+            //            ", 聚合值: " + value);
+            //}
         }
         return list;
     }
