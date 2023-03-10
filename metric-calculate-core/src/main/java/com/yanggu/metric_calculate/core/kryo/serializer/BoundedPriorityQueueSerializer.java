@@ -11,6 +11,9 @@ import com.esotericsoftware.kryo.io.Output;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * 有界优先队列序列化器
+ */
 public class BoundedPriorityQueueSerializer extends Serializer<BoundedPriorityQueue> {
 
     @Override
@@ -21,7 +24,7 @@ public class BoundedPriorityQueueSerializer extends Serializer<BoundedPriorityQu
     }
 
     @Override
-    public BoundedPriorityQueue read(Kryo kryo, Input input, Class<BoundedPriorityQueue> type) {
+    public BoundedPriorityQueue read(Kryo kryo, Input input, Class<? extends BoundedPriorityQueue> type) {
         Integer capacity = kryo.readObject(input, Integer.class);
         Comparator comparator = kryo.readObjectOrNull(input, Comparator.class);
         ArrayList dataList = (ArrayList) kryo.readClassAndObject(input);

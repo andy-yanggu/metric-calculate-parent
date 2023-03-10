@@ -13,7 +13,6 @@ import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
 public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
     @Override
     public void write(Kryo kryo, Output output, TimedKVMetricCube cube) {
-
         kryo.writeObject(output, cube.getName());
         kryo.writeObject(output, cube.getKey());
         kryo.writeObject(output, cube.getReferenceTime());
@@ -23,7 +22,7 @@ public class TimedKVMetricCubeSerializer extends Serializer<TimedKVMetricCube> {
     }
 
     @Override
-    public TimedKVMetricCube read(Kryo kryo, Input input, Class<TimedKVMetricCube> type) {
+    public TimedKVMetricCube read(Kryo kryo, Input input, Class<? extends TimedKVMetricCube> type) {
 
         String name = kryo.readObject(input, String.class);
         String key = kryo.readObject(input, String.class);

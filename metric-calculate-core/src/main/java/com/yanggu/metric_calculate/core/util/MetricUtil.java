@@ -7,7 +7,6 @@ import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.esotericsoftware.kryo.pool.KryoPool;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
@@ -23,8 +22,10 @@ import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldPr
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
-import com.yanggu.metric_calculate.core.kryo.KryoUtils;
+import com.yanggu.metric_calculate.core.kryo.KryoUtil;
+import com.yanggu.metric_calculate.core.kryo.pool.InputPool;
+import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
+import com.yanggu.metric_calculate.core.kryo.pool.OutputPool;
 import com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
@@ -96,13 +97,14 @@ public class MetricUtil {
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
             //初始化KryoPool
-            KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
-            deriveMetricMiddleStore.setKryoPool(kryoPool);
+            KryoPool kryoPool = new KryoPool(true, false, 100);
+            InputPool inputPool = new InputPool(true, false, 100);
+            OutputPool outputPool = new OutputPool(true, false, 100);
+            KryoUtil.init(kryoPool, inputPool, outputPool);
             if (metricMiddleStoreMap.size() != 1) {
                 for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
                     if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
                         deriveMetricMiddleStore = middleStoreEntry.getValue();
-                        deriveMetricMiddleStore.setKryoPool(kryoPool);
                         break;
                     }
                 }

@@ -1,17 +1,18 @@
-package com.yanggu.metric_calculate.core.kryo;
+package com.yanggu.metric_calculate.core.kryo.pool;
+
 
 import cn.hutool.core.collection.BoundedPriorityQueue;
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.pool.KryoFactory;
+import com.esotericsoftware.kryo.serializers.BeanSerializer;
+import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
+import com.esotericsoftware.kryo.util.Pool;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
 import com.yanggu.metric_calculate.core.enums.TimeUnit;
-import com.yanggu.metric_calculate.core.kryo.serializer.BoundedPriorityQueueSerializer;
-import com.yanggu.metric_calculate.core.kryo.serializer.TimeSeriesKVTableSerializer;
-import com.yanggu.metric_calculate.core.kryo.serializer.TimedKVMetricCubeSerializer;
-import com.yanggu.metric_calculate.core.kryo.serializer.TupleSerializer;
+import com.yanggu.metric_calculate.core.kryo.serializer.*;
 import com.yanggu.metric_calculate.core.number.*;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
+import com.yanggu.metric_calculate.core.table.PatternTable;
 import com.yanggu.metric_calculate.core.table.TimeSeriesKVTable;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import com.yanggu.metric_calculate.core.unit.collection.DistinctListObjectUnit;
@@ -24,35 +25,32 @@ import com.yanggu.metric_calculate.core.unit.object.MinObjectUnit;
 import com.yanggu.metric_calculate.core.unit.object.OccupiedObjectUnit;
 import com.yanggu.metric_calculate.core.unit.object.ReplacedObjectUnit;
 import com.yanggu.metric_calculate.core.value.NoneValue;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.util.List;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class CoreKryoFactory extends BaseKryoFactory {
+public class KryoPool extends Pool<Kryo> {
 
     private List<Class<? extends MergedUnit>> classList;
 
-    public CoreKryoFactory(KryoFactory parentFactory) {
-        super(parentFactory);
+    public KryoPool() {
+        super(true, false, 100);
+    }
+
+    public KryoPool(boolean threadSafe, boolean softReferences, int maximumCapacity) {
+        super(threadSafe, softReferences, maximumCapacity);
     }
 
     @Override
-    public Kryo create() {
-        Kryo kryo = super.create();
+    protected Kryo create() {
+        Kryo kryo = new Kryo();
 
         //检测循环依赖，默认值为true,避免版本变化显式设置
         kryo.setReferences(true);
         //默认值为true，避免版本变化显式设置
         kryo.setRegistrationRequired(false);
         //设定默认的实例化器
-        ((Kryo.DefaultInstantiatorStrategy) kryo.getInstantiatorStrategy())
-                .setFallbackInstantiatorStrategy(new StdInstantiatorStrategy());
+        kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 
         //自定义的包装类
         kryo.register(CubeLong.class, 1);
@@ -98,6 +96,8 @@ public class CoreKryoFactory extends BaseKryoFactory {
         kryo.register(TimeSeriesKVTable.class, new TimeSeriesKVTableSerializer(), 30);
         kryo.register(Tuple.class, new TupleSerializer(), 31);
         kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer(), 32);
+        kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 33);
+        kryo.register(PatternTable.class, new PatternTableSerializer(kryo), 34);
 
         //目前自定义的MergeUnit先不注册, 防止注册的时候id冲突
         //应该有udaf的管理界面, 内置的MergeUnit和自定义的MergeUnit进行管理
@@ -109,6 +109,12 @@ public class CoreKryoFactory extends BaseKryoFactory {
         //    }
         //}
         return kryo;
+    }
+
+    @Override
+    public void free(Kryo object) {
+        super.reset(object);
+        super.free(object);
     }
 
 }

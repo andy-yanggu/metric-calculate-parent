@@ -536,7 +536,6 @@ public class DeriveMetricCalculateTest {
         //mid       debit_amt_out > 200   不超过10ms(start和mid之间时间差)
         //end       debit_amt_out > 300   不超过10ms(mid和end之间时间差)
         DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(8);
-        MetricCube<Table, Long, ?, ?> exec;
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();

@@ -7,10 +7,8 @@ import cn.hutool.json.JSONUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
-import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
-import com.yanggu.metric_calculate.core.kryo.KryoUtils;
+import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.unit.collection.UniqueCountUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.CountUnit;
 import com.yanggu.metric_calculate.core.unit.numeric.NumberUnit;
@@ -237,8 +235,8 @@ public class UnitFactoryTest {
         assertEquals(2L, count2.value());
 
         //测试Kryo序列化和反序列化自定义的udaf
-        KryoPool kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(new ArrayList<>(getTestUnitFactory().getUnitMap().values())));
-        Kryo kryo = kryoPool.borrow();
+        KryoPool kryoPool = new KryoPool(true, false, 100);
+        Kryo kryo = kryoPool.obtain();
 
         byte[] bytes;
         try (ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream()) {

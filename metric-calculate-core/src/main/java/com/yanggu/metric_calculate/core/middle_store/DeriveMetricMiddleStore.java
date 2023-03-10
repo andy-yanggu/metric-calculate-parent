@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.middle_store;
 
-import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 
@@ -19,9 +18,6 @@ public interface DeriveMetricMiddleStore {
      * 需要将初始化完成后的实现类放入map中
      */
     void init();
-
-    default void setKryoPool(KryoPool kryoPool) {
-    }
 
     /**
      * 通过key查询

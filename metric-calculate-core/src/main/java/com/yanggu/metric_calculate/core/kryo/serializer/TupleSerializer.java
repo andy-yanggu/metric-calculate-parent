@@ -18,7 +18,7 @@ public class TupleSerializer extends Serializer<Tuple> {
     }
 
     @Override
-    public Tuple read(Kryo kryo, Input input, Class<Tuple> type) {
+    public Tuple read(Kryo kryo, Input input, Class<? extends Tuple> type) {
         Integer size = kryo.readObject(input, Integer.class);
         Object[] objects = new Object[size];
         for (int i = 0; i < size; i++) {

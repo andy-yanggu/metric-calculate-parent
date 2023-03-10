@@ -28,16 +28,18 @@ public class JmhTest1 {
 
     private static MetricCalculate<JSONObject> metricCalculate;
 
+    private static DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate;
+
     @Setup(Level.Trial)
     public static void setup() throws Exception {
         String jsonString = FileUtil.readUtf8String("test3.json");
         DataDetailsWideTable dataDetailsWideTable = JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
         metricCalculate = MetricUtil.initMetricCalculate(dataDetailsWideTable);
+        deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
     }
 
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
         JSONObject input1 = new JSONObject();
         input1.put("account_no_out", "张三");
         input1.put("trans_date", "20230308");

@@ -1,10 +1,8 @@
 package com.yanggu.metric_calculate.core.middle_store;
 
-import com.esotericsoftware.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.cube.TimedKVMetricCube;
-import com.yanggu.metric_calculate.core.kryo.CoreKryoFactory;
-import com.yanggu.metric_calculate.core.kryo.KryoUtils;
+import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 import lombok.SneakyThrows;
 import org.apache.hadoop.conf.Configuration;
@@ -28,7 +26,6 @@ public class DeriveMetricMiddleHbaseStore implements DeriveMetricMiddleStore {
     @SneakyThrows
     @Override
     public void init() {
-        kryoPool = KryoUtils.createRegisterKryoPool(new CoreKryoFactory(classList));
 
         Configuration conf = new Configuration();
         conf.set("hbase.zookeeper.quorum", "172.20.3.57:2182");

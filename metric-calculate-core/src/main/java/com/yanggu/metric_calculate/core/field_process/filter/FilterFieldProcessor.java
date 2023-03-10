@@ -81,9 +81,9 @@ public class FilterFieldProcessor<T> implements FieldProcessor<T, Boolean> {
 
         //执行过滤表达式
         boolean result = (boolean) filterExpression.execute(params);
-        if (log.isDebugEnabled()) {
-            log.debug("前置过滤条件: {}, 输入的数据: {}, 过滤结果: {}", filterExpress, JSONUtil.toJsonStr(params), result);
-        }
+        //if (log.isDebugEnabled()) {
+        //    log.debug("前置过滤条件: {}, 输入的数据: {}, 过滤结果: {}", filterExpress, JSONUtil.toJsonStr(params), result);
+        //}
         return result;
     }
 

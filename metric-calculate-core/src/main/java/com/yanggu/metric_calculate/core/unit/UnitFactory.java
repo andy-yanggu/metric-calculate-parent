@@ -145,9 +145,9 @@ public class UnitFactory implements Serializable {
                 }
             }
         }
-        if (log.isDebugEnabled()) {
-            log.debug("生成的unit: {}", JSONUtil.toJsonStr(unitMap));
-        }
+        //if (log.isDebugEnabled()) {
+        //    log.debug("生成的unit: {}", JSONUtil.toJsonStr(unitMap));
+        //}
     }
 
     /**
@@ -218,7 +218,7 @@ public class UnitFactory implements Serializable {
 
         //生成模板代码
         String templateCode = template.render(param);
-        log.info("{}类生成的模板代码: {}\n", tempClass.getName(), templateCode);
+        //log.info("{}类生成的模板代码: {}\n", tempClass.getName(), templateCode);
 
         //编译表达式
         ScriptEvaluator evaluator = new ScriptEvaluator();
