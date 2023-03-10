@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 
-public class DeriveMetricMiddleHashMapStore extends AbstractDeriveMetricMiddleStore {
+public class DeriveMetricMiddleHashMapKryoStore extends AbstractDeriveMetricMiddleStore {
 
-    private Map<String, MetricCube> localMap;
+    private Map<String, byte[]> localMap;
 
     @Override
     public void init() {
@@ -18,12 +18,12 @@ public class DeriveMetricMiddleHashMapStore extends AbstractDeriveMetricMiddleSt
 
     @Override
     public MetricCube get(MetricCube cube) {
-        return localMap.get(cube.getRealKey());
+        return super.deserialize(localMap.get(cube.getRealKey()));
     }
 
     @Override
     public void update(MetricCube cube) {
-        localMap.put(cube.getRealKey(), cube);
+        localMap.put(cube.getRealKey(), super.serialize(cube));
     }
 
 }

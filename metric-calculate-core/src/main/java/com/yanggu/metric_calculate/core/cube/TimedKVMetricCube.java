@@ -24,6 +24,11 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
     private String key;
 
     /**
+     * 指标名称
+     */
+    private String name;
+
+    /**
      * 指标维度
      */
     private DimensionSet dimensionSet;
@@ -32,11 +37,6 @@ public class TimedKVMetricCube<V extends MergedUnit<V> & Value<?>>
      * 时间聚合粒度
      */
     private TimeBaselineDimension timeBaselineDimension;
-
-    /**
-     * 指标名称
-     */
-    private String name;
 
     /**
      * 当前数据聚合时间戳
