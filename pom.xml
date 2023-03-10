@@ -12,6 +12,7 @@
         <module>udaf-interface</module>
         <module>udaf-test</module>
         <module>metric-calculate-core</module>
+        <module>jmh-test</module>
     </modules>
     <packaging>pom</packaging>
 

@@ -26,3 +26,5 @@ mvnw.cmd
 /nbdist/
 /.nb-gradle/
 /**/target/**
+result.json
+/**/dependency-reduced-pom.xml

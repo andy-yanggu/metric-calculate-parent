@@ -1,7 +1,7 @@
-package com.yanggu.metric_calculate.core.test.jmh;
+package com.yanggu.metric_calculate.jmh;
 
 
-import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
@@ -17,6 +17,7 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.io.InputStream;
 import java.util.List;
 
 @BenchmarkMode(Mode.Throughput)
@@ -32,7 +33,8 @@ public class JmhTest1 {
 
     @Setup(Level.Trial)
     public static void setup() throws Exception {
-        String jsonString = FileUtil.readUtf8String("test3.json");
+        InputStream resourceAsStream = JmhTest1.class.getClassLoader().getResourceAsStream("test3.json");
+        String jsonString = IoUtil.read(resourceAsStream).toString();
         DataDetailsWideTable dataDetailsWideTable = JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
         metricCalculate = MetricUtil.initMetricCalculate(dataDetailsWideTable);
         deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
@@ -41,9 +43,9 @@ public class JmhTest1 {
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
         JSONObject input1 = new JSONObject();
-        input1.put("account_no_out", "张三");
-        input1.put("trans_date", "20230308");
-        input1.put("debit_amt_out", 100);
+        input1.set("account_no_out", "张三");
+        input1.set("trans_date", "20230308");
+        input1.set("debit_amt_out", 100);
         List<DeriveMetricCalculateResult> deriveMetricCalculateResults = deriveMetricCalculate.updateMetricCube(input1);
         blackhole.consume(deriveMetricCalculateResults);
     }

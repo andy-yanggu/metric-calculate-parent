@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.test.jmh;
+package com.yanggu.metric_calculate.jmh;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
