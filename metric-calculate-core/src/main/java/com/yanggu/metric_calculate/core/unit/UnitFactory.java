@@ -10,7 +10,6 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.annotation.*;
 import com.yanggu.metric_calculate.core.enums.BasicType;
 import com.yanggu.metric_calculate.core.number.*;
@@ -71,6 +70,8 @@ public class UnitFactory implements Serializable {
         this.udafJarPathList = udafJarPathList;
     }
 
+    public static final String ERROR_MESSAGE = "自定义聚合函数唯一标识重复, 重复的全类名: ";
+
     //静态代码块只执行一次
     static {
         //扫描有MergeType注解
@@ -83,7 +84,7 @@ public class UnitFactory implements Serializable {
             String value = annotation.value();
             Class<? extends MergedUnit<?>> put = BUILT_IN_UNIT_MAP.put(value, (Class<? extends MergedUnit<?>>) tempClazz);
             if (put != null) {
-                throw new RuntimeException("自定义聚合函数唯一标识重复, 重复的全类名: " + put.getName());
+                throw new RuntimeException(ERROR_MESSAGE + put.getName());
             }
             //进行静态编译, 避免反射提高性能
             ScriptEvaluator janinoExpress = createJaninoExpress(tempClazz);
@@ -145,9 +146,6 @@ public class UnitFactory implements Serializable {
                 }
             }
         }
-        //if (log.isDebugEnabled()) {
-        //    log.debug("生成的unit: {}", JSONUtil.toJsonStr(unitMap));
-        //}
     }
 
     /**
@@ -218,7 +216,6 @@ public class UnitFactory implements Serializable {
 
         //生成模板代码
         String templateCode = template.render(param);
-        //log.info("{}类生成的模板代码: {}\n", tempClass.getName(), templateCode);
 
         //编译表达式
         ScriptEvaluator evaluator = new ScriptEvaluator();

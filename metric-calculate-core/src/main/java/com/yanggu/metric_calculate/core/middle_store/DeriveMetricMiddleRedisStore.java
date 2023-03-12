@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.STORE_MAP;
+
 @Data
 @Slf4j
 public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStore {

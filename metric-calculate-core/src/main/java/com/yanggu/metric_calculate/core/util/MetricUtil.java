@@ -40,7 +40,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.MetricTypeEnum.*;
-import static com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore.DEFAULT_IMPL;
+import static com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.DEFAULT_IMPL;
 
 /**
  * 指标工具类
@@ -92,7 +92,8 @@ public class MetricUtil {
                 }
             }
             //派生指标中间结算结果存储接口
-            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap = AbstractDeriveMetricMiddleStore.STORE_MAP;
+            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
+                    AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.STORE_MAP;
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
             //初始化KryoPool

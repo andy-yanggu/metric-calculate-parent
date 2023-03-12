@@ -70,12 +70,7 @@ public class MetricFieldProcessor<T, R> implements FieldProcessor<T, R> {
         //获取执行参数
         Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
 
-        R execute = (R) metricExpression.execute(params);
-        //if (log.isDebugEnabled()) {
-        //    log.debug("度量字段表达式: {}, 输入的数据: {}, 生成数据: {}", metricExpress,
-        //            JSONUtil.toJsonStr(params), StrUtil.toString(execute));
-        //}
-        return execute;
+        return (R) metricExpression.execute(params);
     }
 
 }
