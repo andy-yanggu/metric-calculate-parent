@@ -26,7 +26,11 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
         /**
          * DeriveMetricMiddleStore实现类初始化完成后, 需要放入其中
          */
-        public static final Map<String, DeriveMetricMiddleStore> STORE_MAP = new HashMap<>();
+        private static final Map<String, DeriveMetricMiddleStore> STORE_MAP = new HashMap<>();
+
+        public static Map<String, DeriveMetricMiddleStore> getStoreMap() {
+            return STORE_MAP;
+        }
 
         static {
             //默认放入memory

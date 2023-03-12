@@ -80,11 +80,7 @@ public class FilterFieldProcessor<T> implements FieldProcessor<T, Boolean> {
         Map<String, Object> params = MetricUtil.getParam(JSONUtil.parseObj(input), fieldMap);
 
         //执行过滤表达式
-        boolean result = (boolean) filterExpression.execute(params);
-        //if (log.isDebugEnabled()) {
-        //    log.debug("前置过滤条件: {}, 输入的数据: {}, 过滤结果: {}", filterExpress, JSONUtil.toJsonStr(params), result);
-        //}
-        return result;
+        return (boolean) filterExpression.execute(params);
     }
 
 }

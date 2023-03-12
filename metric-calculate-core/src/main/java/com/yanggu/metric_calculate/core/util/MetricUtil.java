@@ -93,7 +93,7 @@ public class MetricUtil {
             }
             //派生指标中间结算结果存储接口
             Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
-                    AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.STORE_MAP;
+                    AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
             //初始化KryoPool

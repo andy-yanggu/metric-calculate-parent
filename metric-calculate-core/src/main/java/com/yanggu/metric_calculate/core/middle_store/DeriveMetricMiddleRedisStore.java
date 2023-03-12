@@ -13,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.STORE_MAP;
-
 @Data
 @Slf4j
 public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStore {
@@ -25,7 +23,7 @@ public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStor
     public void init() {
         RedisTemplate<String, byte[]> kryoRedisTemplate = SpringUtil.getBean("kryoRedisTemplate");
         this.setRedisTemplate(kryoRedisTemplate);
-        STORE_MAP.put("REDIS_STRING", this);
+        AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap().put("REDIS_STRING", this);
     }
 
     @Override

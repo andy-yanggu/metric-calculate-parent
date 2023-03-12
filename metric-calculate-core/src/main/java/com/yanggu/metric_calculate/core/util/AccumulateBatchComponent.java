@@ -164,9 +164,7 @@ public class AccumulateBatchComponent<T> {
          * @return true:添加成功 false:添加失败
          */
         public boolean add(T item) {
-            // log.info("add result:"+item);
             boolean result = this.queue.offer(item);
-            // log.info("resultP{}",result);
             this.checkQueueSize();
             return result;
         }
@@ -175,8 +173,6 @@ public class AccumulateBatchComponent<T> {
          * 当前时间与上次任务处理时间差是否超过指定阈值;如果超过触发start方法
          */
         public void timeout() {
-            //log.info("start timeout ...{}", currentThread.getName());
-            // log.info("{}====check timeout",currentThread.getName());
             if (System.currentTimeMillis() - this.lastFlushTime >= this.period) {
                 //log.info("当前时间={}距离上次任务处理时间={}周期={}超出指定阈值={}", System.currentTimeMillis(), lastFlushTime, (System.currentTimeMillis() - this.lastFlushTime), period);
                 this.start(false);
@@ -212,7 +208,6 @@ public class AccumulateBatchComponent<T> {
             //记录最新任务处理开始时间
             this.lastFlushTime = System.currentTimeMillis();
             if (queue.isEmpty()) {
-                //log.info("阻塞队列中元素为空，不需要处理...");
                 return;
             }
             List<T> temp = new ArrayList<>(this.queueSizeLimit);
