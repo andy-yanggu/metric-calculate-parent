@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.table.Table;
@@ -25,6 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
@@ -51,6 +52,10 @@ public class MetricCalculateController {
     @Autowired
     private MagicCubeClient magiccubeClient;
 
+    @Autowired
+    @Qualifier("redisDeriveMetricMiddleStore")
+    private DeriveMetricMiddleStore deriveMetricMiddleStore;
+
     /**
      * 攒批查询
      */
@@ -63,10 +68,6 @@ public class MetricCalculateController {
 
     @PostConstruct
     public void init() {
-        //使用redis作为中间存储
-        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
-        deriveMetricMiddleStore.init();
-
         //批量查询组件
         queryComponent = new AccumulateBatchComponent2<>("攒批读组件", RuntimeUtil.getProcessorCount(), 20, 2000,
                 queryRequests -> {
@@ -134,7 +135,7 @@ public class MetricCalculateController {
         MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
 
         //计算派生指标
-        List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = calcDeriveState(detail, dataWideTable);
+        List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = calcDerive(detail, dataWideTable, true);
 
         ApiResponse<List<DeriveMetricCalculateResult>> response = new ApiResponse<>();
         response.setData(deriveMetricCalculateResultList);
@@ -216,7 +217,7 @@ public class MetricCalculateController {
         MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
 
         //无状态计算派生指标
-        List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = calcDeriveNoState(detail, dataWideTable);
+        List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = calcDerive(detail, dataWideTable, false);
 
         ApiResponse<List<DeriveMetricCalculateResult>> response = new ApiResponse<>();
         response.setData(deriveMetricCalculateResultList);
@@ -239,23 +240,24 @@ public class MetricCalculateController {
         List<MetricCube> collect = deriveMetricCalculateList.parallelStream()
                 .map(tempDerive -> tempDerive.getQueryMetricCube(detail))
                 .collect(Collectors.toList());
-
-
-
-
         return null;
     }
 
-
-    private List<DeriveMetricCalculateResult> calcDeriveState(JSONObject detail,
-                                                              MetricCalculate<JSONObject> dataWideTable) {
+    private List<DeriveMetricCalculateResult> calcDerive(JSONObject detail,
+                                                         MetricCalculate<JSONObject> dataWideTable,
+                                                         boolean update) {
         List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return Collections.emptyList();
         }
         List<DeriveMetricCalculateResult> deriveList = new CopyOnWriteArrayList<>();
         deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
-            List<DeriveMetricCalculateResult> tempList = deriveMetricCalculate.updateMetricCube(detail);
+            List<DeriveMetricCalculateResult> tempList;
+            if (update) {
+                tempList = deriveMetricCalculate.updateMetricCube(detail);
+            } else {
+                tempList = deriveMetricCalculate.noStateCalc(detail);
+            }
             if (CollUtil.isNotEmpty(tempList)) {
                 deriveList.addAll(tempList);
             }
@@ -267,28 +269,6 @@ public class MetricCalculateController {
             deriveList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
         }
         return deriveList;
-    }
-
-    private List<DeriveMetricCalculateResult> calcDeriveNoState(JSONObject detail,
-                                                                MetricCalculate<JSONObject> dataWideTable) {
-        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            return Collections.emptyList();
-        }
-        List<DeriveMetricCalculateResult> deriveDataList = new CopyOnWriteArrayList<>();
-        deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
-            List<DeriveMetricCalculateResult> tempList = deriveMetricCalculate.noStateCalc(detail);
-            if (CollUtil.isNotEmpty(tempList)) {
-                deriveDataList.addAll(tempList);
-            }
-        });
-        if (log.isDebugEnabled()) {
-            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveDataList));
-        }
-        if (CollUtil.isNotEmpty(deriveDataList)) {
-            deriveDataList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
-        }
-        return deriveDataList;
     }
 
     private MetricCalculate<JSONObject> getMetricCalculate(JSONObject detail) {

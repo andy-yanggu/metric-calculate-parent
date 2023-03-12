@@ -25,7 +25,7 @@ public class RoundAccuracyUtil {
                 && Boolean.TRUE.equals(roundAccuracy.getUseAccuracy())
                 && roundAccuracy.getLength() != null && roundAccuracy.getLength() >= 0) {
             AccuracyEnum type = roundAccuracy.getType();
-            Integer length = roundAccuracy.getLength();
+            int length = roundAccuracy.getLength();
 
             //四舍五入
             if (AccuracyEnum.ROUNDING.equals(type)) {

@@ -70,24 +70,7 @@ public class CompositeMetricCalculate<T> implements Calculate<Map<String, Object
         //处理精度
         result = RoundAccuracyUtil.handlerRoundAccuracy(result, roundAccuracy);
 
-        //存储到外部数据库
-        if (result != null) {
-            save(result);
-        }
-
         return result;
     }
 
-    @Override
-    public void save(Object result) throws RuntimeException {
-        if (Boolean.FALSE.equals(storeInfo.getIsStore())) {
-            return;
-        }
-
-        //List<StoreTable> storeTableList = store.getStoreTableList();
-        //StoreTable storeTable = storeTableList.get(0);
-        //System.out.println(storeTable);
-
-
-    }
 }

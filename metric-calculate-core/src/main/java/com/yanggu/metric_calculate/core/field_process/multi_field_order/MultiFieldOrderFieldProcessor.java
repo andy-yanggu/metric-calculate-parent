@@ -40,7 +40,6 @@ public class MultiFieldOrderFieldProcessor<T> implements FieldProcessor<T, Multi
 
     @Override
     public MultiFieldOrderCompareKey process(T input) throws Exception {
-
         int size = fieldOrderParamList.size();
         List<FieldOrder> fieldOrderList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {

@@ -11,8 +11,7 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.Options;
-import com.yanggu.metric_calculate.core.aviatorfunction.CoalesceFunction;
-import com.yanggu.metric_calculate.core.aviatorfunction.GetFunction;
+import com.yanggu.metric_calculate.core.aviator_function.CoalesceFunction;
 import com.yanggu.metric_calculate.core.calculate.CompositeMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
@@ -149,13 +148,13 @@ public class MetricUtil {
         DeriveMetricCalculate<T, M> deriveMetricCalculate = new DeriveMetricCalculate<>();
         deriveMetricCalculate.init();
 
-        //设置名称
-        String name = tempDerive.getName();
-        deriveMetricCalculate.setName(name);
-
         //设置key
         String key = metricCalculate.getId() + "_" + tempDerive.getId();
         deriveMetricCalculate.setKey(key);
+
+        //设置name
+        String name = tempDerive.getName();
+        deriveMetricCalculate.setName(name);
 
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
 
@@ -240,7 +239,6 @@ public class MetricUtil {
 
             //在Aviator中添加自定义函数
             AviatorEvaluatorInstance instance = AviatorEvaluator.newInstance();
-            instance.addFunction(new GetFunction());
             instance.addFunction(new CoalesceFunction());
             instance.setOption(Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY, false);
             Expression compile = instance.compile(expression, true);

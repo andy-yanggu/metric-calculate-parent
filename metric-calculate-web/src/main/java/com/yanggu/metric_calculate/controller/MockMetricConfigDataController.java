@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(tags = "模拟指标配置数据")
 public class MockMetricConfigDataController {
 
+    /**
+     * 返回mock_metric_config目录下的json配置文件
+     * @param tableId 明细宽表id
+     * @return
+     */
     @ApiOperation("返回指标配置数据")
     @GetMapping("/{tableId}")
     public DataDetailsWideTable getTableAndMetricByTableId(@ApiParam("明细宽表id") @PathVariable("tableId") Long tableId) {

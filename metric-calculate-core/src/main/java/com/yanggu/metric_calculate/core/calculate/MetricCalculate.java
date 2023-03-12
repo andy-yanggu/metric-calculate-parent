@@ -10,7 +10,7 @@ import java.util.Map;
 
 /**
  * 指标计算类
- * <p>包含了原子指标、衍生指标、复合指标、全局指标</p>
+ * <p>包含了衍生指标、复合指标、全局指标</p>
  */
 @Data
 public class MetricCalculate<T> extends DataDetailsWideTable {

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.aviatorfunction;
+package com.yanggu.metric_calculate.core.aviator_function;
 
 import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
 import com.googlecode.aviator.runtime.type.AviatorNil;
