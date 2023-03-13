@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.util;
 
+import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,7 +9,8 @@ public class FieldProcessorUtilTest {
 
     @Test
     public void testGetFilterFieldProcessor() {
-        FieldProcessorUtil.getFilterFieldProcessor(null, null);
+        FilterFieldProcessor<Object> filterFieldProcessor = FieldProcessorUtil.getFilterFieldProcessor(null, null);
+
     }
 
     @Test
