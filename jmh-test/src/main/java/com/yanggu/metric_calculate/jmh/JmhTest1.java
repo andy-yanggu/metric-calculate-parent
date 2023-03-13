@@ -97,6 +97,12 @@ public class JmhTest1 {
     }
 
     @Benchmark
+    public void testNoStateCalc_WithKryo(Blackhole blackhole) {
+        List<DeriveMetricCalculateResult> deriveMetricCalculateResults = deriveMetricCalculate1.noStateCalc(input);
+        blackhole.consume(deriveMetricCalculateResults);
+    }
+
+    @Benchmark
     public void testKryo(Blackhole blackhole) {
         byte[] serialize = KryoUtil.serialize(metricCube);
         Object deserialize = KryoUtil.deserialize(serialize);

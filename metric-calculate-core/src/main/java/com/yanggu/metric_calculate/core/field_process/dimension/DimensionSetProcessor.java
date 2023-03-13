@@ -59,12 +59,12 @@ public class DimensionSetProcessor<T> implements FieldProcessor<T, DimensionSet>
     }
 
     @Override
-    public DimensionSet process(T input2) {
-        JSONObject input = JSONUtil.parseObj(input2);
+    public DimensionSet process(T input) {
+        JSONObject input2 = JSONUtil.parseObj(input);
         Map<String, Object> map = new LinkedHashMap<>();
         if (CollUtil.isNotEmpty(dimensionList)) {
             for (Dimension dimension : dimensionList) {
-                Object result = input.get(dimension.getColumnName());
+                Object result = input2.get(dimension.getColumnName());
                 if (result == null) {
                     throw new RuntimeException("没有对应的维度值, 字段名称: "
                             + dimension.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));
