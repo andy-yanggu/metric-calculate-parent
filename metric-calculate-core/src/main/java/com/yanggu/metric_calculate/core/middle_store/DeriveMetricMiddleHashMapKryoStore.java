@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.middle_store;
 
 
 import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -9,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DeriveMetricMiddleHashMapKryoStore extends AbstractDeriveMetricMiddleStore {
 
-    private Map<String, byte[]> localMap;
+    private Map<DimensionSet, byte[]> localMap;
 
     @Override
     public void init() {
@@ -18,12 +19,12 @@ public class DeriveMetricMiddleHashMapKryoStore extends AbstractDeriveMetricMidd
 
     @Override
     public MetricCube get(MetricCube cube) {
-        return super.deserialize(localMap.get(cube.getRealKey()));
+        return super.deserialize(localMap.get(cube.getDimensionSet()));
     }
 
     @Override
     public void update(MetricCube cube) {
-        localMap.put(cube.getRealKey(), super.serialize(cube));
+        localMap.put(cube.getDimensionSet(), super.serialize(cube));
     }
 
 }
