@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.calculate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateProcessor;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
@@ -63,7 +64,7 @@ public class DeriveMetricCalculate2<T, IN, ACC, OUT> {
      */
     private DimensionSetProcessor<T> dimensionSetProcessor;
 
-    private AggregateFunction<IN, ACC, OUT> aggregateFunction;
+    private AggregateProcessor<T, IN, ACC, OUT> aggregateProcessor;
 
     /**
      * 是否包含当前笔, 默认包含
@@ -85,12 +86,31 @@ public class DeriveMetricCalculate2<T, IN, ACC, OUT> {
      */
     private Boolean isUdaf;
 
-    private Map<DimensionSet, ACC> map;
+    private Map<DimensionSet, TreeMap<Long, ACC>> map;
 
     public void exec(T input) {
+        Boolean filter = filterFieldProcessor.process(input);
+        if (Boolean.FALSE.equals(filter)) {
+            return;
+        }
+        Long timestamp = timeFieldProcessor.process(input);
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-        ACC acc = map.computeIfAbsent(dimensionSet, v1 -> aggregateFunction.createAccumulator());
-        aggregateFunction.add(null, acc);
+
+        //查询外部数据源
+        TreeMap<Long, ACC> treeMap = map.computeIfAbsent(dimensionSet, k -> new TreeMap<>());
+        Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
+        ACC historyAcc = treeMap.get(aggregateTimestamp);
+        ACC nowAcc = aggregateProcessor.exec(historyAcc, input);
+        treeMap.put(aggregateTimestamp, nowAcc);
+        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
+        for (TimeWindow window : timeWindow) {
+            Collection<ACC> values = treeMap.subMap(window.getWindowStart(), true, window.getWindowEnd(), false).values();
+            OUT mergeResult = aggregateProcessor.getMergeResult(new ArrayList<>(values));
+            System.out.println("维度信息:" + dimensionSet.realKey() +
+                    ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(window.getWindowStart())) +
+                    ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(window.getWindowEnd())) +
+                    ", 聚合值: " + mergeResult);
+        }
     }
 
 }

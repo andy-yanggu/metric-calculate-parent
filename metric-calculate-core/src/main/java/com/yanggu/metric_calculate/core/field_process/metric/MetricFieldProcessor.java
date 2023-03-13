@@ -65,10 +65,10 @@ public class MetricFieldProcessor<T, R> implements FieldProcessor<T, R> {
 
     @Override
     @SneakyThrows
-    public R process(T input2) {
-        JSONObject input = JSONUtil.parseObj(input2);
+    public R process(T input) {
+        JSONObject input2 = JSONUtil.parseObj(input);
         //获取执行参数
-        Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
+        Map<String, Object> params = MetricUtil.getParam(input2, fieldMap);
 
         return (R) metricExpression.execute(params);
     }
