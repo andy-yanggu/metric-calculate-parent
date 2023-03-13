@@ -111,10 +111,4 @@ public class KryoPool extends Pool<Kryo> {
         return kryo;
     }
 
-    @Override
-    public void free(Kryo object) {
-        super.reset(object);
-        super.free(object);
-    }
-
 }

@@ -2,12 +2,9 @@ package com.yanggu.metric_calculate.core.unit.numeric;
 
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
-import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.number.CubeDecimal;
 import com.yanggu.metric_calculate.core.number.CubeDouble;
 import com.yanggu.metric_calculate.core.number.CubeLong;
-import com.yanggu.metric_calculate.core.unit.object.MinFieldUnit;
-import com.yanggu.metric_calculate.core.value.Key;
 import org.junit.Test;
 
 import java.math.BigDecimal;

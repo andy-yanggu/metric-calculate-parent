@@ -15,10 +15,4 @@ public class OutputPool extends Pool<Output> {
         return new Output(1024, -1);
     }
 
-    @Override
-    public void free(Output object) {
-        super.reset(object);
-        super.free(object);
-    }
-
 }

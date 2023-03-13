@@ -15,10 +15,4 @@ public class InputPool extends Pool<Input> {
         return new Input();
     }
 
-    @Override
-    public void free(Input object) {
-        super.reset(object);
-        super.free(object);
-    }
-
 }
