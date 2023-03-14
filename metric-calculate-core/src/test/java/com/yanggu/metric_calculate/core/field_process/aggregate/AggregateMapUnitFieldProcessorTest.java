@@ -50,7 +50,7 @@ public class AggregateMapUnitFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUnitUdafParam mapUnitUdafParam = JSONUtil.toBean(jsonString, MapUnitUdafParam.class);
 
-        AggregateMapUnitFieldProcessor<JSONObject, BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
+        AggregateMapUnitFieldProcessor<BaseMapUnit<MultiFieldDistinctKey, SumUnit<CubeLong>>> processor =
                         FieldProcessorUtil.getAggregateMapUnitFieldProcessor(mapUnitUdafParam, fieldMap, getTestUnitFactory());
 
         JSONObject input1 = new JSONObject();

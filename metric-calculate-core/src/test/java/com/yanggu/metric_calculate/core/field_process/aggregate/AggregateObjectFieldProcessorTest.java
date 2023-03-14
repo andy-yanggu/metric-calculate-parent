@@ -52,7 +52,7 @@ public class AggregateObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        BaseAggregateFieldProcessor<JSONObject, MaxFieldUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
+        BaseAggregateFieldProcessor<MaxFieldUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
@@ -84,7 +84,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setAggregateType("MAXOBJECT");
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        BaseAggregateFieldProcessor<JSONObject, MaxObjectUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
+        BaseAggregateFieldProcessor<MaxObjectUnit<MultiFieldOrderCompareKey>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
@@ -118,7 +118,7 @@ public class AggregateObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("OCCUPIEDFIELD");
 
-        BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<CloneWrapper<String>>> objectFieldProcessor =
+        BaseAggregateFieldProcessor<OccupiedFieldUnit<CloneWrapper<String>>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
@@ -146,7 +146,7 @@ public class AggregateObjectFieldProcessorTest {
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("OCCUPIEDOBJECT");
 
-        BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<CloneWrapper<JSONObject>>> objectFieldProcessor =
+        BaseAggregateFieldProcessor<OccupiedFieldUnit<CloneWrapper<JSONObject>>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据

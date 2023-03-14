@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUnitUdafParam;
@@ -21,7 +22,7 @@ import java.util.Map;
  *
  */
 @Data
-public class AggregateMapUnitFieldProcessor<T, M extends MergedUnit<M>> implements AggregateFieldProcessor<T, M> {
+public class AggregateMapUnitFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor< M> {
 
     private MapUnitUdafParam mapUnitUdafParam;
 
@@ -36,12 +37,12 @@ public class AggregateMapUnitFieldProcessor<T, M extends MergedUnit<M>> implemen
     /**
      * key生成字段处理器
      */
-    private MultiFieldDistinctFieldProcessor<T> keyFieldProcessor;
+    private MultiFieldDistinctFieldProcessor keyFieldProcessor;
 
     /**
      * value生成字段处理器
      */
-    private BaseAggregateFieldProcessor<T, ?> valueAggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<?> valueAggregateFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -60,7 +61,7 @@ public class AggregateMapUnitFieldProcessor<T, M extends MergedUnit<M>> implemen
     }
 
     @Override
-    public M process(T input) throws Exception {
+    public M process(JSONObject input) throws Exception {
         MultiFieldDistinctKey key = keyFieldProcessor.process(input);
 
         MergedUnit<?> value = valueAggregateFieldProcessor.process(input);

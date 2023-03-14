@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
@@ -20,7 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> implements AggregateFieldProcessor<T, M> {
+public abstract class BaseAggregateFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
 
     protected BaseUdafParam udafParam;
 
@@ -58,11 +59,11 @@ public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> im
 
     @Override
     @SneakyThrows
-    public M process(T input) {
+    public M process(JSONObject input) {
         throw new RuntimeException("子类需要重写process方法");
     }
 
-    protected CloneWrapper<Object> getRetainFieldValue(T input, boolean retainObject) {
+    protected CloneWrapper<Object> getRetainFieldValue(JSONObject input, boolean retainObject) {
         Object value;
         if (retainObject) {
             value = input;
@@ -76,7 +77,7 @@ public abstract class BaseAggregateFieldProcessor<T, M extends MergedUnit<M>> im
         return CloneWrapper.wrap(value);
     }
 
-    protected MetricFieldProcessor<T, ?> getRetainFieldValueFieldProcessor() {
+    protected MetricFieldProcessor<?> getRetainFieldValueFieldProcessor() {
         throw new RuntimeException("需要重写getRetainFieldValueFieldProcessor方法");
     }
 

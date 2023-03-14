@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.ChainPattern;
@@ -17,8 +18,8 @@ import lombok.Data;
 import java.util.*;
 
 @Data
-public class EventStateExtractor<T, M extends MergedUnit<M>>
-        implements AggregateFieldProcessor<T, M> {
+public class EventStateExtractor<M extends MergedUnit<M>>
+        implements AggregateFieldProcessor<M> {
 
     private ChainPattern chainPattern;
 
@@ -28,14 +29,14 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
 
     private Map<String, Class<?>> fieldMap;
 
-    private TreeMap<NodePattern, FilterFieldProcessor<T>> filterFieldProcessorMap;
+    private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
 
     /**
      * 需要进行二次聚合计算
      * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
      * <p>CEP, 按照最后一条数据进行聚合计算</p>
      */
-    private BaseAggregateFieldProcessor<T, ?> externalAggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -47,10 +48,10 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
             throw new RuntimeException("传入的CEP链为空");
         }
 
-        TreeMap<NodePattern, FilterFieldProcessor<T>> tempFilterFieldProcessorMap = new TreeMap<>();
+        TreeMap<NodePattern, FilterFieldProcessor> tempFilterFieldProcessorMap = new TreeMap<>();
 
         for (NodePattern node : nodePatternList) {
-            FilterFieldProcessor<T> filterFieldProcessor =
+            FilterFieldProcessor filterFieldProcessor =
                     FieldProcessorUtil.getFilterFieldProcessor(fieldMap, node.getMatchExpress());
             tempFilterFieldProcessorMap.put(node, filterFieldProcessor);
         }
@@ -62,8 +63,8 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
     }
 
     @Override
-    public M process(T event) {
-        TreeMap<NodePattern, CloneWrapper<T>> dataMap = new TreeMap<>();
+    public M process(JSONObject event) {
+        TreeMap<NodePattern, CloneWrapper<JSONObject>> dataMap = new TreeMap<>();
         filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
             Boolean process = filterProcessor.process(event);
             if (process.equals(true)) {
@@ -86,7 +87,7 @@ public class EventStateExtractor<T, M extends MergedUnit<M>>
 
     @Override
     public Object callBack(Object input) {
-        List<T> tempValueList = new ArrayList<>(((Map<Long, T>) input).values());
+        List<JSONObject> tempValueList = new ArrayList<>(((Map<Long, JSONObject>) input).values());
         if (CollUtil.isEmpty(tempValueList)) {
             return null;
         }

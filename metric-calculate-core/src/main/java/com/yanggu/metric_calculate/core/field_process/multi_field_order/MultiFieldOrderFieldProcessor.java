@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.util.FieldProcessorUtil;
@@ -15,13 +16,13 @@ import java.util.stream.Collectors;
  * 多字段排序字段处理器
  */
 @Data
-public class MultiFieldOrderFieldProcessor<T> implements FieldProcessor<T, MultiFieldOrderCompareKey> {
+public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject, MultiFieldOrderCompareKey> {
 
     private Map<String, Class<?>> fieldMap;
 
     private List<FieldOrderParam> fieldOrderParamList;
 
-    private List<MetricFieldProcessor<T, Object>> metricFieldProcessorList;
+    private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
     @Override
     public void init() throws Exception {
@@ -34,17 +35,17 @@ public class MultiFieldOrderFieldProcessor<T> implements FieldProcessor<T, Multi
         }
         this.metricFieldProcessorList = fieldOrderParamList.stream()
                 .map(tempFieldOrderParam ->
-                        FieldProcessorUtil.<T>getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
+                        FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
                 .collect(Collectors.toList());
     }
 
     @Override
-    public MultiFieldOrderCompareKey process(T input) throws Exception {
+    public MultiFieldOrderCompareKey process(JSONObject input) throws Exception {
         int size = fieldOrderParamList.size();
         List<FieldOrder> fieldOrderList = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
             FieldOrderParam fieldOrderParam = fieldOrderParamList.get(i);
-            MetricFieldProcessor<T, Object> expression = metricFieldProcessorList.get(i);
+            MetricFieldProcessor<Object> expression = metricFieldProcessorList.get(i);
             Object execute = expression.process(input);
             FieldOrder fieldOrder = new FieldOrder();
             fieldOrder.setResult(execute);

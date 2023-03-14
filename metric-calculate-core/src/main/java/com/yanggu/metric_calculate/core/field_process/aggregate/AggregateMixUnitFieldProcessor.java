@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
+import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
@@ -17,7 +18,7 @@ import java.util.Map;
 
 
 @Data
-public class AggregateMixUnitFieldProcessor<T, M extends MergedUnit<M>> implements AggregateFieldProcessor<T, M> {
+public class AggregateMixUnitFieldProcessor<M extends MergedUnit<M>> implements AggregateFieldProcessor<M> {
 
     private MixUnitUdafParam mixUnitUdafParam;
 
@@ -25,7 +26,7 @@ public class AggregateMixUnitFieldProcessor<T, M extends MergedUnit<M>> implemen
 
     private UnitFactory unitFactory;
 
-    private Map<String, BaseAggregateFieldProcessor<T, ?>> multiBaseAggProcessorMap;
+    private Map<String, BaseAggregateFieldProcessor<?>> multiBaseAggProcessorMap;
 
     private Expression expression;
 
@@ -33,11 +34,11 @@ public class AggregateMixUnitFieldProcessor<T, M extends MergedUnit<M>> implemen
     public void init() throws Exception {
         Map<String, BaseUdafParam> mixAggMap = mixUnitUdafParam.getMixAggMap();
 
-        Map<String, BaseAggregateFieldProcessor<T, ?>> map = new HashMap<>();
+        Map<String, BaseAggregateFieldProcessor<?>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             String paramName = entry.getKey();
             List<BaseUdafParam> baseUdafParamList = Collections.singletonList(entry.getValue());
-            BaseAggregateFieldProcessor<T, ?> baseAggregateFieldProcessor =
+            BaseAggregateFieldProcessor<?> baseAggregateFieldProcessor =
                     FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, unitFactory, fieldMap);
             map.put(paramName, baseAggregateFieldProcessor);
         }
@@ -49,9 +50,9 @@ public class AggregateMixUnitFieldProcessor<T, M extends MergedUnit<M>> implemen
     }
 
     @Override
-    public M process(T input) throws Exception {
+    public M process(JSONObject input) throws Exception {
         Map<String, MergedUnit<?>> dataMap = new HashMap<>();
-        for (Map.Entry<String, BaseAggregateFieldProcessor<T, ?>> entry : multiBaseAggProcessorMap.entrySet()) {
+        for (Map.Entry<String, BaseAggregateFieldProcessor<?>> entry : multiBaseAggProcessorMap.entrySet()) {
             String key = entry.getKey();
             MergedUnit<?> process = entry.getValue().process(input);
             if (process != null) {

@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Objective;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
@@ -24,17 +25,17 @@ import java.util.stream.Collectors;
  * @param <M>
  */
 @Data
-public class AggregateObjectFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {
+public class AggregateObjectFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldOrderFieldProcessor<T> multiFieldOrderFieldProcessor;
+    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
      */
-    private MetricFieldProcessor<T, ?> retainFieldValueFieldProcessor;
+    private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -64,7 +65,7 @@ public class AggregateObjectFieldProcessor<T, M extends MergedUnit<M>> extends B
 
     @Override
     @SneakyThrows
-    public M process(T input) {
+    public M process(JSONObject input) {
 
         Objective objective = mergeUnitClazz.getAnnotation(Objective.class);
 

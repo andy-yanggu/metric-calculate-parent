@@ -18,7 +18,7 @@ import java.util.Map;
  */
 @Data
 @Slf4j
-public class CompositeMetricCalculate<T> implements Calculate<Map<String, Object>, Object> {
+public class CompositeMetricCalculate implements Calculate<Map<String, Object>, Object> {
 
     /**
      * 指标名称
@@ -28,12 +28,12 @@ public class CompositeMetricCalculate<T> implements Calculate<Map<String, Object
     /**
      * 时间字段, 提取出时间戳
      */
-    private TimeFieldProcessor<T> timeFieldProcessor;
+    private TimeFieldProcessor timeFieldProcessor;
 
     /**
      * 维度字段处理器
      */
-    private DimensionSetProcessor<T> dimensionSetProcessor;
+    private DimensionSetProcessor dimensionSetProcessor;
 
     /**
      * 编译后的计算表达式

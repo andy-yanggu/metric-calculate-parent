@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Numerical;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
@@ -23,11 +24,11 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class AggregateNumberFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {
+public class AggregateNumberFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
 
-    private MetricFieldProcessor<T, Object> metricFieldProcessor;
+    private MetricFieldProcessor<Object> metricFieldProcessor;
 
-    private List<MetricFieldProcessor<T, Object>> metricFieldProcessorList;
+    private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
     @Override
     public void init() throws Exception {
@@ -39,7 +40,7 @@ public class AggregateNumberFieldProcessor<T, M extends MergedUnit<M>> extends B
                 throw new RuntimeException("度量字段列表为空");
             }
             this.metricFieldProcessorList = metricExpressList.stream()
-                    .map(tempExpress -> FieldProcessorUtil.<T>getMetricFieldProcessor(fieldMap, tempExpress))
+                    .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
                     .collect(Collectors.toList());
         } else {
             String metricExpress = udafParam.getMetricExpress();
@@ -53,12 +54,12 @@ public class AggregateNumberFieldProcessor<T, M extends MergedUnit<M>> extends B
 
     @Override
     @SneakyThrows
-    public M process(T input) {
+    public M process(JSONObject input) {
         Numerical numerical = mergeUnitClazz.getAnnotation(Numerical.class);
         Object process;
         if (numerical.multiNumber()) {
             List<Object> dataList = new ArrayList<>();
-            for (MetricFieldProcessor<T, Object> fieldProcessor : this.metricFieldProcessorList) {
+            for (MetricFieldProcessor<Object> fieldProcessor : this.metricFieldProcessorList) {
                 Object tempData = fieldProcessor.process(input);
                 if (tempData == null) {
                     return null;

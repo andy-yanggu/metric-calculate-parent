@@ -42,7 +42,7 @@ public class AggregateMixUnitFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
 
-        AggregateMixUnitFieldProcessor<JSONObject, BaseMixedUnit> mixUnitFieldProcessor =
+        AggregateMixUnitFieldProcessor<BaseMixedUnit> mixUnitFieldProcessor =
                         FieldProcessorUtil.getAggregateMixUnitFieldProcessor(mixUnitUdafParam, fieldMap, getTestUnitFactory());
         mixUnitFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
 

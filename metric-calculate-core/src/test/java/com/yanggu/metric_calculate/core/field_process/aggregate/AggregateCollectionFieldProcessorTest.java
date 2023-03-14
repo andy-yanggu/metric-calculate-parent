@@ -54,7 +54,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("LISTFIELD");
         baseUdafParam.setRetainExpress("name");
 
-        BaseAggregateFieldProcessor<JSONObject, ListFieldUnit<CloneWrapper<String>>> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<ListFieldUnit<CloneWrapper<String>>> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
@@ -85,7 +85,7 @@ public class AggregateCollectionFieldProcessorTest {
 
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
-        BaseAggregateFieldProcessor<JSONObject, ListObjectUnit<CloneWrapper<JSONObject>>> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<ListObjectUnit<CloneWrapper<JSONObject>>> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据
@@ -121,7 +121,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setCollectiveSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
 
         List<BaseUdafParam> baseUdafParamList = Collections.singletonList(baseUdafParam);
-        BaseAggregateFieldProcessor<JSONObject, SortedListObjectUnit<KeyValue<MultiFieldOrderCompareKey, CloneWrapper<JSONObject>>>> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<SortedListObjectUnit<KeyValue<MultiFieldOrderCompareKey, CloneWrapper<JSONObject>>>> collectionFieldProcessor =
                         FieldProcessorUtil.getBaseAggregateFieldProcessor(baseUdafParamList, getTestUnitFactory(), fieldMap);
 
         //构造原始数据
@@ -156,7 +156,7 @@ public class AggregateCollectionFieldProcessorTest {
         baseUdafParam.setDistinctFieldList(Collections.singletonList("amount"));
         baseUdafParam.setRetainExpress("name");
 
-        BaseAggregateFieldProcessor<JSONObject, DistinctListFieldUnit<KeyValue<MultiFieldDistinctKey, CloneWrapper<String>>>> collectionFieldProcessor =
+        BaseAggregateFieldProcessor<DistinctListFieldUnit<KeyValue<MultiFieldDistinctKey, CloneWrapper<String>>>> collectionFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(baseUdafParam), getTestUnitFactory(), fieldMap);
 
         //构造原始数据

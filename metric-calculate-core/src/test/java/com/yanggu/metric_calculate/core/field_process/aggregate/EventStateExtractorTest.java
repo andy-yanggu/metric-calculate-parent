@@ -69,7 +69,7 @@ public class EventStateExtractorTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amt", Long.class);
 
-        EventStateExtractor<Trade, MatchState<TreeMap<NodePattern, CloneWrapper<Trade>>>>  eventStateExtractor =
+        EventStateExtractor<MatchState<TreeMap<NodePattern, CloneWrapper<Trade>>>>  eventStateExtractor =
                 FieldProcessorUtil.getEventStateExtractor(chainPattern, baseUdafParam, fieldMap, getTestUnitFactory());
 
         List<NodePattern> nodePatternList = chainPattern.getNodePatternList();
@@ -83,18 +83,18 @@ public class EventStateExtractorTest {
         //mid       amt > 200   不超过10ms(start和mid之间时间差)
         //end       amt > 300   不超过10ms(mid和end之间时间差)
 
-        MatchState<TreeMap<NodePattern, CloneWrapper<Trade>>> process = eventStateExtractor.process(objects.get(0));
+        MatchState<TreeMap<NodePattern, CloneWrapper<Trade>>> process = eventStateExtractor.process(JSONUtil.parseObj(objects.get(0)));
 
         assertEquals(process.value().get(start).value(), objects.get(0));
         assertNull(process.value().get(mid));
         assertNull(process.value().get(end));
 
-        process = eventStateExtractor.process(objects.get(4));
+        process = eventStateExtractor.process(JSONUtil.parseObj(objects.get(4)));
         assertEquals(process.value().get(start).value(), objects.get(4));
         assertEquals(process.value().get(mid).value(), objects.get(4));
         assertNull(process.value().get(end));
 
-        process = eventStateExtractor.process(objects.get(8));
+        process = eventStateExtractor.process(JSONUtil.parseObj(objects.get(8)));
         assertEquals(process.value().get(start).value(), objects.get(8));
         assertEquals(process.value().get(mid).value(), objects.get(8));
         assertEquals(process.value().get(end).value(), objects.get(8));

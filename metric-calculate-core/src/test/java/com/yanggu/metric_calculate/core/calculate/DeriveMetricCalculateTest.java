@@ -21,7 +21,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class DeriveMetricCalculateTest {
 
-    private MetricCalculate<JSONObject> metricCalculate;
+    private MetricCalculate metricCalculate;
 
     @Before
     public void init() {
@@ -35,7 +35,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test1() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(0);
         String jsonString =
                 "{\n" +
                         "    \"account_no_out\": \"000000000011\",\n" +
@@ -75,7 +75,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test2() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(1);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(1);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -124,7 +124,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test3() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(2);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(2);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -163,7 +163,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test4() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(3);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(3);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -243,7 +243,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test5() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(4);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(4);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -323,7 +323,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test6() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(5);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(5);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -404,7 +404,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test7() {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(6);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(6);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -492,7 +492,7 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test8() throws Exception {
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(7);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(7);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();
@@ -535,7 +535,7 @@ public class DeriveMetricCalculateTest {
         //start     debit_amt_out > 100
         //mid       debit_amt_out > 200   不超过10ms(start和mid之间时间差)
         //end       debit_amt_out > 300   不超过10ms(mid和end之间时间差)
-        DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(8);
+        DeriveMetricCalculate<?> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateList().get(8);
         List<DeriveMetricCalculateResult> query;
 
         JSONObject input1 = new JSONObject();

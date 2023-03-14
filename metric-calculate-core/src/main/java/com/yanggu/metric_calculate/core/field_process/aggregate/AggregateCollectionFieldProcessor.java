@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.annotation.Collective;
 import com.yanggu.metric_calculate.core.annotation.MergeType;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
@@ -30,7 +31,7 @@ import java.util.Map;
  * @param <M> 生成{@link com.yanggu.metric_calculate.core.unit.MergedUnit}
  */
 @Data
-public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<T, M> {
+public class AggregateCollectionFieldProcessor<M extends MergedUnit<M>> extends BaseAggregateFieldProcessor<M> {
 
     /**
      * 对于滑动计数窗口和CEP类型, 需要额外的聚合处理器
@@ -40,24 +41,24 @@ public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> exten
     /**
      * 多字段去重字段处理器
      */
-    private MultiFieldDistinctFieldProcessor<T> multiFieldDistinctFieldProcessor;
+    private MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor;
 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldOrderFieldProcessor<T> multiFieldOrderFieldProcessor;
+    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
      */
-    private MetricFieldProcessor<T, ?> retainFieldValueFieldProcessor;
+    private MetricFieldProcessor<?> retainFieldValueFieldProcessor;
 
     /**
      * 需要进行二次聚合计算
      * <p>例如滑动计数窗口函数, 最近5次, 求平均值</p>
      * <p>CEP, 按照最后一条数据进行聚合计算</p>
      */
-    private BaseAggregateFieldProcessor<T, ?> externalAggregateFieldProcessor;
+    private BaseAggregateFieldProcessor<?> externalAggregateFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -94,7 +95,7 @@ public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> exten
 
     @Override
     @SneakyThrows
-    public M process(T input) {
+    public M process(JSONObject input) {
 
         Collective collective = mergeUnitClazz.getAnnotation(Collective.class);
 
@@ -131,7 +132,7 @@ public class AggregateCollectionFieldProcessor<T, M extends MergedUnit<M>> exten
         if (!annotation.useExternalAgg() || !(input instanceof List)) {
             return input;
         }
-        List<T> tempValueList = (List<T>) input;
+        List<JSONObject> tempValueList = (List<JSONObject>) input;
         MergedUnit mergedUnit = tempValueList.stream()
                 .map(tempValue -> externalAggregateFieldProcessor.process(tempValue))
                 .reduce(MergedUnit::merge)

@@ -41,9 +41,9 @@ import java.util.Map;
 @Measurement(iterations = 3)
 public class JmhTest1 {
 
-    private static DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate1;
+    private static DeriveMetricCalculate<?> deriveMetricCalculate1;
 
-    private static DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate2;
+    private static DeriveMetricCalculate<?> deriveMetricCalculate2;
 
     private static JSONObject input;
 
@@ -54,7 +54,7 @@ public class JmhTest1 {
         InputStream resourceAsStream = JmhTest1.class.getClassLoader().getResourceAsStream("test3.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
         DataDetailsWideTable dataDetailsWideTable = JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
-        MetricCalculate<JSONObject> metricCalculate = MetricUtil.initMetricCalculate(dataDetailsWideTable);
+        MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(dataDetailsWideTable);
         deriveMetricCalculate1 = metricCalculate.getDeriveMetricCalculateList().get(0);
         deriveMetricCalculate2 = BeanUtil.copyProperties(deriveMetricCalculate1, DeriveMetricCalculate.class);
         DeriveMetricMiddleHashMapStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();

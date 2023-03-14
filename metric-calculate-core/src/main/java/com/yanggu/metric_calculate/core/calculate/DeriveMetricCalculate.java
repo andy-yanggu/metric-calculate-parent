@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.calculate;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.cube.MetricCubeFactory;
 import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
@@ -26,7 +27,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 派生指标计算类
@@ -34,8 +34,8 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
-        implements Calculate<T, MetricCube<Table, Long, M, ?>> {
+public class DeriveMetricCalculate<M extends MergedUnit<M> & Value<?>>
+        implements Calculate<JSONObject, MetricCube<Table, Long, M, ?>> {
 
     /**
      * 指标标识(数据明细宽表id-指标id)
@@ -50,17 +50,17 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
     /**
      * 前置过滤条件处理器, 进行过滤处理
      */
-    private FilterFieldProcessor<T> filterFieldProcessor;
+    private FilterFieldProcessor filterFieldProcessor;
 
     /**
      * 聚合字段处理器, 生成MergeUnit
      */
-    private AggregateFieldProcessor<T, M> aggregateFieldProcessor;
+    private AggregateFieldProcessor<M> aggregateFieldProcessor;
 
     /**
      * 时间字段, 提取出时间戳
      */
-    private TimeFieldProcessor<T> timeFieldProcessor;
+    private TimeFieldProcessor timeFieldProcessor;
 
     /**
      * 时间聚合粒度。包含时间单位和时间长度
@@ -70,7 +70,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
     /**
      * 维度字段处理器, 从明细数据中提取出维度数据
      */
-    private DimensionSetProcessor<T> dimensionSetProcessor;
+    private DimensionSetProcessor dimensionSetProcessor;
 
     /**
      * 是否包含当前笔, 默认包含
@@ -104,7 +104,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
 
     @SneakyThrows
     @Override
-    public MetricCube<Table, Long, M, ?> exec(T input) {
+    public MetricCube<Table, Long, M, ?> exec(JSONObject input) {
         //执行前置过滤条件
         Boolean filter = filterFieldProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
@@ -139,7 +139,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
      * @return
      */
     @SneakyThrows
-    public List<DeriveMetricCalculateResult> noStateCalc(T input) {
+    public List<DeriveMetricCalculateResult> noStateCalc(JSONObject input) {
         //数据的时间戳
         Long timestamp = timeFieldProcessor.process(input);
 
@@ -168,7 +168,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
         return query(historyMetricCube);
     }
 
-    public MetricCube getQueryMetricCube(T input) {
+    public MetricCube getQueryMetricCube(JSONObject input) {
         //数据的时间戳
         Long timestamp = timeFieldProcessor.process(input);
 
@@ -187,7 +187,7 @@ public class DeriveMetricCalculate<T, M extends MergedUnit<M> & Value<?>>
      * @return
      */
     @SneakyThrows
-    public List<DeriveMetricCalculateResult> updateMetricCube(T input) {
+    public List<DeriveMetricCalculateResult> updateMetricCube(JSONObject input) {
         MetricCube<Table, Long, M, ?> newMetricCube = this.exec(input);
         if (newMetricCube == null) {
             return Collections.emptyList();

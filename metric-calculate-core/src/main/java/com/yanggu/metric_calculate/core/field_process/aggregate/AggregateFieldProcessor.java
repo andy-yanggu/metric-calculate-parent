@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.unit.MergedUnit;
 
@@ -9,7 +10,7 @@ import com.yanggu.metric_calculate.core.unit.MergedUnit;
  * @param <T> 输入数据类型
  * @param <M> 生成{@link com.yanggu.metric_calculate.core.unit.MergedUnit}
  */
-public interface AggregateFieldProcessor<T, M extends MergedUnit<M>> extends FieldProcessor<T, M> {
+public interface AggregateFieldProcessor<M extends MergedUnit<M>> extends FieldProcessor<JSONObject, M> {
 
     String getAggregateType();
 

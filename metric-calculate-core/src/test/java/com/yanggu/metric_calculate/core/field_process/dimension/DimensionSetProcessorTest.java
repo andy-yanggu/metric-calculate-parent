@@ -18,7 +18,7 @@ public class DimensionSetProcessorTest {
      */
     @Test
     public void testInit() {
-        DimensionSetProcessor<JSONObject> dimensionSetProcessor = new DimensionSetProcessor<>();
+        DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor();
         List<Dimension> dimensionList = new ArrayList<>();
         dimensionSetProcessor.setDimensionList(dimensionList);
 

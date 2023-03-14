@@ -18,7 +18,7 @@ public class MultiFieldDistinctFieldProcessorTest {
 
     @Test
     public void process() throws Exception {
-        MultiFieldDistinctFieldProcessor<JSONObject> multiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor<>();
+        MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);

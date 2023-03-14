@@ -21,7 +21,7 @@ public class MultiFieldOrderFieldProcessorTest {
 
     @Test
     public void process() throws Exception {
-        MultiFieldOrderFieldProcessor<JSONObject> multiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor<>();
+        MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("age", Integer.class);

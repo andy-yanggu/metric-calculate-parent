@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/metric-calculate")
 public class MetricCalculateController {
 
-    private final Map<Long, MetricCalculate<JSONObject>> metricMap = new ConcurrentHashMap<>();
+    private final Map<Long, MetricCalculate> metricMap = new ConcurrentHashMap<>();
 
     private final Striped<Lock> lockStriped = Striped.lazyWeakLock(20);
 
@@ -132,7 +132,7 @@ public class MetricCalculateController {
     @PostMapping("/state-calculate")
     public ApiResponse<List<DeriveMetricCalculateResult>> stateExecute(@ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
         //获取指标计算类
-        MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
+        MetricCalculate dataWideTable = getMetricCalculate(detail);
 
         //计算派生指标
         List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = calcDerive(detail, dataWideTable, true);
@@ -151,11 +151,11 @@ public class MetricCalculateController {
         DeferredResult<List<DeriveMetricCalculateResult>> deferredResult = new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
 
         //获取指标计算类
-        MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
+        MetricCalculate dataWideTable = getMetricCalculate(detail);
 
         //计算派生指标
         List<Tuple> tupleList = new ArrayList<>();
-        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        List<DeriveMetricCalculate<?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         deriveMetricCalculateList.forEach(tempDerive -> {
             MetricCube<Table, Long, ?, ?> exec = tempDerive.exec(detail);
             if (exec != null) {
@@ -169,7 +169,7 @@ public class MetricCalculateController {
         //进行攒批查询
         List<CompletableFuture<List<DeriveMetricCalculateResult>>> resultFutureList = new ArrayList<>();
         for (Tuple tuple : tupleList) {
-            DeriveMetricCalculate<JSONObject, ?> deriveMetricCalculate = tuple.get(0);
+            DeriveMetricCalculate<?> deriveMetricCalculate = tuple.get(0);
             MetricCube<Table, Long, ?, ?> metricCube = tuple.get(1);
             QueryRequest queryRequest = new QueryRequest();
             queryRequest.setMetricCube(metricCube);
@@ -214,7 +214,7 @@ public class MetricCalculateController {
     @PostMapping("/no-state-calculate")
     public ApiResponse<List<DeriveMetricCalculateResult>> noStateExecute(@ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
         //获取指标计算类
-        MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
+        MetricCalculate dataWideTable = getMetricCalculate(detail);
 
         //无状态计算派生指标
         List<DeriveMetricCalculateResult> deriveMetricCalculateResultList = calcDerive(detail, dataWideTable, false);
@@ -230,9 +230,9 @@ public class MetricCalculateController {
     public ApiResponse<List<DeriveMetricCalculateResult>> noStateExecuteAccumulateBatch(
                                                     @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
         //获取指标计算类
-        MetricCalculate<JSONObject> dataWideTable = getMetricCalculate(detail);
+        MetricCalculate dataWideTable = getMetricCalculate(detail);
         ApiResponse<List<DeriveMetricCalculateResult>> apiResponse = new ApiResponse<>();
-        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        List<DeriveMetricCalculate<?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return apiResponse;
         }
@@ -244,9 +244,9 @@ public class MetricCalculateController {
     }
 
     private List<DeriveMetricCalculateResult> calcDerive(JSONObject detail,
-                                                         MetricCalculate<JSONObject> dataWideTable,
+                                                         MetricCalculate dataWideTable,
                                                          boolean update) {
-        List<DeriveMetricCalculate<JSONObject, ?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        List<DeriveMetricCalculate<?>> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return Collections.emptyList();
         }
@@ -271,19 +271,19 @@ public class MetricCalculateController {
         return deriveList;
     }
 
-    private MetricCalculate<JSONObject> getMetricCalculate(JSONObject detail) {
+    private MetricCalculate getMetricCalculate(JSONObject detail) {
         Long tableId = detail.getLong("tableId");
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId");
         }
-        MetricCalculate<JSONObject> dataWideTable = metricMap.get(tableId);
+        MetricCalculate dataWideTable = metricMap.get(tableId);
         if (dataWideTable == null) {
             dataWideTable = buildMetric(tableId);
         }
         return dataWideTable;
     }
 
-    private MetricCalculate<JSONObject> buildMetric(Long tableId) {
+    private MetricCalculate buildMetric(Long tableId) {
         Lock lock = lockStriped.get(tableId);
         lock.lock();
         try {
@@ -293,7 +293,7 @@ public class MetricCalculateController {
                 log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
                 throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
             }
-            MetricCalculate<JSONObject> metricCalculate = MetricUtil.initMetricCalculate(tableData);
+            MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tableData);
             metricMap.put(tableId, metricCalculate);
             return metricCalculate;
         } finally {

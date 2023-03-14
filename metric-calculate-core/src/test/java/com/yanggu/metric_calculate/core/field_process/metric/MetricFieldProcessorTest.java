@@ -21,7 +21,7 @@ public class MetricFieldProcessorTest {
      */
     @Test
     public void init1() {
-        MetricFieldProcessor<JSONObject, Object> metricFieldProcessor = new MetricFieldProcessor<>();
+        MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
         assertEquals("度量表达式为空", runtimeException.getMessage());
@@ -32,7 +32,7 @@ public class MetricFieldProcessorTest {
      */
     @Test
     public void init2() {
-        MetricFieldProcessor<JSONObject, Object> metricFieldProcessor = new MetricFieldProcessor<>();
+        MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setMetricExpress("metricExpress");
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
@@ -47,7 +47,7 @@ public class MetricFieldProcessorTest {
     @Test
     public void init3() throws Exception {
         String metricExpress = "amount";
-        MetricFieldProcessor<JSONObject, Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
+        MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         objectMetricFieldProcessor.setMetricExpress(metricExpress);
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
@@ -66,7 +66,7 @@ public class MetricFieldProcessorTest {
      */
     @Test
     public void init4() throws Exception {
-        MetricFieldProcessor<JSONObject, Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
+        MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         objectMetricFieldProcessor.setMetricExpress("amount");
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
@@ -88,7 +88,7 @@ public class MetricFieldProcessorTest {
      */
     @Test
     public void process() throws Exception {
-        MetricFieldProcessor<JSONObject, Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
+        MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         objectMetricFieldProcessor.setMetricExpress("amount");
         HashMap<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);

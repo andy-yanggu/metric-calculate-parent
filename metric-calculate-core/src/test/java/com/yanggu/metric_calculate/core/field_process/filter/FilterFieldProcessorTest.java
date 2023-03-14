@@ -22,7 +22,7 @@ public class FilterFieldProcessorTest {
      */
     @Test
     public void init1() throws Exception {
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         filterFieldProcessor.init();
 
         assertNull(filterFieldProcessor.getFilterExpression());
@@ -36,7 +36,7 @@ public class FilterFieldProcessorTest {
     @Test
     public void init2() throws Exception {
         String filterExpress = "true";
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         filterFieldProcessor.setFilterExpress(filterExpress);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, filterFieldProcessor::init);
@@ -52,7 +52,7 @@ public class FilterFieldProcessorTest {
     public void init3() throws Exception {
         String filterExpress = "true";
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
         }};
@@ -72,7 +72,7 @@ public class FilterFieldProcessorTest {
     public void init4() throws Exception {
         String filterExpress = "amount > 100.00";
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         filterFieldProcessor.setFilterExpress(filterExpress);
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount2", BigDecimal.class);
@@ -92,7 +92,7 @@ public class FilterFieldProcessorTest {
     public void init5() throws Exception {
         String filterExpress = "amount > 100.00";
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         filterFieldProcessor.setFilterExpress(filterExpress);
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
@@ -117,7 +117,7 @@ public class FilterFieldProcessorTest {
             put("amount", BigDecimal.class);
         }};
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -142,7 +142,7 @@ public class FilterFieldProcessorTest {
             put("name", String.class);
         }};
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -167,7 +167,7 @@ public class FilterFieldProcessorTest {
             put("amount", Long.class);
         }};
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -192,7 +192,7 @@ public class FilterFieldProcessorTest {
             put("result", Boolean.class);
         }};
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -218,7 +218,7 @@ public class FilterFieldProcessorTest {
             put("age", Long.class);
         }};
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -245,7 +245,7 @@ public class FilterFieldProcessorTest {
             put("amount", BigDecimal.class);
         }};
 
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -265,7 +265,7 @@ public class FilterFieldProcessorTest {
      */
     @Test
     public void test6() throws Exception {
-        FilterFieldProcessor<JSONObject> filterFieldProcessor = new FilterFieldProcessor<>();
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         filterFieldProcessor.init();
 
         Boolean process = filterFieldProcessor.process(null);

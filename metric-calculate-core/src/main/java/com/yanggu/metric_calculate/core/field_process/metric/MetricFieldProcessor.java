@@ -23,7 +23,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class MetricFieldProcessor<T, R> implements FieldProcessor<T, R> {
+public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
 
     /**
      * 宽表字段
@@ -65,12 +65,8 @@ public class MetricFieldProcessor<T, R> implements FieldProcessor<T, R> {
 
     @Override
     @SneakyThrows
-    public R process(T input2) {
-        JSONObject input = JSONUtil.parseObj(input2);
-        //获取执行参数
-        Map<String, Object> params = MetricUtil.getParam(input, fieldMap);
-
-        return (R) metricExpression.execute(params);
+    public R process(JSONObject input) {
+        return (R) metricExpression.execute(input);
     }
 
 }

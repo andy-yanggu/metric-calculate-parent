@@ -17,7 +17,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void init1() {
-        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>();
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
         assertEquals("时间字段的值为空", runtimeException.getMessage());
     }
@@ -27,7 +27,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void init2() {
-        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>();
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
         timeFieldProcessor.setTimeColumnName("TimeColumnName");
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
         assertEquals("时间格式为空", runtimeException.getMessage());
@@ -38,7 +38,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void init3() {
-        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>("timeFormat", "TimeColumnName");
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timeFormat", "TimeColumnName");
         timeFieldProcessor.init();
 
         assertEquals("timeFormat", timeFieldProcessor.getTimeFormat());
@@ -50,7 +50,7 @@ public class TimeFieldProcessorTest {
      */
     @Test
     public void process1() {
-        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>("timestamp", "tran_timestamp");
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timestamp", "tran_timestamp");
 
         JSONObject jsonObject = new JSONObject();
         long currentTimeMillis = System.currentTimeMillis();
@@ -66,7 +66,7 @@ public class TimeFieldProcessorTest {
     @Test
     public void process2() {
 
-        TimeFieldProcessor<JSONObject> timeFieldProcessor = new TimeFieldProcessor<>("yyyyMMdd", "tran_date");
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("yyyyMMdd", "tran_date");
 
         String date = "20221124";
         JSONObject jsonObject = new JSONObject();
