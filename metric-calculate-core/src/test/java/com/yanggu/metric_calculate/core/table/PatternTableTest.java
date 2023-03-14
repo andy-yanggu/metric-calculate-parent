@@ -91,10 +91,10 @@ public class PatternTableTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amt", Long.class);
 
-        EventStateExtractor<Trade, MatchState<TreeMap<NodePattern, CloneWrapper<Trade>>>> eventStateExtractor =
+        EventStateExtractor<MatchState<TreeMap<NodePattern, CloneWrapper<Trade>>>> eventStateExtractor =
                 FieldProcessorUtil.getEventStateExtractor(chainPattern, baseUdafParam, fieldMap, getTestUnitFactory());
 
-        objects.forEach(t -> patternTable.putValue(t.getTime(), null, eventStateExtractor.process(t)));
+        objects.forEach(t -> patternTable.putValue(t.getTime(), null, eventStateExtractor.process(JSONUtil.parseObj(t))));
 
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension().setUnit(TimeUnit.SECOND).setLength(1);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(CollUtil.getLast(objects).getTime());

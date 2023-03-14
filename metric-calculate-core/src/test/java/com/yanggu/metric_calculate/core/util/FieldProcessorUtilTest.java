@@ -9,7 +9,7 @@ public class FieldProcessorUtilTest {
 
     @Test
     public void testGetFilterFieldProcessor() {
-        FilterFieldProcessor<Object> filterFieldProcessor = FieldProcessorUtil.getFilterFieldProcessor(null, null);
+        FilterFieldProcessor filterFieldProcessor = FieldProcessorUtil.getFilterFieldProcessor(null, null);
 
     }
 
