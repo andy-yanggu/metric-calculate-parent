@@ -74,10 +74,10 @@ public class DeriveMetricCalculate<T, IN, ACC, OUT> {
 
     private Map<DimensionSet, TreeMap<Long, ACC>> map = new HashMap<>();
 
-    public void exec(T input) {
+    public List<OUT> exec(T input) {
         Boolean filter = filterFieldProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
-            return;
+            return Collections.emptyList();
         }
         Long timestamp = timeFieldProcessor.process(input);
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
@@ -89,14 +89,17 @@ public class DeriveMetricCalculate<T, IN, ACC, OUT> {
         ACC nowAcc = aggregateProcessor.exec(historyAcc, input);
         treeMap.put(aggregateTimestamp, nowAcc);
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
+        List<OUT> list = new ArrayList<>();
         for (TimeWindow window : timeWindow) {
             Collection<ACC> values = treeMap.subMap(window.getWindowStart(), true, window.getWindowEnd(), false).values();
             OUT mergeResult = aggregateProcessor.getMergeResult(new ArrayList<>(values));
-            System.out.println("维度信息:" + dimensionSet.realKey() +
-                    ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(window.getWindowStart())) +
-                    ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(window.getWindowEnd())) +
-                    ", 聚合值: " + mergeResult);
+            list.add(mergeResult);
+            //System.out.println("维度信息:" + dimensionSet.realKey() +
+            //        ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(window.getWindowStart())) +
+            //        ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(window.getWindowEnd())) +
+            //        ", 聚合值: " + mergeResult);
         }
+        return list;
     }
 
 }
