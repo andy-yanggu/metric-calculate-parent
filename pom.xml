@@ -13,6 +13,7 @@
         <module>udaf-test</module>
         <module>metric-calculate-core</module>
         <module>jmh-test</module>
+        <module>metric-calculate-core2</module>
     </modules>
     <packaging>pom</packaging>
 

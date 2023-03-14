@@ -1,13 +1,14 @@
-package com.yanggu.metric_calculate.core.field_process.aggregate;
+package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 
-import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.unit.AggregateFunction;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
+import lombok.Data;
 import lombok.SneakyThrows;
 
 import java.util.List;
 
+@Data
 public class AggregateProcessor<T, IN, ACC, OUT> {
 
     private AggregateFunction<IN, ACC, OUT> aggregateFunction;
@@ -16,10 +17,10 @@ public class AggregateProcessor<T, IN, ACC, OUT> {
 
     @SneakyThrows
     public ACC exec(ACC oldAcc, T input) {
-        if (oldAcc != null) {
+        if (oldAcc == null) {
             oldAcc = aggregateFunction.createAccumulator();
         }
-        aggregateFunction.add(fieldProcessor.process(input), oldAcc);
+        oldAcc = aggregateFunction.add(fieldProcessor.process(input), oldAcc);
         return oldAcc;
     }
 

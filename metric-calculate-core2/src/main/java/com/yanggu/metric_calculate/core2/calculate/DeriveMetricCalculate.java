@@ -1,27 +1,18 @@
-package com.yanggu.metric_calculate.core.calculate;
+package com.yanggu.metric_calculate.core2.calculate;
 
-import cn.hutool.core.collection.CollUtil;
+
+
 import cn.hutool.core.date.DateUtil;
-import com.yanggu.metric_calculate.core.cube.MetricCube;
-import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateProcessor;
-import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
-import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core.pojo.metric.RoundAccuracy;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeWindow;
-import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
-import com.yanggu.metric_calculate.core.table.Table;
-import com.yanggu.metric_calculate.core.unit.AggregateFunction;
-import com.yanggu.metric_calculate.core.util.RoundAccuracyUtil;
-import com.yanggu.metric_calculate.core.value.Value;
-import com.yanggu.metric_calculate.core.value.ValueMapper;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
+import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
+import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -32,7 +23,7 @@ import java.util.*;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DeriveMetricCalculate2<T, IN, ACC, OUT> {
+public class DeriveMetricCalculate<T, IN, ACC, OUT> {
 
     /**
      * 指标标识(数据明细宽表id-指标id)
@@ -72,11 +63,6 @@ public class DeriveMetricCalculate2<T, IN, ACC, OUT> {
     private Boolean includeCurrent = true;
 
     /**
-     * 派生指标中间结算结果存储
-     */
-    private DeriveMetricMiddleStore deriveMetricMiddleStore;
-
-    /**
      * 精度数据
      */
     private RoundAccuracy roundAccuracy;
@@ -86,7 +72,7 @@ public class DeriveMetricCalculate2<T, IN, ACC, OUT> {
      */
     private Boolean isUdaf;
 
-    private Map<DimensionSet, TreeMap<Long, ACC>> map;
+    private Map<DimensionSet, TreeMap<Long, ACC>> map = new HashMap<>();
 
     public void exec(T input) {
         Boolean filter = filterFieldProcessor.process(input);
