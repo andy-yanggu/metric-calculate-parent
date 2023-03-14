@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
@@ -35,9 +36,9 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    public static <T, IN, ACC, OUT> DeriveMetricCalculate<T, IN, ACC, OUT> initDerive(Derive tempDerive,
-                                                                                      MetricCalculate<T> metricCalculate) {
-        DeriveMetricCalculate<T, IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
+    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive(Derive tempDerive,
+                                                                                MetricCalculate metricCalculate) {
+        DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
         //设置key
         String key = metricCalculate.getId() + "_" + tempDerive.getId();
@@ -50,7 +51,7 @@ public class MetricUtil {
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
 
         //设置前置过滤条件处理器
-        FilterFieldProcessor<T> filterFieldProcessor =
+        FilterFieldProcessor filterFieldProcessor =
                 FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilter());
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
@@ -61,7 +62,7 @@ public class MetricUtil {
         //deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
-        TimeFieldProcessor<T> timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
+        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
@@ -69,7 +70,7 @@ public class MetricUtil {
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器
-        DimensionSetProcessor<T> dimensionSetProcessor =
+        DimensionSetProcessor dimensionSetProcessor =
                 FieldProcessorUtil.getDimensionSetProcessor(key, name, fieldMap, tempDerive.getDimension());
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
@@ -89,7 +90,7 @@ public class MetricUtil {
         return deriveMetricCalculate;
     }
 
-    public static <T> Map<String, Class<?>> getFieldMap(MetricCalculate<T> metricCalculate) {
+    public static Map<String, Class<?>> getFieldMap(MetricCalculate metricCalculate) {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }
@@ -113,7 +114,7 @@ public class MetricUtil {
      * @param fieldMap 宽表字段名称和数据类型
      * @return
      */
-    public static Map<String, Object> getParam(JSONObject input, Map<String, Class<?>> fieldMap) {
+    public static JSONObject getParam(JSONObject input, Map<String, Class<?>> fieldMap) {
         if (CollUtil.isEmpty((Map<?, ?>) input)) {
             throw new RuntimeException("输入数据为空");
         }
@@ -122,7 +123,7 @@ public class MetricUtil {
             throw new RuntimeException("宽表字段为空");
         }
 
-        Map<String, Object> params = new HashMap<>();
+        JSONObject returnData = new JSONObject();
         fieldMap.forEach((key, tempDataClass) -> {
             Object value = input.get(key);
             if (value == null) {
@@ -131,9 +132,9 @@ public class MetricUtil {
             if (!value.getClass().equals(tempDataClass)) {
                 value = Convert.convert(tempDataClass, value);
             }
-            params.put(key, value);
+            returnData.set(key, value);
         });
-        return params;
+        return returnData;
     }
 
 }

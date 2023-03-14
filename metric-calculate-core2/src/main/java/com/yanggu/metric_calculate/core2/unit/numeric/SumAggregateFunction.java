@@ -3,27 +3,26 @@ package com.yanggu.metric_calculate.core2.unit.numeric;
 
 import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
 
-import java.math.BigDecimal;
+public class SumAggregateFunction implements AggregateFunction<Double, Double, Double> {
 
-public class SumAggregateFunction implements AggregateFunction<BigDecimal, BigDecimal, BigDecimal> {
     @Override
-    public BigDecimal createAccumulator() {
-        return new BigDecimal("0.0");
+    public Double createAccumulator() {
+        return 0.0D;
     }
 
     @Override
-    public BigDecimal add(BigDecimal value, BigDecimal accumulator) {
-        return accumulator.add(value);
+    public Double add(Double value, Double accumulator) {
+        return value + accumulator;
     }
 
     @Override
-    public BigDecimal getResult(BigDecimal accumulator) {
+    public Double getResult(Double accumulator) {
         return accumulator;
     }
 
     @Override
-    public BigDecimal merge(BigDecimal a, BigDecimal b) {
-        return a.add(b);
+    public Double merge(Double a, Double b) {
+        return a + b;
     }
 
 }

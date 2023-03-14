@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DimensionSetProcessor<T> implements FieldProcessor<T, DimensionSet> {
+public class DimensionSetProcessor implements FieldProcessor<JSONObject, DimensionSet> {
 
     /**
      * 指标标识(数据明细宽表id-指标id)
@@ -59,12 +59,11 @@ public class DimensionSetProcessor<T> implements FieldProcessor<T, DimensionSet>
     }
 
     @Override
-    public DimensionSet process(T input) {
-        JSONObject input2 = JSONUtil.parseObj(input);
+    public DimensionSet process(JSONObject input) {
         Map<String, Object> map = new LinkedHashMap<>();
         if (CollUtil.isNotEmpty(dimensionList)) {
             for (Dimension dimension : dimensionList) {
-                Object result = input2.get(dimension.getColumnName());
+                Object result = input.get(dimension.getColumnName());
                 if (result == null) {
                     throw new RuntimeException("没有对应的维度值, 字段名称: "
                             + dimension.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));

@@ -3,12 +3,10 @@ package com.yanggu.metric_calculate.core2.field_process.metric;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,7 +21,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class MetricFieldProcessor<T, R> implements FieldProcessor<T, R> {
+public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
 
     /**
      * 宽表字段
@@ -65,12 +63,8 @@ public class MetricFieldProcessor<T, R> implements FieldProcessor<T, R> {
 
     @Override
     @SneakyThrows
-    public R process(T input) {
-        JSONObject input2 = JSONUtil.parseObj(input);
-        //获取执行参数
-        Map<String, Object> params = MetricUtil.getParam(input2, fieldMap);
-
-        return (R) metricExpression.execute(params);
+    public R process(JSONObject input) {
+        return (R) metricExpression.execute(input);
     }
 
 }

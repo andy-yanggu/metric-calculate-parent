@@ -13,12 +13,12 @@ import java.util.Map;
  * <p>包含了衍生指标、复合指标、全局指标</p>
  */
 @Data
-public class MetricCalculate<T> extends DataDetailsWideTable {
+public class MetricCalculate extends DataDetailsWideTable {
 
     /**
      * 派生指标计算类
      */
-    private List<DeriveMetricCalculate<T, ?, ?, ?>> deriveMetricCalculateList;
+    private List<DeriveMetricCalculate<?, ?, ?>> deriveMetricCalculateList;
 
     /**
      * 指标名称和指标类型映射

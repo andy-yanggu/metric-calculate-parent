@@ -2,12 +2,11 @@ package com.yanggu.metric_calculate.core2.field_process.filter;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
+import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ import java.util.Map;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class FilterFieldProcessor<T> implements FieldProcessor<T, Boolean> {
+public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean> {
 
     /**
      * 宽表字段
@@ -71,16 +70,13 @@ public class FilterFieldProcessor<T> implements FieldProcessor<T, Boolean> {
     }
 
     @Override
-    public Boolean process(T input) {
+    public Boolean process(JSONObject input) {
         //如果表达式为空, 直接return true
         if (StrUtil.isBlank(filterExpress)) {
             return true;
         }
-        //获取执行参数
-        Map<String, Object> params = MetricUtil.getParam(JSONUtil.parseObj(input), fieldMap);
-
         //执行过滤表达式
-        return (boolean) filterExpression.execute(params);
+        return (boolean) filterExpression.execute(input);
     }
 
 }

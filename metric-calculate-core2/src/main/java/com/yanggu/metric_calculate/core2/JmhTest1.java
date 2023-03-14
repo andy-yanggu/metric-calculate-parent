@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core2;
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
@@ -22,8 +21,8 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.InputStream;
-import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 @BenchmarkMode(Mode.Throughput)
 @State(Scope.Thread)
@@ -32,7 +31,7 @@ import java.util.List;
 @Measurement(iterations = 3)
 public class JmhTest1 {
 
-    private static DeriveMetricCalculate<JSONObject, BigDecimal, BigDecimal, BigDecimal> deriveMetricCalculate;
+    private static DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate;
 
     private static JSONObject input;
 
@@ -40,14 +39,14 @@ public class JmhTest1 {
     public static void setup() throws Exception {
         InputStream resourceAsStream = JmhTest1.class.getClassLoader().getResourceAsStream("test3.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
-        MetricCalculate<JSONObject> tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate<JSONObject>>() {}, true);
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
         MetricUtil.getFieldMap(tempMetricCalculate);
         Derive derive = tempMetricCalculate.getDerive().get(0);
-        DeriveMetricCalculate<JSONObject, BigDecimal, BigDecimal, BigDecimal> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
+        DeriveMetricCalculate<Double, Double, Double> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
 
-        AggregateProcessor<JSONObject, BigDecimal, BigDecimal, BigDecimal> aggregateProcessor = new AggregateProcessor<>();
+        AggregateProcessor<JSONObject, Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
         aggregateProcessor.setAggregateFunction(new SumAggregateFunction());
-        MetricFieldProcessor<JSONObject, BigDecimal> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
+        MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
         aggregateProcessor.setFieldProcessor(metricFieldProcessor);
         tempderiveMetricCalculate.setAggregateProcessor(aggregateProcessor);
 
@@ -61,12 +60,14 @@ public class JmhTest1 {
         tempInput.set("debit_amt_out", "800");
         tempInput.set("trans_date", "20220609");
 
+        tempInput = MetricUtil.getParam(tempInput, MetricUtil.getFieldMap(tempMetricCalculate));
+
         input = tempInput;
     }
 
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
-        List<BigDecimal> exec = deriveMetricCalculate.exec(input);
+        List<Double> exec = deriveMetricCalculate.exec(input);
         blackhole.consume(exec);
     }
 

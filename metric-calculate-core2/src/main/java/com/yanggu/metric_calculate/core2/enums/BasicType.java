@@ -31,7 +31,7 @@ public enum BasicType {
     /**
      * 小数型
      */
-    DECIMAL(BigDecimal.class),
+    DOUBLE(Double.class),
 
     /**
      * 字符串集合

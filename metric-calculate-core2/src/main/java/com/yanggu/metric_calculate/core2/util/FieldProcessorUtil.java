@@ -31,9 +31,9 @@ public class FieldProcessorUtil {
      * @return 前置过滤条件字段处理器
      */
     @SneakyThrows
-    public static <T> FilterFieldProcessor<T> getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
+    public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                       String filterExpress) {
-        FilterFieldProcessor<T> filterFieldProcessor = new FilterFieldProcessor<>(fieldMap, filterExpress);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, filterExpress);
         filterFieldProcessor.init();
         return filterFieldProcessor;
     }
@@ -44,9 +44,9 @@ public class FieldProcessorUtil {
      * @param timeColumn 时间字段(字段字段名和时间格式)
      * @return 时间字段处理器
      */
-    public static <T> TimeFieldProcessor<T> getTimeFieldProcessor(TimeColumn timeColumn) {
-        TimeFieldProcessor<T> timeFieldProcessor =
-                new TimeFieldProcessor<>(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+    public static TimeFieldProcessor getTimeFieldProcessor(TimeColumn timeColumn) {
+        TimeFieldProcessor timeFieldProcessor =
+                new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
         timeFieldProcessor.init();
         return timeFieldProcessor;
     }
@@ -60,11 +60,11 @@ public class FieldProcessorUtil {
      * @param dimensionList 维度列表
      * @return 维度字段处理器
      */
-    public static <T> DimensionSetProcessor<T> getDimensionSetProcessor(String key,
+    public static DimensionSetProcessor getDimensionSetProcessor(String key,
                                                                         String metricName,
                                                                         Map<String, Class<?>> fieldMap,
                                                                         List<Dimension> dimensionList) {
-        DimensionSetProcessor<T> dimensionSetProcessor = new DimensionSetProcessor<>(dimensionList);
+        DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(dimensionList);
         dimensionSetProcessor.setKey(key);
         dimensionSetProcessor.setMetricName(metricName);
         dimensionSetProcessor.setFieldMap(fieldMap);
@@ -80,9 +80,9 @@ public class FieldProcessorUtil {
      * @return 度量值字段处理器
      */
     @SneakyThrows
-    public static <T, R> MetricFieldProcessor<T, R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
+    public static <R> MetricFieldProcessor<R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                               String metricExpress) {
-        MetricFieldProcessor<T, R> metricFieldProcessor = new MetricFieldProcessor<>();
+        MetricFieldProcessor<R> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setFieldMap(fieldMap);
         metricFieldProcessor.setMetricExpress(metricExpress);
         metricFieldProcessor.init();
@@ -97,9 +97,9 @@ public class FieldProcessorUtil {
      * @return 多字段去重字段处理器
      */
     @SneakyThrows
-    public static <T> MultiFieldDistinctFieldProcessor<T> getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
+    public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                                          List<String> distinctFieldList) {
-        MultiFieldDistinctFieldProcessor<T> tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor<>();
+        MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
         tempMultiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldDistinctFieldProcessor.setDistinctFieldList(distinctFieldList);
         tempMultiFieldDistinctFieldProcessor.init();
@@ -114,9 +114,9 @@ public class FieldProcessorUtil {
      * @return 多字段排序字段处理器
      */
     @SneakyThrows
-    public static <T> MultiFieldOrderFieldProcessor<T> getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
+    public static MultiFieldOrderFieldProcessor getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                               List<FieldOrderParam> fieldOrderParamList) {
-        MultiFieldOrderFieldProcessor<T> tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor<>();
+        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
         tempMultiFieldOrderFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
         tempMultiFieldOrderFieldProcessor.init();

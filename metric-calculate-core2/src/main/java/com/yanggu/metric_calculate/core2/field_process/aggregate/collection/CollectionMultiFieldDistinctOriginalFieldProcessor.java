@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core2.field_process.aggregate.collection;
 
 
+import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.KeyValue;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
@@ -17,14 +19,14 @@ import java.util.Map;
  * @param <T>
  */
 @Data
-public class CollectionMultiFieldDistinctOriginalFieldProcessor<T>
-        implements FieldProcessor<T, KeyValue<MultiFieldDistinctKey, T>> {
+public class CollectionMultiFieldDistinctOriginalFieldProcessor
+        implements FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> {
 
     private BaseUdafParam baseUdafParam;
 
     private Map<String, Class<?>> fieldMap;
 
-    private MultiFieldDistinctFieldProcessor<T> multiFieldDistinctFieldProcessor;
+    private MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -33,7 +35,7 @@ public class CollectionMultiFieldDistinctOriginalFieldProcessor<T>
     }
 
     @Override
-    public KeyValue<MultiFieldDistinctKey, T> process(T input) throws Exception {
+    public KeyValue<MultiFieldDistinctKey, JSONObject> process(JSONObject input) throws Exception {
         MultiFieldDistinctKey multiFieldDistinctKey = multiFieldDistinctFieldProcessor.process(input);
         return new KeyValue<>(multiFieldDistinctKey, input);
     }
