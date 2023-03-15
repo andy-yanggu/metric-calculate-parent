@@ -33,10 +33,10 @@ public class DeriveMetricCalculateTest {
         Derive derive = this.metricCalculate.getDerive().get(0);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, metricCalculate);
 
-        AggregateProcessor<JSONObject, Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
+        AggregateProcessor<Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
         aggregateProcessor.setAggregateFunction(new SumAggregateFunction());
         MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(this.metricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
-        aggregateProcessor.setFieldProcessor(metricFieldProcessor);
+        deriveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
         deriveMetricCalculate.setAggregateProcessor(aggregateProcessor);
 
         JSONObject input = new JSONObject();
@@ -47,7 +47,7 @@ public class DeriveMetricCalculateTest {
         input.set("debit_amt_out", "800");
         input.set("trans_date", "20220609");
 
-        deriveMetricCalculate.exec(input);
+        deriveMetricCalculate.stateExec(input);
     }
 
 }

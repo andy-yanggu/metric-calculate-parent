@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core2.field_process.dimension;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
@@ -68,11 +67,9 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
                     throw new RuntimeException("没有对应的维度值, 字段名称: "
                             + dimension.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));
                 }
-                Class<?> clazz = fieldMap.get(dimension.getColumnName());
-                map.put(dimension.getDimensionName(), Convert.convert(clazz, result));
+                map.put(dimension.getDimensionName(), result);
             }
         }
-
         return new DimensionSet(key, metricName, map);
     }
 

@@ -97,9 +97,9 @@ public class MetricUtil {
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
             //初始化KryoPool
-            KryoPool kryoPool = new KryoPool(true, false, 100);
-            InputPool inputPool = new InputPool(true, false, 100);
-            OutputPool outputPool = new OutputPool(true, false, 100);
+            KryoPool kryoPool = new KryoPool(true, true, 100);
+            InputPool inputPool = new InputPool(true, true, 100);
+            OutputPool outputPool = new OutputPool(true, true, 100);
             KryoUtil.init(kryoPool, inputPool, outputPool);
             if (metricMiddleStoreMap.size() != 1) {
                 for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {

@@ -17,7 +17,8 @@ public class DistinctListFunction<T> implements AggregateFunction<KeyValue<Multi
     }
 
     @Override
-    public Set<KeyValue<MultiFieldDistinctKey, T>> add(KeyValue<MultiFieldDistinctKey, T> value, Set<KeyValue<MultiFieldDistinctKey, T>> accumulator) {
+    public Set<KeyValue<MultiFieldDistinctKey, T>> add(KeyValue<MultiFieldDistinctKey, T> value,
+                                                       Set<KeyValue<MultiFieldDistinctKey, T>> accumulator) {
         accumulator.add(value);
         return accumulator;
     }
@@ -28,7 +29,8 @@ public class DistinctListFunction<T> implements AggregateFunction<KeyValue<Multi
     }
 
     @Override
-    public Set<KeyValue<MultiFieldDistinctKey, T>> merge(Set<KeyValue<MultiFieldDistinctKey, T>> a, Set<KeyValue<MultiFieldDistinctKey, T>> b) {
+    public Set<KeyValue<MultiFieldDistinctKey, T>> merge(Set<KeyValue<MultiFieldDistinctKey, T>> a,
+                                                         Set<KeyValue<MultiFieldDistinctKey, T>> b) {
         a.addAll(b);
         return a;
     }

@@ -1,35 +1,29 @@
-package com.yanggu.metric_calculate.core.kryo;
+package com.yanggu.metric_calculate.core2.kryo;
 
 
 import cn.hutool.core.util.ArrayUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.yanggu.metric_calculate.core.kryo.pool.InputPool;
-import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
-import com.yanggu.metric_calculate.core.kryo.pool.OutputPool;
+import com.yanggu.metric_calculate.core2.kryo.pool.InputPool;
+import com.yanggu.metric_calculate.core2.kryo.pool.KryoPool;
+import com.yanggu.metric_calculate.core2.kryo.pool.OutputPool;
 
 public class KryoUtil {
 
     private KryoUtil() {
     }
 
-    private static KryoPool kryoPool;
+    private static KryoPool KRYO_POOL;
 
-    private static InputPool inputPool;
+    private static InputPool INPUT_POOL;
 
-    private static OutputPool outputPool;
-
-    static {
-        kryoPool = new KryoPool(true, true, 100);
-        inputPool = new InputPool(true, true, 100);
-        outputPool = new OutputPool(true, true, 100);
-    }
+    private static OutputPool OUTPUT_POOL;
 
     public static void init(KryoPool kryoPool, InputPool inputPool, OutputPool outputPool) {
-        KryoUtil.kryoPool = kryoPool;
-        KryoUtil.inputPool = inputPool;
-        KryoUtil.outputPool = outputPool;
+        KRYO_POOL = kryoPool;
+        INPUT_POOL = inputPool;
+        OUTPUT_POOL = outputPool;
     }
 
     /**
@@ -42,14 +36,14 @@ public class KryoUtil {
         if (object == null) {
             return new byte[0];
         }
-        Kryo kryo = kryoPool.obtain();
-        Output output = outputPool.obtain();
+        Kryo kryo = KRYO_POOL.obtain();
+        Output output = OUTPUT_POOL.obtain();
         try {
             kryo.writeClassAndObject(output, object);
             return output.toBytes();
         } finally {
-            kryoPool.free(kryo);
-            outputPool.free(output);
+            KRYO_POOL.free(kryo);
+            OUTPUT_POOL.free(output);
         }
     }
 
@@ -64,14 +58,14 @@ public class KryoUtil {
         if (ArrayUtil.isEmpty(bytes)) {
             return null;
         }
-        Kryo kryo = kryoPool.obtain();
-        Input input = inputPool.obtain();
+        Kryo kryo = KRYO_POOL.obtain();
+        Input input = INPUT_POOL.obtain();
         input.setBuffer(bytes);
         try {
             return (T) kryo.readClassAndObject(input);
         } finally {
-            inputPool.free(input);
-            kryoPool.free(kryo);
+            INPUT_POOL.free(input);
+            KRYO_POOL.free(kryo);
         }
     }
 

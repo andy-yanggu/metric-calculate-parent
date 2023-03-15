@@ -2,16 +2,21 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import com.yanggu.metric_calculate.core2.table.TimeTable;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
@@ -54,7 +59,17 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      */
     private DimensionSetProcessor dimensionSetProcessor;
 
-    private AggregateProcessor<JSONObject, IN, ACC, OUT> aggregateProcessor;
+    /**
+     * 提取出度量数据
+     */
+    private FieldProcessor<JSONObject, IN> metricFieldProcessor;
+
+    private AggregateProcessor<IN, ACC, OUT> aggregateProcessor;
+
+    /**
+     * 中间状态数据外部存储
+     */
+    private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     /**
      * 是否包含当前笔, 默认包含
@@ -71,32 +86,90 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      */
     private Boolean isUdaf;
 
-    private Map<DimensionSet, TreeMap<Long, ACC>> map = new HashMap<>();
-
-    public List<OUT> exec(JSONObject input) {
+    @SneakyThrows
+    public List<OUT> stateExec(JSONObject input) {
+        //执行前置过滤条件
         Boolean filter = filterFieldProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
             return Collections.emptyList();
         }
+
+        //提取出度量值
+        IN process = metricFieldProcessor.process(input);
+        if (process == null) {
+            return Collections.emptyList();
+        }
+
+        //提取出时间字段
         Long timestamp = timeFieldProcessor.process(input);
+
+        //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
-        //查询外部数据源
-        TreeMap<Long, ACC> treeMap = map.computeIfAbsent(dimensionSet, k -> new TreeMap<>());
-        Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
-        ACC historyAcc = treeMap.get(aggregateTimestamp);
-        ACC nowAcc = aggregateProcessor.exec(historyAcc, input);
-        treeMap.put(aggregateTimestamp, nowAcc);
+        //查询外部数据
+        MetricCube<IN, ACC, OUT> metricCube = deriveMetricMiddleStore.get(dimensionSet);
+        if (metricCube == null) {
+            metricCube = new MetricCube<>();
+            metricCube.setDimensionSet(dimensionSet);
+            TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
+            metricCube.setTimeTable(timeTable);
+        }
+        TimeTable<IN, ACC, OUT> timeTable = metricCube.getTimeTable();
+        timeTable.setAggregateProcessor(aggregateProcessor);
+        timeTable.setTimeBaselineDimension(timeBaselineDimension);
+
+        //放入明细数据进行累加
+        timeTable.put(timestamp, process);
+
         List<OUT> list = new ArrayList<>();
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
         for (TimeWindow window : timeWindow) {
-            Collection<ACC> values = treeMap.subMap(window.getWindowStart(), true, window.getWindowEnd(), false).values();
-            OUT mergeResult = aggregateProcessor.getMergeResult(new ArrayList<>(values));
-            list.add(mergeResult);
-            //System.out.println("维度信息:" + dimensionSet.realKey() +
-            //        ", 窗口开始时间: " + DateUtil.formatDateTime(new Date(window.getWindowStart())) +
-            //        ", 窗口结束时间: " + DateUtil.formatDateTime(new Date(window.getWindowEnd())) +
-            //        ", 聚合值: " + mergeResult);
+            OUT mergeResult = timeTable.query(window.getWindowStart(), true, window.getWindowEnd(), false);
+            if (mergeResult != null) {
+                list.add(mergeResult);
+            }
+        }
+        deriveMetricMiddleStore.update(metricCube);
+        return list;
+    }
+
+    @SneakyThrows
+    public List<OUT> noStateExec(JSONObject input) {
+        //提取出维度字段
+        DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+        MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
+        Long timestamp = timeFieldProcessor.process(input);
+
+        //包含当前笔需要执行前置过滤条件
+        if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
+            IN process = metricFieldProcessor.process(input);
+            if (process != null) {
+                if (historyMetricCube == null) {
+                    historyMetricCube = new MetricCube<>();
+                    historyMetricCube.setDimensionSet(dimensionSet);
+                    TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
+                    historyMetricCube.setTimeTable(timeTable);
+                }
+                TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+                timeTable.setAggregateProcessor(aggregateProcessor);
+                timeTable.setTimeBaselineDimension(timeBaselineDimension);
+
+                //放入明细数据进行累加
+                timeTable.put(timestamp, process);
+            }
+        }
+        if (historyMetricCube == null) {
+            return Collections.emptyList();
+        }
+        List<OUT> list = new ArrayList<>();
+        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
+        TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+        for (TimeWindow window : timeWindow) {
+            OUT mergeResult = timeTable
+                    .query(window.getWindowStart(), true, window.getWindowEnd(), false);
+            if (mergeResult != null) {
+                list.add(mergeResult);
+            }
         }
         return list;
     }

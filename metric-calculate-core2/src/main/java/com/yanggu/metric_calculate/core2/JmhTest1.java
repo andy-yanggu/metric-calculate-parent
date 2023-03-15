@@ -22,7 +22,6 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.InputStream;
 import java.util.List;
-import java.util.Map;
 
 @BenchmarkMode(Mode.Throughput)
 @State(Scope.Thread)
@@ -44,10 +43,10 @@ public class JmhTest1 {
         Derive derive = tempMetricCalculate.getDerive().get(0);
         DeriveMetricCalculate<Double, Double, Double> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
 
-        AggregateProcessor<JSONObject, Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
+        AggregateProcessor<Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
         aggregateProcessor.setAggregateFunction(new SumAggregateFunction());
         MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
-        aggregateProcessor.setFieldProcessor(metricFieldProcessor);
+        tempderiveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
         tempderiveMetricCalculate.setAggregateProcessor(aggregateProcessor);
 
         deriveMetricCalculate = tempderiveMetricCalculate;
@@ -67,7 +66,7 @@ public class JmhTest1 {
 
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
-        List<Double> exec = deriveMetricCalculate.exec(input);
+        List<Double> exec = deriveMetricCalculate.stateExec(input);
         blackhole.consume(exec);
     }
 
