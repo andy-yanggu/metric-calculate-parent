@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core2.unit.numeric;
 
 import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
 
-public class SumAggregateFunction implements AggregateFunction<Double, Double, Double> {
+public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override
     public Double createAccumulator() {
@@ -11,8 +11,8 @@ public class SumAggregateFunction implements AggregateFunction<Double, Double, D
     }
 
     @Override
-    public Double add(Double value, Double accumulator) {
-        return value + accumulator;
+    public Double add(T value, Double accumulator) {
+        return value.doubleValue() + accumulator;
     }
 
     @Override

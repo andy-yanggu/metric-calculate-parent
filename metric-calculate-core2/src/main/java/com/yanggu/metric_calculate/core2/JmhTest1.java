@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.unit.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
@@ -44,10 +45,14 @@ public class JmhTest1 {
         DeriveMetricCalculate<Double, Double, Double> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
 
         AggregateProcessor<Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
-        aggregateProcessor.setAggregateFunction(new SumAggregateFunction());
+        aggregateProcessor.setAggregateFunction(new SumAggregateFunction<>());
         MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
         tempderiveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
         tempderiveMetricCalculate.setAggregateProcessor(aggregateProcessor);
+
+        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
+        deriveMetricMiddleHashMapStore.init();
+        tempderiveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
 
         deriveMetricCalculate = tempderiveMetricCalculate;
 

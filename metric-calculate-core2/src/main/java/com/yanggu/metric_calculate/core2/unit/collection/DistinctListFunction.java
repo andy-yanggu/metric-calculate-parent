@@ -8,6 +8,11 @@ import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 去重列表
+ *
+ * @param <T>
+ */
 public class DistinctListFunction<T> implements AggregateFunction<KeyValue<MultiFieldDistinctKey, T>,
         Set<KeyValue<MultiFieldDistinctKey, T>>, Set<KeyValue<MultiFieldDistinctKey, T>>> {
 

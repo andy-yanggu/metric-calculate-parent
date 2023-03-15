@@ -109,14 +109,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         //查询外部数据
         MetricCube<IN, ACC, OUT> metricCube = deriveMetricMiddleStore.get(dimensionSet);
         if (metricCube == null) {
-            metricCube = new MetricCube<>();
-            metricCube.setDimensionSet(dimensionSet);
-            TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
-            metricCube.setTimeTable(timeTable);
+            metricCube = createMetricCube(dimensionSet);
         }
         TimeTable<IN, ACC, OUT> timeTable = metricCube.getTimeTable();
-        timeTable.setAggregateProcessor(aggregateProcessor);
-        timeTable.setTimeBaselineDimension(timeBaselineDimension);
 
         //放入明细数据进行累加
         timeTable.put(timestamp, process);
@@ -145,14 +140,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             IN process = metricFieldProcessor.process(input);
             if (process != null) {
                 if (historyMetricCube == null) {
-                    historyMetricCube = new MetricCube<>();
-                    historyMetricCube.setDimensionSet(dimensionSet);
-                    TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
-                    historyMetricCube.setTimeTable(timeTable);
+                    historyMetricCube = createMetricCube(dimensionSet);
                 }
                 TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
-                timeTable.setAggregateProcessor(aggregateProcessor);
-                timeTable.setTimeBaselineDimension(timeBaselineDimension);
 
                 //放入明细数据进行累加
                 timeTable.put(timestamp, process);
@@ -172,6 +162,16 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             }
         }
         return list;
+    }
+
+    private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
+        MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
+        metricCube.setDimensionSet(dimensionSet);
+        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
+        metricCube.setTimeTable(timeTable);
+        timeTable.setAggregateProcessor(aggregateProcessor);
+        timeTable.setTimeBaselineDimension(timeBaselineDimension);
+        return metricCube;
     }
 
 }

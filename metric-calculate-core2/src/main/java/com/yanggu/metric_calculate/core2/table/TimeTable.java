@@ -16,7 +16,7 @@ public class TimeTable<IN, ACC, OUT> {
 
     private TimeBaselineDimension timeBaselineDimension;
 
-    private TreeMap<Long, ACC> treeMap;
+    private TreeMap<Long, ACC> treeMap = new TreeMap<>();
 
     public ACC put(Long timestamp, IN in) {
         Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
