@@ -39,14 +39,17 @@ public class BaseMapAggregateFunction<IN, ACC, OUT> implements AggregateFunction
     }
 
     @Override
-    public Map<MultiFieldDistinctKey, ACC> merge(Map<MultiFieldDistinctKey, ACC> a, Map<MultiFieldDistinctKey, ACC> b) {
-        b.forEach((tempKey, tempAcc) -> {
-            ACC acc = a.get(tempKey);
+    public Map<MultiFieldDistinctKey, ACC> merge(Map<MultiFieldDistinctKey, ACC> thisAccumulator,
+                                                 Map<MultiFieldDistinctKey, ACC> thatAccumulator) {
+        thatAccumulator.forEach((tempKey, tempAcc) -> {
+            ACC acc = thisAccumulator.get(tempKey);
             if (acc == null) {
-                valueAggregateFunction.merge(valueAggregateFunction.createAccumulator(), tempAcc);
+                acc = valueAggregateFunction.createAccumulator();
             }
+            acc = valueAggregateFunction.merge(acc, tempAcc);
+            thisAccumulator.put(tempKey, acc);
         });
-        return a;
+        return thisAccumulator;
     }
 
 }

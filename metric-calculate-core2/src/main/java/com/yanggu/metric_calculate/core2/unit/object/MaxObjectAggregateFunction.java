@@ -1,35 +1,28 @@
 package com.yanggu.metric_calculate.core2.unit.object;
 
-import com.yanggu.metric_calculate.core2.KeyValue;
-import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
 
-/**
- * @version V1.0
- * @author: YangGu
- * @date: 2023/3/15 21:16
- * @description:
- */
-public class MaxObjectAggregateFunction<T> implements AggregateFunction<KeyValue<MultiFieldOrderCompareKey, T>, KeyValue<MultiFieldOrderCompareKey, T>, T> {
+
+public class MaxObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, T, T> {
 
     @Override
-    public KeyValue<MultiFieldOrderCompareKey, T> createAccumulator() {
-        return new KeyValue<>(MultiFieldOrderCompareKey.MIN, null);
-    }
-
-    @Override
-    public KeyValue<MultiFieldOrderCompareKey, T> add(KeyValue<MultiFieldOrderCompareKey, T> value, KeyValue<MultiFieldOrderCompareKey, T> accumulator) {
-        //accumulator.compareTo(value)
+    public T createAccumulator() {
         return null;
     }
 
     @Override
-    public T getResult(KeyValue<MultiFieldOrderCompareKey, T> accumulator) {
+    public T add(T value, T accumulator) {
         return null;
     }
 
     @Override
-    public KeyValue<MultiFieldOrderCompareKey, T> merge(KeyValue<MultiFieldOrderCompareKey, T> a, KeyValue<MultiFieldOrderCompareKey, T> b) {
+    public T getResult(T accumulator) {
+        return accumulator;
+    }
+
+    @Override
+    public T merge(T thisAccumulator, T thatAccumulator) {
         return null;
     }
+
 }

@@ -21,8 +21,8 @@ public class SumAggregateFunction<T extends Number> implements AggregateFunction
     }
 
     @Override
-    public Double merge(Double a, Double b) {
-        return a + b;
+    public Double merge(Double thisAccumulator, Double thatAccumulator) {
+        return thisAccumulator + thatAccumulator;
     }
 
 }

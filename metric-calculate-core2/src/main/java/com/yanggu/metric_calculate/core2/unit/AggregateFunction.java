@@ -10,6 +10,9 @@ package com.yanggu.metric_calculate.core2.unit;
  */
 public interface AggregateFunction<IN, ACC, OUT> {
 
+    default void init() {
+    }
+
     /**
      * Creates a new accumulator, starting a new aggregate.
      *
@@ -50,10 +53,10 @@ public interface AggregateFunction<IN, ACC, OUT> {
      * return that. The assumption is that the given accumulators will not be used any more after
      * having been passed to this function.
      *
-     * @param a An accumulator to merge
-     * @param b Another accumulator to merge
+     * @param thisAccumulator An accumulator to merge
+     * @param thatAccumulator Another accumulator to merge
      * @return The accumulator with the merged state
      */
-    ACC merge(ACC a, ACC b);
+    ACC merge(ACC thisAccumulator, ACC thatAccumulator);
 
 }

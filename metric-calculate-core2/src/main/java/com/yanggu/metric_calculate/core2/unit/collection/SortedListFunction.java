@@ -25,9 +25,9 @@ public class SortedListFunction<T extends Comparable<T>> implements AggregateFun
     }
 
     @Override
-    public BoundedPriorityQueue<T> merge(BoundedPriorityQueue<T> a, BoundedPriorityQueue<T> b) {
-        a.addAll(b);
-        return a;
+    public BoundedPriorityQueue<T> merge(BoundedPriorityQueue<T> thisAccumulator, BoundedPriorityQueue<T> thatAccumulator) {
+        thisAccumulator.addAll(thatAccumulator);
+        return thisAccumulator;
     }
 
 }

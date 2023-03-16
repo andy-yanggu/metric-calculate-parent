@@ -3,17 +3,15 @@ package com.yanggu.metric_calculate.core2.unit.collection;
 
 import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
- * 去重列表
+ * 去重计数
  *
  * @param <T>
  */
-public class DistinctListFunction<T> implements AggregateFunction<T, Set<T>, List<T>> {
+public class DistinctCountFunction<T> implements AggregateFunction<T, Set<T>, Integer> {
 
     @Override
     public Set<T> createAccumulator() {
@@ -27,8 +25,8 @@ public class DistinctListFunction<T> implements AggregateFunction<T, Set<T>, Lis
     }
 
     @Override
-    public List<T> getResult(Set<T> accumulator) {
-        return new ArrayList<>(accumulator);
+    public Integer getResult(Set<T> accumulator) {
+        return accumulator.size();
     }
 
     @Override
