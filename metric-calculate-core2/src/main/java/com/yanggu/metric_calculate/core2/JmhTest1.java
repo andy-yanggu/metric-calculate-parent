@@ -6,7 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
@@ -44,11 +44,11 @@ public class JmhTest1 {
         Derive derive = tempMetricCalculate.getDerive().get(0);
         DeriveMetricCalculate<Double, Double, Double> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
 
-        AggregateProcessor<Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
-        aggregateProcessor.setAggregateFunction(new SumAggregateFunction<>());
-        MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
-        tempderiveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
-        tempderiveMetricCalculate.setAggregateProcessor(aggregateProcessor);
+        //AggregateFieldProcessor<Double, Double, Double> aggregateFieldProcessor = new AggregateFieldProcessor<>();
+        //aggregateFieldProcessor.setAggregateFunction(new SumAggregateFunction<>());
+        //MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
+        //tempderiveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
+        //tempderiveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleHashMapStore.init();

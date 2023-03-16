@@ -2,11 +2,11 @@ package com.yanggu.metric_calculate.core2.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
@@ -56,9 +56,7 @@ public class MetricUtil {
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //设置聚合字段处理器
-        //AggregateFieldProcessor<T, M> aggregateFieldProcessor =
-        //        FieldProcessorUtil.getAggregateFieldProcessor(tempDerive, fieldMap, unitFactory);
-        //
+        //AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor = new AggregateFieldProcessor<>();
         //deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
@@ -76,16 +74,6 @@ public class MetricUtil {
 
         //精度数据
         deriveMetricCalculate.setRoundAccuracy(tempDerive.getRoundAccuracy());
-
-        ////设置MetricCubeFactory
-        //MetricCubeFactory<M> metricCubeFactory = new MetricCubeFactory<>();
-        //metricCubeFactory.setKey(key);
-        //metricCubeFactory.setName(name);
-        //metricCubeFactory.setTimeBaselineDimension(timeBaselineDimension);
-        //metricCubeFactory.setMergeUnitClazz(aggregateFieldProcessor.getMergeUnitClazz());
-        //metricCubeFactory.setDerive(tempDerive);
-        //
-        //deriveMetricCalculate.setMetricCubeFactory(metricCubeFactory);
 
         return deriveMetricCalculate;
     }

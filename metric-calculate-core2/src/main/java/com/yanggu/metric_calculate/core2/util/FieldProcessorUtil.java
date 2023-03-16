@@ -32,7 +32,7 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                      String filterExpress) {
+                                                               String filterExpress) {
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, filterExpress);
         filterFieldProcessor.init();
         return filterFieldProcessor;
@@ -61,9 +61,9 @@ public class FieldProcessorUtil {
      * @return 维度字段处理器
      */
     public static DimensionSetProcessor getDimensionSetProcessor(String key,
-                                                                        String metricName,
-                                                                        Map<String, Class<?>> fieldMap,
-                                                                        List<Dimension> dimensionList) {
+                                                                 String metricName,
+                                                                 Map<String, Class<?>> fieldMap,
+                                                                 List<Dimension> dimensionList) {
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(dimensionList);
         dimensionSetProcessor.setKey(key);
         dimensionSetProcessor.setMetricName(metricName);
@@ -81,7 +81,7 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <R> MetricFieldProcessor<R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                              String metricExpress) {
+                                                                      String metricExpress) {
         MetricFieldProcessor<R> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setFieldMap(fieldMap);
         metricFieldProcessor.setMetricExpress(metricExpress);
@@ -98,7 +98,7 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                                         List<String> distinctFieldList) {
+                                                                                  List<String> distinctFieldList) {
         MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
         tempMultiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldDistinctFieldProcessor.setDistinctFieldList(distinctFieldList);
@@ -115,12 +115,18 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static MultiFieldOrderFieldProcessor getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                              List<FieldOrderParam> fieldOrderParamList) {
+                                                                       List<FieldOrderParam> fieldOrderParamList) {
         MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
         tempMultiFieldOrderFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
         tempMultiFieldOrderFieldProcessor.init();
         return tempMultiFieldOrderFieldProcessor;
     }
+
+    //public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
+    //                                                                     Derive derive,
+    //                                                                     Map<String, Class<?>> fieldMap) {
+    //
+    //}
 
 }

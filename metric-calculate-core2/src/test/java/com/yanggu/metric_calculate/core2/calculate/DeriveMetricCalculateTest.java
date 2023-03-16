@@ -5,7 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
@@ -32,11 +32,11 @@ public class DeriveMetricCalculateTest {
         Derive derive = this.metricCalculate.getDerive().get(0);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, metricCalculate);
 
-        AggregateProcessor<Double, Double, Double> aggregateProcessor = new AggregateProcessor<>();
-        aggregateProcessor.setAggregateFunction(new SumAggregateFunction<>());
-        MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(this.metricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
-        deriveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
-        deriveMetricCalculate.setAggregateProcessor(aggregateProcessor);
+        //AggregateFieldProcessor<Double, Double, Double> aggregateFieldProcessor = new AggregateFieldProcessor<>();
+        //aggregateFieldProcessor.setAggregateFunction(new SumAggregateFunction<>());
+        //MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(this.metricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
+        //deriveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
+        //deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleHashMapStore.init();

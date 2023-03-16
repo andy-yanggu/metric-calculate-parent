@@ -1,3 +1,5 @@
+package com.yanggu.metric_calculate.core2.unit.numeric;
+
 import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
 
 public class Sum_${class_name}_AggregateFunction implements AggregateFunction<${class_name}, ${class_name}, ${class_name}> {
@@ -18,18 +20,18 @@ public class Sum_${class_name}_AggregateFunction implements AggregateFunction<${
     }
 
     @Override
-    public ${class_name} add(${class_name} value, ${class_name} accumulator) {
-        return accumulator + value;
+    public ${class_name} add(Object value, Object accumulator) {
+        return ((${class_name}) accumulator) + ((${class_name}) value);
     }
 
     @Override
-    public ${class_name} getResult(${class_name} accumulator) {
-        return accumulator;
+    public ${class_name} getResult(Object accumulator) {
+        return (${class_name}) accumulator;
     }
 
     @Override
-    public ${class_name} merge(${class_name} a, ${class_name} b) {
-        return a + b;
+    public Object merge(Object a, Object b) {
+        return ((${class_name}) a) + ((${class_name}) b);
     }
 
 }

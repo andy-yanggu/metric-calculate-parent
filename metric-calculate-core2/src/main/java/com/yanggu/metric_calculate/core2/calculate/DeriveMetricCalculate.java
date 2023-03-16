@@ -3,8 +3,7 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -59,12 +58,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      */
     private DimensionSetProcessor dimensionSetProcessor;
 
-    /**
-     * 提取出度量数据
-     */
-    private FieldProcessor<JSONObject, IN> metricFieldProcessor;
-
-    private AggregateProcessor<IN, ACC, OUT> aggregateProcessor;
+    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
      * 中间状态数据外部存储
@@ -95,8 +89,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         }
 
         //提取出度量值
-        IN process = metricFieldProcessor.process(input);
-        if (process == null) {
+        IN metricData = aggregateFieldProcessor.process(input);
+        if (metricData == null) {
             return Collections.emptyList();
         }
 
@@ -114,7 +108,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         TimeTable<IN, ACC, OUT> timeTable = metricCube.getTimeTable();
 
         //放入明细数据进行累加
-        timeTable.put(timestamp, process);
+        timeTable.put(timestamp, metricData);
 
         List<OUT> list = new ArrayList<>();
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
@@ -137,7 +131,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
 
         //包含当前笔需要执行前置过滤条件
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-            IN process = metricFieldProcessor.process(input);
+            IN process = aggregateFieldProcessor.process(input);
             if (process != null) {
                 if (historyMetricCube == null) {
                     historyMetricCube = createMetricCube(dimensionSet);
@@ -169,7 +163,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         metricCube.setDimensionSet(dimensionSet);
         TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
         metricCube.setTimeTable(timeTable);
-        timeTable.setAggregateProcessor(aggregateProcessor);
+        timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
         timeTable.setTimeBaselineDimension(timeBaselineDimension);
         return metricCube;
     }

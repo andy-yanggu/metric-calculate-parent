@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core2.table;
 
 
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.util.TreeMap;
 @Data
 public class TimeTable<IN, ACC, OUT> {
 
-    private AggregateProcessor<IN, ACC, OUT> aggregateProcessor;
+    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     private TimeBaselineDimension timeBaselineDimension;
 
@@ -21,7 +21,7 @@ public class TimeTable<IN, ACC, OUT> {
     public ACC put(Long timestamp, IN in) {
         Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         ACC historyAcc = treeMap.get(aggregateTimestamp);
-        ACC nowAcc = aggregateProcessor.exec(historyAcc, in);
+        ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
         treeMap.put(aggregateTimestamp, nowAcc);
         return nowAcc;
     }
@@ -31,7 +31,7 @@ public class TimeTable<IN, ACC, OUT> {
         if (CollUtil.isEmpty(values)) {
             return null;
         }
-        return aggregateProcessor.getMergeResult(values);
+        return aggregateFieldProcessor.getMergeResult(values);
     }
 
 }
