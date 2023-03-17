@@ -9,13 +9,11 @@ package com.yanggu.metric_calculate.core2.field_process;
 public interface FieldProcessor<T, R> {
 
     /**
-     * 初始化方法, 实现类可以重写该方法
+     * 初始化方法
      *
      * @throws Exception
      */
-    default void init() throws Exception {
-        throw new RuntimeException("子类需要手动实现init方法");
-    }
+    void init() throws Exception;
 
     R process(T input) throws Exception;
 

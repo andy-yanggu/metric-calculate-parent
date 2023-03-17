@@ -11,11 +11,6 @@ import lombok.Data;
 public class Fields {
 
     /**
-     * 字段类名
-     */
-    private String className;
-
-    /**
      * 字段名
      */
     private String name;

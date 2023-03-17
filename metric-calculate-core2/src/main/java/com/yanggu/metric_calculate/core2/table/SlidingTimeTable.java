@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core2.table;
 
 
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import reactor.util.function.Tuple2;
@@ -16,7 +16,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     private Map<Tuple2<Long, Long>, ACC> map = new HashMap<>();
 
-    public SlidingTimeTable(AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor,
+    public SlidingTimeTable(AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor,
                             TimeBaselineDimension timeBaselineDimension) {
         super(aggregateFieldProcessor, timeBaselineDimension);
     }

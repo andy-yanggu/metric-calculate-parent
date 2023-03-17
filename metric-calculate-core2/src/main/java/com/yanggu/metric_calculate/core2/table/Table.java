@@ -1,16 +1,16 @@
 package com.yanggu.metric_calculate.core2.table;
 
 
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 
 public abstract class Table<IN, ACC, OUT> {
 
-    protected AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+    protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     protected TimeBaselineDimension timeBaselineDimension;
 
-    protected Table(AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor,
+    protected Table(AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor,
                     TimeBaselineDimension timeBaselineDimension) {
         this.aggregateFieldProcessor = aggregateFieldProcessor;
         this.timeBaselineDimension = timeBaselineDimension;

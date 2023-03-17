@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -61,7 +61,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     /**
      * 聚合函数字段处理器
      */
-    private AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
      * 中间状态数据外部存储

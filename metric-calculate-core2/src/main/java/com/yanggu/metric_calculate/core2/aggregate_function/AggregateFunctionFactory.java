@@ -76,10 +76,13 @@ public class AggregateFunctionFactory {
     }
 
     @SneakyThrows
-    public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate,
-                                                                               Map<String, Object> params) {
+    public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
         Class<? extends AggregateFunction> clazz = unitMap.get(aggregate);
-        AggregateFunction aggregateFunction = clazz.newInstance();
+        return clazz.newInstance();
+    }
+
+    public static void initAggregateFunction(AggregateFunction aggregateFunction, Map<String, Object> params) {
+        Class<? extends AggregateFunction> clazz = aggregateFunction.getClass();
         //通过反射给聚合函数的参数赋值
         if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(clazz.getDeclaredFields())) {
             for (Field field : clazz.getDeclaredFields()) {
@@ -91,7 +94,6 @@ public class AggregateFunctionFactory {
             }
         }
         aggregateFunction.init();
-        return aggregateFunction;
     }
 
 }

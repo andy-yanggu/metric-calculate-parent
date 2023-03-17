@@ -3,8 +3,8 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
@@ -18,26 +18,20 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class NumberAggregateFieldProcessor<IN, ACC, OUT> extends AbstractAggregateFieldProcessor<IN, ACC, OUT> {
+public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
     private BaseUdafParam udafParam;
 
     private Map<String, Class<?>> fieldMap;
 
+    private Numerical numerical;
+
     private MetricFieldProcessor<Number> metricFieldProcessor;
 
     private List<MetricFieldProcessor<Number>> metricFieldProcessorList;
 
-    private Numerical numerical;
-
-    public NumberAggregateFieldProcessor(AggregateFunction<IN, ACC, OUT> aggregateFunction) {
-        super(aggregateFunction);
-        this.numerical = aggregateFunction.getClass().getAnnotation(Numerical.class);
-    }
-
     @Override
     public void init() throws Exception {
-        super.init();
         if (numerical.multiNumber()) {
             List<String> metricExpressList = udafParam.getMetricExpressList();
             if (CollUtil.isEmpty(metricExpressList)) {
@@ -63,7 +57,7 @@ public class NumberAggregateFieldProcessor<IN, ACC, OUT> extends AbstractAggrega
             for (MetricFieldProcessor<Number> fieldProcessor : this.metricFieldProcessorList) {
                 Number tempData = fieldProcessor.process(input);
                 if (tempData == null) {
-                    return null;
+                    throw new RuntimeException("度量值为空, 度量表达式" + fieldProcessor.getMetricExpress());
                 }
                 dataList.add(tempData);
             }

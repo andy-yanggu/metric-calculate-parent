@@ -9,7 +9,8 @@ import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFac
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.enums.TimeUnit;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
@@ -144,7 +145,7 @@ public class MetricUtil {
         aggregateFunctionFactory.init();
 
         //设置聚合字段处理器
-        AbstractAggregateFieldProcessor<IN, ACC, OUT> abstractAggregateFieldProcessor =
+        AggregateFieldProcessor<IN, ACC, OUT> abstractAggregateFieldProcessor =
                 FieldProcessorUtil.getAbstractAggregateFieldProcessor(tempDerive, fieldMap, aggregateFunctionFactory);
         deriveMetricCalculate.setAggregateFieldProcessor(abstractAggregateFieldProcessor);
 
@@ -153,7 +154,9 @@ public class MetricUtil {
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(tempDerive.getDuration(), tempDerive.getTimeUnit());
+        Integer duration = tempDerive.getDuration();
+        TimeUnit timeUnit = tempDerive.getTimeUnit();
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(duration, timeUnit);
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器

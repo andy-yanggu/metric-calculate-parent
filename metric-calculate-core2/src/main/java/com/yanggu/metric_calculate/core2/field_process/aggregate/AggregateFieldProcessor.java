@@ -2,31 +2,47 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import lombok.SneakyThrows;
 
 import java.util.Collection;
 
-public abstract class AbstractAggregateFieldProcessor<IN, ACC, OUT> implements FieldProcessor<JSONObject, IN> {
-    
-    protected final AggregateFunction<IN, ACC, OUT> aggregateFunction;
+/**
+ * 聚合字段处理器
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
+public class AggregateFieldProcessor<IN, ACC, OUT> {
 
-    protected AbstractAggregateFieldProcessor(AggregateFunction<IN, ACC, OUT> aggregateFunction) {
+    /**
+     * 从输入的明细数据中提取出度量值
+     */
+    private final FieldProcessor<JSONObject, IN> fieldProcessor;
+
+    /**
+     * 聚合函数
+     */
+    private final AggregateFunction<IN, ACC, OUT> aggregateFunction;
+
+    public AggregateFieldProcessor(FieldProcessor<JSONObject, IN> fieldProcessor,
+                                   AggregateFunction<IN, ACC, OUT> aggregateFunction) {
+        this.fieldProcessor = fieldProcessor;
         this.aggregateFunction = aggregateFunction;
-    }
-
-    @Override
-    public void init() throws Exception {
     }
 
     /**
      * 从明细数据中提取出度量值
      *
-     * @param input
-     * @return
-     * @throws Exception
+     * @param input 明细数据
+     * @return 度量值
      */
-    public abstract IN process(JSONObject input);
+    @SneakyThrows
+    public IN process(JSONObject input) {
+        return fieldProcessor.process(input);
+    }
 
     /**
      * 将度量值添加到累加器中, 并返回累加器
