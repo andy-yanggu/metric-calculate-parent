@@ -5,15 +5,15 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
-import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
-import com.yanggu.metric_calculate.core2.unit.numeric.SumAggregateFunction;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
 
 public class DeriveMetricCalculateTest {
 
@@ -30,14 +30,7 @@ public class DeriveMetricCalculateTest {
     @Test
     public void testExec1() {
         Derive derive = this.metricCalculate.getDerive().get(0);
-        DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, metricCalculate);
-
-        //AggregateFieldProcessor<Double, Double, Double> aggregateFieldProcessor = new AggregateFieldProcessor<>();
-        //aggregateFieldProcessor.setAggregateFunction(new SumAggregateFunction<>());
-        //MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(this.metricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
-        //deriveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
-        //deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
-
+        DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, metricCalculate);
         DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleHashMapStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
@@ -50,7 +43,15 @@ public class DeriveMetricCalculateTest {
         input.set("debit_amt_out", 800);
         input.set("trans_date", "20220609");
 
-        deriveMetricCalculate.stateExec(input);
+        List<Double> doubles = deriveMetricCalculate.stateExec(input);
+        assertEquals(800.0D, doubles.get(0), 0.0D);
+
+        doubles = deriveMetricCalculate.stateExec(input);
+        assertEquals(1600.0D, doubles.get(0), 0.0D);
+
+        input.set("debit_amt_out", 400);
+        doubles = deriveMetricCalculate.stateExec(input);
+        assertEquals(2000.0D, doubles.get(0), 0.0D);
     }
 
 }

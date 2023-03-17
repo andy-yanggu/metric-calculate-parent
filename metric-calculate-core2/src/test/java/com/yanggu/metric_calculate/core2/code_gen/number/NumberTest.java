@@ -5,18 +5,15 @@ import cn.hutool.extra.template.Template;
 import cn.hutool.extra.template.TemplateConfig;
 import cn.hutool.extra.template.TemplateEngine;
 import cn.hutool.extra.template.TemplateUtil;
-import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import org.codehaus.commons.compiler.util.ResourceFinderClassLoader;
 import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.StringResource;
-import org.codehaus.janino.ClassLoaderIClassLoader;
 import org.codehaus.janino.Compiler;
-import org.junit.Assert;
 import org.junit.Test;
 
-import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -45,13 +42,13 @@ public class NumberTest {
         Map<String, byte[]> classes = new HashMap<>();
         compiler.setClassFileCreator((new MapResourceCreator(classes)));
 
-        compiler.compile(new Resource[] {new StringResource("com.yanggu.metric_calculate.core2.unit.numeric/Sum_Double_AggregateFunction.java", templateCode)});
+        compiler.compile(new Resource[] {new StringResource("com.yanggu.metric_calculate.core2.aggregate_function.numeric/Sum_Double_AggregateFunction.java", templateCode)});
 
         ClassLoader cl = new ResourceFinderClassLoader(
                 new MapResourceFinder(classes),  /// resourceFinder
                 ClassLoader.getSystemClassLoader()  /// parent
         );
-        Class<?> clazz = cl.loadClass("com.yanggu.metric_calculate.core2.unit.numeric.Sum_Double_AggregateFunction");
+        Class<?> clazz = cl.loadClass("com.yanggu.metric_calculate.core2.aggregate_function.numeric.Sum_Double_AggregateFunction");
         Object obj = clazz.newInstance();
         AggregateFunction<Double, Double, Double> aggregateFunction = (AggregateFunction) obj;
         Double accumulator = aggregateFunction.createAccumulator();

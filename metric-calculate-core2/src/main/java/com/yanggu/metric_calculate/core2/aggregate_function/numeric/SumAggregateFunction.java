@@ -1,8 +1,12 @@
-package com.yanggu.metric_calculate.core2.unit.numeric;
+package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
 
-import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 
+/**
+ * 累加
+ * @param <T>
+ */
 public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override

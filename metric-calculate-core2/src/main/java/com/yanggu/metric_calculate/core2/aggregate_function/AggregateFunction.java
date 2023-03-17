@@ -1,8 +1,9 @@
-package com.yanggu.metric_calculate.core2.unit;
+package com.yanggu.metric_calculate.core2.aggregate_function;
 
 
 /**
- * 用于定义如何进行数据的增量计算
+ * 定义输入数据、中间状态累计数据、输出数据
+ * <p>定义了如何进行增量计算</p>
  *
  * @param <IN> 输入的数据
  * @param <ACC> 中间累加数据
@@ -10,6 +11,9 @@ package com.yanggu.metric_calculate.core2.unit;
  */
 public interface AggregateFunction<IN, ACC, OUT> {
 
+    /**
+     * 初始化方法, 默认空代码, 实现类可以重写该方法
+     */
     default void init() {
     }
 

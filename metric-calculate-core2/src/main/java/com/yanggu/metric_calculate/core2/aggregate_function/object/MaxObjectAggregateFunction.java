@@ -1,6 +1,6 @@
-package com.yanggu.metric_calculate.core2.unit.object;
+package com.yanggu.metric_calculate.core2.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 
 
 public class MaxObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, T, T> {

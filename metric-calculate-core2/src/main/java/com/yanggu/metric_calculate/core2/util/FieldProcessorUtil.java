@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core2.util;
 
 
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.NumberAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
@@ -8,10 +10,17 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.Mult
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import lombok.SneakyThrows;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -123,10 +132,20 @@ public class FieldProcessorUtil {
         return tempMultiFieldOrderFieldProcessor;
     }
 
-    //public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-    //                                                                     Derive derive,
-    //                                                                     Map<String, Class<?>> fieldMap) {
-    //
-    //}
+    @SneakyThrows
+    public static <IN, ACC, OUT> AbstractAggregateFieldProcessor<IN, ACC, OUT> getAbstractAggregateFieldProcessor(
+                                                                         Derive derive,
+                                                                         Map<String, Class<?>> fieldMap) {
+        List<BaseUdafParam> baseUdafParamList = Arrays.asList(derive.getBaseUdafParam(), derive.getExternalBaseUdafParam());
+        MapUnitUdafParam mapUdafParam = derive.getMapUdafParam();
+        MixUnitUdafParam mixUnitUdafParam = derive.getMixUnitUdafParam();
+        String aggregateType = derive.getCalculateLogic();
+        AggregateFunction<IN, ACC, OUT> aggregateFunction = AggregateFunctionFactory.getAggregateFunction(aggregateType, null);
+        NumberAggregateFieldProcessor<IN, ACC, OUT> numberAggregateFieldProcessor = new NumberAggregateFieldProcessor<>(aggregateFunction);
+        numberAggregateFieldProcessor.setUdafParam(derive.getBaseUdafParam());
+        numberAggregateFieldProcessor.setFieldMap(fieldMap);
+        numberAggregateFieldProcessor.init();
+        return numberAggregateFieldProcessor;
+    }
 
 }

@@ -1,7 +1,7 @@
-package com.yanggu.metric_calculate.core2.unit.collection;
+package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import cn.hutool.core.collection.BoundedPriorityQueue;
-import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 
 import java.util.List;
 

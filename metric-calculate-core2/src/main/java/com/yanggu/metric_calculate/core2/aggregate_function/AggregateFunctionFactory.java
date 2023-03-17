@@ -1,7 +1,7 @@
-package com.yanggu.metric_calculate.core2.unit;
+package com.yanggu.metric_calculate.core2.aggregate_function;
 
 
-import com.yanggu.metric_calculate.core2.unit.numeric.SumAggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +22,9 @@ public class AggregateFunctionFactory {
 
     }
 
-    public static <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
+    public static <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate,
+                                                                                      Map<String, Object> param) {
         return new SumAggregateFunction();
     }
-
 
 }

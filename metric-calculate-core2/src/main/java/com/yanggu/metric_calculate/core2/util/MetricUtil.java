@@ -6,7 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
@@ -56,8 +56,9 @@ public class MetricUtil {
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //设置聚合字段处理器
-        //AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor = new AggregateFieldProcessor<>();
-        //deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
+        AbstractAggregateFieldProcessor<IN, ACC, OUT> abstractAggregateFieldProcessor =
+                FieldProcessorUtil.getAbstractAggregateFieldProcessor(tempDerive, fieldMap);
+        deriveMetricCalculate.setAggregateFieldProcessor(abstractAggregateFieldProcessor);
 
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());

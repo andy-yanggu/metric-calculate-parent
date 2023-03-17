@@ -3,16 +3,17 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.unit.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-@Data
-public class AggregateNumberFieldProcessor<IN, ACC, OUT> implements AggregateFieldProcessor<IN, ACC, OUT> {
+@Getter
+@Setter
+public class NumberAggregateFieldProcessor<IN, ACC, OUT> extends AbstractAggregateFieldProcessor<IN, ACC, OUT> {
 
     private BaseUdafParam udafParam;
 
@@ -22,23 +23,23 @@ public class AggregateNumberFieldProcessor<IN, ACC, OUT> implements AggregateFie
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
+    public NumberAggregateFieldProcessor(AggregateFunction<IN, ACC, OUT> aggregateFunction) {
+        super(aggregateFunction);
+    }
+
     @Override
     public void init() throws Exception {
+        super.init();
         this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getMetricExpress());
-        List<String> metricExpressList = udafParam.getMetricExpressList();
-        this.metricFieldProcessorList = metricExpressList.stream()
-                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
-                .collect(Collectors.toList());
+        //List<String> metricExpressList = udafParam.getMetricExpressList();
+        //this.metricFieldProcessorList = metricExpressList.stream()
+        //        .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
+        //        .collect(Collectors.toList());
     }
 
     @Override
     public IN process(JSONObject input) {
         return (IN) metricFieldProcessor.process(input);
-    }
-
-    @Override
-    public AggregateFunction<IN, ACC, OUT> getAggregateFunction() {
-        return null;
     }
 
 }
