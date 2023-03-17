@@ -1,12 +1,18 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+@Collective
+@MergeType("LISTOBJECT")
+public class ListObjectFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
-public class ListFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
+    private Integer limit = 10;
 
     @Override
     public List<T> createAccumulator() {
@@ -15,7 +21,9 @@ public class ListFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
     @Override
     public List<T> add(T value, List<T> accumulator) {
-        accumulator.add(value);
+        if (limit > accumulator.size()) {
+            accumulator.add(value);
+        }
         return accumulator;
     }
 
@@ -26,7 +34,10 @@ public class ListFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
     @Override
     public List<T> merge(List<T> thisAccumulator, List<T> thatAccumulator) {
-        thisAccumulator.addAll(thatAccumulator);
+        Iterator<T> iterator = thatAccumulator.iterator();
+        while (limit > thisAccumulator.size() && iterator.hasNext()) {
+            thisAccumulator.add(iterator.next());
+        }
         return thisAccumulator;
     }
 

@@ -4,26 +4,24 @@ package com.yanggu.metric_calculate.core2.table;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
-import lombok.Data;
 
 import java.util.Collection;
 import java.util.TreeMap;
 
-@Data
-public class TimeTable<IN, ACC, OUT> {
 
-    private AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+public class TimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
-    private TimeBaselineDimension timeBaselineDimension;
+    private final TreeMap<Long, ACC> treeMap = new TreeMap<>();
 
-    private TreeMap<Long, ACC> treeMap = new TreeMap<>();
+    public TimeTable(AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor, TimeBaselineDimension timeBaselineDimension) {
+        super(aggregateFieldProcessor, timeBaselineDimension);
+    }
 
-    public ACC put(Long timestamp, IN in) {
+    public void put(Long timestamp, IN in) {
         Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         ACC historyAcc = treeMap.get(aggregateTimestamp);
         ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
         treeMap.put(aggregateTimestamp, nowAcc);
-        return nowAcc;
     }
 
     public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {

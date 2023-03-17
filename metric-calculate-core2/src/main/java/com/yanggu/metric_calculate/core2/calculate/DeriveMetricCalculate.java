@@ -58,6 +58,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      */
     private DimensionSetProcessor dimensionSetProcessor;
 
+    /**
+     * 聚合函数字段处理器
+     */
     private AbstractAggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
@@ -80,6 +83,12 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      */
     private Boolean isUdaf;
 
+    /**
+     * 有状态计算
+     *
+     * @param input
+     * @return
+     */
     @SneakyThrows
     public List<OUT> stateExec(JSONObject input) {
         //执行前置过滤条件
@@ -89,8 +98,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         }
 
         //提取出度量值
-        IN metricData = aggregateFieldProcessor.process(input);
-        if (metricData == null) {
+        IN in = aggregateFieldProcessor.process(input);
+        if (in == null) {
             return Collections.emptyList();
         }
 
@@ -101,45 +110,60 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
         //查询外部数据
-        MetricCube<IN, ACC, OUT> metricCube = deriveMetricMiddleStore.get(dimensionSet);
-        if (metricCube == null) {
-            metricCube = createMetricCube(dimensionSet);
+        MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
+        if (historyMetricCube == null) {
+            historyMetricCube = createMetricCube(dimensionSet);
         }
-        TimeTable<IN, ACC, OUT> timeTable = metricCube.getTimeTable();
+        TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
 
         //放入明细数据进行累加
-        timeTable.put(timestamp, metricData);
+        timeTable.put(timestamp, in);
 
         List<OUT> list = new ArrayList<>();
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
         for (TimeWindow window : timeWindow) {
-            OUT mergeResult = timeTable.query(window.getWindowStart(), true, window.getWindowEnd(), false);
+            long windowStart = window.getWindowStart();
+            long windowEnd = window.getWindowEnd();
+            OUT mergeResult = timeTable.query(windowStart, true, windowEnd, false);
             if (mergeResult != null) {
                 list.add(mergeResult);
             }
         }
-        deriveMetricMiddleStore.update(metricCube);
+        deriveMetricMiddleStore.update(historyMetricCube);
         return list;
     }
 
+    /**
+     * 无状态计算
+     * <p>区别在于是否考虑当前笔</p>
+     * <p>是否写入到外部存储中</p>
+     *
+     * @param input 明细数据
+     * @return
+     */
     @SneakyThrows
     public List<OUT> noStateExec(JSONObject input) {
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-        MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
+
+        //提取出时间字段
         Long timestamp = timeFieldProcessor.process(input);
+
+        //查询外部数据
+        MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
 
         //包含当前笔需要执行前置过滤条件
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-            IN process = aggregateFieldProcessor.process(input);
-            if (process != null) {
+            //提取出度量值
+            IN in = aggregateFieldProcessor.process(input);
+            if (in != null) {
                 if (historyMetricCube == null) {
                     historyMetricCube = createMetricCube(dimensionSet);
                 }
                 TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
 
                 //放入明细数据进行累加
-                timeTable.put(timestamp, process);
+                timeTable.put(timestamp, in);
             }
         }
         if (historyMetricCube == null) {
@@ -149,8 +173,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
         TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
         for (TimeWindow window : timeWindow) {
-            OUT mergeResult = timeTable
-                    .query(window.getWindowStart(), true, window.getWindowEnd(), false);
+            long windowStart = window.getWindowStart();
+            long windowEnd = window.getWindowEnd();
+            OUT mergeResult = timeTable.query(windowStart, true, windowEnd, false);
             if (mergeResult != null) {
                 list.add(mergeResult);
             }
@@ -161,10 +186,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
+        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>(aggregateFieldProcessor, timeBaselineDimension);
         metricCube.setTimeTable(timeTable);
-        timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-        timeTable.setTimeBaselineDimension(timeBaselineDimension);
         return metricCube;
     }
 

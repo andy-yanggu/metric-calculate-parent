@@ -6,22 +6,22 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
 
 /**
- * 求和
+ * 最大值
  *
  * @param <T>
  */
 @Numerical
-@MergeType("SUM")
-public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
+@MergeType("MAX")
+public class MaxAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override
     public Double createAccumulator() {
-        return 0.0D;
+        return Double.MIN_VALUE;
     }
 
     @Override
     public Double add(T value, Double accumulator) {
-        return value.doubleValue() + accumulator;
+        return Math.max(value.doubleValue(), accumulator);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class SumAggregateFunction<T extends Number> implements AggregateFunction
 
     @Override
     public Double merge(Double thisAccumulator, Double thatAccumulator) {
-        return thisAccumulator + thatAccumulator;
+        return Math.max(thisAccumulator, thatAccumulator);
     }
 
 }

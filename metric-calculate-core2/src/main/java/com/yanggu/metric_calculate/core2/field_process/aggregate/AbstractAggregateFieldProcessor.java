@@ -9,7 +9,7 @@ import java.util.Collection;
 
 public abstract class AbstractAggregateFieldProcessor<IN, ACC, OUT> implements FieldProcessor<JSONObject, IN> {
     
-    private final AggregateFunction<IN, ACC, OUT> aggregateFunction;
+    protected final AggregateFunction<IN, ACC, OUT> aggregateFunction;
 
     protected AbstractAggregateFieldProcessor(AggregateFunction<IN, ACC, OUT> aggregateFunction) {
         this.aggregateFunction = aggregateFunction;
@@ -17,7 +17,6 @@ public abstract class AbstractAggregateFieldProcessor<IN, ACC, OUT> implements F
 
     @Override
     public void init() throws Exception {
-        aggregateFunction.init();
     }
 
     /**

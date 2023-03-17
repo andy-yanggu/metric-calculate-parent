@@ -8,9 +8,11 @@ import java.util.List;
 
 public class SortedListFunction<T extends Comparable<T>> implements AggregateFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
+    private Integer limit;
+
     @Override
     public BoundedPriorityQueue<T> createAccumulator() {
-        return new BoundedPriorityQueue<>(10);
+        return new BoundedPriorityQueue<>(limit);
     }
 
     @Override

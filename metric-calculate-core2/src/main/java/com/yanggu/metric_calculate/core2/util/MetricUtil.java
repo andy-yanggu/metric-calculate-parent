@@ -1,15 +1,19 @@
 package com.yanggu.metric_calculate.core2.util;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AbstractAggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
@@ -19,6 +23,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static com.yanggu.metric_calculate.core2.enums.MetricTypeEnum.DERIVE;
 
 /**
  * 指标工具类
@@ -27,6 +34,84 @@ import java.util.Map;
 public class MetricUtil {
 
     private MetricUtil() {
+    }
+
+    public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
+        if (tableData == null) {
+            throw new RuntimeException("明细宽表为空");
+        }
+
+        MetricCalculate metricCalculate = BeanUtil.copyProperties(tableData, MetricCalculate.class);
+
+        Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
+        metricCalculate.setMetricTypeMap(metricTypeMap);
+
+        //宽表字段
+        Map<String, Class<?>> fieldMap = getFieldMap(metricCalculate);
+        metricCalculate.setFieldMap(fieldMap);
+
+        //派生指标
+        List<Derive> deriveList = tableData.getDerive();
+        if (CollUtil.isNotEmpty(deriveList)) {
+            List<DeriveMetricCalculate> collect = deriveList.stream()
+                    .map(tempDerive -> {
+                        metricTypeMap.put(tempDerive.getName(), DERIVE);
+                        //初始化派生指标计算类
+                        return MetricUtil.initDerive(tempDerive, metricCalculate);
+                    })
+                    .collect(Collectors.toList());
+
+            //List<Class<? extends MergedUnit>> classList = new ArrayList<>();
+            //for (DeriveMetricCalculate<T, ?> deriveMetricCalculate : collect) {
+            //    if (Boolean.TRUE.equals(deriveMetricCalculate.getIsUdaf())) {
+            //        Class<? extends MergedUnit> mergeUnitClazz = deriveMetricCalculate.getAggregateFieldProcessor().getMergeUnitClazz();
+            //        classList.add(mergeUnitClazz);
+            //    }
+            //}
+            ////派生指标中间结算结果存储接口
+            //Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
+            //        AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
+            ////默认是内存的并发HashMap
+            //DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
+            ////初始化KryoPool
+            //KryoPool kryoPool = new KryoPool(true, true, 100);
+            //InputPool inputPool = new InputPool(true, true, 100);
+            //OutputPool outputPool = new OutputPool(true, true, 100);
+            //KryoUtil.init(kryoPool, inputPool, outputPool);
+            //if (metricMiddleStoreMap.size() != 1) {
+            //    for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
+            //        if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
+            //            deriveMetricMiddleStore = middleStoreEntry.getValue();
+            //            break;
+            //        }
+            //    }
+            //}
+            //DeriveMetricMiddleStore finalDeriveMetricMiddleStore = deriveMetricMiddleStore;
+            //collect.forEach(temp -> temp.setDeriveMetricMiddleStore(finalDeriveMetricMiddleStore));
+            metricCalculate.setDeriveMetricCalculateList(collect);
+        }
+
+        //复合指标
+        //List<Composite> compositeList = tableData.getComposite();
+        //if (CollUtil.isNotEmpty(compositeList)) {
+        //    List<CompositeMetricCalculate<T>> collect = new ArrayList<>();
+        //    compositeList.forEach(compositeMetric -> {
+        //        metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
+        //
+        //        //初始化复合指标计算类
+        //        List<CompositeMetricCalculate<T>> compositeMetricCalculateList =
+        //                MetricUtil.initComposite(compositeMetric, metricCalculate);
+        //        collect.addAll(compositeMetricCalculateList);
+        //    });
+        //    metricCalculate.setCompositeMetricCalculateList(collect);
+        //}
+        //
+        ////全局指标
+        //List<Global> globalList = tableData.getGlobal();
+        //if (CollUtil.isNotEmpty(globalList)) {
+        //    globalList.forEach(temp -> metricTypeMap.put(temp.getName(), GLOBAL));
+        //}
+        return metricCalculate;
     }
 
     /**
@@ -55,9 +140,12 @@ public class MetricUtil {
                 FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilter());
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
+        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(tempDerive.getUdafJarPathList());
+        aggregateFunctionFactory.init();
+
         //设置聚合字段处理器
         AbstractAggregateFieldProcessor<IN, ACC, OUT> abstractAggregateFieldProcessor =
-                FieldProcessorUtil.getAbstractAggregateFieldProcessor(tempDerive, fieldMap);
+                FieldProcessorUtil.getAbstractAggregateFieldProcessor(tempDerive, fieldMap, aggregateFunctionFactory);
         deriveMetricCalculate.setAggregateFieldProcessor(abstractAggregateFieldProcessor);
 
         //时间字段处理器
