@@ -22,6 +22,10 @@ import java.util.*;
 
 /**
  * 派生指标计算类
+ *
+ * @param <IN>  聚合函数输入值
+ * @param <ACC> 中间状态数据
+ * @param <OUT> 输出值
  */
 @Data
 @Slf4j

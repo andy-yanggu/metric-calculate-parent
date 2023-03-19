@@ -10,10 +10,6 @@ public class KryoPool extends Pool<Kryo> {
 
     //private List<Class<? extends MergedUnit>> classList;
 
-    public KryoPool() {
-        super(true, false, 100);
-    }
-
     public KryoPool(boolean threadSafe, boolean softReferences, int maximumCapacity) {
         super(threadSafe, softReferences, maximumCapacity);
     }

@@ -40,12 +40,6 @@ public class JmhTest1 {
         Derive derive = tempMetricCalculate.getDerive().get(0);
         DeriveMetricCalculate<Double, Double, Double> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
 
-        //AggregateFieldProcessor<Double, Double, Double> aggregateFieldProcessor = new AggregateFieldProcessor<>();
-        //aggregateFieldProcessor.setAggregateFunction(new SumAggregateFunction<>());
-        //MetricFieldProcessor<Double> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(tempMetricCalculate.getFieldMap(), derive.getBaseUdafParam().getMetricExpress());
-        //tempderiveMetricCalculate.setMetricFieldProcessor(metricFieldProcessor);
-        //tempderiveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
-
         DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleHashMapStore.init();
         tempderiveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);

@@ -2,18 +2,21 @@ package com.yanggu.metric_calculate.core2.util;
 
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.aggregate_function.map.AbstractMapAggregateFunction;
-import com.yanggu.metric_calculate.core2.annotation.*;
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MapType;
+import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.annotation.Objective;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core2.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
-import com.yanggu.metric_calculate.core2.field_process.origin.OriginFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
@@ -21,12 +24,9 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import lombok.SneakyThrows;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 

@@ -32,7 +32,8 @@ public class BaseMixAggregateFunction implements AggregateFunction<Map<String, O
     }
 
     @Override
-    public Map<String, Object> merge(Map<String, Object> thisAccumulator, Map<String, Object> thatAccumulator) {
+    public Map<String, Object> merge(Map<String, Object> thisAccumulator,
+                                     Map<String, Object> thatAccumulator) {
         return null;
     }
     

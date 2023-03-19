@@ -14,16 +14,16 @@ public class KryoUtil {
     private KryoUtil() {
     }
 
-    private static KryoPool KRYO_POOL;
+    private static KryoPool kryoPool = new KryoPool(true, true, 100);
 
-    private static InputPool INPUT_POOL;
+    private static InputPool inputPool = new InputPool(true, true, 100);
 
-    private static OutputPool OUTPUT_POOL;
+    private static OutputPool outputPool = new OutputPool(true, true, 100);
 
     public static void init(KryoPool kryoPool, InputPool inputPool, OutputPool outputPool) {
-        KRYO_POOL = kryoPool;
-        INPUT_POOL = inputPool;
-        OUTPUT_POOL = outputPool;
+        KryoUtil.kryoPool = kryoPool;
+        KryoUtil.inputPool = inputPool;
+        KryoUtil.outputPool = outputPool;
     }
 
     /**
@@ -34,16 +34,16 @@ public class KryoUtil {
      */
     public static byte[] serialize(Object object) {
         if (object == null) {
-            return new byte[0];
+            throw new RuntimeException("传入的对象为空");
         }
-        Kryo kryo = KRYO_POOL.obtain();
-        Output output = OUTPUT_POOL.obtain();
+        Kryo kryo = kryoPool.obtain();
+        Output output = outputPool.obtain();
         try {
             kryo.writeClassAndObject(output, object);
             return output.toBytes();
         } finally {
-            KRYO_POOL.free(kryo);
-            OUTPUT_POOL.free(output);
+            kryoPool.free(kryo);
+            outputPool.free(output);
         }
     }
 
@@ -51,21 +51,21 @@ public class KryoUtil {
      * 反序列化方法
      *
      * @param bytes
-     * @return
      * @param <T>
+     * @return
      */
     public static <T> T deserialize(byte[] bytes) {
         if (ArrayUtil.isEmpty(bytes)) {
-            return null;
+            throw new RuntimeException("传入的字节数组为空");
         }
-        Kryo kryo = KRYO_POOL.obtain();
-        Input input = INPUT_POOL.obtain();
+        Kryo kryo = kryoPool.obtain();
+        Input input = inputPool.obtain();
         input.setBuffer(bytes);
         try {
             return (T) kryo.readClassAndObject(input);
         } finally {
-            INPUT_POOL.free(input);
-            KRYO_POOL.free(kryo);
+            inputPool.free(input);
+            kryoPool.free(kryo);
         }
     }
 
