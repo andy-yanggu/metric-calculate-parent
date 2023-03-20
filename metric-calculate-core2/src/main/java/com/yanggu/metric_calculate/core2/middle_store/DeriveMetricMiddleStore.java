@@ -9,7 +9,7 @@ import java.util.Map;
 
 /**
  * 派生指标中间结算结果存储接口
- * 可以实现远端存储和本地存储
+ * <p>可以实现远端存储和本地存储</p>
  */
 public interface DeriveMetricMiddleStore {
 

@@ -34,9 +34,9 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
 
         static {
             //默认放入memory
-            //DeriveMetricMiddleHashMapKryoStore memory = new DeriveMetricMiddleHashMapKryoStore();
-            //memory.init();
-            //STORE_MAP.put(DEFAULT_IMPL, memory);
+            DeriveMetricMiddleHashMapKryoStore memory = new DeriveMetricMiddleHashMapKryoStore();
+            memory.init();
+            STORE_MAP.put(DEFAULT_IMPL, memory);
         }
     }
 
