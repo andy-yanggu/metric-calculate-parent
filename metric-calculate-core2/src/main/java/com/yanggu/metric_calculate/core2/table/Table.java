@@ -10,9 +10,11 @@ public abstract class Table<IN, ACC, OUT> {
 
     protected TimeBaselineDimension timeBaselineDimension;
 
-    protected Table(AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor,
-                    TimeBaselineDimension timeBaselineDimension) {
+    public void setAggregateFieldProcessor(AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor) {
         this.aggregateFieldProcessor = aggregateFieldProcessor;
+    }
+
+    public void setTimeBaselineDimension(TimeBaselineDimension timeBaselineDimension) {
         this.timeBaselineDimension = timeBaselineDimension;
     }
 

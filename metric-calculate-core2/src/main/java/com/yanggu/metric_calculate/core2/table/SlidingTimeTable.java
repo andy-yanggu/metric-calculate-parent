@@ -16,11 +16,6 @@ public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     private Map<Tuple2<Long, Long>, ACC> map = new HashMap<>();
 
-    public SlidingTimeTable(AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor,
-                            TimeBaselineDimension timeBaselineDimension) {
-        super(aggregateFieldProcessor, timeBaselineDimension);
-    }
-
     @Override
     public void put(Long timestamp, IN in) {
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);

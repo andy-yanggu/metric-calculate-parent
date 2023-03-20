@@ -47,8 +47,8 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
     /**
      * 将度量值添加到累加器中, 并返回累加器
      *
-     * @param oldAcc
-     * @param in
+     * @param oldAcc 历史中间状态数据
+     * @param in     度量值
      * @return
      */
     public ACC add(ACC oldAcc, IN in) {
@@ -62,7 +62,7 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
     /**
      * 从累加器中获取输出值
      *
-     * @param accumulator
+     * @param accumulator 累加器
      * @return
      */
     public OUT getOut(ACC accumulator) {

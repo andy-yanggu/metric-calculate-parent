@@ -119,6 +119,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             historyMetricCube = createMetricCube(dimensionSet);
         }
         TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+        timeTable.setTimeBaselineDimension(timeBaselineDimension);
+        timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //放入明细数据进行累加
         timeTable.put(timestamp, in);
@@ -165,6 +167,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
                     historyMetricCube = createMetricCube(dimensionSet);
                 }
                 TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+                timeTable.setTimeBaselineDimension(timeBaselineDimension);
+                timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
                 //放入明细数据进行累加
                 timeTable.put(timestamp, in);
@@ -176,6 +180,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         List<OUT> list = new ArrayList<>();
         List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
         TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+        timeTable.setTimeBaselineDimension(timeBaselineDimension);
+        timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
         for (TimeWindow window : timeWindow) {
             long windowStart = window.getWindowStart();
             long windowEnd = window.getWindowEnd();
@@ -190,7 +196,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>(aggregateFieldProcessor, timeBaselineDimension);
+        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
         metricCube.setTimeTable(timeTable);
         return metricCube;
     }

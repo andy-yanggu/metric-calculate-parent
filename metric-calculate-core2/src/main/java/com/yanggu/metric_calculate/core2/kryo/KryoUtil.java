@@ -56,7 +56,7 @@ public class KryoUtil {
      */
     public static <T> T deserialize(byte[] bytes) {
         if (ArrayUtil.isEmpty(bytes)) {
-            throw new RuntimeException("传入的字节数组为空");
+            return null;
         }
         Kryo kryo = kryoPool.obtain();
         Input input = inputPool.obtain();

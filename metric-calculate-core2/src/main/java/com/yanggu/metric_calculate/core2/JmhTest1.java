@@ -6,6 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
@@ -29,6 +30,8 @@ public class JmhTest1 {
 
     private static DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate;
 
+    private static DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate1;
+
     private static JSONObject input;
 
     @Setup(Level.Trial)
@@ -37,14 +40,17 @@ public class JmhTest1 {
         String jsonString = IoUtil.read(resourceAsStream).toString();
         MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
         MetricUtil.getFieldMap(tempMetricCalculate);
-        Derive derive = tempMetricCalculate.getDerive().get(0);
-        DeriveMetricCalculate<Double, Double, Double> tempderiveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
 
+        Derive derive = tempMetricCalculate.getDerive().get(0);
+        deriveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
         DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleHashMapStore.init();
-        tempderiveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
+        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
 
-        deriveMetricCalculate = tempderiveMetricCalculate;
+        deriveMetricCalculate1 = MetricUtil.initDerive(derive, tempMetricCalculate);
+        DeriveMetricMiddleHashMapKryoStore deriveMetricMiddleHashMapKryoStore = new DeriveMetricMiddleHashMapKryoStore();
+        deriveMetricMiddleHashMapKryoStore.init();
+        deriveMetricCalculate1.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);
 
         JSONObject tempInput = new JSONObject();
         tempInput.set("account_no_out", "000000000011");
@@ -59,9 +65,25 @@ public class JmhTest1 {
         input = tempInput;
     }
 
+    /**
+     * 测试纯内存操作
+     *
+     * @param blackhole
+     */
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
         List<Double> exec = deriveMetricCalculate.stateExec(input);
+        blackhole.consume(exec);
+    }
+
+    /**
+     * 测试内存操作, 但是有kryo序列化和反序列化
+     *
+     * @param blackhole
+     */
+    @Benchmark
+    public void testUpdate_With_Kryo(Blackhole blackhole) {
+        List<Double> exec = deriveMetricCalculate1.stateExec(input);
         blackhole.consume(exec);
     }
 
