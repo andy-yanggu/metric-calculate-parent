@@ -32,5 +32,9 @@ public class MetricCalculate extends DataDetailsWideTable {
      */
     private Map<String, Class<?>> fieldMap;
 
+    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getIndexDeriveMetricCalculate(Integer index) {
+        return deriveMetricCalculateList.get(index);
+    }
+
 }
 

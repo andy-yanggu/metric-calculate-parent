@@ -17,6 +17,10 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey> 
 
     private List<Object> fieldList;
 
+    public MultiFieldDistinctKey(List<Object> fieldList) {
+        this.fieldList = fieldList;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(fieldList.toArray());

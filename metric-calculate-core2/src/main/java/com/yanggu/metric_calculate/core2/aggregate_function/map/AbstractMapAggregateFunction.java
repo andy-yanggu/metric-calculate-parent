@@ -8,23 +8,32 @@ import reactor.util.function.Tuple2;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 映射类型的基类
+ *
+ * @param <K> map的key
+ * @param <V> map的value输入值
+ * @param <ValueACC> map的value聚合值
+ * @param <ValueOUT> map的value输出值
+ * @param <OUT> 输出值
+ */
 @Data
-public abstract class AbstractMapAggregateFunction<IN, ACC, OUT>
-        implements AggregateFunction<Tuple2<Object, IN>, Map<Object, ACC>, OUT> {
+public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT>
+        implements AggregateFunction<Tuple2<K, V>, Map<K, ValueACC>, OUT> {
 
-    protected AggregateFunction<IN, ACC, OUT> valueAggregateFunction;
+    protected AggregateFunction<V, ValueACC, ValueOUT> valueAggregateFunction;
 
     @Override
-    public Map<Object, ACC> createAccumulator() {
+    public Map<K, ValueACC> createAccumulator() {
         return new HashMap<>();
     }
 
     @Override
-    public Map<Object, ACC> add(Tuple2<Object, IN> value, Map<Object, ACC> accumulator) {
-        Object key = value.getT1();
-        IN newValue = value.getT2();
+    public Map<K, ValueACC> add(Tuple2<K, V> tuple2, Map<K, ValueACC> accumulator) {
+        K key = tuple2.getT1();
+        V newValue = tuple2.getT2();
 
-        ACC acc = accumulator.get(key);
+        ValueACC acc = accumulator.get(key);
         if (acc == null) {
             acc = valueAggregateFunction.createAccumulator();
         }
@@ -34,9 +43,9 @@ public abstract class AbstractMapAggregateFunction<IN, ACC, OUT>
     }
 
     @Override
-    public Map<Object, ACC> merge(Map<Object, ACC> thisAccumulator, Map<Object, ACC> thatAccumulator) {
+    public Map<K, ValueACC> merge(Map<K, ValueACC> thisAccumulator, Map<K, ValueACC> thatAccumulator) {
         thatAccumulator.forEach((tempKey, tempAcc) -> {
-            ACC acc = thisAccumulator.get(tempKey);
+            ValueACC acc = thisAccumulator.get(tempKey);
             if (acc == null) {
                 acc = valueAggregateFunction.createAccumulator();
             }
@@ -46,4 +55,13 @@ public abstract class AbstractMapAggregateFunction<IN, ACC, OUT>
         return thisAccumulator;
     }
 
+    @Override
+    public OUT getResult(Map<K, ValueACC> accumulator) {
+        Map<K, ValueOUT> map = new HashMap<>();
+        accumulator.forEach((tempKey, tempValueAcc) -> {
+            map.put(tempKey, valueAggregateFunction.getResult(tempValueAcc));
+        });
+        return (OUT) map;
+    }
+    
 }

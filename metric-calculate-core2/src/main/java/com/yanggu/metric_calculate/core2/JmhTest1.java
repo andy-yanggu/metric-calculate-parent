@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -72,7 +73,7 @@ public class JmhTest1 {
      */
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
-        List<Double> exec = deriveMetricCalculate.stateExec(input);
+        List<DeriveMetricCalculateResult<Double>> exec = deriveMetricCalculate.stateExec(input);
         blackhole.consume(exec);
     }
 
@@ -83,7 +84,7 @@ public class JmhTest1 {
      */
     @Benchmark
     public void testUpdate_With_Kryo(Blackhole blackhole) {
-        List<Double> exec = deriveMetricCalculate1.stateExec(input);
+        List<DeriveMetricCalculateResult<Double>> exec = deriveMetricCalculate1.stateExec(input);
         blackhole.consume(exec);
     }
 

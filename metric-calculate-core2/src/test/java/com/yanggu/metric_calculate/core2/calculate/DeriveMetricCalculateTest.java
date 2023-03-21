@@ -2,12 +2,10 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 
 import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,18 +23,14 @@ public class DeriveMetricCalculateTest {
     @Before
     public void init() {
         String jsonString = FileUtil.readUtf8String("test3.json");
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
-        MetricUtil.getFieldMap(tempMetricCalculate);
-        this.metricCalculate = tempMetricCalculate;
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, MetricCalculate.class);
+        this.metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
     }
 
     @Test
     public void testExec1() {
-        Derive derive = this.metricCalculate.getDerive().get(0);
-        DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, metricCalculate);
-        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleHashMapStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
+        DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate =
+                this.metricCalculate.getIndexDeriveMetricCalculate(0);
 
         JSONObject input = new JSONObject();
         input.set("account_no_out", "000000000011");
@@ -46,15 +40,15 @@ public class DeriveMetricCalculateTest {
         input.set("debit_amt_out", 800);
         input.set("trans_date", "20220609");
 
-        List<Double> doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(800.0D, doubles.get(0), 0.0D);
+        List<DeriveMetricCalculateResult<Double>> doubles = deriveMetricCalculate.stateExec(input);
+        assertEquals(800.0D, doubles.get(0).getResult(), 0.0D);
 
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(1600.0D, doubles.get(0), 0.0D);
+        assertEquals(1600.0D, doubles.get(0).getResult(), 0.0D);
 
         input.set("debit_amt_out", 400);
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(2000.0D, doubles.get(0), 0.0D);
+        assertEquals(2000.0D, doubles.get(0).getResult(), 0.0D);
     }
 
     /**
@@ -62,12 +56,8 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test5() {
-        Derive derive = this.metricCalculate.getDerive().get(4);
         DeriveMetricCalculate<JSONObject, List<JSONObject>, List<JSONObject>> deriveMetricCalculate =
-                MetricUtil.initDerive(derive, metricCalculate);
-        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleHashMapStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
+                this.metricCalculate.getIndexDeriveMetricCalculate(4);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -77,8 +67,8 @@ public class DeriveMetricCalculateTest {
         input1.set("trans_date", "20220609");
         input1.set("debit_amt_out", "800");
 
-        List<List<JSONObject>> query = deriveMetricCalculate.stateExec(input1);
-        assertEquals(Collections.singletonList(input1), query.get(0));
+        List<DeriveMetricCalculateResult<List<JSONObject>>> query = deriveMetricCalculate.stateExec(input1);
+        assertEquals(Collections.singletonList(input1), query.get(0).getResult());
 
         JSONObject input2 = new JSONObject();
         input2.set("account_no_out", "000000000011");
@@ -88,7 +78,7 @@ public class DeriveMetricCalculateTest {
         input2.set("trans_date", "20220609");
         input2.set("debit_amt_out", 900);
         query = deriveMetricCalculate.stateExec(input2);
-        assertEquals(Arrays.asList(input1, input2), query.get(0));
+        assertEquals(Arrays.asList(input1, input2), query.get(0).getResult());
 
         JSONObject input3 = new JSONObject();
         input3.set("account_no_out", "000000000011");
@@ -98,7 +88,7 @@ public class DeriveMetricCalculateTest {
         input3.set("trans_date", "20220609");
         input3.set("debit_amt_out", 1000);
         query = deriveMetricCalculate.stateExec(input3);
-        assertEquals(Arrays.asList(input1, input2, input3), query.get(0));
+        assertEquals(Arrays.asList(input1, input2, input3), query.get(0).getResult());
 
         JSONObject input4 = new JSONObject();
         input4.set("account_no_out", "000000000011");
@@ -108,7 +98,7 @@ public class DeriveMetricCalculateTest {
         input4.set("trans_date", "20220609");
         input4.set("debit_amt_out", 1100);
         query = deriveMetricCalculate.stateExec(input4);
-        assertEquals(Arrays.asList(input1, input2, input3, input4), query.get(0));
+        assertEquals(Arrays.asList(input1, input2, input3, input4), query.get(0).getResult());
 
         JSONObject input5 = new JSONObject();
         input5.set("account_no_out", "000000000011");
@@ -118,7 +108,7 @@ public class DeriveMetricCalculateTest {
         input5.set("trans_date", "20220609");
         input5.set("debit_amt_out", 100);
         query = deriveMetricCalculate.stateExec(input5);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0));
+        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0).getResult());
 
         JSONObject input6 = new JSONObject();
         input6.set("account_no_out", "000000000011");
@@ -128,7 +118,7 @@ public class DeriveMetricCalculateTest {
         input6.set("trans_date", "20220609");
         input6.set("debit_amt_out", 100);
         query = deriveMetricCalculate.stateExec(input6);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0));
+        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0).getResult());
 
         JSONObject input7 = new JSONObject();
         input7.set("account_no_out", "000000000011");
@@ -138,7 +128,7 @@ public class DeriveMetricCalculateTest {
         input7.set("trans_date", "20220609");
         input7.set("debit_amt_out", 100);
         query = deriveMetricCalculate.stateExec(input7);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0));
+        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0).getResult());
     }
 
     /**
@@ -147,13 +137,9 @@ public class DeriveMetricCalculateTest {
      */
     @Test
     public void test7() {
-
-        Derive derive = this.metricCalculate.getDerive().get(6);
-        DeriveMetricCalculate<Tuple2<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate =
-                MetricUtil.initDerive(derive, metricCalculate);
-        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleHashMapStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
+        DeriveMetricCalculate<Tuple2<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
+                Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
+                = this.metricCalculate.getIndexDeriveMetricCalculate(6);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -163,10 +149,12 @@ public class DeriveMetricCalculateTest {
         input1.set("trans_date", "20220609");
         input1.set("debit_amt_out", 800);
 
-        List<Map<MultiFieldDistinctKey, Double>> maps = deriveMetricCalculate.stateExec(input1);
-        Map<List<String>, BigDecimal> map = new HashMap<>();
-        map.put(Collections.singletonList("000000000012"), new BigDecimal("800"));
-        //assertEquals(map, query.get(0).getResult());
+        List<DeriveMetricCalculateResult<Map<MultiFieldDistinctKey, Double>>> query =
+                deriveMetricCalculate.stateExec(input1);
+        Map<MultiFieldDistinctKey, Double> map = new HashMap<>();
+        MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("000000000012"));
+        map.put(key, 800.0D);
+        assertEquals(map, query.get(0).getResult());
 
         JSONObject input2 = new JSONObject();
         input2.set("account_no_out", "000000000011");
@@ -175,64 +163,66 @@ public class DeriveMetricCalculateTest {
         input2.set("credit_amt_in", "100");
         input2.set("trans_date", "20220609");
         input2.set("debit_amt_out", 900);
-        //query = deriveMetricCalculate.stateExec(input2);
-        //map.put(Collections.singletonList("000000000012"), new BigDecimal("1700"));
-        //assertEquals(map, query.get(0).getResult());
+        query = deriveMetricCalculate.stateExec(input2);
+        map.put(key, 1700.0D);
+        assertEquals(map, query.get(0).getResult());
 
-        //JSONObject input3 = new JSONObject();
-        //input3.set("account_no_out", "000000000011");
-        //input3.set("account_no_in", "000000000012");
-        //input3.set("trans_timestamp", "1654768045000");
-        //input3.set("credit_amt_in", "100");
-        //input3.set("trans_date", "20220609");
-        //input3.set("debit_amt_out", 1000);
-        //query = deriveMetricCalculate.stateExec(input3);
-        //map.put(Collections.singletonList("000000000012"), new BigDecimal("2700"));
-        //assertEquals(map, query.get(0).getResult());
-        //
-        //JSONObject input4 = new JSONObject();
-        //input4.set("account_no_out", "000000000011");
-        //input4.set("account_no_in", "000000000013");
-        //input4.set("trans_timestamp", "1654768045000");
-        //input4.set("credit_amt_in", "100");
-        //input4.set("trans_date", "20220609");
-        //input4.set("debit_amt_out", 80);
-        //query = deriveMetricCalculate.stateExec(input4);
-        //map.put(Collections.singletonList("000000000013"), new BigDecimal("80"));
-        //assertEquals(map, query.get(0).getResult());
-        //
-        //JSONObject input5 = new JSONObject();
-        //input5.set("account_no_out", "000000000011");
-        //input5.set("account_no_in", "000000000013");
-        //input5.set("trans_timestamp", "1654768045000");
-        //input5.set("credit_amt_in", "100");
-        //input5.set("trans_date", "20220609");
-        //input5.set("debit_amt_out", 100);
-        //query = deriveMetricCalculate.stateExec(input5);
-        //map.put(Collections.singletonList("000000000013"), new BigDecimal("180"));
-        //assertEquals(map, query.get(0).getResult());
-        //
-        //JSONObject input6 = new JSONObject();
-        //input6.set("account_no_out", "000000000011");
-        //input6.set("account_no_in", "000000000012");
-        //input6.set("trans_timestamp", "1654768045000");
-        //input6.set("credit_amt_in", "100");
-        //input6.set("trans_date", "20220609");
-        //input6.set("debit_amt_out", 120);
-        //query = deriveMetricCalculate.stateExec(input6);
-        //map.put(Collections.singletonList("000000000012"), new BigDecimal("2820"));
-        //assertEquals(map, query.get(0).getResult());
-        //
-        //JSONObject input7 = new JSONObject();
-        //input7.set("account_no_out", "000000000011");
-        //input7.set("account_no_in", "000000000016");
-        //input7.set("trans_timestamp", "1654768045000");
-        //input7.set("credit_amt_in", "100");
-        //input7.set("trans_date", "20220609");
-        //input7.set("debit_amt_out", 100);
-        //query = deriveMetricCalculate.stateExec(input7);
-        //map.put(Collections.singletonList("000000000016"), new BigDecimal("100"));
-        //assertEquals(map, query.get(0).getResult());
+        JSONObject input3 = new JSONObject();
+        input3.set("account_no_out", "000000000011");
+        input3.set("account_no_in", "000000000012");
+        input3.set("trans_timestamp", "1654768045000");
+        input3.set("credit_amt_in", "100");
+        input3.set("trans_date", "20220609");
+        input3.set("debit_amt_out", 1000);
+        query = deriveMetricCalculate.stateExec(input3);
+        map.put(key, 2700.0D);
+        assertEquals(map, query.get(0).getResult());
+
+        JSONObject input4 = new JSONObject();
+        input4.set("account_no_out", "000000000011");
+        input4.set("account_no_in", "000000000013");
+        input4.set("trans_timestamp", "1654768045000");
+        input4.set("credit_amt_in", "100");
+        input4.set("trans_date", "20220609");
+        input4.set("debit_amt_out", 80);
+        query = deriveMetricCalculate.stateExec(input4);
+
+        MultiFieldDistinctKey key2 = new MultiFieldDistinctKey(Collections.singletonList("000000000013"));
+        map.put(key2, 80.0D);
+        assertEquals(map, query.get(0).getResult());
+
+        JSONObject input5 = new JSONObject();
+        input5.set("account_no_out", "000000000011");
+        input5.set("account_no_in", "000000000013");
+        input5.set("trans_timestamp", "1654768045000");
+        input5.set("credit_amt_in", "100");
+        input5.set("trans_date", "20220609");
+        input5.set("debit_amt_out", 100);
+        query = deriveMetricCalculate.stateExec(input5);
+        map.put(key2, 180.0D);
+        assertEquals(map, query.get(0).getResult());
+
+        JSONObject input6 = new JSONObject();
+        input6.set("account_no_out", "000000000011");
+        input6.set("account_no_in", "000000000012");
+        input6.set("trans_timestamp", "1654768045000");
+        input6.set("credit_amt_in", "100");
+        input6.set("trans_date", "20220609");
+        input6.set("debit_amt_out", 120);
+        query = deriveMetricCalculate.stateExec(input6);
+        map.put(key, 2820.0D);
+        assertEquals(map, query.get(0).getResult());
+
+        JSONObject input7 = new JSONObject();
+        input7.set("account_no_out", "000000000011");
+        input7.set("account_no_in", "000000000016");
+        input7.set("trans_timestamp", "1654768045000");
+        input7.set("credit_amt_in", "100");
+        input7.set("trans_date", "20220609");
+        input7.set("debit_amt_out", 100);
+        query = deriveMetricCalculate.stateExec(input7);
+        map.put(new MultiFieldDistinctKey(Collections.singletonList("000000000016")), 100.0D);
+        assertEquals(map, query.get(0).getResult());
     }
 
     /**
@@ -241,13 +231,9 @@ public class DeriveMetricCalculateTest {
     @Test
     public void test8() throws Exception {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
-                MetricUtil.initDerive(metricCalculate.getDerive().get(7), metricCalculate);
+                this.metricCalculate.getIndexDeriveMetricCalculate(7);
 
-        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleHashMapStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
-
-        List<Double> query;
+        List<DeriveMetricCalculateResult<Double>> query;
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -259,21 +245,21 @@ public class DeriveMetricCalculateTest {
 
         query = deriveMetricCalculate.stateExec(input1);
 
-        Double result = query.get(0);
+        Double result = query.get(0).getResult();
         //0 / 800
         assertEquals(0.0D, result, 0.0D);
 
         JSONObject input2 = input1.clone();
         input2.set("account_no_in", "张三");
         query = deriveMetricCalculate.stateExec(input2);
-        result = query.get(0);
+        result = query.get(0).getResult();
         //800 / 1600
         assertEquals(0.5D, result, 0.0D);
 
         JSONObject input3 = input1.clone();
         input3.set("account_no_in", "张三");
         query = deriveMetricCalculate.stateExec(input3);
-        result = query.get(0);
+        result = query.get(0).getResult();
         //1600 / 2400
         assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
     }

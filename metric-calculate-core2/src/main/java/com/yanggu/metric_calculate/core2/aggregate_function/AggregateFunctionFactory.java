@@ -7,6 +7,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@NoArgsConstructor
 public class AggregateFunctionFactory {
 
     /**
@@ -27,9 +29,9 @@ public class AggregateFunctionFactory {
     /**
      * 内置的AggregateFunction
      */
-    private static final Map<String, Class<? extends AggregateFunction>> BUILT_IN_UNIT_MAP = new HashMap<>();
+    private static final Map<String, Class<? extends AggregateFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
 
-    private Map<String, Class<? extends AggregateFunction>> unitMap = new HashMap<>();
+    private Map<String, Class<? extends AggregateFunction>> functionMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
@@ -45,7 +47,7 @@ public class AggregateFunctionFactory {
         for (Class<?> tempClazz : classSet) {
             MergeType annotation = tempClazz.getAnnotation(MergeType.class);
             String value = annotation.value();
-            Class<? extends AggregateFunction> put = BUILT_IN_UNIT_MAP.put(value, (Class<? extends AggregateFunction>) tempClazz);
+            Class<? extends AggregateFunction> put = BUILT_IN_FUNCTION_MAP.put(value, (Class<? extends AggregateFunction>) tempClazz);
             if (put != null) {
                 throw new RuntimeException(ERROR_MESSAGE + put.getName());
             }
@@ -61,10 +63,10 @@ public class AggregateFunctionFactory {
      *
      * @throws Exception
      */
-    public void init() throws Exception {
+    public void init() {
         //放入内置的BUILT_IN_UNIT_MAP
-        BUILT_IN_UNIT_MAP.forEach((aggregateType, clazz) -> {
-            Class<? extends AggregateFunction> put = unitMap.put(aggregateType, clazz);
+        BUILT_IN_FUNCTION_MAP.forEach((aggregateType, clazz) -> {
+            Class<? extends AggregateFunction> put = functionMap.put(aggregateType, clazz);
             if (put != null) {
                 throw new RuntimeException(ERROR_MESSAGE + put.getName());
             }
@@ -75,17 +77,17 @@ public class AggregateFunctionFactory {
         }
     }
 
-    @SneakyThrows
-    public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
-        Class<? extends AggregateFunction> clazz = unitMap.get(aggregate);
-        return clazz.newInstance();
-    }
-
-    public static void initAggregateFunction(AggregateFunction aggregateFunction, Map<String, Object> params) {
-        Class<? extends AggregateFunction> clazz = aggregateFunction.getClass();
+    /**
+     * 通过反射给聚合函数设置参数
+     *
+     * @param aggregateFunction
+     * @param params
+     */
+    public static void setUdafParam(AggregateFunction aggregateFunction, Map<String, Object> params) {
+        Field[] declaredFields = aggregateFunction.getClass().getDeclaredFields();
         //通过反射给聚合函数的参数赋值
-        if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(clazz.getDeclaredFields())) {
-            for (Field field : clazz.getDeclaredFields()) {
+        if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {
+            for (Field field : declaredFields) {
                 Object fieldData = params.get(field.getName());
                 if (fieldData != null) {
                     //通过反射给字段赋值
@@ -94,6 +96,21 @@ public class AggregateFunctionFactory {
             }
         }
         aggregateFunction.init();
+    }
+
+    /**
+     * 通过反射使用空参构造创建聚合函数
+     *
+     * @param aggregate
+     * @return
+     * @param <IN>
+     * @param <ACC>
+     * @param <OUT>
+     */
+    @SneakyThrows
+    public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
+        Class<? extends AggregateFunction> clazz = functionMap.get(aggregate);
+        return clazz.newInstance();
     }
 
 }

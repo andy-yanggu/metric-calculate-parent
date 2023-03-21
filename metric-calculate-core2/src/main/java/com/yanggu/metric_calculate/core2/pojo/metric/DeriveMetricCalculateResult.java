@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
  * 派生指标计算结果类
  */
 @Data
-public class DeriveMetricCalculateResult {
+public class DeriveMetricCalculateResult<OUT> {
 
     /**
      * 指标标识(数据明细宽表id-指标id)
@@ -41,6 +41,6 @@ public class DeriveMetricCalculateResult {
     /**
      * 派生指标计算结果指标值
      */
-    private Object result;
+    private OUT result;
 
 }

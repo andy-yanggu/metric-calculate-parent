@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core2.calculate;
 
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
@@ -9,6 +11,7 @@ import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetPro
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
@@ -94,7 +97,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public List<OUT> stateExec(JSONObject input) {
+    public List<DeriveMetricCalculateResult<OUT>> stateExec(JSONObject input) {
         //执行前置过滤条件
         Boolean filter = filterFieldProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
@@ -124,19 +127,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
 
         //放入明细数据进行累加
         timeTable.put(timestamp, in);
-
-        List<OUT> list = new ArrayList<>();
-        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
-        for (TimeWindow window : timeWindow) {
-            long windowStart = window.getWindowStart();
-            long windowEnd = window.getWindowEnd();
-            OUT mergeResult = timeTable.query(windowStart, true, windowEnd, false);
-            if (mergeResult != null) {
-                list.add(mergeResult);
-            }
-        }
         deriveMetricMiddleStore.update(historyMetricCube);
-        return list;
+        return query(historyMetricCube, timestamp);
     }
 
     /**
@@ -148,7 +140,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public List<OUT> noStateExec(JSONObject input) {
+    public List<DeriveMetricCalculateResult<OUT>> noStateExec(JSONObject input) {
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
@@ -177,18 +169,56 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (historyMetricCube == null) {
             return Collections.emptyList();
         }
-        List<OUT> list = new ArrayList<>();
-        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
-        TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
-        timeTable.setTimeBaselineDimension(timeBaselineDimension);
-        timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-        for (TimeWindow window : timeWindow) {
-            long windowStart = window.getWindowStart();
-            long windowEnd = window.getWindowEnd();
-            OUT mergeResult = timeTable.query(windowStart, true, windowEnd, false);
-            if (mergeResult != null) {
-                list.add(mergeResult);
+        return query(historyMetricCube, timestamp);
+    }
+
+    /**
+     * 查询操作, 查询出指标数据
+     *
+     * @param metricCube
+     * @return
+     */
+    public List<DeriveMetricCalculateResult<OUT>> query(MetricCube<IN, ACC, OUT> metricCube,
+                                                   Long timestamp) {
+        //获取统计的时间窗口
+        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(timestamp);
+        if (CollUtil.isEmpty(timeWindowList)) {
+            return Collections.emptyList();
+        }
+
+        List<DeriveMetricCalculateResult<OUT>> list = new ArrayList<>();
+        for (TimeWindow timeWindow : timeWindowList) {
+
+            //窗口开始时间
+            long windowStart = timeWindow.getWindowStart();
+            //窗口结束时间
+            long windowEnd = timeWindow.getWindowEnd();
+
+            //聚合值
+            OUT query = metricCube.getTimeTable().query(windowStart, true, windowEnd, false);
+
+            if (query == null) {
+                continue;
             }
+
+            DeriveMetricCalculateResult<OUT> result = new DeriveMetricCalculateResult<>();
+            //指标key
+            result.setKey(metricCube.getDimensionSet().getKey());
+
+            //指标名称
+            result.setName(metricCube.getDimensionSet().getMetricName());
+
+            //指标维度
+            result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+
+            result.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
+
+            result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
+
+            //聚合值
+            result.setResult(query);
+
+            list.add(result);
         }
         return list;
     }

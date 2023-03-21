@@ -1,8 +1,11 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.annotation.Objective;
 
-
+@MergeType("MAXOBJECT")
+@Objective(useCompareField = true, retainObject = true)
 public class MaxObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, T, T> {
 
     @Override

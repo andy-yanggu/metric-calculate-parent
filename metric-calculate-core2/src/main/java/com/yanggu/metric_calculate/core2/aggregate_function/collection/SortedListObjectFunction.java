@@ -2,11 +2,15 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import cn.hutool.core.collection.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 
 import java.util.List;
 
-
-public class SortedListFunction<T extends Comparable<T>> implements AggregateFunction<T, BoundedPriorityQueue<T>, List<T>> {
+@MergeType("SORTEDLISTOBJECT")
+@Collective(useSortedField = true, retainObject = true)
+public class SortedListObjectFunction<T extends Comparable<T>>
+        implements AggregateFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
     private Integer limit;
 

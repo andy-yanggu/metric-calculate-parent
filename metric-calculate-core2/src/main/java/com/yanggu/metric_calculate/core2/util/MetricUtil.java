@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.util;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
@@ -14,6 +15,8 @@ import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldP
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
@@ -27,6 +30,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core2.enums.MetricTypeEnum.DERIVE;
+import static com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.DEFAULT_IMPL;
 
 /**
  * 指标工具类
@@ -62,56 +66,23 @@ public class MetricUtil {
                     })
                     .collect(Collectors.toList());
 
-            //List<Class<? extends MergedUnit>> classList = new ArrayList<>();
-            //for (DeriveMetricCalculate<T, ?> deriveMetricCalculate : collect) {
-            //    if (Boolean.TRUE.equals(deriveMetricCalculate.getIsUdaf())) {
-            //        Class<? extends MergedUnit> mergeUnitClazz = deriveMetricCalculate.getAggregateFieldProcessor().getMergeUnitClazz();
-            //        classList.add(mergeUnitClazz);
-            //    }
-            //}
-            ////派生指标中间结算结果存储接口
-            //Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
-            //        AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
-            ////默认是内存的并发HashMap
-            //DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
-            ////初始化KryoPool
-            //KryoPool kryoPool = new KryoPool(true, true, 100);
-            //InputPool inputPool = new InputPool(true, true, 100);
-            //OutputPool outputPool = new OutputPool(true, true, 100);
-            //KryoUtil.init(kryoPool, inputPool, outputPool);
-            //if (metricMiddleStoreMap.size() != 1) {
-            //    for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
-            //        if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
-            //            deriveMetricMiddleStore = middleStoreEntry.getValue();
-            //            break;
-            //        }
-            //    }
-            //}
-            //DeriveMetricMiddleStore finalDeriveMetricMiddleStore = deriveMetricMiddleStore;
-            //collect.forEach(temp -> temp.setDeriveMetricMiddleStore(finalDeriveMetricMiddleStore));
+            //派生指标中间结算结果存储接口
+            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
+                    AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
+            //默认是内存的并发HashMap
+            DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
+            if (metricMiddleStoreMap.size() != 1) {
+                for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
+                    if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
+                        deriveMetricMiddleStore = middleStoreEntry.getValue();
+                        break;
+                    }
+                }
+            }
+            DeriveMetricMiddleStore finalDeriveMetricMiddleStore = deriveMetricMiddleStore;
+            collect.forEach(temp -> temp.setDeriveMetricMiddleStore(finalDeriveMetricMiddleStore));
             metricCalculate.setDeriveMetricCalculateList(collect);
         }
-
-        //复合指标
-        //List<Composite> compositeList = tableData.getComposite();
-        //if (CollUtil.isNotEmpty(compositeList)) {
-        //    List<CompositeMetricCalculate<T>> collect = new ArrayList<>();
-        //    compositeList.forEach(compositeMetric -> {
-        //        metricTypeMap.put(compositeMetric.getName(), COMPOSITE);
-        //
-        //        //初始化复合指标计算类
-        //        List<CompositeMetricCalculate<T>> compositeMetricCalculateList =
-        //                MetricUtil.initComposite(compositeMetric, metricCalculate);
-        //        collect.addAll(compositeMetricCalculateList);
-        //    });
-        //    metricCalculate.setCompositeMetricCalculateList(collect);
-        //}
-        //
-        ////全局指标
-        //List<Global> globalList = tableData.getGlobal();
-        //if (CollUtil.isNotEmpty(globalList)) {
-        //    globalList.forEach(temp -> metricTypeMap.put(temp.getName(), GLOBAL));
-        //}
         return metricCalculate;
     }
 

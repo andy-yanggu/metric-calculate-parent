@@ -66,7 +66,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     public IN process(JSONObject input) {
         //获取保留字段或者原始数据
         Object retainFieldValue = input;
-        if (collective.retainObject()) {
+        if (!collective.retainObject()) {
             retainFieldValue = retainFieldValueFieldProcessor.process(input);
         }
 
