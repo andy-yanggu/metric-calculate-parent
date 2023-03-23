@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.lmax.disruptor.*;
+import org.omg.PortableInterceptor.INACTIVE;
 
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -24,27 +25,33 @@ public final class MyBlockingWaitStrategy implements WaitStrategy
     public long waitFor(long sequence, Sequence cursorSequence, Sequence dependentSequence, SequenceBarrier barrier)
         throws AlertException, InterruptedException
     {
-        long availableSequence;
         if (cursorSequence.get() < sequence)
         {
             lock.lock();
             try
             {
                 boolean flag = false;
+                long interval = 0L;
+                long firstTimestamp = 0L;
                 while (cursorSequence.get() < sequence)
                 {
                     barrier.checkAlert();
-                    boolean await = processorNotifyCondition.await(5, TimeUnit.SECONDS);
+                    if (firstTimestamp != 0L) {
+                        interval = System.currentTimeMillis() - firstTimestamp;
+                        System.out.println("时间差" + interval);
+                    }
+                    boolean await = processorNotifyCondition.await(5000 - interval, TimeUnit.MILLISECONDS);
                     if (!await) {
                         System.out.println("定时器时间到, 当前时间: " + DateUtil.formatDateTime(new Date()));
-                        //System.out.println("cursorSequence.get()等于" + cursorSequence.get());
                         if (flag) {
                             break;
                         }
                     } else {
-                        //System.out.println("有数据了");
-                        //System.out.println("cursorSequence.get()" + cursorSequence.get());
                         flag = true;
+                        if (firstTimestamp == 0L) {
+                            firstTimestamp = System.currentTimeMillis();
+                            System.out.println("第一次数据时间:" + DateUtil.formatDateTime(new Date(firstTimestamp)));
+                        }
                     }
                 }
             }
