@@ -1,16 +1,13 @@
 package com.yanggu.metric_calculate.controller;
 
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import cn.hutool.core.date.DateUtil;
+import com.lmax.disruptor.*;
+
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-import cn.hutool.core.thread.NamedThreadFactory;
-import com.lmax.disruptor.*;
-import com.lmax.disruptor.util.ThreadHints;
 
 /**
  * Blocking strategy that uses a lock and condition variable for {@link EventProcessor}s waiting on a barrier.
@@ -20,14 +17,8 @@ import com.lmax.disruptor.util.ThreadHints;
 public final class MyBlockingWaitStrategy implements WaitStrategy
 {
     private final Lock lock = new ReentrantLock();
+
     private final Condition processorNotifyCondition = lock.newCondition();
-
-    private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor =
-            new ScheduledThreadPoolExecutor(1, new NamedThreadFactory("攒批定时器线程", true));
-
-    private ScheduledFuture<?> scheduledFuture;
-
-    private AtomicBoolean atomicBoolean = new AtomicBoolean(false);
 
     @Override
     public long waitFor(long sequence, Sequence cursorSequence, Sequence dependentSequence, SequenceBarrier barrier)
@@ -39,32 +30,31 @@ public final class MyBlockingWaitStrategy implements WaitStrategy
             lock.lock();
             try
             {
-                while (cursorSequence.get() < sequence || !atomicBoolean.get())
+                boolean flag = false;
+                while (cursorSequence.get() < sequence)
                 {
-                    if (scheduledFuture == null) {
-                        scheduledFuture = scheduledThreadPoolExecutor.schedule(() -> {
-                            atomicBoolean.compareAndSet(false, true);
-                            processorNotifyCondition.signalAll();
-                        }, 5000, TimeUnit.MILLISECONDS);
-                    }
                     barrier.checkAlert();
-                    processorNotifyCondition.await();
+                    boolean await = processorNotifyCondition.await(5, TimeUnit.SECONDS);
+                    if (!await) {
+                        System.out.println("定时器时间到, 当前时间: " + DateUtil.formatDateTime(new Date()));
+                        //System.out.println("cursorSequence.get()等于" + cursorSequence.get());
+                        if (flag) {
+                            break;
+                        }
+                    } else {
+                        //System.out.println("有数据了");
+                        //System.out.println("cursorSequence.get()" + cursorSequence.get());
+                        flag = true;
+                    }
                 }
             }
             finally
             {
                 lock.unlock();
-                atomicBoolean.set(false);
             }
         }
 
-        while ((availableSequence = dependentSequence.get()) < sequence)
-        {
-            barrier.checkAlert();
-            ThreadHints.onSpinWait();
-        }
-
-        return availableSequence;
+        return dependentSequence.get();
     }
 
     @Override

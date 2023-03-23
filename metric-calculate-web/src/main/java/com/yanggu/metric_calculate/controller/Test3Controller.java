@@ -30,7 +30,7 @@ public class Test3Controller {
 
     @PostConstruct
     public void init() {
-        RingBuffer<Event> tempRingBuffer = RingBuffer.createMultiProducer(Event::new, 8);
+        RingBuffer<Event> tempRingBuffer = RingBuffer.createMultiProducer(Event::new, 8, new MyBlockingWaitStrategy());
         this.ringBuffer = tempRingBuffer;
 
         SequenceBarrier sequenceBarrier = tempRingBuffer.newBarrier();
@@ -63,10 +63,21 @@ public class Test3Controller {
 
         private List<Long> sequenceList = new ArrayList<>();
 
-        private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor =
-                new ScheduledThreadPoolExecutor(1, new NamedThreadFactory("攒批定时器线程", true));
+        private List<Event> eventList = new ArrayList<>();
 
-        private ScheduledFuture<?> scheduledFuture;
+        //@SneakyThrows
+        //@Override
+        //public void run() {
+        //    sequenceBarrier.clearAlert();
+        //    long nextSequence = sequence.get() + 1;
+        //    while (true) {
+        //        final long availableSequence = sequenceBarrier.waitFor(nextSequence);
+        //        while (nextSequence <= availableSequence) {
+        //            addEvent(nextSequence);
+        //            nextSequence++;
+        //        }
+        //    }
+        //}
 
         @SneakyThrows
         @Override
@@ -74,50 +85,16 @@ public class Test3Controller {
             sequenceBarrier.clearAlert();
             long nextSequence = sequence.get() + 1;
             while (true) {
-                final long availableSequence = sequenceBarrier.waitFor(nextSequence);
+                final long availableSequence = sequenceBarrier.waitFor(nextSequence + 3);
                 while (nextSequence <= availableSequence) {
-                    addEvent(nextSequence);
+                    eventList.add(ringBuffer.get(nextSequence));
                     nextSequence++;
                 }
-            }
-        }
-        
-        private synchronized void addEvent(Long nextSequence) {
-            sequenceList.add(nextSequence);
-            if (sequenceList.size() >= 4) {
-                flush(0L, nextSequence);
-            }
-            if (scheduledFuture == null) {
-                long registerTimeStamp = System.currentTimeMillis();
-                scheduledFuture = scheduledThreadPoolExecutor.schedule(() -> this.flush(registerTimeStamp, nextSequence), 5000, TimeUnit.MILLISECONDS);
-            }
-        }
-
-        public synchronized void flush(long registerTimeStamp, Long nextSequence) {
-            if (CollUtil.isEmpty(sequenceList)) {
-                return;
-            }
-            if (registerTimeStamp == 0L) {
-                log.info("攒批大小到, 当前时间: " + DateUtil.formatDateTime(new Date()) +
-                        ", list被消费了, 消费list大小" + sequenceList.size());
-            } else {
-                log.info("攒批时间到, 定时器注册时间: " + DateUtil.formatDateTime(new Date(registerTimeStamp)) +
-                        ", 当前时间: " + DateUtil.formatDateTime(new Date()) + ", list被消费了, 消费list大小" + sequenceList.size());
-            }
-            try {
                 System.out.println("-----------------");
-                sequenceList.stream()
-                        .map(temp -> ringBuffer.get(temp).getValue())
-                        .forEach(System.out::println);
-            } catch (Throwable e) {
-                log.error("攒批线程消费失败", e);
+                eventList.forEach(System.out::println);
+                eventList.clear();
+                sequence.set(nextSequence);
             }
-            sequenceList.clear();
-            if (scheduledFuture != null) {
-                scheduledFuture.cancel(true);
-                scheduledFuture = null;
-            }
-            sequence.set(nextSequence);
         }
         
     }
