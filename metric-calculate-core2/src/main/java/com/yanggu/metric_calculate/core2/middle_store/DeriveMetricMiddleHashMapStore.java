@@ -18,12 +18,12 @@ public class DeriveMetricMiddleHashMapStore extends AbstractDeriveMetricMiddleSt
     }
 
     @Override
-    public <IN,ACC, OUT> MetricCube<IN,ACC, OUT> get(DimensionSet dimensionSet) {
+    public <IN, ACC, OUT> MetricCube<IN, ACC, OUT> get(DimensionSet dimensionSet) {
         return localMap.get(dimensionSet);
     }
 
     @Override
-    public <IN,ACC, OUT> void update(MetricCube<IN,ACC, OUT> updateMetricCube) {
+    public <IN, ACC, OUT> void update(MetricCube<IN, ACC, OUT> updateMetricCube) {
         localMap.put(updateMetricCube.getDimensionSet(), updateMetricCube);
     }
 
