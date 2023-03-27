@@ -15,8 +15,8 @@
         }
       ],
       "timeColumn": {
-        "columnName": "trans_date",
-        "timeFormat": "yyyyMMdd",
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filter": null,
@@ -2169,28 +2169,28 @@
       "labels": null,
       "name": "credit_amt_out",
       "properties": null,
-      "valueType": "DECIMAL"
+      "valueType": "DOUBLE"
     },
     {
       "className": "trade_detail",
       "labels": null,
       "name": "credit_amt_in",
       "properties": null,
-      "valueType": "DECIMAL"
+      "valueType": "DOUBLE"
     },
     {
       "className": "trade_detail",
       "labels": null,
       "name": "debit_amt_out",
       "properties": null,
-      "valueType": "DECIMAL"
+      "valueType": "DOUBLE"
     },
     {
       "className": "trade_detail",
       "labels": null,
       "name": "debit_amt_in",
       "properties": null,
-      "valueType": "DECIMAL"
+      "valueType": "DOUBLE"
     },
     {
       "className": "trade_detail",

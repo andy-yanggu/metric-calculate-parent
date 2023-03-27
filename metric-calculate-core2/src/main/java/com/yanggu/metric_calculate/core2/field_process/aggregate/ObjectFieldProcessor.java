@@ -68,7 +68,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     public IN process(JSONObject input) {
         //获取保留字段或者原始数据
         Object retainFieldValue = input;
-        if (objective.retainObject()) {
+        if (!objective.retainObject()) {
             retainFieldValue = retainFieldValueFieldProcessor.process(input);
         }
 

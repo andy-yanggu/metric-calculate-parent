@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
@@ -11,7 +12,6 @@ import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
-import reactor.util.function.Tuples;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,7 +62,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     public IN process(JSONObject input) throws Exception {
         MultiFieldDistinctKey key = keyFieldProcessor.process(input);
         Object value = valueAggregateFieldProcessor.process(input);
-        return (IN) Tuples.of(key, value);
+        return (IN) Pair.of(key, value);
     }
 
     private void check() {

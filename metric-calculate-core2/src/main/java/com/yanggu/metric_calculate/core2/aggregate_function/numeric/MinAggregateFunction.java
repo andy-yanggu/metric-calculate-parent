@@ -1,18 +1,18 @@
-package com.yanggu.metric_calculate.core2.aggregate_function.object;
+package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
 import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.Objective;
+import com.yanggu.metric_calculate.core2.annotation.Numerical;
 
 /**
- * 最大对象
+ * 最小值
  *
  * @param <T>
  */
-@MergeType("MAXOBJECT")
-@Objective(useCompareField = true, retainObject = true)
-public class MaxObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, MutableObj<T>, T> {
+@Numerical
+@MergeType("MIN")
+public class MinAggregateFunction<T extends Number & Comparable<T>> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override
     public MutableObj<T> createAccumulator() {
@@ -22,8 +22,7 @@ public class MaxObjectAggregateFunction<T extends Comparable<T>> implements Aggr
     @Override
     public MutableObj<T> add(T value, MutableObj<T> accumulator) {
         T oldValue = accumulator.get();
-        //如果old为空
-        if (oldValue == null || value.compareTo(oldValue) > 0) {
+        if (oldValue == null || value.compareTo(oldValue) < 0) {
             accumulator.set(value);
         }
         return accumulator;
@@ -44,7 +43,7 @@ public class MaxObjectAggregateFunction<T extends Comparable<T>> implements Aggr
             return thisAccumulator;
         } else if (/*thisValue != null && */thatValue == null) {
             return thisAccumulator;
-        } else if (thisValue.compareTo(thatValue) > 0) {
+        } else if (thisValue.compareTo(thatValue) < 0) {
             return thisAccumulator;
         } else {
             return thatAccumulator;

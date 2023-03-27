@@ -97,6 +97,9 @@ public class MetricUtil {
                                                                                 MetricCalculate metricCalculate) {
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
+        //设置id
+        deriveMetricCalculate.setId(tempDerive.getId());
+
         //设置key
         String key = metricCalculate.getId() + "_" + tempDerive.getId();
         deriveMetricCalculate.setKey(key);
@@ -116,9 +119,9 @@ public class MetricUtil {
         aggregateFunctionFactory.init();
 
         //设置聚合字段处理器
-        AggregateFieldProcessor<IN, ACC, OUT> abstractAggregateFieldProcessor =
-                FieldProcessorUtil.getAbstractAggregateFieldProcessor(tempDerive, fieldMap, aggregateFunctionFactory);
-        deriveMetricCalculate.setAggregateFieldProcessor(abstractAggregateFieldProcessor);
+        AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
+                FieldProcessorUtil.getAggregateFieldProcessor(tempDerive, fieldMap, aggregateFunctionFactory);
+        deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());

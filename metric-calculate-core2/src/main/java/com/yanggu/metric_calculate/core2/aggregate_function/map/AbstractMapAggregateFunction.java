@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 
+import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import lombok.Data;
-import reactor.util.function.Tuple2;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Data
 public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT>
-        implements AggregateFunction<Tuple2<K, V>, Map<K, ValueACC>, OUT> {
+        implements AggregateFunction<Pair<K, V>, Map<K, ValueACC>, OUT> {
 
     protected AggregateFunction<V, ValueACC, ValueOUT> valueAggregateFunction;
 
@@ -29,9 +29,9 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     }
 
     @Override
-    public Map<K, ValueACC> add(Tuple2<K, V> tuple2, Map<K, ValueACC> accumulator) {
-        K key = tuple2.getT1();
-        V newValue = tuple2.getT2();
+    public Map<K, ValueACC> add(Pair<K, V> tuple2, Map<K, ValueACC> accumulator) {
+        K key = tuple2.getKey();
+        V newValue = tuple2.getValue();
 
         ValueACC acc = accumulator.get(key);
         if (acc == null) {
@@ -58,9 +58,7 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     @Override
     public OUT getResult(Map<K, ValueACC> accumulator) {
         Map<K, ValueOUT> map = new HashMap<>();
-        accumulator.forEach((tempKey, tempValueAcc) -> {
-            map.put(tempKey, valueAggregateFunction.getResult(tempValueAcc));
-        });
+        accumulator.forEach((tempKey, tempValueAcc) -> map.put(tempKey, valueAggregateFunction.getResult(tempValueAcc)));
         return (OUT) map;
     }
     

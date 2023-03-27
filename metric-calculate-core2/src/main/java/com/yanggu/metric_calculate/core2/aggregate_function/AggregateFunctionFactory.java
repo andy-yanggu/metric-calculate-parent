@@ -110,6 +110,9 @@ public class AggregateFunctionFactory {
     @SneakyThrows
     public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
         Class<? extends AggregateFunction> clazz = functionMap.get(aggregate);
+        if (clazz == null) {
+            throw new RuntimeException("传入的" + aggregate + "有误");
+        }
         return clazz.newInstance();
     }
 

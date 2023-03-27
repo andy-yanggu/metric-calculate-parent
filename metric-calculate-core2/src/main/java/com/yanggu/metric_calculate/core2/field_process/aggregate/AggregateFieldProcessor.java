@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
@@ -66,6 +67,9 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
      * @return
      */
     public OUT getOut(ACC accumulator) {
+        if (accumulator == null) {
+            return null;
+        }
         return aggregateFunction.getResult(accumulator);
     }
 
@@ -76,6 +80,9 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
      * @return
      */
     public OUT getMergeResult(Collection<ACC> accList) {
+        if (CollUtil.isEmpty(accList)) {
+            return null;
+        }
         ACC accumulator = aggregateFunction.createAccumulator();
         accumulator = accList.stream().reduce(accumulator, aggregateFunction::merge);
         return aggregateFunction.getResult(accumulator);

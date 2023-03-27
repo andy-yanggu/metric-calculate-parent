@@ -32,8 +32,10 @@ public class MetricCalculate extends DataDetailsWideTable {
      */
     private Map<String, Class<?>> fieldMap;
 
-    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getIndexDeriveMetricCalculate(Integer index) {
-        return deriveMetricCalculateList.get(index);
+    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculate(Long deriveId) {
+        return deriveMetricCalculateList.stream()
+                .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
+                .findFirst().orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
     }
 
 }

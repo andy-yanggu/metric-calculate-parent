@@ -36,6 +36,11 @@ import java.util.*;
 public class DeriveMetricCalculate<IN, ACC, OUT> {
 
     /**
+     * 派生指标的id
+     */
+    private Long id;
+
+    /**
      * 指标标识(数据明细宽表id-指标id)
      */
     private String key;
@@ -179,7 +184,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     public List<DeriveMetricCalculateResult<OUT>> query(MetricCube<IN, ACC, OUT> metricCube,
-                                                   Long timestamp) {
+                                                        Long timestamp) {
         //获取统计的时间窗口
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(timestamp);
         if (CollUtil.isEmpty(timeWindowList)) {

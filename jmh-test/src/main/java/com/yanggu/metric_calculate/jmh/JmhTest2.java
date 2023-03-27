@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2;
+package com.yanggu.metric_calculate.jmh;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.TypeReference;
@@ -27,7 +27,7 @@ import java.util.List;
 @Fork(1)
 @Warmup(iterations = 3)
 @Measurement(iterations = 3)
-public class JmhTest1 {
+public class JmhTest2 {
 
     private static DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate;
 
@@ -37,7 +37,7 @@ public class JmhTest1 {
 
     @Setup(Level.Trial)
     public static void setup() throws Exception {
-        InputStream resourceAsStream = JmhTest1.class.getClassLoader().getResourceAsStream("test3.json");
+        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("test3.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
         MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
         MetricUtil.getFieldMap(tempMetricCalculate);
@@ -59,7 +59,7 @@ public class JmhTest1 {
         tempInput.set("trans_timestamp", "1654768045000");
         tempInput.set("credit_amt_in", "100");
         tempInput.set("debit_amt_out", "800");
-        tempInput.set("trans_date", "20220609");
+        tempInput.set("trans_timestamp", "1679887968782");
 
         tempInput = MetricUtil.getParam(tempInput, MetricUtil.getFieldMap(tempMetricCalculate));
 
@@ -90,7 +90,7 @@ public class JmhTest1 {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(JmhTest1.class.getSimpleName())
+                .include(JmhTest2.class.getSimpleName())
                 .result("result.json")
                 .resultFormat(ResultFormatType.JSON)
                 .build();

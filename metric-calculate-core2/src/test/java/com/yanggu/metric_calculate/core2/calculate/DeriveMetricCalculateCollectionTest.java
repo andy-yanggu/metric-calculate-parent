@@ -16,13 +16,16 @@ import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 
-public class DeriveMetricCalculateTest {
+/**
+ * 集合型派生指标单元测试类
+ */
+public class DeriveMetricCalculateCollectionTest {
 
     private MetricCalculate metricCalculate;
 
     @Before
     public void init() {
-        String jsonString = FileUtil.readUtf8String("test3.json");
+        String jsonString = FileUtil.readUtf8String("metric_config.json");
         MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, MetricCalculate.class);
         this.metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
     }
@@ -30,7 +33,7 @@ public class DeriveMetricCalculateTest {
     @Test
     public void testExec1() {
         DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate =
-                this.metricCalculate.getIndexDeriveMetricCalculate(0);
+                this.metricCalculate.getDeriveMetricCalculate(0L);
 
         JSONObject input = new JSONObject();
         input.set("account_no_out", "000000000011");
@@ -57,7 +60,7 @@ public class DeriveMetricCalculateTest {
     @Test
     public void test5() {
         DeriveMetricCalculate<JSONObject, List<JSONObject>, List<JSONObject>> deriveMetricCalculate =
-                this.metricCalculate.getIndexDeriveMetricCalculate(4);
+                this.metricCalculate.getDeriveMetricCalculate(4L);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -139,7 +142,7 @@ public class DeriveMetricCalculateTest {
     public void test7() {
         DeriveMetricCalculate<Tuple2<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
                 Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
-                = this.metricCalculate.getIndexDeriveMetricCalculate(6);
+                = this.metricCalculate.getDeriveMetricCalculate(6L);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -231,7 +234,7 @@ public class DeriveMetricCalculateTest {
     @Test
     public void test8() throws Exception {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
-                this.metricCalculate.getIndexDeriveMetricCalculate(7);
+                this.metricCalculate.getDeriveMetricCalculate(7L);
 
         List<DeriveMetricCalculateResult<Double>> query;
 

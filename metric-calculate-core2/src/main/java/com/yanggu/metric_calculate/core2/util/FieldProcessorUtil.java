@@ -140,7 +140,7 @@ public class FieldProcessorUtil {
     }
 
     @SneakyThrows
-    public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAbstractAggregateFieldProcessor(
+    public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
                                                                     Derive derive,
                                                                     Map<String, Class<?>> fieldMap,
                                                                     AggregateFunctionFactory aggregateFunctionFactory) {

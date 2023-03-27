@@ -15,8 +15,8 @@
         }
       ],
       "timeColumn": {
-        "columnName": "trans_date",
-        "timeFormat": "yyyyMMdd",
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filter": null,
@@ -35,6 +35,37 @@
     },
     {
       "id": 2,
+      "name": "today_debit_asset_min",
+      "displayName": "当天借方金额最小值",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "MIN",
+      "baseUdafParam": {
+        "aggregateType": "MIN",
+        "metricExpress":"debit_amt_out"
+      },
+      "duration": 1,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 3,
       "name": "top4_debit_amt_out_desc",
       "displayName": "交易金额降序列表, 最多4个",
       "description": null,
@@ -74,7 +105,7 @@
       }
     },
     {
-      "id": 3,
+      "id": 4,
       "name": "max_amount_timestamp",
       "displayName": "最大交易的金额的交易时间戳",
       "description": null,
@@ -325,66 +356,39 @@
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "credit_amt_out",
-      "properties": null,
       "valueType": "DOUBLE"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "credit_amt_in",
-      "properties": null,
       "valueType": "DOUBLE"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "debit_amt_out",
-      "properties": null,
       "valueType": "DOUBLE"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "debit_amt_in",
-      "properties": null,
       "valueType": "DOUBLE"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "d_c_flag_out",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "d_c_flag_in",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "trans_date",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "trans_time",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "trans_timestamp",
-      "properties": null,
       "valueType": "STRING"
     }
   ]
