@@ -12,6 +12,9 @@ import java.util.Map;
 
 import static org.junit.Assert.*;
 
+/**
+ * 基本映射类型单元测试类
+ */
 public class BaseMapAggregateFunctionTest {
 
     private BaseMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> basemap;
@@ -49,7 +52,7 @@ public class BaseMapAggregateFunctionTest {
 
         MultiFieldDistinctKey multiFieldDistinctKey2 = new MultiFieldDistinctKey(Collections.singletonList("李四"));
         Pair<MultiFieldDistinctKey, Double> otherTuple2 = Pair.of(multiFieldDistinctKey2, 100.0D);
-        add = basemap.add(otherTuple2, accumulator);
+        basemap.add(otherTuple2, accumulator);
         assertEquals(2, accumulator.size());
         //李四100
         assertEquals(100.0D, accumulator.get(multiFieldDistinctKey2), 0.0D);
@@ -66,10 +69,23 @@ public class BaseMapAggregateFunctionTest {
     @Test
     public void merge() {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
-        //basemap.merge()
+        Map<MultiFieldDistinctKey, Double> accumulator1 = basemap.createAccumulator();
+        MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("张三"));
+        accumulator1.put(key, 100.0D);
+        Map<MultiFieldDistinctKey, Double> merge = basemap.merge(accumulator, accumulator1);
+        assertNotNull(merge);
+        assertSame(accumulator, merge);
+        assertEquals(100.0D, merge.get(key), 0.0D);
     }
 
     @Test
     public void getResult() {
+        Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
+        MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("张三"));
+        Map<MultiFieldDistinctKey, Double> add = basemap.add(Pair.of(key, 100.0D), accumulator);
+
+        Map<MultiFieldDistinctKey, Double> result = basemap.getResult(add);
+        assertNotNull(result);
+        assertEquals(100.0D, result.get(key), 0.0D);
     }
 }

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2;
+package com.yanggu.metric_calculate.core2.util;
 
 import lombok.NoArgsConstructor;
 
