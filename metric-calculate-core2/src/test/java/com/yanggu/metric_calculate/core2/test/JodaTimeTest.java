@@ -38,7 +38,7 @@ public class JodaTimeTest {
     @Test
     public void test3() {
         DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("yyyy-MM-dd HH:mm:ss");
-        DateTime dateTime = new DateTime().hourOfDay().roundFloorCopy();;
+        DateTime dateTime = new DateTime().hourOfDay().roundFloorCopy();
         String print = dateTimeFormatter.print(dateTime.getMillis());
         System.out.println("print = " + print);
     }
