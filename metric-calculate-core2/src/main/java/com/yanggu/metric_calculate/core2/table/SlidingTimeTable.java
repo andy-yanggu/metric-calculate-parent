@@ -2,11 +2,8 @@ package com.yanggu.metric_calculate.core2.table;
 
 
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
-import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
+import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
-import reactor.util.function.Tuple2;
-import reactor.util.function.Tuples;
 
 import java.util.HashMap;
 import java.util.List;
@@ -14,7 +11,7 @@ import java.util.Map;
 
 public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
-    private Map<Tuple2<Long, Long>, ACC> map = new HashMap<>();
+    private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 
     @Override
     public void put(Long timestamp, IN in) {
@@ -25,7 +22,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         for (TimeWindow tempTimeWindow : timeWindow) {
             long windowStart = tempTimeWindow.getWindowStart();
             long windowEnd = tempTimeWindow.getWindowEnd();
-            Tuple2<Long, Long> tuple2 = Tuples.of(windowStart, windowEnd);
+            Pair<Long, Long> tuple2 = Pair.of(windowStart, windowEnd);
             ACC historyAcc = map.get(tuple2);
             ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
             map.put(tuple2, nowAcc);
@@ -34,7 +31,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     @Override
     public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return aggregateFieldProcessor.getOut(map.get(Tuples.of(from, to)));
+        return aggregateFieldProcessor.getOut(map.get(Pair.of(from, to)));
     }
 
 }

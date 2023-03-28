@@ -6,6 +6,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
