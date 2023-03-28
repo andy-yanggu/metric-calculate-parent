@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 
 import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
@@ -9,7 +10,6 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import org.junit.Before;
 import org.junit.Test;
-import reactor.util.function.Tuple2;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -140,7 +140,7 @@ public class DeriveMetricCalculateCollectionTest {
      */
     @Test
     public void test7() {
-        DeriveMetricCalculate<Tuple2<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
+        DeriveMetricCalculate<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
                 Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
                 = this.metricCalculate.getDeriveMetricCalculate(6L);
 

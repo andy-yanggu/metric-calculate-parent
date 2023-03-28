@@ -33,7 +33,7 @@
         <mockito.version>4.11.0</mockito.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
         <guava.version>31.1-jre</guava.version>
-        <jmh.version>1.21</jmh.version>
+        <jmh.version>1.35</jmh.version>
     </properties>
 
     <dependencyManagement>
