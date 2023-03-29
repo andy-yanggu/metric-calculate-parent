@@ -16,6 +16,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import com.yanggu.metric_calculate.core2.table.TimeTable;
+import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -216,9 +217,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             //指标维度
             result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
 
-            result.setStartTime(DateUtil.formatDateTime(new Date(windowStart)));
+            result.setStartTime(DateUtils.formatDateTime(windowStart));
 
-            result.setEndTime(DateUtil.formatDateTime(new Date(windowEnd)));
+            result.setEndTime(DateUtils.formatDateTime(windowEnd));
 
             //聚合值
             result.setResult(query);
