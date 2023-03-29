@@ -1,8 +1,9 @@
 package com.yanggu.metric_calculate.core2.enums;
 
-import cn.hutool.core.date.DateField;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import static java.util.Calendar.*;
 
 /**
  * 时间单位
@@ -14,54 +15,48 @@ public enum TimeUnit {
     /**
      * 毫秒
      */
-    MILLS(DateField.MILLISECOND, 1L),
+    MILLS(MILLISECOND),
 
     /**
      * 秒
      */
-    SECOND(DateField.SECOND, 1000L),
+    SECOND(java.util.Calendar.SECOND),
 
     /**
      * 分钟
      */
-    MINUTE(DateField.MINUTE, 60L * SECOND.millis),
+    MINUTE(java.util.Calendar.MINUTE),
 
     /**
-     * 小时
+     * 小时(24小时)
      */
-    HOUR(DateField.HOUR_OF_DAY, 60L * MINUTE.millis),
+    HOUR(HOUR_OF_DAY),
 
     /**
      * 日
      */
-    DAY(DateField.DAY_OF_YEAR, 24L * HOUR.millis),
+    DAY(DAY_OF_YEAR),
 
     /**
-     * 周
+     * 周(周一是星期一)
      */
-    WEEK(DateField.WEEK_OF_YEAR, 7L * DAY.millis),
+    WEEK(WEEK_OF_YEAR),
 
     /**
      * 月
      */
-    MOUTH(DateField.MONTH, 30L * DAY.millis),
+    MONTH(java.util.Calendar.MONTH),
 
     /**
      * 季度
      */
-    //SEASON(DateField.)
+    QUARTER(-1),
 
     /**
      * 年
      */
-    YEAR(DateField.YEAR, 365L * DAY.millis);
+    YEAR(java.util.Calendar.YEAR);
 
-    private final DateField dateField;
-
-    private final Long millis;
-
-    public Long toMillis(long length) {
-        return this.millis * length;
-    }
+    private final int dateField;
 
 }

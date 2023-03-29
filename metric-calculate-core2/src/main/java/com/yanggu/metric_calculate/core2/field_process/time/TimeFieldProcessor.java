@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core2.field_process.time;
 
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,11 +52,14 @@ public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
             throw new RuntimeException(StrUtil.format("时间字段没有值, "
                     + "时间字段名: {}, 原始数据: {}", timeColumnName, JSONUtil.toJsonStr(input)));
         }
-        String dateStr = data.toString();
         if (StrUtil.equals(timeFormat.toUpperCase(), TIMESTAMP)) {
-            return Long.parseLong(dateStr);
+            if (data instanceof Long) {
+                return (Long) data;
+            } else {
+                return Long.parseLong(data.toString());
+            }
         } else {
-            return DateUtil.parse(dateStr, timeFormat).getTime();
+            return DateUtils.parse(data.toString(), timeFormat);
         }
     }
 
