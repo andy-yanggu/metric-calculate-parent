@@ -5,6 +5,9 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 
+/**
+ * 派生指标计算单元测试基类
+ */
 public class DeriveMetricCalculateBase {
 
     public static MetricCalculate metricCalculate;

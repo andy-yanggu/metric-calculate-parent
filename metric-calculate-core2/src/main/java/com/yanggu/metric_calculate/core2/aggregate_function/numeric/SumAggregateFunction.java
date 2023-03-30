@@ -12,7 +12,7 @@ import com.yanggu.metric_calculate.core2.annotation.Numerical;
  */
 @Numerical
 @MergeType("SUM")
-public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
+public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, T> {
 
     @Override
     public Double createAccumulator() {
@@ -20,13 +20,13 @@ public class SumAggregateFunction<T extends Number> implements AggregateFunction
     }
 
     @Override
-    public Double add(T value, Double accumulator) {
-        return value.doubleValue() + accumulator;
+    public Double add(T input, Double accumulator) {
+        return input.doubleValue() + accumulator;
     }
 
     @Override
-    public Double getResult(Double accumulator) {
-        return accumulator;
+    public T getResult(Double accumulator) {
+        return ((T) accumulator);
     }
 
     @Override

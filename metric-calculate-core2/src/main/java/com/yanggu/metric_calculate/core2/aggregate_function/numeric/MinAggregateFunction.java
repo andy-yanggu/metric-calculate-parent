@@ -20,10 +20,10 @@ public class MinAggregateFunction<T extends Number & Comparable<T>> implements A
     }
 
     @Override
-    public MutableObj<T> add(T value, MutableObj<T> accumulator) {
+    public MutableObj<T> add(T input, MutableObj<T> accumulator) {
         T oldValue = accumulator.get();
-        if (oldValue == null || value.compareTo(oldValue) < 0) {
-            accumulator.set(value);
+        if (oldValue == null || input.compareTo(oldValue) < 0) {
+            accumulator.set(input);
         }
         return accumulator;
     }

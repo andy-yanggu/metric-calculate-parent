@@ -20,11 +20,11 @@ public class MaxObjectAggregateFunction<T extends Comparable<T>> implements Aggr
     }
 
     @Override
-    public MutableObj<T> add(T value, MutableObj<T> accumulator) {
+    public MutableObj<T> add(T input, MutableObj<T> accumulator) {
         T oldValue = accumulator.get();
         //如果old为空
-        if (oldValue == null || value.compareTo(oldValue) > 0) {
-            accumulator.set(value);
+        if (oldValue == null || input.compareTo(oldValue) > 0) {
+            accumulator.set(input);
         }
         return accumulator;
     }

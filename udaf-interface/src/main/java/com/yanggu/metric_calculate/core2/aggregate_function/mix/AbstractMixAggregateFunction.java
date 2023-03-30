@@ -22,8 +22,8 @@ public abstract class AbstractMixAggregateFunction<OUT>
     }
 
     @Override
-    public Map<String, Object> add(Map<String, Object> value, Map<String, Object> accumulator) {
-        value.forEach((tempKey, tempValue) -> {
+    public Map<String, Object> add(Map<String, Object> input, Map<String, Object> accumulator) {
+        input.forEach((tempKey, tempValue) -> {
             AggregateFunction<Object, Object, Object> aggregateFunction = mixAggregateFunctionMap.get(tempKey);
             Object add = aggregateFunction.add(tempValue, accumulator.getOrDefault(tempKey, aggregateFunction.createAccumulator()));
             accumulator.put(tempKey, add);

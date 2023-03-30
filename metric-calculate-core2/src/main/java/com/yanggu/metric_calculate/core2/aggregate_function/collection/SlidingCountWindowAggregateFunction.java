@@ -16,7 +16,7 @@ public class SlidingCountWindowAggregateFunction<IN, OUT> implements AggregateFu
     }
 
     @Override
-    public List<IN> add(IN value, List<IN> accumulator) {
+    public List<IN> add(IN input, List<IN> accumulator) {
         return null;
     }
 

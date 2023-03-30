@@ -31,7 +31,7 @@ public class JmhTest3 {
 
         Derive derive = tempMetricCalculate.getDerive().get(0);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapKryoStore();
+        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleStore.init();
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
 

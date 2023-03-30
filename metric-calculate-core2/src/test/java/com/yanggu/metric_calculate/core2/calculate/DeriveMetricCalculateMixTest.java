@@ -1,40 +1,28 @@
 package com.yanggu.metric_calculate.core2.calculate;
 
 
-import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.util.MetricUtil;
-import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
 /**
  * 混合型派生指标单元测试类
  */
-public class DeriveMetricCalculateMixTest {
-
-    private MetricCalculate metricCalculate;
-
-    @Before
-    public void init() {
-        String jsonString = FileUtil.readUtf8String("metric_config.json");
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, MetricCalculate.class);
-        this.metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
-    }
+public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
 
     /**
      * 测试混合类型BASEMIX
      */
     @Test
-    public void test8() throws Exception {
+    public void testBaseMix() throws Exception {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
-                this.metricCalculate.getDeriveMetricCalculate(0L);
+                metricCalculate.getDeriveMetricCalculate(0L);
 
         List<DeriveMetricCalculateResult<Double>> query;
 

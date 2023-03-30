@@ -19,8 +19,8 @@ public class DistinctCountFunction<T> implements AggregateFunction<T, Set<T>, In
     }
 
     @Override
-    public Set<T> add(T value, Set<T> accumulator) {
-        accumulator.add(value);
+    public Set<T> add(T input, Set<T> accumulator) {
+        accumulator.add(input);
         return accumulator;
     }
 

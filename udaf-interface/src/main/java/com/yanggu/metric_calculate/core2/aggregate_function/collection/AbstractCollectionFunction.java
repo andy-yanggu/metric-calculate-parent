@@ -16,8 +16,8 @@ public abstract class AbstractCollectionFunction<IN, ACC extends Collection<IN>,
         implements AggregateFunction<IN, ACC, OUT> {
 
     @Override
-    public ACC add(IN value, ACC accumulator) {
-        accumulator.add(value);
+    public ACC add(IN input, ACC accumulator) {
+        accumulator.add(input);
         return accumulator;
     }
 

@@ -20,9 +20,9 @@ public class ListObjectFunction<T> implements AggregateFunction<T, List<T>, List
     }
 
     @Override
-    public List<T> add(T value, List<T> accumulator) {
+    public List<T> add(T input, List<T> accumulator) {
         if (limit > accumulator.size()) {
-            accumulator.add(value);
+            accumulator.add(input);
         }
         return accumulator;
     }

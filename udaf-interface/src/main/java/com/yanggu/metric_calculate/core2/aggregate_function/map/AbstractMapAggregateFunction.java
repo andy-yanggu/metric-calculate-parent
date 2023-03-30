@@ -29,9 +29,9 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     }
 
     @Override
-    public Map<K, ValueACC> add(Pair<K, V> tuple2, Map<K, ValueACC> accumulator) {
-        K key = tuple2.getKey();
-        V newValue = tuple2.getValue();
+    public Map<K, ValueACC> add(Pair<K, V> input, Map<K, ValueACC> accumulator) {
+        K key = input.getKey();
+        V newValue = input.getValue();
 
         ValueACC acc = accumulator.get(key);
         if (acc == null) {

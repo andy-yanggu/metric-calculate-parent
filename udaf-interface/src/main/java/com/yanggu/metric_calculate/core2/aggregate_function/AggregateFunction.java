@@ -32,15 +32,15 @@ public interface AggregateFunction<IN, ACC, OUT> {
     ACC createAccumulator();
 
     /**
-     * Adds the given input value to the given accumulator, returning the new accumulator value.
+     * Adds the given input input to the given accumulator, returning the new accumulator input.
      *
      * <p>For efficiency, the input accumulator may be modified and returned.
      *
-     * @param value The value to add
-     * @param accumulator The accumulator to add the value to
+     * @param input The input to add
+     * @param accumulator The accumulator to add the input to
      * @return The accumulator with the updated state
      */
-    ACC add(IN value, ACC accumulator);
+    ACC add(IN input, ACC accumulator);
 
     /**
      * Gets the result of the aggregation from the accumulator.
@@ -61,6 +61,8 @@ public interface AggregateFunction<IN, ACC, OUT> {
      * @param thatAccumulator Another accumulator to merge
      * @return The accumulator with the merged state
      */
-    ACC merge(ACC thisAccumulator, ACC thatAccumulator);
+    default ACC merge(ACC thisAccumulator, ACC thatAccumulator) {
+        throw new RuntimeException("需要手动重写merge方法");
+    }
 
 }
