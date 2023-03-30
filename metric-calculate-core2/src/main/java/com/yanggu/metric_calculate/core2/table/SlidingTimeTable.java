@@ -15,7 +15,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     @Override
     public void put(Long timestamp, IN in) {
-        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindow(timestamp);
+        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindowList(timestamp);
         if (CollUtil.isEmpty(timeWindow)) {
             return;
         }

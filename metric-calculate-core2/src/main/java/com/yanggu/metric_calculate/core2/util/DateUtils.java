@@ -16,6 +16,12 @@ public class DateUtils {
     private DateUtils() {
     }
 
+    /**
+     * 将时间戳格式化成yyyy-MM-dd HH:mm:ss字符串
+     *
+     * @param timestamp
+     * @return
+     */
     public static String formatDateTime(Long timestamp) {
         return format(timestamp, DATE_TIME_PATTERN);
     }
@@ -29,6 +35,16 @@ public class DateUtils {
      */
     public static String format(Long timestamp, String pattern) {
         return DateTimeFormat.forPattern(pattern).print(timestamp);
+    }
+
+    /**
+     * 将yyyy-MM-dd HH:mm:ss格式的字符串解析成时间戳
+     *
+     * @param text
+     * @return
+     */
+    public static long parseDateTime(String text) {
+        return parse(text, DATE_TIME_PATTERN);
     }
 
     /**
@@ -56,7 +72,7 @@ public class DateUtils {
     }
 
     /**
-     * 修改为起始时间
+     * 截取时间
      * <p>例如传入2023-03-28 18:39:22的时间戳和11(HOUR_OF_DAY)</p>
      * <p>返回2023-03-28 18:00:00的时间戳</p>
      *

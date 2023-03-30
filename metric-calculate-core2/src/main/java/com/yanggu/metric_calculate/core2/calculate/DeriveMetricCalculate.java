@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
@@ -22,7 +21,10 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * 派生指标计算类
@@ -187,7 +189,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     public List<DeriveMetricCalculateResult<OUT>> query(MetricCube<IN, ACC, OUT> metricCube,
                                                         Long timestamp) {
         //获取统计的时间窗口
-        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindow(timestamp);
+        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         if (CollUtil.isEmpty(timeWindowList)) {
             return Collections.emptyList();
         }

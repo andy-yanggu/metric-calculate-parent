@@ -6,9 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Calendar.*;
 
 /**
  * 时间聚合粒度
@@ -52,103 +55,80 @@ public class TimeBaselineDimension {
      * <p>时间区间为[2022-11-21 00:00:00, 2022-11-23 00:00:00), 左闭右开</p>
      * <p>如果时间聚合粒度不是1, 就是滑动窗口, 窗口滑动步长就是1个时间单位</p>
      */
-    public List<TimeWindow> getTimeWindow2(Long timestamp) {
+    public List<TimeWindow> getTimeWindowList(Long timestamp) {
         int timeUnit = unit.getDateField();
-        long tempTimestamp = timestamp;
         List<TimeWindow> windows = new ArrayList<>();
-        //如果是季度
-        //if (timeUnit == -1) {
-        //
-        //}
-        //for (int i = length; i >= 0; i--) {
-        //    long tempWindowStat = 0L;
-        //    long tempWindowEnd = 0L;
-        //    //if (timeUnit == MILLISECOND) {
-        //    //    tempWindowStat = timestamp;
-        //    //    tempWindowEnd = timestamp + length;
-        //    //}
-        //    ////季度
-        //    ////1-3第一季度、4-6第二季度、7-9第三季度、10-12第四季度
-        //    DateTime dateTime = new DateTime(tempTimestamp);
-        //    if (timeUnit == -1) {
-        //        int month = dateTime.getMonthOfYear();
-        //        //第一季度
-        //        if (month >= 1 && month <= 3) {
-        //            if (flag) {
-        //                month = 4 - month;
-        //            } else {
-        //                month = 1 - month;
-        //            }
-        //            //第二季度
-        //        } else if (month >= 4 && month <= 6) {
-        //            if (flag) {
-        //                month = 7 - month;
-        //            } else {
-        //                month = 4 - month;
-        //            }
-        //            //第三季度
-        //        } else if (month >= 7 && month <= 9) {
-        //            if (flag) {
-        //                month = 10 - month;
-        //            } else {
-        //                month = 7 - month;
-        //            }
-        //            //第四季度
-        //        } else {
-        //            if (flag) {
-        //                month = 13 - month;
-        //            } else {
-        //                month = 10 - month;
-        //            }
-        //        }
-        //        dateTime.monthOfYear().roundFloorCopy().plusMonths(month).getMillis();
-        //    }
-        //    //DateTime.Property property;
-        //    ////秒
-        //    //if (timeUnit == SECOND) {
-        //    //    property = dateTime.secondOfMinute();
-        //    //    //分钟
-        //    //} else if (timeUnit == MINUTE) {
-        //    //    property = dateTime.minuteOfHour();
-        //    //    //小时
-        //    //} else if (timeUnit == HOUR_OF_DAY) {
-        //    //    property = dateTime.hourOfDay();
-        //    //    //天
-        //    //} else if (timeUnit == DAY_OF_YEAR) {
-        //    //    property = dateTime.dayOfYear();
-        //    //    //周(一周的开始是星期一)
-        //    //} else if (timeUnit == WEEK_OF_YEAR) {
-        //    //    property = dateTime.weekOfWeekyear();
-        //    //    //月
-        //    //} else if (timeUnit == MONTH) {
-        //    //    property = dateTime.monthOfYear();
-        //    //    //年
-        //    //} else if (timeUnit == YEAR) {
-        //    //    property = dateTime.year();
-        //    //} else {
-        //    //    throw new RuntimeException("timeUnit: " + timeUnit + "类型错误");
-        //    //}
-        //    //if (flag) {
-        //    //    return property.roundCeilingCopy().getMillis();
-        //    //} else {
-        //    //    return property.roundFloorCopy().getMillis();
-        //    //}
-        //    TimeWindow timeWindow = new TimeWindow(tempWindowStat, tempWindowEnd);
-        //    windows.add(timeWindow);
-        //}
-
-        return windows;
-    }
-
-    //TODO 需要修复getTimeWindow的bug
-    public List<TimeWindow> getTimeWindow(Long timestamp) {
-        Long windowEnd = DateUtils.ceiling(timestamp, this.unit.getDateField());
-        long windowSize = java.util.concurrent.TimeUnit.DAYS.toMillis(1L) * length;
-        long slidingSize = java.util.concurrent.TimeUnit.DAYS.toMillis(1L);
-        long windowStart = windowEnd - windowSize;
-        List<TimeWindow> windows = new ArrayList<>();
-        for (int i = 0; i < length; i++) {
-            windows.add(new TimeWindow(windowStart + i * slidingSize, windowStart + i * slidingSize + windowSize));
+        //毫秒
+        if (timeUnit == MILLISECOND) {
+            for (int i = length - 1; i >= 0; i--) {
+                windows.add(new TimeWindow(timestamp - i, timestamp - i + length));
+            }
+            //秒
+        } else if (timeUnit == SECOND) {
+            DateTime dateTime = new DateTime(timestamp).secondOfMinute().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusSeconds(i).getMillis();
+                long windowEnd = dateTime.plusSeconds(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //分钟
+        } else if (timeUnit == MINUTE) {
+            DateTime dateTime = new DateTime(timestamp).minuteOfHour().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusMinutes(i).getMillis();
+                long windowEnd = dateTime.plusMinutes(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //小时
+        } else if (timeUnit == HOUR_OF_DAY) {
+            DateTime dateTime = new DateTime(timestamp).hourOfDay().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusHours(i).getMillis();
+                long windowEnd = dateTime.plusHours(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //日
+        } else if (timeUnit == DAY_OF_YEAR) {
+            DateTime dateTime = new DateTime(timestamp).dayOfYear().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusDays(i).getMillis();
+                long windowEnd = dateTime.plusDays(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //周
+        } else if (timeUnit == WEEK_OF_YEAR) {
+            DateTime dateTime = new DateTime(timestamp).weekOfWeekyear().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusWeeks(i).getMillis();
+                long windowEnd = dateTime.plusWeeks(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //月
+        } else if (timeUnit == MONTH) {
+            DateTime dateTime = new DateTime(timestamp).monthOfYear().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusMonths(i).getMillis();
+                long windowEnd = dateTime.plusMonths(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //季度
+        } else if (timeUnit == -1) {
+            DateTime dateTime = new DateTime(timestamp);
+            int month = dateTime.getMonthOfYear();
+            dateTime = new DateTime(timestamp).monthOfYear().roundFloorCopy().withMonthOfYear((month + 2) / 3);
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusMonths(i * 3).getMillis();
+                long windowEnd = dateTime.plusMonths((length - i) * 3).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
+            //年
+        } else if (timeUnit == YEAR) {
+            DateTime dateTime = new DateTime(timestamp).year().roundFloorCopy();
+            for (int i = length - 1; i >= 0; i--) {
+                long windowStart = dateTime.minusYears(i).getMillis();
+                long windowEnd = dateTime.plusYears(length - i).getMillis();
+                windows.add(new TimeWindow(windowStart, windowEnd));
+            }
         }
         return windows;
     }
