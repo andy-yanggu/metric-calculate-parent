@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SlidingTimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
+public class SlidingTimeTable2<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 

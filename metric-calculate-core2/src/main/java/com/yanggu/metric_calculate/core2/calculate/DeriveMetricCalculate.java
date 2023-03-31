@@ -14,7 +14,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
-import com.yanggu.metric_calculate.core2.table.TimeTable;
+import com.yanggu.metric_calculate.core2.table.TimeTable2;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -129,7 +129,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (historyMetricCube == null) {
             historyMetricCube = createMetricCube(dimensionSet);
         }
-        TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+        TimeTable2<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
         timeTable.setTimeBaselineDimension(timeBaselineDimension);
         timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
@@ -166,7 +166,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
                 if (historyMetricCube == null) {
                     historyMetricCube = createMetricCube(dimensionSet);
                 }
-                TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
+                TimeTable2<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
                 timeTable.setTimeBaselineDimension(timeBaselineDimension);
                 timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
@@ -234,7 +234,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
+        TimeTable2<IN, ACC, OUT> timeTable = new TimeTable2<>();
         metricCube.setTimeTable(timeTable);
         return metricCube;
     }
