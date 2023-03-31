@@ -33,8 +33,8 @@ public class StateWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunc
             //如果状态不相等
         } else if (!Objects.equals(newStatus, oldStatus)) {
             accumulator.setKey(newStatus);
-            ACC accumulator1 = aggregateFunction.createAccumulator();
-            acc = aggregateFunction.add(input.getValue(), accumulator1);
+            ACC newAccumulator = aggregateFunction.createAccumulator();
+            acc = aggregateFunction.add(input.getValue(), newAccumulator);
         } else {
             //状态相等
             acc = aggregateFunction.add(input.getValue(), acc);

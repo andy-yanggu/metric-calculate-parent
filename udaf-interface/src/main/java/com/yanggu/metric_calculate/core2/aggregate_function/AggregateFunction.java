@@ -3,16 +3,19 @@ package com.yanggu.metric_calculate.core2.aggregate_function;
 
 /**
  * 定义输入数据、中间状态累计数据、输出数据
- * <p>定义了如何进行增量计算</p>
+ * <p>该函数定义了如何进行增量计算，是一个无状态函数</p>
+ * <p>需要有空参构造方法，用于反射生成</p>
+ * <p>聚合函数的相关参数，会在反射生成聚合函数后，反射给聚合函数的参数赋值</p>
  *
  * @param <IN> 输入的数据
- * @param <ACC> 中间累加数据
+ * @param <ACC> 中间累加数据 需要有空参构造方法，可以进行序列化和反序列化
  * @param <OUT> 输出的数据
  */
 public interface AggregateFunction<IN, ACC, OUT> {
 
     /**
      * 初始化方法, 默认空代码, 实现类可以重写该方法
+     * <p>给反射生成聚合函数，且给聚合函数的参数赋值完成后，会调用init方法</p>
      */
     default void init() {
     }
