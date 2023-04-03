@@ -65,6 +65,14 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         return aggregateFunction.createAccumulator();
     }
 
+    public OUT getOutFromInList(List<IN> inList) {
+        ACC acc = aggregateFunction.createAccumulator();
+        for (IN in : inList) {
+            acc = aggregateFunction.add(in, acc);
+        }
+        return aggregateFunction.getResult(acc);
+    }
+
     /**
      * 从累加器中获取输出值
      *
