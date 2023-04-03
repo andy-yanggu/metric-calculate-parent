@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SlidingTimeTable2<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
+public class SlidingTimeTable<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 
@@ -31,7 +31,7 @@ public class SlidingTimeTable2<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
 
     @Override
     public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return aggregateFieldProcessor.getOut(map.get(Pair.of(from, to)));
+        return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(from, to)));
     }
 
 }

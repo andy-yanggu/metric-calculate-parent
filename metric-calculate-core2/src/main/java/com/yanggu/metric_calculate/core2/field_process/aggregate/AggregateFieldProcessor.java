@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import lombok.SneakyThrows;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * 聚合字段处理器
@@ -60,13 +61,17 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         return oldAcc;
     }
 
+    public ACC createAcc() {
+        return aggregateFunction.createAccumulator();
+    }
+
     /**
      * 从累加器中获取输出值
      *
      * @param accumulator 累加器
      * @return
      */
-    public OUT getOut(ACC accumulator) {
+    public OUT getOutFromAcc(ACC accumulator) {
         if (accumulator == null) {
             return null;
         }

@@ -1,13 +1,8 @@
 package com.yanggu.metric_calculate.core2.table;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.pattern.PatternAggregateFunction;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.ChainPattern;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 
 import java.util.Iterator;
@@ -16,29 +11,37 @@ import java.util.NavigableMap;
 import java.util.TreeMap;
 
 
-public class PatternTable<OUT> implements Table<JSONObject, TreeMap<NodePattern, TreeMap<Long, JSONObject>>, OUT> {
+public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
 
-    private PatternAggregateFunction patternAggregateFunction;
+    private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
 
-    private TreeMap<NodePattern, TreeMap<Long, JSONObject>> dataMap = new TreeMap<>();
+    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+
+    private TreeMap<NodePattern, TreeMap<Long, IN>> dataMap = new TreeMap<>();
 
     @Override
     public void put(Long timestamp, JSONObject in) {
-        dataMap = patternAggregateFunction.add(Pair.of(timestamp, in), dataMap);
+        filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
+            Boolean process = filterProcessor.process(in);
+            if (Boolean.TRUE.equals(process)) {
+                TreeMap<Long, IN> treeMap = dataMap.computeIfAbsent(nodePattern, key -> new TreeMap<>());
+                treeMap.put(timestamp, aggregateFieldProcessor.process(in));
+            }
+        });
     }
 
     @Override
     public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        dataMap = patternAggregateFunction.getResult(dataMap);
+
         //判断最后一个节点是否有数据
-        NavigableMap<Long, JSONObject> endTable = dataMap.lastEntry().getValue()
+        NavigableMap<Long, IN> endTable = dataMap.lastEntry().getValue()
                 .subMap(from, fromInclusive, to, toInclusive);
         if (endTable.isEmpty()) {
             return null;
         }
 
         //从第一个节点进行截取数据
-        NavigableMap<Long, JSONObject> nodeTable = dataMap.firstEntry().getValue()
+        NavigableMap<Long, IN> nodeTable = dataMap.firstEntry().getValue()
                 .subMap(from, fromInclusive, to, toInclusive);
 
         //判断第一个节点是否有数据
@@ -46,7 +49,7 @@ public class PatternTable<OUT> implements Table<JSONObject, TreeMap<NodePattern,
             return null;
         }
 
-        TreeMap<Long, JSONObject> nextTable = null;
+        TreeMap<Long, IN> nextTable = null;
 
         Iterator<NodePattern> iterator = dataMap.keySet().iterator();
         iterator.next();
@@ -55,11 +58,11 @@ public class PatternTable<OUT> implements Table<JSONObject, TreeMap<NodePattern,
         while (iterator.hasNext()) {
             nextNode = iterator.next();
             Long size = nextNode.getInterval();
-            TreeMap<Long, JSONObject> nextNodeTable = dataMap.get(nextNode);
+            TreeMap<Long, IN> nextNodeTable = dataMap.get(nextNode);
             nextTable = new TreeMap<>();
-            for (Map.Entry<Long, JSONObject> entry : nodeTable.entrySet()) {
+            for (Map.Entry<Long, IN> entry : nodeTable.entrySet()) {
                 Long timestamp = entry.getKey();
-                nextTable.putAll(nextNodeTable.subMap(timestamp, false,Math.min(timestamp + size, to), true));
+                nextTable.putAll(nextNodeTable.subMap(timestamp, false, Math.min(timestamp + size, to), true));
                 //判断和是否超过当前节点的最大时间戳, 如果超过没有必要继续遍历了
                 if (timestamp + size > nextNodeTable.lastKey()) {
                     break;
@@ -68,10 +71,17 @@ public class PatternTable<OUT> implements Table<JSONObject, TreeMap<NodePattern,
             nodeTable = nextTable;
         }
 
-        if (CollUtil.isEmpty(nextTable)) {
+        if (nextTable == null || nextTable.values().isEmpty()) {
             return null;
         }
-        return null;
+
+        ACC acc = aggregateFieldProcessor.createAcc();
+
+        for (IN in : nextTable.values()) {
+            acc = aggregateFieldProcessor.add(acc, in);
+        }
+
+        return aggregateFieldProcessor.getOutFromAcc(acc);
     }
 
 }

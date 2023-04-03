@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.TreeMap;
 
 @Data
-public class TimeTable2<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
+public class TimeTable<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();
 

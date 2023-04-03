@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core2.cube;
 
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.table.TimeTable2;
+import com.yanggu.metric_calculate.core2.table.TimeTable;
 import lombok.Data;
 
 /**
@@ -22,6 +22,6 @@ public class MetricCube<IN, ACC, OUT> {
     /**
      * 指标数据
      */
-    private TimeTable2<IN, ACC, OUT> timeTable;
+    private TimeTable<IN, ACC, OUT> timeTable;
 
 }

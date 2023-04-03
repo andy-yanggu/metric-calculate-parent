@@ -5,7 +5,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.util.Pool;
 import com.yanggu.metric_calculate.core2.kryo.serializer.TimeTableSerializer;
-import com.yanggu.metric_calculate.core2.table.TimeTable2;
+import com.yanggu.metric_calculate.core2.table.TimeTable;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 public class KryoPool extends Pool<Kryo> {
@@ -27,7 +27,7 @@ public class KryoPool extends Pool<Kryo> {
         //设定默认的实例化器
         kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 
-        kryo.register(TimeTable2.class, new TimeTableSerializer(), 1);
+        kryo.register(TimeTable.class, new TimeTableSerializer(), 1);
         //自定义的包装类
         //kryo.register(CubeLong.class, 1);
         //kryo.register(CubeInteger.class, 2);
