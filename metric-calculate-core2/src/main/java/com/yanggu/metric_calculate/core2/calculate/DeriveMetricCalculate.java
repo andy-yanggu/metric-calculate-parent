@@ -76,6 +76,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
 
     /**
      * 从输入的明细数据中提取出度量值
+     * <p>CEP类型、状态窗口使用该字段</p>
      */
     private FieldProcessor<JSONObject, IN> metricFieldProcessor;
 
@@ -105,6 +106,16 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private Boolean isUdaf;
 
     /**
+     * 滚动时间窗口、滑动时间窗口、滑动计数窗口、状态窗口、全窗口、会话窗口
+     */
+    private int windowType;
+
+    /**
+     * 是否是CEP类型
+     */
+    private Boolean isCep;
+
+    /**
      * 有状态计算
      *
      * @param input
@@ -119,7 +130,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         }
 
         //提取出度量值
-        IN in = metricFieldProcessor.process(input);
+        IN in = getMetricData(input);
         if (in == null) {
             return Collections.emptyList();
         }
@@ -167,7 +178,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         //包含当前笔需要执行前置过滤条件
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
             //提取出度量值
-            IN in = metricFieldProcessor.process(input);
+            IN in = getMetricData(input);
             if (in != null) {
                 if (historyMetricCube == null) {
                     historyMetricCube = createMetricCube(dimensionSet);
@@ -243,6 +254,16 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
         metricCube.setTimeTable(timeTable);
         return metricCube;
+    }
+
+    @SneakyThrows
+    private IN getMetricData(JSONObject input) {
+        //状态窗口或者是CEP类型
+        if (windowType == 3 || Boolean.TRUE.equals(isCep)) {
+            return metricFieldProcessor.process(input);
+        } else {
+            return aggregateFieldProcessor.process(input);
+        }
     }
 
 }

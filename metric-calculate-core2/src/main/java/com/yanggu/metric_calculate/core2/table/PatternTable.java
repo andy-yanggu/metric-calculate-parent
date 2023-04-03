@@ -5,10 +5,7 @@ import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldP
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.TreeMap;
+import java.util.*;
 
 
 public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
@@ -16,6 +13,8 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
     private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+
+    private List<NodePattern> nodePatternList;
 
     private TreeMap<NodePattern, TreeMap<Long, IN>> dataMap = new TreeMap<>();
 
@@ -51,7 +50,7 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
 
         TreeMap<Long, IN> nextTable = null;
 
-        Iterator<NodePattern> iterator = dataMap.keySet().iterator();
+        Iterator<NodePattern> iterator = nodePatternList.iterator();
         iterator.next();
         NodePattern nextNode;
 
