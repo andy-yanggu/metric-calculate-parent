@@ -4,7 +4,6 @@ package com.yanggu.metric_calculate.core2.calculate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
@@ -18,7 +17,6 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import com.yanggu.metric_calculate.core2.table.PatternTable;
 import com.yanggu.metric_calculate.core2.table.Table;
 import com.yanggu.metric_calculate.core2.table.TableFactory;
-import com.yanggu.metric_calculate.core2.table.TimeTable;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -77,12 +75,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      */
     private DimensionSetProcessor dimensionSetProcessor;
 
-    /**
-     * 从输入的明细数据中提取出度量值
-     * <p>CEP类型、状态窗口使用该字段</p>
-     */
-    private FieldProcessor<JSONObject, IN> metricFieldProcessor;
-
     private TableFactory<IN, ACC, OUT> tableFactory;
 
     /**
@@ -134,12 +126,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             return Collections.emptyList();
         }
 
-        //提取出度量值
-        IN in = getMetricData(input);
-        if (in == null) {
-            return Collections.emptyList();
-        }
-
         //提取出时间字段
         Long timestamp = timeFieldProcessor.process(input);
 
@@ -152,13 +138,14 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             historyMetricCube = createMetricCube(dimensionSet);
         }
         Table<IN, ACC, OUT> timeTable = historyMetricCube.getTable();
-        //timeTable.setTimeBaselineDimension(timeBaselineDimension);
-        //timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //放入明细数据进行累加
         if (Boolean.TRUE.equals(isCep)) {
+            //如果是CEP类型的, 进行特殊处理
             ((PatternTable<IN, ACC, OUT>) timeTable).put(timestamp, input);
         } else {
+            //提取出度量值
+            IN in = aggregateFieldProcessor.process(input);
             timeTable.put(timestamp, in);
         }
         deriveMetricMiddleStore.update(historyMetricCube);
@@ -187,7 +174,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         //包含当前笔需要执行前置过滤条件
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
             //提取出度量值
-            IN in = getMetricData(input);
+            IN in = null;
             if (in != null) {
                 if (historyMetricCube == null) {
                     historyMetricCube = createMetricCube(dimensionSet);
@@ -229,7 +216,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             long windowEnd = timeWindow.getWindowEnd();
 
             //聚合值
-            OUT query = metricCube.getTable().query(windowStart, true, windowEnd, false);
+            OUT query = metricCube.getTable().query();
 
             if (query == null) {
                 continue;
@@ -263,16 +250,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         Table<IN, ACC, OUT> table = tableFactory.createTable();
         metricCube.setTable(table);
         return metricCube;
-    }
-
-    @SneakyThrows
-    private IN getMetricData(JSONObject input) {
-        //状态窗口或者是CEP类型
-        if (windowType == 3 || Boolean.TRUE.equals(isCep)) {
-            return metricFieldProcessor.process(input);
-        } else {
-            return aggregateFieldProcessor.process(input);
-        }
     }
 
 }

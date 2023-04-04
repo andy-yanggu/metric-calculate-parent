@@ -212,11 +212,6 @@ public class FieldProcessorUtil {
             return new AggregateFieldProcessor<>(mixFieldProcessor, aggregateFunction);
         }
 
-        //如果是CEP类型
-        //if (aggregateFunctionClass.isAnnotationPresent(Pattern.class)) {
-        //    return getEventStateExtractor(derive.getChainPattern(), derive.getExternalBaseUdafParam(), fieldMap, unitFactory);
-        //}
-
         throw new RuntimeException("暂不支持聚合类型: " + aggregateFunctionClass.getName());
     }
 

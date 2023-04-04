@@ -324,6 +324,60 @@
         },
         "express": "zhangsan_sum_amount / total_sum_amount"
       }
+    },
+    {
+      "id": 10,
+      "name": "pattern_test",
+      "displayName": "cep类型的指标测试",
+      "description": "",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP",
+        "columnIndex": null
+      },
+      "filter": null,
+      "calculateLogic": "SUM",
+      "duration": 1,
+      "timeUnit": "DAY",
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      },
+      "chainPattern": {
+        "aggregateType": "PATTERN",
+        "nodePatternList": [
+          {
+            "index": 0,
+            "name": "start",
+            "matchExpress": "debit_amt_out > 100",
+            "interval": 0
+          },
+          {
+            "index": 1,
+            "name": "mid",
+            "matchExpress": "debit_amt_out > 200",
+            "interval": 10
+          },
+          {
+            "index": 2,
+            "name": "end",
+            "matchExpress": "debit_amt_out > 300",
+            "interval": 10
+          }
+        ]
+      },
+      "baseUdafParam": {
+        "aggregateType": "SUM",
+        "metricExpress": "debit_amt_out"
+      }
     }
   ],
   "fields": [

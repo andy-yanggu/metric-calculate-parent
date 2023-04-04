@@ -112,4 +112,9 @@ public class Derive {
      */
     private RoundAccuracy roundAccuracy;
 
+    /**
+     * 滚动时间窗口、滑动时间窗口、滑动计数窗口、状态窗口、全窗口、会话窗口
+     */
+    private int windowType;
+
 }

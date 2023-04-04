@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SlidingTimeTable<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
+public class SlidingTimeTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 
@@ -27,6 +27,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
             ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
             map.put(tuple2, nowAcc);
         }
+        super.timestamp = timestamp;
     }
 
     @Override

@@ -1,30 +1,46 @@
 package com.yanggu.metric_calculate.core2.table;
 
 
-import cn.hutool.core.collection.CollUtil;
-import lombok.Data;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import lombok.Setter;
 
-import java.util.Collection;
-import java.util.TreeMap;
+import java.util.List;
 
-@Data
-public class TimeTable<IN, ACC, OUT> extends Table2<IN, ACC, OUT> {
+/**
+ * 进行分桶的抽象类
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
+public abstract class TimeTable<IN, ACC, OUT> implements Table<IN, ACC, OUT> {
 
-    private TreeMap<Long, ACC> treeMap = new TreeMap<>();
+    @Setter
+    protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
-    public void put(Long timestamp, IN in) {
-        Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
-        ACC historyAcc = treeMap.get(aggregateTimestamp);
-        ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
-        treeMap.put(aggregateTimestamp, nowAcc);
+    @Setter
+    protected TimeBaselineDimension timeBaselineDimension;
+
+    protected Long timestamp;
+
+    @Override
+    public OUT query() {
+        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
+        TimeWindow timeWindow = timeWindowList.get(0);
+        return query(timeWindow.getWindowStart(), true, timeWindow.getWindowEnd(), false);
     }
 
-    public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        Collection<ACC> values = treeMap.subMap(from, fromInclusive, to, toInclusive).values();
-        if (CollUtil.isEmpty(values)) {
-            return null;
-        }
-        return aggregateFieldProcessor.getMergeResult(values);
-    }
+    /**
+     * 查询数据
+     *
+     * @param from
+     * @param fromInclusive
+     * @param to
+     * @param toInclusive
+     * @return
+     */
+    public abstract OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive);
 
 }

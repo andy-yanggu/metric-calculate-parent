@@ -3,20 +3,42 @@ package com.yanggu.metric_calculate.core2.table;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
+import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import lombok.Data;
 
 import java.util.*;
 
-
+@Data
 public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
 
-    private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
-
-    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+    private Map<String, Class<?>> fieldMap;
 
     private List<NodePattern> nodePatternList;
 
+    private Long timestamp;
+
+    private TimeBaselineDimension timeBaselineDimension;
+
+    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+
+    private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
+
     private TreeMap<NodePattern, TreeMap<Long, IN>> dataMap = new TreeMap<>();
+
+    @Override
+    public void init() {
+        TreeMap<NodePattern, FilterFieldProcessor> tempFilterFieldProcessorMap = new TreeMap<>();
+
+        for (NodePattern node : nodePatternList) {
+            FilterFieldProcessor filterFieldProcessor =
+                    FieldProcessorUtil.getFilterFieldProcessor(fieldMap, node.getMatchExpress());
+            tempFilterFieldProcessorMap.put(node, filterFieldProcessor);
+        }
+        this.filterFieldProcessorMap = tempFilterFieldProcessorMap;
+    }
 
     @Override
     public void put(Long timestamp, JSONObject in) {
@@ -30,7 +52,14 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
     }
 
     @Override
-    public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+    public OUT query() {
+
+        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
+        TimeWindow timeWindow = timeWindowList.get(0);
+        long from = timeWindow.getWindowStart();
+        boolean fromInclusive = true;
+        long to = timeWindow.getWindowEnd();
+        boolean toInclusive = false;
 
         //判断最后一个节点是否有数据
         NavigableMap<Long, IN> endTable = dataMap.lastEntry().getValue()
@@ -60,10 +89,10 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
             TreeMap<Long, IN> nextNodeTable = dataMap.get(nextNode);
             nextTable = new TreeMap<>();
             for (Map.Entry<Long, IN> entry : nodeTable.entrySet()) {
-                Long timestamp = entry.getKey();
-                nextTable.putAll(nextNodeTable.subMap(timestamp, false, Math.min(timestamp + size, to), true));
+                Long tempTimestamp = entry.getKey();
+                nextTable.putAll(nextNodeTable.subMap(tempTimestamp, false, Math.min(tempTimestamp + size, to), true));
                 //判断和是否超过当前节点的最大时间戳, 如果超过没有必要继续遍历了
-                if (timestamp + size > nextNodeTable.lastKey()) {
+                if (tempTimestamp + size > nextNodeTable.lastKey()) {
                     break;
                 }
             }
