@@ -136,6 +136,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
         if (historyMetricCube == null) {
             historyMetricCube = createMetricCube(dimensionSet);
+        } else {
+            tableFactory.setTable(historyMetricCube.getTable());
         }
         Table<IN, ACC, OUT> timeTable = historyMetricCube.getTable();
 
@@ -173,18 +175,17 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
 
         //包含当前笔需要执行前置过滤条件
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-            //提取出度量值
-            IN in = null;
-            if (in != null) {
-                if (historyMetricCube == null) {
-                    historyMetricCube = createMetricCube(dimensionSet);
-                }
-                Table<IN, ACC, OUT> timeTable = historyMetricCube.getTable();
-                //timeTable.setTimeBaselineDimension(timeBaselineDimension);
-                //timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-
-                //放入明细数据进行累加
-                timeTable.put(timestamp, in);
+            if (historyMetricCube == null) {
+                historyMetricCube = createMetricCube(dimensionSet);
+            } else {
+                tableFactory.setTable(historyMetricCube.getTable());
+            }
+            //放入明细数据进行累加
+            if (Boolean.TRUE.equals(isCep)) {
+                ((PatternTable<IN, ACC, OUT>) historyMetricCube.getTable()).put(timestamp, input);
+            } else {
+                IN in = aggregateFieldProcessor.process(input);
+                historyMetricCube.getTable().put(timestamp, in);
             }
         }
         if (historyMetricCube == null) {
