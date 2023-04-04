@@ -6,8 +6,15 @@ import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldP
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import lombok.Data;
 
+/**
+ * 状态窗口
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
 @Data
-public class StatusWindowTable<IN, ACC, OUT> implements Table<MutablePair<MultiFieldDistinctKey, IN>, ACC, OUT> {
+public class StatusWindowTable<IN, ACC, OUT> implements Table<MutablePair<MultiFieldDistinctKey, IN>, OUT> {
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 

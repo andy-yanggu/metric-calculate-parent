@@ -4,8 +4,15 @@ package com.yanggu.metric_calculate.core2.table;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import lombok.Data;
 
+/**
+ * 全窗口
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
 @Data
-public class GlobalTable<IN, ACC, OUT> implements Table<IN, ACC, OUT> {
+public class GlobalTable<IN, ACC, OUT> implements Table<IN, OUT> {
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 

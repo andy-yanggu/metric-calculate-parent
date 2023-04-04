@@ -9,6 +9,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 滑动时间窗口
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
 public class SlidingTimeTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();

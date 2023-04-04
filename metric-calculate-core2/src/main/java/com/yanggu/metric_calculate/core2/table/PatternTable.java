@@ -11,8 +11,15 @@ import lombok.Data;
 
 import java.util.*;
 
+/**
+ * CEP类型
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
 @Data
-public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, ACC, OUT> {
+public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 

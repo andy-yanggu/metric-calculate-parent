@@ -24,7 +24,7 @@ public class TableFactory<IN, ACC, OUT> {
      *
      * @return
      */
-    public Table<IN, ACC, OUT> createTable() {
+    public Table<IN, OUT> createTable() {
         int windowType = derive.getWindowType();
         //滚动时间窗口
         if (windowType == 0) {
@@ -47,7 +47,7 @@ public class TableFactory<IN, ACC, OUT> {
         } else if (windowType == 3) {
             StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            return (Table<IN, ACC, OUT>) statusWindowTable;
+            return (Table<IN, OUT>) statusWindowTable;
             //全窗口
         } else if (windowType == 4) {
             GlobalTable<IN, ACC, OUT> globalTable = new GlobalTable<>();
@@ -60,7 +60,7 @@ public class TableFactory<IN, ACC, OUT> {
             patternTable.setNodePatternList(derive.getChainPattern().getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             patternTable.init();
-            return (Table<IN, ACC, OUT>) patternTable;
+            return (Table<IN, OUT>) patternTable;
         } else {
             throw new RuntimeException("窗口类型异常");
         }
@@ -70,7 +70,7 @@ public class TableFactory<IN, ACC, OUT> {
      * 给Table实现类的相关字段赋值
      * @param table
      */
-    public void setTable(Table<IN, ACC, OUT> table) {
+    public void setTable(Table<IN, OUT> table) {
         int windowType = derive.getWindowType();
         //滚动时间窗口
         if (windowType == 0) {

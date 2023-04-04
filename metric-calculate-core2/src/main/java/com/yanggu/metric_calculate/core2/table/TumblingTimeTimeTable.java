@@ -7,6 +7,13 @@ import lombok.Data;
 import java.util.Collection;
 import java.util.TreeMap;
 
+/**
+ * 滚动时间窗口
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
 @Data
 public class TumblingTimeTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
 

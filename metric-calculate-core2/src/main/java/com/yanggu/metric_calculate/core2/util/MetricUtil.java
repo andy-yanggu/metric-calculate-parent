@@ -21,6 +21,7 @@ import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideT
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core2.table.TableFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -122,6 +123,14 @@ public class MetricUtil {
         AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
                 FieldProcessorUtil.getAggregateFieldProcessor(tempDerive, fieldMap, aggregateFunctionFactory);
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
+
+        TableFactory<IN, ACC, OUT> tableFactory = new TableFactory<>();
+        tableFactory.setDerive(tempDerive);
+        tableFactory.setDeriveMetricCalculate(deriveMetricCalculate);
+        tableFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
+        tableFactory.setFieldMap(metricCalculate.getFieldMap());
+
+        deriveMetricCalculate.setTableFactory(tableFactory);
 
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());

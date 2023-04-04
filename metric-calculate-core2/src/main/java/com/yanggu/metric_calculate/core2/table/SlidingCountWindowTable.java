@@ -8,9 +8,13 @@ import java.util.List;
 
 /**
  * 滑动计数窗口
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
  */
 @Data
-public class SlidingCountWindowTable<IN, ACC, OUT> implements Table<IN, ACC, OUT> {
+public class SlidingCountWindowTable<IN, ACC, OUT> implements Table<IN, OUT> {
 
     private List<IN> inList = new ArrayList<>();
 

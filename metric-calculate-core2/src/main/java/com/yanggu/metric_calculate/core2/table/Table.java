@@ -1,8 +1,16 @@
 package com.yanggu.metric_calculate.core2.table;
 
+/**
+ * 数据分桶方式
+ *
+ * @param <IN>
+ * @param <OUT>
+ */
+public interface Table<IN, OUT> {
 
-public interface Table<IN, ACC, OUT> {
-
+    /**
+     * 初始化接口
+     */
     default void init() {
     }
 

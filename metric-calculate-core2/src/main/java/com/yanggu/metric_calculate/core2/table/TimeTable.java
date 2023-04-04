@@ -9,13 +9,13 @@ import lombok.Setter;
 import java.util.List;
 
 /**
- * 进行分桶的抽象类
+ * 时间窗口
  *
  * @param <IN>
  * @param <ACC>
  * @param <OUT>
  */
-public abstract class TimeTable<IN, ACC, OUT> implements Table<IN, ACC, OUT> {
+public abstract class TimeTable<IN, ACC, OUT> implements Table<IN, OUT> {
 
     @Setter
     protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;

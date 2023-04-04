@@ -139,16 +139,16 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         } else {
             tableFactory.setTable(historyMetricCube.getTable());
         }
-        Table<IN, ACC, OUT> timeTable = historyMetricCube.getTable();
+        Table<IN, OUT> table = historyMetricCube.getTable();
 
         //放入明细数据进行累加
         if (Boolean.TRUE.equals(isCep)) {
             //如果是CEP类型的, 进行特殊处理
-            ((PatternTable<IN, ACC, OUT>) timeTable).put(timestamp, input);
+            ((PatternTable<IN, ACC, OUT>) table).put(timestamp, input);
         } else {
             //提取出度量值
             IN in = aggregateFieldProcessor.process(input);
-            timeTable.put(timestamp, in);
+            table.put(timestamp, in);
         }
         deriveMetricMiddleStore.update(historyMetricCube);
         return query(historyMetricCube, timestamp);
@@ -248,7 +248,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        Table<IN, ACC, OUT> table = tableFactory.createTable();
+        Table<IN, OUT> table = tableFactory.createTable();
         metricCube.setTable(table);
         return metricCube;
     }
