@@ -15,6 +15,9 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import com.yanggu.metric_calculate.core2.table.PatternTable;
+import com.yanggu.metric_calculate.core2.table.Table;
+import com.yanggu.metric_calculate.core2.table.TableFactory;
 import com.yanggu.metric_calculate.core2.table.TimeTable;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
@@ -79,6 +82,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * <p>CEP类型、状态窗口使用该字段</p>
      */
     private FieldProcessor<JSONObject, IN> metricFieldProcessor;
+
+    private TableFactory<IN, ACC, OUT> tableFactory;
 
     /**
      * 聚合函数字段处理器
@@ -146,12 +151,16 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (historyMetricCube == null) {
             historyMetricCube = createMetricCube(dimensionSet);
         }
-        TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
-        timeTable.setTimeBaselineDimension(timeBaselineDimension);
-        timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+        Table<IN, ACC, OUT> timeTable = historyMetricCube.getTable();
+        //timeTable.setTimeBaselineDimension(timeBaselineDimension);
+        //timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //放入明细数据进行累加
-        timeTable.put(timestamp, in);
+        if (Boolean.TRUE.equals(isCep)) {
+            ((PatternTable<IN, ACC, OUT>) timeTable).put(timestamp, input);
+        } else {
+            timeTable.put(timestamp, in);
+        }
         deriveMetricMiddleStore.update(historyMetricCube);
         return query(historyMetricCube, timestamp);
     }
@@ -183,9 +192,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
                 if (historyMetricCube == null) {
                     historyMetricCube = createMetricCube(dimensionSet);
                 }
-                TimeTable<IN, ACC, OUT> timeTable = historyMetricCube.getTimeTable();
-                timeTable.setTimeBaselineDimension(timeBaselineDimension);
-                timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+                Table<IN, ACC, OUT> timeTable = historyMetricCube.getTable();
+                //timeTable.setTimeBaselineDimension(timeBaselineDimension);
+                //timeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
 
                 //放入明细数据进行累加
                 timeTable.put(timestamp, in);
@@ -220,7 +229,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             long windowEnd = timeWindow.getWindowEnd();
 
             //聚合值
-            OUT query = metricCube.getTimeTable().query(windowStart, true, windowEnd, false);
+            OUT query = metricCube.getTable().query(windowStart, true, windowEnd, false);
 
             if (query == null) {
                 continue;
@@ -251,8 +260,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        TimeTable<IN, ACC, OUT> timeTable = new TimeTable<>();
-        metricCube.setTimeTable(timeTable);
+        Table<IN, ACC, OUT> table = tableFactory.createTable();
+        metricCube.setTable(table);
         return metricCube;
     }
 
