@@ -23,7 +23,7 @@ public class DeriveMetricCalculatePatternTest extends DeriveMetricCalculateBase 
         deriveMetricCalculate.setIsCep(true);
         TableFactory<Double, Double, Double> tableFactory = new TableFactory<>();
         tableFactory.setFieldMap(metricCalculate.getFieldMap());
-        tableFactory.setAggregateFieldProcessor(deriveMetricCalculate.getAggregateFieldProcessor());
+        tableFactory.setDeriveMetricCalculate(deriveMetricCalculate);
 
         Derive derive = metricCalculate.getDerive().stream()
                 .filter(tempDerive -> tempDerive.getId().equals(10L))

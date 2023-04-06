@@ -13,8 +13,6 @@ public class TableFactory<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
-    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
-
     private Derive derive;
 
     private DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate;
@@ -26,8 +24,18 @@ public class TableFactory<IN, ACC, OUT> {
      */
     public Table<IN, OUT> createTable() {
         int windowType = derive.getWindowType();
-        //滚动时间窗口
-        if (windowType == 0) {
+        AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor = deriveMetricCalculate.getAggregateFieldProcessor();
+        //CEP类型
+        if (Boolean.TRUE.equals(deriveMetricCalculate.getIsCep())) {
+            PatternTable<IN, ACC, OUT> patternTable = new PatternTable<>();
+            patternTable.setFieldMap(fieldMap);
+            patternTable.setNodePatternList(derive.getChainPattern().getNodePatternList());
+            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            patternTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            patternTable.init();
+            return (Table<IN, OUT>) patternTable;
+            //滚动时间窗口
+        } else if (windowType == 0) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTimeTable<>();
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
@@ -54,13 +62,6 @@ public class TableFactory<IN, ACC, OUT> {
             globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             return globalTable;
             //CEP类型
-        } else if (Boolean.TRUE.equals(deriveMetricCalculate.getIsCep())) {
-            PatternTable<IN, ACC, OUT> patternTable = new PatternTable<>();
-            patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(derive.getChainPattern().getNodePatternList());
-            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.init();
-            return (Table<IN, OUT>) patternTable;
         } else {
             throw new RuntimeException("窗口类型异常");
         }
@@ -72,8 +73,17 @@ public class TableFactory<IN, ACC, OUT> {
      */
     public void setTable(Table<IN, OUT> table) {
         int windowType = derive.getWindowType();
-        //滚动时间窗口
-        if (windowType == 0) {
+        AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor = deriveMetricCalculate.getAggregateFieldProcessor();
+        //CEP类型
+        if (Boolean.TRUE.equals(deriveMetricCalculate.getIsCep())) {
+            PatternTable<IN, ACC, OUT> patternTable = ((PatternTable<IN, ACC, OUT>) table);
+            patternTable.setFieldMap(fieldMap);
+            patternTable.setNodePatternList(derive.getChainPattern().getNodePatternList());
+            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            patternTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            patternTable.init();
+            //滚动时间窗口
+        } else if (windowType == 0) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTimeTable<IN, ACC, OUT>) table);
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
@@ -95,12 +105,6 @@ public class TableFactory<IN, ACC, OUT> {
             GlobalTable<IN, ACC, OUT> globalTable = ((GlobalTable<IN, ACC, OUT>) table);
             globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             //CEP类型
-        } else if (Boolean.TRUE.equals(deriveMetricCalculate.getIsCep())) {
-            PatternTable<IN, ACC, OUT> patternTable = ((PatternTable<IN, ACC, OUT>) table);
-            patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(derive.getChainPattern().getNodePatternList());
-            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.init();
         } else {
             throw new RuntimeException("窗口类型异常");
         }

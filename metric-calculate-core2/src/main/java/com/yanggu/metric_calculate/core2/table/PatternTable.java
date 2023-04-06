@@ -25,18 +25,19 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
 
     private List<NodePattern> nodePatternList;
 
-    private Long timestamp;
-
     private TimeBaselineDimension timeBaselineDimension;
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
 
+    private Long timestamp;
+
     private TreeMap<NodePattern, TreeMap<Long, IN>> dataMap = new TreeMap<>();
 
     @Override
     public void init() {
+        //初始化过滤条件
         TreeMap<NodePattern, FilterFieldProcessor> tempFilterFieldProcessorMap = new TreeMap<>();
 
         for (NodePattern node : nodePatternList) {
@@ -56,11 +57,11 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
                 treeMap.put(timestamp, aggregateFieldProcessor.process(in));
             }
         });
+        this.timestamp = timestamp;
     }
 
     @Override
     public OUT query() {
-
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindow timeWindow = timeWindowList.get(0);
         long from = timeWindow.getWindowStart();
@@ -90,6 +91,7 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
         iterator.next();
         NodePattern nextNode;
 
+        //从第一个节点开始遍历
         while (iterator.hasNext()) {
             nextNode = iterator.next();
             Long size = nextNode.getInterval();
@@ -110,12 +112,15 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
             return null;
         }
 
+        //创建累加器
         ACC acc = aggregateFieldProcessor.createAcc();
 
+        //放入明细数据进行累加
         for (IN in : nextTable.values()) {
             acc = aggregateFieldProcessor.add(acc, in);
         }
 
+        //从累加器中获取数据
         return aggregateFieldProcessor.getOutFromAcc(acc);
     }
 
