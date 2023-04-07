@@ -64,7 +64,7 @@ public class KryoPool extends Pool<Kryo> {
         ////映射型
         //kryo.register(BaseMapUnit.class, 26);
         //
-        //kryo.register(TimeUnit.class, 27);
+        //kryo.register(TimeUnitEnum.class, 27);
         //
         //kryo.register(NoneValue.class, 28);
         //

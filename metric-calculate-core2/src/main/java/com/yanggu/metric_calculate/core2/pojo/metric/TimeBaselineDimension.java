@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.metric;
 
-import com.yanggu.metric_calculate.core2.enums.TimeUnit;
+import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,9 +31,9 @@ public class TimeBaselineDimension {
     /**
      * 时间单位
      */
-    private TimeUnit unit;
+    private TimeUnitEnum unit;
 
-    public TimeBaselineDimension(Integer length, TimeUnit unit) {
+    public TimeBaselineDimension(Integer length, TimeUnitEnum unit) {
         this.length = length;
         this.unit = unit;
     }

@@ -10,7 +10,7 @@ import static java.util.Calendar.*;
  */
 @Getter
 @AllArgsConstructor
-public enum TimeUnit {
+public enum TimeUnitEnum {
 
     /**
      * 毫秒

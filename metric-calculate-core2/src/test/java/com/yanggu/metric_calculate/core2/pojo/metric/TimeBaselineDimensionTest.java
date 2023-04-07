@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.metric;
 
-import com.yanggu.metric_calculate.core2.enums.TimeUnit;
+import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import org.junit.Test;
 
@@ -17,7 +17,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_MillisSecond() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.MILLS);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.MILLS);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(5L);
         assertEquals(2, timeWindowList.size());
 
@@ -35,7 +35,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Second() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.SECOND);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.SECOND);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -53,7 +53,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Minute() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.MINUTE);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.MINUTE);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -71,7 +71,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Hour() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.HOUR);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.HOUR);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -89,7 +89,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Day() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.DAY);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.DAY);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -108,7 +108,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Week() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.WEEK);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.WEEK);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -126,7 +126,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Month() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.MONTH);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.MONTH);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -144,7 +144,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Quarter() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.QUARTER);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.QUARTER);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 
@@ -162,7 +162,7 @@ public class TimeBaselineDimensionTest {
      */
     @Test
     public void getTimeWindow_Year() {
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnit.YEAR);
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.YEAR);
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowList.size());
 

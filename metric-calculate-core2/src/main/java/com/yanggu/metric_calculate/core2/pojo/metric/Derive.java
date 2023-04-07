@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.metric;
 
-import com.yanggu.metric_calculate.core2.enums.TimeUnit;
+import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.pojo.store.StoreInfo;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.ChainPattern;
@@ -53,6 +53,16 @@ public class Derive {
     private String filter;
 
     /**
+     * 聚合函数参数
+     */
+    private AggregateFunctionParam aggregateFunctionParam;
+
+    /**
+     * 窗口相关参数
+     */
+    private WindowParam windowParam;
+
+    /**
      * 聚合逻辑
      */
     private String calculateLogic;
@@ -100,12 +110,7 @@ public class Derive {
     /**
      * 聚合时间单位
      */
-    private TimeUnit timeUnit;
-
-    /**
-     * 存储宽表
-     */
-    private StoreInfo storeInfo;
+    private TimeUnitEnum timeUnit;
 
     /**
      * 精度相关

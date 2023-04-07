@@ -10,7 +10,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFac
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core2.enums.TimeUnit;
+import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -52,7 +52,7 @@ public class MetricUtil {
         Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
         metricCalculate.setMetricTypeMap(metricTypeMap);
 
-        //宽表字段
+        //初始化宽表字段
         Map<String, Class<?>> fieldMap = getFieldMap(metricCalculate);
         metricCalculate.setFieldMap(fieldMap);
 
@@ -109,6 +109,7 @@ public class MetricUtil {
         String name = tempDerive.getName();
         deriveMetricCalculate.setName(name);
 
+        //宽表字段
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
 
         //设置前置过滤条件处理器
@@ -127,7 +128,6 @@ public class MetricUtil {
         TableFactory<IN, ACC, OUT> tableFactory = new TableFactory<>();
         tableFactory.setDerive(tempDerive);
         tableFactory.setDeriveMetricCalculate(deriveMetricCalculate);
-        tableFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
         tableFactory.setFieldMap(metricCalculate.getFieldMap());
 
         deriveMetricCalculate.setTableFactory(tableFactory);
@@ -138,8 +138,8 @@ public class MetricUtil {
 
         //设置时间聚合粒度
         Integer duration = tempDerive.getDuration();
-        TimeUnit timeUnit = tempDerive.getTimeUnit();
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(duration, timeUnit);
+        TimeUnitEnum timeUnitEnum = tempDerive.getTimeUnit();
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(duration, timeUnitEnum);
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器
