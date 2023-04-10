@@ -119,39 +119,30 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public List<DeriveMetricCalculateResult<OUT>> stateExec(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> stateExec(JSONObject input) {
         //执行前置过滤条件
         Boolean filter = filterFieldProcessor.process(input);
         if (Boolean.FALSE.equals(filter)) {
-            return Collections.emptyList();
+            return null;
         }
-
-        //提取出时间字段
-        Long timestamp = timeFieldProcessor.process(input);
 
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
-        //查询外部数据
+        //根据维度查询外部数据
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
         if (historyMetricCube == null) {
             historyMetricCube = createMetricCube(dimensionSet);
         } else {
             tableFactory.setTable(historyMetricCube.getTable());
         }
-        Table<IN, OUT> table = historyMetricCube.getTable();
 
         //放入明细数据进行累加
-        if (Boolean.TRUE.equals(isCep)) {
-            //如果是CEP类型的, 进行特殊处理
-            ((PatternTable<IN, ACC, OUT>) table).put(timestamp, input);
-        } else {
-            //提取出度量值
-            IN in = aggregateFieldProcessor.process(input);
-            table.put(timestamp, in);
-        }
+        addInput(input, historyMetricCube);
+
+        //更新到外部存储
         deriveMetricMiddleStore.update(historyMetricCube);
-        return query(historyMetricCube, timestamp);
+        return query(historyMetricCube);
     }
 
     /**
@@ -163,12 +154,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public List<DeriveMetricCalculateResult<OUT>> noStateExec(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input) {
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-
-        //提取出时间字段
-        Long timestamp = timeFieldProcessor.process(input);
 
         //查询外部数据
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
@@ -180,18 +168,29 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             } else {
                 tableFactory.setTable(historyMetricCube.getTable());
             }
-            //放入明细数据进行累加
-            if (Boolean.TRUE.equals(isCep)) {
-                ((PatternTable<IN, ACC, OUT>) historyMetricCube.getTable()).put(timestamp, input);
-            } else {
-                IN in = aggregateFieldProcessor.process(input);
-                historyMetricCube.getTable().put(timestamp, in);
-            }
+            addInput(input, historyMetricCube);
         }
         if (historyMetricCube == null) {
-            return Collections.emptyList();
+            return null;
         }
-        return query(historyMetricCube, timestamp);
+        return query(historyMetricCube);
+    }
+
+    /**
+     * 放入明细数据进行累加
+     *
+     * @param input
+     * @param historyMetricCube
+     */
+    private void addInput(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
+        //提取出时间字段
+        Long timestamp = timeFieldProcessor.process(input);
+        if (Boolean.TRUE.equals(isCep)) {
+            ((PatternTable<IN, ACC, OUT>) historyMetricCube.getTable()).put(timestamp, input);
+        } else {
+            IN in = aggregateFieldProcessor.process(input);
+            historyMetricCube.getTable().put(timestamp, in);
+        }
     }
 
     /**
@@ -200,49 +199,27 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @param metricCube
      * @return
      */
-    public List<DeriveMetricCalculateResult<OUT>> query(MetricCube<IN, ACC, OUT> metricCube,
-                                                        Long timestamp) {
-        //获取统计的时间窗口
-        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
-        if (CollUtil.isEmpty(timeWindowList)) {
-            return Collections.emptyList();
+    public DeriveMetricCalculateResult<OUT> query(MetricCube<IN, ACC, OUT> metricCube) {
+        //聚合值
+        OUT query = metricCube.getTable().query();
+
+        if (query == null) {
+            return null;
         }
 
-        List<DeriveMetricCalculateResult<OUT>> list = new ArrayList<>();
-        for (TimeWindow timeWindow : timeWindowList) {
+        DeriveMetricCalculateResult<OUT> result = new DeriveMetricCalculateResult<>();
+        //指标key
+        result.setKey(metricCube.getDimensionSet().getKey());
 
-            //窗口开始时间
-            long windowStart = timeWindow.getWindowStart();
-            //窗口结束时间
-            long windowEnd = timeWindow.getWindowEnd();
+        //指标名称
+        result.setName(metricCube.getDimensionSet().getMetricName());
 
-            //聚合值
-            OUT query = metricCube.getTable().query();
+        //指标维度
+        result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
 
-            if (query == null) {
-                continue;
-            }
-
-            DeriveMetricCalculateResult<OUT> result = new DeriveMetricCalculateResult<>();
-            //指标key
-            result.setKey(metricCube.getDimensionSet().getKey());
-
-            //指标名称
-            result.setName(metricCube.getDimensionSet().getMetricName());
-
-            //指标维度
-            result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
-
-            result.setStartTime(DateUtils.formatDateTime(windowStart));
-
-            result.setEndTime(DateUtils.formatDateTime(windowEnd));
-
-            //聚合值
-            result.setResult(query);
-
-            list.add(result);
-        }
-        return list;
+        //聚合值
+        result.setResult(query);
+        return result;
     }
 
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {

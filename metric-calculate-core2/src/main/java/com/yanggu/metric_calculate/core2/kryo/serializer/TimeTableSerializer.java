@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 public class TimeTableSerializer<IN, ACC, OUT> extends Serializer<TumblingTimeTimeTable<IN, ACC, OUT>> {
 
-    private DefaultSerializers.TreeMapSerializer treeMapSerializer = new DefaultSerializers.TreeMapSerializer();
+    private final DefaultSerializers.TreeMapSerializer treeMapSerializer = new DefaultSerializers.TreeMapSerializer();
 
     @Override
     public void write(Kryo kryo, Output output, TumblingTimeTimeTable<IN, ACC, OUT> object) {

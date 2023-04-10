@@ -7,9 +7,6 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import com.yanggu.metric_calculate.core2.table.TableFactory;
 import org.junit.Test;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * CEP型派生指标单元测试类
  */
@@ -39,7 +36,7 @@ public class DeriveMetricCalculatePatternTest extends DeriveMetricCalculateBase 
         input.set("credit_amt_in", 100);
         input.set("debit_amt_out", 800);
         input.set("trans_date", "20220609");
-        List<DeriveMetricCalculateResult<Double>> deriveMetricCalculateResults = deriveMetricCalculate.stateExec(input);
+        DeriveMetricCalculateResult<Double> deriveMetricCalculateResults = deriveMetricCalculate.stateExec(input);
         System.out.println(deriveMetricCalculateResults);
     }
 

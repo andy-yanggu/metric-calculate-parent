@@ -25,7 +25,7 @@ public class DeriveMetricCalculateObjectTest extends DeriveMetricCalculateBase {
     @Test
     public void testMaxField() {
         DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, String>, MutableObj<KeyValue<MultiFieldOrderCompareKey, String>>, KeyValue<MultiFieldOrderCompareKey, String>> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculate(4L);
-        List<DeriveMetricCalculateResult<KeyValue<MultiFieldOrderCompareKey, String>>> query;
+        DeriveMetricCalculateResult<KeyValue<MultiFieldOrderCompareKey, String>> query;
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_in", "000000000012");
@@ -33,28 +33,28 @@ public class DeriveMetricCalculateObjectTest extends DeriveMetricCalculateBase {
         input1.set("debit_amt_out", 800);
 
         query = deriveMetricCalculate.stateExec(input1);
-        assertEquals("1654768045000", query.get(0).getResult().getValue());
+        assertEquals("1654768045000", query.getResult().getValue());
 
         JSONObject input2 = new JSONObject();
         input2.set("account_no_in", "000000000012");
         input2.set("trans_timestamp", "1654768046000");
         input2.set("debit_amt_out", 900);
         query = deriveMetricCalculate.stateExec(input2);
-        assertEquals("1654768046000", query.get(0).getResult().getValue());
+        assertEquals("1654768046000", query.getResult().getValue());
 
         JSONObject input3 = new JSONObject();
         input3.set("account_no_in", "000000000012");
         input3.set("trans_timestamp", "1654768045000");
         input3.set("debit_amt_out", 800);
         query = deriveMetricCalculate.stateExec(input3);
-        assertEquals("1654768046000", query.get(0).getResult().getValue());
+        assertEquals("1654768046000", query.getResult().getValue());
 
         JSONObject input4 = new JSONObject();
         input4.set("account_no_in", "000000000012");
         input4.set("trans_timestamp", "1354768045000");
         input4.set("debit_amt_out", 1100);
         query = deriveMetricCalculate.stateExec(input4);
-        assertEquals("1354768045000", query.get(0).getResult().getValue());
+        assertEquals("1354768045000", query.getResult().getValue());
     }
 
 }

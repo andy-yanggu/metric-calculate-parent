@@ -73,7 +73,7 @@ public class JmhTest2 {
      */
     @Benchmark
     public void testUpdate(Blackhole blackhole) {
-        List<DeriveMetricCalculateResult<Double>> exec = deriveMetricCalculate.stateExec(input);
+        DeriveMetricCalculateResult<Double> exec = deriveMetricCalculate.stateExec(input);
         blackhole.consume(exec);
     }
 
@@ -84,7 +84,7 @@ public class JmhTest2 {
      */
     @Benchmark
     public void testUpdate_With_Kryo(Blackhole blackhole) {
-        List<DeriveMetricCalculateResult<Double>> exec = deriveMetricCalculate1.stateExec(input);
+        DeriveMetricCalculateResult<Double> exec = deriveMetricCalculate1.stateExec(input);
         blackhole.consume(exec);
     }
 

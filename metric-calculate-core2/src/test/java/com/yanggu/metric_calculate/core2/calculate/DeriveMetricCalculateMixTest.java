@@ -24,7 +24,7 @@ public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculate(0L);
 
-        List<DeriveMetricCalculateResult<Double>> query;
+        DeriveMetricCalculateResult<Double> query;
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -36,21 +36,21 @@ public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
 
         query = deriveMetricCalculate.stateExec(input1);
 
-        Double result = query.get(0).getResult();
+        Double result = query.getResult();
         //0 / 800
         assertEquals(0.0D, result, 0.0D);
 
         JSONObject input2 = input1.clone();
         input2.set("account_no_in", "张三");
         query = deriveMetricCalculate.stateExec(input2);
-        result = query.get(0).getResult();
+        result = query.getResult();
         //800 / 1600
         assertEquals(0.5D, result, 0.0D);
 
         JSONObject input3 = input1.clone();
         input3.set("account_no_in", "张三");
         query = deriveMetricCalculate.stateExec(input3);
-        result = query.get(0).getResult();
+        result = query.getResult();
         //1600 / 2400
         assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
     }

@@ -31,15 +31,15 @@ public class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
         input.set("debit_amt_out", 800);
         input.set("trans_date", "20220609");
 
-        List<DeriveMetricCalculateResult<Double>> doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(800.0D, doubles.get(0).getResult(), 0.0D);
+        DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
+        assertEquals(800.0D, doubles.getResult(), 0.0D);
 
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(1600.0D, doubles.get(0).getResult(), 0.0D);
+        assertEquals(1600.0D, doubles.getResult(), 0.0D);
 
         input.set("debit_amt_out", 400);
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(2000.0D, doubles.get(0).getResult(), 0.0D);
+        assertEquals(2000.0D, doubles.getResult(), 0.0D);
     }
 
     /**
@@ -58,20 +58,20 @@ public class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
         input.set("debit_amt_out", 800);
         input.set("trans_date", "20220609");
 
-        List<DeriveMetricCalculateResult<Integer>> doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(new Integer(800), doubles.get(0).getResult());
+        DeriveMetricCalculateResult<Integer> doubles = deriveMetricCalculate.stateExec(input);
+        assertEquals(new Integer(800), doubles.getResult());
 
         input.set("debit_amt_out", 900);
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(new Integer(800), doubles.get(0).getResult());
+        assertEquals(new Integer(800), doubles.getResult());
 
         input.set("debit_amt_out", 400);
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(new Integer(400), doubles.get(0).getResult());
+        assertEquals(new Integer(400), doubles.getResult());
 
         input.set("debit_amt_out", 500);
         doubles = deriveMetricCalculate.stateExec(input);
-        assertEquals(new Integer(400), doubles.get(0).getResult());
+        assertEquals(new Integer(400), doubles.getResult());
     }
 
 }

@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.metric;
 
 import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
-import com.yanggu.metric_calculate.core2.pojo.store.StoreInfo;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.ChainPattern;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;

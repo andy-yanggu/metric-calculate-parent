@@ -32,8 +32,8 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input1.set("trans_date", "20220609");
         input1.set("debit_amt_out", "800");
 
-        List<DeriveMetricCalculateResult<List<JSONObject>>> query = deriveMetricCalculate.stateExec(input1);
-        assertEquals(Collections.singletonList(input1), query.get(0).getResult());
+        DeriveMetricCalculateResult<List<JSONObject>> query = deriveMetricCalculate.stateExec(input1);
+        assertEquals(Collections.singletonList(input1), query.getResult());
 
         JSONObject input2 = new JSONObject();
         input2.set("account_no_out", "000000000011");
@@ -43,7 +43,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input2.set("trans_date", "20220609");
         input2.set("debit_amt_out", 900);
         query = deriveMetricCalculate.stateExec(input2);
-        assertEquals(Arrays.asList(input1, input2), query.get(0).getResult());
+        assertEquals(Arrays.asList(input1, input2), query.getResult());
 
         JSONObject input3 = new JSONObject();
         input3.set("account_no_out", "000000000011");
@@ -53,7 +53,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input3.set("trans_date", "20220609");
         input3.set("debit_amt_out", 1000);
         query = deriveMetricCalculate.stateExec(input3);
-        assertEquals(Arrays.asList(input1, input2, input3), query.get(0).getResult());
+        assertEquals(Arrays.asList(input1, input2, input3), query.getResult());
 
         JSONObject input4 = new JSONObject();
         input4.set("account_no_out", "000000000011");
@@ -63,7 +63,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input4.set("trans_date", "20220609");
         input4.set("debit_amt_out", 1100);
         query = deriveMetricCalculate.stateExec(input4);
-        assertEquals(Arrays.asList(input1, input2, input3, input4), query.get(0).getResult());
+        assertEquals(Arrays.asList(input1, input2, input3, input4), query.getResult());
 
         JSONObject input5 = new JSONObject();
         input5.set("account_no_out", "000000000011");
@@ -73,7 +73,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input5.set("trans_date", "20220609");
         input5.set("debit_amt_out", 100);
         query = deriveMetricCalculate.stateExec(input5);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0).getResult());
+        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
 
         JSONObject input6 = new JSONObject();
         input6.set("account_no_out", "000000000011");
@@ -83,7 +83,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input6.set("trans_date", "20220609");
         input6.set("debit_amt_out", 100);
         query = deriveMetricCalculate.stateExec(input6);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0).getResult());
+        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
 
         JSONObject input7 = new JSONObject();
         input7.set("account_no_out", "000000000011");
@@ -93,7 +93,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
         input7.set("trans_date", "20220609");
         input7.set("debit_amt_out", 100);
         query = deriveMetricCalculate.stateExec(input7);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.get(0).getResult());
+        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
     }
 
 }
