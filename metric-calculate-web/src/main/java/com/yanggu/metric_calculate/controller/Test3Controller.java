@@ -65,20 +65,6 @@ public class Test3Controller {
 
         private List<Event> eventList = new ArrayList<>();
 
-        //@SneakyThrows
-        //@Override
-        //public void run() {
-        //    sequenceBarrier.clearAlert();
-        //    long nextSequence = sequence.get() + 1;
-        //    while (true) {
-        //        final long availableSequence = sequenceBarrier.waitFor(nextSequence);
-        //        while (nextSequence <= availableSequence) {
-        //            addEvent(nextSequence);
-        //            nextSequence++;
-        //        }
-        //    }
-        //}
-
         @SneakyThrows
         @Override
         public void run() {
