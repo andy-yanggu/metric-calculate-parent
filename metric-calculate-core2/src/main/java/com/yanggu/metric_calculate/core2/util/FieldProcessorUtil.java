@@ -18,6 +18,7 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.Mult
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
@@ -144,8 +145,8 @@ public class FieldProcessorUtil {
                                                                     Derive derive,
                                                                     Map<String, Class<?>> fieldMap,
                                                                     AggregateFunctionFactory aggregateFunctionFactory) {
-        List<BaseUdafParam> baseUdafParamList = Arrays.asList(derive.getBaseUdafParam(), derive.getExternalBaseUdafParam());
-        String aggregateType = derive.getCalculateLogic();
+        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
+        String aggregateType = aggregateFunctionParam.getCalculateLogic();
 
         AggregateFunction<IN, ACC, OUT> aggregateFunction = aggregateFunctionFactory.getAggregateFunction(aggregateType);
         Class<? extends AggregateFunction> aggregateFunctionClass = aggregateFunction.getClass();
@@ -154,15 +155,16 @@ public class FieldProcessorUtil {
         if (aggregateFunctionClass.isAnnotationPresent(Numerical.class) 
                 || aggregateFunctionClass.isAnnotationPresent(Objective.class)
                 || aggregateFunctionClass.isAnnotationPresent(Collective.class)) {
-            AggregateFunctionFactory.setUdafParam(aggregateFunction, derive.getBaseUdafParam().getParam());
+            BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
+            AggregateFunctionFactory.setUdafParam(aggregateFunction, baseUdafParam.getParam());
             FieldProcessor<JSONObject, IN> baseFieldProcessor =
-                    getBaseFieldProcessor(baseUdafParamList, fieldMap, aggregateFunction);
+                    getBaseFieldProcessor(baseUdafParam, fieldMap, aggregateFunction);
             return new AggregateFieldProcessor<>(baseFieldProcessor, aggregateFunction);
         }
 
         //如果是映射类型
         if (aggregateFunctionClass.isAnnotationPresent(MapType.class)) {
-            MapUnitUdafParam mapUdafParam = derive.getMapUdafParam();
+            MapUnitUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
             AggregateFunctionFactory.setUdafParam(aggregateFunction, mapUdafParam.getParam());
 
             BaseUdafParam valueUdafParam = mapUdafParam.getValueAggParam();
@@ -181,7 +183,7 @@ public class FieldProcessorUtil {
 
         //如果是混合类型
         if (aggregateFunctionClass.isAnnotationPresent(Mix.class)) {
-            MixUnitUdafParam mixUnitUdafParam = derive.getMixUnitUdafParam();
+            MixUnitUdafParam mixUnitUdafParam = aggregateFunctionParam.getMixUnitUdafParam();
             AggregateFunctionFactory.setUdafParam(aggregateFunction, mixUnitUdafParam.getParam());
 
             //初始化MixFieldProcessor
@@ -218,17 +220,16 @@ public class FieldProcessorUtil {
     /**
      * 生成基础聚合字段处理器（数值型、对象型和集合型）
      *
-     * @param baseUdafParamList
+     * @param baseUdafParam
      * @param fieldMap
      * @return
      */
     @SneakyThrows
     public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseFieldProcessor(
-                                                        List<BaseUdafParam> baseUdafParamList,
+                                                        BaseUdafParam baseUdafParam,
                                                         Map<String, Class<?>> fieldMap,
                                                         AggregateFunction<IN, ACC, OUT> aggregateFunction) {
 
-        BaseUdafParam baseUdafParam = baseUdafParamList.get(0);
         String aggregateType = baseUdafParam.getAggregateType();
         FieldProcessor<JSONObject, IN> fieldProcessor;
         Class<? extends AggregateFunction> aggregateFunctionClass = aggregateFunction.getClass();
@@ -253,7 +254,6 @@ public class FieldProcessorUtil {
             collectionFieldProcessor.setUdafParam(baseUdafParam);
             collectionFieldProcessor.setFieldMap(fieldMap);
             collectionFieldProcessor.setCollective(aggregateFunctionClass.getAnnotation(Collective.class));
-            //collectionFieldProcessor.setExternalBaseUdafParam(baseUdafParamList.get(1));
             fieldProcessor = collectionFieldProcessor;
         } else {
             throw new RuntimeException("不支持的聚合类型: " + aggregateType);

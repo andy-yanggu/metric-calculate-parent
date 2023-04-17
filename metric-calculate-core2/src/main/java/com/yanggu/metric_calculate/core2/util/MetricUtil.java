@@ -117,7 +117,7 @@ public class MetricUtil {
                 FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilter());
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
-        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(tempDerive.getUdafJarPathList());
+        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(tempDerive.getAggregateFunctionParam().getUdafJarPathList());
         aggregateFunctionFactory.init();
 
         //设置聚合字段处理器
@@ -137,8 +137,8 @@ public class MetricUtil {
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
 
         //设置时间聚合粒度
-        Integer duration = tempDerive.getDuration();
-        TimeUnitEnum timeUnitEnum = tempDerive.getTimeUnit();
+        Integer duration = tempDerive.getWindowParam().getDuration();
+        TimeUnitEnum timeUnitEnum = tempDerive.getWindowParam().getTimeUnit();
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(duration, timeUnitEnum);
         deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 

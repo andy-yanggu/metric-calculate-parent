@@ -52,7 +52,7 @@ public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
             throw new RuntimeException(StrUtil.format("时间字段没有值, "
                     + "时间字段名: {}, 原始数据: {}", timeColumnName, JSONUtil.toJsonStr(input)));
         }
-        if (StrUtil.equals(timeFormat, TIMESTAMP)) {
+        if (StrUtil.equals(timeFormat.toUpperCase(), TIMESTAMP)) {
             if (data instanceof Long) {
                 return (Long) data;
             } else {

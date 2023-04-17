@@ -13,8 +13,6 @@ import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -51,11 +49,10 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         //map的value字段处理器
         BaseUdafParam valueAggParam = mapUnitUdafParam.getValueAggParam();
-        List<BaseUdafParam> baseUdafParamList = Collections.singletonList(valueAggParam);
         AggregateFunction<Object, Object, Object> aggregateFunction =
                 aggregateFunctionFactory.getAggregateFunction(valueAggParam.getAggregateType());
         this.valueAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseFieldProcessor(baseUdafParamList, fieldMap, aggregateFunction);
+                FieldProcessorUtil.getBaseFieldProcessor(valueAggParam, fieldMap, aggregateFunction);
     }
 
     @Override

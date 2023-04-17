@@ -16,17 +16,21 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "TIMESTAMP",
-        "columnIndex": null
+        "timeFormat": "TIMESTAMP"
       },
       "filter": null,
-      "calculateLogic": "SUM",
-      "baseUdafParam": {
-        "aggregateType": "SUM",
-        "metricExpress":"debit_amt_out"
+      "aggregateFunctionParam" : {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress":"debit_amt_out"
+        }
       },
-      "duration": 1,
-      "timeUnit": "DAY",
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
@@ -51,13 +55,18 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "MIN",
-      "baseUdafParam": {
-        "aggregateType": "MIN",
-        "metricExpress":"debit_amt_out"
+      "aggregateFunctionParam": {
+        "calculateLogic": "MIN",
+        "baseUdafParam": {
+          "aggregateType": "MIN",
+          "metricExpress":"debit_amt_out"
+        }
       },
-      "duration": 1,
-      "timeUnit": "DAY",
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
@@ -82,26 +91,31 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "SORTEDLISTFIELD",
-      "duration": 2,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "baseUdafParam": {
+          "calculateLogic": "SORTEDLISTFIELD",
+          "aggregateType": "SORTEDLISTFIELD",
+          "retainExpress": "debit_amt_out",
+          "collectiveSortFieldList": [
+            {
+              "express": "debit_amt_out",
+              "asc": false
+            }
+          ],
+          "param": {
+            "limit": 4
+          }
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "baseUdafParam": {
-        "aggregateType": "SORTEDLISTFIELD",
-        "retainExpress": "debit_amt_out",
-        "collectiveSortFieldList": [
-          {
-            "express": "debit_amt_out",
-            "asc": false
-          }
-        ],
-        "param": {
-          "limit": 4
-        }
       }
     },
     {
@@ -122,20 +136,25 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "MAXFIELD",
-      "duration": 2,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "MAXFIELD",
+        "baseUdafParam": {
+          "aggregateType": "MAXFIELD",
+          "retainExpress": "trans_timestamp",
+          "objectiveCompareFieldList": [
+            "debit_amt_out"
+          ]
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "baseUdafParam": {
-        "aggregateType": "MAXFIELD",
-        "retainExpress": "trans_timestamp",
-        "objectiveCompareFieldList": [
-          "debit_amt_out"
-        ]
       }
     },
     {
@@ -382,31 +401,19 @@
   ],
   "fields": [
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "trans_no",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "trans_jnls_no",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "account_no_out",
-      "properties": null,
       "valueType": "STRING"
     },
     {
-      "className": "trade_detail",
-      "labels": null,
       "name": "account_no_in",
-      "properties": null,
       "valueType": "STRING"
     },
     {
