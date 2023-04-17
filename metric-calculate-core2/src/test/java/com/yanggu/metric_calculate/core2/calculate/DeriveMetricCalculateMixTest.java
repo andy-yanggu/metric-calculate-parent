@@ -22,7 +22,7 @@ public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
     @Test
     public void testBaseMix() throws Exception {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculate(0L);
+                metricCalculate.getDeriveMetricCalculate(9L);
 
         DeriveMetricCalculateResult<Double> query;
 

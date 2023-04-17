@@ -66,15 +66,13 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private TimeFieldProcessor timeFieldProcessor;
 
     /**
-     * 时间聚合粒度。包含时间单位和时间长度
-     */
-    private TimeBaselineDimension timeBaselineDimension;
-
-    /**
      * 维度字段处理器, 从明细数据中提取出维度数据
      */
     private DimensionSetProcessor dimensionSetProcessor;
 
+    /**
+     * 数据切分工厂类
+     */
     private TableFactory<IN, ACC, OUT> tableFactory;
 
     /**
@@ -96,16 +94,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * 精度数据
      */
     private RoundAccuracy roundAccuracy;
-
-    /**
-     * 是否是自定义udaf
-     */
-    private Boolean isUdaf;
-
-    /**
-     * 滚动时间窗口、滑动时间窗口、滑动计数窗口、状态窗口、全窗口、会话窗口
-     */
-    private int windowType;
 
     /**
      * 是否是CEP类型

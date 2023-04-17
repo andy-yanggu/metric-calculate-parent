@@ -125,9 +125,14 @@ public class MetricUtil {
                 FieldProcessorUtil.getAggregateFieldProcessor(tempDerive, fieldMap, aggregateFunctionFactory);
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
+        //设置是否为CEP类型
+        deriveMetricCalculate.setIsCep(tempDerive.getAggregateFunctionParam().getIsCep());
+
+        //设置TableFactory
         TableFactory<IN, ACC, OUT> tableFactory = new TableFactory<>();
-        tableFactory.setDerive(tempDerive);
-        tableFactory.setDeriveMetricCalculate(deriveMetricCalculate);
+        tableFactory.setWindowParam(tempDerive.getWindowParam());
+        tableFactory.setAggregateFunctionParam(tempDerive.getAggregateFunctionParam());
+        tableFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
         tableFactory.setFieldMap(metricCalculate.getFieldMap());
 
         deriveMetricCalculate.setTableFactory(tableFactory);
@@ -135,12 +140,6 @@ public class MetricUtil {
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
         deriveMetricCalculate.setTimeFieldProcessor(timeFieldProcessor);
-
-        //设置时间聚合粒度
-        Integer duration = tempDerive.getWindowParam().getDuration();
-        TimeUnitEnum timeUnitEnum = tempDerive.getWindowParam().getTimeUnit();
-        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(duration, timeUnitEnum);
-        deriveMetricCalculate.setTimeBaselineDimension(timeBaselineDimension);
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor =

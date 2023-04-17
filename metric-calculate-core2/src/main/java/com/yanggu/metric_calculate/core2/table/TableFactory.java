@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.core2.table;
 
 
-import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core2.pojo.metric.WindowParam;
 import lombok.Data;
 
 import java.util.Map;
@@ -16,9 +17,11 @@ public class TableFactory<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
-    private Derive derive;
+    private AggregateFunctionParam aggregateFunctionParam;
 
-    private DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate;
+    private WindowParam windowParam;
+
+    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
      * 创建新的Table
@@ -26,28 +29,27 @@ public class TableFactory<IN, ACC, OUT> {
      * @return
      */
     public Table<IN, OUT> createTable() {
-        WindowTypeEnum windowType = derive.getWindowParam().getWindowType();
-        AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor = deriveMetricCalculate.getAggregateFieldProcessor();
+        WindowTypeEnum windowType = windowParam.getWindowType();
         //CEP类型
-        if (Boolean.TRUE.equals(deriveMetricCalculate.getIsCep())) {
+        if (Boolean.TRUE.equals(aggregateFunctionParam.getIsCep())) {
             PatternTable<IN, ACC, OUT> patternTable = new PatternTable<>();
             patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(derive.getAggregateFunctionParam().getChainPattern().getNodePatternList());
+            patternTable.setNodePatternList(aggregateFunctionParam.getChainPattern().getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
             patternTable.init();
             return (Table<IN, OUT>) patternTable;
             //滚动时间窗口
         } else if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTimeTable<>();
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            tumblingTimeTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return tumblingTimeTable;
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
             SlidingTimeTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTimeTable<>();
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            slidingTimeTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return slidingTimeTable;
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
@@ -75,26 +77,25 @@ public class TableFactory<IN, ACC, OUT> {
      * @param table
      */
     public void setTable(Table<IN, OUT> table) {
-        WindowTypeEnum windowType = derive.getWindowParam().getWindowType();
-        AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor = deriveMetricCalculate.getAggregateFieldProcessor();
+        WindowTypeEnum windowType = windowParam.getWindowType();
         //CEP类型
-        if (Boolean.TRUE.equals(deriveMetricCalculate.getIsCep())) {
+        if (Boolean.TRUE.equals(aggregateFunctionParam.getIsCep())) {
             PatternTable<IN, ACC, OUT> patternTable = ((PatternTable<IN, ACC, OUT>) table);
             patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(derive.getAggregateFunctionParam().getChainPattern().getNodePatternList());
+            patternTable.setNodePatternList(aggregateFunctionParam.getChainPattern().getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
             patternTable.init();
             //滚动时间窗口
         } else if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTimeTable<IN, ACC, OUT>) table);
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            tumblingTimeTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
             SlidingTimeTimeTable<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeTimeTable<IN, ACC, OUT>) table);
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            slidingTimeTable.setTimeBaselineDimension(deriveMetricCalculate.getTimeBaselineDimension());
+            slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
             SlidingCountWindowTable<IN, ACC, OUT> slidingCountWindowTable = ((SlidingCountWindowTable<IN, ACC, OUT>) table);
@@ -111,6 +112,10 @@ public class TableFactory<IN, ACC, OUT> {
         } else {
             throw new RuntimeException("窗口类型异常");
         }
+    }
+
+    private TimeBaselineDimension createTimeBaselineDimension() {
+        return new TimeBaselineDimension(windowParam.getDuration(), windowParam.getTimeUnit());
     }
 
 }

@@ -92,6 +92,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
+        "calculateLogic": "SORTEDLISTFIELD",
         "baseUdafParam": {
           "calculateLogic": "SORTEDLISTFIELD",
           "aggregateType": "SORTEDLISTFIELD",
@@ -126,7 +127,7 @@
       "dimension": [
         {
           "columnName": "account_no_in",
-          "columnIndex": 2,
+          "columnIndex": 0,
           "dimensionName": "account_no"
         }
       ],
@@ -158,9 +159,9 @@
       }
     },
     {
-      "id": 4,
-      "name": "today_credit_sum_5",
-      "displayName": "当天近5比交易贷方金额总和",
+      "id": 5,
+      "name": "credit_sum_5",
+      "displayName": "近5笔交易贷方金额总和",
       "description": null,
       "dimension": [
         {
@@ -175,27 +176,25 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "LISTOBJECTCOUNTWINDOW",
-      "duration": 1,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam" : {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "baseUdafParam": {
-        "aggregateType": "LISTOBJECTCOUNTWINDOW",
-        "param": {
-          "limit": 5
-        }
-      },
-      "externalBaseUdafParam": {
-        "aggregateType": "SUM",
-        "metricExpress": "debit_amt_out"
       }
     },
     {
-      "id": 5,
+      "id": 6,
       "name": "test_list_object",
       "displayName": "测试list_object",
       "description": null,
@@ -212,23 +211,28 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "LISTOBJECT",
-      "duration": 2,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "LISTOBJECT",
+        "baseUdafParam": {
+          "aggregateType": "LISTOBJECT",
+          "param": {
+            "limit": 5
+          }
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "baseUdafParam": {
-        "aggregateType": "LISTOBJECT",
-        "param": {
-          "limit": 5
-        }
       }
     },
     {
-      "id": 6,
+      "id": 7,
       "name": "test_sort_list_object",
       "displayName": "测试sort_list_object",
       "description": null,
@@ -245,29 +249,34 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "SORTEDLISTOBJECT",
-      "duration": 2,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "SORTEDLISTOBJECT",
+        "baseUdafParam": {
+          "aggregateType": "SORTEDLISTOBJECT",
+          "collectiveSortFieldList": [
+            {
+              "express": "debit_amt_out",
+              "asc": true
+            }
+          ],
+          "param": {
+            "limit": 5
+          }
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "baseUdafParam": {
-        "aggregateType": "SORTEDLISTOBJECT",
-        "collectiveSortFieldList": [
-          {
-            "express": "debit_amt_out",
-            "asc": true
-          }
-        ],
-        "param": {
-          "limit": 5
-        }
       }
     },
     {
-      "id": 7,
+      "id": 8,
       "name": "test_base_map_unit_sum",
       "displayName": "所有交易账号的累计交易金额",
       "description": "账号为key, value是对金额求和",
@@ -284,27 +293,32 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "BASEMAP",
-      "duration": 1,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "BASEMAP",
+        "mapUdafParam": {
+          "aggregateType": "BASEMAP",
+          "distinctFieldList": [
+            "account_no_in"
+          ],
+          "valueAggParam": {
+            "aggregateType": "SUM",
+            "metricExpress": "debit_amt_out"
+          }
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "mapUdafParam": {
-        "aggregateType": "BASEMAP",
-        "distinctFieldList": [
-          "account_no_in"
-        ],
-        "valueAggParam": {
-          "aggregateType": "SUM",
-          "metricExpress": "debit_amt_out"
-        }
       }
     },
     {
-      "id": 8,
+      "id": 9,
       "name": "张三_transfer_amount_proportion",
       "displayName": "给张三转账的金额占给所有交易对象转账金额的比例",
       "description": "",
@@ -321,27 +335,32 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "BASEMIX",
-      "duration": 1,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "BASEMIX",
+        "mixUnitUdafParam": {
+          "aggregateType": "BASEMIX",
+          "mixAggMap": {
+            "zhangsan_sum_amount": {
+              "aggregateType": "SUM",
+              "metricExpress": "account_no_in == '张三' ? debit_amt_out : 0"
+            },
+            "total_sum_amount": {
+              "aggregateType": "SUM",
+              "metricExpress": "debit_amt_out"
+            }
+          },
+          "express": "zhangsan_sum_amount / total_sum_amount"
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "mixUnitUdafParam": {
-        "aggregateType": "BASEMIX",
-        "mixAggMap": {
-          "zhangsan_sum_amount": {
-            "aggregateType": "SUM",
-            "metricExpress": "account_no_in == '张三' ? debit_amt_out : 0"
-          },
-          "total_sum_amount": {
-            "aggregateType": "SUM",
-            "metricExpress": "debit_amt_out"
-          }
-        },
-        "express": "zhangsan_sum_amount / total_sum_amount"
       }
     },
     {
@@ -362,40 +381,46 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "SUM",
-      "duration": 1,
-      "timeUnit": "DAY",
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        },
+        "isCep": true,
+        "chainPattern": {
+          "aggregateType": "PATTERN",
+          "nodePatternList": [
+            {
+              "index": 0,
+              "name": "start",
+              "matchExpress": "debit_amt_out > 100",
+              "interval": 0
+            },
+            {
+              "index": 1,
+              "name": "mid",
+              "matchExpress": "debit_amt_out > 200",
+              "interval": 10
+            },
+            {
+              "index": 2,
+              "name": "end",
+              "matchExpress": "debit_amt_out > 300",
+              "interval": 10
+            }
+          ]
+        }
+      },
+      "windowParam" : {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
       "roundAccuracy": {
         "useAccuracy": false,
         "length": null,
         "type": "NOT_HANDLE"
-      },
-      "chainPattern": {
-        "aggregateType": "PATTERN",
-        "nodePatternList": [
-          {
-            "index": 0,
-            "name": "start",
-            "matchExpress": "debit_amt_out > 100",
-            "interval": 0
-          },
-          {
-            "index": 1,
-            "name": "mid",
-            "matchExpress": "debit_amt_out > 200",
-            "interval": 10
-          },
-          {
-            "index": 2,
-            "name": "end",
-            "matchExpress": "debit_amt_out > 300",
-            "interval": 10
-          }
-        ]
-      },
-      "baseUdafParam": {
-        "aggregateType": "SUM",
-        "metricExpress": "debit_amt_out"
       }
     }
   ],

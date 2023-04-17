@@ -27,7 +27,7 @@ public class DeriveMetricCalculateMapTest extends DeriveMetricCalculateBase {
     public void testBaseMap() {
         DeriveMetricCalculate<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
                 Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
-                = metricCalculate.getDeriveMetricCalculate(6L);
+                = metricCalculate.getDeriveMetricCalculate(8L);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
