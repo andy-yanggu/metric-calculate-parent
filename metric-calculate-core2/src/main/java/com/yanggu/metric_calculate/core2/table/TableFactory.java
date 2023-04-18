@@ -54,6 +54,7 @@ public class TableFactory<IN, ACC, OUT> {
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
             SlidingCountWindowTable<IN, ACC, OUT> slidingCountWindowTable = new SlidingCountWindowTable<>();
+            slidingCountWindowTable.setLimit(windowParam.getLimit());
             slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             return slidingCountWindowTable;
             //状态窗口
@@ -99,6 +100,7 @@ public class TableFactory<IN, ACC, OUT> {
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
             SlidingCountWindowTable<IN, ACC, OUT> slidingCountWindowTable = ((SlidingCountWindowTable<IN, ACC, OUT>) table);
+            slidingCountWindowTable.setLimit(windowParam.getLimit());
             slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             //状态窗口
         } else if (windowType == STATUS_WINDOW) {

@@ -16,6 +16,8 @@ import java.util.List;
 @Data
 public class SlidingCountWindowTable<IN, ACC, OUT> implements Table<IN, OUT> {
 
+    private Integer limit;
+
     private List<IN> inList = new ArrayList<>();
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
@@ -23,6 +25,9 @@ public class SlidingCountWindowTable<IN, ACC, OUT> implements Table<IN, OUT> {
     @Override
     public void put(Long timestamp, IN in) {
         inList.add(in);
+        while (inList.size() > limit) {
+            inList.remove(0);
+        }
     }
 
     @Override

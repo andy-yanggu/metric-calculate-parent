@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core2.calculate;
 
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
@@ -12,21 +11,15 @@ import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
-import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import com.yanggu.metric_calculate.core2.table.PatternTable;
 import com.yanggu.metric_calculate.core2.table.Table;
 import com.yanggu.metric_calculate.core2.table.TableFactory;
-import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * 派生指标计算类

@@ -422,6 +422,40 @@
         "length": null,
         "type": "NOT_HANDLE"
       }
+    },
+    {
+      "id": 11,
+      "name": "limit_5_sum_debit_asset",
+      "displayName": "最近5笔借方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filter": null,
+      "aggregateFunctionParam" : {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress":"debit_amt_out"
+        }
+      },
+      "windowParam" : {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
     }
   ],
   "fields": [

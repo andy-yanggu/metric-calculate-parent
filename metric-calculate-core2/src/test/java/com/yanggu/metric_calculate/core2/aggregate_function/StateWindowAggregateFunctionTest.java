@@ -15,7 +15,7 @@ import static org.junit.Assert.*;
  */
 public class StateWindowAggregateFunctionTest {
 
-    private StateWindowAggregateFunction<Integer, Double, Integer> sumStateWindow;
+    private StateWindowAggregateFunction<Integer, Double, Double> sumStateWindow;
 
     @Before
     public void init() {
@@ -74,7 +74,7 @@ public class StateWindowAggregateFunctionTest {
         MutablePair<MultiFieldDistinctKey, Double> add = sumStateWindow.add(input, accumulator);
         add = sumStateWindow.add(input, add);
 
-        MutablePair<MultiFieldDistinctKey, Integer> result = sumStateWindow.getResult(add);
+        MutablePair<MultiFieldDistinctKey, Double> result = sumStateWindow.getResult(add);
         System.out.println(result);
     }
 
