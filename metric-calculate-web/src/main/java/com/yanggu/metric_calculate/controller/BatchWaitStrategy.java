@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.controller;
 
 import com.lmax.disruptor.*;
-import com.lmax.disruptor.util.Util;
 
 import java.util.concurrent.TimeUnit;
 

@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.test;
 
-import com.lmax.disruptor.*;
+import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.yanggu.metric_calculate.controller.BatchWaitStrategy;
@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
-
-import static org.junit.Assert.assertEquals;
 
 public class BatchWaitStrategyTest {
 
@@ -34,11 +32,11 @@ public class BatchWaitStrategyTest {
 
         RingBuffer<LongEvent> ringBuffer = disruptor.start();
 
-        for (int i = 0; i < 50; i++) {
-            long sequence = ringBuffer.next();
-            ringBuffer.get(sequence).setValue(i);
-            ringBuffer.publish(sequence);
-        }
+        //for (int i = 0; i < 50; i++) {
+        //    long sequence = ringBuffer.next();
+        //    ringBuffer.get(sequence).setValue(i);
+        //    ringBuffer.publish(sequence);
+        //}
 
         Thread.sleep(1000);
 

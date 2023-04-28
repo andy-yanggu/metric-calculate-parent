@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.core.date.DateUtil;
 import com.lmax.disruptor.EventTranslator;
+import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import lombok.Data;
@@ -20,16 +21,18 @@ import java.util.function.Consumer;
 @RequestMapping("/test4")
 public class Test4Controller {
 
-    final int RING_BUFFER_SIZE = 1024;
-    final int BATCH_SIZE = 10;
-    final long TIMEOUT = 100;
-    final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
-
     private Disruptor<Event> disruptor;
+
+    private EventTranslator<Event> eventEventTranslator =
+            (event, sequence) -> event.setValue("当前sequence, " + sequence + ", 当前时间: " + DateUtil.formatDateTime(new Date()));
 
     @PostConstruct
     public void init() {
-        Disruptor<Event> tempDisruptor = new Disruptor<>(Event::new, RING_BUFFER_SIZE, Executors.defaultThreadFactory(), ProducerType.SINGLE, new BatchWaitStrategy(BATCH_SIZE, TIMEOUT, TIME_UNIT));
+        final int RING_BUFFER_SIZE = 1024;
+        final int BATCH_SIZE = 10;
+        final long TIMEOUT = 100;
+        final TimeUnit TIME_UNIT = TimeUnit.SECONDS;
+        Disruptor<Event> tempDisruptor = new Disruptor<>(Event::new, RING_BUFFER_SIZE, Executors.defaultThreadFactory(), ProducerType.MULTI, new BatchWaitStrategy(BATCH_SIZE, TIMEOUT, TIME_UNIT));
         Consumer<List<Event>> consumer = list -> {
             System.out.println("--------------");
             System.out.println("list大小: " + list.size());
@@ -39,12 +42,13 @@ public class Test4Controller {
         tempDisruptor.handleEventsWith(longMyEventHandler);
         tempDisruptor.start();
         this.disruptor = tempDisruptor;
+        for (int i = 0; i < 100; i++) {
+            tempDisruptor.publishEvent(eventEventTranslator);
+        }
     }
 
     @GetMapping("/test1")
     public void test1() {
-        EventTranslator<Event> eventEventTranslator =
-                (event, sequence) -> event.setValue("当前sequence, " + sequence + ", 当前时间: " + DateUtil.formatDateTime(new Date()));
         disruptor.publishEvent(eventEventTranslator);
     }
 
