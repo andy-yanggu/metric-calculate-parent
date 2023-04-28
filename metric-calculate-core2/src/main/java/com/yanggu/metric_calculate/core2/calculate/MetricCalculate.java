@@ -33,6 +33,15 @@ public class MetricCalculate extends DataDetailsWideTable {
      */
     private Map<String, Class<?>> fieldMap;
 
+    /**
+     * 根据派生指标id查询派生指标
+     *
+     * @param deriveId
+     * @return
+     * @param <IN>
+     * @param <ACC>
+     * @param <OUT>
+     */
     public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long deriveId) {
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             throw new RuntimeException("派生指标列表为空");

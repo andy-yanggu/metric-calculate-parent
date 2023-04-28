@@ -10,7 +10,6 @@ import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFac
 import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
-import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -20,7 +19,6 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
-import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.table.TableFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +40,12 @@ public class MetricUtil {
     private MetricUtil() {
     }
 
+    /**
+     * 初始化指标计算类
+     *
+     * @param tableData
+     * @return
+     */
     public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
         if (tableData == null) {
             throw new RuntimeException("明细宽表为空");

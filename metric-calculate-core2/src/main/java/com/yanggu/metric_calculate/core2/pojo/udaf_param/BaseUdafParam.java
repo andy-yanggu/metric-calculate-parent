@@ -28,6 +28,8 @@ public class BaseUdafParam {
      */
     private List<String> metricExpressList;
 
+    private List<String> retainExpressList;
+
     /**
      * 保留字段表达式（retainExpress）：对象型和集合型只保留指定字段的值
      */

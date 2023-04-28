@@ -4,13 +4,13 @@ import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
 import com.googlecode.aviator.runtime.type.AviatorNil;
 import com.googlecode.aviator.runtime.type.AviatorNumber;
 import com.googlecode.aviator.runtime.type.AviatorObject;
+import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 
 import java.util.Map;
 
 /**
  * 自定义Aviator函数
  * <p>返回第一个不为null的值, 如果都为null, 则返回nil</p>
- * <p>只接受数值类型的参数</p>
  */
 public class CoalesceFunction extends AbstractVariadicFunction {
 
@@ -30,10 +30,8 @@ public class CoalesceFunction extends AbstractVariadicFunction {
     public AviatorObject variadicCall(Map<String, Object> env, AviatorObject... args) {
         for (AviatorObject aviatorObject : args) {
             Object value = aviatorObject.getValue(env);
-            if (value instanceof Number) {
-                return AviatorNumber.valueOf(value);
-            } else if (value != null) {
-                throw new RuntimeException("传入的数据不是数值类型的" + value);
+            if (value != null) {
+                return AviatorRuntimeJavaType.valueOf(value);
             }
         }
         return AviatorNil.NIL;
