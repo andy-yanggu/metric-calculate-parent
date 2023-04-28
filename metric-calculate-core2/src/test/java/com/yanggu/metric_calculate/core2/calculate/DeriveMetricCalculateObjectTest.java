@@ -8,8 +8,6 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFi
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -17,14 +15,13 @@ import static org.junit.Assert.assertEquals;
  */
 public class DeriveMetricCalculateObjectTest extends DeriveMetricCalculateBase {
 
-
     /**
      * 测试对象型MAXFIELD
      * <p>最大交易的金额的交易时间戳</p>
      */
     @Test
     public void testMaxField() {
-        DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, String>, MutableObj<KeyValue<MultiFieldOrderCompareKey, String>>, KeyValue<MultiFieldOrderCompareKey, String>> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculate(4L);
+        DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, String>, MutableObj<KeyValue<MultiFieldOrderCompareKey, String>>, KeyValue<MultiFieldOrderCompareKey, String>> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(4L);
         DeriveMetricCalculateResult<KeyValue<MultiFieldOrderCompareKey, String>> query;
 
         JSONObject input1 = new JSONObject();

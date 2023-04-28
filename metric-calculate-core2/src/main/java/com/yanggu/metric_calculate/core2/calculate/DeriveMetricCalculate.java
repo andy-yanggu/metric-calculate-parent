@@ -7,19 +7,15 @@ import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldP
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
-import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
-import com.yanggu.metric_calculate.core2.table.PatternTable;
 import com.yanggu.metric_calculate.core2.table.Table;
 import com.yanggu.metric_calculate.core2.table.TableFactory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.LinkedHashMap;
 
 /**
  * 派生指标计算类
@@ -54,11 +50,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private FilterFieldProcessor filterFieldProcessor;
 
     /**
-     * 时间字段, 提取出时间戳
-     */
-    private TimeFieldProcessor timeFieldProcessor;
-
-    /**
      * 维度字段处理器, 从明细数据中提取出维度数据
      */
     private DimensionSetProcessor dimensionSetProcessor;
@@ -89,11 +80,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private RoundAccuracy roundAccuracy;
 
     /**
-     * 是否是CEP类型
-     */
-    private Boolean isCep;
-
-    /**
      * 有状态计算
      *
      * @param input
@@ -119,10 +105,12 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         }
 
         //放入明细数据进行累加
-        addInput(input, historyMetricCube);
+        historyMetricCube.getTable().put(input);
 
         //更新到外部存储
         deriveMetricMiddleStore.update(historyMetricCube);
+
+        //查询数据, 并返回
         return query(historyMetricCube);
     }
 
@@ -149,29 +137,13 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             } else {
                 tableFactory.setTable(historyMetricCube.getTable());
             }
-            addInput(input, historyMetricCube);
+            //放入明细数据进行累加
+            historyMetricCube.getTable().put(input);
         }
         if (historyMetricCube == null) {
             return null;
         }
         return query(historyMetricCube);
-    }
-
-    /**
-     * 放入明细数据进行累加
-     *
-     * @param input
-     * @param historyMetricCube
-     */
-    private void addInput(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
-        //提取出时间字段
-        Long timestamp = timeFieldProcessor.process(input);
-        if (Boolean.TRUE.equals(isCep)) {
-            ((PatternTable<IN, ACC, OUT>) historyMetricCube.getTable()).put(timestamp, input);
-        } else {
-            IN in = aggregateFieldProcessor.process(input);
-            historyMetricCube.getTable().put(timestamp, in);
-        }
     }
 
     /**
@@ -196,7 +168,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         result.setName(metricCube.getDimensionSet().getMetricName());
 
         //指标维度
-        result.setDimensionMap(((LinkedHashMap) metricCube.getDimensionSet().getDimensionMap()));
+        result.setDimensionMap(metricCube.getDimensionSet().getDimensionMap());
 
         //聚合值
         result.setResult(query);
@@ -206,7 +178,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        Table<IN, OUT> table = tableFactory.createTable();
+        Table<IN, ACC, OUT> table = tableFactory.createTable();
         metricCube.setTable(table);
         return metricCube;
     }

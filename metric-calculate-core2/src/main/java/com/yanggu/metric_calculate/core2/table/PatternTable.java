@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core2.table;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
@@ -19,7 +19,7 @@ import java.util.*;
  * @param <OUT>
  */
 @Data
-public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
+public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -27,9 +27,9 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
 
     private TimeBaselineDimension timeBaselineDimension;
 
-    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
-
     private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
+
+    private TimeFieldProcessor timeFieldProcessor;
 
     private Long timestamp;
 
@@ -49,15 +49,16 @@ public class PatternTable<IN, ACC, OUT> implements Table<JSONObject, OUT> {
     }
 
     @Override
-    public void put(Long timestamp, JSONObject in) {
+    public void put(JSONObject input) {
+        Long tempTimestamp = timeFieldProcessor.process(input);
         filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
-            Boolean process = filterProcessor.process(in);
+            Boolean process = filterProcessor.process(input);
             if (Boolean.TRUE.equals(process)) {
                 TreeMap<Long, IN> treeMap = dataMap.computeIfAbsent(nodePattern, key -> new TreeMap<>());
-                treeMap.put(timestamp, aggregateFieldProcessor.process(in));
+                treeMap.put(tempTimestamp, aggregateFieldProcessor.process(input));
             }
         });
-        this.timestamp = timestamp;
+        this.timestamp = tempTimestamp;
     }
 
     @Override

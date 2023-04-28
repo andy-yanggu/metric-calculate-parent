@@ -61,10 +61,21 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         return oldAcc;
     }
 
+    /**
+     * 创建累加器
+     *
+     * @return
+     */
     public ACC createAcc() {
         return aggregateFunction.createAccumulator();
     }
 
+    /**
+     * 输入明细, 返回聚合值
+     *
+     * @param inList
+     * @return
+     */
     public OUT getOutFromInList(List<IN> inList) {
         ACC acc = aggregateFunction.createAccumulator();
         for (IN in : inList) {

@@ -22,7 +22,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
     @Test
     public void testListObject() {
         DeriveMetricCalculate<JSONObject, List<JSONObject>, List<JSONObject>> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculate(6L);
+                metricCalculate.getDeriveMetricCalculateById(6L);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");

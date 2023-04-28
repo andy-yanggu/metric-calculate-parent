@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core2.table;
 
+import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import lombok.Data;
 
@@ -14,16 +15,15 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-public class SlidingCountWindowTable<IN, ACC, OUT> implements Table<IN, OUT> {
+public class SlidingCountWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     private Integer limit;
 
     private List<IN> inList = new ArrayList<>();
 
-    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
-
     @Override
-    public void put(Long timestamp, IN in) {
+    public void put(JSONObject input) {
+        IN in = aggregateFieldProcessor.process(input);
         inList.add(in);
         while (inList.size() > limit) {
             inList.remove(0);

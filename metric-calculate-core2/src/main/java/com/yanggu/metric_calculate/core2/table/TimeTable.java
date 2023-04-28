@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.core2.table;
 
 
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 
@@ -15,15 +16,20 @@ import java.util.List;
  * @param <ACC>
  * @param <OUT>
  */
-public abstract class TimeTable<IN, ACC, OUT> implements Table<IN, OUT> {
+@Data
+public abstract class TimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
-    @Setter
-    protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+    protected TimeFieldProcessor timeFieldProcessor;
 
-    @Setter
     protected TimeBaselineDimension timeBaselineDimension;
 
     protected Long timestamp;
+
+    @Override
+    public void put(JSONObject input) {
+        Long tempTimestamp = timeFieldProcessor.process(input);
+        put(tempTimestamp, getInFromInput(input));
+    }
 
     @Override
     public OUT query() {
@@ -42,5 +48,8 @@ public abstract class TimeTable<IN, ACC, OUT> implements Table<IN, OUT> {
      * @return
      */
     public abstract OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive);
+
+
+    public abstract void put(Long timestamp, IN in);
 
 }

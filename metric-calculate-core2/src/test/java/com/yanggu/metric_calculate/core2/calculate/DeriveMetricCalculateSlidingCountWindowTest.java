@@ -18,7 +18,7 @@ public class DeriveMetricCalculateSlidingCountWindowTest extends DeriveMetricCal
     @Test
     public void testSum() throws Exception {
         DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculate(11L);
+                metricCalculate.getDeriveMetricCalculateById(11L);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");

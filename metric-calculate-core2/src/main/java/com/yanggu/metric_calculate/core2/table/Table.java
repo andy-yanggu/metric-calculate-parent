@@ -1,32 +1,42 @@
 package com.yanggu.metric_calculate.core2.table;
 
+import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import lombok.Data;
+
 /**
- * 数据分桶方式
+ * 对数据进行切分
  *
  * @param <IN>
  * @param <OUT>
  */
-public interface Table<IN, OUT> {
+@Data
+public abstract class Table<IN, ACC, OUT> {
+
+    protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
      * 初始化接口
      */
-    default void init() {
+    public void init() {
     }
 
     /**
-     * 根据度量值和时间戳进行累加
+     * 放入明细数据进行累加
      *
-     * @param timestamp
-     * @param in
+     * @param input
      */
-    void put(Long timestamp, IN in);
+    public abstract void put(JSONObject input);
+
+    public IN getInFromInput(JSONObject input) {
+        return aggregateFieldProcessor.process(input);
+    }
 
     /**
      * 查询操作
      *
      * @return
      */
-    OUT query();
+    public abstract OUT query();
 
 }

@@ -22,6 +22,6 @@ public class MetricCube<IN, ACC, OUT> {
     /**
      * 指标数据
      */
-    private Table<IN, OUT> table;
+    private Table<IN, ACC, OUT> table;
 
 }

@@ -59,7 +59,7 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
 
     @Override
     public DimensionSet process(JSONObject input) {
-        Map<String, Object> map = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         if (CollUtil.isNotEmpty(dimensionList)) {
             for (Dimension dimension : dimensionList) {
                 Object result = input.get(dimension.getColumnName());

@@ -6,7 +6,6 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -22,7 +21,7 @@ public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
     @Test
     public void testBaseMix() throws Exception {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculate(9L);
+                metricCalculate.getDeriveMetricCalculateById(9L);
 
         DeriveMetricCalculateResult<Double> query;
 
@@ -52,7 +51,7 @@ public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
         query = deriveMetricCalculate.stateExec(input3);
         result = query.getResult();
         //1600 / 2400
-        assertEquals(new BigDecimal("0.66666").doubleValue(), Double.parseDouble(result.toString()), 0.001D);
+        assertEquals(new BigDecimal("0.66666").doubleValue(), result, 0.001D);
     }
 
 }

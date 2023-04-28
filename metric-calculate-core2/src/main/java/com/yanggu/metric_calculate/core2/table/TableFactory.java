@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.table;
 
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.WindowParam;
@@ -23,12 +24,14 @@ public class TableFactory<IN, ACC, OUT> {
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
+    private TimeFieldProcessor timeFieldProcessor;
+
     /**
      * 创建新的Table
      *
      * @return
      */
-    public Table<IN, OUT> createTable() {
+    public Table<IN, ACC, OUT> createTable() {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //CEP类型
         if (Boolean.TRUE.equals(aggregateFunctionParam.getIsCep())) {
@@ -36,19 +39,22 @@ public class TableFactory<IN, ACC, OUT> {
             patternTable.setFieldMap(fieldMap);
             patternTable.setNodePatternList(aggregateFunctionParam.getChainPattern().getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            patternTable.setTimeFieldProcessor(timeFieldProcessor);
             patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
             patternTable.init();
-            return (Table<IN, OUT>) patternTable;
+            return patternTable;
             //滚动时间窗口
         } else if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTimeTable<>();
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return tumblingTimeTable;
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
             SlidingTimeTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTimeTable<>();
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return slidingTimeTable;
             //滑动计数窗口
@@ -61,7 +67,7 @@ public class TableFactory<IN, ACC, OUT> {
         } else if (windowType == STATUS_WINDOW) {
             StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            return (Table<IN, OUT>) statusWindowTable;
+            return statusWindowTable;
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
             GlobalTable<IN, ACC, OUT> globalTable = new GlobalTable<>();
@@ -77,7 +83,7 @@ public class TableFactory<IN, ACC, OUT> {
      * 给Table实现类的相关字段赋值
      * @param table
      */
-    public void setTable(Table<IN, OUT> table) {
+    public void setTable(Table<IN, ACC, OUT> table) {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //CEP类型
         if (Boolean.TRUE.equals(aggregateFunctionParam.getIsCep())) {
@@ -85,17 +91,20 @@ public class TableFactory<IN, ACC, OUT> {
             patternTable.setFieldMap(fieldMap);
             patternTable.setNodePatternList(aggregateFunctionParam.getChainPattern().getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            patternTable.setTimeFieldProcessor(timeFieldProcessor);
             patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
             patternTable.init();
             //滚动时间窗口
         } else if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTimeTable<IN, ACC, OUT>) table);
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
             SlidingTimeTimeTable<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeTimeTable<IN, ACC, OUT>) table);
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {

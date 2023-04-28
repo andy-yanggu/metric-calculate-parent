@@ -13,7 +13,7 @@ public class DeriveMetricCalculatePatternTest extends DeriveMetricCalculateBase 
     @Test
     public void testCEP() {
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculate(10L);
+                metricCalculate.getDeriveMetricCalculateById(10L);
 
         JSONObject input = new JSONObject();
         input.set("account_no_out", "000000000011");

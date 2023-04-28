@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +26,7 @@ public class DeriveMetricCalculateMapTest extends DeriveMetricCalculateBase {
     public void testBaseMap() {
         DeriveMetricCalculate<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
                 Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
-                = metricCalculate.getDeriveMetricCalculate(8L);
+                = metricCalculate.getDeriveMetricCalculateById(8L);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");

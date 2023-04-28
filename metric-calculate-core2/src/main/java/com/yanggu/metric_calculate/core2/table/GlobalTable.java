@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core2.table;
 
 
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import cn.hutool.json.JSONObject;
 import lombok.Data;
 
 /**
@@ -12,15 +12,13 @@ import lombok.Data;
  * @param <OUT>
  */
 @Data
-public class GlobalTable<IN, ACC, OUT> implements Table<IN, OUT> {
-
-    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+public class GlobalTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
     private ACC accumulator;
 
     @Override
-    public void put(Long timestamp, IN in) {
-        accumulator = aggregateFieldProcessor.add(accumulator, in);
+    public void put(JSONObject input) {
+        accumulator = aggregateFieldProcessor.add(accumulator, getInFromInput(input));
     }
 
     @Override

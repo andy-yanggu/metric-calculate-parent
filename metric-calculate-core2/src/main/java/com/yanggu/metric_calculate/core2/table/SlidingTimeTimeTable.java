@@ -29,10 +29,10 @@ public class SlidingTimeTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> 
         for (TimeWindow tempTimeWindow : timeWindow) {
             long windowStart = tempTimeWindow.getWindowStart();
             long windowEnd = tempTimeWindow.getWindowEnd();
-            Pair<Long, Long> tuple2 = Pair.of(windowStart, windowEnd);
-            ACC historyAcc = map.get(tuple2);
+            Pair<Long, Long> pair = Pair.of(windowStart, windowEnd);
+            ACC historyAcc = map.get(pair);
             ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
-            map.put(tuple2, nowAcc);
+            map.put(pair, nowAcc);
         }
         super.timestamp = timestamp;
     }

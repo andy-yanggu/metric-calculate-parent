@@ -6,8 +6,6 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -21,7 +19,7 @@ public class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
     @Test
     public void testSum() {
         DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate = 
-                metricCalculate.getDeriveMetricCalculate(1L);
+                metricCalculate.getDeriveMetricCalculateById(1L);
 
         JSONObject input = new JSONObject();
         input.set("account_no_out", "000000000011");
@@ -48,7 +46,7 @@ public class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
     @Test
     public void testMin() {
         DeriveMetricCalculate<Integer, MutableObj<Integer>, Integer> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculate(2L);
+                metricCalculate.getDeriveMetricCalculateById(2L);
 
         JSONObject input = new JSONObject();
         input.set("account_no_out", "000000000011");

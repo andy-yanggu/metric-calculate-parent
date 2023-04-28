@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.calculate;
 
 
+import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import lombok.Data;
@@ -32,7 +33,10 @@ public class MetricCalculate extends DataDetailsWideTable {
      */
     private Map<String, Class<?>> fieldMap;
 
-    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculate(Long deriveId) {
+    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long deriveId) {
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            throw new RuntimeException("派生指标列表为空");
+        }
         return deriveMetricCalculateList.stream()
                 .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
                 .findFirst().orElseThrow(() -> new RuntimeException("传入的deriveId错误"));

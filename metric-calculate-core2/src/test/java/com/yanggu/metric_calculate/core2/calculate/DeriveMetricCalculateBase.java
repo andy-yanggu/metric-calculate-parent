@@ -12,10 +12,10 @@ public class DeriveMetricCalculateBase {
 
     public static MetricCalculate metricCalculate;
 
+    //初始化配置文件中的所有派生指标
     static {
         String jsonString = FileUtil.readUtf8String("metric_config.json");
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, MetricCalculate.class);
-        metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
+        metricCalculate = MetricUtil.initMetricCalculate(JSONUtil.toBean(jsonString, MetricCalculate.class));
     }
 
 }
