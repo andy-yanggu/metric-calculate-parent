@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.pojo.metric;
 
 import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 import lombok.Data;
 
 import java.util.List;
@@ -16,6 +17,11 @@ public class WindowParam {
      * 窗口类型
      */
     private WindowTypeEnum windowType;
+
+    /**
+     * 时间字段
+     */
+    private TimeColumn timeColumn;
 
     /**
      * 时间周期
@@ -36,5 +42,15 @@ public class WindowParam {
      * 状态窗口表达式列表
      */
     private List<String> statusExpressList;
+
+    /**
+     * 事件模式数据
+     */
+    private List<NodePattern> nodePatternList;
+
+    /**
+     * 会话窗口间隔
+     */
+    private Long gapTimeMillis;
 
 }

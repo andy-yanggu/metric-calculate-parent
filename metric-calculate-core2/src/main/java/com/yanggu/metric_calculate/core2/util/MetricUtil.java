@@ -136,7 +136,6 @@ public class MetricUtil {
         TableFactory<IN, ACC, OUT> tableFactory = new TableFactory<>();
         tableFactory.setWindowParam(tempDerive.getWindowParam());
         tableFactory.setTimeFieldProcessor(timeFieldProcessor);
-        tableFactory.setAggregateFunctionParam(tempDerive.getAggregateFunctionParam());
         tableFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
         tableFactory.setFieldMap(metricCalculate.getFieldMap());
 

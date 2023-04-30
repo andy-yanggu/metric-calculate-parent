@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.metric;
 
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.ChainPattern;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
 import lombok.Data;
@@ -43,15 +42,5 @@ public class AggregateFunctionParam {
      * 混合类型聚合函数参数
      */
     private MixUnitUdafParam mixUnitUdafParam;
-
-    /**
-     * 是否是CEP类型
-     */
-    private Boolean isCep;
-
-    /**
-     * CEP, 事件模式配置数据
-     */
-    private ChainPattern chainPattern;
 
 }

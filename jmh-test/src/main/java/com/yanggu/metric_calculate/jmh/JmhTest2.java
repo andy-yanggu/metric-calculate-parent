@@ -20,7 +20,6 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.io.InputStream;
-import java.util.List;
 
 @BenchmarkMode(Mode.Throughput)
 @State(Scope.Thread)

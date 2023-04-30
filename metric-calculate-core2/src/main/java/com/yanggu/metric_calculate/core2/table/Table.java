@@ -28,6 +28,12 @@ public abstract class Table<IN, ACC, OUT> {
      */
     public abstract void put(JSONObject input);
 
+    /**
+     * 从明细数据中获取度量值
+     *
+     * @param input
+     * @return
+     */
     public IN getInFromInput(JSONObject input) {
         return aggregateFieldProcessor.process(input);
     }

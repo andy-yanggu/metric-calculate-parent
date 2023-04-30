@@ -265,6 +265,7 @@ public class MetricCalculateController {
         if (log.isDebugEnabled()) {
             log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveList));
         }
+        //按照key进行排序
         if (CollUtil.isNotEmpty(deriveList)) {
             deriveList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
         }

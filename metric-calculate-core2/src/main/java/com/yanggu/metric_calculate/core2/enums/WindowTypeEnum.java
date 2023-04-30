@@ -29,6 +29,16 @@ public enum WindowTypeEnum {
      * 全窗口
      */
     GLOBAL_WINDOW,
+
+    /**
+     * 会话窗口
+     */
+    SESSION_WINDOW,
+
+    /**
+     * 事件窗口
+     */
+    EVENT_WINDOW,
     ;
 
 }

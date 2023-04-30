@@ -19,14 +19,14 @@
         "timeFormat": "TIMESTAMP"
       },
       "filter": null,
-      "aggregateFunctionParam" : {
+      "aggregateFunctionParam": {
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress":"debit_amt_out"
+          "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -59,10 +59,10 @@
         "calculateLogic": "MIN",
         "baseUdafParam": {
           "aggregateType": "MIN",
-          "metricExpress":"debit_amt_out"
+          "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -108,7 +108,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -147,7 +147,7 @@
           ]
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -183,7 +183,7 @@
           "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "SLIDING_COUNT_WINDOW",
         "limit": 5
       },
@@ -220,7 +220,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -264,7 +264,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -306,7 +306,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -352,7 +352,7 @@
           "express": "zhangsan_sum_amount / total_sum_amount"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -386,36 +386,32 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
-        },
-        "isCep": true,
-        "chainPattern": {
-          "aggregateType": "PATTERN",
-          "nodePatternList": [
-            {
-              "index": 0,
-              "name": "start",
-              "matchExpress": "debit_amt_out > 100",
-              "interval": 0
-            },
-            {
-              "index": 1,
-              "name": "mid",
-              "matchExpress": "debit_amt_out > 200",
-              "interval": 10
-            },
-            {
-              "index": 2,
-              "name": "end",
-              "matchExpress": "debit_amt_out > 300",
-              "interval": 10
-            }
-          ]
         }
       },
-      "windowParam" : {
-        "windowType": "TUMBLING_TIME_WINDOW",
+      "windowParam": {
+        "windowType": "EVENT_WINDOW",
         "duration": 1,
-        "timeUnit": "DAY"
+        "timeUnit": "DAY",
+        "nodePatternList": [
+          {
+            "index": 0,
+            "name": "start",
+            "matchExpress": "debit_amt_out > 100",
+            "interval": 0
+          },
+          {
+            "index": 1,
+            "name": "mid",
+            "matchExpress": "debit_amt_out > 200",
+            "interval": 10
+          },
+          {
+            "index": 2,
+            "name": "end",
+            "matchExpress": "debit_amt_out > 300",
+            "interval": 10
+          }
+        ]
       },
       "roundAccuracy": {
         "useAccuracy": false,
@@ -440,14 +436,14 @@
         "timeFormat": "TIMESTAMP"
       },
       "filter": null,
-      "aggregateFunctionParam" : {
+      "aggregateFunctionParam": {
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress":"debit_amt_out"
+          "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "SLIDING_COUNT_WINDOW",
         "limit": 5
       },

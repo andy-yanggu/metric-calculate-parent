@@ -4,7 +4,6 @@ package com.yanggu.metric_calculate.core2.table;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.WindowParam;
 import lombok.Data;
@@ -17,8 +16,6 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.*;
 public class TableFactory<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
-
-    private AggregateFunctionParam aggregateFunctionParam;
 
     private WindowParam windowParam;
 
@@ -33,18 +30,8 @@ public class TableFactory<IN, ACC, OUT> {
      */
     public Table<IN, ACC, OUT> createTable() {
         WindowTypeEnum windowType = windowParam.getWindowType();
-        //CEP类型
-        if (Boolean.TRUE.equals(aggregateFunctionParam.getIsCep())) {
-            PatternTable<IN, ACC, OUT> patternTable = new PatternTable<>();
-            patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(aggregateFunctionParam.getChainPattern().getNodePatternList());
-            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.setTimeFieldProcessor(timeFieldProcessor);
-            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
-            patternTable.init();
-            return patternTable;
-            //滚动时间窗口
-        } else if (windowType == TUMBLING_TIME_WINDOW) {
+        //滚动时间窗口
+        if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTimeTable<>();
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
@@ -74,6 +61,15 @@ public class TableFactory<IN, ACC, OUT> {
             globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             return globalTable;
             //CEP类型
+        } else if (windowType == EVENT_WINDOW) {
+            PatternTable<IN, ACC, OUT> patternTable = new PatternTable<>();
+            patternTable.setFieldMap(fieldMap);
+            patternTable.setNodePatternList(windowParam.getNodePatternList());
+            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            patternTable.setTimeFieldProcessor(timeFieldProcessor);
+            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            patternTable.init();
+            return patternTable;
         } else {
             throw new RuntimeException("窗口类型异常");
         }
@@ -81,21 +77,13 @@ public class TableFactory<IN, ACC, OUT> {
 
     /**
      * 给Table实现类的相关字段赋值
+     *
      * @param table
      */
     public void setTable(Table<IN, ACC, OUT> table) {
         WindowTypeEnum windowType = windowParam.getWindowType();
-        //CEP类型
-        if (Boolean.TRUE.equals(aggregateFunctionParam.getIsCep())) {
-            PatternTable<IN, ACC, OUT> patternTable = ((PatternTable<IN, ACC, OUT>) table);
-            patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(aggregateFunctionParam.getChainPattern().getNodePatternList());
-            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.setTimeFieldProcessor(timeFieldProcessor);
-            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
-            patternTable.init();
-            //滚动时间窗口
-        } else if (windowType == TUMBLING_TIME_WINDOW) {
+        //滚动时间窗口
+        if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTimeTable<IN, ACC, OUT>) table);
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
@@ -120,6 +108,14 @@ public class TableFactory<IN, ACC, OUT> {
             GlobalTable<IN, ACC, OUT> globalTable = ((GlobalTable<IN, ACC, OUT>) table);
             globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             //CEP类型
+        } else if (windowType == EVENT_WINDOW) {
+            PatternTable<IN, ACC, OUT> patternTable = ((PatternTable<IN, ACC, OUT>) table);
+            patternTable.setFieldMap(fieldMap);
+            patternTable.setNodePatternList(windowParam.getNodePatternList());
+            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            patternTable.setTimeFieldProcessor(timeFieldProcessor);
+            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            patternTable.init();
         } else {
             throw new RuntimeException("窗口类型异常");
         }
