@@ -54,6 +54,9 @@ public class TableFactory<IN, ACC, OUT> {
         } else if (windowType == STATUS_WINDOW) {
             StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            statusWindowTable.setFieldMap(fieldMap);
+            statusWindowTable.setStatusExpressList(windowParam.getStatusExpressList());
+            statusWindowTable.init();
             return statusWindowTable;
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
@@ -103,6 +106,9 @@ public class TableFactory<IN, ACC, OUT> {
         } else if (windowType == STATUS_WINDOW) {
             StatusWindowTable<IN, ACC, OUT> statusWindowTable = ((StatusWindowTable<IN, ACC, OUT>) table);
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            statusWindowTable.setFieldMap(fieldMap);
+            statusWindowTable.setStatusExpressList(windowParam.getStatusExpressList());
+            statusWindowTable.init();
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
             GlobalTable<IN, ACC, OUT> globalTable = ((GlobalTable<IN, ACC, OUT>) table);

@@ -111,7 +111,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         deriveMetricMiddleStore.update(historyMetricCube);
 
         //查询数据, 并返回
-        return query(historyMetricCube);
+        return historyMetricCube.query(input);
     }
 
     /**
@@ -143,36 +143,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (historyMetricCube == null) {
             return null;
         }
-        return query(historyMetricCube);
-    }
-
-    /**
-     * 查询操作, 查询出指标数据
-     *
-     * @param metricCube
-     * @return
-     */
-    public DeriveMetricCalculateResult<OUT> query(MetricCube<IN, ACC, OUT> metricCube) {
-        //聚合值
-        OUT query = metricCube.getTable().query();
-
-        if (query == null) {
-            return null;
-        }
-
-        DeriveMetricCalculateResult<OUT> result = new DeriveMetricCalculateResult<>();
-        //指标key
-        result.setKey(metricCube.getDimensionSet().getKey());
-
-        //指标名称
-        result.setName(metricCube.getDimensionSet().getMetricName());
-
-        //指标维度
-        result.setDimensionMap(metricCube.getDimensionSet().getDimensionMap());
-
-        //聚合值
-        result.setResult(query);
-        return result;
+        return historyMetricCube.query(input);
     }
 
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {

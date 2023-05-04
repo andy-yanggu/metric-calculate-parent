@@ -14,6 +14,7 @@ import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
@@ -103,6 +104,23 @@ public class FieldProcessorUtil {
         metricFieldProcessor.setMetricExpress(metricExpress);
         metricFieldProcessor.init();
         return metricFieldProcessor;
+    }
+
+    /**
+     * 多表达式字段处理器
+     *
+     * @param fieldMap
+     * @param metricExpressList
+     * @return
+     */
+    @SneakyThrows
+    public static MetricListFieldProcessor getMetricListFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                       List<String> metricExpressList) {
+        MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
+        metricListFieldProcessor.setFieldMap(fieldMap);
+        metricListFieldProcessor.setMetricExpressList(metricExpressList);
+        metricListFieldProcessor.init();
+        return metricListFieldProcessor;
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.table;
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -30,8 +31,9 @@ public class SlidingCountWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public OUT query() {
-        return aggregateFieldProcessor.getOutFromInList(inList);
+    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+        OUT outFromInList = aggregateFieldProcessor.getOutFromInList(inList);
+        deriveMetricCalculateResult.setResult(outFromInList);
     }
 
 }

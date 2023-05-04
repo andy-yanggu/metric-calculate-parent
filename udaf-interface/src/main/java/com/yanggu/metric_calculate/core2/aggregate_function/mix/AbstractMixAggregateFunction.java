@@ -33,7 +33,13 @@ public abstract class AbstractMixAggregateFunction<OUT>
 
     @Override
     public OUT getResult(Map<String, Object> accumulator) {
-        return (OUT) expression.execute(accumulator);
+        Map<String, Object> env = new HashMap<>();
+        accumulator.forEach((tempKey, tempAcc) -> {
+            AggregateFunction<Object, Object, Object> tempAggFunction = mixAggregateFunctionMap.get(tempKey);
+            Object result = tempAggFunction.getResult(tempAcc);
+            env.put(tempKey, result);
+        });
+        return (OUT) expression.execute(env);
     }
 
     @Override

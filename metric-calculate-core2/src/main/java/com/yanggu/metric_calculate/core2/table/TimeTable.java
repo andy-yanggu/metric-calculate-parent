@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.core2.table;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 
 import java.util.List;
@@ -31,11 +33,16 @@ public abstract class TimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         put(tempTimestamp, getInFromInput(input));
     }
 
+    public abstract void put(Long timestamp, IN in);
+
     @Override
-    public OUT query() {
+    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindow timeWindow = timeWindowList.get(0);
-        return query(timeWindow.getWindowStart(), true, timeWindow.getWindowEnd(), false);
+        OUT query = query(timeWindow.getWindowStart(), true, timeWindow.getWindowEnd(), false);
+        deriveMetricCalculateResult.setResult(query);
+        deriveMetricCalculateResult.setStartTime(DateUtils.formatDateTime(timeWindow.getWindowStart()));
+        deriveMetricCalculateResult.setEndTime(DateUtils.formatDateTime(timeWindow.getWindowEnd()));
     }
 
     /**
@@ -48,8 +55,5 @@ public abstract class TimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
      * @return
      */
     public abstract OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive);
-
-
-    public abstract void put(Long timestamp, IN in);
 
 }

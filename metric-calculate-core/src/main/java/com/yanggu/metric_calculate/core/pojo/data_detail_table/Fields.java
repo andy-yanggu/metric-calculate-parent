@@ -11,18 +11,23 @@ import lombok.Data;
 public class Fields {
 
     /**
-     * 字段类名
-     */
-    private String className;
-
-    /**
      * 字段名
      */
     private String name;
 
     /**
+     * 派生指标中文名
+     */
+    private String displayName;
+
+    /**
      * 字段数据类型
      */
     private BasicType valueType;
+
+    /**
+     * 描述信息
+     */
+    private String description;
 
 }

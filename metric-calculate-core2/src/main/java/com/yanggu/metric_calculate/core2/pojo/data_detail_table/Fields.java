@@ -16,8 +16,18 @@ public class Fields {
     private String name;
 
     /**
+     * 字段中文名
+     */
+    private String displayName;
+
+    /**
      * 字段数据类型
      */
     private BasicType valueType;
+
+    /**
+     * 描述信息
+     */
+    private String description;
 
 }

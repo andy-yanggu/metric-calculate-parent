@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.table;
 
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 
 /**
@@ -22,8 +23,9 @@ public class GlobalTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public OUT query() {
-        return aggregateFieldProcessor.getOutFromAcc(accumulator);
+    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+        OUT out = aggregateFieldProcessor.getOutFromAcc(accumulator);
+        deriveMetricCalculateResult.setResult(out);
     }
 
 }

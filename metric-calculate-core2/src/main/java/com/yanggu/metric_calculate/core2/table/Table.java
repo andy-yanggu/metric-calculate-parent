@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.table;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 
 /**
@@ -43,6 +44,6 @@ public abstract class Table<IN, ACC, OUT> {
      *
      * @return
      */
-    public abstract OUT query();
+    public abstract void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult);
 
 }

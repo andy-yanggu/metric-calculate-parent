@@ -452,6 +452,74 @@
         "length": null,
         "type": "NOT_HANDLE"
       }
+    },
+    {
+      "id": 12,
+      "name": "first_trade_timestamp",
+      "displayName": "首次交易时间戳",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "OCCUPIEDFIELD",
+        "baseUdafParam": {
+          "aggregateType": "OCCUPIEDFIELD",
+          "retainExpress": "trans_timestamp"
+        }
+      },
+      "windowParam": {
+        "windowType": "GLOBAL_WINDOW"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 13,
+      "name": "status_sum_debit_asset",
+      "displayName": "借方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
     }
   ],
   "fields": [

@@ -7,6 +7,7 @@ import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.Map;
@@ -34,8 +35,9 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
                 .collect(Collectors.toList());
     }
 
+    @SneakyThrows
     @Override
-    public List<Object> process(JSONObject input) throws Exception {
+    public List<Object> process(JSONObject input) {
         return this.metricFieldProcessorList.stream()
                 .map(tempFieldProcessor -> tempFieldProcessor.process(input))
                 .collect(Collectors.toList());

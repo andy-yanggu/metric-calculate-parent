@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.pojo.metric;
 import lombok.Data;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 
 /**
  * 派生指标计算结果类
@@ -22,19 +23,24 @@ public class DeriveMetricCalculateResult<OUT> {
 
     /**
      * 开始时间
-     * yyyy-MM-dd HH:mm:ss格式, 包含开始时间
+     * <p>yyyy-MM-dd HH:mm:ss格式, 包含开始时间</p>
      */
     private String startTime;
 
     /**
      * 结束时间
-     * yyyy-MM-dd HH:mm:ss格式, 不包含开始时间
+     * <p>yyyy-MM-dd HH:mm:ss格式, 不包含开始时间</p>
      */
     private String endTime;
 
     /**
+     * 窗口状态标识
+     */
+    private List<Object> statusList;
+
+    /**
      * 维度kv k是维度名称, value是维度值
-     * <p>维度和页面定义的维度顺序一致
+     * <p>维度和页面定义的维度顺序一致</p>
      */
     private LinkedHashMap<String, Object> dimensionMap;
 

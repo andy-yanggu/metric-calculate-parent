@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.table;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
@@ -62,7 +63,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public OUT query() {
+    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindow timeWindow = timeWindowList.get(0);
         long from = timeWindow.getWindowStart();
@@ -74,7 +75,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         NavigableMap<Long, IN> endTable = dataMap.lastEntry().getValue()
                 .subMap(from, fromInclusive, to, toInclusive);
         if (endTable.isEmpty()) {
-            return null;
+            return;
         }
 
         //从第一个节点进行截取数据
@@ -83,7 +84,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
         //判断第一个节点是否有数据
         if (nodeTable.isEmpty()) {
-            return null;
+            return;
         }
 
         TreeMap<Long, IN> nextTable = null;
@@ -110,7 +111,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         }
 
         if (nextTable == null || nextTable.values().isEmpty()) {
-            return null;
+            return;
         }
 
         //创建累加器
@@ -122,7 +123,8 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         }
 
         //从累加器中获取数据
-        return aggregateFieldProcessor.getOutFromAcc(acc);
+        OUT out = aggregateFieldProcessor.getOutFromAcc(acc);
+        deriveMetricCalculateResult.setResult(out);
     }
 
 }
