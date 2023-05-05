@@ -7,6 +7,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
  * 平均值
  */
 public class AvgAggregateFunction<T extends Number> implements AggregateFunction<T, MutablePair<Double, Long>, Double> {
+    
     @Override
     public MutablePair<Double, Long> createAccumulator() {
         return new MutablePair<>(0.0D, 0L);

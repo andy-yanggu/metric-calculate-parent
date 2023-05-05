@@ -1,9 +1,8 @@
 package com.yanggu.metric_calculate.pojo;
 
-import com.yanggu.metric_calculate.core.calculate.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core.cube.MetricCube;
-import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core.table.Table;
+import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 @Data
 public class PutRequest {
 
-    private MetricCube<Table, Long, ?, ?> metricCube;
+    private MetricCube metricCube;
 
     private DeriveMetricCalculate deriveMetricCalculate;
 

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * 对ValeOUT进行排序的map, 并进行limit
- * <p>输出的是{@code List<K>}, 只是根据value进行排序，取对应K的TopN</p>
+ * <p>输出的是{@code List<ValueACC>}, 只是根据value进行排序，取TopN</p>
  *
  * @param <K>
  * @param <V>
@@ -20,16 +20,16 @@ import java.util.stream.Collectors;
  * @param <ValeOUT>
  */
 @MapType
-@MergeType("SORTVALUERETURNKEYMAP")
-public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>
-        extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, List<K>> {
+@MergeType("SORTVALUERETURNVALUEMAP")
+public class SortValueReturnValueMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>
+        extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, List<ValeOUT>> {
 
     private Integer limit = 10;
 
     private Boolean asc = true;
 
     @Override
-    public List<K> getResult(Map<K, ValueACC> accumulator) {
+    public List<ValeOUT> getResult(Map<K, ValueACC> accumulator) {
         Comparator<Pair<K, ValeOUT>> pairComparator = (o1, o2) -> {
             if (Boolean.TRUE.equals(asc)) {
                 return o1.getValue().compareTo(o2.getValue());
@@ -40,7 +40,7 @@ public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValeOUT exte
         return accumulator.entrySet().stream()
                 .map(tempEntry -> Pair.of(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
                 .sorted(pairComparator)
-                .map(Pair::getKey)
+                .map(Pair::getValue)
                 .limit(limit)
                 .collect(Collectors.toList());
     }

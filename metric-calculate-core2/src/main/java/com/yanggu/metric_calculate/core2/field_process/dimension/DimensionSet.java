@@ -42,7 +42,7 @@ public class DimensionSet implements Serializable {
      *
      * @return
      */
-    public String realKey() {
+    public String getRealKey() {
         return key + ":" + metricName + ":" + dimensionMap.values().stream()
                 .map(Object::toString)
                 .collect(Collectors.joining(":"));

@@ -1,8 +1,7 @@
 package com.yanggu.metric_calculate.pojo;
 
 
-import com.yanggu.metric_calculate.core.cube.MetricCube;
-import com.yanggu.metric_calculate.core.table.Table;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import lombok.Data;
 
 import java.util.concurrent.CompletableFuture;
@@ -10,8 +9,8 @@ import java.util.concurrent.CompletableFuture;
 @Data
 public class QueryRequest {
 
-    private MetricCube<Table, Long, ?, ?> metricCube;
+    private MetricCube metricCube;
 
-    private CompletableFuture<MetricCube<Table, Long, ?, ?>> queryFuture;
+    private CompletableFuture<MetricCube> queryFuture;
 
 }

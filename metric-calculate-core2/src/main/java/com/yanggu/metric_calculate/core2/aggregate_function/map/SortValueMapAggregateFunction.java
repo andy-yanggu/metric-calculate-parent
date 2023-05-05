@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 /**
  * 对ValeOUT进行排序的map, 并进行limit
- * <p>输出的仍然是map, 只是根据value进行排序，取TopN</p>
+ * <p>输出的仍然是{@code Map<K, ValueOut>}, 只是根据value进行排序，取TopN</p>
  *
  * @param <K>
  * @param <V>
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @MapType
 @MergeType("SORTVALUEMAP")
-public class SortValueMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<? super ValeOUT>>
+public class SortValueMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, Map<K, ValeOUT>> {
 
     private Integer limit = 10;

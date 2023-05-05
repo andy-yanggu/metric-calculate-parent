@@ -26,6 +26,10 @@ public class MetricCube<IN, ACC, OUT> {
      */
     private Table<IN, ACC, OUT> table;
 
+    public String getRealKey() {
+        return dimensionSet.getRealKey();
+    }
+
     /**
      * 查询指标数据
      *

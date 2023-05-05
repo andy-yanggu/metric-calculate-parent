@@ -1,10 +1,14 @@
 package com.yanggu.metric_calculate.core2.kryo.pool;
 
 
+import cn.hutool.core.collection.BoundedPriorityQueue;
+import cn.hutool.core.lang.Tuple;
+import cn.hutool.core.lang.mutable.MutablePair;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.util.Pool;
-import com.yanggu.metric_calculate.core2.kryo.serializer.TimeTableSerializer;
+import com.yanggu.metric_calculate.core2.kryo.serializer.*;
+import com.yanggu.metric_calculate.core2.table.GlobalTable;
 import com.yanggu.metric_calculate.core2.table.TumblingTimeTimeTable;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -26,6 +30,10 @@ public class KryoPool extends Pool<Kryo> {
         kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 
         kryo.register(TumblingTimeTimeTable.class, new TimeTableSerializer<>(), 1);
+        kryo.register(Tuple.class, new TupleSerializer(), 2);
+        kryo.register(MutablePair.class, new MutablePairSerializer<>(), 3);
+        kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 4);
+        kryo.register(GlobalTable.class, new GlobalTableSerializer<>(), 5);
         return kryo;
     }
 

@@ -1,8 +1,7 @@
 package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.core.util.IdUtil;
-import cn.hutool.system.SystemUtil;
-import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
+import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import io.swagger.annotations.Api;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,8 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.PostConstruct;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 @Slf4j

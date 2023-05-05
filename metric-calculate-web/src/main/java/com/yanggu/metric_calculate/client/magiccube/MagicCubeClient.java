@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.client.magiccube;
 
-import com.yanggu.metric_calculate.core.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
