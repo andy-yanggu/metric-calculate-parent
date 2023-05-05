@@ -67,14 +67,11 @@ public class AccumulateBatchComponent<T> {
      * @return true:添加成功 false:添加失败
      */
     public boolean add(T item) {
-        // log.info("add item={}",item);
         int len = this.workThreads.size();
-        //log.info("add len..."+len);
         if (len == 1) {
             return this.workThreads.get(0).add(item);
         } else {
             int mod = this.index.incrementAndGet() % len;
-            // log.info("路由到this.workThreads[mod]={}",mod);
             return this.workThreads.get(mod).add(item);
         }
     }

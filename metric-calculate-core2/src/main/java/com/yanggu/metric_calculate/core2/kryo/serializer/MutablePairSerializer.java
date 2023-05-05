@@ -19,7 +19,7 @@ public class MutablePairSerializer<K, V> extends Serializer<MutablePair<K, V>> {
     public MutablePair<K, V> read(Kryo kryo, Input input, Class<? extends MutablePair<K, V>> clazz) {
         K k = (K) kryo.readClassAndObject(input);
         V v = (V) kryo.readClassAndObject(input);
-        return new MutablePair<K, V>(k, v);
+        return new MutablePair<>(k, v);
     }
 
 }

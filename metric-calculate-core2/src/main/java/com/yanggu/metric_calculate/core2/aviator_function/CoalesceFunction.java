@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core2.aviator_function;
 
 import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
 import com.googlecode.aviator.runtime.type.AviatorNil;
-import com.googlecode.aviator.runtime.type.AviatorNumber;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 
