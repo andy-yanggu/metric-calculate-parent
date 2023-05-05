@@ -8,9 +8,9 @@ import java.util.List;
 
 @MergeType("SORTEDLISTOBJECT")
 @Collective(useSortedField = true, retainObject = true)
-public class SortedListObjectFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
+public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
-    private Integer limit;
+    private Integer limit = 100;
 
     @Override
     public BoundedPriorityQueue<T> createAccumulator() {

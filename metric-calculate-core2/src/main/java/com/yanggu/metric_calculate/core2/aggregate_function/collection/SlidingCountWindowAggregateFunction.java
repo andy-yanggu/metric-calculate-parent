@@ -7,9 +7,16 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 
 import java.util.List;
 
+/**
+ * 滑动计数
+ *
+ * @param <IN>
+ * @param <OUT>
+ */
 @MergeType("LISTOBJECTCOUNTWINDOW")
 @Collective
 public class SlidingCountWindowAggregateFunction<IN, OUT> implements AggregateFunction<IN, List<IN>, OUT> {
+
     @Override
     public List<IN> createAccumulator() {
         return null;

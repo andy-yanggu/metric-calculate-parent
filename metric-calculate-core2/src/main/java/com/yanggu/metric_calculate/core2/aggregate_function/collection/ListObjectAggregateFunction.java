@@ -8,9 +8,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * 对象列表
+ *
+ * @param <T>
+ */
 @Collective
 @MergeType("LISTOBJECT")
-public class ListObjectFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
+public class ListObjectAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
     private Integer limit = 10;
 

@@ -2,6 +2,8 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +13,9 @@ import java.util.Set;
  *
  * @param <T>
  */
-public class DistinctCountFunction<T> implements AggregateFunction<T, Set<T>, Integer> {
+@MergeType("DISTINCTCOUNT")
+@Collective(useDistinctField = true)
+public class DistinctCountAggregateFunction<T> implements AggregateFunction<T, Set<T>, Integer> {
 
     @Override
     public Set<T> createAccumulator() {

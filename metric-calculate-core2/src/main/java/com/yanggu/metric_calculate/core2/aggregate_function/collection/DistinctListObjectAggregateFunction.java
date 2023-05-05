@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 
 import java.util.ArrayList;
@@ -9,11 +11,13 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * 去重列表
+ * 去重对象列表
  *
  * @param <T>
  */
-public class DistinctListFunction<T> implements AggregateFunction<T, Set<T>, List<T>> {
+@MergeType(value = "DISTINCTLISTOBJECT")
+@Collective(useDistinctField = true)
+public class DistinctListObjectAggregateFunction<T> implements AggregateFunction<T, Set<T>, List<T>> {
 
     @Override
     public Set<T> createAccumulator() {

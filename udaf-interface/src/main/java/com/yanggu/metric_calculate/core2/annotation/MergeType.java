@@ -27,18 +27,4 @@ public @interface MergeType {
      */
     String description() default "";
 
-    /**
-     * 是否使用参数
-     *
-     * @return
-     */
-    boolean useParam() default false;
-
-    /**
-     * 是否使用子聚合函数
-     *
-     * @return
-     */
-    boolean useExternalAgg() default false;
-
 }
