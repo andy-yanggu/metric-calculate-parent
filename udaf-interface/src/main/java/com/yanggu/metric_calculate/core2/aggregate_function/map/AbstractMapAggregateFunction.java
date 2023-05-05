@@ -33,10 +33,7 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
         K key = input.getKey();
         V newValue = input.getValue();
 
-        ValueACC acc = accumulator.get(key);
-        if (acc == null) {
-            acc = valueAggregateFunction.createAccumulator();
-        }
+        ValueACC acc = accumulator.getOrDefault(key, valueAggregateFunction.createAccumulator());
         acc = valueAggregateFunction.add(newValue, acc);
         accumulator.put(key, acc);
         return accumulator;
@@ -44,13 +41,10 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
 
     @Override
     public Map<K, ValueACC> merge(Map<K, ValueACC> thisAccumulator, Map<K, ValueACC> thatAccumulator) {
-        thatAccumulator.forEach((tempKey, tempAcc) -> {
-            ValueACC acc = thisAccumulator.get(tempKey);
-            if (acc == null) {
-                acc = valueAggregateFunction.createAccumulator();
-            }
-            acc = valueAggregateFunction.merge(acc, tempAcc);
-            thisAccumulator.put(tempKey, acc);
+        thatAccumulator.forEach((tempKey, thatAcc) -> {
+            ValueACC thisAcc = thisAccumulator.getOrDefault(tempKey, valueAggregateFunction.createAccumulator());
+            thisAcc = valueAggregateFunction.merge(thisAcc, thatAcc);
+            thisAccumulator.put(tempKey, thisAcc);
         });
         return thisAccumulator;
     }
