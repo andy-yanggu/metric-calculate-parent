@@ -4,8 +4,8 @@ package com.yanggu.metric_calculate.core2.aggregate_function;
 /**
  * 定义输入数据、中间状态累计数据、输出数据
  * <p>该函数定义了如何进行增量计算，是一个无状态函数</p>
- * <p>需要有空参构造方法，用于反射生成</p>
- * <p>聚合函数的相关参数，会在反射生成聚合函数后，反射给聚合函数的参数赋值</p>
+ * <p>需要空参构造方法，用于反射生成</p>
+ * <p>聚合函数的相关参数，会在反射调用空参构造方法生成聚合函数对象后，反射给聚合函数的参数赋值</p>
  *
  * @param <IN> 输入的数据
  * @param <ACC> 中间累加数据 需要有空参构造方法，可以进行序列化和反序列化
@@ -35,7 +35,7 @@ public interface AggregateFunction<IN, ACC, OUT> {
     ACC createAccumulator();
 
     /**
-     * Adds the given input input to the given accumulator, returning the new accumulator input.
+     * Adds the given input into the given accumulator, returning the new accumulator input.
      *
      * <p>For efficiency, the input accumulator may be modified and returned.
      *
@@ -64,8 +64,6 @@ public interface AggregateFunction<IN, ACC, OUT> {
      * @param thatAccumulator Another accumulator to merge
      * @return The accumulator with the merged state
      */
-    default ACC merge(ACC thisAccumulator, ACC thatAccumulator) {
-        throw new RuntimeException("需要手动重写merge方法");
-    }
+    ACC merge(ACC thisAccumulator, ACC thatAccumulator);
 
 }

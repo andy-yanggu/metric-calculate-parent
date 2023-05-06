@@ -21,6 +21,9 @@ public class MaxAggregateFunction<T extends Number> implements AggregateFunction
 
     @Override
     public Double add(T input, Double accumulator) {
+        if (input == null) {
+            return accumulator;
+        }
         return Math.max(input.doubleValue(), accumulator);
     }
 

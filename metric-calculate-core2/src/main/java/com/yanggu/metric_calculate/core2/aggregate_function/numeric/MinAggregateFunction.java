@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 最小值
@@ -19,7 +20,7 @@ public class MinAggregateFunction<T extends Number> implements AggregateFunction
     }
 
     @Override
-    public Double add(T input, Double accumulator) {
+    public Double add(@NotNull T input, Double accumulator) {
         return Math.min(input.doubleValue(), accumulator);
     }
 

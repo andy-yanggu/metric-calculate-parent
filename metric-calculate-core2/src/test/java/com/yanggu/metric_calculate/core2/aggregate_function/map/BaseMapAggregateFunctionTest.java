@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunctionTest;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import org.junit.Before;
 import org.junit.Test;

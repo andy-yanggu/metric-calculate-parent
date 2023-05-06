@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.aggregate_function.map;
 import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.annotation.MapType;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import lombok.Data;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -14,11 +15,12 @@ import java.util.stream.Collectors;
  * 对ValeOUT进行排序的map, 并进行limit
  * <p>输出的仍然是{@code Map<K, ValueOut>}, 只是根据value进行排序，取TopN</p>
  *
- * @param <K>
- * @param <V>
+ * @param <K> map的k类型
+ * @param <V> map的v类型
  * @param <ValueACC>
  * @param <ValeOUT>
  */
+@Data
 @MapType
 @MergeType("SORTVALUEMAP")
 public class SortValueMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>

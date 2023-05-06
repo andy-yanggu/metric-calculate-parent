@@ -48,4 +48,10 @@ public class StateWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunc
         return new MutablePair<>(accumulator.getKey(), aggregateFunction.getResult(accumulator.getValue()));
     }
 
+    @Override
+    public MutablePair<MultiFieldDistinctKey, ACC> merge(MutablePair<MultiFieldDistinctKey, ACC> thisAccumulator,
+                                                         MutablePair<MultiFieldDistinctKey, ACC> thatAccumulator) {
+        return null;
+    }
+
 }
