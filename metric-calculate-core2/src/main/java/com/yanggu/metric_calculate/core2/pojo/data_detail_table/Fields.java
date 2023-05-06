@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.pojo.data_detail_table;
 
 
 import com.yanggu.metric_calculate.core2.enums.BasicType;
+import com.yanggu.metric_calculate.core2.enums.FieldTypeEnum;
 import lombok.Data;
 
 /**
@@ -29,5 +30,15 @@ public class Fields {
      * 描述信息
      */
     private String description;
+
+    /**
+     * 字段类型
+     */
+    private FieldTypeEnum fieldType;
+
+    /**
+     * 字段表达式
+     */
+    private String express;
 
 }

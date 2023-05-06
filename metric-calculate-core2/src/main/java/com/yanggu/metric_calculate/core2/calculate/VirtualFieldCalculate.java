@@ -1,0 +1,35 @@
+package com.yanggu.metric_calculate.core2.calculate;
+
+import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import lombok.Data;
+
+import java.util.Map;
+
+/**
+ * 虚拟字段计算类
+ * <p>有些字段是虚拟字段通过其他字段计算得到</p>
+ * <p>常见的如时间戳，得到年、月、日、小时数等</p>
+ * <p>可以实现简单的字段补全逻辑</p>
+ */
+@Data
+public class VirtualFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
+
+    private String express;
+
+    private Map<String, Class<?>> fieldMap;
+
+    private MetricFieldProcessor<R> metricFieldProcessor;
+
+    @Override
+    public void init() {
+        this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, express);
+    }
+
+    @Override
+    public R process(JSONObject input) {
+        return metricFieldProcessor.process(input);
+    }
+
+}

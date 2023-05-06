@@ -17,9 +17,19 @@ import java.util.Map;
 public class MetricCalculate extends DataDetailsWideTable {
 
     /**
+     * 字段计算类
+     */
+    private List<FieldCalculate> fieldCalculateList;
+
+    /**
      * 派生指标计算类
      */
     private List<DeriveMetricCalculate> deriveMetricCalculateList;
+
+    /**
+     * 全局指标计算类
+     */
+    private List<GlobalMetricCalculate> globalMetricCalculateList;
 
     /**
      * 指标名称和指标类型映射
