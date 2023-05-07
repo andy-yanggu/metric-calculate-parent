@@ -6,15 +6,14 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -28,7 +27,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
     private MetricFieldProcessor<Number> metricFieldProcessor;
 
-    private List<MetricFieldProcessor<Number>> metricFieldProcessorList;
+    private MetricListFieldProcessor metricListFieldProcessor;
 
     @Override
     public void init() throws Exception {
@@ -37,9 +36,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
             if (CollUtil.isEmpty(metricExpressList)) {
                 throw new RuntimeException("度量字段列表为空");
             }
-            this.metricFieldProcessorList = metricExpressList.stream()
-                    .map(tempExpress -> FieldProcessorUtil.<Number>getMetricFieldProcessor(fieldMap, tempExpress))
-                    .collect(Collectors.toList());
+            this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList);
         } else {
             String metricExpress = udafParam.getMetricExpress();
             if (StrUtil.isBlank(metricExpress)) {
@@ -53,15 +50,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     public IN process(JSONObject input) {
         Object process;
         if (numerical.multiNumber()) {
-            List<Number> dataList = new ArrayList<>();
-            for (MetricFieldProcessor<Number> fieldProcessor : this.metricFieldProcessorList) {
-                Number tempData = fieldProcessor.process(input);
-                if (tempData == null) {
-                    throw new RuntimeException("度量值为空, 度量表达式" + fieldProcessor.getMetricExpress());
-                }
-                dataList.add(tempData);
-            }
-            process = dataList;
+            process = metricListFieldProcessor.process(input);
         } else {
             process = this.metricFieldProcessor.process(input);
         }

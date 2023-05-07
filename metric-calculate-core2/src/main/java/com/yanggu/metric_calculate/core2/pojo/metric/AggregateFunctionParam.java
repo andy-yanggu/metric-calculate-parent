@@ -34,6 +34,11 @@ public class AggregateFunctionParam {
     private BaseUdafParam baseUdafParam;
 
     /**
+     * 额外的基本聚合函数参数
+     */
+    private BaseUdafParam externalBaseUdafParam;
+
+    /**
      * 映射类型聚合函数参数
      */
     private MapUnitUdafParam mapUdafParam;
