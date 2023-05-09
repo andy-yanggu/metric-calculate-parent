@@ -2,10 +2,16 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.calculate.field.FieldCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.GlobalMetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import lombok.Data;
+import lombok.SneakyThrows;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +25,7 @@ public class MetricCalculate extends DataDetailsWideTable {
     /**
      * 字段计算类
      */
-    private List<FieldCalculate> fieldCalculateList;
+    private List<FieldCalculate<JSONObject, Object>> fieldCalculateList;
 
     /**
      * 派生指标计算类
@@ -59,6 +65,27 @@ public class MetricCalculate extends DataDetailsWideTable {
         return deriveMetricCalculateList.stream()
                 .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
                 .findFirst().orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
+    }
+
+    /**
+     * 从原始数据中提取数据, 进行手动数据类型转换
+     * <p>虚拟类型的字段进行计算</p>
+     * <p>防止输入的数据类型和数据明细宽表定义的数据类型不匹配
+     * <p>主要是数值型
+     *
+     * @param input
+     * @return
+     */
+    @SneakyThrows
+    public JSONObject getParam(JSONObject input) {
+        JSONObject data = new JSONObject();
+        for (FieldCalculate<JSONObject, Object> fieldCalculate : fieldCalculateList) {
+            Object process = fieldCalculate.process(input);
+            if (process != null) {
+                data.set(fieldCalculate.getName(), process);
+            }
+        }
+        return data;
     }
 
 }

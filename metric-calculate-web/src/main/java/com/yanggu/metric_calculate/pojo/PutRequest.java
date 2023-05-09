@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.pojo;
 
-import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;

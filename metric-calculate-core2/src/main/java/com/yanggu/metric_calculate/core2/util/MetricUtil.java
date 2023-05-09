@@ -3,12 +3,15 @@ package com.yanggu.metric_calculate.core2.util;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
-import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.field.FieldCalculate;
+import com.yanggu.metric_calculate.core2.calculate.field.RealFieldCalculate;
+import com.yanggu.metric_calculate.core2.calculate.field.VirtualFieldCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.enums.FieldTypeEnum;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
@@ -23,11 +26,14 @@ import com.yanggu.metric_calculate.core2.table.TableFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.core2.enums.FieldTypeEnum.REAL;
+import static com.yanggu.metric_calculate.core2.enums.FieldTypeEnum.VIRTUAL;
 import static com.yanggu.metric_calculate.core2.enums.MetricTypeEnum.DERIVE;
 import static com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.DEFAULT_IMPL;
 
@@ -60,26 +66,73 @@ public class MetricUtil {
         Map<String, Class<?>> fieldMap = getFieldMap(metricCalculate);
         metricCalculate.setFieldMap(fieldMap);
 
-        //派生指标
-        List<Derive> deriveList = tableData.getDerive();
-        if (CollUtil.isNotEmpty(deriveList)) {
-            List<DeriveMetricCalculate> collect = deriveList.stream()
-                    .map(tempDerive -> {
-                        metricTypeMap.put(tempDerive.getName(), DERIVE);
-                        //初始化派生指标计算类
-                        return MetricUtil.initDerive(tempDerive, metricCalculate);
-                    })
-                    .collect(Collectors.toList());
+        //初始化字段计算
+        initFieldCalculate(metricCalculate);
 
-            //派生指标中间结算结果存储接口
-            Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
-                    AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
-            //默认是内存的并发HashMap
-            DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
-            collect.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
-            metricCalculate.setDeriveMetricCalculateList(collect);
-        }
+        //初始化派生指标
+        initAllDerive(metricCalculate);
+
         return metricCalculate;
+    }
+
+    /**
+     * 初始化字段计算
+     *
+     * @param metricCalculate
+     */
+    public static void initFieldCalculate(MetricCalculate metricCalculate) {
+        List<Fields> fieldsList = metricCalculate.getFields();
+        if (CollUtil.isEmpty(fieldsList)) {
+            return;
+        }
+        List<FieldCalculate<JSONObject, Object>> fieldCalculateList = new ArrayList<>();
+        for (Fields fields : fieldsList) {
+            FieldTypeEnum fieldType = fields.getFieldType();
+            //真实字段
+            if (REAL.equals(fieldType)) {
+                RealFieldCalculate<Object> realFieldCalculate = new RealFieldCalculate<>();
+                realFieldCalculate.setColumnName(fields.getName());
+                realFieldCalculate.setDataClass((Class<Object>) fields.getValueType().getType());
+                fieldCalculateList.add(realFieldCalculate);
+                //虚拟字段
+            } else if (VIRTUAL.equals(fieldType)) {
+                VirtualFieldCalculate<Object> virtualFieldCalculate = new VirtualFieldCalculate<>();
+                virtualFieldCalculate.setColumnName(fields.getName());
+                virtualFieldCalculate.setExpress(fields.getExpress());
+                virtualFieldCalculate.setFieldMap(metricCalculate.getFieldMap());
+                virtualFieldCalculate.init();
+                fieldCalculateList.add(virtualFieldCalculate);
+            }
+        }
+        metricCalculate.setFieldCalculateList(fieldCalculateList);
+    }
+
+    /**
+     * 初始化所有派生指标
+     *
+     * @param metricCalculate
+     */
+    public static void initAllDerive(MetricCalculate metricCalculate) {
+        List<Derive> deriveList = metricCalculate.getDerive();
+        if (CollUtil.isEmpty(deriveList)) {
+            return;
+        }
+        Map<String, MetricTypeEnum> metricTypeMap = metricCalculate.getMetricTypeMap();
+        List<DeriveMetricCalculate> collect = deriveList.stream()
+                .map(tempDerive -> {
+                    metricTypeMap.put(tempDerive.getName(), DERIVE);
+                    //初始化派生指标计算类
+                    return MetricUtil.initDerive(tempDerive, metricCalculate);
+                })
+                .collect(Collectors.toList());
+
+        //派生指标中间结算结果存储接口
+        Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
+                AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
+        //默认是内存的并发HashMap
+        DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
+        collect.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
+        metricCalculate.setDeriveMetricCalculateList(collect);
     }
 
     /**

@@ -30,6 +30,11 @@ public class DataDetailsWideTable {
     private String displayName;
 
     /**
+     * 宽表字段
+     */
+    private List<Fields> fields;
+
+    /**
      * 派生指标
      */
     private List<Derive> derive;
@@ -43,10 +48,5 @@ public class DataDetailsWideTable {
      * 全局指标
      */
     private List<Global> global;
-
-    /**
-     * 宽表字段
-     */
-    private List<Fields> fields;
 
 }

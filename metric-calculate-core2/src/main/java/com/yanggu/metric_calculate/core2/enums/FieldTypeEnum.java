@@ -13,8 +13,7 @@ public enum FieldTypeEnum {
     /**
      * 虚拟字段, 通过真实字段计算得到
      */
-    VIRTUAL
-
+    VIRTUAL,
     ;
 
 }

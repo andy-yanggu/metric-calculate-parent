@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.calculate;
 
 import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class DeriveMetricCalculateMapTest extends DeriveMetricCalculateBase {
     @Test
     public void testBaseMap() {
         DeriveMetricCalculate<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
-                Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
+                        Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
                 = metricCalculate.getDeriveMetricCalculateById(8L);
 
         JSONObject input1 = new JSONObject();

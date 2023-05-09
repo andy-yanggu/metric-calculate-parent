@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.calculate;
+package com.yanggu.metric_calculate.core2.calculate.field;
 
 /**
  * 字段计算类
@@ -10,6 +10,8 @@ public interface FieldCalculate<T, R> {
      */
     default void init() {
     }
+
+    String getName();
 
     R process(T input) throws Exception;
 

@@ -6,7 +6,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
-import com.yanggu.metric_calculate.core2.calculate.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
@@ -245,17 +245,20 @@ public class MetricCalculateController implements ApplicationRunner {
     private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject detail,
                                                                  MetricCalculate dataWideTable,
                                                                  boolean update) {
+        //进行字段计算
+        detail = dataWideTable.getParam(detail);
         List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return Collections.emptyList();
         }
         List<DeriveMetricCalculateResult<Object>> deriveList = new CopyOnWriteArrayList<>();
+        JSONObject finalDetail = detail;
         deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
             DeriveMetricCalculateResult<Object> result;
             if (update) {
-                result = deriveMetricCalculate.stateExec(detail);
+                result = deriveMetricCalculate.stateExec(finalDetail);
             } else {
-                result = deriveMetricCalculate.noStateExec(detail);
+                result = deriveMetricCalculate.noStateExec(finalDetail);
             }
             if (result != null) {
                 deriveList.add(result);
