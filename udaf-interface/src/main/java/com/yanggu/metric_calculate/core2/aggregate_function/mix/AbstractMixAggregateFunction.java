@@ -12,7 +12,7 @@ import java.util.Map;
 public abstract class AbstractMixAggregateFunction<OUT>
         implements AggregateFunction<Map<String, Object>, Map<String, Object>, OUT> {
 
-    private Map<String, AggregateFunction<Object, Object, Object>> mixAggregateFunctionMap;
+    private Map<String, AggregateFunction> mixAggregateFunctionMap;
 
     private Expression expression;
 

@@ -217,7 +217,7 @@ public class FieldProcessorUtil {
             abstractMixAggregateFunction.setExpression(expression);
 
             //设置mixAggregateFunctionMap
-            Map<String, AggregateFunction<Object, Object, Object>> mixAggregateFunctionMap = new HashMap<>();
+            Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
             Map<String, BaseUdafParam> mixAggMap = mixUnitUdafParam.getMixAggMap();
             mixAggMap.forEach((tempParam, tempBaseUdafParam) -> {
                 AggregateFunction<Object, Object, Object> tempAggregateFunction =

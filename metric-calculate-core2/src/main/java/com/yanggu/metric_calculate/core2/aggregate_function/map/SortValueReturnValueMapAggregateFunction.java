@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.aggregate_function.map;
 import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.annotation.MapType;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import lombok.Data;
 
 import java.util.Comparator;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
  * @param <ValueACC>
  * @param <ValeOUT>
  */
+@Data
 @MapType
 @MergeType("SORTVALUERETURNVALUEMAP")
 public class SortValueReturnValueMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>
