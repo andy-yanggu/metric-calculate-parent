@@ -3,8 +3,8 @@ package com.yanggu.metric_calculate.core2.middle_store;
 
 import com.yanggu.metric_calculate.core2.kryo.KryoUtil;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMiddleStore {
 
@@ -26,7 +26,7 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
         /**
          * DeriveMetricMiddleStore实现类初始化完成后, 需要放入其中
          */
-        private static final Map<String, DeriveMetricMiddleStore> STORE_MAP = new HashMap<>();
+        public static final Map<String, DeriveMetricMiddleStore> STORE_MAP = new ConcurrentHashMap<>();
 
         public static Map<String, DeriveMetricMiddleStore> getStoreMap() {
             return STORE_MAP;

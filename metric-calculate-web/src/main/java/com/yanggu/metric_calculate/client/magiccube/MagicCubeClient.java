@@ -5,6 +5,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
+
 /**
  * 获取magiccube指标、宽表相关定义
  */
@@ -19,5 +21,13 @@ public interface MagicCubeClient {
      */
     @GetMapping("/model/{tableId}")
     DataDetailsWideTable getTableAndMetricByTableId(@PathVariable("tableId") Long tableId);
+
+    /**
+     * 获取所有宽表id
+     *
+     * @return
+     */
+    @GetMapping("/model/all-id")
+    List<Long> getAllTableId();
 
 }

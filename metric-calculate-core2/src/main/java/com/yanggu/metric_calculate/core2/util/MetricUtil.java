@@ -76,16 +76,7 @@ public class MetricUtil {
                     AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
             //默认是内存的并发HashMap
             DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
-            if (metricMiddleStoreMap.size() != 1) {
-                for (Map.Entry<String, DeriveMetricMiddleStore> middleStoreEntry : metricMiddleStoreMap.entrySet()) {
-                    if (!StrUtil.equals(DEFAULT_IMPL, middleStoreEntry.getKey())) {
-                        deriveMetricMiddleStore = middleStoreEntry.getValue();
-                        break;
-                    }
-                }
-            }
-            DeriveMetricMiddleStore finalDeriveMetricMiddleStore = deriveMetricMiddleStore;
-            collect.forEach(temp -> temp.setDeriveMetricMiddleStore(finalDeriveMetricMiddleStore));
+            collect.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
             metricCalculate.setDeriveMetricCalculateList(collect);
         }
         return metricCalculate;

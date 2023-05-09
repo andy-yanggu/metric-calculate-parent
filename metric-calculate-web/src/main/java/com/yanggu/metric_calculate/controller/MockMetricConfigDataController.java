@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * 模拟指标配置数据
  */
@@ -29,6 +32,15 @@ public class MockMetricConfigDataController {
     public DataDetailsWideTable getTableAndMetricByTableId(@ApiParam("明细宽表id") @PathVariable("tableId") Long tableId) {
         String jsonString = FileUtil.readUtf8String("mock_metric_config/" + tableId + ".json");
         return JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
+    }
+
+    @ApiOperation("获取所有宽表id")
+    @GetMapping("/all-id")
+    public List<Long> getAllTableId() {
+        return FileUtil.loopFiles("mock_metric_config", pathname -> pathname.getName().endsWith(".json"))
+                .stream()
+                .map(file -> Long.parseLong(file.getName().split("\\.")[0]))
+                .collect(Collectors.toList());
     }
 
 }

@@ -7,6 +7,9 @@ import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.DEFAULT_IMPL;
+import static com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.STORE_MAP;
+
 
 public class DeriveMetricMiddleHashMapStore extends AbstractDeriveMetricMiddleStore {
 
@@ -15,6 +18,8 @@ public class DeriveMetricMiddleHashMapStore extends AbstractDeriveMetricMiddleSt
     @Override
     public void init() {
         localMap = new ConcurrentHashMap<>();
+        //默认放入memory
+        STORE_MAP.put(DEFAULT_IMPL, this);
     }
 
     @Override
