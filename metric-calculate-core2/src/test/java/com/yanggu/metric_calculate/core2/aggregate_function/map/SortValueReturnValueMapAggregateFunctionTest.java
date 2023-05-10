@@ -1,6 +1,9 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.MapType;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -8,9 +11,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class SortValueReturnValueMapAggregateFunctionTest {
+
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = SortValueReturnValueMapAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("SORTVALUERETURNVALUEMAP", mergeType.value());
+    }
+
+    @Test
+    public void testMapType() {
+        MapType mapType = SortValueReturnValueMapAggregateFunction.class.getAnnotation(MapType.class);
+        assertNotNull(mapType);
+    }
+
+    @Test
+    public void testConstructor() {
+        SortValueReturnValueMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> aggregateFunction = new SortValueReturnValueMapAggregateFunction<>();
+        assertNotNull(aggregateFunction);
+        assertNull(aggregateFunction.getValueAggregateFunction());
+    }
 
     @Test
     public void testGetResult_Positive() {

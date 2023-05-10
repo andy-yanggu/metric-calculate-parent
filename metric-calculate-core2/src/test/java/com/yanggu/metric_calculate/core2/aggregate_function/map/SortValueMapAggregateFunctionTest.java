@@ -1,18 +1,40 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.MapType;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * SortValueMapAggregateFunction单元测试类
  */
 public class SortValueMapAggregateFunctionTest {
+
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = SortValueMapAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("SORTVALUEMAP", mergeType.value());
+    }
+
+    @Test
+    public void testMapType() {
+        MapType mapType = SortValueMapAggregateFunction.class.getAnnotation(MapType.class);
+        assertNotNull(mapType);
+    }
+
+    @Test
+    public void testConstructor() {
+        SortValueMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> aggregateFunction = new SortValueMapAggregateFunction<>();
+        assertNotNull(aggregateFunction);
+        assertNull(aggregateFunction.getValueAggregateFunction());
+    }
 
     /**
      * 默认升序取Top5

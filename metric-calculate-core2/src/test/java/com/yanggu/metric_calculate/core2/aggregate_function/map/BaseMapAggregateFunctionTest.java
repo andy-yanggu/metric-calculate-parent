@@ -2,6 +2,8 @@ package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.MapType;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,25 @@ public class BaseMapAggregateFunctionTest {
         this.basemap = new BaseMapAggregateFunction<>();
         SumAggregateFunction<Double> sumAggregateFunction = new SumAggregateFunction<>();
         this.basemap.setValueAggregateFunction(sumAggregateFunction);
+    }
+
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = BaseMapAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("BASEMAP", mergeType.value());
+    }
+
+    @Test
+    public void testMapType() {
+        MapType mapType = BaseMapAggregateFunction.class.getAnnotation(MapType.class);
+        assertNotNull(mapType);
+    }
+
+    @Test
+    public void testConstructor() {
+        BaseMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> aggregateFunction = new BaseMapAggregateFunction<>();
+        assertNotNull(aggregateFunction);
+        assertNull(aggregateFunction.getValueAggregateFunction());
     }
 
     @Test
@@ -88,4 +109,5 @@ public class BaseMapAggregateFunctionTest {
         assertNotNull(result);
         assertEquals(100.0D, result.get(key), 0.0D);
     }
+
 }
