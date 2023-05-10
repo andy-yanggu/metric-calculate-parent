@@ -32,10 +32,10 @@ public class ReplacedObjectAggregateFunction<T> implements AggregateFunction<T, 
 
     @Override
     public MutableObj<T> merge(MutableObj<T> thisAccumulator, MutableObj<T> thatAccumulator) {
-        if (thisAccumulator.get() != null) {
-            return thisAccumulator;
-        } else {
+        if (thatAccumulator.get() != null) {
             return thatAccumulator;
+        } else {
+            return thisAccumulator;
         }
     }
 

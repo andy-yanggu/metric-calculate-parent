@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("OCCUPIEDOBJECT")
-@Objective(useCompareField = false, retainObject = true)
+@Objective(useCompareField = false)
 public class OccupiedObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override
@@ -35,14 +35,8 @@ public class OccupiedObjectAggregateFunction<T> implements AggregateFunction<T, 
 
     @Override
     public MutableObj<T> merge(MutableObj<T> thisAccumulator, MutableObj<T> thatAccumulator) {
-        T thisValue = thisAccumulator.get();
-        T thatValue = thatAccumulator.get();
-        if (thisValue == null && thatValue != null) {
+        if (thisAccumulator.get() == null && thatAccumulator.get() != null) {
             return thatAccumulator;
-        } else if (thisValue == null/* && thatValue == null*/) {
-            return thisAccumulator;
-        } else if (/*thisValue != null && */thatValue == null) {
-            return thisAccumulator;
         } else {
             return thisAccumulator;
         }
