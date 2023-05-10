@@ -117,7 +117,7 @@ public class AggregateCollectionFieldProcessorTest {
     public void process4() {
 
         BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("SORTEDLISTOBJECT");
+        baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
         baseUdafParam.setCollectiveSortFieldList(Collections.singletonList(new FieldOrderParam("amount", false)));
 
         List<BaseUdafParam> baseUdafParamList = Collections.singletonList(baseUdafParam);

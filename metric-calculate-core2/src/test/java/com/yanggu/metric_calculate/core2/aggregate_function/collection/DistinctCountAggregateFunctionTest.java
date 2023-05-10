@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import org.junit.Test;
 
 import java.util.HashSet;
@@ -11,6 +13,26 @@ import static org.junit.Assert.*;
  * 去重计数单元测试类
  */
 public class DistinctCountAggregateFunctionTest {
+
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = DistinctCountAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("DISTINCTCOUNT", mergeType.value());
+    }
+
+    @Test
+    public void testCollective() {
+        Collective collective = DistinctCountAggregateFunction.class.getAnnotation(Collective.class);
+        assertTrue(collective.retainObject());
+        assertFalse(collective.useSortedField());
+        assertTrue(collective.useDistinctField());
+    }
+
+    @Test
+    public void testConstructor() {
+        DistinctCountAggregateFunction<Object> distinctCountAggregateFunction = new DistinctCountAggregateFunction<>();
+        assertNotNull(distinctCountAggregateFunction);
+    }
 
     @Test
     public void testCreateAccumulator() {

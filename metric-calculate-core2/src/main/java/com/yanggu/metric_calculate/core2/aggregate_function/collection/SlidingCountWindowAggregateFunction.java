@@ -33,7 +33,7 @@ public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements Aggreg
     @Override
     public List<IN> add(IN input, List<IN> accumulator) {
         accumulator.add(input);
-        if (accumulator.size() > limit) {
+        while (accumulator.size() > limit) {
             accumulator.remove(0);
         }
         return accumulator;
@@ -51,7 +51,7 @@ public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements Aggreg
     @Override
     public List<IN> merge(List<IN> thisAccumulator, List<IN> thatAccumulator) {
         thisAccumulator.addAll(thatAccumulator);
-        if (thatAccumulator.size() > limit) {
+        while (thisAccumulator.size() > limit) {
             thisAccumulator.remove(0);
         }
         return thisAccumulator;

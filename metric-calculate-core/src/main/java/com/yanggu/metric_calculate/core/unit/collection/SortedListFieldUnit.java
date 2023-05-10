@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Objects;
 
 
-@MergeType(value = "SORTEDLISTFIELD", useParam = true)
+@MergeType(value = "SORTEDLIMITLISTFIELD", useParam = true)
 @Collective(useSortedField = true, retainObject = false)
 public class SortedListFieldUnit<T extends Comparable<T> & Clone<T>>
         implements CollectionUnit<T, SortedListFieldUnit<T>>, Value<List<Object>> {

@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -8,12 +10,32 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * 对象列表单元测试类
  */
 public class ListObjectAggregateFunctionTest {
+
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = ListObjectAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("LISTOBJECT", mergeType.value());
+    }
+
+    @Test
+    public void testCollective() {
+        Collective collective = ListObjectAggregateFunction.class.getAnnotation(Collective.class);
+        assertTrue(collective.retainObject());
+        assertFalse(collective.useSortedField());
+        assertFalse(collective.useDistinctField());
+    }
+
+    @Test
+    public void testConstructor() {
+        ListObjectAggregateFunction<Integer> listObjectAggregateFunction = new ListObjectAggregateFunction<>();
+        assertEquals(new Integer(10), listObjectAggregateFunction.getLimit());
+    }
 
     @Test
     public void testCreateAccumulator() {

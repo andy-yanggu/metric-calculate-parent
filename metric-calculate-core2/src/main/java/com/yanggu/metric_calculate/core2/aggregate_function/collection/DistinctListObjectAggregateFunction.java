@@ -15,7 +15,7 @@ import java.util.Set;
  *
  * @param <T>
  */
-@MergeType(value = "DISTINCTLISTOBJECT")
+@MergeType("DISTINCTLISTOBJECT")
 @Collective(useDistinctField = true)
 public class DistinctListObjectAggregateFunction<T> implements AggregateFunction<T, Set<T>, List<T>> {
 

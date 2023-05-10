@@ -16,6 +16,21 @@ spring:
     database: 1
 #    password: Redis6379
 
+management:
+  server:
+    port: 50000                         # 启用独立运维端口
+  endpoint:                             # 开启shutdown和health端点
+    shutdown:
+      enabled: true
+    health:
+      probes:
+        enabled: true
+  endpoints:
+    web:
+      exposure:
+        base-path: /actuator            # 指定上下文路径，启用相应端点
+        include: health,shutdown
+
 feign:
   magiccube-api:
     host: http://localhost:${server.port}

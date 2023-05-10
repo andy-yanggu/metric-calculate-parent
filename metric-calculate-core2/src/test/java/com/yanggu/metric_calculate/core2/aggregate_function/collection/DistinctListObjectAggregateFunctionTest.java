@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
+import com.yanggu.metric_calculate.core2.annotation.Collective;
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -14,6 +16,26 @@ import static org.junit.Assert.*;
  */
 public class DistinctListObjectAggregateFunctionTest {
 
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = DistinctListObjectAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("DISTINCTLISTOBJECT", mergeType.value());
+    }
+
+    @Test
+    public void testCollective() {
+        Collective collective = DistinctListObjectAggregateFunction.class.getAnnotation(Collective.class);
+        assertTrue(collective.retainObject());
+        assertFalse(collective.useSortedField());
+        assertTrue(collective.useDistinctField());
+    }
+
+    @Test
+    public void testConstructor() {
+        DistinctListObjectAggregateFunction<Object> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
+        assertNotNull(distinctListObjectAggregateFunction);
+    }
+    
     /**
      * 测试创建累加器是否正常
      */

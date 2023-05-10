@@ -8,8 +8,8 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@MergeType("SORTEDLISTOBJECT")
-@Collective(useSortedField = true, retainObject = true)
+@MergeType("SORTEDLIMITLISTOBJECT")
+@Collective(useSortedField = true)
 public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
     private Integer limit = 10;

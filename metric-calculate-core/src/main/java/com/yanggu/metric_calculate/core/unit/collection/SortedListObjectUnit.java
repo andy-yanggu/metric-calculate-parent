@@ -22,7 +22,7 @@ import java.util.Map;
  */
 
 @FieldNameConstants
-@MergeType(value = "SORTEDLISTOBJECT", useParam = true)
+@MergeType(value = "SORTEDLIMITLISTOBJECT", useParam = true)
 @Collective(useSortedField = true, retainObject = true)
 public class SortedListObjectUnit<T extends Comparable<T> & Clone<T>> implements CollectionUnit<T, SortedListObjectUnit<T>>, Value<List<Object>> {
 

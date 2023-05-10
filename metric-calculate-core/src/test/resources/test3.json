@@ -51,7 +51,7 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "SORTEDLISTFIELD",
+      "calculateLogic": "SORTEDLIMITLISTFIELD",
       "duration": 2,
       "timeUnit": "DAY",
       "roundAccuracy": {
@@ -60,7 +60,7 @@
         "type": "NOT_HANDLE"
       },
       "baseUdafParam": {
-        "aggregateType": "SORTEDLISTFIELD",
+        "aggregateType": "SORTEDLIMITLISTFIELD",
         "retainExpress": "debit_amt_out",
         "collectiveSortFieldList": [
           {
@@ -195,7 +195,7 @@
         "columnIndex": null
       },
       "filter": null,
-      "calculateLogic": "SORTEDLISTOBJECT",
+      "calculateLogic": "SORTEDLIMITLISTOBJECT",
       "duration": 2,
       "timeUnit": "DAY",
       "roundAccuracy": {
@@ -204,7 +204,7 @@
         "type": "NOT_HANDLE"
       },
       "baseUdafParam": {
-        "aggregateType": "SORTEDLISTOBJECT",
+        "aggregateType": "SORTEDLIMITLISTOBJECT",
         "collectiveSortFieldList": [
           {
             "express": "debit_amt_out",

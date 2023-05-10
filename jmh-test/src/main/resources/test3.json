@@ -92,10 +92,10 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SORTEDLISTFIELD",
+        "calculateLogic": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
-          "calculateLogic": "SORTEDLISTFIELD",
-          "aggregateType": "SORTEDLISTFIELD",
+          "calculateLogic": "SORTEDLIMITLISTFIELD",
+          "aggregateType": "SORTEDLIMITLISTFIELD",
           "retainExpress": "debit_amt_out",
           "collectiveSortFieldList": [
             {
@@ -250,9 +250,9 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SORTEDLISTOBJECT",
+        "calculateLogic": "SORTEDLIMITLISTOBJECT",
         "baseUdafParam": {
-          "aggregateType": "SORTEDLISTOBJECT",
+          "aggregateType": "SORTEDLIMITLISTOBJECT",
           "collectiveSortFieldList": [
             {
               "express": "debit_amt_out",
