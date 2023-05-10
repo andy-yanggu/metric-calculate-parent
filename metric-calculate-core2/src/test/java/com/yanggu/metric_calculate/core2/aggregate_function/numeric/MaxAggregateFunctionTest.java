@@ -1,10 +1,30 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.annotation.Numerical;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class MaxAggregateFunctionTest {
+
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = MaxAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("MAX", mergeType.value());
+    }
+
+    @Test
+    public void testNumerical() {
+        Numerical numerical = MaxAggregateFunction.class.getAnnotation(Numerical.class);
+        assertFalse(numerical.multiNumber());
+    }
+
+    @Test
+    public void testConstructor() {
+        MaxAggregateFunction<Integer> maxAggregateFunction = new MaxAggregateFunction<>();
+        assertNotNull(maxAggregateFunction);
+    }
 
     // Test case for createAccumulator method
     @Test
@@ -77,4 +97,5 @@ public class MaxAggregateFunctionTest {
         Double accumulator = maxAggregateFunction.merge(-10.0D, 5.0D);
         assertEquals(5.0D, accumulator, 0.0D);
     }
+
 }

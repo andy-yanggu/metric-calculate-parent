@@ -1,14 +1,34 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
+import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.annotation.Numerical;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Unit test for CountAggregateFunction.
  */
 public class CountAggregateFunctionTest {
 
+    @Test
+    public void testMergeType() {
+        MergeType mergeType = CountAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("COUNT", mergeType.value());
+    }
+
+    @Test
+    public void testNumerical() {
+        Numerical numerical = CountAggregateFunction.class.getAnnotation(Numerical.class);
+        assertFalse(numerical.multiNumber());
+    }
+
+    @Test
+    public void testConstructor() {
+        CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
+        assertNotNull(countAggregateFunction);
+    }
+    
     @Test
     public void testCreateAccumulator() {
         CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
