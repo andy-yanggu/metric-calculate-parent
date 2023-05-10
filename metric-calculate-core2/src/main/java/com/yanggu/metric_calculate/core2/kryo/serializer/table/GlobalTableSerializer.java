@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.kryo.serializer;
+package com.yanggu.metric_calculate.core2.kryo.serializer.table;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;

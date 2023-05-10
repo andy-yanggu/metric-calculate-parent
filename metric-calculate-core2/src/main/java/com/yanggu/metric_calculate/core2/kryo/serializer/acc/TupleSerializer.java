@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.kryo.serializer;
+package com.yanggu.metric_calculate.core2.kryo.serializer.acc;
 
 import cn.hutool.core.lang.Tuple;
 import com.esotericsoftware.kryo.Kryo;
@@ -8,6 +8,7 @@ import com.esotericsoftware.kryo.io.Output;
 
 
 public class TupleSerializer extends Serializer<Tuple> {
+
     @Override
     public void write(Kryo kryo, Output output, Tuple object) {
         int size = object.size();

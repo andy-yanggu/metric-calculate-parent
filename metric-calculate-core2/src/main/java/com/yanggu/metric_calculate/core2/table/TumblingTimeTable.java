@@ -15,7 +15,7 @@ import java.util.TreeMap;
  * @param <OUT>
  */
 @Data
-public class TumblingTimeTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
+public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();
 

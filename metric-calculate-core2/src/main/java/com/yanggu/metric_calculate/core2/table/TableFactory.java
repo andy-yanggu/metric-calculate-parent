@@ -32,14 +32,14 @@ public class TableFactory<IN, ACC, OUT> {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
-            TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTimeTable<>();
+            TumblingTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTable<>();
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return tumblingTimeTable;
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
-            SlidingTimeTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTimeTable<>();
+            SlidingTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTable<>();
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
@@ -87,13 +87,13 @@ public class TableFactory<IN, ACC, OUT> {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
-            TumblingTimeTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTimeTable<IN, ACC, OUT>) table);
+            TumblingTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTable<IN, ACC, OUT>) table);
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
-            SlidingTimeTimeTable<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeTimeTable<IN, ACC, OUT>) table);
+            SlidingTimeTable<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeTable<IN, ACC, OUT>) table);
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());

@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core2.table;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.Map;
  * @param <ACC>
  * @param <OUT>
  */
-public class SlidingTimeTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
+@Data
+public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 
