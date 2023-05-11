@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -37,11 +36,6 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
      * 维度字段
      */
     private List<Dimension> dimensionList;
-
-    /**
-     * 宽表字段
-     */
-    private Map<String, Class<?>> fieldMap;
 
     public DimensionSetProcessor(List<Dimension> dimensionList) {
         this.dimensionList = dimensionList;

@@ -116,7 +116,7 @@ public class AggregateObjectFieldProcessorTest {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setRetainExpress("name");
-        udafParam.setAggregateType("OCCUPIEDFIELD");
+        udafParam.setAggregateType("FIRSTFIELD");
 
         BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<CloneWrapper<String>>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);
@@ -144,7 +144,7 @@ public class AggregateObjectFieldProcessorTest {
     public void process6() {
 
         BaseUdafParam udafParam = new BaseUdafParam();
-        udafParam.setAggregateType("OCCUPIEDOBJECT");
+        udafParam.setAggregateType("FIRSTOBJECT");
 
         BaseAggregateFieldProcessor<JSONObject, OccupiedFieldUnit<CloneWrapper<JSONObject>>> objectFieldProcessor =
                 FieldProcessorUtil.getBaseAggregateFieldProcessor(Collections.singletonList(udafParam), getTestUnitFactory(), fieldMap);

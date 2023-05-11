@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import lombok.Data;
@@ -46,9 +45,8 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
-        AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
         //编译度量字段表达式
-        Expression tempMetricExpression = instance.compile(metricExpress, true);
+        Expression tempMetricExpression = AviatorEvaluator.compile(metricExpress, true);
         List<String> variableNames = tempMetricExpression.getVariableNames();
         //检查数据明细宽表中是否包含当前参数
         if (CollUtil.isNotEmpty(variableNames)) {

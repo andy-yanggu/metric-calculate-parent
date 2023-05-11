@@ -34,8 +34,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
             throw new RuntimeException("排序字段为空");
         }
         this.metricFieldProcessorList = fieldOrderParamList.stream()
-                .map(tempFieldOrderParam ->
-                        FieldProcessorUtil.<Object>getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
+                .map(tempFieldOrderParam -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
                 .collect(Collectors.toList());
     }
 

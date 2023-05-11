@@ -472,9 +472,9 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "OCCUPIEDFIELD",
+        "calculateLogic": "FIRSTFIELD",
         "baseUdafParam": {
-          "aggregateType": "OCCUPIEDFIELD",
+          "aggregateType": "FIRSTFIELD",
           "retainExpress": "trans_timestamp"
         }
       },

@@ -6,13 +6,13 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Objective;
 
 /**
- * 占位对象
+ * 最先写入的非NULL值
  *
  * @param <T>
  */
-@MergeType("OCCUPIEDOBJECT")
+@MergeType("FIRSTOBJECT")
 @Objective(useCompareField = false)
-public class OccupiedObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
+public class FirstObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override
     public MutableObj<T> createAccumulator() {

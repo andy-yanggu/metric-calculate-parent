@@ -10,7 +10,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 
 @Data
 @Objective(useCompareField = false, retainObject = false)
-@MergeType(value = "REPLACEDFIELD", timeWindowType = TIME_SLIDING_WINDOW)
+@MergeType(value = "LASTFIELD", timeWindowType = TIME_SLIDING_WINDOW)
 public class ReplacedFieldUnit<T extends Clone<T>> implements ObjectiveUnit<T, ReplacedFieldUnit<T>>, Value<T> {
 
     private ReplacedObjectUnit<T> replacedObjectUnit;

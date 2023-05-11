@@ -73,18 +73,15 @@ public class FieldProcessorUtil {
      *
      * @param key           指标唯一标识
      * @param metricName    指标名称
-     * @param fieldMap      宽表字段
      * @param dimensionList 维度列表
      * @return 维度字段处理器
      */
     public static DimensionSetProcessor getDimensionSetProcessor(String key,
                                                                  String metricName,
-                                                                 Map<String, Class<?>> fieldMap,
                                                                  List<Dimension> dimensionList) {
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(dimensionList);
         dimensionSetProcessor.setKey(key);
         dimensionSetProcessor.setMetricName(metricName);
-        dimensionSetProcessor.setFieldMap(fieldMap);
         dimensionSetProcessor.init();
         return dimensionSetProcessor;
     }
@@ -158,10 +155,31 @@ public class FieldProcessorUtil {
     }
 
     @SneakyThrows
+    public static <IN> MixFieldProcessor<IN> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                  MixUnitUdafParam mixUnitUdafParam) {
+        MixFieldProcessor<IN> mixFieldProcessor = new MixFieldProcessor<>();
+        mixFieldProcessor.setFieldMap(fieldMap);
+        mixFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
+        mixFieldProcessor.init();
+        return mixFieldProcessor;
+    }
+
+    public static <IN> MapFieldProcessor<IN> getMapFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                  AggregateFunctionFactory aggregateFunctionFactory,
+                                                                  MapUnitUdafParam mapUdafParam) throws Exception {
+        MapFieldProcessor<IN> mapFieldProcessor = new MapFieldProcessor<>();
+        mapFieldProcessor.setFieldMap(fieldMap);
+        mapFieldProcessor.setMapUnitUdafParam(mapUdafParam);
+        mapFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
+        mapFieldProcessor.init();
+        return mapFieldProcessor;
+    }
+
+    @SneakyThrows
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                                    Derive derive,
-                                                                    Map<String, Class<?>> fieldMap,
-                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
+            Derive derive,
+            Map<String, Class<?>> fieldMap,
+            AggregateFunctionFactory aggregateFunctionFactory) {
         AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
         String aggregateType = aggregateFunctionParam.getCalculateLogic();
 
@@ -169,7 +187,7 @@ public class FieldProcessorUtil {
         Class<? extends AggregateFunction> aggregateFunctionClass = aggregateFunction.getClass();
 
         //如果是基本聚合类型(数值型、集合型、对象型)
-        if (aggregateFunctionClass.isAnnotationPresent(Numerical.class) 
+        if (aggregateFunctionClass.isAnnotationPresent(Numerical.class)
                 || aggregateFunctionClass.isAnnotationPresent(Objective.class)
                 || aggregateFunctionClass.isAnnotationPresent(Collective.class)) {
             BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
@@ -190,11 +208,7 @@ public class FieldProcessorUtil {
             AggregateFunctionFactory.setUdafParam(valueAggregateFunction, valueUdafParam.getParam());
             ((AbstractMapAggregateFunction<?, Object, Object, Object, OUT>) aggregateFunction).setValueAggregateFunction(valueAggregateFunction);
 
-            MapFieldProcessor<IN> mapFieldProcessor = new MapFieldProcessor<>();
-            mapFieldProcessor.setFieldMap(fieldMap);
-            mapFieldProcessor.setMapUnitUdafParam(mapUdafParam);
-            mapFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
-            mapFieldProcessor.init();
+            MapFieldProcessor<IN> mapFieldProcessor = getMapFieldProcessor(fieldMap, aggregateFunctionFactory, mapUdafParam);
             return new AggregateFieldProcessor<>(mapFieldProcessor, aggregateFunction);
         }
 
@@ -204,10 +218,7 @@ public class FieldProcessorUtil {
             AggregateFunctionFactory.setUdafParam(aggregateFunction, mixUnitUdafParam.getParam());
 
             //初始化MixFieldProcessor
-            MixFieldProcessor<IN> mixFieldProcessor = new MixFieldProcessor<>();
-            mixFieldProcessor.setFieldMap(fieldMap);
-            mixFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
-            mixFieldProcessor.init();
+            MixFieldProcessor<IN> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUnitUdafParam);
 
             AbstractMixAggregateFunction<OUT> abstractMixAggregateFunction = (AbstractMixAggregateFunction<OUT>) aggregateFunction;
 
@@ -243,9 +254,9 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseFieldProcessor(
-                                                        BaseUdafParam baseUdafParam,
-                                                        Map<String, Class<?>> fieldMap,
-                                                        AggregateFunction<IN, ACC, OUT> aggregateFunction) {
+            BaseUdafParam baseUdafParam,
+            Map<String, Class<?>> fieldMap,
+            AggregateFunction<IN, ACC, OUT> aggregateFunction) {
 
         String aggregateType = baseUdafParam.getAggregateType();
         FieldProcessor<JSONObject, IN> fieldProcessor;

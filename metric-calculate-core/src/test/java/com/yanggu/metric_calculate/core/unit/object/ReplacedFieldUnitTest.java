@@ -20,7 +20,7 @@ public class ReplacedFieldUnitTest {
     @Test
     public void testMergeType() {
         MergeType annotation = ReplacedFieldUnit.class.getAnnotation(MergeType.class);
-        assertEquals("REPLACEDFIELD", annotation.value());
+        assertEquals("LASTFIELD", annotation.value());
         assertFalse(annotation.useParam());
     }
 

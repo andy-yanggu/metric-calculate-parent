@@ -6,13 +6,13 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Objective;
 
 /**
- * 取代对象
+ * 最后写入的非NULL值
  *
  * @param <T>
  */
-@MergeType("REPLACEDOBJECT")
+@MergeType("LASTOBJECT")
 @Objective(useCompareField = false, retainObject = true)
-public class ReplacedObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
+public class LastObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override
     public MutableObj<T> createAccumulator() {

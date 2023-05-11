@@ -187,7 +187,7 @@ public class MetricUtil {
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor =
-                FieldProcessorUtil.getDimensionSetProcessor(key, name, fieldMap, tempDerive.getDimension());
+                FieldProcessorUtil.getDimensionSetProcessor(key, name, tempDerive.getDimension());
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
         //精度数据

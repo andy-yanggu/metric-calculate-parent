@@ -4,11 +4,11 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Objective;
 
 /**
- * 占位字段
+ * 最后写入的非NULL值
  *
  * @param <T>
  */
-@MergeType("OCCUPIEDFIELD")
+@MergeType("LASTFIELD")
 @Objective(useCompareField = false, retainObject = false)
-public class OccupiedFieldAggregateFunction<T> extends OccupiedObjectAggregateFunction<T> {
+public class LastFieldAggregateFunction<T> extends LastObjectAggregateFunction<T> {
 }

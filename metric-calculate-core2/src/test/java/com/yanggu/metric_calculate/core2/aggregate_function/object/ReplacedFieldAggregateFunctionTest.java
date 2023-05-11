@@ -13,20 +13,20 @@ public class ReplacedFieldAggregateFunctionTest {
 
     @Test
     public void testMergeType() {
-        MergeType mergeType = ReplacedFieldAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("REPLACEDFIELD", mergeType.value());
+        MergeType mergeType = LastFieldAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("LASTFIELD", mergeType.value());
     }
 
     @Test
     public void testObjective() {
-        Objective objective = ReplacedFieldAggregateFunction.class.getAnnotation(Objective.class);
+        Objective objective = LastFieldAggregateFunction.class.getAnnotation(Objective.class);
         assertFalse(objective.retainObject());
         assertFalse(objective.useCompareField());
     }
 
     @Test
     public void testConstructor() {
-        ReplacedFieldAggregateFunction<String> replacedFieldAggregateFunction = new ReplacedFieldAggregateFunction<>();
+        LastFieldAggregateFunction<String> replacedFieldAggregateFunction = new LastFieldAggregateFunction<>();
         assertNotNull(replacedFieldAggregateFunction);
     }
 

@@ -19,7 +19,7 @@ public class OccupiedObjectUnitTest {
     @Test
     public void testMergeType() {
         MergeType annotation = OccupiedObjectUnit.class.getAnnotation(MergeType.class);
-        assertEquals("OCCUPIEDOBJECT", annotation.value());
+        assertEquals("FIRSTOBJECT", annotation.value());
         assertFalse(annotation.useParam());
     }
 

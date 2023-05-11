@@ -13,20 +13,20 @@ public class OccupiedFieldAggregateFunctionTest {
 
     @Test
     public void testMergeType() {
-        MergeType mergeType = OccupiedFieldAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("OCCUPIEDFIELD", mergeType.value());
+        MergeType mergeType = FirstFieldAggregateFunction.class.getAnnotation(MergeType.class);
+        assertEquals("FIRSTFIELD", mergeType.value());
     }
 
     @Test
     public void testObjective() {
-        Objective objective = OccupiedFieldAggregateFunction.class.getAnnotation(Objective.class);
+        Objective objective = FirstFieldAggregateFunction.class.getAnnotation(Objective.class);
         assertFalse(objective.retainObject());
         assertFalse(objective.useCompareField());
     }
 
     @Test
     public void testConstructor() {
-        OccupiedFieldAggregateFunction<String> occupiedFieldAggregateFunction = new OccupiedFieldAggregateFunction<>();
+        FirstFieldAggregateFunction<String> occupiedFieldAggregateFunction = new FirstFieldAggregateFunction<>();
         assertNotNull(occupiedFieldAggregateFunction);
     }
 

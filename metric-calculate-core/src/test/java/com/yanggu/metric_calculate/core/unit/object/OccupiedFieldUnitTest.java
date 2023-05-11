@@ -19,7 +19,7 @@ public class OccupiedFieldUnitTest {
     @Test
     public void testMergeType() {
         MergeType annotation = OccupiedFieldUnit.class.getAnnotation(MergeType.class);
-        assertEquals("OCCUPIEDFIELD", annotation.value());
+        assertEquals("FIRSTFIELD", annotation.value());
         assertFalse(annotation.useParam());
     }
 

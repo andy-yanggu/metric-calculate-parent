@@ -12,7 +12,7 @@ import static com.yanggu.metric_calculate.core.enums.TimeWindowEnum.TIME_SLIDING
 
 @NoArgsConstructor
 @Objective(useCompareField = false, retainObject = false)
-@MergeType(value = "OCCUPIEDFIELD", timeWindowType = TIME_SLIDING_WINDOW)
+@MergeType(value = "FIRSTFIELD", timeWindowType = TIME_SLIDING_WINDOW)
 public class OccupiedFieldUnit<T extends Clone<T>> implements ObjectiveUnit<T, OccupiedFieldUnit<T>>, Value<T> {
 
     private OccupiedObjectUnit<T> occupiedObjectUnit = new OccupiedObjectUnit<>();

@@ -20,7 +20,7 @@ public class ReplacedObjectUnitTest {
     @Test
     public void testMergeType() {
         MergeType annotation = ReplacedObjectUnit.class.getAnnotation(MergeType.class);
-        assertEquals("REPLACEDOBJECT", annotation.value());
+        assertEquals("LASTOBJECT", annotation.value());
         assertFalse(annotation.useParam());
     }
 
