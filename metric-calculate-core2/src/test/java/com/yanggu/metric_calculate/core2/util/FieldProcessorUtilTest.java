@@ -4,7 +4,8 @@ import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.exception.ExpressionSyntaxErrorException;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.collection.ListObjectAggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.mix.BaseMixAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstFieldAggregateFunction;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
@@ -175,11 +176,9 @@ public class FieldProcessorUtilTest {
     @Test
     public void getBaseFieldProcessor_Collective_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("collective");
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        //AggregateFunction<IN, ACC, OUT> aggregateFunction = new AggregateFunction<>();
-        //FieldProcessor<JSONObject, IN> fieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, aggregateFunction);
-        //assertTrue(fieldProcessor instanceof CollectionFieldProcessor);
+        FieldProcessor<JSONObject, JSONObject> fieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, new ListObjectAggregateFunction<>());
+        assertTrue(fieldProcessor instanceof CollectionFieldProcessor);
     }
 
     @Test
@@ -187,13 +186,9 @@ public class FieldProcessorUtilTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("invalid");
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        //AggregateFunction<IN, ACC, OUT> aggregateFunction = new AggregateFunction<>();
-        //try {
-        //    FieldProcessor<JSONObject, IN> fieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, aggregateFunction);
-        //    fail("Expected an exception to be thrown");
-        //} catch (RuntimeException e) {
-        //    assertEquals("不支持的聚合类型: invalid", e.getMessage());
-        //}
+        BaseMixAggregateFunction aggregateFunction = new BaseMixAggregateFunction();
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, aggregateFunction));
+        assertEquals("不支持的聚合类型: invalid", runtimeException.getMessage());
     }
 
 }

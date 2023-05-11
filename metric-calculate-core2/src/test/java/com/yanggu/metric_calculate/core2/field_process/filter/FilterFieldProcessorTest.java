@@ -232,31 +232,30 @@ public class FilterFieldProcessorTest {
         assertTrue(result);
     }
 
-    ///**
-    // * 测试过滤字段为BigDecimal的数据类型
-    // * <p>但是传入的数据类型和定义的不匹配, 代码内部进行了转换</p>
-    // *
-    // * @throws Exception
-    // */
-    //@Test
-    //public void process6() throws Exception {
-    //    String express = "amount > 100.00";
-    //    Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-    //        put("amount", BigDecimal.class);
-    //    }};
-    //
-    //    FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
-    //    filterFieldProcessor.init();
-    //
-    //    JSONObject jsonObject = new JSONObject();
-    //    jsonObject.set("amount", "50");
-    //    Boolean result = filterFieldProcessor.process(jsonObject);
-    //    assertFalse(result);
-    //
-    //    jsonObject.set("amount", "120");
-    //    result = filterFieldProcessor.process(jsonObject);
-    //    assertTrue(result);
-    //}
+    /**
+     * 测试过滤字段为BigDecimal的数据类型
+     *
+     * @throws Exception
+     */
+    @Test
+    public void process6() throws Exception {
+        String express = "amount > 100.00";
+        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
+            put("amount", BigDecimal.class);
+        }};
+
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        filterFieldProcessor.init();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.set("amount", BigDecimal.valueOf(50L));
+        Boolean result = filterFieldProcessor.process(jsonObject);
+        assertFalse(result);
+
+        jsonObject.set("amount", BigDecimal.valueOf(120L));
+        result = filterFieldProcessor.process(jsonObject);
+        assertTrue(result);
+    }
 
     /**
      * 没有前置过滤条件, 应该返回true
