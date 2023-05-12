@@ -8,16 +8,22 @@ import lombok.Data;
 import java.util.LinkedList;
 
 /**
- * 第前N条数据
+ * 当前行的第前N条数据
  */
 @Data
 @MergeType("LAGOBJECT")
 @Objective(useCompareField = false)
 public class LagObjectAggregateFunction<IN> implements AggregateFunction<IN, LinkedList<IN>, IN> {
 
+    /**
+     * 偏移量
+     */
     private int offset = 1;
 
-    private IN defaultValue = null;
+    /**
+     * 没有值, 返回默认值
+     */
+    private IN defaultValue;
 
     @Override
     public LinkedList<IN> createAccumulator() {
@@ -27,6 +33,7 @@ public class LagObjectAggregateFunction<IN> implements AggregateFunction<IN, Lin
     @Override
     public LinkedList<IN> add(IN input, LinkedList<IN> accumulator) {
         accumulator.add(input);
+        //删除offset之前的数据
         while (accumulator.size() > offset + 1) {
             accumulator.removeFirst();
         }
@@ -35,12 +42,15 @@ public class LagObjectAggregateFunction<IN> implements AggregateFunction<IN, Lin
 
     @Override
     public IN getResult(LinkedList<IN> accumulator) {
+        //如果没有到达第N个, 直接返回默认值
         if (accumulator.size() < offset + 1) {
             return defaultValue;
+            //如果刚好到达第N个, 返回头
         } else if (accumulator.size() == offset + 1) {
             return accumulator.getFirst();
         } else {
-            throw new RuntimeException("too more elements: " + accumulator);
+            //如果大于, 返回第accumulator.size() - offset - 1个
+            return accumulator.get(accumulator.size() - offset - 1);
         }
     }
 
