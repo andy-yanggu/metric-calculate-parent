@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * 占位字段单元测试类
  */
-public class OccupiedFieldAggregateFunctionTest {
+public class FirstFieldAggregateFunctionTest {
 
     @Test
     public void testMergeType() {

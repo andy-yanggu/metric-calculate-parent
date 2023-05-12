@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 /**
  * 取代字段单元测试类
  */
-public class ReplacedFieldAggregateFunctionTest {
+public class LastFieldAggregateFunctionTest {
 
     @Test
     public void testMergeType() {

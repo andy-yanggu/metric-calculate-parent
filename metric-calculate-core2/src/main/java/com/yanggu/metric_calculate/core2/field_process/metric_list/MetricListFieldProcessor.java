@@ -25,10 +25,15 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
+    @SneakyThrows
     @Override
-    public void init() throws Exception {
+    public void init() {
         if (CollUtil.isEmpty(metricExpressList)) {
             throw new RuntimeException("表达式列表为空");
+        }
+
+        if (CollUtil.isEmpty(fieldMap)) {
+            throw new RuntimeException("宽表字段为空");
         }
         this.metricFieldProcessorList = metricExpressList.stream()
                 .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
