@@ -156,10 +156,12 @@ public class FieldProcessorUtil {
 
     @SneakyThrows
     public static <IN> MixFieldProcessor<IN> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                  MixUnitUdafParam mixUnitUdafParam) {
+                                                                  MixUnitUdafParam mixUnitUdafParam,
+                                                                  AggregateFunctionFactory aggregateFunctionFactory) {
         MixFieldProcessor<IN> mixFieldProcessor = new MixFieldProcessor<>();
         mixFieldProcessor.setFieldMap(fieldMap);
         mixFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
+        mixFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
         mixFieldProcessor.init();
         return mixFieldProcessor;
     }
@@ -177,9 +179,9 @@ public class FieldProcessorUtil {
 
     @SneakyThrows
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-            Derive derive,
-            Map<String, Class<?>> fieldMap,
-            AggregateFunctionFactory aggregateFunctionFactory) {
+                                                                    Derive derive,
+                                                                    Map<String, Class<?>> fieldMap,
+                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
         AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
         String aggregateType = aggregateFunctionParam.getCalculateLogic();
 
@@ -218,7 +220,7 @@ public class FieldProcessorUtil {
             AggregateFunctionFactory.setUdafParam(aggregateFunction, mixUnitUdafParam.getParam());
 
             //初始化MixFieldProcessor
-            MixFieldProcessor<IN> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUnitUdafParam);
+            MixFieldProcessor<IN> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUnitUdafParam, aggregateFunctionFactory);
 
             AbstractMixAggregateFunction<OUT> abstractMixAggregateFunction = (AbstractMixAggregateFunction<OUT>) aggregateFunction;
 
@@ -254,9 +256,9 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseFieldProcessor(
-            BaseUdafParam baseUdafParam,
-            Map<String, Class<?>> fieldMap,
-            AggregateFunction<IN, ACC, OUT> aggregateFunction) {
+                                                            BaseUdafParam baseUdafParam,
+                                                            Map<String, Class<?>> fieldMap,
+                                                            AggregateFunction<IN, ACC, OUT> aggregateFunction) {
 
         String aggregateType = baseUdafParam.getAggregateType();
         FieldProcessor<JSONObject, IN> fieldProcessor;

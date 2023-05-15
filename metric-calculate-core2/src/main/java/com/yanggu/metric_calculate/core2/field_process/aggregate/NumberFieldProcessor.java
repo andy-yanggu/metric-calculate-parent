@@ -9,14 +9,12 @@ import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcess
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.List;
 import java.util.Map;
 
-@Getter
-@Setter
+@Data
 public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
     private BaseUdafParam udafParam;

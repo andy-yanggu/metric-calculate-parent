@@ -11,6 +11,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstFieldAgg
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.CollectionFieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.aggregate.MixFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.NumberFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.ObjectFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
@@ -24,10 +25,12 @@ import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
 import org.junit.Test;
 
 import java.util.*;
 
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static org.junit.Assert.*;
 
 public class FieldProcessorUtilTest {
@@ -143,6 +146,31 @@ public class FieldProcessorUtilTest {
         Expression expression2 = AviatorEvaluator.compile("field2", true);
         assertEquals(expression1, tempMultiFieldOrderFieldProcessor.getMetricFieldProcessorList().get(0).getMetricExpression());
         assertEquals(expression2, tempMultiFieldOrderFieldProcessor.getMetricFieldProcessorList().get(1).getMetricExpression());
+    }
+
+    @Test
+    public void testGetMixFieldProcessor() {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("id", Integer.class);
+        fieldMap.put("amount", String.class);
+
+        MixUnitUdafParam mixUnitUdafParam = new MixUnitUdafParam();
+        mixUnitUdafParam.setAggregateType("BASEMIX");
+        Map<String, BaseUdafParam> mixAggMap = new HashMap<>();
+        mixUnitUdafParam.setMixAggMap(mixAggMap);
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("SUM");
+        baseUdafParam.setMetricExpress("amount");
+        mixAggMap.put("SUM", baseUdafParam);
+
+        MixFieldProcessor<Object> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUnitUdafParam, getAggregateFunctionFactory());
+
+        assertEquals(fieldMap, mixFieldProcessor.getFieldMap());
+        assertEquals(mixUnitUdafParam, mixFieldProcessor.getMixUnitUdafParam());
+        assertEquals(getAggregateFunctionFactory(), mixFieldProcessor.getAggregateFunctionFactory());
+        Map<String, FieldProcessor<JSONObject, Object>> multiBaseAggProcessorMap = mixFieldProcessor.getMultiBaseAggProcessorMap();
+        assertEquals(1, multiBaseAggProcessorMap.size());
+        assertEquals(FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory().getAggregateFunction("SUM")), multiBaseAggProcessorMap.get("SUM"));
     }
 
     @Test
