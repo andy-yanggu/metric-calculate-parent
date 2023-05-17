@@ -7,7 +7,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,11 +45,11 @@ public class MapFieldProcessorTest {
 
         //out给in转账, 记录out给每个in转账的总金额
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
-        MapUnitUdafParam mapUnitUdafParam = JSONUtil.toBean(jsonString, MapUnitUdafParam.class);
+        MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
 
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
         aggregateFunctionFactory.init();
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, aggregateFunctionFactory, mapUnitUdafParam);
+        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, aggregateFunctionFactory, mapUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");

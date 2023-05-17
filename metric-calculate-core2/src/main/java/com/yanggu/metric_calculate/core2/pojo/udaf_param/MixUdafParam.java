@@ -8,7 +8,7 @@ import java.util.Map;
  * 混合聚合类型参数
  */
 @Data
-public class MixUnitUdafParam {
+public class MixUdafParam {
 
     /**
      * 聚合类型

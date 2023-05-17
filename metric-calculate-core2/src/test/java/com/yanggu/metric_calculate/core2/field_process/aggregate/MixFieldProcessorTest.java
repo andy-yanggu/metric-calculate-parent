@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,7 +46,7 @@ public class MixFieldProcessorTest {
     public void testInit3() {
         MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
         mixFieldProcessor.setFieldMap(fieldMap);
-        mixFieldProcessor.setMixUnitUdafParam(new MixUnitUdafParam());
+        mixFieldProcessor.setMixUdafParam(new MixUdafParam());
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
         assertEquals("map参数为空", runtimeException.getMessage());
@@ -57,8 +57,8 @@ public class MixFieldProcessorTest {
         MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
         mixFieldProcessor.setFieldMap(fieldMap);
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
-        MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
-        mixFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
+        MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
+        mixFieldProcessor.setMixUdafParam(mixUdafParam);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
         assertEquals("聚合函数工厂类为空", runtimeException.getMessage());
@@ -69,14 +69,14 @@ public class MixFieldProcessorTest {
         MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
         mixFieldProcessor.setFieldMap(fieldMap);
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
-        MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
-        mixFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
+        MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
+        mixFieldProcessor.setMixUdafParam(mixUdafParam);
         mixFieldProcessor.setAggregateFunctionFactory(getAggregateFunctionFactory());
 
         mixFieldProcessor.init();
 
         assertSame(fieldMap, mixFieldProcessor.getFieldMap());
-        assertSame(mixUnitUdafParam, mixFieldProcessor.getMixUnitUdafParam());
+        assertSame(mixUdafParam, mixFieldProcessor.getMixUdafParam());
         assertSame(getAggregateFunctionFactory(), mixFieldProcessor.getAggregateFunctionFactory());
         assertTrue(CollUtil.isNotEmpty(mixFieldProcessor.getMultiBaseAggProcessorMap()));
     }
@@ -85,9 +85,9 @@ public class MixFieldProcessorTest {
     public void process() throws Exception {
 
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
-        MixUnitUdafParam mixUnitUdafParam = JSONUtil.toBean(jsonString, MixUnitUdafParam.class);
+        MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
 
-        MixFieldProcessor<Map<String, Long>> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUnitUdafParam, getAggregateFunctionFactory());
+        MixFieldProcessor<Map<String, Long>> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, getAggregateFunctionFactory());
 
         JSONObject input1 = new JSONObject();
         input1.set("amount", 100L);

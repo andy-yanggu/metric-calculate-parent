@@ -54,7 +54,7 @@ public class AviatorTest {
         env.put("dayCount", new MapSequence(dayCount));
 
         Object execute = compile.execute(env);
-        assertEquals(1, execute);
+        assertEquals(1L, execute);
     }
 
     /**

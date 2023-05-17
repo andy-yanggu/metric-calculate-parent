@@ -24,8 +24,8 @@ import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
@@ -62,8 +62,7 @@ public class FieldProcessorUtil {
      * @return 时间字段处理器
      */
     public static TimeFieldProcessor getTimeFieldProcessor(TimeColumn timeColumn) {
-        TimeFieldProcessor timeFieldProcessor =
-                new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
         timeFieldProcessor.init();
         return timeFieldProcessor;
     }
@@ -154,38 +153,70 @@ public class FieldProcessorUtil {
         return tempMultiFieldOrderFieldProcessor;
     }
 
+    /**
+     * 混合类型字段处理器
+     *
+     * @param fieldMap
+     * @param mixUdafParam
+     * @param factory
+     * @return
+     * @param <IN>
+     */
     @SneakyThrows
     public static <IN> MixFieldProcessor<IN> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                  MixUnitUdafParam mixUnitUdafParam,
-                                                                  AggregateFunctionFactory aggregateFunctionFactory) {
+                                                                  MixUdafParam mixUdafParam,
+                                                                  AggregateFunctionFactory factory) {
         MixFieldProcessor<IN> mixFieldProcessor = new MixFieldProcessor<>();
         mixFieldProcessor.setFieldMap(fieldMap);
-        mixFieldProcessor.setMixUnitUdafParam(mixUnitUdafParam);
-        mixFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
+        mixFieldProcessor.setMixUdafParam(mixUdafParam);
+        mixFieldProcessor.setAggregateFunctionFactory(factory);
         mixFieldProcessor.init();
         return mixFieldProcessor;
     }
 
+    /**
+     * 映射型字段处理器
+     *
+     * @param fieldMap
+     * @param factory
+     * @param mapUdafParam
+     * @return
+     * @param <IN>
+     * @throws Exception
+     */
+    @SneakyThrows
     public static <IN> MapFieldProcessor<IN> getMapFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                  AggregateFunctionFactory aggregateFunctionFactory,
-                                                                  MapUnitUdafParam mapUdafParam) throws Exception {
+                                                                  AggregateFunctionFactory factory,
+                                                                  MapUdafParam mapUdafParam) {
         MapFieldProcessor<IN> mapFieldProcessor = new MapFieldProcessor<>();
         mapFieldProcessor.setFieldMap(fieldMap);
-        mapFieldProcessor.setMapUnitUdafParam(mapUdafParam);
-        mapFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
+        mapFieldProcessor.setMapUdafParam(mapUdafParam);
+        mapFieldProcessor.setAggregateFunctionFactory(factory);
         mapFieldProcessor.init();
         return mapFieldProcessor;
     }
 
+    /**
+     * 聚合字段处理器
+     * <p>包含度量字段和聚合函数</p>
+     *
+     * @param derive
+     * @param fieldMap
+     * @param factory
+     * @return
+     * @param <IN>
+     * @param <ACC>
+     * @param <OUT>
+     */
     @SneakyThrows
-    public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                                    Derive derive,
-                                                                    Map<String, Class<?>> fieldMap,
-                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
+    public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT>
+                                                    getAggregateFieldProcessor(Derive derive,
+                                                                               Map<String, Class<?>> fieldMap,
+                                                                               AggregateFunctionFactory factory) {
         AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
         String aggregateType = aggregateFunctionParam.getCalculateLogic();
 
-        AggregateFunction<IN, ACC, OUT> aggregateFunction = aggregateFunctionFactory.getAggregateFunction(aggregateType);
+        AggregateFunction<IN, ACC, OUT> aggregateFunction = factory.getAggregateFunction(aggregateType);
         Class<? extends AggregateFunction> aggregateFunctionClass = aggregateFunction.getClass();
 
         //如果是基本聚合类型(数值型、集合型、对象型)
@@ -201,40 +232,40 @@ public class FieldProcessorUtil {
 
         //如果是映射类型
         if (aggregateFunctionClass.isAnnotationPresent(MapType.class)) {
-            MapUnitUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
+            MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
             AggregateFunctionFactory.setUdafParam(aggregateFunction, mapUdafParam.getParam());
 
             BaseUdafParam valueUdafParam = mapUdafParam.getValueAggParam();
             AggregateFunction<Object, Object, Object> valueAggregateFunction
-                    = aggregateFunctionFactory.getAggregateFunction(valueUdafParam.getAggregateType());
+                    = factory.getAggregateFunction(valueUdafParam.getAggregateType());
             AggregateFunctionFactory.setUdafParam(valueAggregateFunction, valueUdafParam.getParam());
             ((AbstractMapAggregateFunction<?, Object, Object, Object, OUT>) aggregateFunction).setValueAggregateFunction(valueAggregateFunction);
 
-            MapFieldProcessor<IN> mapFieldProcessor = getMapFieldProcessor(fieldMap, aggregateFunctionFactory, mapUdafParam);
+            MapFieldProcessor<IN> mapFieldProcessor = getMapFieldProcessor(fieldMap, factory, mapUdafParam);
             return new AggregateFieldProcessor<>(mapFieldProcessor, aggregateFunction);
         }
 
         //如果是混合类型
         if (aggregateFunctionClass.isAnnotationPresent(Mix.class)) {
-            MixUnitUdafParam mixUnitUdafParam = aggregateFunctionParam.getMixUnitUdafParam();
-            AggregateFunctionFactory.setUdafParam(aggregateFunction, mixUnitUdafParam.getParam());
+            MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
+            AggregateFunctionFactory.setUdafParam(aggregateFunction, mixUdafParam.getParam());
 
             //初始化MixFieldProcessor
-            MixFieldProcessor<IN> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUnitUdafParam, aggregateFunctionFactory);
+            MixFieldProcessor<IN> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUdafParam, factory);
 
             AbstractMixAggregateFunction<OUT> abstractMixAggregateFunction = (AbstractMixAggregateFunction<OUT>) aggregateFunction;
 
             //设置表达式
-            String express = mixUnitUdafParam.getExpress();
+            String express = mixUdafParam.getExpress();
             Expression expression = AviatorEvaluator.getInstance().compile(express, true);
             abstractMixAggregateFunction.setExpression(expression);
 
             //设置mixAggregateFunctionMap
             Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
-            Map<String, BaseUdafParam> mixAggMap = mixUnitUdafParam.getMixAggMap();
+            Map<String, BaseUdafParam> mixAggMap = mixUdafParam.getMixAggMap();
             mixAggMap.forEach((tempParam, tempBaseUdafParam) -> {
                 AggregateFunction<Object, Object, Object> tempAggregateFunction =
-                        aggregateFunctionFactory.getAggregateFunction(tempBaseUdafParam.getAggregateType());
+                        factory.getAggregateFunction(tempBaseUdafParam.getAggregateType());
                 AggregateFunctionFactory.setUdafParam(tempAggregateFunction, tempBaseUdafParam.getParam());
 
                 mixAggregateFunctionMap.put(tempParam, tempAggregateFunction);

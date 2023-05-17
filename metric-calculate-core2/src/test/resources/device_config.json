@@ -20,7 +20,7 @@
       },
       "aggregateFunctionParam": {
         "calculateLogic": "BASEMIX",
-        "mixUnitUdafParam": {
+        "mixUdafParam": {
           "aggregateType": "BASEMIX",
           "mixAggMap": {
             "max_timestamp": {

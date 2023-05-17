@@ -5,9 +5,8 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUnitUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -19,7 +18,7 @@ import java.util.Map;
 @Data
 public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
-    private MixUnitUdafParam mixUnitUdafParam;
+    private MixUdafParam mixUdafParam;
 
     private Map<String, Class<?>> fieldMap;
 
@@ -33,10 +32,10 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
         }
-        if (mixUnitUdafParam == null) {
+        if (mixUdafParam == null) {
             throw new RuntimeException("混合参数为空");
         }
-        Map<String, BaseUdafParam> mixAggMap = mixUnitUdafParam.getMixAggMap();
+        Map<String, BaseUdafParam> mixAggMap = mixUdafParam.getMixAggMap();
         if (CollUtil.isEmpty(mixAggMap)) {
             throw new RuntimeException("map参数为空");
         }

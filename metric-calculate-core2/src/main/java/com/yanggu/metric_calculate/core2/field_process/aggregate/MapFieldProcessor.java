@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUnitUdafParam;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 
@@ -21,7 +21,7 @@ import java.util.Map;
 @Data
 public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
-    private MapUnitUdafParam mapUnitUdafParam;
+    private MapUdafParam mapUdafParam;
 
     private Map<String, Class<?>> fieldMap;
 
@@ -45,10 +45,10 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         //map的key字段处理器
         this.keyFieldProcessor =
-                FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, mapUnitUdafParam.getDistinctFieldList());
+                FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldList());
 
         //map的value字段处理器
-        BaseUdafParam valueAggParam = mapUnitUdafParam.getValueAggParam();
+        BaseUdafParam valueAggParam = mapUdafParam.getValueAggParam();
         AggregateFunction<Object, Object, Object> aggregateFunction =
                 aggregateFunctionFactory.getAggregateFunction(valueAggParam.getAggregateType());
         this.valueAggregateFieldProcessor =
@@ -63,11 +63,11 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     }
 
     private void check() {
-        if (mapUnitUdafParam == null) {
+        if (mapUdafParam == null) {
             throw new RuntimeException("映射类型udaf参数为空");
         }
 
-        if (mapUnitUdafParam.getValueAggParam() == null) {
+        if (mapUdafParam.getValueAggParam() == null) {
             throw new RuntimeException("value的聚合函数参数为空");
         }
 
@@ -75,7 +75,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
             throw new RuntimeException("宽表字段为空");
         }
 
-        if (CollUtil.isEmpty(mapUnitUdafParam.getDistinctFieldList())) {
+        if (CollUtil.isEmpty(mapUdafParam.getDistinctFieldList())) {
             throw new RuntimeException("去重字段列表为空");
         }
     }

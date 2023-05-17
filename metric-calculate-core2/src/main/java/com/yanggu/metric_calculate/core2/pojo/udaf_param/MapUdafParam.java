@@ -9,7 +9,7 @@ import java.util.Map;
  * 映射类型udaf参数
  */
 @Data
-public class MapUnitUdafParam {
+public class MapUdafParam {
 
     /**
      * 聚合类型
