@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core2.util;
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
+import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.aggregate_function.map.AbstractMapAggregateFunction;
@@ -257,6 +258,8 @@ public class FieldProcessorUtil {
 
             //设置表达式
             String express = mixUdafParam.getExpress();
+            //设置反射调用
+            AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
             Expression expression = AviatorEvaluator.getInstance().compile(express, true);
             abstractMixAggregateFunction.setExpression(expression);
 
