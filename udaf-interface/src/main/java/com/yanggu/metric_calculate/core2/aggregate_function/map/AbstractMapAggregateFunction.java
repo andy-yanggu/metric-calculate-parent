@@ -11,11 +11,11 @@ import java.util.Map;
 /**
  * 映射类型的基类
  *
- * @param <K> map的key
- * @param <V> map的value输入值
+ * @param <K>        map的key
+ * @param <V>        map的value输入值
  * @param <ValueACC> map的value聚合值
  * @param <ValueOUT> map的value输出值
- * @param <OUT> 输出值
+ * @param <OUT>      输出值
  */
 @Data
 public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT>
@@ -31,12 +31,18 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     @Override
     public Map<K, ValueACC> add(Pair<K, V> input, Map<K, ValueACC> accumulator) {
         K key = input.getKey();
-        V newValue = input.getValue();
 
-        ValueACC acc = accumulator.getOrDefault(key, valueAggregateFunction.createAccumulator());
-        acc = valueAggregateFunction.add(newValue, acc);
-        accumulator.put(key, acc);
+        ValueACC oldAcc = accumulator.getOrDefault(key, valueAggregateFunction.createAccumulator());
+        ValueACC newAcc = valueAggregateFunction.add(input.getValue(), oldAcc);
+        accumulator.put(key, newAcc);
         return accumulator;
+    }
+
+    @Override
+    public OUT getResult(Map<K, ValueACC> accumulator) {
+        Map<K, ValueOUT> map = new HashMap<>();
+        accumulator.forEach((tempKey, tempValueAcc) -> map.put(tempKey, valueAggregateFunction.getResult(tempValueAcc)));
+        return (OUT) map;
     }
 
     @Override
@@ -49,11 +55,4 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
         return thisAccumulator;
     }
 
-    @Override
-    public OUT getResult(Map<K, ValueACC> accumulator) {
-        Map<K, ValueOUT> map = new HashMap<>();
-        accumulator.forEach((tempKey, tempValueAcc) -> map.put(tempKey, valueAggregateFunction.getResult(tempValueAcc)));
-        return (OUT) map;
-    }
-    
 }
