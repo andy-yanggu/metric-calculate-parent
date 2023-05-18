@@ -2,15 +2,19 @@ package com.yanggu.metric_calculate.core2.util;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
+import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.exception.ExpressionSyntaxErrorException;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.aggregate_function.collection.ListObjectAggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.map.BaseMapAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.mix.BaseMixAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstFieldAggregateFunction;
+import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstObjectAggregateFunction;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
@@ -23,12 +27,14 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.Mult
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.*;
 
@@ -202,6 +208,161 @@ public class FieldProcessorUtilTest {
         assertEquals(FieldProcessorUtil.getBaseFieldProcessor(valueAggParam, fieldMap, new SumAggregateFunction<Integer>()), mapFieldProcessor.getValueAggregateFieldProcessor());
     }
 
+    /**
+     * 数值类型
+     */
+    @Test
+    public void testNumberGetAggregateFieldProcessor() {
+        AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
+        aggregateFunctionParam.setCalculateLogic("SUM");
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("SUM");
+        baseUdafParam.setMetricExpress("amount");
+        aggregateFunctionParam.setBaseUdafParam(baseUdafParam);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Integer.class);
+
+        AggregateFunctionFactory factory = getAggregateFunctionFactory();
+        AggregateFieldProcessor<Integer, Double, Double> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(aggregateFunctionParam, fieldMap, factory);
+
+        FieldProcessor<JSONObject, Integer> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, new SumAggregateFunction<>());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+        assertEquals(SumAggregateFunction.class, aggregateFieldProcessor.getAggregateFunction().getClass());
+    }
+
+    /**
+     * 对象类型
+     */
+    @Test
+    public void testObjectGetAggregateFieldProcessor() {
+        AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
+        aggregateFunctionParam.setCalculateLogic("FIRSTOBJECT");
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("FIRSTOBJECT");
+        aggregateFunctionParam.setBaseUdafParam(baseUdafParam);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Integer.class);
+
+        AggregateFunctionFactory factory = getAggregateFunctionFactory();
+        AggregateFieldProcessor<JSONObject, MutableObj<JSONObject>, JSONObject> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(aggregateFunctionParam, fieldMap, factory);
+
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, new FirstObjectAggregateFunction<>());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+        assertEquals(FirstObjectAggregateFunction.class, aggregateFieldProcessor.getAggregateFunction().getClass());
+    }
+
+    /**
+     * 集合类型
+     */
+    @Test
+    public void testCollectionGetAggregateFieldProcessor() {
+        AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
+        aggregateFunctionParam.setCalculateLogic("LISTOBJECT");
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("LISTOBJECT");
+        aggregateFunctionParam.setBaseUdafParam(baseUdafParam);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Integer.class);
+
+        AggregateFunctionFactory factory = getAggregateFunctionFactory();
+        AggregateFieldProcessor<JSONObject, List<JSONObject>, List<JSONObject>> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(aggregateFunctionParam, fieldMap, factory);
+
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, new ListObjectAggregateFunction<>());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+        assertEquals(new ListObjectAggregateFunction<JSONObject>(), aggregateFieldProcessor.getAggregateFunction());
+    }
+
+    /**
+     * 映射类型
+     */
+    @Test
+    public void testMapGetAggregateFieldProcessor() {
+        AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
+        aggregateFunctionParam.setCalculateLogic("BASEMAP");
+
+        MapUdafParam mapUdafParam = new MapUdafParam();
+        mapUdafParam.setAggregateType("BASEMAP");
+        mapUdafParam.setDistinctFieldList(CollUtil.toList("name"));
+
+        BaseUdafParam valueAggParam = new BaseUdafParam();
+        valueAggParam.setAggregateType("SUM");
+        valueAggParam.setMetricExpress("amount");
+
+        mapUdafParam.setValueAggParam(valueAggParam);
+        aggregateFunctionParam.setMapUdafParam(mapUdafParam);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("name", String.class);
+        fieldMap.put("amount", Integer.class);
+
+        AggregateFunctionFactory factory = getAggregateFunctionFactory();
+        AggregateFieldProcessor<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<MultiFieldDistinctKey, Double>> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(aggregateFunctionParam, fieldMap, factory);
+
+        FieldProcessor<JSONObject, Pair<MultiFieldDistinctKey, Integer>> baseFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, factory, mapUdafParam);
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+
+        BaseMapAggregateFunction<MultiFieldDistinctKey, Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();
+        baseMapAggregateFunction.setValueAggregateFunction(new SumAggregateFunction<>());
+        assertEquals(baseMapAggregateFunction, aggregateFieldProcessor.getAggregateFunction());
+    }
+
+    /**
+     * 混合类型
+     */
+    @Test
+    public void testMixGetAggregateFieldProcessor() {
+        AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
+        aggregateFunctionParam.setCalculateLogic("BASEMIX");
+
+        MixUdafParam mixUdafParam = new MixUdafParam();
+        mixUdafParam.setAggregateType("BASEMIX");
+
+        HashMap<String, BaseUdafParam> mixAggMap = new HashMap<>();
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("SUM");
+        baseUdafParam.setMetricExpress("amount");
+        mixAggMap.put("amount", baseUdafParam);
+        mixUdafParam.setMixAggMap(mixAggMap);
+
+        mixUdafParam.setExpress("amount");
+        aggregateFunctionParam.setMixUdafParam(mixUdafParam);
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Integer.class);
+
+        AggregateFunctionFactory factory = getAggregateFunctionFactory();
+
+        AggregateFieldProcessor<Map<String, Object>, Map<String, Object>, Double> aggregateFieldProcessor = FieldProcessorUtil.getAggregateFieldProcessor(aggregateFunctionParam, fieldMap, factory);
+
+        MixFieldProcessor<Map<String, Object>> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, factory);
+        assertEquals(mixFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+
+        BaseMixAggregateFunction<Double> baseMixAggregateFunction = new BaseMixAggregateFunction<>();
+        Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
+        mixAggregateFunctionMap.put("amount", new SumAggregateFunction<Integer>());
+        baseMixAggregateFunction.setMixAggregateFunctionMap(mixAggregateFunctionMap);
+        baseMixAggregateFunction.setExpression(AviatorEvaluator.compile("amount", true));
+        assertEquals(baseMixAggregateFunction, aggregateFieldProcessor.getAggregateFunction());
+    }
+
+    @Test
+    public void testInvalidGetAggregateFieldProcessor() {
+        AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
+        aggregateFunctionParam.setCalculateLogic("invalid");
+
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Integer.class);
+
+        AggregateFunctionFactory factory = Mockito.mock(AggregateFunctionFactory.class);
+        AggregateFunction<Object, Object, Object> aggregateFunction = Mockito.mock(AggregateFunction.class);
+        Mockito.when(factory.getAggregateFunction("invalid")).thenReturn(aggregateFunction);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> FieldProcessorUtil.getAggregateFieldProcessor(aggregateFunctionParam, fieldMap, factory));
+        assertEquals("暂不支持聚合类型: " + aggregateFunction.getClass().getName(), runtimeException.getMessage());
+    }
+
     @Test
     public void getBaseFieldProcessor_Numerical_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
@@ -241,11 +402,11 @@ public class FieldProcessorUtilTest {
     @Test
     public void getBaseFieldProcessor_Invalid_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("invalid");
+        baseUdafParam.setAggregateType("BASEMIX");
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        BaseMixAggregateFunction aggregateFunction = new BaseMixAggregateFunction();
+        BaseMixAggregateFunction<Double> aggregateFunction = new BaseMixAggregateFunction<>();
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, aggregateFunction));
-        assertEquals("不支持的聚合类型: invalid", runtimeException.getMessage());
+        assertEquals("不支持的聚合类型: BASEMIX", runtimeException.getMessage());
     }
 
 }

@@ -201,7 +201,7 @@ public class FieldProcessorUtil {
      * 聚合字段处理器
      * <p>包含度量字段和聚合函数</p>
      *
-     * @param derive
+     * @param aggregateFunctionParam
      * @param fieldMap
      * @param factory
      * @return
@@ -211,10 +211,9 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT>
-                                                    getAggregateFieldProcessor(Derive derive,
+                                                    getAggregateFieldProcessor(AggregateFunctionParam aggregateFunctionParam,
                                                                                Map<String, Class<?>> fieldMap,
                                                                                AggregateFunctionFactory factory) {
-        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
         String aggregateType = aggregateFunctionParam.getCalculateLogic();
 
         AggregateFunction<IN, ACC, OUT> aggregateFunction = factory.getAggregateFunction(aggregateType);

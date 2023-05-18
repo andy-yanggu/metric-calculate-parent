@@ -11,12 +11,12 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFi
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
-import lombok.Setter;
+import lombok.Data;
 import lombok.SneakyThrows;
 
 import java.util.Map;
 
-@Setter
+@Data
 public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
     private BaseUdafParam udafParam;

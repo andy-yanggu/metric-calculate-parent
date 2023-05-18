@@ -21,9 +21,9 @@ import java.util.Map;
 public abstract class AbstractMixAggregateFunction<OUT>
         implements AggregateFunction<Map<String, Object>, Map<String, Object>, OUT> {
 
-    private Map<String, AggregateFunction> mixAggregateFunctionMap;
+    protected Map<String, AggregateFunction> mixAggregateFunctionMap;
 
-    private Expression expression;
+    protected Expression expression;
 
     @Override
     public Map<String, Object> createAccumulator() {

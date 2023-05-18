@@ -14,11 +14,11 @@ import static org.junit.Assert.*;
 
 public class BaseMixAggregateFunctionTest {
 
-    private BaseMixAggregateFunction baseMixAggregateFunction;
+    private BaseMixAggregateFunction<Double> baseMixAggregateFunction;
 
     @Before
     public void init() {
-        baseMixAggregateFunction = new BaseMixAggregateFunction();
+        baseMixAggregateFunction = new BaseMixAggregateFunction<>();
         Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
         mixAggregateFunctionMap.put("test1", new SumAggregateFunction<>());
         mixAggregateFunctionMap.put("test2", new SumAggregateFunction<>());

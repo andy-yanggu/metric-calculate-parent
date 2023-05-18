@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.util.Collection;
@@ -12,11 +13,13 @@ import java.util.List;
 
 /**
  * 聚合字段处理器
+ * <p>主要有度量字段处理器和聚合函数</p>
  *
  * @param <IN>
  * @param <ACC>
  * @param <OUT>
  */
+@Getter
 public class AggregateFieldProcessor<IN, ACC, OUT> {
 
     /**
@@ -51,14 +54,13 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
      *
      * @param oldAcc 历史中间状态数据
      * @param in     度量值
-     * @return
+     * @return 新的累加器
      */
     public ACC add(ACC oldAcc, IN in) {
         if (oldAcc == null) {
-            oldAcc = aggregateFunction.createAccumulator();
+            oldAcc = createAcc();
         }
-        oldAcc = aggregateFunction.add(in, oldAcc);
-        return oldAcc;
+        return aggregateFunction.add(in, oldAcc);
     }
 
     /**
