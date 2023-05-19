@@ -37,4 +37,9 @@ public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
         return aggregateFieldProcessor.getMergeResult(values);
     }
 
+    @Override
+    public boolean isEmpty() {
+        return CollUtil.isEmpty(treeMap);
+    }
+
 }

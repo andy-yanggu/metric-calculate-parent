@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core2.table;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
@@ -20,7 +21,7 @@ import java.util.*;
  * @param <OUT>
  */
 @Data
-public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
+public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -71,6 +72,11 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         Long process = timeFieldProcessor.process(input);
         return query(process);
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return CollUtil.isEmpty(dataMap);
     }
 
     public DeriveMetricCalculateResult<OUT> query(Long timestamp) {

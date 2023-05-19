@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.table;
 
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
@@ -19,7 +20,7 @@ import java.util.Map;
  * @param <OUT>
  */
 @Data
-public class StatusWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
+public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -69,6 +70,11 @@ public class StatusWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         deriveMetricCalculateResult.setStatusList(newStatusList);
         deriveMetricCalculateResult.setResult(outFromInList);
         return deriveMetricCalculateResult;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return CollUtil.isEmpty(inList);
     }
 
 }

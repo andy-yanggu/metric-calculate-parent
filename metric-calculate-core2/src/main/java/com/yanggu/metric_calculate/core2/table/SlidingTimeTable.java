@@ -44,4 +44,9 @@ public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
         return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(from, to)));
     }
 
+    @Override
+    public boolean isEmpty() {
+        return CollUtil.isEmpty(map);
+    }
+
 }

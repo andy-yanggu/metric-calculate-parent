@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core2.table;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-public class SlidingCountWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
+public class SlidingCountWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private Integer limit;
 
@@ -41,6 +42,11 @@ public class SlidingCountWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(outFromInList);
         return deriveMetricCalculateResult;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return CollUtil.isEmpty(inList);
     }
 
 }

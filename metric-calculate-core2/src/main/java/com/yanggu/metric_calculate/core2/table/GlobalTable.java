@@ -13,7 +13,7 @@ import lombok.Data;
  * @param <OUT>
  */
 @Data
-public class GlobalTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
+public class GlobalTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private ACC accumulator;
 
@@ -33,6 +33,11 @@ public class GlobalTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(out);
         return deriveMetricCalculateResult;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return accumulator == null;
     }
 
 }

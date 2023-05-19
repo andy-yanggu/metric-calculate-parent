@@ -2,10 +2,6 @@ package com.yanggu.metric_calculate.core2.aggregate_function.mix;
 
 
 import com.googlecode.aviator.Expression;
-import com.googlecode.aviator.runtime.type.seq.ArraySequence;
-import com.googlecode.aviator.runtime.type.seq.CharSeqSequence;
-import com.googlecode.aviator.runtime.type.seq.IterableSequence;
-import com.googlecode.aviator.runtime.type.seq.MapSequence;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import lombok.Data;
 
@@ -50,23 +46,7 @@ public abstract class AbstractMixAggregateFunction<OUT>
             if (result == null) {
                 return;
             }
-            Class<?> clazz = result.getClass();
-            //如果是数组
-            if (clazz.isArray()) {
-                env.put(tempKey, new ArraySequence(result));
-                //如果是Map
-            } else if (result instanceof Map) {
-                env.put(tempKey, new MapSequence(((Map<?, ?>) result)));
-                //如果是可遍历的(List、Set)
-            } else if (result instanceof Iterable) {
-                env.put(tempKey, new IterableSequence((Iterable<Object>) result));
-                //如果是字符串
-            } else if (result instanceof String) {
-                env.put(tempKey, new CharSeqSequence((CharSequence) result));
-            } else {
-                //除此之外的都是标量, 直接放入原始数据即可
-                env.put(tempKey, result);
-            }
+            env.put(tempKey, result);
         });
         return (OUT) expression.execute(env);
     }
