@@ -31,9 +31,16 @@ public class SlidingCountWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+    public DeriveMetricCalculateResult<OUT> query() {
+        return query(null);
+    }
+
+    @Override
+    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         OUT outFromInList = aggregateFieldProcessor.getOutFromInList(inList);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(outFromInList);
+        return deriveMetricCalculateResult;
     }
 
 }

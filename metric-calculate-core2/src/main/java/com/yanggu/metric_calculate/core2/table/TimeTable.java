@@ -36,13 +36,25 @@ public abstract class TimeTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     public abstract void put(Long timestamp, IN in);
 
     @Override
-    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+    public DeriveMetricCalculateResult<OUT> query() {
+        return query(timestamp);
+    }
+
+    @Override
+    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+        Long process = timeFieldProcessor.process(input);
+        return query(process);
+    }
+
+    public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindow timeWindow = timeWindowList.get(0);
         OUT query = query(timeWindow.getWindowStart(), true, timeWindow.getWindowEnd(), false);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(query);
         deriveMetricCalculateResult.setStartTime(DateUtils.formatDateTime(timeWindow.getWindowStart()));
         deriveMetricCalculateResult.setEndTime(DateUtils.formatDateTime(timeWindow.getWindowEnd()));
+        return deriveMetricCalculateResult;
     }
 
     /**

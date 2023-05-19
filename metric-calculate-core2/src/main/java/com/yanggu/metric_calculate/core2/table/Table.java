@@ -40,7 +40,14 @@ public abstract class Table<IN, ACC, OUT> {
      *
      * @return
      */
-    public abstract void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult);
+    public abstract DeriveMetricCalculateResult<OUT> query();
+
+    /**
+     * 查询操作
+     *
+     * @return
+     */
+    public abstract DeriveMetricCalculateResult<OUT> query(JSONObject input);
 
     /**
      * 删除过期数据

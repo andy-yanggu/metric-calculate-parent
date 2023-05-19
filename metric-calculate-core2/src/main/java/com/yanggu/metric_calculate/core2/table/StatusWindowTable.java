@@ -49,15 +49,26 @@ public class StatusWindowTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+    public DeriveMetricCalculateResult<OUT> query() {
+        OUT outFromInList = aggregateFieldProcessor.getOutFromInList(inList);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
+        deriveMetricCalculateResult.setStatusList(statusList);
+        deriveMetricCalculateResult.setResult(outFromInList);
+        return deriveMetricCalculateResult;
+    }
+
+    @Override
+    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         List<Object> newStatusList = metricListFieldProcessor.process(input);
         //如果状态不相同, 清空数据
         if (!newStatusList.equals(statusList)) {
             inList.clear();
         }
         OUT outFromInList = aggregateFieldProcessor.getOutFromInList(inList);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setStatusList(newStatusList);
         deriveMetricCalculateResult.setResult(outFromInList);
+        return deriveMetricCalculateResult;
     }
 
 }

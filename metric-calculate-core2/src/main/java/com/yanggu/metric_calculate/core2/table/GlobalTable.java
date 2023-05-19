@@ -23,9 +23,16 @@ public class GlobalTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+    public DeriveMetricCalculateResult<OUT> query() {
+        return query(null);
+    }
+
+    @Override
+    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         OUT out = aggregateFieldProcessor.getOutFromAcc(accumulator);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(out);
+        return deriveMetricCalculateResult;
     }
 
 }

@@ -33,15 +33,33 @@ public class MetricCube<IN, ACC, OUT> {
     /**
      * 查询指标数据
      *
+     * @return
+     */
+    public DeriveMetricCalculateResult<OUT> query() {
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query();
+        if (deriveMetricCalculateResult == null) {
+            return null;
+        }
+        deriveMetricCalculateResult.setKey(dimensionSet.getKey());
+        deriveMetricCalculateResult.setName(dimensionSet.getMetricName());
+        deriveMetricCalculateResult.setDimensionMap(dimensionSet.getDimensionMap());
+        return deriveMetricCalculateResult;
+    }
+
+    /**
+     * 查询指标数据
+     *
      * @param input
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
-        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query(input);
+        if (deriveMetricCalculateResult == null) {
+            return null;
+        }
         deriveMetricCalculateResult.setKey(dimensionSet.getKey());
         deriveMetricCalculateResult.setName(dimensionSet.getMetricName());
         deriveMetricCalculateResult.setDimensionMap(dimensionSet.getDimensionMap());
-        table.query(input, deriveMetricCalculateResult);
         return deriveMetricCalculateResult;
     }
 

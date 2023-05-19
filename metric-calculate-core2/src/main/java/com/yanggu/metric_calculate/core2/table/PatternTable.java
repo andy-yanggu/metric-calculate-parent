@@ -63,7 +63,17 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
     }
 
     @Override
-    public void query(JSONObject input, DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
+    public DeriveMetricCalculateResult<OUT> query() {
+        return query(timestamp);
+    }
+
+    @Override
+    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+        Long process = timeFieldProcessor.process(input);
+        return query(process);
+    }
+
+    public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindow timeWindow = timeWindowList.get(0);
         long from = timeWindow.getWindowStart();
@@ -75,7 +85,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         NavigableMap<Long, IN> endTable = dataMap.lastEntry().getValue()
                 .subMap(from, fromInclusive, to, toInclusive);
         if (endTable.isEmpty()) {
-            return;
+            return null;
         }
 
         //从第一个节点进行截取数据
@@ -84,7 +94,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
         //判断第一个节点是否有数据
         if (nodeTable.isEmpty()) {
-            return;
+            return null;
         }
 
         TreeMap<Long, IN> nextTable = null;
@@ -111,7 +121,7 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
         }
 
         if (nextTable == null || nextTable.values().isEmpty()) {
-            return;
+            return null;
         }
 
         //创建累加器
@@ -124,7 +134,9 @@ public class PatternTable<IN, ACC, OUT> extends Table<IN, ACC, OUT> {
 
         //从累加器中获取数据
         OUT out = aggregateFieldProcessor.getOutFromAcc(acc);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(out);
+        return deriveMetricCalculateResult;
     }
 
 }

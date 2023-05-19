@@ -4,12 +4,17 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.github.xiaoymin.knife4j.annotations.DynamicParameter;
+import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
 import com.google.common.util.concurrent.Striped;
 import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
+import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
@@ -35,6 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Api(tags = "指标计算接口")
@@ -242,6 +248,62 @@ public class MetricCalculateController implements ApplicationRunner {
         return null;
     }
 
+    /**
+     * 全量铺底接口, 计算宽表下的所有指标
+     */
+    @ApiOperation("全量铺底（计算所有指标数据）")
+    @PostMapping("/full-update")
+    public ApiResponse<Object> fullUpdate(@RequestBody List<JSONObject> dataList) {
+        MetricCalculate metricCalculate = getMetricCalculate(dataList.get(0));
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            //deriveMetricCalculate.getDimensionSetProcessor().process()
+            //table.getInFromInput()
+        }
+        return null;
+    }
+
+    @ApiOperation("查询派生指标数据")
+    @PostMapping("/query-derive-data")
+    @DynamicParameters(name = "dimensionJson", properties = {
+            @DynamicParameter(name = "name1", value = "value1", example = "key是维度名, value是维度值"),
+            @DynamicParameter(name = "name2", value = "value2", example = "多个维度写多个kv")
+    })
+    public ApiResponse<Object> queryDeriveData(@ApiParam("数据明细宽表id") @RequestParam Long tableId,
+                                               @ApiParam(value = "维度json数据") @RequestBody LinkedHashMap<String, Object> dimensionMap) {
+        ApiResponse<Object> apiResponse = new ApiResponse<>();
+
+        DataDetailsWideTable table = magiccubeClient.getTableAndMetricByTableId(tableId);
+        if (table == null || table.getId() == null) {
+            throw new RuntimeException("传入的tableId: " + tableId + "有误");
+        }
+
+        List<Derive> deriveList = table.getDerive();
+        if (CollUtil.isEmpty(deriveList)) {
+            return apiResponse;
+        }
+        List<DimensionSet> dimensionList = deriveList.stream()
+                .map(tempDerive -> {
+                    DimensionSet dimension = new DimensionSet();
+                    dimension.setKey(tableId + "_" + tempDerive.getId());
+                    dimension.setMetricName(tempDerive.getName());
+                    dimension.setDimensionMap(dimensionMap);
+                    return dimension;
+                })
+                .collect(Collectors.toList());
+        Map<DimensionSet, MetricCube> dimensionMetricDataMap = deriveMetricMiddleStore.batchGet(dimensionList);
+        if (CollUtil.isEmpty(dimensionMetricDataMap)) {
+            return apiResponse;
+        }
+        Map<String, Object> returnMap = new HashMap<>();
+        dimensionMetricDataMap.values().forEach(tempMetricData -> {
+            DeriveMetricCalculateResult deriveMetricCalculateResult = tempMetricData.query();
+            returnMap.put(deriveMetricCalculateResult.getKey(), deriveMetricCalculateResult);
+        });
+        apiResponse.setData(returnMap);
+        return apiResponse;
+    }
+
     private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject detail,
                                                                  MetricCalculate dataWideTable,
                                                                  boolean update) {
@@ -349,7 +411,7 @@ public class MetricCalculateController implements ApplicationRunner {
     }
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
+    public void run(ApplicationArguments args) {
         queryMetric();
     }
 
