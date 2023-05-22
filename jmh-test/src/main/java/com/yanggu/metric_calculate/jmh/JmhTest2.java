@@ -1,14 +1,13 @@
 package com.yanggu.metric_calculate.jmh;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import org.openjdk.jmh.annotations.*;
@@ -36,18 +35,16 @@ public class JmhTest2 {
 
     @Setup(Level.Trial)
     public static void setup() throws Exception {
-        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("test3.json");
+        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("metric_config.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
         MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
-        MetricUtil.getFieldMap(tempMetricCalculate);
 
-        Derive derive = tempMetricCalculate.getDerive().get(0);
-        deriveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
-        DeriveMetricMiddleHashMapStore deriveMetricMiddleHashMapStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleHashMapStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapStore);
+        MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
+        DeriveMetricCalculate<Double, Double, Double> tempDeriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
+        deriveMetricCalculate = tempDeriveMetricCalculate;
 
-        deriveMetricCalculate1 = MetricUtil.initDerive(derive, tempMetricCalculate);
+        deriveMetricCalculate1 = new DeriveMetricCalculate<>();
+        BeanUtil.copyProperties(tempDeriveMetricCalculate, deriveMetricCalculate1);
         DeriveMetricMiddleHashMapKryoStore deriveMetricMiddleHashMapKryoStore = new DeriveMetricMiddleHashMapKryoStore();
         deriveMetricMiddleHashMapKryoStore.init();
         deriveMetricCalculate1.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);
@@ -60,7 +57,7 @@ public class JmhTest2 {
         tempInput.set("debit_amt_out", "800");
         tempInput.set("trans_timestamp", "1679887968782");
 
-        tempInput = MetricUtil.getParam(tempInput, MetricUtil.getFieldMap(tempMetricCalculate));
+        tempInput = metricCalculate.getParam(tempInput);
 
         input = tempInput;
     }

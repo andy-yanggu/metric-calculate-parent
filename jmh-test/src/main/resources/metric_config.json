@@ -19,14 +19,14 @@
         "timeFormat": "TIMESTAMP"
       },
       "filter": null,
-      "aggregateFunctionParam" : {
+      "aggregateFunctionParam": {
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress":"debit_amt_out"
+          "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -59,10 +59,10 @@
         "calculateLogic": "MIN",
         "baseUdafParam": {
           "aggregateType": "MIN",
-          "metricExpress":"debit_amt_out"
+          "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -108,7 +108,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -147,7 +147,7 @@
           ]
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -183,7 +183,7 @@
           "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "SLIDING_COUNT_WINDOW",
         "limit": 5
       },
@@ -220,7 +220,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -264,7 +264,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -306,7 +306,7 @@
           }
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -337,7 +337,7 @@
       "filter": null,
       "aggregateFunctionParam": {
         "calculateLogic": "BASEMIX",
-        "mixUnitUdafParam": {
+        "mixUdafParam": {
           "aggregateType": "BASEMIX",
           "mixAggMap": {
             "zhangsan_sum_amount": {
@@ -352,7 +352,7 @@
           "express": "zhangsan_sum_amount / total_sum_amount"
         }
       },
-      "windowParam" : {
+      "windowParam": {
         "windowType": "TUMBLING_TIME_WINDOW",
         "duration": 1,
         "timeUnit": "DAY"
@@ -386,36 +386,32 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
-        },
-        "isCep": true,
-        "chainPattern": {
-          "aggregateType": "PATTERN",
-          "nodePatternList": [
-            {
-              "index": 0,
-              "name": "start",
-              "matchExpress": "debit_amt_out > 100",
-              "interval": 0
-            },
-            {
-              "index": 1,
-              "name": "mid",
-              "matchExpress": "debit_amt_out > 200",
-              "interval": 10
-            },
-            {
-              "index": 2,
-              "name": "end",
-              "matchExpress": "debit_amt_out > 300",
-              "interval": 10
-            }
-          ]
         }
       },
-      "windowParam" : {
-        "windowType": "TUMBLING_TIME_WINDOW",
+      "windowParam": {
+        "windowType": "EVENT_WINDOW",
         "duration": 1,
-        "timeUnit": "DAY"
+        "timeUnit": "DAY",
+        "nodePatternList": [
+          {
+            "index": 0,
+            "name": "start",
+            "matchExpress": "debit_amt_out > 100",
+            "interval": 0
+          },
+          {
+            "index": 1,
+            "name": "mid",
+            "matchExpress": "debit_amt_out > 200",
+            "interval": 10
+          },
+          {
+            "index": 2,
+            "name": "end",
+            "matchExpress": "debit_amt_out > 300",
+            "interval": 10
+          }
+        ]
       },
       "roundAccuracy": {
         "useAccuracy": false,
@@ -440,14 +436,82 @@
         "timeFormat": "TIMESTAMP"
       },
       "filter": null,
-      "aggregateFunctionParam" : {
+      "aggregateFunctionParam": {
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress":"debit_amt_out"
+          "metricExpress": "debit_amt_out"
         }
       },
-      "windowParam" : {
+      "windowParam": {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 12,
+      "name": "first_trade_timestamp",
+      "displayName": "首次交易时间戳",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "FIRSTFIELD",
+        "baseUdafParam": {
+          "aggregateType": "FIRSTFIELD",
+          "retainExpress": "trans_timestamp"
+        }
+      },
+      "windowParam": {
+        "windowType": "GLOBAL_WINDOW"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 13,
+      "name": "status_sum_debit_asset",
+      "displayName": "借方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
         "windowType": "SLIDING_COUNT_WINDOW",
         "limit": 5
       },
@@ -461,55 +525,68 @@
   "fields": [
     {
       "name": "trans_no",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "trans_jnls_no",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "account_no_out",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "account_no_in",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "credit_amt_out",
-      "valueType": "DOUBLE"
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
     },
     {
       "name": "credit_amt_in",
-      "valueType": "DOUBLE"
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
     },
     {
       "name": "debit_amt_out",
-      "valueType": "DOUBLE"
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
     },
     {
       "name": "debit_amt_in",
-      "valueType": "DOUBLE"
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
     },
     {
       "name": "d_c_flag_out",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "d_c_flag_in",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "trans_date",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "trans_time",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "trans_timestamp",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     }
   ]
 }

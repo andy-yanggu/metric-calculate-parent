@@ -5,11 +5,8 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 
@@ -17,20 +14,18 @@ import java.io.InputStream;
 
 /**
  * 火焰图测试代码
+ * <p>找出代码运行的瓶颈</p>
  */
 public class JmhTest3 {
 
     public static void main(String[] args) {
-        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("test3.json");
+        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("metric_config.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
-        MetricUtil.getFieldMap(tempMetricCalculate);
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {
+        }, true);
 
-        Derive derive = tempMetricCalculate.getDerive().get(0);
-        DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = MetricUtil.initDerive(derive, tempMetricCalculate);
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleStore.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
+        MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
+        DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
 
         JSONObject tempInput = new JSONObject();
         tempInput.set("account_no_out", "000000000011");
@@ -40,8 +35,7 @@ public class JmhTest3 {
         tempInput.set("debit_amt_out", "800");
         tempInput.set("trans_timestamp", "1679887968782");
 
-        tempInput = MetricUtil.getParam(tempInput, MetricUtil.getFieldMap(tempMetricCalculate));
-
+        tempInput = metricCalculate.getParam(tempInput);
 
         for (int i = 0; i < 100000000; i++) {
             DeriveMetricCalculateResult<Double> deriveMetricCalculateResults = deriveMetricCalculate.stateExec(tempInput);

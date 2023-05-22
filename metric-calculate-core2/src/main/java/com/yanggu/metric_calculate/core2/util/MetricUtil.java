@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core2.util;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.convert.Convert;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
@@ -93,6 +92,7 @@ public class MetricUtil {
                 RealFieldCalculate<Object> realFieldCalculate = new RealFieldCalculate<>();
                 realFieldCalculate.setColumnName(fields.getName());
                 realFieldCalculate.setDataClass((Class<Object>) fields.getValueType().getType());
+                realFieldCalculate.init();
                 fieldCalculateList.add(realFieldCalculate);
                 //虚拟字段
             } else if (VIRTUAL.equals(fieldType)) {
@@ -102,6 +102,8 @@ public class MetricUtil {
                 virtualFieldCalculate.setFieldMap(metricCalculate.getFieldMap());
                 virtualFieldCalculate.init();
                 fieldCalculateList.add(virtualFieldCalculate);
+            } else {
+                throw new RuntimeException("字段类型异常");
             }
         }
         metricCalculate.setFieldCalculateList(fieldCalculateList);
@@ -209,38 +211,6 @@ public class MetricUtil {
         fields.forEach(temp -> fieldMap.put(temp.getName(), temp.getValueType().getType()));
         metricCalculate.setFieldMap(fieldMap);
         return fieldMap;
-    }
-
-    /**
-     * 从原始数据中提取数据, 进行手动数据类型转换
-     * <p>防止输入的数据类型和数据明细宽表定义的数据类型不匹配
-     * <p>主要是数值型
-     *
-     * @param input    输入的数据
-     * @param fieldMap 宽表字段名称和数据类型
-     * @return
-     */
-    public static JSONObject getParam(JSONObject input, Map<String, Class<?>> fieldMap) {
-        if (CollUtil.isEmpty((Map<?, ?>) input)) {
-            throw new RuntimeException("输入数据为空");
-        }
-
-        if (CollUtil.isEmpty(fieldMap)) {
-            throw new RuntimeException("宽表字段为空");
-        }
-
-        JSONObject returnData = new JSONObject();
-        fieldMap.forEach((key, tempDataClass) -> {
-            Object value = input.get(key);
-            if (value == null) {
-                return;
-            }
-            if (!value.getClass().equals(tempDataClass)) {
-                value = Convert.convert(tempDataClass, value);
-            }
-            returnData.set(key, value);
-        });
-        return returnData;
     }
 
 }
