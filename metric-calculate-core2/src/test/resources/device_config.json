@@ -46,17 +46,20 @@
   "fields": [
     {
       "name": "device_id",
-      "valueType": "STRING"
+      "valueType": "STRING",
+      "fieldType": "REAL"
     },
     {
       "name": "status",
       "valueType": "LONG",
-      "description": "设备状态0表示离线, 1表示在线"
+      "description": "设备状态0表示离线, 1表示在线",
+      "fieldType": "REAL"
     },
     {
       "name": "timestamp",
       "valueType": "LONG",
-      "description": "数据上报的时间戳"
+      "description": "数据上报的时间戳",
+      "fieldType": "REAL"
     }
   ]
 }
