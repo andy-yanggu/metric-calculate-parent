@@ -1,7 +1,9 @@
 package com.yanggu.metric_calculate.core2.field_process.multi_field_order;
 
 import com.google.common.collect.Ordering;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
 import java.util.ArrayList;
@@ -11,6 +13,8 @@ import java.util.List;
  * 多字段排序
  */
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderCompareKey> {
 
     private List<FieldOrder> fieldOrderList;

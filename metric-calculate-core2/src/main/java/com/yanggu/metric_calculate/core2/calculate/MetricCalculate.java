@@ -70,8 +70,8 @@ public class MetricCalculate extends DataDetailsWideTable {
     /**
      * 从原始数据中提取数据, 进行手动数据类型转换
      * <p>虚拟类型的字段进行计算</p>
-     * <p>防止输入的数据类型和数据明细宽表定义的数据类型不匹配
-     * <p>主要是数值型
+     * <p>防止输入的数据类型和数据明细宽表定义的数据类型不匹配</p>
+     * <p>主要是数值型</p>
      *
      * @param input
      * @return
