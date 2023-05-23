@@ -17,4 +17,10 @@ public class ApiResponse<T> {
         return new ApiResponse<>();
     }
 
+    public static <T> ApiResponse<T> success(T data) {
+        ApiResponse<T> apiResponse = new ApiResponse<>();
+        apiResponse.setData(data);
+        return apiResponse;
+    }
+
 }
