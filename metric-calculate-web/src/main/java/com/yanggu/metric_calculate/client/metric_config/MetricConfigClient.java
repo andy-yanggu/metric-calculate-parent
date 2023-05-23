@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.client.magiccube;
+package com.yanggu.metric_calculate.client.metric_config;
 
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 /**
- * 获取magiccube指标、宽表相关定义
+ * 获取指标、宽表相关定义
  */
-@FeignClient(name = "magiccube-api", url = "${feign.magiccube-api.host}")
-public interface MagicCubeClient {
+@FeignClient(name = "metric-config-api", url = "${feign.metric-config-api.host}")
+public interface MetricConfigClient {
 
     /**
      * 根据数据明细宽表id获取明细宽表以及派生指标和复合指标

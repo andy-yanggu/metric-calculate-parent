@@ -2,12 +2,11 @@ package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.util.concurrent.Striped;
-import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
+import com.yanggu.metric_calculate.client.metric_config.MetricConfigClient;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import io.swagger.annotations.Api;
@@ -41,7 +40,7 @@ public class MetricConfigController implements ApplicationRunner {
     private final Striped<ReadWriteLock> readWriteLockStriped = Striped.lazyWeakReadWriteLock(20);
 
     @Autowired
-    private MagicCubeClient magiccubeClient;
+    private MetricConfigClient metricConfigClient;
 
     @Autowired
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
@@ -72,21 +71,16 @@ public class MetricConfigController implements ApplicationRunner {
     public ApiResponse<Object> updateDeriveMetric(@ApiParam("数据明细宽表id") @RequestParam Long tableId) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
 
-        DataDetailsWideTable table = magiccubeClient.getTableAndMetricByTableId(tableId);
+        DataDetailsWideTable table = metricConfigClient.getTableAndMetricByTableId(tableId);
         if (table == null || table.getId() == null) {
             throw new RuntimeException("传入的tableId: " + tableId + "有误");
         }
 
-        List<Derive> deriveList = table.getDerive();
-        if (CollUtil.isEmpty(deriveList)) {
-            return apiResponse;
-        }
-
+        //初始化指标计算类
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(table);
 
-        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
-
         //更新指标数据
+        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
         Lock writeLock = readWriteLock.writeLock();
         writeLock.lock();
         try {
@@ -137,7 +131,7 @@ public class MetricConfigController implements ApplicationRunner {
     private void queryMetric() {
         log.info("load metric from DB");
         //获取所有宽表id
-        List<Long> allTableId = magiccubeClient.getAllTableId();
+        List<Long> allTableId = metricConfigClient.getAllTableId();
         allTableId.parallelStream().forEach(tempTableId -> {
             ReadWriteLock readWriteLock = readWriteLockStriped.get(tempTableId);
             Lock writeLock = readWriteLock.writeLock();
@@ -158,7 +152,7 @@ public class MetricConfigController implements ApplicationRunner {
 
     private MetricCalculate buildMetric(Long tableId) {
         //根据明细宽表id查询指标数据和宽表数据
-        DataDetailsWideTable tableData = magiccubeClient.getTableAndMetricByTableId(tableId);
+        DataDetailsWideTable tableData = metricConfigClient.getTableAndMetricByTableId(tableId);
         if (tableData == null || tableData.getId() == null) {
             log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
             throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);

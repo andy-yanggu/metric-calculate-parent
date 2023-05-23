@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.controller;
 import cn.hutool.core.collection.CollUtil;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameter;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
-import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
+import com.yanggu.metric_calculate.client.metric_config.MetricConfigClient;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
@@ -30,7 +30,7 @@ import java.util.List;
 public class MetricDataController {
 
     @Autowired
-    private MagicCubeClient magiccubeClient;
+    private MetricConfigClient metricConfigClient;
 
     @Autowired
     @Qualifier("redisDeriveMetricMiddleStore")
@@ -47,7 +47,7 @@ public class MetricDataController {
                                                @ApiParam(value = "维度json数据") @RequestBody LinkedHashMap<String, Object> dimensionMap) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
 
-        DataDetailsWideTable table = magiccubeClient.getTableAndMetricByTableId(tableId);
+        DataDetailsWideTable table = metricConfigClient.getTableAndMetricByTableId(tableId);
         if (table == null || table.getId() == null) {
             throw new RuntimeException("传入的tableId: " + tableId + "有误");
         }
