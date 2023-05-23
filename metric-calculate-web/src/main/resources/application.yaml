@@ -31,6 +31,10 @@ management:
         base-path: /actuator            # 指定上下文路径，启用相应端点
         include: health,shutdown
 
+#feign客户端url配置
 feign:
   magiccube-api:
     host: http://localhost:${server.port}
+
+knife4j:
+  enable: true

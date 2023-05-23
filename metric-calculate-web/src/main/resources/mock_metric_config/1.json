@@ -337,7 +337,7 @@
       "filter": null,
       "aggregateFunctionParam": {
         "calculateLogic": "BASEMIX",
-        "mixUnitUdafParam": {
+        "mixUdafParam": {
           "aggregateType": "BASEMIX",
           "mixAggMap": {
             "zhangsan_sum_amount": {

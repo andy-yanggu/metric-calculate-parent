@@ -62,8 +62,7 @@ public class MetricUtil {
         metricCalculate.setMetricTypeMap(metricTypeMap);
 
         //初始化宽表字段
-        Map<String, Class<?>> fieldMap = getFieldMap(metricCalculate);
-        metricCalculate.setFieldMap(fieldMap);
+        setFieldMap(metricCalculate);
 
         //初始化字段计算
         initFieldCalculate(metricCalculate);
@@ -198,7 +197,7 @@ public class MetricUtil {
         return deriveMetricCalculate;
     }
 
-    public static Map<String, Class<?>> getFieldMap(MetricCalculate metricCalculate) {
+    public static void setFieldMap(MetricCalculate metricCalculate) {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }
@@ -210,7 +209,6 @@ public class MetricUtil {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fields.forEach(temp -> fieldMap.put(temp.getName(), temp.getValueType().getType()));
         metricCalculate.setFieldMap(fieldMap);
-        return fieldMap;
     }
 
 }

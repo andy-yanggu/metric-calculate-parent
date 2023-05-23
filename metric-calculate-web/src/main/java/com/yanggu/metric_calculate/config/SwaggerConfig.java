@@ -9,12 +9,14 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import springfox.documentation.swagger2.annotations.EnableSwagger2WebMvc;
 
 /**
  * knife4j的配置类
  */
 @Configuration
 @EnableKnife4j
+@EnableSwagger2WebMvc
 public class SwaggerConfig {
 
     @Value("${spring.application.name}")

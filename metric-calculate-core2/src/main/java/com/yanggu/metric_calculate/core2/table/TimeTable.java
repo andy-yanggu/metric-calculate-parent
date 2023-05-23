@@ -50,6 +50,9 @@ public abstract class TimeTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT
         List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindow timeWindow = timeWindowList.get(0);
         OUT query = query(timeWindow.getWindowStart(), true, timeWindow.getWindowEnd(), false);
+        if (query == null) {
+            return null;
+        }
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(query);
         deriveMetricCalculateResult.setStartTime(DateUtils.formatDateTime(timeWindow.getWindowStart()));

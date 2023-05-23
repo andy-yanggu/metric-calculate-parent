@@ -32,35 +32,43 @@ public class MetricCube<IN, ACC, OUT> {
 
     /**
      * 查询指标数据
+     * <p>实时查询</p>
      *
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query() {
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query();
-        if (deriveMetricCalculateResult == null) {
-            return null;
-        }
-        deriveMetricCalculateResult.setKey(dimensionSet.getKey());
-        deriveMetricCalculateResult.setName(dimensionSet.getMetricName());
-        deriveMetricCalculateResult.setDimensionMap(dimensionSet.getDimensionMap());
+        //设置维度信息
+        setDimension(deriveMetricCalculateResult);
         return deriveMetricCalculateResult;
     }
 
     /**
      * 查询指标数据
+     * <p>主要用于查询历史数据</p>
      *
      * @param input
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query(input);
+        //设置维度信息
+        setDimension(deriveMetricCalculateResult);
+        return deriveMetricCalculateResult;
+    }
+
+    /**
+     * 设置维度信息
+     *
+     * @param deriveMetricCalculateResult
+     */
+    private void setDimension(DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult) {
         if (deriveMetricCalculateResult == null) {
-            return null;
+            return;
         }
         deriveMetricCalculateResult.setKey(dimensionSet.getKey());
         deriveMetricCalculateResult.setName(dimensionSet.getMetricName());
         deriveMetricCalculateResult.setDimensionMap(dimensionSet.getDimensionMap());
-        return deriveMetricCalculateResult;
     }
 
 }

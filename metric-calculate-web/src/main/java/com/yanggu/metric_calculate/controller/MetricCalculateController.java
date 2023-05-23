@@ -4,20 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.github.xiaoymin.knife4j.annotations.DynamicParameter;
-import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
-import com.google.common.util.concurrent.Striped;
-import com.yanggu.metric_calculate.client.magiccube.MagicCubeClient;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
-import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
 import com.yanggu.metric_calculate.util.ApiResponse;
@@ -27,37 +20,29 @@ import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.stream.Collectors;
 
 @Slf4j
-@Api(tags = "指标计算接口")
 @RestController
+@Api(tags = "指标计算接口")
 @RequestMapping("/metric-calculate")
-public class MetricCalculateController implements ApplicationRunner {
-
-    private final Map<Long, MetricCalculate> metricMap = new ConcurrentHashMap<>();
-
-    private final Striped<ReadWriteLock> readWriteLockStriped = Striped.lazyWeakReadWriteLock(20);
-
-    @Autowired
-    private MagicCubeClient magiccubeClient;
+public class MetricCalculateController {
 
     @Autowired
     @Qualifier("redisDeriveMetricMiddleStore")
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
+
+    @Autowired
+    private MetricConfigController metricConfigController;
 
     /**
      * 攒批查询
@@ -116,19 +101,6 @@ public class MetricCalculateController implements ApplicationRunner {
         //                completableFuture.complete(putRequest.getDeriveMetricCalculate().query(putRequest.getMetricCube()));
         //            }
         //        });
-    }
-
-    //定期刷新指标元数据
-    @Scheduled(fixedRate = 1000 * 60)
-    public void scheduledRefreshMetric() {
-        queryMetric();
-    }
-
-    @ApiOperation("刷新指标接口")
-    @GetMapping("/manualRefreshMetric")
-    public ApiResponse<?> manualRefreshMetric() {
-        queryMetric();
-        return ApiResponse.success();
     }
 
     @ApiOperation("有状态-计算接口")
@@ -251,56 +223,52 @@ public class MetricCalculateController implements ApplicationRunner {
     /**
      * 全量铺底接口, 计算宽表下的所有指标
      */
-    @ApiOperation("全量铺底（计算所有指标数据）")
-    @PostMapping("/full-update")
+    @ApiOperation("全量铺底（计算所有派生指标数据）")
+    @PostMapping("/full-update-derive")
     public ApiResponse<Object> fullUpdate(@RequestBody List<JSONObject> dataList) {
         MetricCalculate metricCalculate = getMetricCalculate(dataList.get(0));
-        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
-        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
-            //deriveMetricCalculate.getDimensionSetProcessor().process()
-            //table.getInFromInput()
-        }
-        return null;
-    }
 
-    @ApiOperation("查询派生指标数据")
-    @PostMapping("/query-derive-data")
-    @DynamicParameters(name = "dimensionJson", properties = {
-            @DynamicParameter(name = "name1", value = "value1", example = "key是维度名, value是维度值"),
-            @DynamicParameter(name = "name2", value = "value2", example = "多个维度写多个kv")
-    })
-    public ApiResponse<Object> queryDeriveData(@ApiParam("数据明细宽表id") @RequestParam Long tableId,
-                                               @ApiParam(value = "维度json数据") @RequestBody LinkedHashMap<String, Object> dimensionMap) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
-
-        DataDetailsWideTable table = magiccubeClient.getTableAndMetricByTableId(tableId);
-        if (table == null || table.getId() == null) {
-            throw new RuntimeException("传入的tableId: " + tableId + "有误");
-        }
-
-        List<Derive> deriveList = table.getDerive();
-        if (CollUtil.isEmpty(deriveList)) {
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return apiResponse;
         }
-        List<DimensionSet> dimensionList = deriveList.stream()
-                .map(tempDerive -> {
-                    DimensionSet dimension = new DimensionSet();
-                    dimension.setKey(tableId + "_" + tempDerive.getId());
-                    dimension.setMetricName(tempDerive.getName());
-                    dimension.setDimensionMap(dimensionMap);
-                    return dimension;
-                })
-                .collect(Collectors.toList());
-        Map<DimensionSet, MetricCube> dimensionMetricDataMap = deriveMetricMiddleStore.batchGet(dimensionList);
-        if (CollUtil.isEmpty(dimensionMetricDataMap)) {
+        Set<DimensionSet> dimensionSets = new HashSet<>();
+        List<Tuple> tupleList = new ArrayList<>();
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            for (JSONObject input : dataList) {
+                Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(input);
+                if (Boolean.TRUE.equals(filter)) {
+                    DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+                    dimensionSets.add(dimensionSet);
+                    Tuple tuple = new Tuple(deriveMetricCalculate, input, dimensionSet);
+                    tupleList.add(tuple);
+                }
+            }
+        }
+
+        if (CollUtil.isEmpty(dimensionSets)) {
             return apiResponse;
         }
-        Map<String, Object> returnMap = new HashMap<>();
-        dimensionMetricDataMap.values().forEach(tempMetricData -> {
-            DeriveMetricCalculateResult deriveMetricCalculateResult = tempMetricData.query();
-            returnMap.put(deriveMetricCalculateResult.getKey(), deriveMetricCalculateResult);
-        });
-        apiResponse.setData(returnMap);
+
+        //批量读取数据
+        Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(new ArrayList<>(dimensionSets));
+
+        for (Tuple tuple : tupleList) {
+            DeriveMetricCalculate deriveMetricCalculate = tuple.get(0);
+            JSONObject input = tuple.get(1);
+            DimensionSet dimensionSet = tuple.get(2);
+            MetricCube metricCube = dimensionSetMetricCubeMap.get(dimensionSet);
+            if (metricCube == null) {
+                metricCube = deriveMetricCalculate.createMetricCube(dimensionSet);
+            }
+            //TODO 缺少了删除数据逻辑
+            metricCube.getTable().put(input);
+        }
+
+        //批量更新
+        deriveMetricMiddleStore.batchUpdate(new ArrayList<>(dimensionSetMetricCubeMap.values()));
+
         return apiResponse;
     }
 
@@ -342,77 +310,7 @@ public class MetricCalculateController implements ApplicationRunner {
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId, 原始数据: " + JSONUtil.toJsonStr(detail));
         }
-        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
-        Lock readLock = readWriteLock.readLock();
-
-        //先上读锁
-        readLock.lock();
-        MetricCalculate dataWideTable;
-        try {
-            dataWideTable = metricMap.get(tableId);
-            //如果缓存中存在直接return
-            if (dataWideTable != null) {
-                return dataWideTable;
-            }
-        } finally {
-            //释放读锁
-            readLock.unlock();
-        }
-        Lock writeLock = readWriteLock.writeLock();
-        //如果缓存中不存在上写锁
-        writeLock.lock();
-        try {
-            //double check防止多次读取数据
-            dataWideTable = metricMap.get(tableId);
-            if (dataWideTable == null) {
-                dataWideTable = buildMetric(tableId);
-                metricMap.put(tableId, dataWideTable);
-            }
-        } finally {
-            //释放写锁
-            writeLock.unlock();
-        }
-        return dataWideTable;
-    }
-
-    private MetricCalculate buildMetric(Long tableId) {
-        //根据明细宽表id查询指标数据和宽表数据
-        DataDetailsWideTable tableData = magiccubeClient.getTableAndMetricByTableId(tableId);
-        if (tableData == null || tableData.getId() == null) {
-            log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
-            throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
-        }
-        return MetricUtil.initMetricCalculate(tableData);
-    }
-
-    /**
-     * 从数据库加载指标定义
-     */
-    private void queryMetric() {
-        log.info("load metric from DB");
-        //获取所有宽表id
-        List<Long> allTableId = magiccubeClient.getAllTableId();
-        allTableId.parallelStream().forEach(tempTableId -> {
-            ReadWriteLock readWriteLock = readWriteLockStriped.get(tempTableId);
-            Lock writeLock = readWriteLock.writeLock();
-            writeLock.lock();
-            try {
-                MetricCalculate metricCalculate = buildMetric(tempTableId);
-                metricMap.put(tempTableId, metricCalculate);
-            } finally {
-                writeLock.unlock();
-            }
-        });
-        //删除metricMap不存在allTableId的元素
-        List<Long> oldIdList = new ArrayList<>(metricMap.keySet());
-        if (allTableId.retainAll(oldIdList)) {
-            allTableId.forEach(metricMap::remove);
-        }
-    }
-
-    @Override
-    public void run(ApplicationArguments args) {
-        queryMetric();
+        return metricConfigController.getMetricCalculate(tableId);
     }
 
 }

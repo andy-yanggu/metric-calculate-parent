@@ -6,6 +6,7 @@ import lombok.Getter;
 public class ErrorCodeException extends Exception {
 
     private final ErrorCode error;
+
     private final String errorMessage;
 
     public ErrorCodeException(ErrorCode error) {

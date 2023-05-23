@@ -146,7 +146,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         return historyMetricCube.query(input);
     }
 
-    private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
+    public MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
         Table<IN, ACC, OUT> table = tableFactory.createTable();

@@ -7,6 +7,7 @@
     <artifactId>metric-calculate</artifactId>
     <name>metric-calculate</name>
     <version>1.0.0-SNAPSHOT</version>
+
     <modules>
         <module>metric-calculate-web</module>
         <module>udaf-interface</module>
@@ -27,8 +28,8 @@
         <spring-cloud.version>2021.0.5</spring-cloud.version>
         <spring-cloud-alibaba.version>2021.0.4.0</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
-        <hutool.version>5.8.11</hutool.version>
-        <knife4j-spring-boot-starter.version>3.0.3</knife4j-spring-boot-starter.version>
+        <hutool.version>5.8.18</hutool.version>
+        <knife4j-spring-boot-starter.version>2.0.9</knife4j-spring-boot-starter.version>
         <kryo.version>5.4.0</kryo.version>
         <mockito.version>5.2.0</mockito.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
