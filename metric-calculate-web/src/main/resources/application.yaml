@@ -19,18 +19,26 @@ spring:
 # 端点控制配置
 management:
   server:
-    port: 50000                         # 启用独立运维端口
-  endpoint:                             # 开启shutdown和health端点
+    # 启用独立运维端口
+    port: 50000
+  endpoint:
+    # 开启shutdown
     shutdown:
       enabled: true
+    # 开启liveness和readiness端点
     health:
       probes:
         enabled: true
+      show-details: always
   endpoints:
     web:
-      base-path: /actuator            # 指定上下文路径，启用相应端点
+      # 指定上下文路径，启用相应端点
+      base-path: /actuator
       exposure:
         include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
 
 #feign客户端url配置
 feign:
