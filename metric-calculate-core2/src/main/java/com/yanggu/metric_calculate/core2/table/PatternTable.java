@@ -21,7 +21,7 @@ import java.util.*;
  * @param <OUT>
  */
 @Data
-public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
+public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, PatternTable<IN, ACC, OUT>> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -72,6 +72,11 @@ public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         Long process = timeFieldProcessor.process(input);
         return query(process);
+    }
+
+    @Override
+    public PatternTable<IN, ACC, OUT> merge(PatternTable<IN, ACC, OUT> thatTable) {
+        return null;
     }
 
     @Override

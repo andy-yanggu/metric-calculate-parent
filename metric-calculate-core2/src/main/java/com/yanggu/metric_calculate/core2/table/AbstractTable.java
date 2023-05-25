@@ -17,7 +17,7 @@ import lombok.Data;
  * @param <OUT>
  */
 @Data
-public abstract class AbstractTable<IN, ACC, OUT> implements Table<IN, ACC, OUT> {
+public abstract class AbstractTable<IN, ACC, OUT, T extends Table<IN, ACC, OUT, T>> implements Table<IN, ACC, OUT, T> {
 
     protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 

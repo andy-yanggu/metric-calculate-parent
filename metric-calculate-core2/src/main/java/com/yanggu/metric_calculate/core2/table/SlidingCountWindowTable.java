@@ -16,7 +16,7 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-public class SlidingCountWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
+public class SlidingCountWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, SlidingCountWindowTable<IN, ACC, OUT>> {
 
     private Integer limit;
 
@@ -42,6 +42,11 @@ public class SlidingCountWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(outFromInList);
         return deriveMetricCalculateResult;
+    }
+
+    @Override
+    public SlidingCountWindowTable<IN, ACC, OUT> merge(SlidingCountWindowTable<IN, ACC, OUT> thatTable) {
+        return null;
     }
 
     @Override

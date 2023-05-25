@@ -4,7 +4,7 @@ package com.yanggu.metric_calculate.core2.table;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 
-public interface Table<IN, ACC, OUT> {
+public interface Table<IN, ACC, OUT, T extends Table<IN, ACC, OUT, T>> {
 
     /**
      * 放入明细数据进行累加
@@ -24,6 +24,7 @@ public interface Table<IN, ACC, OUT> {
     /**
      * 查询操作
      * <p>查询历史数据</p>
+     * @param input
      *
      * @return
      */
@@ -32,10 +33,10 @@ public interface Table<IN, ACC, OUT> {
     /**
      * 合并表操作
      *
-     * @param that
+     * @param thatTable
      * @return
      */
-    //Table<IN, ACC, OUT> merge(Table<IN, ACC, OUT> that);
+    T merge(T thatTable);
 
     /**
      * 是否为空

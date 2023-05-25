@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core2.table;
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
 
@@ -15,7 +16,7 @@ import java.util.TreeMap;
  * @param <OUT>
  */
 @Data
-public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
+public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT, TumblingTimeTable<IN, ACC, OUT>> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();
 
@@ -34,7 +35,25 @@ public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
         if (CollUtil.isEmpty(values)) {
             return null;
         }
-        return aggregateFieldProcessor.getMergeResult(values);
+        return aggregateFieldProcessor.getMergeResult(new ArrayList<>(values));
+    }
+
+    @Override
+    public TumblingTimeTable<IN, ACC, OUT> merge(TumblingTimeTable<IN, ACC, OUT> thatTable) {
+        TreeMap<Long, ACC> thatTreeMap = thatTable.getTreeMap();
+        thatTreeMap.forEach((tempLong, thatAcc) -> {
+            ACC thisAcc = treeMap.get(tempLong);
+            if (thisAcc == null) {
+                treeMap.put(tempLong, thatAcc);
+            } else {
+                treeMap.put(tempLong, aggregateFieldProcessor.mergeAccList(CollUtil.toList(thatAcc, thisAcc)));
+            }
+        });
+
+        TumblingTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTable<>();
+        tumblingTimeTable.setTimestamp(Math.max(super.timestamp, thatTable.getTimestamp()));
+        tumblingTimeTable.setTreeMap(new TreeMap<>(treeMap));
+        return tumblingTimeTable;
     }
 
     @Override

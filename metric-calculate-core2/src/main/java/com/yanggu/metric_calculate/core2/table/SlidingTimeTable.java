@@ -18,7 +18,7 @@ import java.util.Map;
  * @param <OUT>
  */
 @Data
-public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
+public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT, SlidingTimeTable<IN, ACC, OUT>> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 
@@ -42,6 +42,24 @@ public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
     @Override
     public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
         return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(from, to)));
+    }
+
+    @Override
+    public SlidingTimeTable<IN, ACC, OUT> merge(SlidingTimeTable<IN, ACC, OUT> thatTable) {
+        Map<Pair<Long, Long>, ACC> thatMap = thatTable.getMap();
+        thatMap.forEach((tempPair, thatAcc) -> {
+            ACC thisAcc = map.get(tempPair);
+            if (thisAcc == null) {
+                map.put(tempPair, thatAcc);
+            } else {
+                map.put(tempPair, aggregateFieldProcessor.mergeAccList(CollUtil.toList(thisAcc, thatAcc)));
+            }
+        });
+
+        SlidingTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTable<>();
+        slidingTimeTable.setTimestamp(Math.max(super.timestamp, thatTable.getTimestamp()));
+        slidingTimeTable.setMap(new HashMap<>(map));
+        return slidingTimeTable;
     }
 
     @Override

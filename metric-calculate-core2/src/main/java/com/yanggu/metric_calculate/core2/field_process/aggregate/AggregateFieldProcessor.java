@@ -99,19 +99,29 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         return aggregateFunction.getResult(accumulator);
     }
 
+    public ACC mergeAccList(List<ACC> accList) {
+        if (CollUtil.isEmpty(accList)) {
+            return null;
+        }
+        ACC accumulator = aggregateFunction.createAccumulator();
+        for (ACC acc : accList) {
+            accumulator = aggregateFunction.merge(accumulator, acc);
+        }
+        return accumulator;
+    }
+
     /**
      * 合并多个累加器并输出
      *
      * @param accList
      * @return
      */
-    public OUT getMergeResult(Collection<ACC> accList) {
+    public OUT getMergeResult(List<ACC> accList) {
         if (CollUtil.isEmpty(accList)) {
             return null;
         }
-        ACC accumulator = aggregateFunction.createAccumulator();
-        accumulator = accList.stream().reduce(accumulator, aggregateFunction::merge);
-        return aggregateFunction.getResult(accumulator);
+        ACC accumulator = mergeAccList(accList);
+        return getOutFromAcc(accumulator);
     }
 
 }
