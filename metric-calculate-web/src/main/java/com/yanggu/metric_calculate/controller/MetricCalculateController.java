@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
+import com.yanggu.metric_calculate.service.MetricConfigService;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,7 +43,7 @@ public class MetricCalculateController {
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Autowired
-    private MetricConfigController metricConfigController;
+    private MetricConfigService metricConfigService;
 
     /**
      * 攒批查询
@@ -310,7 +311,7 @@ public class MetricCalculateController {
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId, 原始数据: " + JSONUtil.toJsonStr(detail));
         }
-        return metricConfigController.getMetricCalculate(tableId);
+        return metricConfigService.getMetricCalculate(tableId);
     }
 
 }
