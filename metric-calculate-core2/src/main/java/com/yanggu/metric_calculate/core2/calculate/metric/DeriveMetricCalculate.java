@@ -82,6 +82,26 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private RoundAccuracy roundAccuracy;
 
     /**
+     * 添加度量值
+     *
+     * @param input
+     * @param historyMetricCube
+     * @return
+     */
+    public MetricCube<IN, ACC, OUT> addInput(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
+        if (historyMetricCube == null) {
+            //提取出维度字段
+            DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+            historyMetricCube = createMetricCube(dimensionSet);
+        } else {
+            tableFactory.setTable(historyMetricCube.getTable());
+        }
+        //放入明细数据进行累加
+        historyMetricCube.getTable().put(input);
+        return historyMetricCube;
+    }
+
+    /**
      * 有状态计算
      *
      * @param input
@@ -100,14 +120,9 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
 
         //根据维度查询外部数据
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
-        if (historyMetricCube == null) {
-            historyMetricCube = createMetricCube(dimensionSet);
-        } else {
-            tableFactory.setTable(historyMetricCube.getTable());
-        }
 
-        //放入明细数据进行累加
-        historyMetricCube.getTable().put(input);
+        //添加度量值
+        historyMetricCube = addInput(input, historyMetricCube);
 
         //更新到外部存储
         deriveMetricMiddleStore.update(historyMetricCube);
@@ -134,13 +149,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
 
         //包含当前笔需要执行前置过滤条件
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-            if (historyMetricCube == null) {
-                historyMetricCube = createMetricCube(dimensionSet);
-            } else {
-                tableFactory.setTable(historyMetricCube.getTable());
-            }
-            //放入明细数据进行累加
-            historyMetricCube.getTable().put(input);
+            //添加度量值
+            historyMetricCube = addInput(input, historyMetricCube);
         }
         if (historyMetricCube == null) {
             return null;
@@ -149,20 +159,12 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     }
 
     public CompletableFuture<DeriveMetricCalculateResult<OUT>> noStateFutureExec(
-            JSONObject input,
-            CompletableFuture<MetricCube<IN, ACC, OUT>> completableFuture) {
+                                                        JSONObject input,
+                                                        CompletableFuture<MetricCube<IN, ACC, OUT>> completableFuture) {
         return completableFuture.thenApply(historyMetricCube -> {
             //包含当前笔需要执行前置过滤条件
             if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-                if (historyMetricCube == null) {
-                    //提取出维度字段
-                    DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-                    historyMetricCube = createMetricCube(dimensionSet);
-                } else {
-                    tableFactory.setTable(historyMetricCube.getTable());
-                }
-                //放入明细数据进行累加
-                historyMetricCube.getTable().put(input);
+                historyMetricCube = addInput(input, historyMetricCube);
             }
             if (historyMetricCube == null) {
                 return null;

@@ -1,14 +1,11 @@
 package com.yanggu.metric_calculate.service;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.RuntimeUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
 import com.yanggu.metric_calculate.core2.util.QueryRequest;
@@ -20,8 +17,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -32,66 +31,15 @@ import java.util.stream.Collectors;
 public class MetricCalculateService {
 
     @Autowired
-    @Qualifier("redisDeriveMetricMiddleStore")
-    private DeriveMetricMiddleStore deriveMetricMiddleStore;
-
-    @Autowired
     private MetricConfigService metricConfigService;
 
-    /**
-     * 攒批查询
-     */
+    @Autowired
+    @Qualifier("queryComponent")
     private AccumulateBatchComponent2<QueryRequest> queryComponent;
 
-    /**
-     * 攒批更新
-     */
+    @Autowired
+    @Qualifier("putComponent")
     private AccumulateBatchComponent2<PutRequest> putComponent;
-
-    @PostConstruct
-    public void init1() {
-        //批量查询组件
-        queryComponent = new AccumulateBatchComponent2<>("攒批读组件", RuntimeUtil.getProcessorCount(), 100, 2000,
-                queryRequests -> {
-                    List<DimensionSet> collect = queryRequests.stream()
-                            .map(QueryRequest::getDimensionSet)
-                            //去一下重
-                            .distinct()
-                            .collect(Collectors.toList());
-
-                    //批量查询
-                    Map<DimensionSet, MetricCube> map = deriveMetricMiddleStore.batchGet(collect);
-
-                    //批量查询完成后, 进行回调通知
-                    for (QueryRequest queryRequest : queryRequests) {
-                        MetricCube historyMetricCube = map.get(queryRequest.getDimensionSet());
-                        queryRequest.getQueryFuture().complete(historyMetricCube);
-                    }
-                });
-    }
-
-    @PostConstruct
-    public void init2() {
-        ////批量更新组件
-        //putComponent = new AccumulateBatchComponent2<>("攒批写组件", RuntimeUtil.getProcessorCount(), 20, 2000,
-        //        putRequests -> {
-        //            List<MetricCube> collect = putRequests.stream()
-        //                    .map(PutRequest::getMetricCube)
-        //                    .collect(Collectors.toList());
-        //
-        //            //TODO 需要考虑请求合并
-        //            //Map<String, Optional<MetricCube>> collect1 = collect.stream().collect(Collectors.groupingBy(KeyReferable::getRealKey,
-        //                    //Collectors.reducing((metricCube, metricCube2) -> (MetricCube) metricCube.merge(metricCube2))));
-        //
-        //            //批量更新
-        //            deriveMetricMiddleStore.batchUpdate(collect);
-        //            //批量更新完成后, 进行回调通知
-        //            for (PutRequest putRequest : putRequests) {
-        //                CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture = putRequest.getResultFuture();
-        //                completableFuture.complete(putRequest.getDeriveMetricCalculate().query(putRequest.getMetricCube()));
-        //            }
-        //        });
-    }
 
     /**
      * 无状态-计算接口
@@ -150,10 +98,7 @@ public class MetricCalculateService {
 
         List<CompletableFuture<DeriveMetricCalculateResult>> completableFutureList = new ArrayList<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
-            DimensionSet process = deriveMetricCalculate.getDimensionSetProcessor().process(input);
-            QueryRequest queryRequest = new QueryRequest();
-            queryRequest.setDimensionSet(process);
-            queryRequest.setQueryFuture(new CompletableFuture<>());
+            QueryRequest queryRequest = getQueryRequest(input, deriveMetricCalculate);
             //进行攒批查询
             queryComponent.add(queryRequest);
             CompletableFuture<DeriveMetricCalculateResult> completableFuture =
@@ -181,6 +126,82 @@ public class MetricCalculateService {
                 });
 
         return deferredResult;
+    }
+
+    /**
+     * 攒批更新
+     *
+     * @param input
+     * @return
+     */
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateExecuteAccumulateBatch(JSONObject input) {
+        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult =
+                new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
+
+        //获取指标计算类
+        MetricCalculate metricCalculate = getMetricCalculate(input);
+
+        ApiResponse<List<DeriveMetricCalculateResult>> apiResponse = new ApiResponse<>();
+
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            deferredResult.setResult(apiResponse);
+            return deferredResult;
+        }
+
+        List<CompletableFuture<DeriveMetricCalculateResult>> completableFutureList = new ArrayList<>();
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            //先执行前置过滤条件
+            Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(input);
+            if (Boolean.FALSE.equals(filter)) {
+                continue;
+            }
+            QueryRequest queryRequest = getQueryRequest(input, deriveMetricCalculate);
+            //攒批查询
+            queryComponent.add(queryRequest);
+            CompletableFuture<DeriveMetricCalculateResult> completableFuture = queryRequest.getQueryFuture()
+                    .thenCompose(historyMetricCube -> {
+                        //添加度量值
+                        historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube);
+                        PutRequest putRequest = new PutRequest();
+                        putRequest.setMetricCube(historyMetricCube);
+                        putRequest.setInput(input);
+                        putRequest.setResultFuture(new CompletableFuture<>());
+                        //进行攒批更新
+                        putComponent.add(putRequest);
+                        return putRequest.getResultFuture();
+                    });
+            completableFutureList.add(completableFuture);
+        }
+
+        //当所有的更新都完成时, 进行输出
+        CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
+                .whenComplete((data, exception) -> {
+                    List<DeriveMetricCalculateResult> collect = completableFutureList.stream()
+                            .map(temp -> {
+                                try {
+                                    return temp.get();
+                                } catch (Throwable e) {
+                                    throw new RuntimeException(e);
+                                }
+                            })
+                            .collect(Collectors.toList());
+                    if (CollUtil.isNotEmpty(collect)) {
+                        //按照key进行排序
+                        collect.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
+                    }
+                    apiResponse.setData(collect);
+                    deferredResult.setResult(apiResponse);
+                });
+        return deferredResult;
+    }
+
+    private QueryRequest getQueryRequest(JSONObject input, DeriveMetricCalculate deriveMetricCalculate) {
+        DimensionSet process = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+        QueryRequest queryRequest = new QueryRequest();
+        queryRequest.setDimensionSet(process);
+        queryRequest.setQueryFuture(new CompletableFuture<>());
+        return queryRequest;
     }
 
     private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject detail,

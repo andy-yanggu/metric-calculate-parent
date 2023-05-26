@@ -10,11 +10,24 @@ spring:
       # 配置策略
       matching-strategy: ant-path-matcher
   redis:
-    host: 127.0.0.1
-    port: 6379
+    host: 172.20.7.106
+    port: 16379
     client-type: lettuce
     database: 1
-#    password: Redis6379
+    password: Redis6379
+
+#指标计算配置参数
+metric-calculate:
+  #攒批组件配置参数
+  accumulate-batch-component:
+    read:
+      thread-num: 1
+      limit: 10
+      interval: 200
+    write:
+      thread-num: 1
+      limit: 10
+      interval: 200
 
 # 端点控制配置
 management:
