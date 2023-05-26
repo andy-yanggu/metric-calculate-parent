@@ -14,7 +14,7 @@ import lombok.Data;
  * @param <OUT>
  */
 @Data
-public class GlobalTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, GlobalTable<IN, ACC, OUT>> {
+public class GlobalTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private ACC accumulator;
 
@@ -23,7 +23,7 @@ public class GlobalTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, Globa
         accumulator = aggregateFieldProcessor.add(accumulator, getInFromInput(input));
     }
 
-    @Override
+    //@Override
     public GlobalTable<IN, ACC, OUT> merge(GlobalTable<IN, ACC, OUT> thatTable) {
         GlobalTable<IN, ACC, OUT> globalTable = new GlobalTable<>();
         ACC acc = aggregateFieldProcessor.mergeAccList(CollUtil.toList(accumulator, thatTable.getAccumulator()));

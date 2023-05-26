@@ -20,7 +20,7 @@ import java.util.Map;
  * @param <OUT>
  */
 @Data
-public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, StatusWindowTable<IN, ACC, OUT>> {
+public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -72,7 +72,7 @@ public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT,
         return deriveMetricCalculateResult;
     }
 
-    @Override
+    //@Override
     public StatusWindowTable<IN, ACC, OUT> merge(StatusWindowTable<IN, ACC, OUT> thatTable) {
 
         StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();

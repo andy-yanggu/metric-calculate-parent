@@ -19,7 +19,7 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-public abstract class TimeTable<IN, ACC, OUT, T extends Table<IN, ACC, OUT, T>> extends AbstractTable<IN, ACC, OUT, T> {
+public abstract class TimeTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     protected TimeFieldProcessor timeFieldProcessor;
 

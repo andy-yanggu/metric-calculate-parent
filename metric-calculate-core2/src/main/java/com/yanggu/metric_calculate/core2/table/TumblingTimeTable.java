@@ -16,7 +16,7 @@ import java.util.TreeMap;
  * @param <OUT>
  */
 @Data
-public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT, TumblingTimeTable<IN, ACC, OUT>> {
+public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();
 
@@ -38,7 +38,7 @@ public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT, Tum
         return aggregateFieldProcessor.getMergeResult(new ArrayList<>(values));
     }
 
-    @Override
+    //@Override
     public TumblingTimeTable<IN, ACC, OUT> merge(TumblingTimeTable<IN, ACC, OUT> thatTable) {
         TreeMap<Long, ACC> thatTreeMap = thatTable.getTreeMap();
         thatTreeMap.forEach((tempLong, thatAcc) -> {

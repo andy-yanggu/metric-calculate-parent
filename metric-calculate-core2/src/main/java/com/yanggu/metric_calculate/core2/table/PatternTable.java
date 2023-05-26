@@ -21,7 +21,7 @@ import java.util.*;
  * @param <OUT>
  */
 @Data
-public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, PatternTable<IN, ACC, OUT>> {
+public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -74,7 +74,7 @@ public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT, Patt
         return query(process);
     }
 
-    @Override
+    //@Override
     public PatternTable<IN, ACC, OUT> merge(PatternTable<IN, ACC, OUT> thatTable) {
         return null;
     }
