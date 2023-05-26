@@ -1,10 +1,13 @@
 package com.yanggu.metric_calculate.controller;
 
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameter;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.table.Table;
+import com.yanggu.metric_calculate.pojo.DimensionTableData;
 import com.yanggu.metric_calculate.service.MetricDataService;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import io.swagger.annotations.Api;
@@ -62,15 +65,10 @@ public class MetricDataController {
 
     @ApiOperation("更新派生指标数据")
     @PutMapping("/update-derive-data")
-    @DynamicParameters(name = "dimensionJson", properties = {
-            @DynamicParameter(name = "name1", value = "value1", example = "key是维度名, value是维度值"),
-            @DynamicParameter(name = "name2", value = "value2", example = "多个维度写多个kv")
-    })
     public ApiResponse<Object> updateDeriveData(@ApiParam("数据明细宽表id") @RequestParam Long tableId,
                                                 @ApiParam("派生指标id") @RequestParam Long deriveId,
-                                                @ApiParam(value = "维度json数据") @RequestBody LinkedHashMap<String, Object> dimensionMap,
-                                                @ApiParam("派生指标数据") Table table) {
-        metricDataService.updateDeriveData(tableId, deriveId, dimensionMap, table);
+                                                @ApiParam("维度数据和表数据") @RequestBody DimensionTableData dimensionTableData) {
+        metricDataService.updateDeriveData(tableId, deriveId, dimensionTableData.getDimensionMap(), dimensionTableData.getTable());
         return ApiResponse.success();
     }
 
