@@ -221,58 +221,6 @@ public class MetricCalculateController {
         return null;
     }
 
-    /**
-     * 全量铺底接口, 计算宽表下的所有指标
-     */
-    @ApiOperation("全量铺底（计算所有派生指标数据）")
-    @PostMapping("/full-update-derive")
-    public ApiResponse<Object> fullUpdate(@RequestBody List<JSONObject> dataList) {
-        MetricCalculate metricCalculate = getMetricCalculate(dataList.get(0));
-
-        ApiResponse<Object> apiResponse = new ApiResponse<>();
-        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            return apiResponse;
-        }
-        Set<DimensionSet> dimensionSets = new HashSet<>();
-        List<Tuple> tupleList = new ArrayList<>();
-        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
-            for (JSONObject input : dataList) {
-                Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(input);
-                if (Boolean.TRUE.equals(filter)) {
-                    DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
-                    dimensionSets.add(dimensionSet);
-                    Tuple tuple = new Tuple(deriveMetricCalculate, input, dimensionSet);
-                    tupleList.add(tuple);
-                }
-            }
-        }
-
-        if (CollUtil.isEmpty(dimensionSets)) {
-            return apiResponse;
-        }
-
-        //批量读取数据
-        Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(new ArrayList<>(dimensionSets));
-
-        for (Tuple tuple : tupleList) {
-            DeriveMetricCalculate deriveMetricCalculate = tuple.get(0);
-            JSONObject input = tuple.get(1);
-            DimensionSet dimensionSet = tuple.get(2);
-            MetricCube metricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            if (metricCube == null) {
-                metricCube = deriveMetricCalculate.createMetricCube(dimensionSet);
-            }
-            //TODO 缺少了删除数据逻辑
-            metricCube.getTable().put(input);
-        }
-
-        //批量更新
-        deriveMetricMiddleStore.batchUpdate(new ArrayList<>(dimensionSetMetricCubeMap.values()));
-
-        return apiResponse;
-    }
-
     private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject detail,
                                                                  MetricCalculate dataWideTable,
                                                                  boolean update) {

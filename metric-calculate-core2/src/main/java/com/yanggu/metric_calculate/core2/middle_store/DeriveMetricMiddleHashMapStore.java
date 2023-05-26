@@ -32,4 +32,9 @@ public class DeriveMetricMiddleHashMapStore extends AbstractDeriveMetricMiddleSt
         localMap.put(updateMetricCube.getDimensionSet(), updateMetricCube);
     }
 
+    @Override
+    public void deleteData(DimensionSet dimensionSet) {
+        localMap.remove(dimensionSet);
+    }
+
 }

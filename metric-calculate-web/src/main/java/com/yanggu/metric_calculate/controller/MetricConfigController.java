@@ -32,14 +32,14 @@ public class MetricConfigController {
 
     @ApiOperation("全量更新指标配置")
     @GetMapping("/refresh-metric-config")
-    public ApiResponse<Object> refreshMetric() {
+    public ApiResponse<Object> refreshMetricConfig() {
         metricConfigService.buildAllMetric();
         return ApiResponse.success();
     }
 
-    @ApiOperation("增量更新指标配置（更新某个宽表下的指标）")
+    @ApiOperation("增量更新指标配置（更新某个宽表下的所有指标）")
     @PutMapping("/update-metric-config")
-    public ApiResponse<Object> updateDeriveMetric(@ApiParam("数据明细宽表id") @RequestParam Long tableId) {
+    public ApiResponse<Object> updateMetricConfig(@ApiParam("数据明细宽表id") @RequestParam Long tableId) {
         ApiResponse<Object> apiResponse = new ApiResponse<>();
         metricConfigService.updateTable(tableId);
         return apiResponse;

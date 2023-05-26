@@ -30,4 +30,9 @@ public class DeriveMetricMiddleHashMapKryoStore extends AbstractDeriveMetricMidd
         localMap.put(updateMetricCube.getDimensionSet(), super.serialize(updateMetricCube));
     }
 
+    @Override
+    public void deleteData(DimensionSet dimensionSet) {
+        localMap.remove(dimensionSet);
+    }
+
 }

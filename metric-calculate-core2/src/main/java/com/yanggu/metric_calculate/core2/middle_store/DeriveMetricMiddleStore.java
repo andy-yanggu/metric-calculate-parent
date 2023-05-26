@@ -61,4 +61,9 @@ public interface DeriveMetricMiddleStore {
         cubeList.forEach(this::update);
     }
 
+    void deleteData(DimensionSet dimensionSet);
+
+    default void batchDeleteData(List<DimensionSet> dimensionSetList) {
+        dimensionSetList.forEach(this::deleteData);
+    }
 }

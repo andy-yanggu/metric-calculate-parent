@@ -67,4 +67,17 @@ public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStor
         redisTemplate.opsForValue().multiSet(collect);
     }
 
+    @Override
+    public void deleteData(DimensionSet dimensionSet) {
+        redisTemplate.delete(dimensionSet.getRealKey());
+    }
+
+    @Override
+    public void batchDeleteData(List<DimensionSet> dimensionSetList) {
+        List<String> collect = dimensionSetList.stream()
+                .map(DimensionSet::getRealKey)
+                .collect(Collectors.toList());
+        redisTemplate.delete(collect);
+    }
+
 }

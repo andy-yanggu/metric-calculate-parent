@@ -15,12 +15,13 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.stream.Collectors;
 
 /**
  * 指标配置Service
@@ -30,8 +31,6 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class MetricConfigService implements ApplicationRunner {
 
     private final Map<Long, MetricCalculate> metricMap = new ConcurrentHashMap<>();
-
-    private final List<DataDetailsWideTable> dataDetailsWideTableList = new CopyOnWriteArrayList<>();
 
     private final Striped<ReadWriteLock> readWriteLockStriped = Striped.lazyWeakReadWriteLock(20);
 
@@ -53,7 +52,12 @@ public class MetricConfigService implements ApplicationRunner {
      * @return
      */
     public List<DataDetailsWideTable> allMetricConfigData() {
-        return dataDetailsWideTableList;
+        if (CollUtil.isEmpty(metricMap)) {
+            return Collections.emptyList();
+        }
+        return metricMap.values().stream()
+                .map(temp -> BeanUtil.copyProperties(temp, DataDetailsWideTable.class))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -130,7 +134,6 @@ public class MetricConfigService implements ApplicationRunner {
         //获取所有宽表id
         List<Long> allTableId = metricConfigClient.getAllTableId();
         metricMap.clear();
-        dataDetailsWideTableList.clear();
         allTableId.parallelStream().forEach(tempTableId -> {
             ReadWriteLock readWriteLock = readWriteLockStriped.get(tempTableId);
             Lock writeLock = readWriteLock.writeLock();
@@ -138,9 +141,6 @@ public class MetricConfigService implements ApplicationRunner {
             try {
                 MetricCalculate metricCalculate = buildMetric(tempTableId);
                 metricMap.put(tempTableId, metricCalculate);
-                DataDetailsWideTable dataDetailsWideTable = new DataDetailsWideTable();
-                BeanUtil.copyProperties(metricCalculate, dataDetailsWideTable);
-                dataDetailsWideTableList.add(dataDetailsWideTable);
             } finally {
                 writeLock.unlock();
             }
