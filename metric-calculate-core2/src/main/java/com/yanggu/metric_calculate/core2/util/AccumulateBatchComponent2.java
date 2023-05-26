@@ -131,17 +131,17 @@ public class AccumulateBatchComponent2<T> {
             if (CollUtil.isEmpty(list)) {
                 return;
             }
+            try {
+                consumer.accept(list);
+            } catch (Throwable e) {
+                log.error("攒批线程消费失败", e);
+            }
             if (registerTimeStamp == 0L) {
                 log.info(name + "攒批大小到, 当前时间: " + DateUtil.formatDateTime(new Date()) +
                         ", list被消费了, 消费list大小" + list.size());
             } else {
                 log.info(name + "攒批时间到, 定时器注册时间: " + DateUtil.formatDateTime(new Date(registerTimeStamp)) +
                         ", 当前时间: " + DateUtil.formatDateTime(new Date()) + ", list被消费了, 消费list大小" + list.size());
-            }
-            try {
-                consumer.accept(list);
-            } catch (Throwable e) {
-                log.error("攒批线程消费失败", e);
             }
             list.clear();
             if (scheduledFuture != null) {

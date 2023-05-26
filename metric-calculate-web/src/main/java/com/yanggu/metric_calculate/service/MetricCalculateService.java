@@ -17,10 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -121,6 +118,9 @@ public class MetricCalculateService {
                             deriveMetricCalculateResultList.add(deriveMetricCalculateResult);
                         }
                     }
+                    if (CollUtil.isNotEmpty(deriveMetricCalculateResultList)) {
+                        deriveMetricCalculateResultList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
+                    }
                     apiResponse.setData(deriveMetricCalculateResultList);
                     deferredResult.setResult(apiResponse);
                 });
@@ -136,7 +136,7 @@ public class MetricCalculateService {
      */
     public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateExecuteAccumulateBatch(JSONObject input) {
         DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult =
-                new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
+                new DeferredResult<>(TimeUnit.SECONDS.toMillis(120L));
 
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
@@ -176,7 +176,7 @@ public class MetricCalculateService {
 
         //当所有的更新都完成时, 进行输出
         CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
-                .whenComplete((data, exception) -> {
+                .thenAccept(tempObj -> {
                     List<DeriveMetricCalculateResult> collect = completableFutureList.stream()
                             .map(temp -> {
                                 try {
@@ -185,6 +185,8 @@ public class MetricCalculateService {
                                     throw new RuntimeException(e);
                                 }
                             })
+                            //进行非空判断
+                            .filter(Objects::nonNull)
                             .collect(Collectors.toList());
                     if (CollUtil.isNotEmpty(collect)) {
                         //按照key进行排序

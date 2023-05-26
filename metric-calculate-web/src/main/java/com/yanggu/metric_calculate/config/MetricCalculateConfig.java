@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
 import com.yanggu.metric_calculate.core2.util.QueryRequest;
 import com.yanggu.metric_calculate.pojo.PutRequest;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -84,8 +82,7 @@ public class MetricCalculateConfig {
             //批量更新完成后, 进行回调通知
             for (PutRequest putRequest : putRequests) {
                 MetricCube metricCube = putRequest.getMetricCube();
-                CompletableFuture<DeriveMetricCalculateResult> resultFuture = putRequest.getResultFuture();
-                resultFuture.complete(metricCube.query(putRequest.getInput()));
+                putRequest.getResultFuture().complete(metricCube.query(putRequest.getInput()));
             }
         };
         return new AccumulateBatchComponent2<>("攒批写组件", threadNum, limit, interval, batchUpdateConsumer);

@@ -22,12 +22,12 @@ metric-calculate:
   accumulate-batch-component:
     read:
       thread-num: 1
-      limit: 10
-      interval: 200
+      limit: 100
+      interval: 50
     write:
       thread-num: 1
-      limit: 10
-      interval: 200
+      limit: 100
+      interval: 50
 
 # 端点控制配置
 management:
