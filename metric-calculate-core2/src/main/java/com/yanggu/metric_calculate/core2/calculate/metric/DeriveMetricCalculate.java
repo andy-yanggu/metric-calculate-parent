@@ -17,6 +17,8 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.concurrent.CompletableFuture;
+
 /**
  * 派生指标计算类
  *
@@ -144,6 +146,29 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             return null;
         }
         return historyMetricCube.query(input);
+    }
+
+    public CompletableFuture<DeriveMetricCalculateResult<OUT>> noStateFutureExec(
+            JSONObject input,
+            CompletableFuture<MetricCube<IN, ACC, OUT>> completableFuture) {
+        return completableFuture.thenApply(historyMetricCube -> {
+            //包含当前笔需要执行前置过滤条件
+            if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
+                if (historyMetricCube == null) {
+                    //提取出维度字段
+                    DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+                    historyMetricCube = createMetricCube(dimensionSet);
+                } else {
+                    tableFactory.setTable(historyMetricCube.getTable());
+                }
+                //放入明细数据进行累加
+                historyMetricCube.getTable().put(input);
+            }
+            if (historyMetricCube == null) {
+                return null;
+            }
+            return historyMetricCube.query(input);
+        });
     }
 
     public MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {

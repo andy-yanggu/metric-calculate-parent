@@ -1,35 +1,21 @@
 package com.yanggu.metric_calculate.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
-import com.yanggu.metric_calculate.pojo.PutRequest;
-import com.yanggu.metric_calculate.pojo.QueryRequest;
-import com.yanggu.metric_calculate.service.MetricConfigService;
+import com.yanggu.metric_calculate.service.MetricCalculateService;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -39,101 +25,44 @@ import java.util.concurrent.TimeUnit;
 public class MetricCalculateController {
 
     @Autowired
-    @Qualifier("redisDeriveMetricMiddleStore")
-    private DeriveMetricMiddleStore deriveMetricMiddleStore;
-
-    @Autowired
-    private MetricConfigService metricConfigService;
-
-    /**
-     * 攒批查询
-     */
-    private AccumulateBatchComponent2<QueryRequest> queryComponent;
-
-    /**
-     * 攒批更新
-     */
-    private AccumulateBatchComponent2<PutRequest> putComponent;
-
-    @PostConstruct
-    public void init() {
-        //批量查询组件
-        //queryComponent = new AccumulateBatchComponent2<>("攒批读组件", RuntimeUtil.getProcessorCount(), 20, 2000,
-        //        queryRequests -> {
-        //            List<MetricCube> collect = queryRequests.stream()
-        //                    .map(QueryRequest::getMetricCube)
-        //                    .collect(Collectors.toList());
-        //
-        //            //TODO 需要考虑请求合并
-        //            //批量查询
-        //            Map<DimensionSet, MetricCube> map = deriveMetricMiddleStore.batchGet(collect);
-        //
-        //            //批量查询完成后, 进行回调通知
-        //            for (QueryRequest queryRequest : queryRequests) {
-        //                MetricCube historyMetricCube = map.get(queryRequest.getMetricCube().getDimensionSet());
-        //                MetricCube<Table, Long, ?, ?> newMetricCube = queryRequest.getMetricCube();
-        //                if (historyMetricCube == null) {
-        //                    historyMetricCube = newMetricCube;
-        //                } else {
-        //                    historyMetricCube.merge(newMetricCube);
-        //                    //删除过期数据
-        //                    historyMetricCube.eliminateExpiredData();
-        //                }
-        //                queryRequest.getQueryFuture().complete(historyMetricCube);
-        //            }
-        //        });
-        //
-        ////批量更新组件
-        //putComponent = new AccumulateBatchComponent2<>("攒批写组件", RuntimeUtil.getProcessorCount(), 20, 2000,
-        //        putRequests -> {
-        //            List<MetricCube> collect = putRequests.stream()
-        //                    .map(PutRequest::getMetricCube)
-        //                    .collect(Collectors.toList());
-        //
-        //            //TODO 需要考虑请求合并
-        //            //Map<String, Optional<MetricCube>> collect1 = collect.stream().collect(Collectors.groupingBy(KeyReferable::getRealKey,
-        //                    //Collectors.reducing((metricCube, metricCube2) -> (MetricCube) metricCube.merge(metricCube2))));
-        //
-        //            //批量更新
-        //            deriveMetricMiddleStore.batchUpdate(collect);
-        //            //批量更新完成后, 进行回调通知
-        //            for (PutRequest putRequest : putRequests) {
-        //                CompletableFuture<List<DeriveMetricCalculateResult>> completableFuture = putRequest.getResultFuture();
-        //                completableFuture.complete(putRequest.getDeriveMetricCalculate().query(putRequest.getMetricCube()));
-        //            }
-        //        });
-    }
+    private MetricCalculateService metricCalculateService;
 
     @ApiOperation("有状态-计算接口")
     @PostMapping("/state-calculate")
-    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecute(@ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecute(
+                                                            @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
+        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateExecute(detail);
+        return ApiResponse.success(resultList);
+    }
 
-        //获取指标计算类
-        MetricCalculate dataWideTable = getMetricCalculate(detail);
+    @ApiOperation("无状态-计算接口")
+    @PostMapping("/no-state-calculate")
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> noStateExecute(
+                                                            @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
+        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateExecute(detail);
+        return ApiResponse.success(resultList);
+    }
 
-        //计算派生指标
-        List<DeriveMetricCalculateResult<Object>> deriveMetricCalculateResultList = calcDerive(detail, dataWideTable, true);
-
-        //设置返回值
-        ApiResponse<List<DeriveMetricCalculateResult<Object>>> response = new ApiResponse<>();
-        response.setData(deriveMetricCalculateResultList);
-
-        return response;
+    @ApiOperation("无状态-计算接口（攒批查询）")
+    @PostMapping("/no-state-calculate-accumulate-batch")
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateExecuteAccumulateBatch(
+                                                                @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
+        return metricCalculateService.noStateExecuteAccumulateBatch(input);
     }
 
     @ApiOperation("有状态-计算接口（攒批查询和攒批更新）")
     @PostMapping("/state-calculate-accumulate-batch")
     public DeferredResult<List<DeriveMetricCalculateResult>> stateExecuteAccumulateBatch(
-            @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
+                                                             @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
 
         DeferredResult<List<DeriveMetricCalculateResult>> deferredResult = new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
 
         //获取指标计算类
-        MetricCalculate dataWideTable = getMetricCalculate(detail);
+        //MetricCalculate dataWideTable = getMetricCalculate(detail);
 
         //计算派生指标
-        List<Tuple> tupleList = new ArrayList<>();
-        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
+        //List<Tuple> tupleList = new ArrayList<>();
+        //List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         //deriveMetricCalculateList.forEach(tempDerive -> {
         //    MetricCube<Table, Long, ?, ?> exec = tempDerive.exec(detail);
         //    if (exec != null) {
@@ -186,80 +115,6 @@ public class MetricCalculateController {
         //            deferredResult.setResult(collect);
         //        });
         return deferredResult;
-    }
-
-    @ApiOperation("无状态-计算接口")
-    @PostMapping("/no-state-calculate")
-    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> noStateExecute(@ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
-        //获取指标计算类
-        MetricCalculate dataWideTable = getMetricCalculate(detail);
-
-        //无状态计算派生指标
-        List<DeriveMetricCalculateResult<Object>> deriveMetricCalculateResultList = calcDerive(detail, dataWideTable, false);
-
-        ApiResponse<List<DeriveMetricCalculateResult<Object>>> response = new ApiResponse<>();
-        response.setData(deriveMetricCalculateResultList);
-
-        return response;
-    }
-
-    @ApiOperation("无状态-计算接口（攒批查询）")
-    @PostMapping("/no-state-calculate-accumulate-batch")
-    public ApiResponse<List<DeriveMetricCalculateResult>> noStateExecuteAccumulateBatch(
-            @ApiParam("明细宽表数据") @RequestBody JSONObject detail) {
-        //获取指标计算类
-        MetricCalculate dataWideTable = getMetricCalculate(detail);
-        ApiResponse<List<DeriveMetricCalculateResult>> apiResponse = new ApiResponse<>();
-        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            return apiResponse;
-        }
-
-        //List<MetricCube> collect = deriveMetricCalculateList.parallelStream()
-        //        .map(tempDerive -> tempDerive.getQueryMetricCube(detail))
-        //        .collect(Collectors.toList());
-        return null;
-    }
-
-    private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject detail,
-                                                                 MetricCalculate dataWideTable,
-                                                                 boolean update) {
-        //进行字段计算
-        detail = dataWideTable.getParam(detail);
-        List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            return Collections.emptyList();
-        }
-        List<DeriveMetricCalculateResult<Object>> deriveList = new CopyOnWriteArrayList<>();
-        JSONObject finalDetail = detail;
-        deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
-            DeriveMetricCalculateResult<Object> result;
-            if (update) {
-                result = deriveMetricCalculate.stateExec(finalDetail);
-            } else {
-                result = deriveMetricCalculate.noStateExec(finalDetail);
-            }
-            if (result != null) {
-                deriveList.add(result);
-            }
-        });
-        if (log.isDebugEnabled()) {
-            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveList));
-        }
-        //按照key进行排序
-        if (CollUtil.isNotEmpty(deriveList)) {
-            //按照指标id进行排序
-            deriveList.sort(Comparator.comparingInt(temp -> Integer.parseInt(temp.getKey().split("_")[1])));
-        }
-        return deriveList;
-    }
-
-    private MetricCalculate getMetricCalculate(JSONObject detail) {
-        Long tableId = detail.getLong("tableId");
-        if (tableId == null) {
-            throw new RuntimeException("没有传入tableId, 原始数据: " + JSONUtil.toJsonStr(detail));
-        }
-        return metricConfigService.getMetricCalculate(tableId);
     }
 
 }

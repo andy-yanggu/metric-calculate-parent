@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.pojo;
+package com.yanggu.metric_calculate.core2.util;
 
 
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
