@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 import com.yanggu.metric_calculate.core2.annotation.Collective;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -61,6 +62,17 @@ public class DistinctCountAggregateFunctionTest {
         assertNotNull(accumulator);
         assertEquals(1, accumulator.size());
         assertTrue(accumulator.contains(1));
+    }
+
+    @Test
+    public void testGetResult() {
+        DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
+        HashSet<Integer> mock = Mockito.mock(HashSet.class);
+        Mockito.when(mock.size()).thenReturn(1);
+        Integer result = distinctCount.getResult(mock);
+        assertEquals(new Integer(1), result);
+        //验证依赖方法
+        Mockito.verify(mock, Mockito.times(1)).size();
     }
 
     @Test
