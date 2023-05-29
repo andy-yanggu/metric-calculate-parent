@@ -38,6 +38,9 @@ public class MetricCube<IN, ACC, OUT> {
      */
     public DeriveMetricCalculateResult<OUT> query() {
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query();
+        if (deriveMetricCalculateResult == null) {
+            return null;
+        }
         //设置维度信息
         setDimension(deriveMetricCalculateResult);
         return deriveMetricCalculateResult;
@@ -52,6 +55,9 @@ public class MetricCube<IN, ACC, OUT> {
      */
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query(input);
+        if (deriveMetricCalculateResult == null) {
+            return null;
+        }
         //设置维度信息
         setDimension(deriveMetricCalculateResult);
         return deriveMetricCalculateResult;

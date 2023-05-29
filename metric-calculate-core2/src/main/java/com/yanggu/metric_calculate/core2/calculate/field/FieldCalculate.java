@@ -11,8 +11,20 @@ public interface FieldCalculate<T, R> {
     default void init() {
     }
 
+    /**
+     * 获取字段名称
+     *
+     * @return
+     */
     String getName();
 
+    /**
+     * 执行字段计算
+     *
+     * @param input
+     * @return
+     * @throws Exception
+     */
     R process(T input) throws Exception;
 
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 获取指标、宽表相关定义
  */
-@FeignClient(name = "metric-config-api", url = "${feign.metric-config-api.host}")
+@FeignClient(name = "metric-config-api", url = "${feign.metric-config-api.host}", path = "/mock-model")
 public interface MetricConfigClient {
 
     /**
@@ -19,7 +19,7 @@ public interface MetricConfigClient {
      * @param tableId 数据明细宽表的id
      * @return
      */
-    @GetMapping("/model/{tableId}")
+    @GetMapping("/{tableId}")
     DataDetailsWideTable getTableAndMetricByTableId(@PathVariable("tableId") Long tableId);
 
     /**
@@ -27,7 +27,7 @@ public interface MetricConfigClient {
      *
      * @return
      */
-    @GetMapping("/model/all-id")
+    @GetMapping("/all-id")
     List<Long> getAllTableId();
 
 }

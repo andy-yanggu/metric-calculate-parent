@@ -18,12 +18,13 @@ import java.util.stream.Collectors;
  * 模拟指标配置数据
  */
 @RestController
-@RequestMapping("/model")
 @Api(tags = "模拟指标配置数据")
+@RequestMapping("/mock-model")
 public class MockMetricConfigDataController {
 
     /**
      * 返回mock_metric_config目录下的json配置文件
+     *
      * @param tableId 明细宽表id
      * @return
      */

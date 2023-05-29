@@ -210,10 +210,10 @@ public class FieldProcessorUtil {
      * @param <OUT>
      */
     @SneakyThrows
-    public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT>
-                                                    getAggregateFieldProcessor(AggregateFunctionParam aggregateFunctionParam,
-                                                                               Map<String, Class<?>> fieldMap,
-                                                                               AggregateFunctionFactory factory) {
+    public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
+                                                                        AggregateFunctionParam aggregateFunctionParam,
+                                                                        Map<String, Class<?>> fieldMap,
+                                                                        AggregateFunctionFactory factory) {
         String aggregateType = aggregateFunctionParam.getCalculateLogic();
 
         AggregateFunction<IN, ACC, OUT> aggregateFunction = factory.getAggregateFunction(aggregateType);
@@ -226,7 +226,7 @@ public class FieldProcessorUtil {
             BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
             AggregateFunctionFactory.setUdafParam(aggregateFunction, baseUdafParam.getParam());
             FieldProcessor<JSONObject, IN> baseFieldProcessor =
-                    getBaseFieldProcessor(baseUdafParam, fieldMap, aggregateFunction);
+                    getBaseFieldProcessor(baseUdafParam, fieldMap, factory);
             return new AggregateFieldProcessor<>(baseFieldProcessor, aggregateFunction);
         }
 
@@ -289,13 +289,13 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseFieldProcessor(
-                                                            BaseUdafParam baseUdafParam,
-                                                            Map<String, Class<?>> fieldMap,
-                                                            AggregateFunction<IN, ACC, OUT> aggregateFunction) {
+                                                                    BaseUdafParam baseUdafParam,
+                                                                    Map<String, Class<?>> fieldMap,
+                                                                    AggregateFunctionFactory factory) {
 
         String aggregateType = baseUdafParam.getAggregateType();
         FieldProcessor<JSONObject, IN> fieldProcessor;
-        Class<? extends AggregateFunction> aggregateFunctionClass = aggregateFunction.getClass();
+        Class<? extends AggregateFunction> aggregateFunctionClass = factory.getAggregateFunctionClass(aggregateType);
         if (aggregateFunctionClass.isAnnotationPresent(Numerical.class)) {
             //数值型
             NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>();

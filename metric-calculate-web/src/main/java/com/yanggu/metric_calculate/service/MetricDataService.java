@@ -3,16 +3,14 @@ package com.yanggu.metric_calculate.service;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Tuple;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.client.metric_config.MetricConfigClient;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.table.Table;
+import com.yanggu.metric_calculate.pojo.TableData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,14 +21,11 @@ import java.util.*;
 public class MetricDataService {
 
     @Autowired
-    private MetricConfigClient metricConfigClient;
-
-    @Autowired
     @Qualifier("redisDeriveMetricMiddleStore")
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Autowired
-    private MetricConfigService metricConfigService;
+    private MetricConfigDataService metricConfigDataService;
 
     /**
      * 查询派生指标数据
@@ -44,7 +39,6 @@ public class MetricDataService {
                                                                Long deriveId,
                                                                LinkedHashMap<String, Object> dimensionMap) {
         DimensionSet dimension = getDimensionSet(tableId, deriveId, dimensionMap);
-        if (dimension == null) return null;
         MetricCube<Object, Object, Object> metricCube = deriveMetricMiddleStore.get(dimension);
         if (metricCube == null) {
             return null;
@@ -56,7 +50,7 @@ public class MetricDataService {
      * 全量铺底接口, 计算宽表下的所有指标
      */
     public void fullUpdate(List<JSONObject> dataList, Long tableId) {
-        MetricCalculate metricCalculate = metricConfigService.getMetricCalculate(tableId);
+        MetricCalculate metricCalculate = metricConfigDataService.getMetricCalculate(tableId);
 
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
@@ -82,17 +76,18 @@ public class MetricDataService {
 
         //批量读取数据
         Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(new ArrayList<>(dimensionSets));
+        if (dimensionSetMetricCubeMap == null) {
+            dimensionSetMetricCubeMap = Collections.emptyMap();
+        }
 
         for (Tuple tuple : tupleList) {
             DeriveMetricCalculate deriveMetricCalculate = tuple.get(0);
             JSONObject input = tuple.get(1);
             DimensionSet dimensionSet = tuple.get(2);
-            MetricCube metricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            if (metricCube == null) {
-                metricCube = deriveMetricCalculate.createMetricCube(dimensionSet);
-            }
+            MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
+            historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube);
             //TODO 缺少了删除数据逻辑
-            metricCube.getTable().put(input);
+            dimensionSetMetricCubeMap.put(dimensionSet, historyMetricCube);
         }
 
         //批量更新
@@ -113,35 +108,26 @@ public class MetricDataService {
 
     /**
      * 更新派生指标数据
+     */
+    public void updateDeriveData(TableData tableData) {
+        DimensionSet dimensionSet = getDimensionSet(tableData.getTableId(), tableData.getDeriveId(), tableData.getDimensionMap());
+        MetricCube metricCube = new MetricCube<>();
+        metricCube.setDimensionSet(dimensionSet);
+        metricCube.setTable(tableData.getTable());
+        deriveMetricMiddleStore.update(metricCube);
+    }
+
+    /**
+     * 获取维度数据
      *
      * @param tableId
      * @param deriveId
      * @param dimensionMap
-     * @param table
+     * @return
      */
-    public void updateDeriveData(Long tableId, Long deriveId, LinkedHashMap<String, Object> dimensionMap, Table table) {
-        DimensionSet dimensionSet = getDimensionSet(tableId, deriveId, dimensionMap);
-        MetricCube metricCube = new MetricCube<>();
-        metricCube.setDimensionSet(dimensionSet);
-        metricCube.setTable(table);
-        deriveMetricMiddleStore.update(metricCube);
-    }
-
     private DimensionSet getDimensionSet(Long tableId, Long deriveId, LinkedHashMap<String, Object> dimensionMap) {
-        DataDetailsWideTable table = metricConfigClient.getTableAndMetricByTableId(tableId);
-        if (table == null || table.getId() == null) {
-            throw new RuntimeException("传入的tableId: " + tableId + "有误");
-        }
-
-        List<Derive> deriveList = table.getDerive();
-        if (CollUtil.isEmpty(deriveList)) {
-            return null;
-        }
-        Derive derive = deriveList.stream()
-                .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("传入的派生指标id" + deriveId + "有误"));
-
+        //获取派生指标
+        Derive derive = metricConfigDataService.getDerive(tableId, deriveId);
         DimensionSet dimension = new DimensionSet();
         dimension.setKey(tableId + "_" + derive.getId());
         dimension.setMetricName(derive.getName());

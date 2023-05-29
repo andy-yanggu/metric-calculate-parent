@@ -1,8 +1,6 @@
 package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.aggregate_function.numeric.CovAggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
@@ -13,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -31,7 +30,7 @@ public class NumberFieldProcessorTest {
         baseUdafParam.setMetricExpress("amount");
         baseUdafParam.setAggregateType(aggregateType);
 
-        FieldProcessor<JSONObject, Double> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, new SumAggregateFunction<>());
+        FieldProcessor<JSONObject, Double> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory());
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", 100.0D);
@@ -54,7 +53,7 @@ public class NumberFieldProcessorTest {
         fieldMap.put("amount", Long.class);
         fieldMap.put("amount1", Long.class);
 
-        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, new CovAggregateFunction());
+        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory());
 
         JSONObject input = new JSONObject();
         input.set("amount", 1L);

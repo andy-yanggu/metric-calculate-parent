@@ -8,8 +8,8 @@ import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
-import com.yanggu.metric_calculate.core2.util.QueryRequest;
 import com.yanggu.metric_calculate.pojo.PutRequest;
+import com.yanggu.metric_calculate.pojo.QueryRequest;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 public class MetricCalculateService {
 
     @Autowired
-    private MetricConfigService metricConfigService;
+    private MetricConfigDataService metricConfigDataService;
 
     @Autowired
     @Qualifier("queryComponent")
@@ -75,10 +75,10 @@ public class MetricCalculateService {
     public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateExecuteAccumulateBatch(JSONObject input) {
 
         DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult =
-                                        new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
+                new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
 
         ApiResponse<List<DeriveMetricCalculateResult>> apiResponse = new ApiResponse<>();
-        //设置超时出咯
+        //设置超时处理
         deferredResult.onTimeout(() -> {
             apiResponse.setMessage("请求超时, 请重试");
             apiResponse.setStatus("500");
@@ -206,11 +206,12 @@ public class MetricCalculateService {
         return queryRequest;
     }
 
-    private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject detail,
+    private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject input,
                                                                  MetricCalculate dataWideTable,
                                                                  boolean update) {
         //进行字段计算
-        detail = dataWideTable.getParam(detail);
+        JSONObject detail = dataWideTable.getParam(input);
+        log.info("输入明细数据: {}, 计算后的输入明细数据: {}, 是否更新: {}", JSONUtil.toJsonStr(input), JSONUtil.toJsonStr(detail), update);
         List<DeriveMetricCalculate> deriveMetricCalculateList = dataWideTable.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return Collections.emptyList();
@@ -228,13 +229,11 @@ public class MetricCalculateService {
                 deriveList.add(result);
             }
         });
-        if (log.isDebugEnabled()) {
-            log.debug("派生指标计算后的数据: {}", JSONUtil.toJsonStr(deriveList));
-        }
+        log.info("输入的明细数据: {}, 派生指标计算后的数据: {}", JSONUtil.toJsonStr(detail), JSONUtil.toJsonStr(deriveList));
         //按照key进行排序
         if (CollUtil.isNotEmpty(deriveList)) {
-            //按照指标id进行排序
-            deriveList.sort(Comparator.comparingInt(temp -> Integer.parseInt(temp.getKey().split("_")[1])));
+            //按照指标key进行排序
+            deriveList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
         }
         return deriveList;
     }
@@ -244,7 +243,7 @@ public class MetricCalculateService {
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId, 原始数据: " + JSONUtil.toJsonStr(detail));
         }
-        return metricConfigService.getMetricCalculate(tableId);
+        return metricConfigDataService.getMetricCalculate(tableId);
     }
 
 }

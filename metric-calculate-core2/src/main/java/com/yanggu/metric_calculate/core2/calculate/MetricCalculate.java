@@ -50,24 +50,6 @@ public class MetricCalculate extends DataDetailsWideTable {
     private Map<String, Class<?>> fieldMap;
 
     /**
-     * 根据派生指标id查询派生指标
-     *
-     * @param deriveId
-     * @return
-     * @param <IN>
-     * @param <ACC>
-     * @param <OUT>
-     */
-    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long deriveId) {
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            throw new RuntimeException("派生指标列表为空");
-        }
-        return deriveMetricCalculateList.stream()
-                .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
-                .findFirst().orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
-    }
-
-    /**
      * 从原始数据中提取数据, 进行手动数据类型转换
      * <p>虚拟类型的字段进行计算</p>
      * <p>防止输入的数据类型和数据明细宽表定义的数据类型不匹配</p>
@@ -86,6 +68,24 @@ public class MetricCalculate extends DataDetailsWideTable {
             }
         }
         return data;
+    }
+
+    /**
+     * 根据派生指标id查询派生指标
+     *
+     * @param deriveId
+     * @return
+     * @param <IN>
+     * @param <ACC>
+     * @param <OUT>
+     */
+    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long deriveId) {
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            throw new RuntimeException("派生指标列表为空");
+        }
+        return deriveMetricCalculateList.stream()
+                .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
+                .findFirst().orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
     }
 
 }

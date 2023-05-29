@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +25,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.stream.Collectors;
 
 /**
- * 指标配置Service
+ * 指标配置数据Service
  */
 @Slf4j
 @Service
-public class MetricConfigService implements ApplicationRunner {
+public class MetricConfigDataService implements ApplicationRunner {
 
     private final Map<Long, MetricCalculate> metricMap = new ConcurrentHashMap<>();
 
@@ -61,29 +62,31 @@ public class MetricConfigService implements ApplicationRunner {
     }
 
     /**
+     * 根据宽表id获取指标配置数据
+     *
+     * @param tableId
+     * @return
+     */
+    public DataDetailsWideTable metricConfigDataById(Long tableId) {
+        if (CollUtil.isEmpty(metricMap)) {
+            return null;
+        }
+        return metricMap.values().stream()
+                .filter(tempTableData -> tempTableData.getId().equals(tableId))
+                .findFirst()
+                .map(temp -> BeanUtil.copyProperties(temp, DataDetailsWideTable.class))
+                .orElseThrow(() -> new RuntimeException("传入的tableId: " + tableId + "有误"));
+    }
+
+    /**
      * 增量更新指标配置（更新某个宽表下的所有指标）
      *
      * @param tableId
      * @return
      */
     public void updateTable(Long tableId) {
-        DataDetailsWideTable table = metricConfigClient.getTableAndMetricByTableId(tableId);
-        if (table == null || table.getId() == null) {
-            throw new RuntimeException("传入的tableId: " + tableId + "有误");
-        }
-
-        //初始化指标计算类
-        MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(table);
-
-        //更新指标数据
-        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
-        Lock writeLock = readWriteLock.writeLock();
-        writeLock.lock();
-        try {
-            metricMap.put(tableId, metricCalculate);
-        } finally {
-            writeLock.unlock();
-        }
+        //初始化和设置指标计算类
+        buildAndSetMetricData(tableId);
     }
 
     /**
@@ -109,8 +112,8 @@ public class MetricConfigService implements ApplicationRunner {
             //释放读锁
             readLock.unlock();
         }
-        Lock writeLock = readWriteLock.writeLock();
         //如果缓存中不存在上写锁
+        Lock writeLock = readWriteLock.writeLock();
         writeLock.lock();
         try {
             //double check防止多次读取数据
@@ -130,23 +133,58 @@ public class MetricConfigService implements ApplicationRunner {
      * 从数据库加载指标定义
      */
     public void buildAllMetric() {
-        log.info("load metric from DB");
+        log.info("初始化所有指标计算类");
         //获取所有宽表id
         List<Long> allTableId = metricConfigClient.getAllTableId();
         metricMap.clear();
-        allTableId.parallelStream().forEach(tempTableId -> {
-            ReadWriteLock readWriteLock = readWriteLockStriped.get(tempTableId);
-            Lock writeLock = readWriteLock.writeLock();
-            writeLock.lock();
-            try {
-                MetricCalculate metricCalculate = buildMetric(tempTableId);
-                metricMap.put(tempTableId, metricCalculate);
-            } finally {
-                writeLock.unlock();
-            }
-        });
+        if (CollUtil.isEmpty(allTableId)) {
+            return;
+        }
+        allTableId.parallelStream().forEach(this::buildAndSetMetricData);
     }
 
+    /**
+     * 根据宽表id和派生指标id获取派生指标
+     *
+     * @param tableId
+     * @param deriveId
+     * @return
+     */
+    public Derive getDerive(Long tableId, Long deriveId) {
+        MetricCalculate metricCalculate = getMetricCalculate(tableId);
+        List<Derive> deriveList = metricCalculate.getDerive();
+        if (CollUtil.isEmpty(deriveList)) {
+            return null;
+        }
+        return deriveList.stream()
+                .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("传入的派生指标id" + deriveId + "有误"));
+    }
+
+    /**
+     * 初始化和设置指标计算类
+     *
+     * @param tableId
+     */
+    private void buildAndSetMetricData(Long tableId) {
+        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
+        Lock writeLock = readWriteLock.writeLock();
+        writeLock.lock();
+        try {
+            MetricCalculate metricCalculate = buildMetric(tableId);
+            metricMap.put(tableId, metricCalculate);
+        } finally {
+            writeLock.unlock();
+        }
+    }
+
+    /**
+     * 初始化指标计算类
+     *
+     * @param tableId
+     * @return
+     */
     private MetricCalculate buildMetric(Long tableId) {
         //根据明细宽表id查询指标数据和宽表数据
         DataDetailsWideTable tableData = metricConfigClient.getTableAndMetricByTableId(tableId);
@@ -156,6 +194,9 @@ public class MetricConfigService implements ApplicationRunner {
         }
         //初始化指标计算类
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tableData);
+        if (metricCalculate == null) {
+            throw new RuntimeException("指标计算类初始化失败");
+        }
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return metricCalculate;

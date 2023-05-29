@@ -2,10 +2,6 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstFieldAggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstObjectAggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.object.MaxFieldAggregateFunction;
-import com.yanggu.metric_calculate.core2.aggregate_function.object.MaxObjectAggregateFunction;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrder;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
@@ -19,6 +15,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -47,10 +44,11 @@ public class ObjectFieldProcessorTest {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setRetainExpress("name");
+        udafParam.setAggregateType("MAXFIELD");
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, new MaxFieldAggregateFunction<KeyValue<MultiFieldOrderCompareKey, String>>());
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -79,8 +77,9 @@ public class ObjectFieldProcessorTest {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
+        udafParam.setAggregateType("MAXOBJECT");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, new MaxObjectAggregateFunction<KeyValue<MultiFieldOrderCompareKey, JSONObject>>());
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -111,7 +110,7 @@ public class ObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("FIRSTFIELD");
 
-        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, new FirstFieldAggregateFunction<>());
+        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -135,8 +134,9 @@ public class ObjectFieldProcessorTest {
     public void process4() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("FIRSTOBJECT");
 
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, new FirstObjectAggregateFunction<>());
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();

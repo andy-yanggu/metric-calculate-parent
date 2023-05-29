@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
@@ -53,9 +52,9 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
-        AviatorEvaluatorInstance instance = AviatorEvaluator.getInstance();
+        //设置反射调用
         AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        Expression tempFilterExpression = instance.compile(filterExpress, true);
+        Expression tempFilterExpression = AviatorEvaluator.compile(filterExpress, true);
         List<String> variableNames = tempFilterExpression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
             throw new RuntimeException("过滤条件为常量表达式, 没有意义: " + filterExpress);

@@ -14,6 +14,11 @@ import lombok.Data;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 数值型字段提取器
+ *
+ * @param <IN>
+ */
 @Data
 public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
