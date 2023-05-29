@@ -44,11 +44,20 @@ public class MetricDataController {
         return ApiResponse.success(result);
     }
 
-    @ApiOperation("全量铺底（计算所有派生指标数据）")
-    @PostMapping("/full-update-derive")
-    public ApiResponse<Object> fullUpdate(@NotNull @RequestParam Long tableId,
-                                          @NotEmpty @RequestBody List<JSONObject> dataList) {
-        metricDataService.fullUpdate(dataList, tableId);
+    @ApiOperation("全量填充（计算所有派生指标数据）")
+    @PostMapping("/full-fill-derive-data")
+    public ApiResponse<Object> fullUpdate(@ApiParam("数据明细宽表id") @NotNull @RequestParam Long tableId,
+                                          @ApiParam("数据list") @NotEmpty @RequestBody List<JSONObject> dataList) {
+        metricDataService.fullFillDeriveData(dataList, tableId);
+        return ApiResponse.success();
+    }
+
+    @ApiOperation("部分填充（单个派生指标）")
+    @PostMapping("/fill-derive-data-by-id")
+    public ApiResponse<Object> fillDeriveDataById(@NotNull @ApiParam("数据明细宽表id") @RequestParam Long tableId,
+                                                  @NotNull @ApiParam("派生指标id") @RequestParam Long deriveId,
+                                                  @NotEmpty @ApiParam("数据list") @RequestBody List<JSONObject> dataList) {
+        metricDataService.fillDeriveDataById(tableId, deriveId, dataList);
         return ApiResponse.success();
     }
 
@@ -65,10 +74,10 @@ public class MetricDataController {
         return ApiResponse.success();
     }
 
-    @ApiOperation("更新派生指标数据")
-    @PutMapping("/update-derive-data")
+    @ApiOperation("修正派生指标数据")
+    @PutMapping("/correct-derive-data")
     public ApiResponse<Object> updateDeriveData(@ApiParam("维度数据和表数据") @RequestBody @Validated TableData tableData) {
-        metricDataService.updateDeriveData(tableData);
+        metricDataService.correctDeriveData(tableData);
         return ApiResponse.success();
     }
 

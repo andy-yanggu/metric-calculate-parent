@@ -6,7 +6,11 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-
+/**
+ * 可变对象序列化器
+ *
+ * @param <T>
+ */
 public class MutableObjectSerializer<T> extends Serializer<MutableObj<T>> {
 
     @Override

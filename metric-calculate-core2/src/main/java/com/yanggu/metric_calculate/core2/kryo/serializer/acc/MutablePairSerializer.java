@@ -6,7 +6,12 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-
+/**
+ * 可变二元组序列化器
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class MutablePairSerializer<K, V> extends Serializer<MutablePair<K, V>> {
 
     @Override

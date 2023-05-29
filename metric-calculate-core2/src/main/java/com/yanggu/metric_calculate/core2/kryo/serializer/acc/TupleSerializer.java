@@ -6,7 +6,9 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
-
+/**
+ * 元祖序列化器
+ */
 public class TupleSerializer extends Serializer<Tuple> {
 
     @Override

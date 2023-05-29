@@ -16,7 +16,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * 指标数据Service
+ */
 @Service
 public class MetricDataService {
 
@@ -46,13 +50,34 @@ public class MetricDataService {
         return metricCube.query();
     }
 
+    public void fillDeriveDataById(Long tableId, Long deriveId, List<JSONObject> dataList) {
+        fullFillDeriveDataByDeriveIdList(dataList, tableId, Collections.singletonList(deriveId));
+    }
+
     /**
-     * 全量铺底接口, 计算宽表下的所有指标
+     * 全量铺底接口, 计算宽表下的所有派生指标
      */
-    public void fullUpdate(List<JSONObject> dataList, Long tableId) {
+    public void fullFillDeriveData(List<JSONObject> dataList, Long tableId) {
+        List<Long> allDeriveIdList = metricConfigDataService.getAllDeriveIdList(tableId);
+        fullFillDeriveDataByDeriveIdList(dataList, tableId, allDeriveIdList);
+    }
+
+    /**
+     * 计算宽表下的指定派生指标
+     */
+    public void fullFillDeriveDataByDeriveIdList(List<JSONObject> dataList, Long tableId, List<Long> deriveIdList) {
         MetricCalculate metricCalculate = metricConfigDataService.getMetricCalculate(tableId);
 
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            return;
+        }
+
+        //过滤出指定的派生指标
+        deriveMetricCalculateList = deriveMetricCalculateList.stream()
+                .filter(tempDerive -> deriveIdList.contains(tempDerive.getId()))
+                .collect(Collectors.toList());
+
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return;
         }
@@ -109,7 +134,7 @@ public class MetricDataService {
     /**
      * 更新派生指标数据
      */
-    public void updateDeriveData(TableData tableData) {
+    public void correctDeriveData(TableData tableData) {
         DimensionSet dimensionSet = getDimensionSet(tableData.getTableId(), tableData.getDeriveId(), tableData.getDimensionMap());
         MetricCube metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);

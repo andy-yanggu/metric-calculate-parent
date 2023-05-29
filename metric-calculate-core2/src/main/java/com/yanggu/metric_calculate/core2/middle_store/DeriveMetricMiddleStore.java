@@ -68,6 +68,11 @@ public interface DeriveMetricMiddleStore {
      */
     void deleteData(DimensionSet dimensionSet);
 
+    /**
+     * 批量删除
+     *
+     * @param dimensionSetList
+     */
     default void batchDeleteData(List<DimensionSet> dimensionSetList) {
         dimensionSetList.forEach(this::deleteData);
     }

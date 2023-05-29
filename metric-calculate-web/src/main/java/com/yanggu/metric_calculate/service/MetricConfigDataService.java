@@ -162,6 +162,17 @@ public class MetricConfigDataService implements ApplicationRunner {
                 .orElseThrow(() -> new RuntimeException("传入的派生指标id" + deriveId + "有误"));
     }
 
+    public List<Long> getAllDeriveIdList(Long tableId) {
+        MetricCalculate metricCalculate = getMetricCalculate(tableId);
+        List<Derive> deriveList = metricCalculate.getDerive();
+        if (CollUtil.isEmpty(deriveList)) {
+            return Collections.emptyList();
+        }
+        return deriveList.stream()
+                .map(Derive::getId)
+                .collect(Collectors.toList());
+    }
+
     /**
      * 初始化和设置指标计算类
      *

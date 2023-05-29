@@ -7,6 +7,12 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+/**
+ * 不可变二元组序列化器
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class PairSerializer<K, V> extends Serializer<Pair<K, V>> {
 
     @Override
