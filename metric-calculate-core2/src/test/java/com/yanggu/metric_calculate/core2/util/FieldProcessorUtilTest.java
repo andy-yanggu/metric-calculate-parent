@@ -37,7 +37,7 @@ import org.mockito.Mockito;
 
 import java.util.*;
 
-import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
 import static org.junit.Assert.*;
 
 public class FieldProcessorUtilTest {

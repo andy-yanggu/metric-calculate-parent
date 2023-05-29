@@ -1,13 +1,17 @@
 package com.yanggu.metric_calculate.core2.aggregate_function;
 
 
-public class AggregateFunctionFactoryTest {
+public class AggregateFunctionFactoryBase {
 
     public static AggregateFunctionFactory aggregateFunctionFactory;
 
     static {
         AggregateFunctionFactory tempAggregateFunctionFactory = new AggregateFunctionFactory();
-        tempAggregateFunctionFactory.init();
+        try {
+            tempAggregateFunctionFactory.init();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         aggregateFunctionFactory = tempAggregateFunctionFactory;
     }
 
