@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 获取指标、宽表相关定义
  */
-@FeignClient(name = "metric-config-api", url = "${feign.metric-config-api.host}", path = "/mock-model")
+@FeignClient(name = "metric-config-api", path = "/mock-model", url = "${feign.metric-config-api.host}")
 public interface MetricConfigClient {
 
     /**

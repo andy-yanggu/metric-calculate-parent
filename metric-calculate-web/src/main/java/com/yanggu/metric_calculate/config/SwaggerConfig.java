@@ -25,11 +25,15 @@ public class SwaggerConfig {
     @Value("${spring.application.version}")
     private String version;
 
+    @Value("${spring.application.description}")
+    private String description;
+
     @Bean
     public Docket createDevRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(new ApiInfoBuilder()
                         .title(applicationName)
+                        .description(description)
                         .version(version)
                         .build())
                 .select()

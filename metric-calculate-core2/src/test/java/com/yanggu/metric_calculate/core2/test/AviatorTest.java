@@ -2,14 +2,16 @@ package com.yanggu.metric_calculate.core2.test;
 
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.ListUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.RandomUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.googlecode.aviator.runtime.type.seq.MapSequence;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,7 +35,7 @@ public class AviatorTest {
                         "return set;";
         Expression compile = AviatorEvaluator.compile(express);
         Object execute = compile.execute();
-        assertEquals(CollUtil.newHashSet("test1", "test2", "test3"),execute);
+        assertEquals(CollUtil.newHashSet("test1", "test2", "test3"), execute);
     }
 
     /**
@@ -80,6 +82,27 @@ public class AviatorTest {
         env.put("amount", 500);
         execute = compile.execute(env);
         assertFalse((Boolean) execute);
+    }
+
+    @Test
+    public void test4() {
+        int count = 0;
+        int total = 1000000000;
+        for (int j = 0; j < total; j++) {
+            List<Integer> list = ListUtil.toList(RandomUtil.randomInt(0, 100), RandomUtil.randomInt(0, 100), RandomUtil.randomInt(0, 100));
+            for (int i = 0; i < 12; i++) {
+                boolean contains = list.contains(RandomUtil.randomInt(0, 100));
+                if (contains) {
+                    count++;
+                    break;
+                }
+            }
+            if (j != 0 && j % 10000000 == 0) {
+                System.out.print("当前时间: "+ DateUtil.formatDateTime(new Date()) +"执行了: " + j + "次, ");
+                System.out.println("命中次数: " + count * 1.0 / j);
+            }
+        }
+        System.out.println("最后命中次数: " + count * 1.0 / total);
     }
 
 }

@@ -16,9 +16,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
@@ -101,12 +99,12 @@ public class MetricConfigDataService implements ApplicationRunner {
 
         //先上读锁
         readLock.lock();
-        MetricCalculate dataWideTable;
+        MetricCalculate metricCalculate;
         try {
-            dataWideTable = metricMap.get(tableId);
+            metricCalculate = metricMap.get(tableId);
             //如果缓存中存在直接return
-            if (dataWideTable != null) {
-                return dataWideTable;
+            if (metricCalculate != null) {
+                return metricCalculate;
             }
         } finally {
             //释放读锁
@@ -117,16 +115,16 @@ public class MetricConfigDataService implements ApplicationRunner {
         writeLock.lock();
         try {
             //double check防止多次读取数据
-            dataWideTable = metricMap.get(tableId);
-            if (dataWideTable == null) {
-                dataWideTable = buildMetric(tableId);
-                metricMap.put(tableId, dataWideTable);
+            metricCalculate = metricMap.get(tableId);
+            if (metricCalculate == null) {
+                metricCalculate = buildMetric(tableId);
+                metricMap.put(tableId, metricCalculate);
             }
         } finally {
             //释放写锁
             writeLock.unlock();
         }
-        return dataWideTable;
+        return metricCalculate;
     }
 
     /**
@@ -136,7 +134,18 @@ public class MetricConfigDataService implements ApplicationRunner {
         log.info("初始化所有指标计算类");
         //获取所有宽表id
         List<Long> allTableId = metricConfigClient.getAllTableId();
-        metricMap.clear();
+        //删除原有的数据
+        Iterator<Map.Entry<Long, MetricCalculate>> iterator = metricMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Long tempTableId = iterator.next().getKey();
+            Lock writeLock = readWriteLockStriped.get(tempTableId).writeLock();
+            writeLock.lock();
+            try {
+                iterator.remove();
+            } finally {
+                writeLock.unlock();
+            }
+        }
         if (CollUtil.isEmpty(allTableId)) {
             return;
         }
@@ -209,11 +218,10 @@ public class MetricConfigDataService implements ApplicationRunner {
             throw new RuntimeException("指标计算类初始化失败");
         }
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            return metricCalculate;
+        if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
+            //设置派生指标外部存储
+            deriveMetricCalculateList.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
         }
-        //设置外部存储
-        deriveMetricCalculateList.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
         return metricCalculate;
     }
 

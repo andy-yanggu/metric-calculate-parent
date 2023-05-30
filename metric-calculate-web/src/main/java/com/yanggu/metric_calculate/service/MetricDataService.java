@@ -85,11 +85,13 @@ public class MetricDataService {
         List<Tuple> tupleList = new ArrayList<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
             for (JSONObject input : dataList) {
-                Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(input);
+                //进行字段计算
+                JSONObject detail = metricCalculate.getParam(input);
+                Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(detail);
                 if (Boolean.TRUE.equals(filter)) {
-                    DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+                    DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(detail);
                     dimensionSets.add(dimensionSet);
-                    Tuple tuple = new Tuple(deriveMetricCalculate, input, dimensionSet);
+                    Tuple tuple = new Tuple(deriveMetricCalculate, detail, dimensionSet);
                     tupleList.add(tuple);
                 }
             }
@@ -107,10 +109,10 @@ public class MetricDataService {
 
         for (Tuple tuple : tupleList) {
             DeriveMetricCalculate deriveMetricCalculate = tuple.get(0);
-            JSONObject input = tuple.get(1);
+            JSONObject detail = tuple.get(1);
             DimensionSet dimensionSet = tuple.get(2);
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube);
+            historyMetricCube = deriveMetricCalculate.addInput(detail, historyMetricCube);
             //TODO 缺少了删除数据逻辑
             dimensionSetMetricCubeMap.put(dimensionSet, historyMetricCube);
         }

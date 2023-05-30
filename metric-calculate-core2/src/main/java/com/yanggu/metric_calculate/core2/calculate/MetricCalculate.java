@@ -60,6 +60,9 @@ public class MetricCalculate extends DataDetailsWideTable {
      */
     @SneakyThrows
     public JSONObject getParam(JSONObject input) {
+        if (CollUtil.isEmpty((Map<?, ?>) input)) {
+            throw new RuntimeException("输入的明细数据为空");
+        }
         JSONObject data = new JSONObject();
         for (FieldCalculate<JSONObject, Object> fieldCalculate : fieldCalculateList) {
             Object process = fieldCalculate.process(input);

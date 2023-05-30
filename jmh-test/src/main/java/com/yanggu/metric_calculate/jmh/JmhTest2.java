@@ -43,8 +43,7 @@ public class JmhTest2 {
         DeriveMetricCalculate<Double, Double, Double> tempDeriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
         deriveMetricCalculate = tempDeriveMetricCalculate;
 
-        deriveMetricCalculate1 = new DeriveMetricCalculate<>();
-        BeanUtil.copyProperties(tempDeriveMetricCalculate, deriveMetricCalculate1);
+        deriveMetricCalculate1 = BeanUtil.copyProperties(tempDeriveMetricCalculate, DeriveMetricCalculate.class);
         DeriveMetricMiddleHashMapKryoStore deriveMetricMiddleHashMapKryoStore = new DeriveMetricMiddleHashMapKryoStore();
         deriveMetricMiddleHashMapKryoStore.init();
         deriveMetricCalculate1.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);

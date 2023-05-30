@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * 指标配置类
+ * 指标计算配置类
  */
 @Slf4j
 @Configuration
