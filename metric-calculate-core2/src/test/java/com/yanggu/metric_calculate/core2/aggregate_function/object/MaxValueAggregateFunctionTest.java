@@ -22,7 +22,7 @@ public class MaxValueAggregateFunctionTest {
     public void testObjective() {
         Objective objective = MaxValueAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(0, objective.retainStrategy());
-        assertTrue(objective.useCompareField());
+        assertEquals(3, objective.keyStrategy());
     }
 
     @Test

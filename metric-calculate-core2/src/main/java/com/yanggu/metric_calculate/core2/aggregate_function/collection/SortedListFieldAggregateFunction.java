@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
  * @param <T>
  */
 @MergeType("SORTEDLIMITLISTFIELD")
-@Collective(useSortedField = true, retainStrategy = 1)
+@Collective(keyStrategy = 2, retainStrategy = 1)
 public class SortedListFieldAggregateFunction<T extends Comparable<T>> extends SortedListObjectAggregateFunction<T> {
 }

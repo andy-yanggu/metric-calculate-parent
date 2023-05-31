@@ -22,7 +22,7 @@ public class MinValueAggregateFunctionTest {
     public void testObjective() {
         Objective objective = MinValueAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(0, objective.retainStrategy());
-        assertTrue(objective.useCompareField());
+        assertEquals(3, objective.keyStrategy());
     }
 
     @Test

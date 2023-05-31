@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("FIRSTOBJECT")
-@Objective(useCompareField = false, retainStrategy = 2)
+@Objective(keyStrategy = 0, retainStrategy = 2)
 public class FirstObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override

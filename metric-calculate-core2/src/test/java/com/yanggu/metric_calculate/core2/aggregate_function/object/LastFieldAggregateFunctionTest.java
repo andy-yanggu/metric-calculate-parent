@@ -21,7 +21,7 @@ public class LastFieldAggregateFunctionTest {
     public void testObjective() {
         Objective objective = LastFieldAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(1, objective.retainStrategy());
-        assertFalse(objective.useCompareField());
+        assertEquals(0, objective.keyStrategy());
     }
 
     @Test

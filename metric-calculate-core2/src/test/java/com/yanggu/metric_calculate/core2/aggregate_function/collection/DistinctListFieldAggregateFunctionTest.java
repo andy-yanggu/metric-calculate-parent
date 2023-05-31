@@ -19,8 +19,7 @@ public class DistinctListFieldAggregateFunctionTest {
     public void testCollective() {
         Collective collective = DistinctListFieldAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(1, collective.retainStrategy());
-        assertFalse(collective.useSortedField());
-        assertTrue(collective.useDistinctField());
+        assertEquals(1, collective.keyStrategy());
     }
 
     @Test

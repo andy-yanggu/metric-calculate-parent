@@ -18,8 +18,7 @@ public class SortedListFieldAggregateFunctionTest {
     public void testCollective() {
         Collective collective = SortedListFieldAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(1, collective.retainStrategy());
-        assertTrue(collective.useSortedField());
-        assertFalse(collective.useDistinctField());
+        assertEquals(2, collective.keyStrategy());
     }
 
     @Test

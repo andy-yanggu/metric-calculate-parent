@@ -14,7 +14,7 @@ import java.util.Set;
  * @param <T>
  */
 @MergeType("DISTINCTCOUNT")
-@Collective(useDistinctField = true, useSortedField = false, retainStrategy = 0)
+@Collective(keyStrategy = 1, retainStrategy = 0)
 public class DistinctCountAggregateFunction<T> implements AggregateFunction<T, Set<T>, Integer> {
 
     @Override

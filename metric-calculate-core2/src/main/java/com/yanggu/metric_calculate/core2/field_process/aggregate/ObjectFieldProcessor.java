@@ -44,8 +44,9 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
     @Override
     public void init() throws Exception {
+        int keyStrategy = objective.keyStrategy();
         //如果是设置了比较字段
-        if (objective.useCompareField()) {
+        if (keyStrategy == 3) {
             if (CollUtil.isEmpty(udafParam.getObjectiveCompareFieldList())) {
                 throw new RuntimeException("对象型比较字段列表为空");
             }
@@ -74,7 +75,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
         int retainStrategy = objective.retainStrategy();
         //如果使用比较字段
-        if (objective.useCompareField()) {
+        if (objective.keyStrategy() == 3) {
             MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
                 return null;

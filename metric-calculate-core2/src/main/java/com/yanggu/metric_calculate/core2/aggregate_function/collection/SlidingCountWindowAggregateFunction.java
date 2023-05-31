@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Data
 @MergeType("SLIDINGCOUNTWINDOW")
-@Collective(useDistinctField = false, useSortedField = false, retainStrategy = 1)
+@Collective(keyStrategy = 0, retainStrategy = 1)
 public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<IN, List<IN>, OUT> {
 
     private Integer limit = 10;

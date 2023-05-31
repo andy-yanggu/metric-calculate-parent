@@ -11,11 +11,14 @@ import java.lang.annotation.*;
 public @interface Objective {
 
     /**
-     * 是否需要指定比较参数
-     *
-     * @return true需要配置比较字段, false不需要配置比较字段
+     * 主键策略
+     * <p>0不使用任何字段作为主键</p>
+     * <p>1去重字段</p>
+     * <p>2排序字段</p>
+     * <p>3比较字段</p>
+     * @return
      */
-    boolean useCompareField() default true;
+    int keyStrategy() default 0;
 
     /**
      * 保留字段策略

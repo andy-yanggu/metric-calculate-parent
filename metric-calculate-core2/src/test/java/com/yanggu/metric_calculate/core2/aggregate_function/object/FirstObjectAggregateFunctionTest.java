@@ -22,7 +22,7 @@ public class FirstObjectAggregateFunctionTest {
     public void testObjective() {
         Objective objective = FirstObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
-        assertFalse(objective.useCompareField());
+        assertEquals(0, objective.keyStrategy());
     }
 
     @Test

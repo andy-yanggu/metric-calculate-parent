@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
  * @param <T>
  */
 @MergeType(value = "DISTINCTLIST")
-@Collective(useDistinctField = true, useSortedField = false, retainStrategy = 0)
+@Collective(keyStrategy = 1, retainStrategy = 0)
 public class DistinctListAggregateFunction<T> extends DistinctListObjectAggregateFunction<T> {
 }

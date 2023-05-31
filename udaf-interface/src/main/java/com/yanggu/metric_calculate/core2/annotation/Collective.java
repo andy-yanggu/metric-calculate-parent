@@ -11,18 +11,14 @@ import java.lang.annotation.*;
 public @interface Collective {
 
     /**
-     * 是否使用去重字段
-     *
+     * 主键策略
+     * <p>0不使用任何字段作为主键</p>
+     * <p>1去重字段</p>
+     * <p>2排序字段</p>
+     * <p>3比较字段</p>
      * @return
      */
-    boolean useDistinctField() default false;
-
-    /**
-     * 是否使用排序字段
-     *
-     * @return
-     */
-    boolean useSortedField() default false;
+    int keyStrategy() default 0;
 
     /**
      * 保留字段策略

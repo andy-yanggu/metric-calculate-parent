@@ -8,7 +8,6 @@ import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import lombok.Getter;
 import lombok.SneakyThrows;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -99,6 +98,12 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         return aggregateFunction.getResult(accumulator);
     }
 
+    /**
+     * 合并多个累加器
+     *
+     * @param accList
+     * @return
+     */
     public ACC mergeAccList(List<ACC> accList) {
         if (CollUtil.isEmpty(accList)) {
             return null;

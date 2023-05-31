@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("MINVALUE")
-@Objective(useCompareField = true, retainStrategy = 0)
+@Objective(keyStrategy = 3, retainStrategy = 0)
 public class MinValueAggregateFunction<T extends Comparable<T>> extends MinObjectAggregateFunction<T> {
 }

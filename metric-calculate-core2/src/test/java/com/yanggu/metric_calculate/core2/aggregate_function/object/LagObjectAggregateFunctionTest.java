@@ -21,7 +21,7 @@ public class LagObjectAggregateFunctionTest {
     public void testObjective() {
         Objective objective = LagObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
-        assertFalse(objective.useCompareField());
+        assertEquals(0, objective.keyStrategy());
     }
 
     @Test

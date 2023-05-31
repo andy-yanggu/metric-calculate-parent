@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("FIRSTFIELD")
-@Objective(useCompareField = false, retainStrategy = 1)
+@Objective(keyStrategy = 0, retainStrategy = 1)
 public class FirstFieldAggregateFunction<T> extends FirstObjectAggregateFunction<T> {
 }

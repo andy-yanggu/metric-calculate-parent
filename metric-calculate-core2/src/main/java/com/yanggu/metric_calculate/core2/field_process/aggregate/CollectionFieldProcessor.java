@@ -47,14 +47,13 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
 
     @Override
     public void init() throws Exception {
+        int keyStrategy = collective.keyStrategy();
         //设置了去重字段
-        if (collective.useDistinctField()) {
+        if (keyStrategy == 1) {
             this.multiFieldDistinctFieldProcessor =
                     FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldList());
-        }
-
-        //设置了排序字段
-        if (collective.useSortedField()) {
+            //设置了排序字段
+        } else if (keyStrategy == 2) {
             this.multiFieldOrderFieldProcessor =
                     FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList());
         }
@@ -73,10 +72,11 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     @SneakyThrows
     @Override
     public IN process(JSONObject input) {
+        int keyStrategy = collective.keyStrategy();
         int retainStrategy = collective.retainStrategy();
         Object result = null;
         //使用了去重字段
-        if (collective.useDistinctField()) {
+        if (keyStrategy == 1) {
             MultiFieldDistinctKey distinctKey = multiFieldDistinctFieldProcessor.process(input);
             if (distinctKey == null) {
                 return null;
@@ -89,7 +89,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
                 result = new KeyValue<>(distinctKey, input);
             }
             //使用了排序字段
-        } else if (collective.useSortedField()) {
+        } else if (keyStrategy == 2) {
             MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
                 return null;

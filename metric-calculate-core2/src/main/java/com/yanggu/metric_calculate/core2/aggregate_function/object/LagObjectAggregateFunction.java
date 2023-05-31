@@ -12,7 +12,7 @@ import java.util.LinkedList;
  */
 @Data
 @MergeType("LAGOBJECT")
-@Objective(useCompareField = false, retainStrategy = 2)
+@Objective(keyStrategy = 0, retainStrategy = 2)
 public class LagObjectAggregateFunction<IN> implements AggregateFunction<IN, LinkedList<IN>, IN> {
 
     /**

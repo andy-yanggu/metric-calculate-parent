@@ -22,7 +22,7 @@ public class LastObjectAggregateFunctionTest {
     public void testObjective() {
         Objective objective = LastObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
-        assertFalse(objective.useCompareField());
+        assertEquals(0, objective.keyStrategy());
     }
 
     @Test
