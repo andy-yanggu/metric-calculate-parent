@@ -16,8 +16,8 @@ import java.util.List;
  * @param <T>
  */
 @Data
-@Collective
 @MergeType("LISTOBJECT")
+@Collective(useDistinctField = false, useSortedField = false, retainStrategy = 2)
 public class ListObjectAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
     @UdafCustomParam

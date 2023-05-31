@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 @MergeType("SORTEDLIMITLISTOBJECT")
-@Collective(useSortedField = true)
+@Collective(useSortedField = true, retainStrategy = 2)
 public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
     private Integer limit = 10;

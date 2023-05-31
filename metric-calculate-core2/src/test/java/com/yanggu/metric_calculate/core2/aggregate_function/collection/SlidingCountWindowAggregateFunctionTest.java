@@ -21,7 +21,7 @@ public class SlidingCountWindowAggregateFunctionTest {
     @Test
     public void testCollective() {
         Collective collective = SlidingCountWindowAggregateFunction.class.getAnnotation(Collective.class);
-        assertFalse(collective.retainObject());
+        assertEquals(1, collective.retainStrategy());
         assertFalse(collective.useSortedField());
         assertFalse(collective.useDistinctField());
     }

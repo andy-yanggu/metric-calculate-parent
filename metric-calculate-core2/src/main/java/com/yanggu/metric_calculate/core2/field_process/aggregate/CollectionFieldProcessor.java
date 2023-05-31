@@ -16,6 +16,11 @@ import lombok.SneakyThrows;
 
 import java.util.Map;
 
+/**
+ * 集合型字段处理器
+ *
+ * @param <IN>
+ */
 @Data
 public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
@@ -55,7 +60,11 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         }
 
         //设置了保留字段
-        if (!collective.retainObject()) {
+        int retainStrategy = collective.retainStrategy();
+        if (retainStrategy != 0 && retainStrategy != 1 && retainStrategy != 2) {
+            throw new RuntimeException("保留策略错误: " + retainStrategy);
+        }
+        if (retainStrategy == 1) {
             this.retainFieldValueFieldProcessor =
                     FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpress());
         }
@@ -64,31 +73,42 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     @SneakyThrows
     @Override
     public IN process(JSONObject input) {
-        //获取保留字段或者原始数据
-        Object retainFieldValue = input;
-        if (!collective.retainObject()) {
-            retainFieldValue = retainFieldValueFieldProcessor.process(input);
-        }
-
-        //默认没有去重字段或者排序字段
-        Object result = retainFieldValue;
-
+        int retainStrategy = collective.retainStrategy();
+        Object result = null;
         //使用了去重字段
         if (collective.useDistinctField()) {
             MultiFieldDistinctKey distinctKey = multiFieldDistinctFieldProcessor.process(input);
             if (distinctKey == null) {
                 return null;
             }
-            result = new KeyValue<>(distinctKey, retainFieldValue);
-        }
-
-        //使用了排序字段
-        if (collective.useSortedField()) {
+            if (retainStrategy == 0) {
+                result = distinctKey;
+            } else if (retainStrategy == 1) {
+                result = new KeyValue<>(distinctKey, retainFieldValueFieldProcessor.process(input));
+            } else if (retainStrategy == 2) {
+                result = new KeyValue<>(distinctKey, input);
+            }
+            //使用了排序字段
+        } else if (collective.useSortedField()) {
             MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
                 return null;
             }
-            result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValue);
+            if (retainStrategy == 0) {
+                result = multiFieldOrderCompareKey;
+            } else if (retainStrategy == 1) {
+                result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValueFieldProcessor.process(input));
+            } else if (retainStrategy == 2) {
+                result = new KeyValue<>(multiFieldOrderCompareKey, input);
+            }
+        } else {
+            if (retainStrategy == 0) {
+                result = null;
+            } else if (retainStrategy == 1) {
+                result = retainFieldValueFieldProcessor.process(input);
+            } else if (retainStrategy == 2) {
+                result = input;
+            }
         }
         return (IN) result;
     }

@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 聚合对象型字段处理器
  *
- * @param <M>
+ * @param <IN>
  */
 @Data
 public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {

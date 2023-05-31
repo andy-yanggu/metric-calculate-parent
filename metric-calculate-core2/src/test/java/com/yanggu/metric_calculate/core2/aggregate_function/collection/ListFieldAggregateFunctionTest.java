@@ -19,7 +19,7 @@ public class ListFieldAggregateFunctionTest {
     @Test
     public void testCollective() {
         Collective collective = ListFieldAggregateFunction.class.getAnnotation(Collective.class);
-        assertFalse(collective.retainObject());
+        assertEquals(1, collective.retainStrategy());
         assertFalse(collective.useSortedField());
         assertFalse(collective.useDistinctField());
     }

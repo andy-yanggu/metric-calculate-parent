@@ -140,10 +140,35 @@ public class CollectionFieldProcessorTest {
     }
 
     /**
-     * DISTINCTLISTOBJECT: 没有排序字段、有去重字段和保留原始数据
+     * SORTEDLIMITLIST: 有排序字段、没有去重字段和不保留任何数据
      */
     @Test
     public void process5() throws Exception {
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setAggregateType("SORTEDLIMITLIST");
+        baseUdafParam.setCollectiveSortFieldList(CollUtil.toList(new FieldOrderParam("amount", false)));
+
+        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory());
+
+        //构造原始数据
+        JSONObject input = new JSONObject();
+        input.set("amount", 100);
+        input.set("name", "张三");
+
+        MultiFieldOrderCompareKey process = baseFieldProcessor.process(input);
+        MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
+        FieldOrder fieldOrder = new FieldOrder();
+        fieldOrder.setResult(100);
+        fieldOrder.setAsc(false);
+        multiFieldOrderCompareKey.setFieldOrderList(CollUtil.toList(fieldOrder));
+        assertEquals(multiFieldOrderCompareKey, process);
+    }
+
+    /**
+     * DISTINCTLISTOBJECT: 没有排序字段、有去重字段和保留原始数据
+     */
+    @Test
+    public void process6() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setDistinctFieldList(CollUtil.toList("amount"));
         baseUdafParam.setAggregateType("DISTINCTLISTOBJECT");
@@ -164,7 +189,7 @@ public class CollectionFieldProcessorTest {
      * DISTINCTLISTFIELD: 没有排序字段、有去重字段和保留指定字段
      */
     @Test
-    public void process6() throws Exception {
+    public void process7() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setDistinctFieldList(CollUtil.toList("amount"));
         baseUdafParam.setRetainExpress("name");
@@ -183,31 +208,51 @@ public class CollectionFieldProcessorTest {
     }
 
     /**
-     * DISTINCTCOUNT: 没有排序字段、有去重字段和保留原始数据
+     * DISTINCTLIST: 没有排序字段、有去重字段和不保留任何数据
      */
     @Test
-    public void process7() throws Exception {
+    public void process8() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setDistinctFieldList(CollUtil.toList("amount"));
-        baseUdafParam.setAggregateType("DISTINCTCOUNT");
+        baseUdafParam.setAggregateType("DISTINCTLIST");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldDistinctKey, JSONObject> process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getKey().getFieldList().get(0));
-        assertEquals(input, process.getValue());
+        MultiFieldDistinctKey process = baseFieldProcessor.process(input);
+        assertEquals(100, process.getFieldList().get(0));
+    }
+
+    /**
+     * DISTINCTCOUNT: 没有排序字段、有去重字段和保留原始数据
+     */
+    @Test
+    public void process9() throws Exception {
+        BaseUdafParam baseUdafParam = new BaseUdafParam();
+        baseUdafParam.setDistinctFieldList(CollUtil.toList("amount"));
+        baseUdafParam.setAggregateType("DISTINCTCOUNT");
+
+        FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor =
+                FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAggregateFunctionFactory());
+
+        //构造原始数据
+        JSONObject input = new JSONObject();
+        input.set("amount", 100);
+        input.set("name", "张三");
+
+        MultiFieldDistinctKey process = baseFieldProcessor.process(input);
+        assertEquals(100, process.getFieldList().get(0));
     }
 
     /**
      * SLIDINGCOUNTWINDOW、滑动计数窗口函数: 没有去重字段、没有排序字段和保留指定字段
      */
     @Test
-    public void process8() throws Exception {
+    public void process10() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setRetainExpress("amount");
         baseUdafParam.setAggregateType("SLIDINGCOUNTWINDOW");

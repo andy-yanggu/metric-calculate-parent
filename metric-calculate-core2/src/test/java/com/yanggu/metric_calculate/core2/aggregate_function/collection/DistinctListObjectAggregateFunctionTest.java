@@ -25,7 +25,7 @@ public class DistinctListObjectAggregateFunctionTest {
     @Test
     public void testCollective() {
         Collective collective = DistinctListObjectAggregateFunction.class.getAnnotation(Collective.class);
-        assertTrue(collective.retainObject());
+        assertEquals(2, collective.retainStrategy());
         assertFalse(collective.useSortedField());
         assertTrue(collective.useDistinctField());
     }

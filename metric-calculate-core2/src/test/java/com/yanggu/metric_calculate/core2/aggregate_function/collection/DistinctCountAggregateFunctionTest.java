@@ -24,7 +24,7 @@ public class DistinctCountAggregateFunctionTest {
     @Test
     public void testCollective() {
         Collective collective = DistinctCountAggregateFunction.class.getAnnotation(Collective.class);
-        assertTrue(collective.retainObject());
+        assertEquals(0, collective.retainStrategy());
         assertFalse(collective.useSortedField());
         assertTrue(collective.useDistinctField());
     }

@@ -16,7 +16,7 @@ import java.util.Set;
  * @param <T>
  */
 @MergeType("DISTINCTLISTOBJECT")
-@Collective(useDistinctField = true)
+@Collective(useDistinctField = true, useSortedField = false, retainStrategy = 2)
 public class DistinctListObjectAggregateFunction<T> implements AggregateFunction<T, Set<T>, List<T>> {
 
     @Override
