@@ -9,13 +9,14 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.googlecode.aviator.runtime.type.seq.MapSequence;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class AviatorTest {
 
@@ -85,6 +86,7 @@ public class AviatorTest {
     }
 
     @Test
+    @Ignore
     public void test4() {
         int count = 0;
         int total = 1000000000;

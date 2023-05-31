@@ -6,6 +6,9 @@ import com.yanggu.metric_calculate.core2.annotation.Numerical;
 
 import java.util.List;
 
+/**
+ * 协方差
+ */
 @MergeType("COV")
 @Numerical(multiNumber = true)
 public class CovAggregateFunction implements AggregateFunction<List<? extends Number>, Object, Double> {

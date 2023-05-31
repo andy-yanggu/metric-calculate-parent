@@ -31,6 +31,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!-- Micrometer Prometheus registry  -->
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
         <!-- 导入配置文件处理器，配置文件就会和javabean进行绑定 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -75,7 +80,6 @@
         <dependency>
             <groupId>com.yanggu</groupId>
             <artifactId>metric-calculate-core2</artifactId>
-            <version>1.0.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>slf4j-simple</artifactId>
@@ -104,11 +108,6 @@
             <artifactId>mockito-inline</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-        <!-- Micrometer Prometheus registry  -->
-        <dependency>
-            <groupId>io.micrometer</groupId>
-            <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
     </dependencies>
 
