@@ -13,9 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
-/**
- * 指标配置数据接口
- */
 @Validated
 @RestController
 @Api(tags = "指标配置数据接口")
@@ -33,7 +30,8 @@ public class MetricConfigDataController {
 
     @ApiOperation("获取某个宽表的指标配置数据")
     @GetMapping("/{tableId}")
-    public ApiResponse<DataDetailsWideTable> metricConfigDataById(@NotNull(message = "宽表id不能为空") @PathVariable Long tableId) {
+    public ApiResponse<DataDetailsWideTable> metricConfigDataById(
+            @NotNull(message = "宽表id不能为空") @ApiParam("数据明细宽表id") @PathVariable Long tableId) {
         return ApiResponse.success(metricConfigDataService.metricConfigDataById(tableId));
     }
 
@@ -46,7 +44,8 @@ public class MetricConfigDataController {
 
     @ApiOperation("增量更新指标配置（更新某个宽表下的所有指标）")
     @PutMapping("/refresh/{tableId}")
-    public ApiResponse<Object> updateMetricConfig(@NotNull(message = "宽表id不能为空") @ApiParam("数据明细宽表id") @PathVariable Long tableId) {
+    public ApiResponse<Object> updateMetricConfig(
+            @NotNull(message = "宽表id不能为空") @ApiParam("数据明细宽表id") @PathVariable Long tableId) {
         metricConfigDataService.updateTable(tableId);
         return ApiResponse.success();
     }

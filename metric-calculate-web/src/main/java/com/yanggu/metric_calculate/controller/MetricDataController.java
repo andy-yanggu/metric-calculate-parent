@@ -19,9 +19,6 @@ import javax.validation.constraints.NotNull;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-/**
- * 指标数据接口
- */
 @Validated
 @RestController
 @Api(tags = "指标数据接口")

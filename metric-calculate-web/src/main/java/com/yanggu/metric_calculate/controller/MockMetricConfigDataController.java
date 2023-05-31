@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * 模拟指标配置数据
- */
 @RestController
 @Api(tags = "模拟指标配置数据")
 @RequestMapping("/mock-model")

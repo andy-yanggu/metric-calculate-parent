@@ -144,7 +144,7 @@ public class AggregateFunctionFactory {
     @SneakyThrows
     public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
         Class<? extends AggregateFunction> clazz = getAggregateFunctionClass(aggregate);
-        return clazz.newInstance();
+        return clazz.getDeclaredConstructor().newInstance();
     }
 
     public Class<? extends AggregateFunction> getAggregateFunctionClass(String aggregate) {
