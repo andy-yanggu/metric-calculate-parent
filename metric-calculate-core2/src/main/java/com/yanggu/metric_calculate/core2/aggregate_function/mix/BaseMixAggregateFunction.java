@@ -5,6 +5,11 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Mix;
 import lombok.Data;
 
+/**
+ * 基本混合型，可以对计算后的数据进行二次处理
+ *
+ * @param <OUT>
+ */
 @Mix
 @Data
 @MergeType("BASEMIX")

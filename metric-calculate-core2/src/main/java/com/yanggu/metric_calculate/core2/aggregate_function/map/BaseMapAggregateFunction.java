@@ -7,6 +7,7 @@ import lombok.Data;
 import java.util.Map;
 
 /**
+ * 基础映射，不对key和value进行任何处理
  *
  * @param <K> map的key类型
  * @param <V> map的value类型

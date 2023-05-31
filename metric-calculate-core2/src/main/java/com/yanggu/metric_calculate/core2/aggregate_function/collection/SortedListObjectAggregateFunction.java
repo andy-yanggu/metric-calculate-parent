@@ -7,6 +7,11 @@ import lombok.Data;
 
 import java.util.List;
 
+/**
+ * 有序对象列表
+ *
+ * @param <T>
+ */
 @Data
 @MergeType("SORTEDLIMITLISTOBJECT")
 @Collective(useSortedField = true, retainStrategy = 2)

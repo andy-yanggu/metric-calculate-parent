@@ -21,7 +21,7 @@ public class MaxObjectAggregateFunctionTest {
     @Test
     public void testObjective() {
         Objective objective = MaxObjectAggregateFunction.class.getAnnotation(Objective.class);
-        assertTrue(objective.retainObject());
+        assertEquals(2, objective.retainStrategy());
         assertTrue(objective.useCompareField());
     }
 

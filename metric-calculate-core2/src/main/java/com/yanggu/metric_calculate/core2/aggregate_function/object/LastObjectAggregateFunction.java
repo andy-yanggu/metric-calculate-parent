@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("LASTOBJECT")
-@Objective(useCompareField = false, retainObject = true)
+@Objective(useCompareField = false, retainStrategy = 2)
 public class LastObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override

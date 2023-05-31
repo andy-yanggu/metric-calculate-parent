@@ -56,8 +56,12 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
                     FieldProcessorUtil.getOrderFieldProcessor(fieldMap, collect);
         }
 
+        int retainStrategy = objective.retainStrategy();
+        if (retainStrategy != 0 && retainStrategy != 1 && retainStrategy != 2) {
+            throw new RuntimeException("保留策略错误: " + retainStrategy);
+        }
         //如果设置了保留字段
-        if (!objective.retainObject()) {
+        if (retainStrategy == 1) {
             this.retainFieldValueFieldProcessor =
                     FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpress());
         }
@@ -66,21 +70,30 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     @Override
     @SneakyThrows
     public IN process(JSONObject input) {
-        //获取保留字段或者原始数据
-        Object retainFieldValue = input;
-        if (!objective.retainObject()) {
-            retainFieldValue = retainFieldValueFieldProcessor.process(input);
-        }
+        Object result = null;
 
-        //默认没有排序字段
-        Object result = retainFieldValue;
-
+        int retainStrategy = objective.retainStrategy();
+        //如果使用比较字段
         if (objective.useCompareField()) {
             MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
                 return null;
             }
-            result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValue);
+            if (retainStrategy == 0) {
+                result = multiFieldOrderCompareKey;
+            } else if (retainStrategy == 1) {
+                result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValueFieldProcessor.process(input));
+            } else {
+                result = new KeyValue<>(multiFieldOrderCompareKey, input);
+            }
+        } else {
+            if (retainStrategy == 0) {
+                result = null;
+            } else if (retainStrategy == 1) {
+                result = retainFieldValueFieldProcessor.process(input);
+            } else {
+                result = input;
+            }
         }
         return (IN) result;
     }

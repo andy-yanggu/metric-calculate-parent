@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("LASTFIELD")
-@Objective(useCompareField = false, retainObject = false)
+@Objective(useCompareField = false, retainStrategy = 1)
 public class LastFieldAggregateFunction<T> extends LastObjectAggregateFunction<T> {
 }

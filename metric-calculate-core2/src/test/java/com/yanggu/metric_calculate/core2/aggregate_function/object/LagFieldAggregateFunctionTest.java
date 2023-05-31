@@ -20,7 +20,7 @@ public class LagFieldAggregateFunctionTest {
     @Test
     public void testObjective() {
         Objective objective = LagFieldAggregateFunction.class.getAnnotation(Objective.class);
-        assertFalse(objective.retainObject());
+        assertEquals(1, objective.retainStrategy());
         assertFalse(objective.useCompareField());
     }
 

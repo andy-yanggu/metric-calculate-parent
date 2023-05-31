@@ -4,11 +4,11 @@ import com.yanggu.metric_calculate.core2.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.annotation.Objective;
 
 /**
- * 最大字段
+ * 最小值
  *
  * @param <T>
  */
-@MergeType("MAXFIELD")
-@Objective(useCompareField = true, retainStrategy = 1)
-public class MaxFieldAggregateFunction<T extends Comparable<T>> extends MaxObjectAggregateFunction<T> {
+@MergeType("MINVALUE")
+@Objective(useCompareField = true, retainStrategy = 0)
+public class MinValueAggregateFunction<T extends Comparable<T>> extends MinObjectAggregateFunction<T> {
 }

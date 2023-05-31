@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core2.annotation.Objective;
  * @param <T>
  */
 @MergeType("MAXOBJECT")
-@Objective(useCompareField = true, retainObject = true)
+@Objective(useCompareField = true, retainStrategy = 2)
 public class MaxObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, MutableObj<T>, T> {
 
     @Override

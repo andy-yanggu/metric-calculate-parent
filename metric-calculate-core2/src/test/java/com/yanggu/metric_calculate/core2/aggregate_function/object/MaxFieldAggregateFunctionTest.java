@@ -21,7 +21,7 @@ public class MaxFieldAggregateFunctionTest {
     @Test
     public void testObjective() {
         Objective objective = MaxFieldAggregateFunction.class.getAnnotation(Objective.class);
-        assertFalse(objective.retainObject());
+        assertEquals(1, objective.retainStrategy());
         assertTrue(objective.useCompareField());
     }
 

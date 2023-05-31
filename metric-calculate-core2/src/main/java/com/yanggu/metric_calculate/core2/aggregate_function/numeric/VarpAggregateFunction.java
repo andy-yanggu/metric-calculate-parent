@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.pojo.agg_bean.Measures;
 
 /**
- * 方差聚合函数
+ * 方差
  */
 public class VarpAggregateFunction<T extends Number> implements AggregateFunction<T, Measures, Double> {
 

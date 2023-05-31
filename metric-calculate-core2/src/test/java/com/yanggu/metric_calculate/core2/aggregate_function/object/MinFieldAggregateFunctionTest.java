@@ -21,7 +21,7 @@ public class MinFieldAggregateFunctionTest {
     @Test
     public void testObjective() {
         Objective objective = MinFieldAggregateFunction.class.getAnnotation(Objective.class);
-        assertFalse(objective.retainObject());
+        assertEquals(1, objective.retainStrategy());
         assertTrue(objective.useCompareField());
     }
 

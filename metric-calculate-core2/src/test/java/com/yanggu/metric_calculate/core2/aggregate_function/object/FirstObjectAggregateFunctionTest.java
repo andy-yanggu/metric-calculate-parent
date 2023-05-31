@@ -21,7 +21,7 @@ public class FirstObjectAggregateFunctionTest {
     @Test
     public void testObjective() {
         Objective objective = FirstObjectAggregateFunction.class.getAnnotation(Objective.class);
-        assertTrue(objective.retainObject());
+        assertEquals(2, objective.retainStrategy());
         assertFalse(objective.useCompareField());
     }
 

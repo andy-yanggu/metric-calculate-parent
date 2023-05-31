@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core2.annotation.Collective;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
 
 /**
- * 去重字段列表
+ * 去重列表
  *
  * @param <T>
  */

@@ -18,10 +18,13 @@ public @interface Objective {
     boolean useCompareField() default true;
 
     /**
-     * 是否保留对象
+     * 保留字段策略
+     * <p>0不保留任何数据</p>
+     * <p>1保留指定字段</p>
+     * <p>2保留原始数据</p>
      *
-     * @return true保留对象, false保留字段
+     * @return
      */
-    boolean retainObject() default true;
+    int retainStrategy() default 0;
 
 }

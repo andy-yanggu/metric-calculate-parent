@@ -19,6 +19,9 @@ import java.util.*;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * 聚合函数工厂类
+ */
 @NoArgsConstructor
 public class AggregateFunctionFactory {
 
