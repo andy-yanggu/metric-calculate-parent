@@ -16,6 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MetricCalculateApplication {
 
     public static void main(String[] args) {
+        //设置彩色日志
+        System.setProperty("log4j.skipJansi", "false");
         SpringApplication.run(MetricCalculateApplication.class, args);
     }
 

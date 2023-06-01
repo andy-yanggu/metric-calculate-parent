@@ -16,6 +16,12 @@ spring:
     client-type: lettuce
     database: 1
     password: Redis6379
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  config: classpath:log4j2.xml
 
 #指标计算配置参数
 metric-calculate:
