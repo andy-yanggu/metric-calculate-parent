@@ -1,18 +1,20 @@
 package com.yanggu.metric_calculate.core2.annotation;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 集合型
  */
-@Inherited
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Collective {
 
     /**
      * 主键策略
-     * <p>0不使用任何字段作为主键</p>
+     * <p>0没有主键</p>
      * <p>1去重字段</p>
      * <p>2排序字段</p>
      * <p>3比较字段</p>

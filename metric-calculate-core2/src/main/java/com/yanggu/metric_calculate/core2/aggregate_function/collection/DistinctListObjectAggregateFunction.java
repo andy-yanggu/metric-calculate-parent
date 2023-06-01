@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.annotation.Collective;
 import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,17 +16,11 @@ import java.util.Set;
  */
 @MergeType("DISTINCTLISTOBJECT")
 @Collective(keyStrategy = 1, retainStrategy = 2)
-public class DistinctListObjectAggregateFunction<T> implements AggregateFunction<T, Set<T>, List<T>> {
+public class DistinctListObjectAggregateFunction<T> extends AbstractCollectionFunction<T, Set<T>, List<T>> {
 
     @Override
     public Set<T> createAccumulator() {
         return new HashSet<>();
-    }
-
-    @Override
-    public Set<T> add(T input, Set<T> accumulator) {
-        accumulator.add(input);
-        return accumulator;
     }
 
     @Override

@@ -173,7 +173,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         });
     }
 
-    public MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
+    private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
         Table<IN, ACC, OUT> table = tableFactory.createTable();
