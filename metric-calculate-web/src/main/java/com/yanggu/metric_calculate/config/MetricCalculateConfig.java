@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,8 +32,9 @@ public class MetricCalculateConfig {
      * @return
      */
     @Bean
-    public DeriveMetricMiddleStore redisDeriveMetricMiddleStore() {
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+    public DeriveMetricMiddleStore redisDeriveMetricMiddleStore(RedisTemplate<String, byte[]> kryoRedisTemplate) {
+        DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
+        deriveMetricMiddleStore.setRedisTemplate(kryoRedisTemplate);
         deriveMetricMiddleStore.init();
         log.info("派生指标外部存储初始化完成: 指标存储类: {}", deriveMetricMiddleStore.getClass().getName());
         return deriveMetricMiddleStore;

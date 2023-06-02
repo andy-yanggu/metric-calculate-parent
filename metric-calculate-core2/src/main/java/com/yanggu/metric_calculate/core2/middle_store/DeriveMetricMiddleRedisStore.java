@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core2.middle_store;
 
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.extra.spring.SpringUtil;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import lombok.Data;
@@ -22,9 +21,9 @@ public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStor
 
     @Override
     public void init() {
-        RedisTemplate<String, byte[]> kryoRedisTemplate = SpringUtil.getBean("kryoRedisTemplate");
-        this.setRedisTemplate(kryoRedisTemplate);
-        AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap().put("REDIS_STRING", this);
+        if (redisTemplate == null) {
+            throw new RuntimeException("redisTemplate不能为空");
+        }
     }
 
     @Override
@@ -76,6 +75,7 @@ public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStor
     public void batchDeleteData(List<DimensionSet> dimensionSetList) {
         List<String> collect = dimensionSetList.stream()
                 .map(DimensionSet::getRealKey)
+                .distinct()
                 .collect(Collectors.toList());
         redisTemplate.delete(collect);
     }

@@ -17,7 +17,6 @@ public class DeriveMetricMiddleHashMapKryoStore extends AbstractDeriveMetricMidd
     @Override
     public void init() {
         localMap = new ConcurrentHashMap<>();
-        AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap().put(KRYO_MAP, this);
     }
 
     @Override

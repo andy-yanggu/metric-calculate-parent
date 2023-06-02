@@ -16,7 +16,7 @@ import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldP
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
-import com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 import static com.yanggu.metric_calculate.core2.enums.FieldTypeEnum.REAL;
 import static com.yanggu.metric_calculate.core2.enums.FieldTypeEnum.VIRTUAL;
 import static com.yanggu.metric_calculate.core2.enums.MetricTypeEnum.DERIVE;
-import static com.yanggu.metric_calculate.core2.middle_store.AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.DEFAULT_IMPL;
 
 /**
  * 指标工具类
@@ -61,7 +60,7 @@ public class MetricUtil {
         Map<String, MetricTypeEnum> metricTypeMap = new HashMap<>();
         metricCalculate.setMetricTypeMap(metricTypeMap);
 
-        //初始化宽表字段
+        //设置宽表字段
         setFieldMap(metricCalculate);
 
         //初始化字段计算
@@ -78,7 +77,10 @@ public class MetricUtil {
      *
      * @param metricCalculate
      */
-    public static void initFieldCalculate(MetricCalculate metricCalculate) {
+    private static void initFieldCalculate(MetricCalculate metricCalculate) {
+        if (metricCalculate == null) {
+            return;
+        }
         List<Fields> fieldsList = metricCalculate.getFields();
         if (CollUtil.isEmpty(fieldsList)) {
             return;
@@ -113,7 +115,10 @@ public class MetricUtil {
      *
      * @param metricCalculate
      */
-    public static void initAllDerive(MetricCalculate metricCalculate) {
+    private static void initAllDerive(MetricCalculate metricCalculate) {
+        if (metricCalculate == null) {
+            return;
+        }
         List<Derive> deriveList = metricCalculate.getDerive();
         if (CollUtil.isEmpty(deriveList)) {
             return;
@@ -127,11 +132,9 @@ public class MetricUtil {
                 })
                 .collect(Collectors.toList());
 
-        //派生指标中间结算结果存储接口
-        Map<String, DeriveMetricMiddleStore> metricMiddleStoreMap =
-                AbstractDeriveMetricMiddleStore.DeriveMetricMiddleStoreHolder.getStoreMap();
         //默认是内存的并发HashMap
-        DeriveMetricMiddleStore deriveMetricMiddleStore = metricMiddleStoreMap.get(DEFAULT_IMPL);
+        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        deriveMetricMiddleStore.init();
         collect.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
         metricCalculate.setDeriveMetricCalculateList(collect);
     }
@@ -197,7 +200,7 @@ public class MetricUtil {
         return deriveMetricCalculate;
     }
 
-    public static void setFieldMap(MetricCalculate metricCalculate) {
+    private static void setFieldMap(MetricCalculate metricCalculate) {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }
