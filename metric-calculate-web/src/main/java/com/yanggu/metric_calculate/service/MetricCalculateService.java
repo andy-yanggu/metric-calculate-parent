@@ -5,7 +5,9 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
 import com.yanggu.metric_calculate.pojo.PutRequest;
@@ -17,10 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +35,10 @@ public class MetricCalculateService {
     private MetricConfigDataService metricConfigDataService;
 
     @Autowired
+    @Qualifier("redisDeriveMetricMiddleStore")
+    private DeriveMetricMiddleStore deriveMetricMiddleStore;
+
+    @Autowired
     @Qualifier("queryComponent")
     private AccumulateBatchComponent2<QueryRequest> queryComponent;
 
@@ -44,12 +47,15 @@ public class MetricCalculateService {
     private AccumulateBatchComponent2<PutRequest> putComponent;
 
     /**
-     * 无状态-计算接口
+     * 无状态(多线程)
+     * <p>QPS低使用该接口</p>
+     * <p>外部数据多线程读取</p>
+     * <p>吞吐量低, 响应时间短</p>
      *
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> noStateExecute(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> noStateExecuteThread(JSONObject input) {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
 
@@ -58,21 +64,56 @@ public class MetricCalculateService {
     }
 
     /**
-     * 有状态计算
+     * 无状态(批处理)
+     * <p>QPS中使用该接口</p>
+     * <p>外部数据进行批量读取</p>
+     * <p>吞吐量中, 响应时间中</p>
      *
-     * @param detail
+     * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> stateExecute(JSONObject detail) {
+    public List<DeriveMetricCalculateResult<Object>> noStateExecuteBatch(JSONObject input) {
         //获取指标计算类
-        MetricCalculate metricCalculate = getMetricCalculate(detail);
+        MetricCalculate metricCalculate = getMetricCalculate(input);
+        //进行字段计算
+        JSONObject detail = metricCalculate.getParam(input);
+        log.info("输入明细数据: {}, 计算后的输入明细数据: {}", JSONUtil.toJsonStr(input), JSONUtil.toJsonStr(detail));
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            return Collections.emptyList();
+        }
 
-        //计算派生指标
-        return calcDerive(detail, metricCalculate, true);
+        Map<DimensionSet, DeriveMetricCalculate> map = new HashMap<>();
+
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+            map.put(dimensionSet, deriveMetricCalculate);
+        }
+
+        List<DimensionSet> dimensionSetList = new ArrayList<>(map.keySet());
+
+        Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(dimensionSetList);
+        if (dimensionSetMetricCubeMap == null) {
+            dimensionSetMetricCubeMap = Collections.emptyMap();
+        }
+
+        List<DeriveMetricCalculateResult<Object>> deriveMetricCalculateResultList = new ArrayList<>();
+        for (DimensionSet dimensionSet : dimensionSetList) {
+            MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
+            DeriveMetricCalculate deriveMetricCalculate = map.get(dimensionSet);
+            DeriveMetricCalculateResult<Object> deriveMetricCalculateResult = deriveMetricCalculate.noStateExec(input, historyMetricCube);
+            if (deriveMetricCalculateResult != null) {
+                deriveMetricCalculateResultList.add(deriveMetricCalculateResult);
+            }
+        }
+        return deriveMetricCalculateResultList;
     }
 
     /**
-     * 攒批查询
+     * 无状态(内存攒批读)
+     * <p>QPS高使用该接口</p>
+     * <p>使用内存队列进行攒批</p>
+     * <p>吞吐量大, 响应时间长</p>
      *
      * @param input
      * @return
@@ -95,14 +136,40 @@ public class MetricCalculateService {
             QueryRequest queryRequest = getQueryRequest(detail, deriveMetricCalculate);
             //进行攒批查询
             queryComponent.add(queryRequest);
-            CompletableFuture<DeriveMetricCalculateResult> completableFuture =
-                    deriveMetricCalculate.noStateFutureExec(detail, queryRequest.getQueryFuture());
+            CompletableFuture<DeriveMetricCalculateResult> completableFuture = queryRequest.getQueryFuture()
+                    .thenApply(historyMetricCube -> deriveMetricCalculate.noStateExec(input, historyMetricCube));
             completableFutureList.add(completableFuture);
         }
 
         //所有查询完成后执行
         setDeferredResult(deferredResult, completableFutureList);
         return deferredResult;
+    }
+
+    /**
+     * 有状态计算(多线程)
+     *
+     * @param input
+     * @return
+     */
+    public List<DeriveMetricCalculateResult<Object>> stateExecuteThread(JSONObject input) {
+        //获取指标计算类
+        MetricCalculate metricCalculate = getMetricCalculate(input);
+
+        //计算派生指标
+        return calcDerive(input, metricCalculate, true);
+    }
+
+    /**
+     * 有状态计算(批读、批写)
+     * @param input
+     * @return
+     */
+    public List<DeriveMetricCalculateResult<Object>> stateExecuteBatch(JSONObject input) {
+        //获取指标计算类
+        MetricCalculate metricCalculate = getMetricCalculate(input);
+
+        return null;
     }
 
     /**

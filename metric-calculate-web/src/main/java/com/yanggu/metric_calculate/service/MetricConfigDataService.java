@@ -12,6 +12,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,7 @@ public class MetricConfigDataService implements ApplicationRunner {
     private MetricConfigClient metricConfigClient;
 
     @Autowired
+    @Qualifier("redisDeriveMetricMiddleStore")
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Override

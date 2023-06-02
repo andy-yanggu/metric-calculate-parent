@@ -17,8 +17,6 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.concurrent.CompletableFuture;
-
 /**
  * 派生指标计算类
  *
@@ -82,23 +80,44 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private RoundAccuracy roundAccuracy;
 
     /**
-     * 添加度量值
+     * 无状态计算
+     * <p>直接读外部存储, 不写入外部存储</p>
+     * <p>需要是否考虑当前笔</p>
      *
-     * @param input
-     * @param historyMetricCube
+     * @param input 明细数据
      * @return
      */
-    public MetricCube<IN, ACC, OUT> addInput(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
-        if (historyMetricCube == null) {
-            //提取出维度字段
-            DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-            historyMetricCube = createMetricCube(dimensionSet);
-        } else {
-            tableFactory.setTable(historyMetricCube.getTable());
+    @SneakyThrows
+    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input) {
+        //提取出维度字段
+        DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+
+        //查询外部数据
+        MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
+
+        //考虑是否包含当前笔
+        return noStateExec(input, historyMetricCube);
+    }
+
+    /**
+     * 无状态计算
+     * <p>外部数据直接传入, 而不是自己读取</p>
+     * <p>需要是否考虑当前笔</p>
+     *
+     * @param input 明细数据
+     * @return
+     */
+    @SneakyThrows
+    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
+        //包含当前笔需要执行前置过滤条件
+        if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
+            //添加度量值
+            historyMetricCube = addInput(input, historyMetricCube);
         }
-        //放入明细数据进行累加
-        historyMetricCube.getTable().put(input);
-        return historyMetricCube;
+        if (historyMetricCube == null) {
+            return null;
+        }
+        return historyMetricCube.query(input);
     }
 
     /**
@@ -132,45 +151,23 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     }
 
     /**
-     * 无状态计算
-     * <p>区别在于是否考虑当前笔</p>
-     * <p>是否写入到外部存储中</p>
+     * 添加度量值
      *
-     * @param input 明细数据
+     * @param input
+     * @param historyMetricCube
      * @return
      */
-    @SneakyThrows
-    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input) {
-        //提取出维度字段
-        DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-
-        //查询外部数据
-        MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
-
-        //包含当前笔需要执行前置过滤条件
-        if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-            //添加度量值
-            historyMetricCube = addInput(input, historyMetricCube);
-        }
+    public MetricCube<IN, ACC, OUT> addInput(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
         if (historyMetricCube == null) {
-            return null;
+            //提取出维度字段
+            DimensionSet dimensionSet = dimensionSetProcessor.process(input);
+            historyMetricCube = createMetricCube(dimensionSet);
+        } else {
+            tableFactory.setTable(historyMetricCube.getTable());
         }
-        return historyMetricCube.query(input);
-    }
-
-    public CompletableFuture<DeriveMetricCalculateResult<OUT>> noStateFutureExec(
-                                                        JSONObject input,
-                                                        CompletableFuture<MetricCube<IN, ACC, OUT>> completableFuture) {
-        return completableFuture.thenApply(historyMetricCube -> {
-            //包含当前笔需要执行前置过滤条件
-            if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
-                historyMetricCube = addInput(input, historyMetricCube);
-            }
-            if (historyMetricCube == null) {
-                return null;
-            }
-            return historyMetricCube.query(input);
-        });
+        //放入明细数据进行累加
+        historyMetricCube.getTable().put(input);
+        return historyMetricCube;
     }
 
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {

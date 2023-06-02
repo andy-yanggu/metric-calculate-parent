@@ -27,31 +27,47 @@ public class MetricCalculateController {
     @Autowired
     private MetricCalculateService metricCalculateService;
 
-    @ApiOperation("有状态-计算接口")
-    @PostMapping("/state-calculate")
-    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecute(
-            @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
-        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateExecute(input);
-        return ApiResponse.success(resultList);
-    }
-
-    @ApiOperation("无状态-计算接口")
-    @PostMapping("/no-state-calculate")
+    @ApiOperation("无状态-计算接口（多线程）")
+    @PostMapping("/no-state-calculate/thread")
     public ApiResponse<List<DeriveMetricCalculateResult<Object>>> noStateExecute(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
-        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateExecute(input);
+        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateExecuteThread(input);
         return ApiResponse.success(resultList);
     }
 
-    @ApiOperation("无状态-计算接口（攒批查询）")
-    @PostMapping("/no-state-calculate-accumulate-batch")
+    @ApiOperation("无状态-计算接口（批查询）")
+    @PostMapping("/no-state-calculate/batch")
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> noStateExecuteBatch(
+            @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
+        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateExecuteBatch(input);
+        return ApiResponse.success(resultList);
+    }
+
+    @ApiOperation("无状态-计算接口（内存攒批查询）")
+    @PostMapping("/no-state-calculate/accumulate-batch")
     public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateExecuteAccumulateBatch(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
         return metricCalculateService.noStateExecuteAccumulateBatch(input);
     }
 
-    @ApiOperation("有状态-计算接口（攒批查询和攒批更新）")
-    @PostMapping("/state-calculate-accumulate-batch")
+    @ApiOperation("有状态-计算接口（多线程）")
+    @PostMapping("/state-calculate/thread")
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecuteThread(
+            @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
+        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateExecuteThread(input);
+        return ApiResponse.success(resultList);
+    }
+
+    @ApiOperation("有状态-计算接口（批处理）")
+    @PostMapping("/state-calculate/thread")
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecute(
+            @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
+        List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateExecuteBatch(input);
+        return ApiResponse.success(resultList);
+    }
+
+    @ApiOperation("有状态-计算接口（内存攒批查询和攒批更新）")
+    @PostMapping("/state-calculate/accumulate-batch")
     public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateExecuteAccumulateBatch(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
         return metricCalculateService.stateExecuteAccumulateBatch(input);
