@@ -29,7 +29,7 @@ public class MetricCalculateController {
 
     @ApiOperation("无状态-计算接口（多线程）")
     @PostMapping("/no-state-calculate/thread")
-    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> noStateExecute(
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> noStateExecuteThread(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
         List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateExecuteThread(input);
         return ApiResponse.success(resultList);
@@ -59,8 +59,8 @@ public class MetricCalculateController {
     }
 
     @ApiOperation("有状态-计算接口（批处理）")
-    @PostMapping("/state-calculate/thread")
-    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecute(
+    @PostMapping("/state-calculate/batch")
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> stateExecuteBatch(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
         List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateExecuteBatch(input);
         return ApiResponse.success(resultList);
