@@ -20,9 +20,6 @@ spring:
     ansi:
       enabled: always
 
-logging:
-  config: classpath:log4j2.xml
-
 #指标计算配置参数
 metric-calculate:
   #攒批组件配置参数

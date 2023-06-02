@@ -13,7 +13,11 @@ import lombok.SneakyThrows;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * 混合型字段处理器
+ *
+ * @param <IN>
+ */
 @Data
 public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 

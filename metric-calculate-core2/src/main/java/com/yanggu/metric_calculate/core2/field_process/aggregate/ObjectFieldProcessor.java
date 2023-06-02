@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * 聚合对象型字段处理器
+ * 对象型字段处理器
  *
  * @param <IN>
  */

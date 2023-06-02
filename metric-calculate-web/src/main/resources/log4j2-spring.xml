@@ -6,8 +6,7 @@ status 级别有8个：ALL,TRACE, DEBUG, INFO, WARN, ERROR ,FATAL,OFF。
 monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
 -->
 <configuration status="OFF" monitorInterval="30">
-
-    <Properties>
+    <properties>
         <!--
             日志输出格式，每个转换说明符以百分号(%)开头，'%'后面的转换字符有如下:
             p (level) 日志级别
@@ -34,10 +33,10 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
             %.15：若字符长度超过15，截去多余字符，
             %15.15若字符长度小于5，则右边用空格填充；若字符长度超过15，截去多余字符
         -->
-        <Property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%6p} %style{%5pid}{bright,magenta} --- [%15.15t] %style{%-40.40logger{39}}{bright,cyan} : %m%n
-        </Property>
-        <Property name="LOG_PATH">.\logs</Property>
-    </Properties>
+        <property name="pattern">%d{yyyy-MM-dd HH:mm:ss.SSS} %highlight{%6p} %style{%5pid}{bright,magenta} --- [%15.15t] %style{%-40.40logger{39}}{bright,cyan} : %m%n
+        </property>
+        <property name="LOG_PATH">.\logs</property>
+    </properties>
     <Appenders>
 
         <!--
@@ -50,6 +49,11 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
             <PatternLayout pattern="${pattern}"/>
         </Console>
 
+        <!-- 所有的日志信息会打印到此文件中，append=false每次启动程序会自动清空 -->
+         <File name="all" fileName="${LOG_PATH}/all.log" append="true">
+            <PatternLayout pattern="${pattern}"/>
+        </File>
+
         <!--
             设置级别为 DEBUG 日志输出到 debug.log 中
             日志写入策略 immediateFlush log4j2接收到日志事件时，是否立即将日志刷到磁盘。默认为true 。
@@ -57,7 +61,7 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
         -->
         <!--设置级别为 DEBUG 日志输出到 debug.log 中-->
         <RollingRandomAccessFile name="debug"
-                                 immediateFlush="false"
+                                 immediateFlush="true"
                                  fileName="${LOG_PATH}/debug.log"
                                  filePattern="${LOG_PATH}/debug-%d{yyyy-MM-dd}.log">
             <Filters>
@@ -79,7 +83,7 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
             <DefaultRolloverStrategy max="15"/>
         </RollingRandomAccessFile>
         <RollingRandomAccessFile name="info"
-                                 immediateFlush="false"
+                                 immediateFlush="true"
                                  fileName="${LOG_PATH}/info.log"
                                  filePattern="${LOG_PATH}/info-%d{yyyy-MM-dd}.log">
             <Filters>
@@ -94,7 +98,7 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
             <DefaultRolloverStrategy max="60"/>
         </RollingRandomAccessFile>
         <RollingRandomAccessFile name="warn"
-                                 immediateFlush="false"
+                                 immediateFlush="true"
                                  fileName="${LOG_PATH}/warn.log"
                                  filePattern="${LOG_PATH}/warn-%d{yyyy-MM-dd}.log">
             <Filters>
@@ -108,7 +112,7 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
             <DefaultRolloverStrategy max="60"/>
         </RollingRandomAccessFile>
         <RollingRandomAccessFile name="error"
-                                 immediateFlush="false"
+                                 immediateFlush="true"
                                  fileName="${LOG_PATH}/error.log"
                                  filePattern="${LOG_PATH}/error-%d{yyyy-MM-dd}.log">
             <PatternLayout pattern="${pattern}"/>
@@ -120,30 +124,7 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
             </Policies>
             <DefaultRolloverStrategy max="60"/>
         </RollingRandomAccessFile>
-        <!-- 设置 task_suc 日志 -->
-        <RollingRandomAccessFile name="task_suc"
-                                 immediateFlush="false"
-                                 fileName="${LOG_PATH}/task_suc.log"
-                                 filePattern="${LOG_PATH}/task_suc-%d{yyyy-MM-dd}.log">
-            <PatternLayout pattern="${pattern}"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-            </Policies>
-            <DefaultRolloverStrategy max="90"/>
-        </RollingRandomAccessFile>
-        <!-- 设置 task_fail 日志 -->
-        <RollingRandomAccessFile name="task_fail"
-                                 immediateFlush="false"
-                                 fileName="${LOG_PATH}/task_fail.log"
-                                 filePattern="${LOG_PATH}/task_fail-%d{yyyy-MM-dd}.log">
-            <PatternLayout pattern="${pattern}"/>
-            <Policies>
-                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
-            </Policies>
-            <DefaultRolloverStrategy max="90"/>
-        </RollingRandomAccessFile>
     </Appenders>
-
 
     <!--共有8个级别，按照从低到高为：All < Trace < Debug < Info < Warn < Error < Fatal < OFF.
            All:最低等级的，用于打开所有日志记录.
@@ -154,28 +135,13 @@ monitorInterval log4j2 自动检测配置文件的时间间隔（单位：秒）
            Error:输出错误信息日志.
            Fatal:输出每个严重的错误事件将会导致应用程序的退出的日志.
            OFF:最高等级的，用于关闭所有日志记录-->
-
     <Loggers>
-        <Logger name="com.joker.cloud.linserver" level="info" additivity="true">
-            <AppenderRef ref="debug"/>
+        <Root level="INFO">
+            <AppenderRef ref="console"/>
+            <AppenderRef ref="all"/>
             <AppenderRef ref="info"/>
             <AppenderRef ref="warn"/>
             <AppenderRef ref="error"/>
-        </Logger>
-        <!-- org.springframework 只输出 ERROR 级别以上的日志 -->
-        <Logger name="org.springframework" level="ERROR"/>
-        <!-- org.apache 只输出 ERROR 级别以上的日志 -->
-        <Logger name="org.apache" level="ERROR"/>
-        <!-- task_suc 日志 -->
-        <Logger name="task_suc" additivity="true">
-            <AppenderRef ref="task_suc"/>
-        </Logger>
-        <!-- task_fail 日志 -->
-        <Logger name="task_fail" additivity="true">
-            <AppenderRef ref="task_fail"/>
-        </Logger>
-        <Root level="INFO">
-            <AppenderRef ref="console"/>
         </Root>
     </Loggers>
 </configuration>

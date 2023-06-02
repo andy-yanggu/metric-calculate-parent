@@ -55,6 +55,14 @@ public class TestController {
         return deferredResult;
     }
 
+    @GetMapping("/test-log")
+    public void testLog() {
+        log.debug("测试debug日志");
+        log.info("测试info日志");
+        log.warn("测试warn日志");
+        log.error("测试error日志");
+    }
+
     @Data
     public static class Request<T> {
 
