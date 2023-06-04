@@ -169,7 +169,49 @@ public class MetricCalculateService {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
 
-        return null;
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            return Collections.emptyList();
+        }
+
+        Map<DimensionSet, DeriveMetricCalculate> map = new HashMap<>();
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            //执行前置过滤条件
+            Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(input);
+            if (Boolean.FALSE.equals(filter)) {
+                continue;
+            }
+
+            //提取出维度字段
+            DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+            map.put(dimensionSet, deriveMetricCalculate);
+        }
+
+        if (CollUtil.isEmpty(map)) {
+            return null;
+        }
+
+        ArrayList<DimensionSet> dimensionSetList = new ArrayList<>(map.keySet());
+        Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(dimensionSetList);
+        if (dimensionSetMetricCubeMap == null) {
+            dimensionSetMetricCubeMap = Collections.emptyMap();
+        }
+
+        List<MetricCube> updateMetricCubeList = new ArrayList<>();
+        List<DeriveMetricCalculateResult<Object>> resultList = new ArrayList<>();
+        for (DimensionSet dimensionSet : dimensionSetList) {
+            DeriveMetricCalculate deriveMetricCalculate = map.get(dimensionSet);
+            MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
+            historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube);
+            updateMetricCubeList.add(historyMetricCube);
+            DeriveMetricCalculateResult query = historyMetricCube.query(input);
+            if (query != null) {
+                resultList.add(query);
+            }
+        }
+
+        deriveMetricMiddleStore.batchUpdate(updateMetricCubeList);
+        return resultList;
     }
 
     /**
