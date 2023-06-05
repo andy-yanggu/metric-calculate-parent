@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.core2.util;
 
-import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.thread.NamedThreadFactory;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -26,16 +28,6 @@ public class AccumulateBatchComponent<T> {
     private AtomicInteger index;
 
     /**
-     * 任务定时器
-     */
-    private static final ScheduledThreadPoolExecutor scheduleThreadPool = new ScheduledThreadPoolExecutor(1);
-
-    /**
-     * 组件初始化完成工作线程的新建
-     */
-    private static final ExecutorService executorService = Executors.newCachedThreadPool();
-
-    /**
      * 构造器
      *
      * @param threadNum 默认新建的消费者线程个数
@@ -52,16 +44,14 @@ public class AccumulateBatchComponent<T> {
         for (int i = 0; i < threadNum; ++i) {
             WorkThread<T> workThread = new WorkThread<>("workThread" + "_" + i, limitSize, period, capacity, consumer);
             this.workThreads.add(workThread);
-
-            executorService.submit(workThread);
-            //开启threadNum个定时任务，每个任务各自检查各个工作线程对象内部的timeout方法，查看前后两次的timeout方法执行周期
-            scheduleThreadPool.scheduleAtFixedRate(workThread::timeout, RandomUtil.randomInt(50), period, TimeUnit.MILLISECONDS);
+            //启动消费者线程
+            new Thread(workThread).start();
         }
     }
 
     /**
-     * 生产者线程将对象添加到对应消费者线程对象内部的阻塞队列中去<br>
-     * 内部采用HASH取模算法进行动态路由
+     * 生产者线程将对象添加到对应消费者线程对象内部的阻塞队列中去
+     * <p>默认进行轮训, 可以拓展自己的路由算法</p>
      *
      * @param item 待添加的对象
      * @return true:添加成功 false:添加失败
@@ -98,14 +88,11 @@ public class AccumulateBatchComponent<T> {
         private final long period;
 
         /**
-         * 用来记录任务的即时处理时间
-         */
-        private volatile long lastFlushTime;
-
-        /**
          * 当前工作线程对象
          */
         private volatile Thread currentThread;
+
+        private volatile ScheduledFuture<?> scheduledFuture;
 
         /**
          * 工作线程对象内部的阻塞队列
@@ -116,6 +103,11 @@ public class AccumulateBatchComponent<T> {
          * 回调接口
          */
         private final Consumer<List<T>> consumer;
+
+        /**
+         * 定时器线程池
+         */
+        private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor;
 
         /**
          * 消费者线程构造器
@@ -130,9 +122,9 @@ public class AccumulateBatchComponent<T> {
             this.threadName = threadName;
             this.queueSizeLimit = queueSizeLimit;
             this.period = period;
-            this.lastFlushTime = System.currentTimeMillis();
             this.consumer = consumer;
             this.queue = new ArrayBlockingQueue<>(capacity);
+            this.scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1, new NamedThreadFactory(threadName + "-攒批定时器线程", true));
         }
 
         @Override
@@ -141,15 +133,8 @@ public class AccumulateBatchComponent<T> {
             this.currentThread.setName(this.threadName);
             //当前线程没有被其他线程打断
             while (!this.currentThread.isInterrupted()) {
-                //死循环的判断是否满足触发条件(队列实际大小是否超出指定阈值或距离上次任务时间是否超出指定阈值)，如果未满足将阻塞当前线程，避免死循环给系统带来性能开销
-                while (!this.canFlush()) {
-                    //当前工作线程被阻塞
-                    //log.info("线程被阻塞...");
-                    LockSupport.park(this);
-                }
-                //一旦add方法执行的时候判断存放的阻塞队列元素大小超出自定制阈值亦或距离上次任务处理时间差超出指定阈值，就会调用LockSupport.unpark方法解除阻塞的线程
-                //一旦线程被解除阻塞，就会触发此方法，将队列元素转成List对象且调用已经注册的回调函数
-                // log.info("阻塞线程被唤醒");
+                LockSupport.park(this);
+                log.info("阻塞线程被唤醒");
                 this.flush();
             }
         }
@@ -162,48 +147,47 @@ public class AccumulateBatchComponent<T> {
          */
         public boolean add(T item) {
             boolean result = this.queue.offer(item);
-            this.checkQueueSize();
+            this.check();
             return result;
         }
 
         /**
-         * 当前时间与上次任务处理时间差是否超过指定阈值;如果超过触发start方法
+         * 队列长度检查和定时器注册
          */
-        public void timeout() {
-            if (System.currentTimeMillis() - this.lastFlushTime >= this.period) {
-                //log.info("当前时间={}距离上次任务处理时间={}周期={}超出指定阈值={}", System.currentTimeMillis(), lastFlushTime, (System.currentTimeMillis() - this.lastFlushTime), period);
-                this.start(false);
+        private void check() {
+            if (this.queue.size() >= this.queueSizeLimit) {
+                this.start(0L);
+                return;
+            }
+            //只能一个注册定时器
+            //进行加锁和double check
+            if (scheduledFuture == null) {
+                synchronized (this) {
+                    if (scheduledFuture == null) {
+                        long registerTimeStamp = System.currentTimeMillis();
+                        scheduledFuture = scheduledThreadPoolExecutor.schedule(() -> this.start(registerTimeStamp), period, TimeUnit.MILLISECONDS);
+                    }
+                }
             }
         }
 
         /**
          * 唤醒被阻塞的工作线程
          */
-        private void start(boolean matchLength) {
-            if (matchLength) {
-                //log.info("攒批大小匹配, 执行start方法，唤醒被阻塞的线程" + currentThread.getName());
+        private void start(long timestamp) {
+            if (timestamp == 0L) {
+                log.info("{}队列大小={}超出指定阈值={}", currentThread.getName(), this.queue.size(), queueSizeLimit);
             } else {
-                //log.info("攒批时间到, 执行start方法，唤醒被阻塞的线程" + currentThread.getName());
+                log.info("攒批时间到, 执行start方法，唤醒被阻塞的线程: {}, 注册定时器时间: {}, 执行时间: {}",
+                        currentThread.getName(), DateUtil.format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss.SSS"), DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS"));
             }
             LockSupport.unpark(this.currentThread);
-        }
-
-        /**
-         * 判断队列实际长度是否超过指定阈值;如果超过触发start方法
-         */
-        private void checkQueueSize() {
-            if (this.queue.size() > this.queueSizeLimit) {
-                log.info("{}队列大小={}超出指定阈值={}", currentThread.getName(), this.queue.size(), queueSizeLimit);
-                this.start(true);
-            }
         }
 
         /**
          * 将队列中的元素添加到指定集合(初始容量限制)
          */
         public void flush() {
-            //记录最新任务处理开始时间
-            this.lastFlushTime = System.currentTimeMillis();
             if (queue.isEmpty()) {
                 return;
             }
@@ -211,6 +195,12 @@ public class AccumulateBatchComponent<T> {
             int size = this.queue.drainTo(temp, this.queueSizeLimit);
             if (size > 0) {
                 log.info("{}被唤醒后,开始执行任务:从队列中腾出大小为{}的数据且转成List对象", currentThread.getName(), size);
+                //删除之前注册的定时器
+                if (scheduledFuture != null) {
+                    log.info("定时器删除成功");
+                    scheduledFuture.cancel(true);
+                    scheduledFuture = null;
+                }
                 try {
                     //执行回调函数
                     this.consumer.accept(temp);
@@ -219,16 +209,6 @@ public class AccumulateBatchComponent<T> {
                 }
             }
         }
-
-        /**
-         * 判断队列实际大小是否超过指定阈值亦或距离上次任务处理时间差是否超过指定阈值
-         *
-         * @return true:满足触发条件 false:不满足触发条件
-         */
-        private boolean canFlush() {
-            return this.queue.size() > this.queueSizeLimit || System.currentTimeMillis() - this.lastFlushTime > this.period;
-        }
-
     }
 
 }
