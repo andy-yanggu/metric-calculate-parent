@@ -41,7 +41,7 @@ public class TestController {
      */
     @GetMapping("/test1")
     public DeferredResult<String> test1() {
-        DeferredResult<String> deferredResult = new DeferredResult<>(TimeUnit.SECONDS.toMillis(60L));
+        DeferredResult<String> deferredResult = new DeferredResult<>(TimeUnit.SECONDS.toMillis(20L));
         String uuid = IdUtil.fastSimpleUUID();
         Request<String> request = new Request<>();
         request.setUuid(uuid);

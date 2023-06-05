@@ -100,6 +100,8 @@ public class AccumulateBatchComponent<T> {
 
         private volatile ScheduledFuture<?> scheduledFuture;
 
+        private volatile boolean wakeup = false;
+
         /**
          * 工作线程对象内部的阻塞队列
          */
@@ -142,8 +144,9 @@ public class AccumulateBatchComponent<T> {
                 //线程默认阻塞, 等待被唤醒
                 //唤醒条件为攒批大小到或者攒批时间到
                 LockSupport.park(this);
-                log.info("阻塞线程被唤醒");
+                //log.info("阻塞线程被唤醒");
                 this.consumerListData();
+                wakeup = false;
             }
         }
 
@@ -160,39 +163,9 @@ public class AccumulateBatchComponent<T> {
         }
 
         /**
-         * 消费队列中的list数据
-         */
-        private void consumerListData() {
-            if (queue.isEmpty()) {
-                return;
-            }
-            List<T> temp = new ArrayList<>(this.queueSizeLimit);
-            int size = this.queue.drain(temp::add, this.queueSizeLimit);
-            if (size > 0) {
-                log.info("{}被唤醒后,开始执行任务:从队列中腾出大小为{}的数据且转成List对象", currentThread.getName(), size);
-                //删除之前注册的定时器
-                if (scheduledFuture != null) {
-                    log.info("定时器删除成功");
-                    scheduledFuture.cancel(true);
-                    scheduledFuture = null;
-                }
-                try {
-                    //执行回调函数
-                    this.consumer.accept(temp);
-                } catch (Throwable error) {
-                    log.error("批处理发生异常", error);
-                }
-            }
-        }
-
-        /**
          * 队列长度检查和定时器注册
          */
         private void check() {
-            if (this.queue.size() >= this.queueSizeLimit) {
-                this.start(0L);
-                return;
-            }
             //只能一个注册定时器
             //进行加锁和double check
             if (scheduledFuture == null) {
@@ -203,19 +176,67 @@ public class AccumulateBatchComponent<T> {
                     }
                 }
             }
+            //检查队列长度
+            while (this.queue.size() >= this.queueSizeLimit) {
+                this.start(0L);
+            }
         }
 
         /**
          * 唤醒被阻塞的工作线程
          */
         private void start(long timestamp) {
-            if (timestamp == 0L) {
-                log.info("{}队列大小={}超出指定阈值={}", currentThread.getName(), this.queue.size(), queueSizeLimit);
-            } else {
-                log.info("攒批时间到, 执行start方法，唤醒被阻塞的线程: {}, 注册定时器时间: {}, 执行时间: {}",
-                        currentThread.getName(), DateUtil.format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss.SSS"), DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS"));
+            //线程是阻塞状态才进行唤醒
+            //防止多个线程重复唤醒
+            if (!wakeup) {
+                synchronized (this) {
+                    if (!wakeup) {
+                        if (timestamp == 0L) {
+                            if (queue.isEmpty()) {
+                                return;
+                            }
+                            log.info("攒批大小到, {}队列大小={}, 超出指定阈值={}", currentThread.getName(), this.queue.size(), queueSizeLimit);
+                        } else {
+                            //删除之前注册的定时器
+                            if (scheduledFuture != null) {
+                                log.info("定时器删除成功");
+                                scheduledFuture.cancel(true);
+                                scheduledFuture = null;
+                            }
+                            if (queue.isEmpty()) {
+                                return;
+                            }
+                            log.info("攒批时间到, {}队列大小={}, 注册定时器时间: {}, 执行时间: {}",
+                                    currentThread.getName(), this.queue.size(),
+                                    DateUtil.format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss.SSS"),
+                                    DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS")
+                            );
+                        }
+                        LockSupport.unpark(this.currentThread);
+                        wakeup = true;
+                    }
+                }
             }
-            LockSupport.unpark(this.currentThread);
+        }
+
+        /**
+         * 消费队列中的list数据
+         */
+        private void consumerListData() {
+            if (queue.isEmpty()) {
+                return;
+            }
+            List<T> temp = new ArrayList<>(this.queueSizeLimit);
+            this.queue.drain(temp::add, this.queueSizeLimit);
+            if (!temp.isEmpty()) {
+                //log.info("{}被唤醒后,开始执行任务:从队列中腾出大小为{}的数据且转成List对象", currentThread.getName(), temp.size());
+                try {
+                    //执行回调函数
+                    this.consumer.accept(temp);
+                } catch (Throwable error) {
+                    log.error("批处理发生异常", error);
+                }
+            }
         }
 
     }
