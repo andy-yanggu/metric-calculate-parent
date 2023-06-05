@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
+import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class MetricCalculateConfig {
      * 攒批查询组件
      */
     @Bean
-    public AccumulateBatchComponent2<QueryRequest> queryComponent(
+    public AccumulateBatchComponent<QueryRequest> queryComponent(
                         DeriveMetricMiddleStore deriveMetricMiddleStore,
                         @Value("${metric-calculate.accumulate-batch-component.read.thread-num}") Integer threadNum,
                         @Value("${metric-calculate.accumulate-batch-component.read.limit}") Integer limit,
@@ -69,14 +69,14 @@ public class MetricCalculateConfig {
             }
         };
         log.info("攒批读组件初始化完成, 并行度: {}, 攒批大小: {}, 攒批时间: {}毫秒", threadNum, limit, interval);
-        return new AccumulateBatchComponent2<>("攒批读组件", threadNum, limit, interval, batchGetConsumer);
+        return new AccumulateBatchComponent<>("攒批读组件", threadNum, limit, interval, batchGetConsumer);
     }
 
     /**
      * 批量更新组件
      */
     @Bean
-    public AccumulateBatchComponent2<PutRequest> putComponent(
+    public AccumulateBatchComponent<PutRequest> putComponent(
                             DeriveMetricMiddleStore deriveMetricMiddleStore,
                             @Value("${metric-calculate.accumulate-batch-component.write.thread-num}") Integer threadNum,
                             @Value("${metric-calculate.accumulate-batch-component.write.limit}") Integer limit,
@@ -96,7 +96,7 @@ public class MetricCalculateConfig {
             }
         };
         log.info("攒批写组件初始化完成, 并行度: {}, 攒批大小: {}, 攒批时间: {}毫秒", threadNum, limit, interval);
-        return new AccumulateBatchComponent2<>("攒批写组件", threadNum, limit, interval, batchUpdateConsumer);
+        return new AccumulateBatchComponent<>("攒批写组件", threadNum, limit, interval, batchUpdateConsumer);
     }
 
 }

@@ -36,6 +36,7 @@
         <jmh.version>1.35</jmh.version>
         <joda-time.version>2.12.4</joda-time.version>
         <tlog.version>1.5.0</tlog.version>
+        <jctools-core.version>4.0.1</jctools-core.version>
     </properties>
 
     <dependencyManagement>
@@ -118,6 +119,11 @@
                 <groupId>com.yomahub</groupId>
                 <artifactId>tlog-all-spring-boot-starter</artifactId>
                 <version>${tlog.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jctools</groupId>
+                <artifactId>jctools-core</artifactId>
+                <version>${jctools-core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

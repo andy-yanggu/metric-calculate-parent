@@ -31,7 +31,7 @@ public class TestController {
                 request.getCompletableFuture().complete(request.getUuid());
             }
         };
-        this.component = new AccumulateBatchComponent<>(1, 10, 2000, 20, consumer);
+        this.component = new AccumulateBatchComponent<>("测试攒批组件", 1, 10, 2000, consumer);
     }
 
     /**

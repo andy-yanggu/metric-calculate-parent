@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
+import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
 import com.yanggu.metric_calculate.util.ApiResponse;
@@ -40,11 +40,11 @@ public class MetricCalculateService {
 
     @Autowired
     @Qualifier("queryComponent")
-    private AccumulateBatchComponent2<QueryRequest> queryComponent;
+    private AccumulateBatchComponent<QueryRequest> queryComponent;
 
     @Autowired
     @Qualifier("putComponent")
-    private AccumulateBatchComponent2<PutRequest> putComponent;
+    private AccumulateBatchComponent<PutRequest> putComponent;
 
     /**
      * 无状态(多线程)
