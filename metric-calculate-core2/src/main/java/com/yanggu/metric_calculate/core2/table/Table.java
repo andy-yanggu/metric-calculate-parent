@@ -15,6 +15,7 @@ public interface Table<IN, ACC, OUT> {
 
     /**
      * 查询操作
+     * <p>无状态查询操作</p>
      * <p>查询实时数据</p>
      *
      * @return
@@ -23,6 +24,7 @@ public interface Table<IN, ACC, OUT> {
 
     /**
      * 查询操作
+     * <p>无状态查询操作</p>
      * <p>查询历史数据</p>
      * @param input
      *

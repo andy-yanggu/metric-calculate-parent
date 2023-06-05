@@ -32,6 +32,7 @@ public class MetricCube<IN, ACC, OUT> {
 
     /**
      * 查询指标数据
+     * <p>无状态查询操作</p>
      * <p>实时查询</p>
      *
      * @return
@@ -48,6 +49,7 @@ public class MetricCube<IN, ACC, OUT> {
 
     /**
      * 查询指标数据
+     * <p>无状态查询操作</p>
      * <p>主要用于查询历史数据</p>
      *
      * @param input
@@ -61,6 +63,15 @@ public class MetricCube<IN, ACC, OUT> {
         //设置维度信息
         setDimension(deriveMetricCalculateResult);
         return deriveMetricCalculateResult;
+    }
+
+    /**
+     * 判断是否为空
+     *
+     * @return
+     */
+    public boolean isEmpty() {
+        return table == null || table.isEmpty();
     }
 
     /**

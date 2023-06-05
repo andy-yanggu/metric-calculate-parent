@@ -188,10 +188,10 @@ public class MetricCalculateService {
         }
 
         if (CollUtil.isEmpty(map)) {
-            return null;
+            return Collections.emptyList();
         }
 
-        ArrayList<DimensionSet> dimensionSetList = new ArrayList<>(map.keySet());
+        List<DimensionSet> dimensionSetList = new ArrayList<>(map.keySet());
         Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(dimensionSetList);
         if (dimensionSetMetricCubeMap == null) {
             dimensionSetMetricCubeMap = Collections.emptyMap();
