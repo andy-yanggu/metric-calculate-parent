@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.controller;
 
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.date.DateUtil;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import io.swagger.annotations.Api;
 import lombok.Data;
@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.annotation.PostConstruct;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static cn.hutool.core.date.DatePattern.NORM_DATETIME_MS_PATTERN;
 
 @Slf4j
 @Api(tags = "测试接口")
@@ -28,10 +30,10 @@ public class TestController {
     public void init() {
         Consumer<List<Request<String>>> consumer = requests -> {
             for (TestController.Request<String> request : requests) {
-                request.getCompletableFuture().complete(request.getUuid());
+                request.getCompletableFuture().complete(request.getUuid() + ", " + DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN));
             }
         };
-        this.component = new AccumulateBatchComponent<>("测试攒批组件", 1, 10, 2000, consumer);
+        this.component = new AccumulateBatchComponent<>("测试攒批组件", 1, 10, 200, consumer);
     }
 
     /**
@@ -41,8 +43,9 @@ public class TestController {
      */
     @GetMapping("/test1")
     public DeferredResult<String> test1() {
-        DeferredResult<String> deferredResult = new DeferredResult<>(TimeUnit.SECONDS.toMillis(20L));
-        String uuid = IdUtil.fastSimpleUUID();
+        DeferredResult<String> deferredResult = new DeferredResult<>(2000L);
+
+        String uuid = DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN);
         Request<String> request = new Request<>();
         request.setUuid(uuid);
         CompletableFuture<String> completableFuture = new CompletableFuture<>();
