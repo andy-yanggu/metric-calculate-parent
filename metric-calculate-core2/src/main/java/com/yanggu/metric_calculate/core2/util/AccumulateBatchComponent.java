@@ -186,36 +186,36 @@ public class AccumulateBatchComponent<T> {
          * 唤醒被阻塞的工作线程
          */
         private void start(long timestamp) {
-            //线程是阻塞状态才进行唤醒
-            //防止多个线程重复唤醒
-            if (!wakeup) {
-                synchronized (this) {
-                    if (!wakeup) {
-                        if (timestamp == 0L) {
-                            if (queue.isEmpty()) {
+            if (timestamp == 0L) {
+                if (!wakeup) {
+                    synchronized (this) {
+                        if (!wakeup) {
+                            if (this.queue.size() < this.queueSizeLimit) {
                                 return;
                             }
                             log.info("攒批大小到, {}队列大小={}, 超出指定阈值={}", currentThread.getName(), this.queue.size(), queueSizeLimit);
-                        } else {
-                            //删除之前注册的定时器
-                            if (scheduledFuture != null) {
-                                log.info("定时器删除成功");
-                                scheduledFuture.cancel(true);
-                                scheduledFuture = null;
-                            }
-                            if (queue.isEmpty()) {
-                                return;
-                            }
-                            log.info("攒批时间到, {}队列大小={}, 注册定时器时间: {}, 执行时间: {}",
-                                    currentThread.getName(), this.queue.size(),
-                                    DateUtil.format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss.SSS"),
-                                    DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS")
-                            );
+                            LockSupport.unpark(this.currentThread);
+                            wakeup = true;
                         }
-                        LockSupport.unpark(this.currentThread);
-                        wakeup = true;
                     }
                 }
+            } else {
+                //删除之前注册的定时器
+                if (scheduledFuture != null) {
+                    log.info("定时器删除成功");
+                    scheduledFuture.cancel(true);
+                    scheduledFuture = null;
+                }
+                if (queue.isEmpty()) {
+                    return;
+                }
+                log.info("攒批时间到, {}队列大小={}, 注册定时器时间: {}, 执行时间: {}",
+                        currentThread.getName(), this.queue.size(),
+                        DateUtil.format(new Date(timestamp), "yyyy-MM-dd HH:mm:ss.SSS"),
+                        DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss.SSS")
+                );
+                LockSupport.unpark(this.currentThread);
+                wakeup = true;
             }
         }
 
@@ -229,7 +229,7 @@ public class AccumulateBatchComponent<T> {
             List<T> temp = new ArrayList<>(this.queueSizeLimit);
             this.queue.drain(temp::add, this.queueSizeLimit);
             if (!temp.isEmpty()) {
-                //log.info("{}被唤醒后,开始执行任务:从队列中腾出大小为{}的数据且转成List对象", currentThread.getName(), temp.size());
+                log.info("{}被唤醒后,开始执行任务:从队列中腾出大小为{}的数据且转成List对象", currentThread.getName(), temp.size());
                 try {
                     //执行回调函数
                     this.consumer.accept(temp);
