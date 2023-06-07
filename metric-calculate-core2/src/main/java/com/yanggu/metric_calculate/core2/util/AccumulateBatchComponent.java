@@ -2,16 +2,19 @@ package com.yanggu.metric_calculate.core2.util;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.thread.NamedThreadFactory;
+import cn.hutool.core.util.RuntimeUtil;
+import com.yomahub.tlog.core.thread.TLogInheritableTask;
 import lombok.extern.slf4j.Slf4j;
 import org.jctools.queues.MpscArrayQueue;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.locks.LockSupport;
 import java.util.function.Consumer;
 
 import static cn.hutool.core.date.DatePattern.NORM_DATETIME_MS_PATTERN;
@@ -27,7 +30,7 @@ public class AccumulateBatchComponent<T> {
     /**
      * 工作线程数组
      */
-    private final List<WorkThread<T>> workThreads;
+    private final List<Work<T>> works;
 
     private AtomicInteger index;
 
@@ -41,7 +44,7 @@ public class AccumulateBatchComponent<T> {
      */
     public AccumulateBatchComponent(String name, int threadNum, int limit,
                                     int interval, Consumer<List<T>> consumer) {
-        this.workThreads = new ArrayList<>(threadNum);
+        this.works = new ArrayList<>(threadNum);
         if (threadNum > 1) {
             this.index = new AtomicInteger();
         }
@@ -49,18 +52,11 @@ public class AccumulateBatchComponent<T> {
         //定时器线程池
         ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1, new NamedThreadFactory(name + "-攒批定时器线程", true));
         for (int i = 0; i < threadNum; ++i) {
-            String threadName = name + "_" + i;
-            WorkThread<T> workThread = new WorkThread<>(limit, consumer);
-            Thread thread = new Thread(workThread);
-            workThread.currentThread = thread;
-            this.workThreads.add(workThread);
+            Work<T> work = new Work<>(limit, consumer);
+            this.works.add(work);
 
-            //启动消费者线程
-            thread.setName(threadName);
-            thread.start();
-
-            //启动定时器, 唤醒消费者线程
-            scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> workThread.start(false), 0L, interval, TimeUnit.MILLISECONDS);
+            //启动定时器, 唤醒消费者
+            scheduledThreadPoolExecutor.scheduleAtFixedRate(() -> work.start(false), 0L, interval, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -72,19 +68,19 @@ public class AccumulateBatchComponent<T> {
      * @return true:添加成功 false:添加失败
      */
     public void add(T item) {
-        int len = this.workThreads.size();
+        int len = this.works.size();
         if (len == 1) {
-            this.workThreads.get(0).add(item);
+            this.works.get(0).add(item);
         } else {
             int mod = this.index.incrementAndGet() % len;
-            this.workThreads.get(mod).add(item);
+            this.works.get(mod).add(item);
         }
     }
 
     /**
-     * 消费者线程
+     * 消费者
      */
-    private static class WorkThread<T> implements Runnable {
+    private static class Work<T> {
 
         /**
          * 队列中允许存放元素个数限制<br>
@@ -103,14 +99,14 @@ public class AccumulateBatchComponent<T> {
         private final Consumer<List<T>> consumer;
 
         /**
+         * 消费者线程池
+         */
+        private final ThreadPoolExecutor threadPoolExecutor;
+
+        /**
          * 用来记录任务的即时处理时间
          */
         private volatile long lastFlushTime;
-
-        /**
-         * 当前工作线程对象
-         */
-        private volatile Thread currentThread;
 
         private volatile boolean wakeup = false;
 
@@ -120,23 +116,13 @@ public class AccumulateBatchComponent<T> {
          * @param limit    指定队列阈值(可配置)
          * @param consumer 回调接口
          */
-        public WorkThread(int limit, Consumer<List<T>> consumer) {
+        public Work(int limit, Consumer<List<T>> consumer) {
             this.limit = limit;
             this.consumer = consumer;
             this.queue = new MpscArrayQueue<>(2 * limit);
             this.lastFlushTime = System.currentTimeMillis();
-        }
-
-        @Override
-        public void run() {
-            //当前线程没有被其他线程打断
-            while (!this.currentThread.isInterrupted()) {
-                //线程默认阻塞, 等待被唤醒
-                //唤醒条件为攒批大小到或者攒批时间到
-                LockSupport.park(this);
-                this.consumerListData();
-                wakeup = false;
-            }
+            int processorCount = RuntimeUtil.getProcessorCount();
+            this.threadPoolExecutor = new ThreadPoolExecutor(processorCount, processorCount, 200L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
         }
 
         /**
@@ -174,25 +160,34 @@ public class AccumulateBatchComponent<T> {
                             if (this.queue.size() < this.limit) {
                                 return;
                             }
-                            log.info("攒批大小到, {}队列大小={}, 超出指定阈值={}", currentThread.getName(), this.queue.size(), limit);
-                            LockSupport.unpark(this.currentThread);
+                            log.info("攒批大小到, 队列大小={}, 超出指定阈值={}", this.queue.size(), limit);
+                            Work<T> work = this;
+                            threadPoolExecutor.submit(new TLogInheritableTask() {
+                                @Override
+                                public void runTask() {
+                                    work.consumerListData();
+                                }
+                            });
                             wakeup = true;
                         }
                     }
                 }
             } else {
-                //记录最新任务处理开始时间
                 long flushTime = this.lastFlushTime;
-                this.lastFlushTime = System.currentTimeMillis();
                 if (queue.isEmpty()) {
                     return;
                 }
-                log.info("攒批时间到, {}队列大小={}, 上次执行时间: {}, 执行时间: {}",
-                        currentThread.getName(), this.queue.size(),
+                log.info("攒批时间到, 队列大小={}, 上次执行时间: {}, 执行时间: {}", this.queue.size(),
                         DateUtil.format(new Date(flushTime), NORM_DATETIME_MS_PATTERN),
                         DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN)
                 );
-                LockSupport.unpark(this.currentThread);
+                Work<T> work = this;
+                threadPoolExecutor.submit(new TLogInheritableTask() {
+                    @Override
+                    public void runTask() {
+                        work.consumerListData();
+                    }
+                });
                 wakeup = true;
             }
         }
@@ -201,18 +196,22 @@ public class AccumulateBatchComponent<T> {
          * 消费队列中的list数据
          */
         private void consumerListData() {
+            //记录最新任务处理开始时间
+            this.lastFlushTime = System.currentTimeMillis();
             if (queue.isEmpty()) {
                 return;
             }
             List<T> temp = new ArrayList<>(this.limit);
             this.queue.drain(temp::add, this.limit);
             if (!temp.isEmpty()) {
-                log.info("{}被唤醒后, 开始执行任务:从队列中腾出大小为{}的数据且转成List对象", currentThread.getName(), temp.size());
+                log.info("开始执行任务:从队列中腾出大小为{}的数据且转成List对象", temp.size());
                 try {
                     //执行回调函数
                     this.consumer.accept(temp);
                 } catch (Throwable error) {
                     log.error("批处理发生异常", error);
+                } finally {
+                    wakeup = false;
                 }
             }
         }
