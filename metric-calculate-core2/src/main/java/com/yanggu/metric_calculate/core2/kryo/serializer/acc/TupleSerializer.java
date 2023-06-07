@@ -14,7 +14,7 @@ public class TupleSerializer extends Serializer<Tuple> {
     @Override
     public void write(Kryo kryo, Output output, Tuple object) {
         int size = object.size();
-        kryo.writeObject(output, size);
+        output.writeInt(size);
         for (int i = 0; i < size; i++) {
             kryo.writeClassAndObject(output, object.get(i));
         }
@@ -22,7 +22,7 @@ public class TupleSerializer extends Serializer<Tuple> {
 
     @Override
     public Tuple read(Kryo kryo, Input input, Class<? extends Tuple> type) {
-        Integer size = kryo.readObject(input, Integer.class);
+        int size = input.readInt();
         Object[] objects = new Object[size];
         for (int i = 0; i < size; i++) {
             objects[i] = kryo.readClassAndObject(input);

@@ -7,10 +7,16 @@ import cn.hutool.core.lang.Tuple;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.core.lang.mutable.MutablePair;
 import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.serializers.BeanSerializer;
 import com.esotericsoftware.kryo.util.DefaultInstantiatorStrategy;
 import com.esotericsoftware.kryo.util.Pool;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
+import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core2.kryo.serializer.cube.DimensionSetSerializer;
+import com.yanggu.metric_calculate.core2.kryo.serializer.cube.MetricCubeSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.acc.*;
 import com.yanggu.metric_calculate.core2.kryo.serializer.table.*;
+import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core2.table.*;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -45,6 +51,11 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 13);
         kryo.register(MutableObj.class, new MutableObjectSerializer<>(), 14);
         kryo.register(Pair.class, new PairSerializer<>(), 15);
+
+        //MetricCube序列化器和反序列化器
+        kryo.register(DimensionSet.class, new DimensionSetSerializer(), 20);
+        kryo.register(MetricCube.class, new MetricCubeSerializer<>(), 21);
+        kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 22);
         return kryo;
     }
 

@@ -301,9 +301,9 @@ public class MetricCalculateService {
     }
 
     private QueryRequest getQueryRequest(JSONObject input, DeriveMetricCalculate deriveMetricCalculate) {
-        DimensionSet process = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+        DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
         QueryRequest queryRequest = new QueryRequest();
-        queryRequest.setDimensionSet(process);
+        queryRequest.setDimensionSet(dimensionSet);
         queryRequest.setQueryFuture(new CompletableFuture<>());
         return queryRequest;
     }
