@@ -57,7 +57,15 @@ public class MetricConfigDataService implements ApplicationRunner {
             return Collections.emptyList();
         }
         return metricMap.values().stream()
-                .map(temp -> BeanUtil.copyProperties(temp, DataDetailsWideTable.class))
+                .map(temp -> {
+                    Lock readLock = readWriteLockStriped.get(temp.getId()).readLock();
+                    readLock.lock();
+                    try {
+                        return BeanUtil.copyProperties(temp, DataDetailsWideTable.class);
+                    } finally {
+                        readLock.unlock();
+                    }
+                })
                 .collect(Collectors.toList());
     }
 
@@ -71,11 +79,15 @@ public class MetricConfigDataService implements ApplicationRunner {
         if (CollUtil.isEmpty(metricMap)) {
             return null;
         }
-        return metricMap.values().stream()
-                .filter(tempTableData -> tempTableData.getId().equals(tableId))
-                .findFirst()
-                .map(temp -> BeanUtil.copyProperties(temp, DataDetailsWideTable.class))
-                .orElseThrow(() -> new RuntimeException("传入的tableId: " + tableId + "有误"));
+        Lock readLock = readWriteLockStriped.get(tableId).readLock();
+        readLock.lock();
+        try {
+            return Optional.ofNullable(metricMap.get(tableId))
+                    .map(temp -> BeanUtil.copyProperties(temp, DataDetailsWideTable.class))
+                    .orElseThrow(() -> new RuntimeException("传入的tableId: " + tableId + "有误"));
+        } finally {
+            readLock.unlock();
+        }
     }
 
     /**
@@ -132,7 +144,7 @@ public class MetricConfigDataService implements ApplicationRunner {
     /**
      * 从数据库加载指标定义
      */
-    public void buildAllMetric() {
+    public synchronized void buildAllMetric() {
         log.info("初始化所有指标计算类");
         //获取所有宽表id
         List<Long> allTableId = metricConfigClient.getAllTableId();
@@ -162,26 +174,43 @@ public class MetricConfigDataService implements ApplicationRunner {
      * @return
      */
     public Derive getDerive(Long tableId, Long deriveId) {
-        MetricCalculate metricCalculate = getMetricCalculate(tableId);
-        List<Derive> deriveList = metricCalculate.getDerive();
-        if (CollUtil.isEmpty(deriveList)) {
-            return null;
+        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
+        Lock readLock = readWriteLock.readLock();
+        readLock.lock();
+        try {
+            MetricCalculate metricCalculate = metricMap.get(tableId);
+            if (metricCalculate == null) {
+                return null;
+            }
+            List<Derive> deriveList = metricCalculate.getDerive();
+            if (CollUtil.isEmpty(deriveList)) {
+                return null;
+            }
+            return deriveList.stream()
+                    .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("传入的派生指标id" + deriveId + "有误"));
+        } finally {
+            readLock.unlock();
         }
-        return deriveList.stream()
-                .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException("传入的派生指标id" + deriveId + "有误"));
     }
 
     public List<Long> getAllDeriveIdList(Long tableId) {
-        MetricCalculate metricCalculate = getMetricCalculate(tableId);
-        List<Derive> deriveList = metricCalculate.getDerive();
-        if (CollUtil.isEmpty(deriveList)) {
-            return Collections.emptyList();
+        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
+        Lock readLock = readWriteLock.readLock();
+        readLock.lock();
+        try {
+            MetricCalculate metricCalculate = metricMap.get(tableId);
+            List<Derive> deriveList = metricCalculate.getDerive();
+            if (CollUtil.isEmpty(deriveList)) {
+                return Collections.emptyList();
+            }
+            return deriveList.stream()
+                    .map(Derive::getId)
+                    .collect(Collectors.toList());
+        } finally {
+            readLock.unlock();
         }
-        return deriveList.stream()
-                .map(Derive::getId)
-                .collect(Collectors.toList());
     }
 
     /**

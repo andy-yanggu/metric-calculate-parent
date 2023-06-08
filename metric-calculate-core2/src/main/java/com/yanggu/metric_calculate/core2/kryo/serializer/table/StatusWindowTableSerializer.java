@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.yanggu.metric_calculate.core2.table.StatusWindowTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -25,8 +26,8 @@ public class StatusWindowTableSerializer<IN, ACC, OUT> extends Serializer<Status
     @Override
     public StatusWindowTable<IN, ACC, OUT> read(Kryo kryo, Input input, Class<? extends StatusWindowTable<IN, ACC, OUT>> type) {
         StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();
-        statusWindowTable.setStatusList(statusListSerializer.read(kryo, input, List.class));
-        statusWindowTable.setInList(inListSerializer.read(kryo, input, List.class));
+        statusWindowTable.setStatusList(statusListSerializer.read(kryo, input, ArrayList.class));
+        statusWindowTable.setInList(inListSerializer.read(kryo, input, ArrayList.class));
         return statusWindowTable;
     }
 

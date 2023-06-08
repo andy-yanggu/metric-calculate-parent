@@ -55,7 +55,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> noStateExecuteThread(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> noStateCalculateThread(JSONObject input) {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
 
@@ -72,7 +72,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> noStateExecuteBatch(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> noStateCalculateBatch(JSONObject input) {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
@@ -118,7 +118,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateExecuteAccumulateBatch(JSONObject input) {
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateCalculateAccumulateBatch(JSONObject input) {
         DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult = createDeferredResult(5000L);
 
         //获取指标计算类
@@ -152,7 +152,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> stateExecuteThread(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> stateCalculateThread(JSONObject input) {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
 
@@ -165,7 +165,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> stateExecuteBatch(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> stateCalculateBatch(JSONObject input) {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
 
@@ -220,7 +220,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateExecuteAccumulateBatch(JSONObject input) {
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateCalculateAccumulateBatch(JSONObject input) {
         DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult = createDeferredResult(5000L);
 
         //获取指标计算类

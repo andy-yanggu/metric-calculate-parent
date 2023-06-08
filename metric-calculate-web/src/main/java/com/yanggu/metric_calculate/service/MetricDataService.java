@@ -104,7 +104,7 @@ public class MetricDataService {
         //批量读取数据
         Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(new ArrayList<>(dimensionSets));
         if (dimensionSetMetricCubeMap == null) {
-            dimensionSetMetricCubeMap = Collections.emptyMap();
+            dimensionSetMetricCubeMap = new HashMap<>();
         }
 
         for (Tuple tuple : tupleList) {
@@ -155,6 +155,9 @@ public class MetricDataService {
     private DimensionSet getDimensionSet(Long tableId, Long deriveId, LinkedHashMap<String, Object> dimensionMap) {
         //获取派生指标
         Derive derive = metricConfigDataService.getDerive(tableId, deriveId);
+        if (derive == null) {
+            throw new RuntimeException("传入的tableId: " + tableId + "或者deriveId: " + deriveId + "有误");
+        }
         DimensionSet dimension = new DimensionSet();
         dimension.setKey(tableId + "_" + derive.getId());
         dimension.setMetricName(derive.getName());
