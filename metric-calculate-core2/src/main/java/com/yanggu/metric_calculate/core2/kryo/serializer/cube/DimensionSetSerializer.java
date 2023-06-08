@@ -24,7 +24,7 @@ public class DimensionSetSerializer extends Serializer<DimensionSet> {
     public DimensionSet read(Kryo kryo, Input input, Class<? extends DimensionSet> type) {
         String key = input.readString();
         String metricName = input.readString();
-        LinkedHashMap linkedHashMap = kryo.readObject(input, LinkedHashMap.class);
+        LinkedHashMap<String, Object> linkedHashMap = kryo.readObject(input, LinkedHashMap.class);
         return new DimensionSet(key, metricName, linkedHashMap);
     }
 

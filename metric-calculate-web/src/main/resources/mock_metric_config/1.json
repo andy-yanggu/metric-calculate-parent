@@ -94,7 +94,6 @@
       "aggregateFunctionParam": {
         "calculateLogic": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
-          "calculateLogic": "SORTEDLIMITLISTFIELD",
           "aggregateType": "SORTEDLIMITLISTFIELD",
           "retainExpress": "debit_amt_out",
           "collectiveSortFieldList": [
