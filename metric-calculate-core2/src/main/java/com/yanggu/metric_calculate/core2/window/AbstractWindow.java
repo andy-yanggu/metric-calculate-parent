@@ -19,6 +19,9 @@ import lombok.Data;
 @Data
 public abstract class AbstractWindow<IN, ACC, OUT> implements Window<OUT> {
 
+    /**
+     * 聚合字段处理器
+     */
     protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**

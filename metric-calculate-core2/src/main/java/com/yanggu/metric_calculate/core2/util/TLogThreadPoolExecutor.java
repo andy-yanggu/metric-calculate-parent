@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.util;
+package com.yanggu.metric_calculate.core2.util;
 
 import com.yomahub.tlog.core.thread.TLogInheritableTask;
 

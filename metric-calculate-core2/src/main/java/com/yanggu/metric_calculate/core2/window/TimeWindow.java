@@ -47,6 +47,17 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
         return query(process);
     }
 
+    /**
+     * 查询数据
+     *
+     * @param from
+     * @param fromInclusive
+     * @param to
+     * @param toInclusive
+     * @return
+     */
+    public abstract OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive);
+
     public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
@@ -60,16 +71,5 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
         deriveMetricCalculateResult.setEndTime(DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
         return deriveMetricCalculateResult;
     }
-
-    /**
-     * 查询数据
-     *
-     * @param from
-     * @param fromInclusive
-     * @param to
-     * @param toInclusive
-     * @return
-     */
-    public abstract OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive);
 
 }

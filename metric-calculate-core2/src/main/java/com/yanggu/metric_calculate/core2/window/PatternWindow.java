@@ -101,15 +101,13 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         boolean toInclusive = false;
 
         //判断最后一个节点是否有数据
-        NavigableMap<Long, IN> endTable = dataMap.lastEntry().getValue()
-                .subMap(from, fromInclusive, to, toInclusive);
+        NavigableMap<Long, IN> endTable = dataMap.lastEntry().getValue().subMap(from, fromInclusive, to, toInclusive);
         if (endTable.isEmpty()) {
             return null;
         }
 
         //从第一个节点进行截取数据
-        NavigableMap<Long, IN> nodeTable = dataMap.firstEntry().getValue()
-                .subMap(from, fromInclusive, to, toInclusive);
+        NavigableMap<Long, IN> nodeTable = dataMap.firstEntry().getValue().subMap(from, fromInclusive, to, toInclusive);
 
         //判断第一个节点是否有数据
         if (nodeTable.isEmpty()) {
@@ -143,16 +141,8 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
             return null;
         }
 
-        //创建累加器
-        ACC acc = aggregateFieldProcessor.createAcc();
-
-        //放入明细数据进行累加
-        for (IN in : nextTable.values()) {
-            acc = aggregateFieldProcessor.add(acc, in);
-        }
-
         //从累加器中获取数据
-        OUT out = aggregateFieldProcessor.getOutFromAcc(acc);
+        OUT out = aggregateFieldProcessor.getOutFromInList(new ArrayList<>(nextTable.values()));
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(out);
         return deriveMetricCalculateResult;

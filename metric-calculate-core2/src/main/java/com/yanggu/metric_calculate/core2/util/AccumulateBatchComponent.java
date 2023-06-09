@@ -50,9 +50,10 @@ public class AccumulateBatchComponent<T> {
         }
 
         //定时器线程池
-        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1, new NamedThreadFactory(name + "-攒批定时器线程", true));
+        ScheduledThreadPoolExecutor scheduledThreadPoolExecutor = new ScheduledThreadPoolExecutor(1,
+                new NamedThreadFactory(name + "-攒批定时器线程", true));
         for (int i = 0; i < threadNum; ++i) {
-            Work<T> work = new Work<>(limit, consumer);
+            Work<T> work = new Work<>(name, limit, consumer);
             this.works.add(work);
 
             //启动定时器, 唤醒消费者
@@ -116,13 +117,16 @@ public class AccumulateBatchComponent<T> {
          * @param limit    指定队列阈值(可配置)
          * @param consumer 回调接口
          */
-        public Work(int limit, Consumer<List<T>> consumer) {
+        public Work(String name, int limit, Consumer<List<T>> consumer) {
             this.limit = limit;
             this.consumer = consumer;
             this.queue = new MpscArrayQueue<>(2 * limit);
             this.lastFlushTime = System.currentTimeMillis();
             int processorCount = RuntimeUtil.getProcessorCount();
-            this.threadPoolExecutor = new ThreadPoolExecutor(processorCount, processorCount, 200L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+            this.threadPoolExecutor = new TLogThreadPoolExecutor(processorCount, processorCount,
+                    200L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100),
+                    new NamedThreadFactory(name + "-消费者线程", false),
+                    new ThreadPoolExecutor.CallerRunsPolicy());
         }
 
         /**
@@ -161,19 +165,15 @@ public class AccumulateBatchComponent<T> {
                                 return;
                             }
                             log.info("攒批大小到, 队列大小={}, 超出指定阈值={}", this.queue.size(), limit);
-                            Work<T> work = this;
-                            threadPoolExecutor.submit(new TLogInheritableTask() {
-                                @Override
-                                public void runTask() {
-                                    work.consumerListData();
-                                }
-                            });
+                            threadPoolExecutor.submit(this::consumerListData);
                             wakeup = true;
                         }
                     }
                 }
             } else {
                 long flushTime = this.lastFlushTime;
+                //记录最新任务处理开始时间
+                this.lastFlushTime = System.currentTimeMillis();
                 if (queue.isEmpty()) {
                     return;
                 }
@@ -196,8 +196,6 @@ public class AccumulateBatchComponent<T> {
          * 消费队列中的list数据
          */
         private void consumerListData() {
-            //记录最新任务处理开始时间
-            this.lastFlushTime = System.currentTimeMillis();
             if (queue.isEmpty()) {
                 return;
             }

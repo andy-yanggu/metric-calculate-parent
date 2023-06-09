@@ -31,14 +31,6 @@ public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         accumulator = aggregateFieldProcessor.add(accumulator, getInFromInput(input));
     }
 
-    //@Override
-    public GlobalWindow<IN, ACC, OUT> merge(GlobalWindow<IN, ACC, OUT> thatGlobalWindow) {
-        GlobalWindow<IN, ACC, OUT> globalWindow = new GlobalWindow<>();
-        ACC acc = aggregateFieldProcessor.mergeAccList(CollUtil.toList(accumulator, thatGlobalWindow.getAccumulator()));
-        globalWindow.setAccumulator(acc);
-        return globalWindow;
-    }
-
     @Override
     public DeriveMetricCalculateResult<OUT> query() {
         return query(null);
@@ -55,6 +47,14 @@ public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     @Override
     public boolean isEmpty() {
         return accumulator == null;
+    }
+
+    //@Override
+    public GlobalWindow<IN, ACC, OUT> merge(GlobalWindow<IN, ACC, OUT> thatGlobalWindow) {
+        GlobalWindow<IN, ACC, OUT> globalWindow = new GlobalWindow<>();
+        ACC acc = aggregateFieldProcessor.mergeAccList(CollUtil.toList(accumulator, thatGlobalWindow.getAccumulator()));
+        globalWindow.setAccumulator(acc);
+        return globalWindow;
     }
 
 }

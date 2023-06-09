@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
-import com.yanggu.metric_calculate.util.TLogThreadPoolExecutor;
+import com.yanggu.metric_calculate.core2.util.TLogThreadPoolExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

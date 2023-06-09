@@ -5,6 +5,12 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 
+/**
+ * 数据切分核心窗口
+ * <p>定义数据如何切分</p>
+ *
+ * @param <OUT>
+ */
 public interface Window<OUT> {
 
     /**
@@ -25,8 +31,6 @@ public interface Window<OUT> {
      * 查询操作
      * <p>无状态查询操作</p>
      * <p>查询实时数据</p>
-     *
-     * @return
      */
     DeriveMetricCalculateResult<OUT> query();
 
@@ -35,8 +39,6 @@ public interface Window<OUT> {
      * <p>无状态查询操作</p>
      * <p>查询历史数据</p>
      * @param input
-     *
-     * @return
      */
     DeriveMetricCalculateResult<OUT> query(JSONObject input);
 
