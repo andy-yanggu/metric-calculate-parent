@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 @AllArgsConstructor
-public class TimeWindow {
+public class TimeWindowData {
 
     /**
      * 窗口开始时间戳（包含）

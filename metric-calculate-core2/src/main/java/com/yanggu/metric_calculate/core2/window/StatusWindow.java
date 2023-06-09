@@ -1,8 +1,9 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
@@ -12,6 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.STATUS_WINDOW;
+
 /**
  * 状态窗口, 当窗口字段的值发生改变时, 生成一个新的窗口
  *
@@ -20,7 +23,7 @@ import java.util.Map;
  * @param <OUT>
  */
 @Data
-public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
+public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -35,6 +38,11 @@ public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT>
     @Override
     public void init() {
         this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, statusExpressList);
+    }
+
+    @Override
+    public WindowTypeEnum type() {
+        return STATUS_WINDOW;
     }
 
     @Override
@@ -73,9 +81,9 @@ public class StatusWindowTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT>
     }
 
     //@Override
-    public StatusWindowTable<IN, ACC, OUT> merge(StatusWindowTable<IN, ACC, OUT> thatTable) {
+    public StatusWindow<IN, ACC, OUT> merge(StatusWindow<IN, ACC, OUT> thatTable) {
 
-        StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();
+        StatusWindow<IN, ACC, OUT> statusWindowTable = new StatusWindow<>();
         //inList.addAll(thatTable.getInList());
         //statusWindowTable.setInList(inList);
         return statusWindowTable;

@@ -10,7 +10,7 @@ import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.pojo.TableData;
+import com.yanggu.metric_calculate.pojo.UpdateMetricData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -39,15 +39,13 @@ public class MetricDataService {
      * @param dimensionMap
      * @return
      */
-    public DeriveMetricCalculateResult<Object> queryDeriveData(Long tableId,
-                                                               Long deriveId,
-                                                               LinkedHashMap<String, Object> dimensionMap) {
-        DimensionSet dimension = getDimensionSet(tableId, deriveId, dimensionMap);
-        MetricCube<Object, Object, Object> metricCube = deriveMetricMiddleStore.get(dimension);
-        if (metricCube == null) {
-            return null;
-        }
-        return metricCube.query();
+    public <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> queryDeriveData(Long tableId,
+                                                                           Long deriveId,
+                                                                           LinkedHashMap<String, Object> dimensionMap) {
+        DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate =
+                metricConfigDataService.getDeriveMetricCalculateById(tableId, deriveId);
+        DimensionSet dimensionSet = getDimensionSet(tableId, deriveId, dimensionMap);
+        return deriveMetricCalculate.query(dimensionSet);
     }
 
     public void fillDeriveDataById(Long tableId, Long deriveId, List<JSONObject> dataList) {
@@ -136,11 +134,14 @@ public class MetricDataService {
     /**
      * 更新派生指标数据
      */
-    public void correctDeriveData(TableData tableData) {
-        DimensionSet dimensionSet = getDimensionSet(tableData.getTableId(), tableData.getDeriveId(), tableData.getDimensionMap());
+    public void correctDeriveData(UpdateMetricData updateMetricData) {
+        if (updateMetricData.getWindow().isEmpty()) {
+            throw new RuntimeException("传入的window为空");
+        }
+        DimensionSet dimensionSet = getDimensionSet(updateMetricData.getTableId(), updateMetricData.getDeriveId(), updateMetricData.getDimensionMap());
         MetricCube metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        metricCube.setTable(tableData.getTable());
+        metricCube.setWindow(updateMetricData.getWindow());
         deriveMetricMiddleStore.update(metricCube);
     }
 

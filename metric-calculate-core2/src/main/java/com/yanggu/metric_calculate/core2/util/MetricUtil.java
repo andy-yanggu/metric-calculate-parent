@@ -21,7 +21,7 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
-import com.yanggu.metric_calculate.core2.table.TableFactory;
+import com.yanggu.metric_calculate.core2.window.WindowFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -181,13 +181,13 @@ public class MetricUtil {
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
 
         //设置TableFactory
-        TableFactory<IN, ACC, OUT> tableFactory = new TableFactory<>();
-        tableFactory.setWindowParam(tempDerive.getWindowParam());
-        tableFactory.setTimeFieldProcessor(timeFieldProcessor);
-        tableFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
-        tableFactory.setFieldMap(metricCalculate.getFieldMap());
+        WindowFactory<IN, ACC, OUT> windowFactory = new WindowFactory<>();
+        windowFactory.setWindowParam(tempDerive.getWindowParam());
+        windowFactory.setTimeFieldProcessor(timeFieldProcessor);
+        windowFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
+        windowFactory.setFieldMap(metricCalculate.getFieldMap());
 
-        deriveMetricCalculate.setTableFactory(tableFactory);
+        deriveMetricCalculate.setWindowFactory(windowFactory);
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor =

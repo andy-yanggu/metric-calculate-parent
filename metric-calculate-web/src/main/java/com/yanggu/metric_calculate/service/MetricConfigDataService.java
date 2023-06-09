@@ -195,6 +195,28 @@ public class MetricConfigDataService implements ApplicationRunner {
         }
     }
 
+    /**
+     * 根据宽表id和派生指标id获取派生指标计算类
+     *
+     * @param tableId
+     * @param deriveId
+     * @return
+     */
+    public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long tableId, Long deriveId) {
+        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
+        Lock readLock = readWriteLock.readLock();
+        readLock.lock();
+        try {
+            MetricCalculate metricCalculate = metricMap.get(tableId);
+            if (metricCalculate == null) {
+                return null;
+            }
+            return metricCalculate.getDeriveMetricCalculateById(deriveId);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
     public List<Long> getAllDeriveIdList(Long tableId) {
         ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
         Lock readLock = readWriteLock.readLock();

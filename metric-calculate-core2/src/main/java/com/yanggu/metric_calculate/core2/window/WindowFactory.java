@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
@@ -13,7 +13,7 @@ import java.util.Map;
 import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.*;
 
 @Data
-public class TableFactory<IN, ACC, OUT> {
+public class WindowFactory<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -28,31 +28,31 @@ public class TableFactory<IN, ACC, OUT> {
      *
      * @return
      */
-    public Table<IN, ACC, OUT> createTable() {
+    public AbstractWindow<IN, ACC, OUT> createTable() {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
-            TumblingTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTable<>();
+            TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeWindow<>();
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return tumblingTimeTable;
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
-            SlidingTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTable<>();
+            SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable = new SlidingTimeWindow<>();
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             return slidingTimeTable;
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
-            SlidingCountWindowTable<IN, ACC, OUT> slidingCountWindowTable = new SlidingCountWindowTable<>();
+            SlidingCountWindow<IN, ACC, OUT> slidingCountWindowTable = new SlidingCountWindow<>();
             slidingCountWindowTable.setLimit(windowParam.getLimit());
             slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             return slidingCountWindowTable;
             //状态窗口
         } else if (windowType == STATUS_WINDOW) {
-            StatusWindowTable<IN, ACC, OUT> statusWindowTable = new StatusWindowTable<>();
+            StatusWindow<IN, ACC, OUT> statusWindowTable = new StatusWindow<>();
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             statusWindowTable.setFieldMap(fieldMap);
             statusWindowTable.setStatusExpressList(windowParam.getStatusExpressList());
@@ -60,12 +60,12 @@ public class TableFactory<IN, ACC, OUT> {
             return statusWindowTable;
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
-            GlobalTable<IN, ACC, OUT> globalTable = new GlobalTable<>();
+            GlobalWindow<IN, ACC, OUT> globalTable = new GlobalWindow<>();
             globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             return globalTable;
             //CEP类型
         } else if (windowType == EVENT_WINDOW) {
-            PatternTable<IN, ACC, OUT> patternTable = new PatternTable<>();
+            PatternWindow<IN, ACC, OUT> patternTable = new PatternWindow<>();
             patternTable.setFieldMap(fieldMap);
             patternTable.setNodePatternList(windowParam.getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
@@ -81,41 +81,41 @@ public class TableFactory<IN, ACC, OUT> {
     /**
      * 给Table实现类的相关字段赋值
      *
-     * @param table
+     * @param window
      */
-    public void setTable(Table<IN, ACC, OUT> table) {
+    public void setTable(AbstractWindow<IN, ACC, OUT> window) {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
-            TumblingTimeTable<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeTable<IN, ACC, OUT>) table);
+            TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeWindow<IN, ACC, OUT>) window);
             tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
-            SlidingTimeTable<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeTable<IN, ACC, OUT>) table);
+            SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeWindow<IN, ACC, OUT>) window);
             slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
             slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
-            SlidingCountWindowTable<IN, ACC, OUT> slidingCountWindowTable = ((SlidingCountWindowTable<IN, ACC, OUT>) table);
+            SlidingCountWindow<IN, ACC, OUT> slidingCountWindowTable = ((SlidingCountWindow<IN, ACC, OUT>) window);
             slidingCountWindowTable.setLimit(windowParam.getLimit());
             slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             //状态窗口
         } else if (windowType == STATUS_WINDOW) {
-            StatusWindowTable<IN, ACC, OUT> statusWindowTable = ((StatusWindowTable<IN, ACC, OUT>) table);
+            StatusWindow<IN, ACC, OUT> statusWindowTable = ((StatusWindow<IN, ACC, OUT>) window);
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             statusWindowTable.setFieldMap(fieldMap);
             statusWindowTable.setStatusExpressList(windowParam.getStatusExpressList());
             statusWindowTable.init();
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
-            GlobalTable<IN, ACC, OUT> globalTable = ((GlobalTable<IN, ACC, OUT>) table);
+            GlobalWindow<IN, ACC, OUT> globalTable = ((GlobalWindow<IN, ACC, OUT>) window);
             globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             //CEP类型
         } else if (windowType == EVENT_WINDOW) {
-            PatternTable<IN, ACC, OUT> patternTable = ((PatternTable<IN, ACC, OUT>) table);
+            PatternWindow<IN, ACC, OUT> patternTable = ((PatternWindow<IN, ACC, OUT>) window);
             patternTable.setFieldMap(fieldMap);
             patternTable.setNodePatternList(windowParam.getNodePatternList());
             patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);

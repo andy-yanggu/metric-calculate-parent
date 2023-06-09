@@ -1,12 +1,15 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 
 import cn.hutool.core.collection.CollUtil;
+import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.TreeMap;
+
+import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.TUMBLING_TIME_WINDOW;
 
 /**
  * 滚动时间窗口
@@ -16,9 +19,14 @@ import java.util.TreeMap;
  * @param <OUT>
  */
 @Data
-public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
+public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();
+
+    @Override
+    public WindowTypeEnum type() {
+        return TUMBLING_TIME_WINDOW;
+    }
 
     @Override
     public void put(Long timestamp, IN in) {
@@ -39,7 +47,7 @@ public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
     }
 
     //@Override
-    public TumblingTimeTable<IN, ACC, OUT> merge(TumblingTimeTable<IN, ACC, OUT> thatTable) {
+    public TumblingTimeWindow<IN, ACC, OUT> merge(TumblingTimeWindow<IN, ACC, OUT> thatTable) {
         TreeMap<Long, ACC> thatTreeMap = thatTable.getTreeMap();
         thatTreeMap.forEach((tempLong, thatAcc) -> {
             ACC thisAcc = treeMap.get(tempLong);
@@ -50,7 +58,7 @@ public class TumblingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
             }
         });
 
-        TumblingTimeTable<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeTable<>();
+        TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeWindow<>();
         tumblingTimeTable.setTimestamp(Math.max(super.timestamp, thatTable.getTimestamp()));
         tumblingTimeTable.setTreeMap(new TreeMap<>(treeMap));
         return tumblingTimeTable;

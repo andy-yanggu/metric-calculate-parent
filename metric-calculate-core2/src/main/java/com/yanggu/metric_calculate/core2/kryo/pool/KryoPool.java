@@ -22,9 +22,9 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFi
 import com.yanggu.metric_calculate.core2.kryo.serializer.acc.*;
 import com.yanggu.metric_calculate.core2.kryo.serializer.cube.DimensionSetSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.cube.MetricCubeSerializer;
-import com.yanggu.metric_calculate.core2.kryo.serializer.table.*;
+import com.yanggu.metric_calculate.core2.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
-import com.yanggu.metric_calculate.core2.table.*;
+import com.yanggu.metric_calculate.core2.window.*;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
@@ -50,12 +50,12 @@ public class KryoPool extends Pool<Kryo> {
         kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 
         //添加Table序列化和反序列化器
-        kryo.register(TumblingTimeTable.class, new TumblingTimeTableSerializer<>(), 1);
-        kryo.register(GlobalTable.class, new GlobalTableSerializer<>(), 2);
-        kryo.register(SlidingTimeTable.class, new SlidingTimeTableSerializer<>(), 3);
-        kryo.register(SlidingCountWindowTable.class, new SlidingCountWindowTableSerializer<>(), 4);
-        kryo.register(StatusWindowTable.class, new StatusWindowTableSerializer<>(), 5);
-        kryo.register(PatternTable.class, new PatternTableSerializer<>(), 6);
+        kryo.register(TumblingTimeWindow.class, new TumblingTimeWindowSerializer<>(), 1);
+        kryo.register(GlobalWindow.class, new GlobalWindowSerializer<>(), 2);
+        kryo.register(SlidingTimeWindow.class, new SlidingTimeWindowSerializer<>(), 3);
+        kryo.register(SlidingCountWindow.class, new SlidingCountWindowSerializer<>(), 4);
+        kryo.register(StatusWindow.class, new StatusWindowSerializer<>(), 5);
+        kryo.register(PatternWindow.class, new PatternWindowSerializer<>(), 6);
 
         //ACC序列化器和反序列化器
         kryo.register(Tuple.class, new TupleSerializer(), 11);

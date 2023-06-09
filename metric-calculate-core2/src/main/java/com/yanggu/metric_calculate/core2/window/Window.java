@@ -1,10 +1,18 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 
-public interface Table<IN, ACC, OUT> {
+public interface Window<OUT> {
+
+    /**
+     * 窗口类型
+     *
+     * @return
+     */
+    WindowTypeEnum type();
 
     /**
      * 放入明细数据进行累加

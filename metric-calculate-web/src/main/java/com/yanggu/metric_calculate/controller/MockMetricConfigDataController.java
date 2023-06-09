@@ -27,7 +27,7 @@ public class MockMetricConfigDataController {
      */
     @ApiOperation("返回指标配置数据")
     @GetMapping("/{tableId}")
-    public DataDetailsWideTable getTableAndMetricByTableId(@ApiParam("明细宽表id") @PathVariable("tableId") Long tableId) {
+    public DataDetailsWideTable getTableAndMetricByTableId(@ApiParam(value = "明细宽表id", required = true) @PathVariable("tableId") Long tableId) {
         String jsonString = FileUtil.readUtf8String("mock_metric_config/" + tableId + ".json");
         return JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
     }

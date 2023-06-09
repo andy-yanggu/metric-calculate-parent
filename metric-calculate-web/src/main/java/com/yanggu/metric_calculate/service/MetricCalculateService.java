@@ -22,6 +22,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -45,6 +46,10 @@ public class MetricCalculateService {
     @Autowired
     @Qualifier("putComponent")
     private AccumulateBatchComponent<PutRequest> putComponent;
+
+    @Autowired
+    @Qualifier("tLogThreadPoolExecutor")
+    private ThreadPoolExecutor threadPoolExecutor;
 
     /**
      * 无状态(多线程)
@@ -319,17 +324,25 @@ public class MetricCalculateService {
             return Collections.emptyList();
         }
         List<DeriveMetricCalculateResult<Object>> deriveList = new CopyOnWriteArrayList<>();
-        deriveMetricCalculateList.parallelStream().forEach(deriveMetricCalculate -> {
-            DeriveMetricCalculateResult<Object> result;
-            if (update) {
-                result = deriveMetricCalculate.stateExec(detail);
-            } else {
-                result = deriveMetricCalculate.noStateExec(detail);
-            }
-            if (result != null) {
-                deriveList.add(result);
-            }
-        });
+        CompletableFuture[] array = deriveMetricCalculateList.stream()
+            .map(deriveMetricCalculate ->
+                CompletableFuture.runAsync(() -> {
+                    DeriveMetricCalculateResult<Object> temp;
+                    if (update) {
+                        temp = deriveMetricCalculate.stateExec(detail);
+                    } else {
+                        temp = deriveMetricCalculate.noStateExec(detail);
+                    }
+                    if (temp != null) {
+                        deriveList.add(temp);
+                    }
+                }, threadPoolExecutor)
+            )
+            .toArray(CompletableFuture[]::new);
+
+        //等待所有线程完成
+        CompletableFuture.allOf(array).join();
+
         log.info("输入的明细数据: {}, 派生指标计算后的数据: {}", JSONUtil.toJsonStr(detail), JSONUtil.toJsonStr(deriveList));
         //按照key进行排序
         if (CollUtil.isNotEmpty(deriveList)) {

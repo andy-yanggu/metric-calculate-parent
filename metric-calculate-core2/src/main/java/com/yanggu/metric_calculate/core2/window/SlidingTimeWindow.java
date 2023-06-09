@@ -1,14 +1,17 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
-import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import lombok.Data;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.SLIDING_TIME_WINDOW;
 
 /**
  * 滑动时间窗口
@@ -18,19 +21,24 @@ import java.util.Map;
  * @param <OUT>
  */
 @Data
-public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
+public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
 
     @Override
+    public WindowTypeEnum type() {
+        return SLIDING_TIME_WINDOW;
+    }
+
+    @Override
     public void put(Long timestamp, IN in) {
-        List<TimeWindow> timeWindow = timeBaselineDimension.getTimeWindowList(timestamp);
-        if (CollUtil.isEmpty(timeWindow)) {
+        List<TimeWindowData> timeWindowData = timeBaselineDimension.getTimeWindowList(timestamp);
+        if (CollUtil.isEmpty(timeWindowData)) {
             return;
         }
-        for (TimeWindow tempTimeWindow : timeWindow) {
-            long windowStart = tempTimeWindow.getWindowStart();
-            long windowEnd = tempTimeWindow.getWindowEnd();
+        for (TimeWindowData tempTimeWindowData : timeWindowData) {
+            long windowStart = tempTimeWindowData.getWindowStart();
+            long windowEnd = tempTimeWindowData.getWindowEnd();
             Pair<Long, Long> pair = Pair.of(windowStart, windowEnd);
             ACC historyAcc = map.get(pair);
             ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
@@ -45,7 +53,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
     }
 
     //@Override
-    public SlidingTimeTable<IN, ACC, OUT> merge(SlidingTimeTable<IN, ACC, OUT> thatTable) {
+    public SlidingTimeWindow<IN, ACC, OUT> merge(SlidingTimeWindow<IN, ACC, OUT> thatTable) {
         Map<Pair<Long, Long>, ACC> thatMap = thatTable.getMap();
         thatMap.forEach((tempPair, thatAcc) -> {
             ACC thisAcc = map.get(tempPair);
@@ -56,7 +64,7 @@ public class SlidingTimeTable<IN, ACC, OUT> extends TimeTable<IN, ACC, OUT> {
             }
         });
 
-        SlidingTimeTable<IN, ACC, OUT> slidingTimeTable = new SlidingTimeTable<>();
+        SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable = new SlidingTimeWindow<>();
         slidingTimeTable.setTimestamp(Math.max(super.timestamp, thatTable.getTimestamp()));
         slidingTimeTable.setMap(new HashMap<>(map));
         return slidingTimeTable;

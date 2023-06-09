@@ -10,8 +10,8 @@ import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcess
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
-import com.yanggu.metric_calculate.core2.table.Table;
-import com.yanggu.metric_calculate.core2.table.TableFactory;
+import com.yanggu.metric_calculate.core2.window.AbstractWindow;
+import com.yanggu.metric_calculate.core2.window.WindowFactory;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -55,9 +55,10 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     private DimensionSetProcessor dimensionSetProcessor;
 
     /**
-     * 数据切分工厂类
+     * 窗口工厂类
+     * <p>用于初始化窗口和给窗口实现类字段赋值</p>
      */
-    private TableFactory<IN, ACC, OUT> tableFactory;
+    private WindowFactory<IN, ACC, OUT> windowFactory;
 
     /**
      * 聚合函数字段处理器
@@ -151,6 +152,21 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
     }
 
     /**
+     * 根据维度查询数据
+     *
+     * @param dimensionSet
+     * @return
+     */
+    public DeriveMetricCalculateResult<OUT> query(DimensionSet dimensionSet) {
+        MetricCube<IN, ACC, OUT> metricCube = deriveMetricMiddleStore.get(dimensionSet);
+        if (metricCube == null) {
+            return null;
+        }
+        windowFactory.setTable(metricCube.getWindow());
+        return metricCube.query();
+    }
+
+    /**
      * 添加度量值
      *
      * @param input
@@ -163,18 +179,18 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             DimensionSet dimensionSet = dimensionSetProcessor.process(input);
             historyMetricCube = createMetricCube(dimensionSet);
         } else {
-            tableFactory.setTable(historyMetricCube.getTable());
+            windowFactory.setTable(historyMetricCube.getWindow());
         }
         //放入明细数据进行累加
-        historyMetricCube.getTable().put(input);
+        historyMetricCube.getWindow().put(input);
         return historyMetricCube;
     }
 
     private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
-        Table<IN, ACC, OUT> table = tableFactory.createTable();
-        metricCube.setTable(table);
+        AbstractWindow<IN, ACC, OUT> window = windowFactory.createTable();
+        metricCube.setWindow(window);
         return metricCube;
     }
 

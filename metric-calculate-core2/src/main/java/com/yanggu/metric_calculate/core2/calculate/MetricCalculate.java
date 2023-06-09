@@ -88,7 +88,8 @@ public class MetricCalculate extends DataDetailsWideTable {
         }
         return deriveMetricCalculateList.stream()
                 .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
-                .findFirst().orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
     }
 
 }

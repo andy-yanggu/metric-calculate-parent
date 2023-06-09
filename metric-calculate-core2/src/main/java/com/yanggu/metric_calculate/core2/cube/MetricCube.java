@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core2.cube;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.table.Table;
+import com.yanggu.metric_calculate.core2.window.AbstractWindow;
 import lombok.Data;
 
 /**
@@ -24,7 +24,7 @@ public class MetricCube<IN, ACC, OUT> {
     /**
      * 指标数据
      */
-    private Table<IN, ACC, OUT> table;
+    private AbstractWindow<IN, ACC, OUT> window;
 
     public String getRealKey() {
         return dimensionSet.getRealKey();
@@ -38,7 +38,7 @@ public class MetricCube<IN, ACC, OUT> {
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query() {
-        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query();
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = window.query();
         if (deriveMetricCalculateResult == null) {
             return null;
         }
@@ -56,7 +56,7 @@ public class MetricCube<IN, ACC, OUT> {
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
-        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = table.query(input);
+        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = window.query(input);
         if (deriveMetricCalculateResult == null) {
             return null;
         }
@@ -71,7 +71,7 @@ public class MetricCube<IN, ACC, OUT> {
      * @return
      */
     public boolean isEmpty() {
-        return table == null || table.isEmpty();
+        return window == null || window.isEmpty();
     }
 
     /**

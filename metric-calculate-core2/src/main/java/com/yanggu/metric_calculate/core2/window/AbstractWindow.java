@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
@@ -17,7 +17,7 @@ import lombok.Data;
  * @param <OUT>
  */
 @Data
-public abstract class AbstractTable<IN, ACC, OUT> implements Table<IN, ACC, OUT> {
+public abstract class AbstractWindow<IN, ACC, OUT> implements Window<OUT> {
 
     protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 

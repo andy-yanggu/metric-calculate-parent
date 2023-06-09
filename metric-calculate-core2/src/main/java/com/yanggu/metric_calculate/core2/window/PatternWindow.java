@@ -1,17 +1,20 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindow;
+import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 
 import java.util.*;
+
+import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.EVENT_WINDOW;
 
 /**
  * CEP类型
@@ -21,7 +24,7 @@ import java.util.*;
  * @param <OUT>
  */
 @Data
-public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
+public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
@@ -51,6 +54,11 @@ public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
     }
 
     @Override
+    public WindowTypeEnum type() {
+        return EVENT_WINDOW;
+    }
+
+    @Override
     public void put(JSONObject input) {
         Long tempTimestamp = timeFieldProcessor.process(input);
         filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
@@ -75,7 +83,7 @@ public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
     }
 
     //@Override
-    public PatternTable<IN, ACC, OUT> merge(PatternTable<IN, ACC, OUT> thatTable) {
+    public PatternWindow<IN, ACC, OUT> merge(PatternWindow<IN, ACC, OUT> thatTable) {
         return null;
     }
 
@@ -85,11 +93,11 @@ public class PatternTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
     }
 
     public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
-        List<TimeWindow> timeWindowList = timeBaselineDimension.getTimeWindowList(timestamp);
-        TimeWindow timeWindow = timeWindowList.get(0);
-        long from = timeWindow.getWindowStart();
+        List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
+        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        long from = timeWindowData.getWindowStart();
         boolean fromInclusive = true;
-        long to = timeWindow.getWindowEnd();
+        long to = timeWindowData.getWindowEnd();
         boolean toInclusive = false;
 
         //判断最后一个节点是否有数据

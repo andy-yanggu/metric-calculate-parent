@@ -1,10 +1,13 @@
-package com.yanggu.metric_calculate.core2.table;
+package com.yanggu.metric_calculate.core2.window;
 
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
+
+import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.GLOBAL_WINDOW;
 
 /**
  * 全窗口
@@ -14,9 +17,14 @@ import lombok.Data;
  * @param <OUT>
  */
 @Data
-public class GlobalTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
+public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private ACC accumulator;
+
+    @Override
+    public WindowTypeEnum type() {
+        return GLOBAL_WINDOW;
+    }
 
     @Override
     public void put(JSONObject input) {
@@ -24,11 +32,11 @@ public class GlobalTable<IN, ACC, OUT> extends AbstractTable<IN, ACC, OUT> {
     }
 
     //@Override
-    public GlobalTable<IN, ACC, OUT> merge(GlobalTable<IN, ACC, OUT> thatTable) {
-        GlobalTable<IN, ACC, OUT> globalTable = new GlobalTable<>();
-        ACC acc = aggregateFieldProcessor.mergeAccList(CollUtil.toList(accumulator, thatTable.getAccumulator()));
-        globalTable.setAccumulator(acc);
-        return globalTable;
+    public GlobalWindow<IN, ACC, OUT> merge(GlobalWindow<IN, ACC, OUT> thatGlobalWindow) {
+        GlobalWindow<IN, ACC, OUT> globalWindow = new GlobalWindow<>();
+        ACC acc = aggregateFieldProcessor.mergeAccList(CollUtil.toList(accumulator, thatGlobalWindow.getAccumulator()));
+        globalWindow.setAccumulator(acc);
+        return globalWindow;
     }
 
     @Override
