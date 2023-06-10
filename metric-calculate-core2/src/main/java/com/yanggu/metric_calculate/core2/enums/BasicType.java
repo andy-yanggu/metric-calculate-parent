@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core2.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**

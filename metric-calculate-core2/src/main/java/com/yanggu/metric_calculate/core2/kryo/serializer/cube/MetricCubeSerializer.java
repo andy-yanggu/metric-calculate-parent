@@ -27,11 +27,11 @@ public class MetricCubeSerializer<IN, ACC, OUT> extends Serializer<MetricCube<IN
 
     @Override
     public MetricCube<IN, ACC, OUT> read(Kryo kryo, Input input, Class<? extends MetricCube<IN, ACC, OUT>> type) {
-        DimensionSet dimensionSet = kryo.readObject(input, DimensionSet.class, dimensionSetSerializer);
-        AbstractWindow<IN, ACC, OUT> window = (AbstractWindow<IN, ACC, OUT>) kryo.readClassAndObject(input);
-
         MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
+        DimensionSet dimensionSet = kryo.readObject(input, DimensionSet.class, dimensionSetSerializer);
         metricCube.setDimensionSet(dimensionSet);
+
+        AbstractWindow<IN, ACC, OUT> window = (AbstractWindow<IN, ACC, OUT>) kryo.readClassAndObject(input);
         metricCube.setWindow(window);
         return metricCube;
     }

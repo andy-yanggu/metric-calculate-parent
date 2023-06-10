@@ -61,11 +61,8 @@ public class MetricCalculateService {
      * @return
      */
     public List<DeriveMetricCalculateResult<Object>> noStateCalculateThread(JSONObject input) {
-        //获取指标计算类
-        MetricCalculate metricCalculate = getMetricCalculate(input);
-
         //无状态计算派生指标
-        return calcDerive(input, metricCalculate, false);
+        return calcDerive(input, false);
     }
 
     /**
@@ -97,6 +94,7 @@ public class MetricCalculateService {
 
         List<DimensionSet> dimensionSetList = new ArrayList<>(map.keySet());
 
+        //批查询指标数据
         Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(dimensionSetList);
         if (dimensionSetMetricCubeMap == null) {
             dimensionSetMetricCubeMap = Collections.emptyMap();
@@ -134,9 +132,9 @@ public class MetricCalculateService {
             return deferredResult;
         }
 
-        List<CompletableFuture<DeriveMetricCalculateResult>> completableFutureList = new ArrayList<>();
         //进行字段计算
         JSONObject detail = metricCalculate.getParam(input);
+        List<CompletableFuture<DeriveMetricCalculateResult>> completableFutureList = new ArrayList<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
             QueryRequest queryRequest = getQueryRequest(detail, deriveMetricCalculate);
             //进行攒批查询
@@ -158,11 +156,8 @@ public class MetricCalculateService {
      * @return
      */
     public List<DeriveMetricCalculateResult<Object>> stateCalculateThread(JSONObject input) {
-        //获取指标计算类
-        MetricCalculate metricCalculate = getMetricCalculate(input);
-
         //计算派生指标
-        return calcDerive(input, metricCalculate, true);
+        return calcDerive(input, true);
     }
 
     /**
@@ -263,6 +258,10 @@ public class MetricCalculateService {
             completableFutureList.add(completableFuture);
         }
 
+        if (CollUtil.isEmpty(completableFutureList)) {
+            return deferredResult;
+        }
+
         //当所有的更新都完成时, 进行输出
         setDeferredResult(deferredResult, completableFutureList);
         return deferredResult;
@@ -314,8 +313,9 @@ public class MetricCalculateService {
     }
 
     private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject input,
-                                                                 MetricCalculate metricCalculate,
                                                                  boolean update) {
+        //获取指标计算类
+        MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
         JSONObject detail = metricCalculate.getParam(input);
         log.info("输入明细数据: {}, 计算后的输入明细数据: {}, 是否更新: {}", JSONUtil.toJsonStr(input), JSONUtil.toJsonStr(detail), update);
