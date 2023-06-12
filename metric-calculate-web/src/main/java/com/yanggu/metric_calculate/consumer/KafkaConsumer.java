@@ -10,6 +10,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -22,8 +23,7 @@ public class KafkaConsumer {
     private MetricDataService metricDataService;
 
     /**
-     * 批量消费成功的明细数据
-     * <p>topic的分区策略是一个table的数据，放入到同一个分区中</p>
+     * 批量消费明细数据
      *
      * @param records
      */
@@ -32,12 +32,11 @@ public class KafkaConsumer {
         if (CollUtil.isEmpty(records)) {
             return;
         }
-        Long tableId = Long.parseLong(records.get(0).key());
-        List<JSONObject> collect = records.stream()
+        Map<Long, List<JSONObject>> collect = records.stream()
                 .map(ConsumerRecord::value)
                 .map(JSONUtil::parseObj)
-                .collect(Collectors.toList());
-        metricDataService.fullFillDeriveData(collect, tableId);
+                .collect(Collectors.groupingBy(temp -> temp.getLong("tableId")));
+        collect.forEach((tempTableId, tempList) -> metricDataService.fullFillDeriveData(tempList, tempTableId));
     }
 
 }
