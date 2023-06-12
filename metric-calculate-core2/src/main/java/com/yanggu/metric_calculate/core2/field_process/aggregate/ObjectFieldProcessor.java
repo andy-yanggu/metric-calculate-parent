@@ -71,7 +71,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     @Override
     @SneakyThrows
     public IN process(JSONObject input) {
-        Object result = null;
+        Object result;
 
         int retainStrategy = objective.retainStrategy();
         //如果使用比较字段

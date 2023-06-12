@@ -10,6 +10,8 @@ spring:
     pathmatch:
       # 配置策略
       matching-strategy: ant-path-matcher
+
+  #redis相关配置
   redis:
     host: 172.20.7.106
     port: 16379
@@ -20,6 +22,16 @@ spring:
     ansi:
       enabled: always
 
+  #kafka相关配置
+  kafka:
+    #消费者相关配置
+    consumer:
+      bootstrap-servers: 172.20.7.143:9092
+      topic: 'metric-calculate'
+    #开启批量消费
+    listener:
+      type: batch
+
 #指标计算配置参数
 metric-calculate:
   #指标计算线程池配置
@@ -29,7 +41,7 @@ metric-calculate:
     keep-alive-time: 100
     time-unit: MILLISECONDS
     queue-length: 100
-    thread-name-prefix: 'metric-calculate'
+    thread-name-prefix: ${spring.application.name}
 
   #攒批组件配置参数
   accumulate-batch-component:
