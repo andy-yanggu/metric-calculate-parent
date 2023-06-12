@@ -31,6 +31,18 @@ public class MetricCube<IN, ACC, OUT> {
     }
 
     /**
+     * 添加明细数据到窗口中
+     *
+     * @param input
+     */
+    public void put(JSONObject input) {
+        if (window == null) {
+            return;
+        }
+        window.put(input);
+    }
+
+    /**
      * 查询指标数据
      * <p>无状态查询操作</p>
      * <p>实时查询</p>
@@ -38,6 +50,9 @@ public class MetricCube<IN, ACC, OUT> {
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query() {
+        if (isEmpty()) {
+            return null;
+        }
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = window.query();
         if (deriveMetricCalculateResult == null) {
             return null;
@@ -56,6 +71,9 @@ public class MetricCube<IN, ACC, OUT> {
      * @return
      */
     public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+        if (isEmpty()) {
+            return null;
+        }
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = window.query(input);
         if (deriveMetricCalculateResult == null) {
             return null;
@@ -63,6 +81,20 @@ public class MetricCube<IN, ACC, OUT> {
         //设置维度信息
         setDimension(deriveMetricCalculateResult);
         return deriveMetricCalculateResult;
+    }
+
+    public void deleteData() {
+        if (isEmpty()) {
+            return;
+        }
+        window.deleteData();
+    }
+
+    public void deleteData(JSONObject input) {
+        if (isEmpty()) {
+            return;
+        }
+        window.deleteData(input);
     }
 
     /**

@@ -37,6 +37,14 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
     public abstract void put(Long timestamp, IN in);
 
     @Override
+    public void deleteData(JSONObject input) {
+        Long process = timeFieldProcessor.process(input);
+        deleteData(process);
+    }
+
+    public abstract void deleteData(Long timestamp);
+
+    @Override
     public DeriveMetricCalculateResult<OUT> query() {
         return query(timestamp);
     }

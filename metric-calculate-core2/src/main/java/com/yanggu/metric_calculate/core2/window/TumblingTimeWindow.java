@@ -29,12 +29,20 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
+    public void deleteData() {
+    }
+
+    @Override
     public void put(Long timestamp, IN in) {
         Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         ACC historyAcc = treeMap.get(aggregateTimestamp);
         ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);
         treeMap.put(aggregateTimestamp, nowAcc);
         super.timestamp = timestamp;
+    }
+
+    @Override
+    public void deleteData(Long timestamp) {
     }
 
     @Override

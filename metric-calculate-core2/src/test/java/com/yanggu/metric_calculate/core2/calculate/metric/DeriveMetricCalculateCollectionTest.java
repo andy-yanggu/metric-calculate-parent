@@ -6,8 +6,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrder;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 import org.junit.Test;
@@ -111,10 +109,6 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
     public void testSort_list_object() throws Exception {
         DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, JSONObject>, BoundedPriorityQueue<KeyValue<MultiFieldOrderCompareKey, JSONObject>>, List<KeyValue<MultiFieldOrderCompareKey, JSONObject>>> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(7L);
-
-        DeriveMetricMiddleStore store = new DeriveMetricMiddleHashMapKryoStore();
-        store.init();
-        deriveMetricCalculate.setDeriveMetricMiddleStore(store);
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
         input1.set("account_no_in", "000000000012");

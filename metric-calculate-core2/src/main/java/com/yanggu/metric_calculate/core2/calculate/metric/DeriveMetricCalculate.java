@@ -182,7 +182,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
             windowFactory.setTable(historyMetricCube.getWindow());
         }
         //放入明细数据进行累加
-        historyMetricCube.getWindow().put(input);
+        historyMetricCube.put(input);
         return historyMetricCube;
     }
 

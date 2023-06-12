@@ -45,6 +45,14 @@ public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     @Override
+    public void deleteData(JSONObject input) {
+    }
+
+    @Override
+    public void deleteData() {
+    }
+
+    @Override
     public boolean isEmpty() {
         return accumulator == null;
     }

@@ -31,6 +31,10 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
+    public void deleteData() {
+    }
+
+    @Override
     public void put(Long timestamp, IN in) {
         List<TimeWindowData> timeWindowData = timeBaselineDimension.getTimeWindowList(timestamp);
         if (CollUtil.isEmpty(timeWindowData)) {
@@ -45,6 +49,10 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
             map.put(pair, nowAcc);
         }
         super.timestamp = timestamp;
+    }
+
+    @Override
+    public void deleteData(Long timestamp) {
     }
 
     @Override

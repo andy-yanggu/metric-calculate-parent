@@ -38,9 +38,18 @@ public interface Window<OUT> {
      * 查询操作
      * <p>无状态查询操作</p>
      * <p>查询历史数据</p>
-     * @param input
      */
     DeriveMetricCalculateResult<OUT> query(JSONObject input);
+
+    /**
+     * 删除数据
+     * <p>根据窗口条件删除数据</p>
+     *
+     * @param input
+     */
+    void deleteData(JSONObject input);
+
+    void deleteData();
 
     ///**
     // * 合并表操作
@@ -56,12 +65,5 @@ public interface Window<OUT> {
      * @return
      */
     boolean isEmpty();
-
-    /**
-     * 删除过期数据
-     *
-     * @param input
-     */
-    //public abstract void deleteExpireData(JSONObject input);
 
 }

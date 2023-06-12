@@ -52,6 +52,14 @@ public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OU
         return deriveMetricCalculateResult;
     }
 
+    @Override
+    public void deleteData(JSONObject input) {
+    }
+
+    @Override
+    public void deleteData() {
+    }
+
     //@Override
     public SlidingCountWindow<IN, ACC, OUT> merge(SlidingCountWindow<IN, ACC, OUT> thatTable) {
         return null;

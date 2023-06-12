@@ -80,6 +80,14 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         return deriveMetricCalculateResult;
     }
 
+    @Override
+    public void deleteData(JSONObject input) {
+    }
+
+    @Override
+    public void deleteData() {
+    }
+
     //@Override
     public StatusWindow<IN, ACC, OUT> merge(StatusWindow<IN, ACC, OUT> thatTable) {
 

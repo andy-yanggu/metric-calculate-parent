@@ -82,6 +82,14 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         return query(process);
     }
 
+    @Override
+    public void deleteData(JSONObject input) {
+    }
+
+    @Override
+    public void deleteData() {
+    }
+
     //@Override
     public PatternWindow<IN, ACC, OUT> merge(PatternWindow<IN, ACC, OUT> thatTable) {
         return null;
