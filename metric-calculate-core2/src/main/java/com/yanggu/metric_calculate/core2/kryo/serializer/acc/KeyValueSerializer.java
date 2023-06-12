@@ -7,6 +7,12 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 
+/**
+ * KeyValue数据序列化器
+ *
+ * @param <K>
+ * @param <V>
+ */
 public class KeyValueSerializer<K extends Comparable<K>, V> extends Serializer<KeyValue<K, V>> {
 
     @Override

@@ -10,7 +10,9 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFi
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * 多字段排序序列化器
+ */
 public class MultiFieldOrderCompareKeySerializer extends Serializer<MultiFieldOrderCompareKey> {
 
     private CollectionSerializer<List> listCollectionSerializer = new CollectionSerializer<>();

@@ -11,6 +11,9 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.Mult
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 多字段去重序列化器
+ */
 public class MultiFieldDistinctKeySerializer extends Serializer<MultiFieldDistinctKey> {
 
     private CollectionSerializer<List> listCollectionSerializer = new CollectionSerializer<>();

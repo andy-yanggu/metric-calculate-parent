@@ -121,14 +121,14 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateCalculateAccumulateBatch(JSONObject input) {
-        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult = createDeferredResult(5000L);
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> noStateCalculateAccumulateBatch(JSONObject input) {
+        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> deferredResult = createDeferredResult(5000L);
 
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            deferredResult.setResult(ApiResponse.success(null));
+            deferredResult.setResult(ApiResponse.success((null)));
             return deferredResult;
         }
 
@@ -220,8 +220,8 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateCalculateAccumulateBatch(JSONObject input) {
-        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult = createDeferredResult(5000L);
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> stateCalculateAccumulateBatch(JSONObject input) {
+        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> deferredResult = createDeferredResult(5000L);
 
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
@@ -267,12 +267,12 @@ public class MetricCalculateService {
         return deferredResult;
     }
 
-    private DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> createDeferredResult(Long duration) {
-        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult =
+    private DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> createDeferredResult(Long duration) {
+        DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> deferredResult =
                 new DeferredResult<>(TimeUnit.MILLISECONDS.toMillis(duration));
         //设置超时处理
         deferredResult.onTimeout(() -> {
-            ApiResponse<List<DeriveMetricCalculateResult>> apiResponse = new ApiResponse<>();
+            ApiResponse<List<DeriveMetricCalculateResult<Object>>> apiResponse = new ApiResponse<>();
             apiResponse.setMessage("请求超时, 请重试");
             apiResponse.setStatus("500");
             deferredResult.setResult(apiResponse);
@@ -280,11 +280,11 @@ public class MetricCalculateService {
         return deferredResult;
     }
 
-    private void setDeferredResult(DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> deferredResult,
+    private void setDeferredResult(DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> deferredResult,
                                    List<CompletableFuture<DeriveMetricCalculateResult>> completableFutureList) {
         CompletableFuture.allOf(completableFutureList.toArray(new CompletableFuture[0]))
                 .thenAccept(tempObj -> {
-                    List<DeriveMetricCalculateResult> collect = new ArrayList<>();
+                    List<DeriveMetricCalculateResult<Object>> collect = new ArrayList<>();
                     for (CompletableFuture<DeriveMetricCalculateResult> completableFuture : completableFutureList) {
                         DeriveMetricCalculateResult deriveMetricCalculateResult;
                         try {

@@ -7,6 +7,9 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrder;
 
+/**
+ * 字段排序序列化器
+ */
 public class FieldOrderSerializer extends Serializer<FieldOrder> {
 
     @Override

@@ -49,7 +49,7 @@ public class MetricCalculateController {
     @ApiOperationSupport(order = 3)
     @ApiOperation("无状态-计算接口（内存攒批查询）")
     @PostMapping("/no-state-calculate/accumulate-batch")
-    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> noStateCalculateAccumulateBatch(
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> noStateCalculateAccumulateBatch(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
         return metricCalculateService.noStateCalculateAccumulateBatch(input);
     }
@@ -75,7 +75,7 @@ public class MetricCalculateController {
     @ApiOperationSupport(order = 6)
     @ApiOperation("有状态-计算接口（内存攒批查询和攒批更新）")
     @PostMapping("/state-calculate/accumulate-batch")
-    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult>>> stateCalculateAccumulateBatch(
+    public DeferredResult<ApiResponse<List<DeriveMetricCalculateResult<Object>>>> stateCalculateAccumulateBatch(
             @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
         return metricCalculateService.stateCalculateAccumulateBatch(input);
     }
