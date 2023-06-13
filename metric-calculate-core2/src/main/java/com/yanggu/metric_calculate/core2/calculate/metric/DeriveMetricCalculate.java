@@ -118,7 +118,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (historyMetricCube == null) {
             return null;
         }
-        return historyMetricCube.query(input);
+        return historyMetricCube.query();
     }
 
     /**
@@ -148,7 +148,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         deriveMetricMiddleStore.update(historyMetricCube);
 
         //查询数据, 并返回
-        return historyMetricCube.query(input);
+        return historyMetricCube.query();
     }
 
     /**

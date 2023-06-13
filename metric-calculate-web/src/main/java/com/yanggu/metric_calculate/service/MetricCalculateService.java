@@ -204,7 +204,7 @@ public class MetricCalculateService {
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
             historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube);
             updateMetricCubeList.add(historyMetricCube);
-            DeriveMetricCalculateResult query = historyMetricCube.query(input);
+            DeriveMetricCalculateResult query = historyMetricCube.query();
             if (query != null) {
                 resultList.add(query);
             }

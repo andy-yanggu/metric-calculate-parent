@@ -63,9 +63,9 @@ public class MetricCube<IN, ACC, OUT> {
     }
 
     /**
-     * 查询指标数据
+     * 根据明细数据查询实时指标数据
      * <p>无状态查询操作</p>
-     * <p>主要用于查询历史数据</p>
+     * <p>主要重新重新设定窗口条件。例如窗口内的数据是否过期</p>
      *
      * @param input
      * @return

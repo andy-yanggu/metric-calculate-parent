@@ -14,6 +14,7 @@
         <module>udaf-test</module>
         <module>jmh-test</module>
         <module>metric-calculate-core2</module>
+        <module>metric-calculate-flink</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -37,6 +38,7 @@
         <joda-time.version>2.12.4</joda-time.version>
         <tlog.version>1.5.0</tlog.version>
         <jctools-core.version>4.0.1</jctools-core.version>
+        <flink.version>1.16.0</flink.version>
     </properties>
 
     <dependencyManagement>
@@ -129,6 +131,24 @@
                 <groupId>org.jctools</groupId>
                 <artifactId>jctools-core</artifactId>
                 <version>${jctools-core.version}</version>
+            </dependency>
+            <!-- flink的DataStream API java版本 -->
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-streaming-java</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <!-- flink的本地WebUI依赖 -->
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-runtime-web</artifactId>
+                <version>${flink.version}</version>
+            </dependency>
+            <!-- kafka的连接器 -->
+            <dependency>
+                <groupId>org.apache.flink</groupId>
+                <artifactId>flink-connector-kafka</artifactId>
+                <version>${flink.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

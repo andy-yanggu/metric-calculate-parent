@@ -11,9 +11,9 @@ import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideT
 import lombok.Data;
 import lombok.SneakyThrows;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 指标计算类
@@ -90,6 +90,15 @@ public class MetricCalculate extends DataDetailsWideTable {
                 .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
+    }
+
+    public List<DeriveMetricCalculate> getDeriveMetricCalculateListById(List<Long> deriveIdList) {
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            throw new RuntimeException("派生指标列表为空");
+        }
+        return deriveMetricCalculateList.stream()
+                .filter(tempDerive -> deriveIdList.contains(tempDerive.getId()))
+                .collect(Collectors.toList());
     }
 
 }

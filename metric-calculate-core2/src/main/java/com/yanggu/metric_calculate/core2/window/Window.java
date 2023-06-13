@@ -30,26 +30,34 @@ public interface Window<OUT> {
     /**
      * 查询操作
      * <p>无状态查询操作</p>
-     * <p>查询实时数据</p>
+     * <p>根据窗口条件查询</p>
+     * <p>窗口数据是内置的</p>
      */
     DeriveMetricCalculateResult<OUT> query();
 
     /**
      * 查询操作
      * <p>无状态查询操作</p>
-     * <p>查询历史数据</p>
+     * <p>根据窗口条件查询</p>
+     * <p>窗口数据是通过input传入的</p>
      */
     DeriveMetricCalculateResult<OUT> query(JSONObject input);
 
     /**
      * 删除数据
      * <p>根据窗口条件删除数据</p>
+     * <p>窗口条件是内部的</p>
+     */
+    void deleteData();
+
+    /**
+     * 删除数据
+     * <p>根据窗口条件删除数据</p>
+     * <p>窗口条件是input传入的</p>
      *
      * @param input
      */
     void deleteData(JSONObject input);
-
-    void deleteData();
 
     ///**
     // * 合并表操作
@@ -60,7 +68,7 @@ public interface Window<OUT> {
     //T merge(T thatTable);
 
     /**
-     * 是否为空
+     * 窗口是否为空
      *
      * @return
      */

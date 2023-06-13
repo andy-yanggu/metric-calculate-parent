@@ -42,6 +42,16 @@ public class MetricDataController {
         return ApiResponse.success(result);
     }
 
+    @ApiOperation("根据明细查询派生指标实时数据")
+    @PostMapping("/query-derive-current-data")
+    public ApiResponse<List<DeriveMetricCalculateResult<Object>>> queryDeriveCurrentData(
+            @NotNull(message = "数据明细宽表id不能为空") @ApiParam(value = "数据明细宽表id", required = true) @RequestParam Long tableId,
+            @NotEmpty(message = "派生指标id列表不能为空") @ApiParam(value = "派生指标id列表", required = true) @RequestParam List<Long> deriveIdList,
+            @NotEmpty(message = "明细宽表数据不能为空") @ApiParam("明细宽表数据") @RequestBody JSONObject input) {
+        List<DeriveMetricCalculateResult<Object>> list = metricDataService.queryDeriveCurrentData(tableId, deriveIdList, input);
+        return ApiResponse.success(list);
+    }
+
     @ApiOperation("全量填充（计算所有派生指标数据）")
     @PostMapping("/full-fill-derive-data")
     public ApiResponse<Object> fullUpdate(

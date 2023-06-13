@@ -48,6 +48,43 @@ public class MetricDataService {
         return deriveMetricCalculate.query(dimensionSet);
     }
 
+    public List<DeriveMetricCalculateResult<Object>> queryDeriveCurrentData(Long tableId,
+                                                                            List<Long> deriveIdList,
+                                                                            JSONObject input) {
+
+        //获宽表下的派生指标
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricConfigDataService.getDeriveMetricCalculateList(tableId, deriveIdList);
+
+        List<DeriveMetricCalculateResult<Object>> list = new ArrayList<>();
+        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
+            return list;
+        }
+
+        List<DimensionSet> dimensionSetList = new ArrayList<>();
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+            dimensionSetList.add(dimensionSet);
+        }
+
+        //根据维度进行批量查询
+        Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(dimensionSetList);
+        if (dimensionSetMetricCubeMap == null) {
+            dimensionSetMetricCubeMap = Collections.emptyMap();
+        }
+
+        for (DimensionSet dimensionSet : dimensionSetList) {
+            MetricCube metricCube = dimensionSetMetricCubeMap.get(dimensionSet);
+            if (metricCube != null) {
+                //根据明细数据进行查询
+                DeriveMetricCalculateResult<Object> result = metricCube.query(input);
+                if (result != null) {
+                    list.add(result);
+                }
+            }
+        }
+        return list;
+    }
+
     public void fillDeriveDataById(Long tableId, Long deriveId, List<JSONObject> dataList) {
         fullFillDeriveDataByDeriveIdList(dataList, tableId, Collections.singletonList(deriveId));
     }

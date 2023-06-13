@@ -95,7 +95,7 @@ public class MetricCalculateConfig {
             //批量更新完成后, 进行回调通知
             for (PutRequest putRequest : putRequests) {
                 MetricCube metricCube = putRequest.getMetricCube();
-                putRequest.getResultFuture().complete(metricCube.query(putRequest.getInput()));
+                putRequest.getResultFuture().complete(metricCube.query());
             }
         };
         log.info("攒批写组件初始化完成, 并行度: {}, 攒批大小: {}, 攒批时间: {}毫秒", threadNum, limit, interval);

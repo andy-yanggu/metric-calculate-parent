@@ -217,6 +217,21 @@ public class MetricConfigDataService implements ApplicationRunner {
         }
     }
 
+    public List<DeriveMetricCalculate> getDeriveMetricCalculateList(Long tableId, List<Long> deriveIdList) {
+        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
+        Lock readLock = readWriteLock.readLock();
+        readLock.lock();
+        try {
+            MetricCalculate metricCalculate = metricMap.get(tableId);
+            if (metricCalculate == null) {
+                return Collections.emptyList();
+            }
+            return metricCalculate.getDeriveMetricCalculateListById(deriveIdList);
+        } finally {
+            readLock.unlock();
+        }
+    }
+
     public List<Long> getAllDeriveIdList(Long tableId) {
         ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
         Lock readLock = readWriteLock.readLock();
