@@ -80,8 +80,10 @@ management:
 
 #feign客户端url配置
 feign:
+  okhttp:
+    enabled: true
   metric-config-api:
-    host: http://localhost:${server.port}
+    url: http://localhost:${server.port}
 
 knife4j:
   enable: true
