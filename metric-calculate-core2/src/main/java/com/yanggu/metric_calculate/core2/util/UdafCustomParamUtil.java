@@ -50,7 +50,7 @@ public class UdafCustomParamUtil {
                 udafCustomParamData.setDataType(field.getType().getSimpleName());
                 //设置默认值
                 ReflectUtil.setAccessible(field);
-                udafCustomParamData.setDefaultValue(field.get(clazz.newInstance()));
+                udafCustomParamData.setDefaultValue(field.get(clazz.getConstructor().newInstance()));
                 //设置能否被更新
                 udafCustomParamData.setUpdate(udafParam.update());
                 //设置能够为空
