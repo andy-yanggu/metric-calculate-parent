@@ -7,7 +7,7 @@ server:
 spring:
   application:
     name: metric-calculate
-    version: 1.0.0
+    version: '1.0.0'
     description: '指标计算服务'
   mvc:
     pathmatch:
