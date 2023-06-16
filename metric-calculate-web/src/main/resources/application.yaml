@@ -1,5 +1,8 @@
 server:
   port: 8888
+  #开启压缩
+  compression:
+    enabled: true
 
 spring:
   application:
@@ -9,16 +12,10 @@ spring:
   mvc:
     pathmatch:
       # 配置策略
-      matching-strategy: ant-path-matcher
+      matching-strategy: ANT_PATH_MATCHER
 
-  #redis相关配置
-  redis:
-    host: 172.20.7.106
-    port: 16379
-    client-type: lettuce
-    database: 1
-    password: Redis6379
   output:
+    #日志彩色打印
     ansi:
       enabled: always
 
@@ -32,27 +29,20 @@ spring:
     listener:
       type: batch
 
-#指标计算配置参数
-metric-calculate:
-  #指标计算线程池配置
-  t-log-thread-pool:
-    core-size: 8
-    max-size: 16
-    keep-alive-time: 100
-    time-unit: MILLISECONDS
-    queue-length: 100
-    thread-name-prefix: ${spring.application.name}
+  data:
+    #redis相关配置
+    redis:
+      client-type: lettuce
+      host: 172.20.7.106
+      port: 16379
+      database: 1
+      password: Redis6379
 
-  #攒批组件配置参数
-  accumulate-batch-component:
-    read:
-      thread-num: 1
-      limit: 100
-      interval: 50
-    write:
-      thread-num: 1
-      limit: 100
-      interval: 50
+  cloud:
+    #feign相关的配置
+    openfeign:
+      okhttp:
+        enabled: true
 
 # 端点控制配置
 management:
@@ -78,12 +68,46 @@ management:
     tags:
       application: ${spring.application.name}
 
+#指标计算配置参数
+metric-calculate:
+  #指标计算线程池配置
+  t-log-thread-pool:
+    core-size: 8
+    max-size: 16
+    keep-alive-time: 100
+    time-unit: MILLISECONDS
+    queue-length: 100
+    thread-name-prefix: ${spring.application.name}
+
+  #攒批组件配置参数
+  accumulate-batch-component:
+    read:
+      thread-num: 1
+      limit: 100
+      interval: 50
+    write:
+      thread-num: 1
+      limit: 100
+      interval: 50
+
 #feign客户端url配置
 feign:
-  okhttp:
-    enabled: true
   metric-config-api:
     url: http://localhost:${server.port}
 
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+  - group: 'default'
+    paths-to-match: '/**'
+    packages-to-scan: 'com.yanggu.metric_calculate.controller'
+
+# knife4j的增强配置，不需要增强可以不配
 knife4j:
   enable: true

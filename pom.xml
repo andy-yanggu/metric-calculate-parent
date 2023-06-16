@@ -24,16 +24,15 @@
         <java.version>20</java.version>
         <maven.compiler.source>20</maven.compiler.source>
         <maven.compiler.target>20</maven.compiler.target>
-        <spring-boot.version>2.7.12</spring-boot.version>
-        <spring-cloud.version>2021.0.7</spring-cloud.version>
-        <spring-cloud-alibaba.version>2021.0.5.0</spring-cloud-alibaba.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
+        <spring-cloud.version>2022.0.2</spring-cloud.version>
+        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
         <hutool.version>5.8.19</hutool.version>
-        <knife4j-openapi2-spring-boot-starter.version>4.1.0</knife4j-openapi2-spring-boot-starter.version>
+        <knife4j-openapi3-jakarta-spring-boot-starter.version>4.1.0</knife4j-openapi3-jakarta-spring-boot-starter.version>
         <kryo.version>5.5.0</kryo.version>
-        <mockito.version>5.2.0</mockito.version>
-        <maven-invoker.version>3.1.0</maven-invoker.version>
-        <guava.version>31.1-jre</guava.version>
+        <mockito-inline.version>5.2.0</mockito-inline.version>
+        <guava.version>32.0.1-jre</guava.version>
         <jmh.version>1.36</jmh.version>
         <joda-time.version>2.12.5</joda-time.version>
         <tlog.version>1.5.0</tlog.version>
@@ -99,8 +98,8 @@
             </dependency>
             <dependency>
                 <groupId>com.github.xiaoymin</groupId>
-                <artifactId>knife4j-openapi2-spring-boot-starter</artifactId>
-                <version>${knife4j-openapi2-spring-boot-starter.version}</version>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j-openapi3-jakarta-spring-boot-starter.version}</version>
             </dependency>
             <dependency>
                 <groupId>joda-time</groupId>
@@ -149,6 +148,12 @@
                 <groupId>org.apache.flink</groupId>
                 <artifactId>flink-connector-kafka</artifactId>
                 <version>${flink.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-inline</artifactId>
+                <version>${mockito-inline.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

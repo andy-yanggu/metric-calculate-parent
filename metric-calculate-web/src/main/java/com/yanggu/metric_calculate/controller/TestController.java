@@ -3,8 +3,8 @@ package com.yanggu.metric_calculate.controller;
 import cn.hutool.core.date.DateUtil;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -22,7 +22,7 @@ import static cn.hutool.core.date.DatePattern.NORM_DATETIME_MS_PATTERN;
 
 @Slf4j
 @RestController
-@Api(tags = "测试接口")
+@Tag(name = "测试接口")
 @RequestMapping("/test")
 public class TestController {
 
@@ -46,7 +46,7 @@ public class TestController {
      *
      * @return
      */
-    @ApiOperation("测试攒批组件1")
+    @Operation(summary = "测试攒批组件1")
     @GetMapping("/test1")
     public DeferredResult<String> test1() {
         DeferredResult<String> deferredResult = new DeferredResult<>(2000L);
@@ -69,7 +69,7 @@ public class TestController {
      *
      * @return
      */
-    @ApiOperation("测试攒批组件2")
+    @Operation(summary = "测试攒批组件2")
     @GetMapping("/test2")
     public DeferredResult<String> test2() {
         DeferredResult<String> deferredResult = new DeferredResult<>(2000L);

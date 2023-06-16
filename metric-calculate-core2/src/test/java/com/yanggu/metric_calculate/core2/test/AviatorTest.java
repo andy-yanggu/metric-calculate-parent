@@ -8,15 +8,18 @@ import cn.hutool.core.util.RandomUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
+import com.googlecode.aviator.runtime.function.AbstractFunction;
+import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.seq.MapSequence;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 public class AviatorTest {
 
@@ -105,6 +108,27 @@ public class AviatorTest {
             }
         }
         System.out.println("最后命中次数: " + count * 1.0 / total);
+    }
+
+    @Test
+    public void test5() {
+        String express = "add(a, 1)";
+        Expression expression = AviatorEvaluator.getInstance().compile(express);
+        Map<String, Object> stringObjectMap = expression.newEnv();
+        System.out.println(stringObjectMap);
+    }
+
+    public static class Add extends AbstractFunction {
+
+        @Override
+        public String getName() {
+            return "add";
+        }
+
+        @Override
+        public AviatorObject call(Map<String, Object> env, AviatorObject arg1, AviatorObject arg2) {
+            return null;
+        }
     }
 
 }
