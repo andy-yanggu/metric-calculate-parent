@@ -147,7 +147,7 @@ public class MetricDataService {
             JSONObject detail = tuple.get(1);
             DimensionSet dimensionSet = tuple.get(2);
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            historyMetricCube = deriveMetricCalculate.addInput(detail, historyMetricCube);
+            historyMetricCube = deriveMetricCalculate.addInput(detail, historyMetricCube, dimensionSet);
             //TODO 缺少了删除数据逻辑
             dimensionSetMetricCubeMap.put(dimensionSet, historyMetricCube);
         }

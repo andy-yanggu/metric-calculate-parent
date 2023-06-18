@@ -104,7 +104,8 @@ public class MetricCalculateService {
         for (DimensionSet dimensionSet : dimensionSetList) {
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
             DeriveMetricCalculate deriveMetricCalculate = map.get(dimensionSet);
-            DeriveMetricCalculateResult<Object> deriveMetricCalculateResult = deriveMetricCalculate.noStateExec(input, historyMetricCube);
+            DeriveMetricCalculateResult<Object> deriveMetricCalculateResult =
+                    deriveMetricCalculate.noStateExec(input, historyMetricCube, dimensionSet);
             if (deriveMetricCalculateResult != null) {
                 deriveMetricCalculateResultList.add(deriveMetricCalculateResult);
             }
@@ -140,7 +141,9 @@ public class MetricCalculateService {
             //进行攒批查询
             queryComponent.add(queryRequest);
             CompletableFuture<DeriveMetricCalculateResult> completableFuture = queryRequest.getQueryFuture()
-                    .thenApply(historyMetricCube -> deriveMetricCalculate.noStateExec(input, historyMetricCube));
+                    .thenApply(historyMetricCube -> {
+                        return deriveMetricCalculate.noStateExec(input, historyMetricCube, queryRequest.getDimensionSet());
+                    });
             completableFutureList.add(completableFuture);
         }
 
@@ -202,7 +205,7 @@ public class MetricCalculateService {
         for (DimensionSet dimensionSet : dimensionSetList) {
             DeriveMetricCalculate deriveMetricCalculate = map.get(dimensionSet);
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube);
+            historyMetricCube = deriveMetricCalculate.addInput(input, historyMetricCube, dimensionSet);
             updateMetricCubeList.add(historyMetricCube);
             DeriveMetricCalculateResult query = historyMetricCube.query();
             if (query != null) {
@@ -246,7 +249,7 @@ public class MetricCalculateService {
             CompletableFuture<DeriveMetricCalculateResult> completableFuture = queryRequest.getQueryFuture()
                     .thenCompose(historyMetricCube -> {
                         //添加度量值
-                        historyMetricCube = deriveMetricCalculate.addInput(detail, historyMetricCube);
+                        historyMetricCube = deriveMetricCalculate.addInput(detail, historyMetricCube, queryRequest.getDimensionSet());
                         PutRequest putRequest = new PutRequest();
                         putRequest.setMetricCube(historyMetricCube);
                         putRequest.setInput(detail);

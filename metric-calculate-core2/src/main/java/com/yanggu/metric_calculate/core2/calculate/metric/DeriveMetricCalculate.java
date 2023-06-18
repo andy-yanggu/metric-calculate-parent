@@ -97,7 +97,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
 
         //考虑是否包含当前笔
-        return noStateExec(input, historyMetricCube);
+        return noStateExec(input, historyMetricCube, dimensionSet);
     }
 
     /**
@@ -109,11 +109,13 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
-        //包含当前笔需要执行前置过滤条件
+    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input,
+                                                        MetricCube<IN, ACC, OUT> historyMetricCube,
+                                                        DimensionSet dimensionSet) {
+        //包含当前笔且前置过滤条件为true
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
             //添加度量值
-            historyMetricCube = addInput(input, historyMetricCube);
+            historyMetricCube = addInput(input, historyMetricCube, dimensionSet);
         }
         if (historyMetricCube == null) {
             return null;
@@ -142,7 +144,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
 
         //添加度量值
-        historyMetricCube = addInput(input, historyMetricCube);
+        historyMetricCube = addInput(input, historyMetricCube, dimensionSet);
 
         //更新到外部存储
         deriveMetricMiddleStore.update(historyMetricCube);
@@ -171,27 +173,23 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      *
      * @param input
      * @param historyMetricCube
+     * @param dimensionSet
      * @return
      */
-    public MetricCube<IN, ACC, OUT> addInput(JSONObject input, MetricCube<IN, ACC, OUT> historyMetricCube) {
+    public MetricCube<IN, ACC, OUT> addInput(JSONObject input,
+                                             MetricCube<IN, ACC, OUT> historyMetricCube,
+                                             DimensionSet dimensionSet) {
         if (historyMetricCube == null) {
-            //提取出维度字段
-            DimensionSet dimensionSet = dimensionSetProcessor.process(input);
-            historyMetricCube = createMetricCube(dimensionSet);
+            historyMetricCube = new MetricCube<>();
+            historyMetricCube.setDimensionSet(dimensionSet);
+            AbstractWindow<IN, ACC, OUT> window = windowFactory.createTable();
+            historyMetricCube.setWindow(window);
         } else {
             windowFactory.setTable(historyMetricCube.getWindow());
         }
         //放入明细数据进行累加
         historyMetricCube.put(input);
         return historyMetricCube;
-    }
-
-    private MetricCube<IN, ACC, OUT> createMetricCube(DimensionSet dimensionSet) {
-        MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
-        metricCube.setDimensionSet(dimensionSet);
-        AbstractWindow<IN, ACC, OUT> window = windowFactory.createTable();
-        metricCube.setWindow(window);
-        return metricCube;
     }
 
 }

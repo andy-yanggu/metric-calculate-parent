@@ -124,18 +124,20 @@ public class MetricUtil {
             return;
         }
         Map<String, MetricTypeEnum> metricTypeMap = metricCalculate.getMetricTypeMap();
+        //默认是内存的并发HashMap
+        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        deriveMetricMiddleStore.init();
+
         List<DeriveMetricCalculate> collect = deriveList.stream()
                 .map(tempDerive -> {
                     metricTypeMap.put(tempDerive.getName(), DERIVE);
                     //初始化派生指标计算类
-                    return MetricUtil.initDerive(tempDerive, metricCalculate);
+                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
+                    deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
+                    return deriveMetricCalculate;
                 })
                 .collect(Collectors.toList());
 
-        //默认是内存的并发HashMap
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleStore.init();
-        collect.forEach(temp -> temp.setDeriveMetricMiddleStore(deriveMetricMiddleStore));
         metricCalculate.setDeriveMetricCalculateList(collect);
     }
 
@@ -151,10 +153,11 @@ public class MetricUtil {
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
         //设置id
-        deriveMetricCalculate.setId(tempDerive.getId());
+        Long id = tempDerive.getId();
+        deriveMetricCalculate.setId(id);
 
         //设置key
-        String key = metricCalculate.getId() + "_" + tempDerive.getId();
+        String key = metricCalculate.getId() + "_" + id;
         deriveMetricCalculate.setKey(key);
 
         //设置name
@@ -180,7 +183,7 @@ public class MetricUtil {
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
 
-        //设置TableFactory
+        //设置WindowFactory
         WindowFactory<IN, ACC, OUT> windowFactory = new WindowFactory<>();
         windowFactory.setWindowParam(tempDerive.getWindowParam());
         windowFactory.setTimeFieldProcessor(timeFieldProcessor);
@@ -196,6 +199,9 @@ public class MetricUtil {
 
         //精度数据
         deriveMetricCalculate.setRoundAccuracy(tempDerive.getRoundAccuracy());
+
+        //设置是否包含当前笔
+        deriveMetricCalculate.setIncludeCurrent(tempDerive.getIncludeCurrent());
 
         return deriveMetricCalculate;
     }

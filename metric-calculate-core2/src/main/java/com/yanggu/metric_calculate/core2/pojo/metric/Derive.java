@@ -61,4 +61,9 @@ public class Derive {
      */
     private RoundAccuracy roundAccuracy;
 
+    /**
+     * 是否包含当前笔, 默认包含
+     */
+    private Boolean includeCurrent = true;
+
 }
