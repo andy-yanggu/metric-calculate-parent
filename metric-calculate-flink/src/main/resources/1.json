@@ -1,0 +1,591 @@
+{
+  "id": 1,
+  "name": "trade_detail",
+  "derive": [
+    {
+      "id": 1,
+      "name": "today_debit_asset",
+      "displayName": "当天借方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 2,
+      "name": "today_debit_asset_min",
+      "displayName": "当天借方金额最小值",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "MIN",
+        "baseUdafParam": {
+          "aggregateType": "MIN",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 3,
+      "name": "top4_debit_amt_out_desc",
+      "displayName": "交易金额降序列表, 最多4个",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SORTEDLIMITLISTFIELD",
+        "baseUdafParam": {
+          "aggregateType": "SORTEDLIMITLISTFIELD",
+          "retainExpress": "debit_amt_out",
+          "collectiveSortFieldList": [
+            {
+              "express": "debit_amt_out",
+              "asc": false
+            }
+          ],
+          "param": {
+            "limit": 4
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 4,
+      "name": "max_amount_timestamp",
+      "displayName": "最大交易的金额的交易时间戳",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "MAXFIELD",
+        "baseUdafParam": {
+          "aggregateType": "MAXFIELD",
+          "retainExpress": "trans_timestamp",
+          "objectiveCompareFieldList": [
+            "debit_amt_out"
+          ]
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 5,
+      "name": "credit_sum_5",
+      "displayName": "近5笔交易贷方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 6,
+      "name": "test_list_object",
+      "displayName": "测试list_object",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "LISTOBJECT",
+        "baseUdafParam": {
+          "aggregateType": "LISTOBJECT",
+          "param": {
+            "limit": 5
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 7,
+      "name": "test_sort_list_object",
+      "displayName": "测试sort_list_object",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SORTEDLIMITLISTOBJECT",
+        "baseUdafParam": {
+          "aggregateType": "SORTEDLIMITLISTOBJECT",
+          "collectiveSortFieldList": [
+            {
+              "express": "debit_amt_out",
+              "asc": true
+            }
+          ],
+          "param": {
+            "limit": 5
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 8,
+      "name": "test_base_map_unit_sum",
+      "displayName": "所有交易账号的累计交易金额",
+      "description": "账号为key, value是对金额求和",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "BASEMAP",
+        "mapUdafParam": {
+          "aggregateType": "BASEMAP",
+          "distinctFieldList": [
+            "account_no_in"
+          ],
+          "valueAggParam": {
+            "aggregateType": "SUM",
+            "metricExpress": "debit_amt_out"
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 9,
+      "name": "张三_transfer_amount_proportion",
+      "displayName": "给张三转账的金额占给所有交易对象转账金额的比例",
+      "description": "",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "BASEMIX",
+        "mixUdafParam": {
+          "aggregateType": "BASEMIX",
+          "mixAggMap": {
+            "zhangsan_sum_amount": {
+              "aggregateType": "SUM",
+              "metricExpress": "account_no_in == '张三' ? debit_amt_out : 0"
+            },
+            "total_sum_amount": {
+              "aggregateType": "SUM",
+              "metricExpress": "debit_amt_out"
+            }
+          },
+          "express": "zhangsan_sum_amount / total_sum_amount"
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 10,
+      "name": "pattern_test",
+      "displayName": "cep类型的指标测试",
+      "description": "",
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "EVENT_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY",
+        "nodePatternList": [
+          {
+            "index": 0,
+            "name": "start",
+            "matchExpress": "debit_amt_out > 100",
+            "interval": 0
+          },
+          {
+            "index": 1,
+            "name": "mid",
+            "matchExpress": "debit_amt_out > 200",
+            "interval": 10
+          },
+          {
+            "index": 2,
+            "name": "end",
+            "matchExpress": "debit_amt_out > 300",
+            "interval": 10
+          }
+        ]
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 11,
+      "name": "limit_5_sum_debit_asset",
+      "displayName": "最近5笔借方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 12,
+      "name": "first_trade_timestamp",
+      "displayName": "首次交易时间戳",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_in",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "FIRSTFIELD",
+        "baseUdafParam": {
+          "aggregateType": "FIRSTFIELD",
+          "retainExpress": "trans_timestamp"
+        }
+      },
+      "windowParam": {
+        "windowType": "GLOBAL_WINDOW"
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 13,
+      "name": "status_sum_debit_asset",
+      "displayName": "借方金额总和",
+      "description": null,
+      "dimension": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filter": null,
+      "aggregateFunctionParam": {
+        "calculateLogic": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpress": "debit_amt_out"
+        }
+      },
+      "windowParam": {
+        "windowType": "SLIDING_COUNT_WINDOW",
+        "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    }
+  ],
+  "fields": [
+    {
+      "name": "trans_no",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "trans_jnls_no",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "account_no_out",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "account_no_in",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "credit_amt_out",
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "credit_amt_in",
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "debit_amt_out",
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "debit_amt_in",
+      "valueType": "DOUBLE",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "d_c_flag_out",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "d_c_flag_in",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "trans_date",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "trans_time",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "trans_timestamp",
+      "valueType": "STRING",
+      "fieldType": "REAL"
+    }
+  ]
+}

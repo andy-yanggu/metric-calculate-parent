@@ -41,6 +41,10 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.yanggu</groupId>
+            <artifactId>metric-calculate-core2</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
