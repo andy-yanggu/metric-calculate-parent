@@ -15,9 +15,6 @@ import com.yanggu.metric_calculate.flink.source_function.TableDataSourceFunction
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.eventtime.WatermarkStrategy;
 import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.api.common.typeinfo.TypeHint;
-import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.connector.kafka.source.KafkaSource;
 import org.apache.flink.runtime.state.JavaSerializer;
 import org.apache.flink.streaming.api.datastream.BroadcastStream;
