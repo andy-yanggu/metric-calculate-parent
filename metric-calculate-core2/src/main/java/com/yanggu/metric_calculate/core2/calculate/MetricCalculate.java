@@ -11,6 +11,7 @@ import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideT
 import lombok.Data;
 import lombok.SneakyThrows;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,22 +21,24 @@ import java.util.stream.Collectors;
  * <p>包含了衍生指标、复合指标、全局指标</p>
  */
 @Data
-public class MetricCalculate extends DataDetailsWideTable {
+public class MetricCalculate extends DataDetailsWideTable implements Serializable {
+
+    private static final long serialVersionUID = 9035602780530630814L;
 
     /**
      * 字段计算类
      */
-    private List<FieldCalculate<JSONObject, Object>> fieldCalculateList;
+    private transient List<FieldCalculate<JSONObject, Object>> fieldCalculateList;
 
     /**
      * 派生指标计算类
      */
-    private List<DeriveMetricCalculate> deriveMetricCalculateList;
+    private transient List<DeriveMetricCalculate> deriveMetricCalculateList;
 
     /**
      * 全局指标计算类
      */
-    private List<GlobalMetricCalculate> globalMetricCalculateList;
+    private transient List<GlobalMetricCalculate> globalMetricCalculateList;
 
     /**
      * 指标名称和指标类型映射
@@ -77,10 +80,10 @@ public class MetricCalculate extends DataDetailsWideTable {
      * 根据派生指标id查询派生指标
      *
      * @param deriveId
-     * @return
      * @param <IN>
      * @param <ACC>
      * @param <OUT>
+     * @return
      */
     public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long deriveId) {
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {

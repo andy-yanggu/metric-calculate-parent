@@ -128,11 +128,14 @@ public class MetricUtil {
         DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleStore.init();
 
+
+        Long tableId = metricCalculate.getId();
+        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<DeriveMetricCalculate> collect = deriveList.stream()
                 .map(tempDerive -> {
                     metricTypeMap.put(tempDerive.getName(), DERIVE);
                     //初始化派生指标计算类
-                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, metricCalculate);
+                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, tableId, fieldMap);
                     deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
                     return deriveMetricCalculate;
                 })
@@ -149,7 +152,8 @@ public class MetricUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive(Derive tempDerive,
-                                                                                MetricCalculate metricCalculate) {
+                                                                                Long tableId,
+                                                                                Map<String, Class<?>> fieldMap) {
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
         //设置id
@@ -157,15 +161,12 @@ public class MetricUtil {
         deriveMetricCalculate.setId(id);
 
         //设置key
-        String key = metricCalculate.getId() + "_" + id;
+        String key = tableId + ":" + id;
         deriveMetricCalculate.setKey(key);
 
         //设置name
         String name = tempDerive.getName();
         deriveMetricCalculate.setName(name);
-
-        //宽表字段
-        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
 
         //设置前置过滤条件处理器
         FilterFieldProcessor filterFieldProcessor =
@@ -188,7 +189,7 @@ public class MetricUtil {
         windowFactory.setWindowParam(tempDerive.getWindowParam());
         windowFactory.setTimeFieldProcessor(timeFieldProcessor);
         windowFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
-        windowFactory.setFieldMap(metricCalculate.getFieldMap());
+        windowFactory.setFieldMap(fieldMap);
 
         deriveMetricCalculate.setWindowFactory(windowFactory);
 
@@ -206,7 +207,7 @@ public class MetricUtil {
         return deriveMetricCalculate;
     }
 
-    private static void setFieldMap(MetricCalculate metricCalculate) {
+    public static void setFieldMap(MetricCalculate metricCalculate) {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }

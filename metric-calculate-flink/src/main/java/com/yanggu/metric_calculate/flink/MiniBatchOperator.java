@@ -14,6 +14,7 @@ import org.apache.flink.streaming.api.operators.AbstractStreamOperator;
 import org.apache.flink.streaming.api.operators.OneInputStreamOperator;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
@@ -26,7 +27,9 @@ import java.util.concurrent.ScheduledFuture;
 @Data
 @NoArgsConstructor
 public class MiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
-        implements OneInputStreamOperator<T, List<T>>, ProcessingTimeService.ProcessingTimeCallback {
+        implements OneInputStreamOperator<T, List<T>>, ProcessingTimeService.ProcessingTimeCallback, Serializable {
+
+    private static final long serialVersionUID = -3891085332645805210L;
 
     /**
      * 攒批大小
@@ -59,10 +62,13 @@ public class MiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
     public void initializeState(StateInitializationContext context) throws Exception {
         ListStateDescriptor<T> listStateDescriptor = new ListStateDescriptor<>("list-state", elementSerializer);
         listState = context.getOperatorStateStore().getListState(listStateDescriptor);
+        //如果是状态恢复
         if (context.isRestored()) {
+            //将状态数据添加到本地缓存中
             for (T element : listState.get()) {
                 localBuffer.add(element);
             }
+            //状态恢复强制向下游输出
             flush();
         }
     }
@@ -109,6 +115,7 @@ public class MiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
         StreamRecord<List<T>> listStreamRecord = new StreamRecord<>(localBuffer);
         output.collect(listStreamRecord);
         localBuffer.clear();
+        //如果之前注册了定时器, 删除定时器
         if (scheduledFuture != null) {
             scheduledFuture.cancel(true);
             scheduledFuture = null;
