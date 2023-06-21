@@ -26,7 +26,7 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Data
 @NoArgsConstructor
-public class MiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
+public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
         implements OneInputStreamOperator<T, List<T>>, ProcessingTimeService.ProcessingTimeCallback, Serializable {
 
     private static final long serialVersionUID = -3891085332645805210L;

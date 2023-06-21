@@ -30,4 +30,12 @@ public interface MetricConfigClient {
     @GetMapping("/all-id")
     List<Long> getAllTableId();
 
+    /**
+     * 所有宽表数据
+     *
+     * @return
+     */
+    @GetMapping("/all-data")
+    List<DataDetailsWideTable> allTableData();
+
 }

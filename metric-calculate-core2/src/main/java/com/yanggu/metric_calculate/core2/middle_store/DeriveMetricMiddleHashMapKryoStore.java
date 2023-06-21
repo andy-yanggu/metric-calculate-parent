@@ -10,8 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class DeriveMetricMiddleHashMapKryoStore extends AbstractDeriveMetricMiddleStore {
 
-    public static final String KRYO_MAP = "KRYO_MAP";
-
     private Map<DimensionSet, byte[]> localMap;
 
     @Override
