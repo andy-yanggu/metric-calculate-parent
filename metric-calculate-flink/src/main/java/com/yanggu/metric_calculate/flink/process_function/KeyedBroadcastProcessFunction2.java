@@ -8,6 +8,8 @@ import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
+import com.yanggu.metric_calculate.flink.pojo.DeriveData;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
@@ -19,19 +21,23 @@ import org.apache.flink.util.Collector;
 
 import java.util.Map;
 
-public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunction<DimensionSet, JSONObject, JSONObject, Object> implements CheckpointedFunction {
+@Slf4j
+public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>
+                implements CheckpointedFunction {
 
-    private final MapStateDescriptor<Long, JSONObject> deriveMapStateDescriptor = new MapStateDescriptor<>("deriveMapState", Long.class, JSONObject.class);
+    private static final long serialVersionUID = 6092835299466260638L;
+    private final MapStateDescriptor<Long, DeriveData> deriveMapStateDescriptor = new MapStateDescriptor<>("deriveMapState", Long.class, DeriveData.class);
 
-    private BroadcastState<Long, JSONObject> broadcastState;
+    private transient BroadcastState<Long, DeriveData> broadcastState;
 
     @Override
-    public void processElement(JSONObject value, KeyedBroadcastProcessFunction<DimensionSet, JSONObject, JSONObject, Object>.ReadOnlyContext ctx, Collector<Object> out) throws Exception {
+    public void processElement(JSONObject value,
+                               KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>.ReadOnlyContext ctx,
+                               Collector<DeriveMetricCalculateResult> out) throws Exception {
         Long deriveId = value.getLong("deriveId");
-
-        ReadOnlyBroadcastState<Long, JSONObject> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
-        JSONObject jsonObject = broadcastState.get(deriveId);
-        DeriveMetricCalculate deriveMetricCalculate = jsonObject.get("deriveMetricCalculate", DeriveMetricCalculate.class);
+        ReadOnlyBroadcastState<Long, DeriveData> tempBroadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
+        DeriveData deriveData = tempBroadcastState.get(deriveId);
+        DeriveMetricCalculate deriveMetricCalculate = deriveData.getDeriveMetricCalculate();
         DimensionSet dimensionSet = ctx.getCurrentKey();
         MetricCube historyMetricCube = value.get("historyMetricCube", MetricCube.class);
         historyMetricCube = deriveMetricCalculate.addInput(value, historyMetricCube, dimensionSet);
@@ -42,36 +48,36 @@ public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunctio
     }
 
     @Override
-    public void processBroadcastElement(JSONObject value, KeyedBroadcastProcessFunction<DimensionSet, JSONObject, JSONObject, Object>.Context ctx, Collector<Object> out) throws Exception {
-        Long tableId = value.getLong("tableId");
-        Map<String, Class<?>> fieldMap = (Map<String, Class<?>>) value.get("fieldMap");
-        Derive derive = value.get("derive", Derive.class);
-        DeriveMetricCalculate<Object, Object, Object> deriveMetricCalculate = MetricUtil.initDerive(derive, tableId, fieldMap);
-        value.set("deriveMetricCalculate", deriveMetricCalculate);
-        BroadcastState<Long, JSONObject> tempBroadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
-        tempBroadcastState.put(tableId, value);
+    public void processBroadcastElement(DeriveData value,
+                                        KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>.Context ctx,
+                                        Collector<DeriveMetricCalculateResult> out) throws Exception {
+        initDeriveMetricCalculate(value);
+        BroadcastState<Long, DeriveData> tempBroadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
+        tempBroadcastState.put(value.getDerive().getId(), value);
     }
 
     @Override
     public void snapshotState(FunctionSnapshotContext context) throws Exception {
-        broadcastState.iterator().forEachRemaining(temp -> temp.getValue().remove("deriveMetricCalculate"));
     }
 
     @Override
     public void initializeState(FunctionInitializationContext context) throws Exception {
         broadcastState = context.getOperatorStateStore().getBroadcastState(deriveMapStateDescriptor);
         if (context.isRestored()) {
-            broadcastState.iterator().forEachRemaining(temp -> {
-                JSONObject value = temp.getValue();
-                Long tableId = value.getLong("tableId");
-                Map<String, Class<?>> fieldMap = (Map<String, Class<?>>) value.get("fieldMap");
-                Derive derive = value.get("derive", Derive.class);
-                DeriveMetricCalculate<Object, Object, Object> deriveMetricCalculate = MetricUtil.initDerive(derive, tableId, fieldMap);
-                value.set("deriveMetricCalculate", deriveMetricCalculate);
-            });
+            broadcastState.iterator().forEachRemaining(temp -> initDeriveMetricCalculate(temp.getValue()));
         } else {
-
         }
+    }
+
+    private void initDeriveMetricCalculate(DeriveData deriveData) {
+        if (deriveData == null) {
+            log.error("传入的deriveData为null");
+        }
+        Long tableId = deriveData.getTableId();
+        Map<String, Class<?>> fieldMap = deriveData.getFieldMap();
+        Derive derive = deriveData.getDerive();
+        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(derive, tableId, fieldMap);
+        deriveData.setDeriveMetricCalculate(deriveMetricCalculate);
     }
 
 }

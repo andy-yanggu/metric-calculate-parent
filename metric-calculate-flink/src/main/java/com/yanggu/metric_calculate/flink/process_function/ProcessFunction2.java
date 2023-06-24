@@ -9,6 +9,8 @@ import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideT
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Global;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
+import com.yanggu.metric_calculate.flink.pojo.DeriveData;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
@@ -29,11 +31,11 @@ public class ProcessFunction2 extends ProcessFunction<DataDetailsWideTable, Void
 
         if (CollUtil.isNotEmpty(deriveList)) {
             deriveList.forEach(tempDerive -> {
-                JSONObject jsonObject = new JSONObject();
-                jsonObject.set("tableId", tableId);
-                jsonObject.set("fieldMap", fieldMap);
-                jsonObject.set("derive", tempDerive);
-                ctx.output(new OutputTag<>("derive-config"), jsonObject);
+                DeriveData deriveData = new DeriveData<>();
+                deriveData.setTableId(tableId);
+                deriveData.setFieldMap(fieldMap);
+                deriveData.setDerive(tempDerive);
+                ctx.output(new OutputTag<>("derive-config", TypeInformation.of(DeriveData.class)), deriveData);
             });
         }
         List<Global> globalList = dataDetailsWideTable.getGlobal();

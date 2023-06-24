@@ -1,11 +1,9 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
@@ -41,7 +39,6 @@ public class MyProcessFunction1 extends ProcessFunction<List<JSONObject>, JSONOb
             input.set("historyMetricCube", historyMetricCube);
             out.collect(input);
         }
-
     }
 
 }

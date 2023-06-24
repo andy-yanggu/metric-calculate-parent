@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.runtime.state.FunctionInitializationContext;
 import org.apache.flink.runtime.state.FunctionSnapshotContext;
 import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
@@ -69,7 +70,7 @@ public class MyBroadcastProcessFunction extends BroadcastProcessFunction<String,
                 DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
                 clone.set("dimensionSet", dimensionSet);
 
-                readOnlyContext.output(new OutputTag<>("derive"), clone);
+                readOnlyContext.output(new OutputTag<>("derive", TypeInformation.of(JSONObject.class)), clone);
             }
         }
 

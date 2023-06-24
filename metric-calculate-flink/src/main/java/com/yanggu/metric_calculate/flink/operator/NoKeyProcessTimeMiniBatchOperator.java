@@ -1,9 +1,8 @@
-package com.yanggu.metric_calculate.flink;
+package com.yanggu.metric_calculate.flink.operator;
 
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.flink.api.common.operators.ProcessingTimeService;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
@@ -25,7 +24,6 @@ import java.util.concurrent.ScheduledFuture;
  * <p>使用处理时间, 不需要进行keyBy</p>
  */
 @Data
-@NoArgsConstructor
 public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
         implements OneInputStreamOperator<T, List<T>>, ProcessingTimeService.ProcessingTimeCallback, Serializable {
 
@@ -49,7 +47,7 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
     /**
      * 本地缓冲
      */
-    private final transient List<T> localBuffer = new ArrayList<>();
+    private transient List<T> localBuffer;
 
     private transient ScheduledFuture<?> scheduledFuture;
 
@@ -60,6 +58,7 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
      */
     @Override
     public void initializeState(StateInitializationContext context) throws Exception {
+        localBuffer = new ArrayList<>(batchSize + 1);
         ListStateDescriptor<T> listStateDescriptor = new ListStateDescriptor<>("list-state", elementSerializer);
         listState = context.getOperatorStateStore().getListState(listStateDescriptor);
         //如果是状态恢复
@@ -69,12 +68,17 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
                 localBuffer.add(element);
             }
             //状态恢复强制向下游输出
-            flush();
+            //由于这时候没有注册定时器, 如果本地缓冲有数据, 但是后面没有新的数据来
+            //可能会造成永远不会向下游输出
+            if (CollUtil.isNotEmpty(localBuffer)) {
+                flush();
+            }
         }
     }
 
     @Override
     public void snapshotState(StateSnapshotContext context) throws Exception {
+        //将本地缓存中的数据拷贝到listState中
         listState.clear();
         if (CollUtil.isNotEmpty(localBuffer)) {
             listState.addAll(localBuffer);
@@ -112,8 +116,10 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
         if (CollUtil.isEmpty(localBuffer)) {
             return;
         }
-        StreamRecord<List<T>> listStreamRecord = new StreamRecord<>(localBuffer);
+        StreamRecord<List<T>> listStreamRecord = new StreamRecord<>(new ArrayList<>(localBuffer));
+        //向下游输出一个List<T>
         output.collect(listStreamRecord);
+        //清空本地缓存
         localBuffer.clear();
         //如果之前注册了定时器, 删除定时器
         if (scheduledFuture != null) {
