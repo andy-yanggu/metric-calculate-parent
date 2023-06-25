@@ -3,9 +3,8 @@ package com.yanggu.metric_calculate.flink.process_function;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import org.apache.flink.configuration.Configuration;
+import lombok.Data;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 
@@ -20,18 +19,12 @@ import static com.yanggu.metric_calculate.flink.util.Constant.HISTORY_METRIC_CUB
 /**
  * 攒批读
  */
+@Data
 public class BatchReadProcessFunction extends ProcessFunction<List<JSONObject>, JSONObject> implements Serializable {
 
     private static final long serialVersionUID = -3855414494042599733L;
 
     private transient DeriveMetricMiddleStore deriveMetricMiddleStore;
-
-    @Override
-    public void open(Configuration parameters) {
-        DeriveMetricMiddleHashMapKryoStore deriveMetricMiddleHashMapKryoStore = new DeriveMetricMiddleHashMapKryoStore();
-        deriveMetricMiddleHashMapKryoStore.init();
-        this.deriveMetricMiddleStore = deriveMetricMiddleHashMapKryoStore;
-    }
 
     @Override
     public void processElement(List<JSONObject> inputList,

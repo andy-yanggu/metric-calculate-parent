@@ -18,11 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.runtime.state.FunctionInitializationContext;
 import org.apache.flink.runtime.state.FunctionSnapshotContext;
 import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
 import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction;
 import org.apache.flink.util.Collector;
+import org.apache.flink.util.OutputTag;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,6 +60,7 @@ public class KeyedDeriveBroadcastProcessFunction extends KeyedBroadcastProcessFu
         if (deriveMetricCalculateResult != null) {
             out.collect(deriveMetricCalculateResult);
         }
+        ctx.output(new OutputTag<>("updateMetricCube", TypeInformation.of(MetricCube.class)), historyMetricCube);
     }
 
     @Override

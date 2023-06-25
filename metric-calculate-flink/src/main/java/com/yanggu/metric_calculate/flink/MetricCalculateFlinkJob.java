@@ -2,18 +2,19 @@ package com.yanggu.metric_calculate.flink;
 
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.flink.operator.NoKeyProcessTimeMiniBatchOperator;
 import com.yanggu.metric_calculate.flink.pojo.DeriveData;
-import com.yanggu.metric_calculate.flink.process_function.KeyedDeriveBroadcastProcessFunction;
-import com.yanggu.metric_calculate.flink.process_function.MetricDataMetricConfigBroadcastProcessFunction;
-import com.yanggu.metric_calculate.flink.process_function.BatchReadProcessFunction;
-import com.yanggu.metric_calculate.flink.process_function.DataTableProcessFunction;
+import com.yanggu.metric_calculate.flink.process_function.*;
 import com.yanggu.metric_calculate.flink.source_function.TableDataSourceFunction;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.api.java.typeutils.runtime.kryo.KryoSerializer;
 import org.apache.flink.runtime.state.JavaSerializer;
 import org.apache.flink.streaming.api.datastream.BroadcastStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
@@ -57,26 +58,45 @@ public class MetricCalculateFlinkJob {
         NoKeyProcessTimeMiniBatchOperator<JSONObject> deriveNoKeyProcessTimeMiniBatchOperator = new NoKeyProcessTimeMiniBatchOperator<>();
         deriveNoKeyProcessTimeMiniBatchOperator.setElementSerializer(new JavaSerializer<>());
 
-        SingleOutputStreamOperator<Void> process1 = tableSource.process(new DataTableProcessFunction());
+        SingleOutputStreamOperator<Void> tableConfigDataStream = tableSource.process(new DataTableProcessFunction());
 
         //deriveConfigDataStream
         MapStateDescriptor<Long, JSONObject> deriveMapStateDescriptor =
                 new MapStateDescriptor<>("deriveMapState", Long.class, JSONObject.class);
 
-        BroadcastStream<DeriveData> deriveBroadcastStream = process1
+        BroadcastStream<DeriveData> deriveBroadcastStream = tableConfigDataStream
                 .getSideOutput(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveData.class)))
                 .broadcast(deriveMapStateDescriptor);
 
+        DeriveMetricMiddleHashMapKryoStore deriveMetricMiddleHashMapKryoStore = new DeriveMetricMiddleHashMapKryoStore();
+        deriveMetricMiddleHashMapKryoStore.init();
+
+        BatchReadProcessFunction batchReadProcessFunction = new BatchReadProcessFunction();
+        batchReadProcessFunction.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);
+
         //派生指标数据流
-        dataStream
+        SingleOutputStreamOperator<DeriveMetricCalculateResult> deriveBatchReadOperator = dataStream
                 //分流出派生指标数据
                 .getSideOutput(new OutputTag<>(DERIVE, TypeInformation.of(JSONObject.class)))
                 //攒批读
                 .transform("Derive Batch Read Operator", TypeInformation.of(new TypeHint<List<JSONObject>>() {}), deriveNoKeyProcessTimeMiniBatchOperator)
-                .process(new BatchReadProcessFunction())
+                .process(batchReadProcessFunction)
                 .keyBy(tempObj -> tempObj.get(DIMENSION_SET, DimensionSet.class))
                 .connect(deriveBroadcastStream)
-                .process(new KeyedDeriveBroadcastProcessFunction())
+                .process(new KeyedDeriveBroadcastProcessFunction());
+
+        NoKeyProcessTimeMiniBatchOperator<MetricCube> deriveNoKeyProcessTimeMiniBatchOperator2 = new NoKeyProcessTimeMiniBatchOperator<>();
+        deriveNoKeyProcessTimeMiniBatchOperator2.setElementSerializer(new KryoSerializer<>(MetricCube.class, env.getConfig()));
+
+        BatchUpdateProcessFunction batchUpdateProcessFunction = new BatchUpdateProcessFunction();
+        batchUpdateProcessFunction.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);
+
+        deriveBatchReadOperator
+                .getSideOutput(new OutputTag<>("updateMetricCube", TypeInformation.of(MetricCube.class)))
+                .transform("Derive Batch Update Operator", TypeInformation.of(new TypeHint<List<MetricCube>>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
+                .process(batchUpdateProcessFunction);
+
+        deriveBatchReadOperator
                 .print("derive calculate result >>>");
 
         //全局指标数据流
@@ -84,7 +104,5 @@ public class MetricCalculateFlinkJob {
 
         env.execute("指标计算服务");
     }
-
-
 
 }
