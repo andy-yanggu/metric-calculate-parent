@@ -28,7 +28,7 @@ public class MyProcessFunction1 extends ProcessFunction<List<JSONObject>, JSONOb
     @Override
     public void processElement(List<JSONObject> inputList,
                                ProcessFunction<List<JSONObject>, JSONObject>.Context ctx,
-                               Collector<JSONObject> out) throws Exception {
+                               Collector<JSONObject> out) {
         List<DimensionSet> collect = inputList.stream()
                 .map(temp -> temp.get("dimensionSet", DimensionSet.class))
                 .collect(Collectors.toList());

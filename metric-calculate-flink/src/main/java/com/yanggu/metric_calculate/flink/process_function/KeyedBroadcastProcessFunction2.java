@@ -1,7 +1,12 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.HttpUtil;
+import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
+import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
@@ -19,27 +24,34 @@ import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
 import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction;
 import org.apache.flink.util.Collector;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
+import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE_ID;
+import static com.yanggu.metric_calculate.flink.util.Constant.HISTORY_METRIC_CUBE;
 
 @Slf4j
 public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>
                 implements CheckpointedFunction {
 
     private static final long serialVersionUID = 6092835299466260638L;
-    private final MapStateDescriptor<Long, DeriveData> deriveMapStateDescriptor = new MapStateDescriptor<>("deriveMapState", Long.class, DeriveData.class);
 
-    private transient BroadcastState<Long, DeriveData> broadcastState;
+    private String url = "http://localhost:8888/mock-model/all-derive-data";
+
+    private final MapStateDescriptor<Long, DeriveData> deriveMapStateDescriptor = new MapStateDescriptor<>("deriveMapState", Long.class, DeriveData.class);
 
     @Override
     public void processElement(JSONObject value,
                                KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>.ReadOnlyContext ctx,
                                Collector<DeriveMetricCalculateResult> out) throws Exception {
-        Long deriveId = value.getLong("deriveId");
-        ReadOnlyBroadcastState<Long, DeriveData> tempBroadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
-        DeriveData deriveData = tempBroadcastState.get(deriveId);
+        Long deriveId = value.getLong(DERIVE_ID);
+        ReadOnlyBroadcastState<Long, DeriveData> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
+        DeriveData deriveData = broadcastState.get(deriveId);
         DeriveMetricCalculate deriveMetricCalculate = deriveData.getDeriveMetricCalculate();
         DimensionSet dimensionSet = ctx.getCurrentKey();
-        MetricCube historyMetricCube = value.get("historyMetricCube", MetricCube.class);
+        MetricCube historyMetricCube = value.get(HISTORY_METRIC_CUBE, MetricCube.class);
         historyMetricCube = deriveMetricCalculate.addInput(value, historyMetricCube, dimensionSet);
         DeriveMetricCalculateResult deriveMetricCalculateResult = historyMetricCube.query();
         if (deriveMetricCalculateResult != null) {
@@ -52,8 +64,8 @@ public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunctio
                                         KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>.Context ctx,
                                         Collector<DeriveMetricCalculateResult> out) throws Exception {
         initDeriveMetricCalculate(value);
-        BroadcastState<Long, DeriveData> tempBroadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
-        tempBroadcastState.put(value.getDerive().getId(), value);
+        BroadcastState<Long, DeriveData> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
+        broadcastState.put(value.getDerive().getId(), value);
     }
 
     @Override
@@ -62,10 +74,42 @@ public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunctio
 
     @Override
     public void initializeState(FunctionInitializationContext context) throws Exception {
-        broadcastState = context.getOperatorStateStore().getBroadcastState(deriveMapStateDescriptor);
+        BroadcastState<Long, DeriveData> broadcastState = context.getOperatorStateStore().getBroadcastState(deriveMapStateDescriptor);
         if (context.isRestored()) {
             broadcastState.iterator().forEachRemaining(temp -> initDeriveMetricCalculate(temp.getValue()));
         } else {
+            //获取所有的派生指标数据
+            String jsonArrayString = HttpUtil.get(url);
+            if (StrUtil.isBlank(jsonArrayString)) {
+                return;
+            }
+            JSONArray objects = JSONUtil.parseArray(jsonArrayString);
+            List<DeriveData> list = new ArrayList<>();
+            for (Object object : objects) {
+                JSONObject tempObj = (JSONObject) object;
+                Long tableId = tempObj.getLong("tableId");
+                JSONObject tempFieldMap = tempObj.getJSONObject("fieldMap");
+                Derive derive = tempObj.get("derive", Derive.class);
+                Map<String, Class<?>> fieldMap = new HashMap<>();
+                for (Map.Entry<String, Object> entry : tempFieldMap) {
+                    String tempKey = entry.getKey();
+                    Object tempValue = entry.getValue();
+                    fieldMap.put(tempKey, Class.forName(tempValue.toString()));
+                }
+                DeriveData deriveData = new DeriveData<>();
+                deriveData.setTableId(tableId);
+                deriveData.setFieldMap(fieldMap);
+                deriveData.setDerive(derive);
+                list.add(deriveData);
+            }
+            //List<DeriveData> list = JSONUtil.toList(jsonArrayString, DeriveData.class);
+            if (CollUtil.isEmpty(list)) {
+                return;
+            }
+            for (DeriveData deriveData : list) {
+                initDeriveMetricCalculate(deriveData);
+                broadcastState.put(deriveData.getDerive().getId(), deriveData);
+            }
         }
     }
 

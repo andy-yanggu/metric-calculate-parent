@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.pojo.metric;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -9,7 +10,9 @@ import java.util.List;
  * 派生指标
  */
 @Data
-public class Derive {
+public class Derive implements Serializable {
+
+    private static final long serialVersionUID = 7997617771105250097L;
 
     /**
      * 派生指标id

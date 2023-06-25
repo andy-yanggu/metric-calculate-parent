@@ -34,6 +34,8 @@ public class MyBroadcastProcessFunction extends BroadcastProcessFunction<String,
     private final MapStateDescriptor<Long, MetricCalculate> mapStateDescriptor =
             new MapStateDescriptor<>("DataDetailsWideTable", Long.class, MetricCalculate.class);
 
+    private final String url = "http://localhost:8888/mock-model/all-data";
+
     @Override
     public void processElement(String jsonString,
                                BroadcastProcessFunction<String, DataDetailsWideTable, Void>.ReadOnlyContext readOnlyContext,
@@ -114,11 +116,15 @@ public class MyBroadcastProcessFunction extends BroadcastProcessFunction<String,
             broadcastState.clear();
             broadcastState.putAll(tempMap);
         } else {
-            String jsonArray = HttpUtil.get("http://localhost:8888/mock-model/all-data");
+            String jsonArray = HttpUtil.get(url);
             if (StrUtil.isBlank(jsonArray)) {
                 return;
             }
-            Map<Long, MetricCalculate> tempMap = JSONUtil.toList(jsonArray, DataDetailsWideTable.class).stream()
+            List<DataDetailsWideTable> list = JSONUtil.toList(jsonArray, DataDetailsWideTable.class);
+            if (CollUtil.isEmpty(list)) {
+                return;
+            }
+            Map<Long, MetricCalculate> tempMap = list.stream()
                     .map(MetricUtil::initMetricCalculate)
                     .collect(Collectors.toMap(DataDetailsWideTable::getId, temp -> temp, (a, b) -> b));
 

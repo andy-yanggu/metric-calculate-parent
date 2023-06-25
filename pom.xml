@@ -27,7 +27,7 @@
         <spring-cloud.version>2022.0.2</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
-        <hutool.version>5.8.19</hutool.version>
+        <hutool.version>5.8.20</hutool.version>
         <knife4j-openapi3-jakarta.version>4.1.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>
         <mockito-inline.version>5.2.0</mockito-inline.version>
