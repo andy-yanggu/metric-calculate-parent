@@ -9,17 +9,25 @@ import org.apache.flink.configuration.Configuration;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.flink.util.Constant.DIMENSION_SET;
+import static com.yanggu.metric_calculate.flink.util.Constant.HISTORY_METRIC_CUBE;
 
-public class MyProcessFunction1 extends ProcessFunction<List<JSONObject>, JSONObject> {
+/**
+ * 攒批读
+ */
+public class BatchReadProcessFunction extends ProcessFunction<List<JSONObject>, JSONObject> implements Serializable {
 
-    private DeriveMetricMiddleStore deriveMetricMiddleStore;
+    private static final long serialVersionUID = -3855414494042599733L;
+
+    private transient DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void open(Configuration parameters) {
         DeriveMetricMiddleHashMapKryoStore deriveMetricMiddleHashMapKryoStore = new DeriveMetricMiddleHashMapKryoStore();
         deriveMetricMiddleHashMapKryoStore.init();
         this.deriveMetricMiddleStore = deriveMetricMiddleHashMapKryoStore;
@@ -30,13 +38,13 @@ public class MyProcessFunction1 extends ProcessFunction<List<JSONObject>, JSONOb
                                ProcessFunction<List<JSONObject>, JSONObject>.Context ctx,
                                Collector<JSONObject> out) {
         List<DimensionSet> collect = inputList.stream()
-                .map(temp -> temp.get("dimensionSet", DimensionSet.class))
+                .map(temp -> temp.get(DIMENSION_SET, DimensionSet.class))
                 .collect(Collectors.toList());
         Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(collect);
         for (JSONObject input : inputList) {
-            DimensionSet dimensionSet = input.get("dimensionSet", DimensionSet.class);
+            DimensionSet dimensionSet = input.get(DIMENSION_SET, DimensionSet.class);
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            input.set("historyMetricCube", historyMetricCube);
+            input.set(HISTORY_METRIC_CUBE, historyMetricCube);
             out.collect(input);
         }
     }

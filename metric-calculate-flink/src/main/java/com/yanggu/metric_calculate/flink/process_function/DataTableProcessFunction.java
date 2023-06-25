@@ -17,24 +17,33 @@ import org.apache.flink.util.OutputTag;
 import java.util.List;
 import java.util.Map;
 
-public class ProcessFunction2 extends ProcessFunction<DataDetailsWideTable, Void> {
+import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE_CONFIG;
+
+/**
+ * 数据明细宽表处理函数
+ */
+public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTable, Void> {
+
+    private static final long serialVersionUID = -4721794115378342971L;
 
     @Override
-    public void processElement(DataDetailsWideTable dataDetailsWideTable, ProcessFunction<DataDetailsWideTable, Void>.Context ctx, Collector<Void> out) throws Exception {
-        List<Derive> deriveList = dataDetailsWideTable.getDerive();
+    public void processElement(DataDetailsWideTable dataDetailsWideTable,
+                               ProcessFunction<DataDetailsWideTable, Void>.Context ctx,
+                               Collector<Void> out) {
 
         MetricCalculate metricCalculate = BeanUtil.copyProperties(dataDetailsWideTable, MetricCalculate.class);
         MetricUtil.setFieldMap(metricCalculate);
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         Long tableId = metricCalculate.getId();
 
+        List<Derive> deriveList = dataDetailsWideTable.getDerive();
         if (CollUtil.isNotEmpty(deriveList)) {
             deriveList.forEach(tempDerive -> {
                 DeriveData deriveData = new DeriveData<>();
                 deriveData.setTableId(tableId);
                 deriveData.setFieldMap(fieldMap);
                 deriveData.setDerive(tempDerive);
-                ctx.output(new OutputTag<>("derive-config", TypeInformation.of(DeriveData.class)), deriveData);
+                ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveData.class)), deriveData);
             });
         }
         List<Global> globalList = dataDetailsWideTable.getGlobal();

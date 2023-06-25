@@ -22,19 +22,25 @@ import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.flink.util.Constant.*;
+
 @Slf4j
-public class MyBroadcastProcessFunction extends BroadcastProcessFunction<String, DataDetailsWideTable, Void> implements CheckpointedFunction {
+public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastProcessFunction<String, DataDetailsWideTable, Void>
+        implements CheckpointedFunction, Serializable {
+
+    private static final long serialVersionUID = 7881762197491832138L;
 
     private final MapStateDescriptor<Long, MetricCalculate> mapStateDescriptor =
             new MapStateDescriptor<>("DataDetailsWideTable", Long.class, MetricCalculate.class);
 
-    private final String url = "http://localhost:8888/mock-model/all-data";
+    private String url = "http://localhost:8888/mock-model/all-data";
 
     @Override
     public void processElement(String jsonString,
@@ -49,7 +55,6 @@ public class MyBroadcastProcessFunction extends BroadcastProcessFunction<String,
         ReadOnlyBroadcastState<Long, MetricCalculate> broadcastState = readOnlyContext.getBroadcastState(mapStateDescriptor);
         MetricCalculate metricCalculate = broadcastState.get(tableId);
         if (metricCalculate == null) {
-            //TODO 考虑广播流先来, 数据流没有数据的情况
             log.error("广播状态中没有数据明细宽表数据: 宽表id: {}", tableId);
             return;
         }
@@ -67,12 +72,12 @@ public class MyBroadcastProcessFunction extends BroadcastProcessFunction<String,
                     continue;
                 }
                 JSONObject clone = input.clone();
-                clone.set("deriveId", deriveMetricCalculate.getId());
+                clone.set(DERIVE_ID, deriveMetricCalculate.getId());
 
                 DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
-                clone.set("dimensionSet", dimensionSet);
+                clone.set(DIMENSION_SET, dimensionSet);
 
-                readOnlyContext.output(new OutputTag<>("derive", TypeInformation.of(JSONObject.class)), clone);
+                readOnlyContext.output(new OutputTag<>(DERIVE, TypeInformation.of(JSONObject.class)), clone);
             }
         }
 

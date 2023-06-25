@@ -45,6 +45,12 @@
             <groupId>com.yanggu</groupId>
             <artifactId>metric-calculate-core2</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-test-utils</artifactId>
+            <version>${flink.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

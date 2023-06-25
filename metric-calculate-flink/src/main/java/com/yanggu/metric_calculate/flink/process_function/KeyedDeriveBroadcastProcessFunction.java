@@ -24,6 +24,7 @@ import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
 import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction;
 import org.apache.flink.util.Collector;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +34,8 @@ import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE_ID;
 import static com.yanggu.metric_calculate.flink.util.Constant.HISTORY_METRIC_CUBE;
 
 @Slf4j
-public class KeyedBroadcastProcessFunction2 extends KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>
-                implements CheckpointedFunction {
+public class KeyedDeriveBroadcastProcessFunction extends KeyedBroadcastProcessFunction<DimensionSet, JSONObject, DeriveData, DeriveMetricCalculateResult>
+                implements CheckpointedFunction, Serializable {
 
     private static final long serialVersionUID = 6092835299466260638L;
 
