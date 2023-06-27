@@ -8,13 +8,16 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 多字段去重序列化器
  */
-public class MultiFieldDistinctKeySerializer extends Serializer<MultiFieldDistinctKey> {
+public class MultiFieldDistinctKeySerializer extends Serializer<MultiFieldDistinctKey> implements Serializable {
+
+    private static final long serialVersionUID = -6465589424180908501L;
 
     private CollectionSerializer<List> listCollectionSerializer = new CollectionSerializer<>();
 

@@ -39,13 +39,13 @@ public class MetricCalculateFlinkJob {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
         env.setParallelism(1);
-        env.addDefaultKryoSerializer(MetricCube.class, new MetricCubeSerializer<>());
-        env.addDefaultKryoSerializer(TumblingTimeWindow.class, new TumblingTimeWindowSerializer<>());
-        env.addDefaultKryoSerializer(GlobalWindow.class, new GlobalWindowSerializer<>());
-        env.addDefaultKryoSerializer(SlidingTimeWindow.class, new SlidingTimeWindowSerializer<>());
-        env.addDefaultKryoSerializer(SlidingCountWindow.class, new SlidingCountWindowSerializer<>());
-        env.addDefaultKryoSerializer(StatusWindow.class, new StatusWindowSerializer<>());
-        env.addDefaultKryoSerializer(PatternWindow.class, new PatternWindowSerializer<>());
+        env.registerTypeWithKryoSerializer(MetricCube.class, new MetricCubeSerializer<>());
+        env.registerTypeWithKryoSerializer(TumblingTimeWindow.class, new TumblingTimeWindowSerializer<>());
+        env.registerTypeWithKryoSerializer(GlobalWindow.class, new GlobalWindowSerializer<>());
+        env.registerTypeWithKryoSerializer(SlidingTimeWindow.class, new SlidingTimeWindowSerializer<>());
+        env.registerTypeWithKryoSerializer(SlidingCountWindow.class, new SlidingCountWindowSerializer<>());
+        env.registerTypeWithKryoSerializer(StatusWindow.class, new StatusWindowSerializer<>());
+        env.registerTypeWithKryoSerializer(PatternWindow.class, new PatternWindowSerializer<>());
 
         //数据明细宽表配置流
         DataStreamSource<DataDetailsWideTable> tableSourceDataStream = env.addSource(new TableDataSourceFunction(), "Table-Source");

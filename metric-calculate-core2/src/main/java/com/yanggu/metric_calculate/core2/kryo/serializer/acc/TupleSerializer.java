@@ -6,10 +6,14 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import java.io.Serializable;
+
 /**
  * 元祖序列化器
  */
-public class TupleSerializer extends Serializer<Tuple> {
+public class TupleSerializer extends Serializer<Tuple> implements Serializable {
+
+    private static final long serialVersionUID = -5150747248969279645L;
 
     @Override
     public void write(Kryo kryo, Output output, Tuple object) {

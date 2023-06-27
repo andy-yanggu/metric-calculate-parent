@@ -7,10 +7,14 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrder;
 
+import java.io.Serializable;
+
 /**
  * 字段排序序列化器
  */
-public class FieldOrderSerializer extends Serializer<FieldOrder> {
+public class FieldOrderSerializer extends Serializer<FieldOrder> implements Serializable {
+
+    private static final long serialVersionUID = 5359246401789028377L;
 
     @Override
     public void write(Kryo kryo, Output output, FieldOrder fieldOrder) {

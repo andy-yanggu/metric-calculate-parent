@@ -6,13 +6,17 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import java.io.Serializable;
+
 /**
  * 可变二元组序列化器
  *
  * @param <K>
  * @param <V>
  */
-public class MutablePairSerializer<K, V> extends Serializer<MutablePair<K, V>> {
+public class MutablePairSerializer<K, V> extends Serializer<MutablePair<K, V>> implements Serializable {
+
+    private static final long serialVersionUID = -2839965751894818964L;
 
     @Override
     public void write(Kryo kryo, Output output, MutablePair<K, V> mutablePair) {

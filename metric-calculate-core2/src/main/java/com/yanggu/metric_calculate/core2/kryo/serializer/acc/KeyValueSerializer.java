@@ -7,13 +7,17 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 
+import java.io.Serializable;
+
 /**
  * KeyValue数据序列化器
  *
  * @param <K>
  * @param <V>
  */
-public class KeyValueSerializer<K extends Comparable<K>, V> extends Serializer<KeyValue<K, V>> {
+public class KeyValueSerializer<K extends Comparable<K>, V> extends Serializer<KeyValue<K, V>> implements Serializable {
+
+    private static final long serialVersionUID = -8925969254953524456L;
 
     @Override
     public void write(Kryo kryo, Output output, KeyValue<K, V> keyValue) {

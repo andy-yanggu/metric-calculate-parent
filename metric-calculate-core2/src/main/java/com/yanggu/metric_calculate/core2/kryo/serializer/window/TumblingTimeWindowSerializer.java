@@ -5,7 +5,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.DefaultSerializers;
+import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoLongSerializer;
+import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoTreeMapSerializer;
 import com.yanggu.metric_calculate.core2.window.TumblingTimeWindow;
 
 import java.io.Serializable;
@@ -15,9 +16,9 @@ public class TumblingTimeWindowSerializer<IN, ACC, OUT> extends Serializer<Tumbl
 
     private static final long serialVersionUID = 3500078827166722503L;
 
-    private final DefaultSerializers.LongSerializer longSerializer = new DefaultSerializers.LongSerializer();
+    private final KryoLongSerializer longSerializer = new KryoLongSerializer();
 
-    private final DefaultSerializers.TreeMapSerializer treeMapSerializer = new DefaultSerializers.TreeMapSerializer();
+    private final KryoTreeMapSerializer treeMapSerializer = new KryoTreeMapSerializer();
 
     @Override
     public void write(Kryo kryo, Output output, TumblingTimeWindow<IN, ACC, OUT> tumblingTimeWindow) {

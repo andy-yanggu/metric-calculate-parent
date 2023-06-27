@@ -7,13 +7,16 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 多字段排序序列化器
  */
-public class MultiFieldOrderCompareKeySerializer extends Serializer<MultiFieldOrderCompareKey> {
+public class MultiFieldOrderCompareKeySerializer extends Serializer<MultiFieldOrderCompareKey> implements Serializable {
+
+    private static final long serialVersionUID = -5875701121165212922L;
 
     private CollectionSerializer<List> listCollectionSerializer = new CollectionSerializer<>();
 

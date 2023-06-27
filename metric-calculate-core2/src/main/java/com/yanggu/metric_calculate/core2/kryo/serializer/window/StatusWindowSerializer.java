@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.esotericsoftware.kryo.serializers.CollectionSerializer;
+import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoCollectionSerializer;
 import com.yanggu.metric_calculate.core2.window.StatusWindow;
 
 import java.io.Serializable;
@@ -16,9 +16,9 @@ public class StatusWindowSerializer<IN, ACC, OUT> extends Serializer<StatusWindo
 
     private static final long serialVersionUID = 3202427902720287246L;
 
-    private final CollectionSerializer<List> statusListSerializer = new CollectionSerializer<>();
+    private final KryoCollectionSerializer<List> statusListSerializer = new KryoCollectionSerializer<>();
 
-    private final CollectionSerializer<List> inListSerializer = new CollectionSerializer<>();
+    private final KryoCollectionSerializer<List> inListSerializer = new KryoCollectionSerializer<>();
 
     @Override
     public void write(Kryo kryo, Output output, StatusWindow<IN, ACC, OUT> statusWindow) {

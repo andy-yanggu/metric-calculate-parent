@@ -7,13 +7,17 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import java.io.Serializable;
+
 /**
  * 不可变二元组序列化器
  *
  * @param <K>
  * @param <V>
  */
-public class PairSerializer<K, V> extends Serializer<Pair<K, V>> {
+public class PairSerializer<K, V> extends Serializer<Pair<K, V>> implements Serializable {
+
+    private static final long serialVersionUID = 1928262873772992960L;
 
     @Override
     public void write(Kryo kryo, Output output, Pair<K, V> pair) {

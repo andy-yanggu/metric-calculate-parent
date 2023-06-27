@@ -8,13 +8,16 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 
 /**
  * 有界优先队列序列化器
  */
-public class BoundedPriorityQueueSerializer<T> extends Serializer<BoundedPriorityQueue<T>> {
+public class BoundedPriorityQueueSerializer<T> extends Serializer<BoundedPriorityQueue<T>> implements Serializable {
+
+    private static final long serialVersionUID = 7019833704874520657L;
 
     @Override
     public void write(Kryo kryo, Output output, BoundedPriorityQueue<T> boundedPriorityQueue) {

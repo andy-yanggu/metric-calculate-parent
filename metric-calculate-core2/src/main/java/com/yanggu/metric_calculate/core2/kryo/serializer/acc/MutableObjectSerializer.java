@@ -6,12 +6,16 @@ import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 
+import java.io.Serializable;
+
 /**
  * 可变对象序列化器
  *
  * @param <T>
  */
-public class MutableObjectSerializer<T> extends Serializer<MutableObj<T>> {
+public class MutableObjectSerializer<T> extends Serializer<MutableObj<T>> implements Serializable {
+
+    private static final long serialVersionUID = -5624609536031018473L;
 
     @Override
     public void write(Kryo kryo, Output output, MutableObj<T> mutableObj) {
