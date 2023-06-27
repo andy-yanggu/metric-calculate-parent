@@ -8,6 +8,8 @@ import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.window.AbstractWindow;
 
+import java.io.Serializable;
+
 /**
  * 指标数据序列化器
  *
@@ -15,7 +17,9 @@ import com.yanggu.metric_calculate.core2.window.AbstractWindow;
  * @param <ACC>
  * @param <OUT>
  */
-public class MetricCubeSerializer<IN, ACC, OUT> extends Serializer<MetricCube<IN, ACC, OUT>> {
+public class MetricCubeSerializer<IN, ACC, OUT> extends Serializer<MetricCube<IN, ACC, OUT>> implements Serializable {
+
+    private static final long serialVersionUID = 5322548126738351047L;
 
     private final DimensionSetSerializer dimensionSetSerializer = new DimensionSetSerializer();
 

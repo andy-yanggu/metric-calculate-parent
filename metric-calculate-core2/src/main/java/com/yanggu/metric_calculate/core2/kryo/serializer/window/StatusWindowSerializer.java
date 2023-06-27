@@ -7,11 +7,14 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.yanggu.metric_calculate.core2.window.StatusWindow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class StatusWindowSerializer<IN, ACC, OUT> extends Serializer<StatusWindow<IN, ACC, OUT>> {
+public class StatusWindowSerializer<IN, ACC, OUT> extends Serializer<StatusWindow<IN, ACC, OUT>> implements Serializable {
+
+    private static final long serialVersionUID = 3202427902720287246L;
 
     private final CollectionSerializer<List> statusListSerializer = new CollectionSerializer<>();
 

@@ -9,7 +9,7 @@ import java.util.Map;
 
 
 @Data
-public class DeriveData<IN, ACC, OUT> implements Serializable {
+public class DeriveConfigData<IN, ACC, OUT> implements Serializable {
 
     private static final long serialVersionUID = 8555083618866402099L;
 

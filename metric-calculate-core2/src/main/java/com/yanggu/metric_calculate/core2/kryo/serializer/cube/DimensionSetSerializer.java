@@ -6,12 +6,15 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
 /**
  * 维度序列化器
  */
-public class DimensionSetSerializer extends Serializer<DimensionSet> {
+public class DimensionSetSerializer extends Serializer<DimensionSet> implements Serializable {
+
+    private static final long serialVersionUID = -1812423076780276120L;
 
     @Override
     public void write(Kryo kryo, Output output, DimensionSet dimensionSet) {

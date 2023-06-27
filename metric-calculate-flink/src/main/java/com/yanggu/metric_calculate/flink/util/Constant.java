@@ -1,7 +1,13 @@
 package com.yanggu.metric_calculate.flink.util;
 
 
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapKryoStore;
+import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
+
 public class Constant {
+
+    private Constant() {
+    }
 
     public static final String DERIVE_ID = "deriveId";
 
@@ -12,5 +18,13 @@ public class Constant {
     public static final String HISTORY_METRIC_CUBE = "historyMetricCube";
 
     public static final String DERIVE_CONFIG = "derive-config";
+
+    public static final DeriveMetricMiddleStore DERIVE_METRIC_MIDDLE_STORE;
+
+    static {
+        //派生指标外部存储
+        DERIVE_METRIC_MIDDLE_STORE = new DeriveMetricMiddleHashMapKryoStore();
+        DERIVE_METRIC_MIDDLE_STORE.init();
+    }
 
 }

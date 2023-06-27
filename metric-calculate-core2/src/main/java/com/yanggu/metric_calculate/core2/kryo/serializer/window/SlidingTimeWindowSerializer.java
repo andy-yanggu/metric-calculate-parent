@@ -8,10 +8,13 @@ import com.esotericsoftware.kryo.serializers.DefaultSerializers;
 import com.esotericsoftware.kryo.serializers.MapSerializer;
 import com.yanggu.metric_calculate.core2.window.SlidingTimeWindow;
 
+import java.io.Serializable;
 import java.util.Map;
 
 
-public class SlidingTimeWindowSerializer<IN, ACC, OUT> extends Serializer<SlidingTimeWindow<IN, ACC, OUT>> {
+public class SlidingTimeWindowSerializer<IN, ACC, OUT> extends Serializer<SlidingTimeWindow<IN, ACC, OUT>> implements Serializable {
+
+    private static final long serialVersionUID = -416111087144999336L;
 
     private final DefaultSerializers.LongSerializer longSerializer = new DefaultSerializers.LongSerializer();
 

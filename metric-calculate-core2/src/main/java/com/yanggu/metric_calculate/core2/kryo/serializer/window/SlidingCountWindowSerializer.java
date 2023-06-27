@@ -8,11 +8,14 @@ import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers;
 import com.yanggu.metric_calculate.core2.window.SlidingCountWindow;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 
-public class SlidingCountWindowSerializer<IN, ACC, OUT> extends Serializer<SlidingCountWindow<IN, ACC, OUT>> {
+public class SlidingCountWindowSerializer<IN, ACC, OUT> extends Serializer<SlidingCountWindow<IN, ACC, OUT>> implements Serializable {
+
+    private static final long serialVersionUID = 6433262404195009833L;
 
     private final DefaultSerializers.IntSerializer limitSerializer = new DefaultSerializers.IntSerializer();
 

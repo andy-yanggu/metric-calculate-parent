@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
+import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
@@ -23,10 +24,9 @@ import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.flink.util.Constant.*;
@@ -71,13 +71,13 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
                 if (Boolean.FALSE.equals(filter)) {
                     continue;
                 }
-                JSONObject clone = input.clone();
-                clone.set(DERIVE_ID, deriveMetricCalculate.getId());
-
+                DeriveCalculateData deriveCalculateData = new DeriveCalculateData<>();
+                deriveCalculateData.setData(input.clone());
+                deriveCalculateData.setDeriveId(deriveMetricCalculate.getId());
                 DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
-                clone.set(DIMENSION_SET, dimensionSet);
+                deriveCalculateData.setDimensionSet(dimensionSet);
 
-                readOnlyContext.output(new OutputTag<>(DERIVE, TypeInformation.of(JSONObject.class)), clone);
+                readOnlyContext.output(new OutputTag<>(DERIVE, TypeInformation.of(DeriveCalculateData.class)), deriveCalculateData);
             }
         }
 
@@ -97,8 +97,7 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
                                         BroadcastProcessFunction<String, DataDetailsWideTable, Void>.Context context,
                                         Collector<Void> collector) throws Exception {
         BroadcastState<Long, MetricCalculate> broadcastState = context.getBroadcastState(mapStateDescriptor);
-        MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(dataDetailsWideTable);
-        broadcastState.put(dataDetailsWideTable.getId(), metricCalculate);
+        broadcastState.put(dataDetailsWideTable.getId(), MetricUtil.initMetricCalculate(dataDetailsWideTable));
     }
 
     @Override
@@ -108,19 +107,11 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
     @Override
     public void initializeState(FunctionInitializationContext context) throws Exception {
         BroadcastState<Long, MetricCalculate> broadcastState = context.getOperatorStateStore().getBroadcastState(mapStateDescriptor);
+        //如果是作业恢复, 重新初始化指标计算类
         if (context.isRestored()) {
-            Map<Long, MetricCalculate> tempMap = new HashMap<>();
-            Iterator<Map.Entry<Long, MetricCalculate>> iterator = broadcastState.iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<Long, MetricCalculate> next = iterator.next();
-                Long key = next.getKey();
-                MetricCalculate metricCalculate = next.getValue();
-                metricCalculate = MetricUtil.initMetricCalculate(metricCalculate);
-                tempMap.put(key, metricCalculate);
-            }
-            broadcastState.clear();
-            broadcastState.putAll(tempMap);
+            broadcastState.iterator().forEachRemaining(tempEntry -> tempEntry.setValue(MetricUtil.initMetricCalculate(tempEntry.getValue())));
         } else {
+            //如果是作业初始化, 获取并且初始化所有指标计算类
             String jsonArray = HttpUtil.get(url);
             if (StrUtil.isBlank(jsonArray)) {
                 return;
@@ -131,7 +122,7 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
             }
             Map<Long, MetricCalculate> tempMap = list.stream()
                     .map(MetricUtil::initMetricCalculate)
-                    .collect(Collectors.toMap(DataDetailsWideTable::getId, temp -> temp, (a, b) -> b));
+                    .collect(Collectors.toMap(DataDetailsWideTable::getId, Function.identity()));
 
             broadcastState.putAll(tempMap);
         }

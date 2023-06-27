@@ -7,10 +7,13 @@ import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.DefaultSerializers;
 import com.yanggu.metric_calculate.core2.window.PatternWindow;
 
+import java.io.Serializable;
 import java.util.TreeMap;
 
 
-public class PatternWindowSerializer<IN, ACC, OUT> extends Serializer<PatternWindow<IN, ACC, OUT>> {
+public class PatternWindowSerializer<IN, ACC, OUT> extends Serializer<PatternWindow<IN, ACC, OUT>> implements Serializable {
+
+    private static final long serialVersionUID = 7195228733772121102L;
 
     private final DefaultSerializers.LongSerializer longSerializer = new DefaultSerializers.LongSerializer();
 

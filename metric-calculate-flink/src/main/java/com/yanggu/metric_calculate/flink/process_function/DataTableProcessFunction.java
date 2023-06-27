@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideT
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Global;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
-import com.yanggu.metric_calculate.flink.pojo.DeriveData;
+import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.streaming.api.functions.ProcessFunction;
 import org.apache.flink.util.Collector;
@@ -39,11 +39,11 @@ public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTab
         List<Derive> deriveList = dataDetailsWideTable.getDerive();
         if (CollUtil.isNotEmpty(deriveList)) {
             deriveList.forEach(tempDerive -> {
-                DeriveData deriveData = new DeriveData<>();
-                deriveData.setTableId(tableId);
-                deriveData.setFieldMap(fieldMap);
-                deriveData.setDerive(tempDerive);
-                ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveData.class)), deriveData);
+                DeriveConfigData deriveConfigData = new DeriveConfigData<>();
+                deriveConfigData.setTableId(tableId);
+                deriveConfigData.setFieldMap(fieldMap);
+                deriveConfigData.setDerive(tempDerive);
+                ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveConfigData.class)), deriveConfigData);
             });
         }
         List<Global> globalList = dataDetailsWideTable.getGlobal();
@@ -51,4 +51,5 @@ public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTab
             //TODO 全局指标
         }
     }
+
 }
