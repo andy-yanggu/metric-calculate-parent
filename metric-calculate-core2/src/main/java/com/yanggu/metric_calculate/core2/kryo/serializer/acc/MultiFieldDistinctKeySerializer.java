@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoCollectionSerializer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class MultiFieldDistinctKeySerializer extends Serializer<MultiFieldDistin
 
     private static final long serialVersionUID = -6465589424180908501L;
 
-    private CollectionSerializer<List> listCollectionSerializer = new CollectionSerializer<>();
+    private KryoCollectionSerializer<List> listCollectionSerializer = new KryoCollectionSerializer<>();
 
     @Override
     public void write(Kryo kryo, Output output, MultiFieldDistinctKey multiFieldDistinctKey) {
