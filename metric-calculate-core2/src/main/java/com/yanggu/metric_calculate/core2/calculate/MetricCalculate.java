@@ -96,6 +96,9 @@ public class MetricCalculate extends DataDetailsWideTable implements Serializabl
     }
 
     public List<DeriveMetricCalculate> getDeriveMetricCalculateListById(List<Long> deriveIdList) {
+        if (CollUtil.isEmpty(deriveIdList)) {
+            throw new RuntimeException("传入的派生指标列表为空");
+        }
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             throw new RuntimeException("派生指标列表为空");
         }

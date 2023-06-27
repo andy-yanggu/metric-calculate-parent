@@ -6,6 +6,7 @@ import lombok.Data;
 import org.apache.flink.api.common.operators.ProcessingTimeService;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
+import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.runtime.state.StateInitializationContext;
 import org.apache.flink.runtime.state.StateSnapshotContext;
@@ -42,7 +43,7 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
     /**
      * list中数据序列化方式
      */
-    private TypeSerializer<T> elementSerializer;
+    private TypeInformation<T> elementTypeInfo;
 
     /**
      * 本地缓冲
@@ -59,7 +60,7 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
     @Override
     public void initializeState(StateInitializationContext context) throws Exception {
         localBuffer = new ArrayList<>(batchSize + 1);
-        ListStateDescriptor<T> listStateDescriptor = new ListStateDescriptor<>("list-state", elementSerializer);
+        ListStateDescriptor<T> listStateDescriptor = new ListStateDescriptor<>("list-state", elementTypeInfo);
         listState = context.getOperatorStateStore().getListState(listStateDescriptor);
         //如果是状态恢复
         if (context.isRestored()) {

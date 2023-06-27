@@ -103,15 +103,7 @@ public class MetricDataService {
     public void fullFillDeriveDataByDeriveIdList(List<JSONObject> dataList, Long tableId, List<Long> deriveIdList) {
         MetricCalculate metricCalculate = metricConfigDataService.getMetricCalculate(tableId);
 
-        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
-        if (CollUtil.isEmpty(deriveMetricCalculateList)) {
-            return;
-        }
-
-        //过滤出指定的派生指标
-        deriveMetricCalculateList = deriveMetricCalculateList.stream()
-                .filter(tempDerive -> deriveIdList.contains(tempDerive.getId()))
-                .collect(Collectors.toList());
+        List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateListById(deriveIdList);
 
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return;
@@ -171,12 +163,12 @@ public class MetricDataService {
     /**
      * 更新派生指标数据
      */
-    public void correctDeriveData(UpdateMetricData updateMetricData) {
+    public <IN, ACC, OUT> void correctDeriveData(UpdateMetricData<IN, ACC, OUT> updateMetricData) {
         if (updateMetricData.getWindow().isEmpty()) {
             throw new RuntimeException("传入的window为空");
         }
         DimensionSet dimensionSet = getDimensionSet(updateMetricData.getTableId(), updateMetricData.getDeriveId(), updateMetricData.getDimensionMap());
-        MetricCube metricCube = new MetricCube<>();
+        MetricCube<IN, ACC, OUT> metricCube = new MetricCube<>();
         metricCube.setDimensionSet(dimensionSet);
         metricCube.setWindow(updateMetricData.getWindow());
         deriveMetricMiddleStore.update(metricCube);

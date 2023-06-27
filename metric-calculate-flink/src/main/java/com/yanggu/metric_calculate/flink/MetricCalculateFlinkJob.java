@@ -56,7 +56,7 @@ public class MetricCalculateFlinkJob {
                 .process(new MetricDataMetricConfigBroadcastProcessFunction());
 
         NoKeyProcessTimeMiniBatchOperator<JSONObject> deriveNoKeyProcessTimeMiniBatchOperator = new NoKeyProcessTimeMiniBatchOperator<>();
-        deriveNoKeyProcessTimeMiniBatchOperator.setElementSerializer(new JavaSerializer<>());
+        deriveNoKeyProcessTimeMiniBatchOperator.setElementTypeInfo(TypeInformation.of(JSONObject.class));
 
         SingleOutputStreamOperator<Void> tableConfigDataStream = tableSource.process(new DataTableProcessFunction());
 
@@ -86,7 +86,7 @@ public class MetricCalculateFlinkJob {
                 .process(new KeyedDeriveBroadcastProcessFunction());
 
         NoKeyProcessTimeMiniBatchOperator<MetricCube> deriveNoKeyProcessTimeMiniBatchOperator2 = new NoKeyProcessTimeMiniBatchOperator<>();
-        deriveNoKeyProcessTimeMiniBatchOperator2.setElementSerializer(new KryoSerializer<>(MetricCube.class, env.getConfig()));
+        deriveNoKeyProcessTimeMiniBatchOperator2.setElementTypeInfo(TypeInformation.of(MetricCube.class));
 
         BatchUpdateProcessFunction batchUpdateProcessFunction = new BatchUpdateProcessFunction();
         batchUpdateProcessFunction.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);

@@ -203,8 +203,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      * @return
      */
     public <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> getDeriveMetricCalculateById(Long tableId, Long deriveId) {
-        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
-        Lock readLock = readWriteLock.readLock();
+        Lock readLock = readWriteLockStriped.get(tableId).readLock();
         readLock.lock();
         try {
             MetricCalculate metricCalculate = metricMap.get(tableId);
@@ -233,8 +232,7 @@ public class MetricConfigDataService implements ApplicationRunner {
     }
 
     public List<Long> getAllDeriveIdList(Long tableId) {
-        ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
-        Lock readLock = readWriteLock.readLock();
+        Lock readLock = readWriteLockStriped.get(tableId).readLock();
         readLock.lock();
         try {
             MetricCalculate metricCalculate = metricMap.get(tableId);

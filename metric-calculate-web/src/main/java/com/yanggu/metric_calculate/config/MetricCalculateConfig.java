@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
-import com.yanggu.metric_calculate.core2.util.TLogThreadPoolExecutor;
+import com.yanggu.metric_calculate.util.TLogThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -18,9 +18,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -106,14 +104,13 @@ public class MetricCalculateConfig {
      * 配置TLog线程池
      */
     @Bean
-    public ThreadPoolExecutor tLogThreadPoolExecutor(@Value("${metric-calculate.t-log-thread-pool.core-size}") Integer coreSize,
-                                                     @Value("${metric-calculate.t-log-thread-pool.max-size}") Integer maxSize,
-                                                     @Value("${metric-calculate.t-log-thread-pool.keep-alive-time}") Long keepAliveTime,
-                                                     @Value("${metric-calculate.t-log-thread-pool.time-unit}") TimeUnit timeUnit,
-                                                     @Value("${metric-calculate.t-log-thread-pool.queue-length}") Integer queueLength,
-                                                     @Value("${metric-calculate.t-log-thread-pool.thread-name-prefix}") String threadNamePrefix) {
-        log.info("指标计算TLog线程池初始化完成: 核心大小: {}, 最大大小: {}, 存活时间: {}, 时间单位: {}, 队列大小: {}, 线程名前缀: {}", coreSize, maxSize, keepAliveTime, timeUnit, queueLength, threadNamePrefix);
-        return new TLogThreadPoolExecutor(coreSize, maxSize, keepAliveTime, timeUnit, new ArrayBlockingQueue<>(queueLength), new NamedThreadFactory(threadNamePrefix, false), new ThreadPoolExecutor.CallerRunsPolicy());
+    public TLogThreadPoolTaskExecutor tLogThreadPoolExecutor(@Value("${metric-calculate.t-log-thread-pool.core-size}") Integer coreSize,
+                                                             @Value("${metric-calculate.t-log-thread-pool.max-size}") Integer maxSize,
+                                                             @Value("${metric-calculate.t-log-thread-pool.keep-alive-second}") Integer keepAliveSeconds,
+                                                             @Value("${metric-calculate.t-log-thread-pool.queue-length}") Integer queueLength,
+                                                             @Value("${metric-calculate.t-log-thread-pool.thread-name-prefix}") String threadNamePrefix) {
+        log.info("指标计算TLog线程池初始化完成: 核心大小: {}, 最大大小: {}, 存活时间: {}秒, 队列大小: {}, 线程名前缀: {}", coreSize, maxSize, keepAliveSeconds, queueLength, threadNamePrefix);
+        return new TLogThreadPoolTaskExecutor(coreSize, maxSize, keepAliveSeconds, queueLength, new NamedThreadFactory(threadNamePrefix, false), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
 }

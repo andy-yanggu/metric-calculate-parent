@@ -74,8 +74,7 @@ metric-calculate:
   t-log-thread-pool:
     core-size: 8
     max-size: 16
-    keep-alive-time: 100
-    time-unit: MILLISECONDS
+    keep-alive-second: 100
     queue-length: 100
     thread-name-prefix: ${spring.application.name}
 

@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.pojo.PutRequest;
 import com.yanggu.metric_calculate.pojo.QueryRequest;
 import com.yanggu.metric_calculate.util.ApiResponse;
+import com.yanggu.metric_calculate.util.TLogThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,7 +23,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,7 +49,7 @@ public class MetricCalculateService {
 
     @Autowired
     @Qualifier("tLogThreadPoolExecutor")
-    private ThreadPoolExecutor threadPoolExecutor;
+    private TLogThreadPoolTaskExecutor threadPoolExecutor;
 
     /**
      * 无状态(多线程)

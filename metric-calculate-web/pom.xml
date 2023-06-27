@@ -100,10 +100,6 @@
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.yanggu</groupId>
             <artifactId>metric-calculate-core2</artifactId>
             <exclusions>

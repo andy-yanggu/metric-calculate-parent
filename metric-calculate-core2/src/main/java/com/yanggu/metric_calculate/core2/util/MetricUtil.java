@@ -161,7 +161,7 @@ public class MetricUtil {
         deriveMetricCalculate.setId(id);
 
         //设置key
-        String key = tableId + ":" + id;
+        String key = tableId + "_" + id;
         deriveMetricCalculate.setKey(key);
 
         //设置name

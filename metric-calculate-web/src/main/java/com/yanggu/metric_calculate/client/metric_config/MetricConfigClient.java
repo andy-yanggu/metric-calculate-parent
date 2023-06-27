@@ -36,6 +36,6 @@ public interface MetricConfigClient {
      * @return
      */
     @GetMapping("/all-data")
-    List<DataDetailsWideTable> allTableData();
+    List<DataDetailsWideTable> getAllTableData();
 
 }
