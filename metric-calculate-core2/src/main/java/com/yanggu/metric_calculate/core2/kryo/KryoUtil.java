@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.kryo;
 
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
@@ -43,7 +44,10 @@ public class KryoUtil {
             return output.toBytes();
         } finally {
             kryoPool.free(kryo);
+            kryo.reset();
             outputPool.free(output);
+            output.setPosition(0);
+            ReflectUtil.setFieldValue(output, "total", 0L);
         }
     }
 
@@ -66,6 +70,9 @@ public class KryoUtil {
         } finally {
             inputPool.free(input);
             kryoPool.free(kryo);
+            kryo.reset();
+            input.setPosition(0);
+            ReflectUtil.setFieldValue(input, "total", 0L);
         }
     }
 
