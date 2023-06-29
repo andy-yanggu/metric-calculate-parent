@@ -29,6 +29,8 @@ import com.yanggu.metric_calculate.flink.source_function.TableDataSourceFunction
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.configuration.Configuration;
+import org.apache.flink.configuration.RestOptions;
 import org.apache.flink.streaming.api.datastream.BroadcastStream;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
@@ -50,7 +52,10 @@ import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.d
 public class MetricCalculateFlinkJob {
 
     public static void main(String[] args) throws Exception {
-        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+        //启动一个webUI，指定本地WEB-UI端口号
+        Configuration configuration = new Configuration();
+        configuration.setInteger(RestOptions.PORT, 8081);
+        StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(configuration);
         env.setParallelism(1);
 
         //强制使用kryo
