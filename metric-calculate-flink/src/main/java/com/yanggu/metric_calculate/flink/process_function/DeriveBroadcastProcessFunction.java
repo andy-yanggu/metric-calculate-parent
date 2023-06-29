@@ -3,8 +3,7 @@ package com.yanggu.metric_calculate.flink.process_function;
 
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
+import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +12,7 @@ import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
 import org.apache.flink.runtime.state.FunctionInitializationContext;
 import org.apache.flink.runtime.state.FunctionSnapshotContext;
 import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
-import org.apache.flink.streaming.api.functions.co.KeyedBroadcastProcessFunction;
+import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
 import org.apache.flink.util.Collector;
 
 import java.io.Serializable;
@@ -21,36 +20,34 @@ import java.io.Serializable;
 import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.deriveMapStateDescriptor;
 
 @Slf4j
-public class KeyedDeriveBroadcastProcessFunction extends KeyedBroadcastProcessFunction<DimensionSet, DeriveCalculateData, DeriveConfigData, MetricCube>
+public class DeriveBroadcastProcessFunction extends BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>
                 implements CheckpointedFunction, Serializable {
 
-    private static final long serialVersionUID = 6092835299466260638L;
+    private static final long serialVersionUID = -1838715009731159197L;
 
     private String url = "http://localhost:8888/mock-model/all-derive-data";
 
     @Override
-    public void processElement(DeriveCalculateData value,
-                               KeyedBroadcastProcessFunction<DimensionSet, DeriveCalculateData, DeriveConfigData, MetricCube>.ReadOnlyContext ctx,
-                               Collector<MetricCube> out) throws Exception {
+    public void processElement(MetricCube value,
+                               BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>.ReadOnlyContext ctx,
+                               Collector<DeriveMetricCalculateResult> out) throws Exception {
         ReadOnlyBroadcastState<Long, DeriveConfigData> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
-        Long deriveId = value.getDeriveId();
+        Long deriveId = Long.parseLong(value.getDimensionSet().getKey().split("_")[1]);
         DeriveConfigData deriveConfigData = broadcastState.get(deriveId);
         if (deriveConfigData == null) {
             log.error("广播状态中没有派生指标配置数据: 派生指标id: {}", deriveId);
             return;
         }
         DeriveMetricCalculate deriveMetricCalculate = deriveConfigData.getDeriveMetricCalculate();
-        DimensionSet dimensionSet = ctx.getCurrentKey();
-        MetricCube historyMetricCube = value.getMetricCube();
-        historyMetricCube = deriveMetricCalculate.addInput(value.getData(), historyMetricCube, dimensionSet);
-        value.setMetricCube(historyMetricCube);
-        out.collect(historyMetricCube);
+        deriveMetricCalculate.getWindowFactory().setTable(value.getWindow());
+        DeriveMetricCalculateResult deriveMetricCalculateResult = value.query();
+        if (deriveMetricCalculateResult != null) {
+            out.collect(deriveMetricCalculateResult);
+        }
     }
 
     @Override
-    public void processBroadcastElement(DeriveConfigData value,
-                                        KeyedBroadcastProcessFunction<DimensionSet, DeriveCalculateData, DeriveConfigData, MetricCube>.Context ctx,
-                                        Collector<MetricCube> out) throws Exception {
+    public void processBroadcastElement(DeriveConfigData value, BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>.Context ctx, Collector<DeriveMetricCalculateResult> out) throws Exception {
         DeriveMetricCalculateUtil.initDeriveMetricCalculate(value);
         BroadcastState<Long, DeriveConfigData> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
         broadcastState.put(value.getDerive().getId(), value);

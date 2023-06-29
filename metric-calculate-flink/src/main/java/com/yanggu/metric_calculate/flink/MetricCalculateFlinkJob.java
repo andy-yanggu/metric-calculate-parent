@@ -19,18 +19,12 @@ import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoMapSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoTreeMapSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
-import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 import com.yanggu.metric_calculate.core2.window.*;
 import com.yanggu.metric_calculate.flink.operator.NoKeyProcessTimeMiniBatchOperator;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
-import com.yanggu.metric_calculate.flink.process_function.BatchReadProcessFunction;
-import com.yanggu.metric_calculate.flink.process_function.DataTableProcessFunction;
-import com.yanggu.metric_calculate.flink.process_function.KeyedDeriveBroadcastProcessFunction;
-import com.yanggu.metric_calculate.flink.process_function.MetricDataMetricConfigBroadcastProcessFunction;
-import com.yanggu.metric_calculate.flink.sink_function.BatchWriteSinkFunction;
+import com.yanggu.metric_calculate.flink.process_function.*;
 import com.yanggu.metric_calculate.flink.source_function.TableDataSourceFunction;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeHint;
@@ -48,6 +42,7 @@ import java.util.TreeMap;
 
 import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE;
 import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE_CONFIG;
+import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.deriveMapStateDescriptor;
 
 /**
  * 指标计算flink程序
@@ -97,7 +92,7 @@ public class MetricCalculateFlinkJob {
         //派生指标配置数据流
         BroadcastStream<DeriveConfigData> deriveBroadcastStream = tableConfigDataStream
                 .getSideOutput(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveConfigData.class)))
-                .broadcast(new MapStateDescriptor<>("deriveMapState", Long.class, DeriveConfigData.class));
+                .broadcast(deriveMapStateDescriptor);
 
         //将数据明细宽表数据流进行广播
         BroadcastStream<DataDetailsWideTable> tableSourceBroadcast = tableSourceDataStream
@@ -127,7 +122,7 @@ public class MetricCalculateFlinkJob {
         deriveNoKeyProcessTimeMiniBatchOperator2.setElementTypeInfo(TypeInformation.of(MetricCube.class));
 
         //派生指标数据流
-        SingleOutputStreamOperator<MetricCube> deriveBatchReadOperator = dataStream
+        dataStream
                 //分流出派生指标数据
                 .getSideOutput(new OutputTag<>(DERIVE, deriveCalculateDataTypeInformation))
                 //攒批读组件
@@ -136,18 +131,19 @@ public class MetricCalculateFlinkJob {
                 .process(batchReadProcessFunction)
                 //根据维度进行keyBy
                 .keyBy(DeriveCalculateData::getDimensionSet)
+                //连接派生指标配置流
                 .connect(deriveBroadcastStream)
-                .process(new KeyedDeriveBroadcastProcessFunction());
-
-        deriveBatchReadOperator
-                .getSideOutput(new OutputTag<>("derive-result", TypeInformation.of(DeriveMetricCalculateResult.class)))
-                .print("derive-result>>>");
-
-        deriveBatchReadOperator
+                //计算派生指标
+                .process(new KeyedDeriveBroadcastProcessFunction())
                 //攒批写组件
                 .transform("Derive Batch Update Operator", TypeInformation.of(new TypeHint<List<MetricCube>>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
                 //批写
-                .addSink(new BatchWriteSinkFunction());
+                .process(new BatchWriteProcessFunction())
+                //连接派生指标配置流
+                .connect(deriveBroadcastStream)
+                //返回计算后的数据
+                .process(new DeriveBroadcastProcessFunction())
+                .print("derive-result>>>");
 
         //全局指标数据流
         //SideOutputDataStream<JSONObject> globalDataStream = dataStream.getSideOutput(new OutputTag<>("global"));

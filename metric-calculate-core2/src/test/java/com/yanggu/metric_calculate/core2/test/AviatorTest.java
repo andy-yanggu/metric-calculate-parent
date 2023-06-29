@@ -118,6 +118,15 @@ public class AviatorTest {
         System.out.println(stringObjectMap);
     }
 
+    @Test
+    public void test6() {
+        String express = "a <= b";
+        Expression expression = AviatorEvaluator.getInstance().compile(express);
+        Map<String, Object> env = new HashMap<>();
+        Object execute = expression.execute(env);
+        System.out.println(execute);
+    }
+
     public static class Add extends AbstractFunction {
 
         @Override
