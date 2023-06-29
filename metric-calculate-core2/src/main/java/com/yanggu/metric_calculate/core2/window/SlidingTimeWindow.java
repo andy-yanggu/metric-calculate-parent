@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import lombok.Data;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +32,6 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public void deleteData() {
-    }
-
-    @Override
     public void put(Long timestamp, IN in) {
         List<TimeWindowData> timeWindowData = timeBaselineDimension.getTimeWindowList(timestamp);
         if (CollUtil.isEmpty(timeWindowData)) {
@@ -52,12 +49,20 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public void deleteData(Long timestamp) {
+    public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
+        return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(from, to)));
     }
 
     @Override
-    public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(from, to)));
+    public void deleteData() {
+        Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
+        Iterator<Map.Entry<Pair<Long, Long>, ACC>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Long key = iterator.next().getKey().getKey();
+            if (key < expireTimestamp) {
+                iterator.remove();
+            }
+        }
     }
 
     //@Override

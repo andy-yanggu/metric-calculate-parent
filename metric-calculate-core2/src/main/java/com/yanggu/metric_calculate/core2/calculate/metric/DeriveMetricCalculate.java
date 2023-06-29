@@ -189,6 +189,8 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         }
         //放入明细数据进行累加
         historyMetricCube.put(input);
+        //删除过期数据
+        historyMetricCube.deleteData();
         return historyMetricCube;
     }
 

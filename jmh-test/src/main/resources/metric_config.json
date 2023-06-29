@@ -1,7 +1,7 @@
 {
   "id": 1,
   "name": "trade_detail",
-  "derive": [
+  "deriveList": [
     {
       "id": 1,
       "name": "today_debit_asset",
@@ -522,7 +522,7 @@
       }
     }
   ],
-  "fields": [
+  "fieldList": [
     {
       "name": "trans_no",
       "valueType": "STRING",

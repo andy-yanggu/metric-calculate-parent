@@ -90,13 +90,6 @@ public class MetricCube<IN, ACC, OUT> {
         window.deleteData();
     }
 
-    public void deleteData(JSONObject input) {
-        if (isEmpty()) {
-            return;
-        }
-        window.deleteData(input);
-    }
-
     /**
      * 判断是否为空
      *

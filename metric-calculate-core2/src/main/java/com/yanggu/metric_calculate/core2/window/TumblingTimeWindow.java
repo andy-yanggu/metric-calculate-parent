@@ -5,9 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.TreeMap;
+import java.util.*;
 
 import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.TUMBLING_TIME_WINDOW;
 
@@ -29,10 +27,6 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public void deleteData() {
-    }
-
-    @Override
     public void put(Long timestamp, IN in) {
         Long aggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         ACC historyAcc = treeMap.get(aggregateTimestamp);
@@ -42,16 +36,24 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public void deleteData(Long timestamp) {
-    }
-
-    @Override
     public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
         Collection<ACC> values = treeMap.subMap(from, fromInclusive, to, toInclusive).values();
         if (CollUtil.isEmpty(values)) {
             return null;
         }
         return aggregateFieldProcessor.getMergeResult(new ArrayList<>(values));
+    }
+
+    @Override
+    public void deleteData() {
+        Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
+        Iterator<Map.Entry<Long, ACC>> iterator = treeMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Long key = iterator.next().getKey();
+            if (key < expireTimestamp) {
+                iterator.remove();
+            }
+        }
     }
 
     //@Override

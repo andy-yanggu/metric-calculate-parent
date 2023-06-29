@@ -41,23 +41,10 @@ public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OU
 
     @Override
     public DeriveMetricCalculateResult<OUT> query() {
-        return query(null);
-    }
-
-    @Override
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
         OUT out = aggregateFieldProcessor.getOutFromInList(inList);
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(out);
         return deriveMetricCalculateResult;
-    }
-
-    @Override
-    public void deleteData(JSONObject input) {
-    }
-
-    @Override
-    public void deleteData() {
     }
 
     //@Override

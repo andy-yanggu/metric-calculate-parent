@@ -6,8 +6,9 @@ import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 
 /**
- * 数据切分核心窗口
+ * 数据切分核心接口
  * <p>定义数据如何切分</p>
+ * <p>窗口内的数据如何查询</p>
  *
  * @param <OUT>
  */
@@ -49,15 +50,6 @@ public interface Window<OUT> {
      * <p>窗口条件是内部的</p>
      */
     void deleteData();
-
-    /**
-     * 删除数据
-     * <p>根据窗口条件删除数据</p>
-     * <p>窗口条件是input传入的</p>
-     *
-     * @param input
-     */
-    void deleteData(JSONObject input);
 
     ///**
     // * 合并表操作

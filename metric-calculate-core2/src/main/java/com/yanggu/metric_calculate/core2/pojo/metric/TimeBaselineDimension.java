@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 
@@ -20,7 +19,6 @@ import static java.util.Calendar.*;
 @Data
 @Slf4j
 @NoArgsConstructor
-@Accessors(chain = true)
 public class TimeBaselineDimension {
 
     /**
@@ -39,8 +37,8 @@ public class TimeBaselineDimension {
     }
 
     /**
-     * 当前数据聚合的时间戳
-     * 例如数据时间为2022-11-21 14:00:00, 时间单位为DAY, 返回2022-11-21 00:00:00的时间戳
+     * 返回当前数据聚合的时间戳
+     * <p>例如数据时间为2022-11-21 14:00:00, 时间单位为DAY, 返回2022-11-21 00:00:00的时间戳</p>
      *
      * @return
      */
@@ -131,6 +129,82 @@ public class TimeBaselineDimension {
             }
         }
         return windows;
+    }
+
+    /**
+     * 获取过期的时间戳
+     * <p>默认是2倍长度的时间周期</p>
+     *
+     * @param timestamp
+     * @return
+     */
+    public Long getExpireTimestamp(Long timestamp) {
+        int timeUnit = unit.getDateField();
+        int expireLength = 2 * length;
+        //毫秒
+        if (timeUnit == MILLISECOND) {
+            return timestamp - expireLength;
+            //秒
+        } else if (timeUnit == SECOND) {
+            return new DateTime(timestamp)
+                    .secondOfMinute()
+                    .roundFloorCopy()
+                    .plusSeconds(expireLength)
+                    .getMillis();
+            //分钟
+        } else if (timeUnit == MINUTE) {
+            return new DateTime(timestamp)
+                    .minuteOfHour()
+                    .roundFloorCopy()
+                    .minusMinutes(expireLength)
+                    .getMillis();
+            //小时
+        } else if (timeUnit == HOUR_OF_DAY) {
+            return new DateTime(timestamp)
+                    .hourOfDay()
+                    .roundFloorCopy()
+                    .minusHours(expireLength)
+                    .getMillis();
+            //日
+        } else if (timeUnit == DAY_OF_YEAR) {
+            return new DateTime(timestamp)
+                    .dayOfYear()
+                    .roundFloorCopy()
+                    .minusDays(expireLength)
+                    .getMillis();
+            //周
+        } else if (timeUnit == WEEK_OF_YEAR) {
+            return new DateTime(timestamp)
+                    .weekOfWeekyear()
+                    .roundFloorCopy()
+                    .minusWeeks(expireLength)
+                    .getMillis();
+            //月
+        } else if (timeUnit == MONTH) {
+            return new DateTime(timestamp)
+                    .monthOfYear()
+                    .roundFloorCopy()
+                    .minusMonths(expireLength)
+                    .getMillis();
+            //季度
+        } else if (timeUnit == -1) {
+            int month = new DateTime(timestamp).getMonthOfYear();
+            return new DateTime(timestamp)
+                    .monthOfYear()
+                    .roundFloorCopy()
+                    .withMonthOfYear((month + 2) / 3)
+                    .minusMonths(expireLength)
+                    .getMillis();
+            //年
+        } else if (timeUnit == YEAR) {
+            return new DateTime(timestamp)
+                    .year()
+                    .roundFloorCopy()
+                    .minusYears(expireLength)
+                    .getMillis();
+        } else {
+            throw new RuntimeException("时间单位错误: " + unit);
+        }
     }
 
 }

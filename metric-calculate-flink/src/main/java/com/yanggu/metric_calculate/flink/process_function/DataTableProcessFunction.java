@@ -36,7 +36,7 @@ public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTab
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         Long tableId = metricCalculate.getId();
 
-        List<Derive> deriveList = dataDetailsWideTable.getDerive();
+        List<Derive> deriveList = dataDetailsWideTable.getDeriveList();
         if (CollUtil.isNotEmpty(deriveList)) {
             deriveList.forEach(tempDerive -> {
                 DeriveConfigData deriveConfigData = new DeriveConfigData<>();
@@ -46,7 +46,7 @@ public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTab
                 ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveConfigData.class)), deriveConfigData);
             });
         }
-        List<Global> globalList = dataDetailsWideTable.getGlobal();
+        List<Global> globalList = dataDetailsWideTable.getGlobalList();
         if (CollUtil.isNotEmpty(globalList)) {
             //TODO 全局指标
         }

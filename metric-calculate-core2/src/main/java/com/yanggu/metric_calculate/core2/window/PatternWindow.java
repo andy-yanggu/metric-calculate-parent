@@ -83,11 +83,17 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public void deleteData(JSONObject input) {
-    }
-
-    @Override
     public void deleteData() {
+        Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
+        for (TreeMap<Long, IN> value : dataMap.values()) {
+            Iterator<Map.Entry<Long, IN>> iterator = value.entrySet().iterator();
+            while (iterator.hasNext()) {
+                Long key = iterator.next().getKey();
+                if (key < expireTimestamp) {
+                    iterator.remove();
+                }
+            }
+        }
     }
 
     //@Override
@@ -100,7 +106,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         return CollUtil.isEmpty(dataMap);
     }
 
-    public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
+    private DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
         long from = timeWindowData.getWindowStart();

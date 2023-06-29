@@ -73,7 +73,7 @@ public class MockMetricConfigDataController {
                 .flatMap(tempTable -> {
                     MetricCalculate metricCalculate = BeanUtil.copyProperties(tempTable, MetricCalculate.class);
                     MetricUtil.setFieldMap(metricCalculate);
-                    List<Derive> deriveList = metricCalculate.getDerive();
+                    List<Derive> deriveList = metricCalculate.getDeriveList();
                     return deriveList.stream()
                             .map(tempDerive -> {
                                 DeriveData deriveData = new DeriveData();

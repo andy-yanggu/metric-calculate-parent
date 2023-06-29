@@ -66,28 +66,6 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         return deriveMetricCalculateResult;
     }
 
-    @Override
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
-        List<Object> newStatusList = metricListFieldProcessor.process(input);
-        //如果状态不相同, 直接返回null
-        if (!newStatusList.equals(statusList)) {
-            return null;
-        }
-        OUT outFromInList = aggregateFieldProcessor.getOutFromInList(inList);
-        DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
-        deriveMetricCalculateResult.setStatusList(newStatusList);
-        deriveMetricCalculateResult.setResult(outFromInList);
-        return deriveMetricCalculateResult;
-    }
-
-    @Override
-    public void deleteData(JSONObject input) {
-    }
-
-    @Override
-    public void deleteData() {
-    }
-
     //@Override
     public StatusWindow<IN, ACC, OUT> merge(StatusWindow<IN, ACC, OUT> thatTable) {
 

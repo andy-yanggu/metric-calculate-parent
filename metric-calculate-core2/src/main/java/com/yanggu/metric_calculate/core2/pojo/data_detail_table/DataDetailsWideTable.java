@@ -32,21 +32,21 @@ public class DataDetailsWideTable {
     /**
      * 宽表字段
      */
-    private List<Fields> fields;
+    private List<Fields> fieldList;
 
     /**
      * 派生指标
      */
-    private List<Derive> derive;
+    private List<Derive> deriveList;
 
     /**
      * 复合指标
      */
-    private List<Composite> composite;
+    private List<Composite> compositeList;
 
     /**
      * 全局指标
      */
-    private List<Global> global;
+    private List<Global> globalList;
 
 }

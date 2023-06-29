@@ -81,7 +81,7 @@ public class MetricUtil {
         if (metricCalculate == null) {
             return;
         }
-        List<Fields> fieldsList = metricCalculate.getFields();
+        List<Fields> fieldsList = metricCalculate.getFieldList();
         if (CollUtil.isEmpty(fieldsList)) {
             return;
         }
@@ -119,7 +119,7 @@ public class MetricUtil {
         if (metricCalculate == null) {
             return;
         }
-        List<Derive> deriveList = metricCalculate.getDerive();
+        List<Derive> deriveList = metricCalculate.getDeriveList();
         if (CollUtil.isEmpty(deriveList)) {
             return;
         }
@@ -211,7 +211,7 @@ public class MetricUtil {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }
-        List<Fields> fields = metricCalculate.getFields();
+        List<Fields> fields = metricCalculate.getFieldList();
         if (CollUtil.isEmpty(fields)) {
             throw new RuntimeException("宽表字段为空, 宽表数据: " + JSONUtil.toJsonStr(metricCalculate));
         }

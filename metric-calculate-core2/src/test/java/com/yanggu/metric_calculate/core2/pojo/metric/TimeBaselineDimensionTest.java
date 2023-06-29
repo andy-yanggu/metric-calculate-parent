@@ -6,11 +6,18 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TimeBaselineDimensionTest {
 
     private final long timestamp = DateUtils.parseDateTime("2023-03-30 14:02:23");
+
+    @Test
+    public void testGetCurrentAggregateTimestamp() {
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.HOUR);
+        Long currentAggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
+        assertEquals("2023-03-30 14:00:00", DateUtils.formatDateTime(currentAggregateTimestamp));
+    }
 
     /**
      * 测试毫秒
@@ -174,5 +181,26 @@ public class TimeBaselineDimensionTest {
         assertEquals("2023-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
         assertEquals("2025-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
     }
+
+    /**
+     * 测试小时
+     */
+    @Test
+    public void testGetExpireTimestamp_hour() {
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.HOUR);
+        Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
+        assertEquals("2023-03-30 10:00:00", DateUtils.formatDateTime(expireTimestamp));
+    }
+
+    /**
+     * 测试天
+     */
+    @Test
+    public void testGetExpireTimestamp_day() {
+        TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.DAY);
+        Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
+        assertEquals("2023-03-26 00:00:00", DateUtils.formatDateTime(expireTimestamp));
+    }
+
 
 }

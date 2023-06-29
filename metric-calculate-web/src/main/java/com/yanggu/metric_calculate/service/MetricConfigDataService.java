@@ -182,7 +182,7 @@ public class MetricConfigDataService implements ApplicationRunner {
             if (metricCalculate == null) {
                 return null;
             }
-            List<Derive> deriveList = metricCalculate.getDerive();
+            List<Derive> deriveList = metricCalculate.getDeriveList();
             if (CollUtil.isEmpty(deriveList)) {
                 return null;
             }
@@ -236,7 +236,7 @@ public class MetricConfigDataService implements ApplicationRunner {
         readLock.lock();
         try {
             MetricCalculate metricCalculate = metricMap.get(tableId);
-            List<Derive> deriveList = metricCalculate.getDerive();
+            List<Derive> deriveList = metricCalculate.getDeriveList();
             if (CollUtil.isEmpty(deriveList)) {
                 return Collections.emptyList();
             }
