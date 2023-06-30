@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
@@ -22,6 +23,8 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     private MapUdafParam mapUdafParam;
 
     private Map<String, Class<?>> fieldMap;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     private AggregateFunctionFactory aggregateFunctionFactory;
 
@@ -43,11 +46,11 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         //map的key字段处理器
         this.keyFieldProcessor =
-                FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldList());
+                FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldParamList(), aviatorFunctionFactory);
 
         //map的value字段处理器
         this.valueAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseFieldProcessor(mapUdafParam.getValueAggParam(), fieldMap, aggregateFunctionFactory);
+                FieldProcessorUtil.getBaseFieldProcessor(mapUdafParam.getValueAggParam(), fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
     }
 
     @Override

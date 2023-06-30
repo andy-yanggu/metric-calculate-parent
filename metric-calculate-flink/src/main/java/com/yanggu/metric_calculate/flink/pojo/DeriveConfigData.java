@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 
@@ -16,6 +17,16 @@ public class DeriveConfigData<IN, ACC, OUT> implements Serializable {
     private Long tableId;
 
     private Map<String, Class<?>> fieldMap;
+
+    /**
+     * 自定义udf-jar的路径
+     */
+    private List<String> aviatorFunctionJarPathList;
+
+    /**
+     * 自定义udaf-jar的路径
+     */
+    private List<String> udafJarPathList;
 
     private Derive derive;
 

@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
@@ -38,11 +39,11 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     @Override
     public void init() throws Exception {
         if (numerical.multiNumber()) {
-            List<String> metricExpressList = udafParam.getMetricExpressList();
+            List<AviatorExpressParam> metricExpressList = udafParam.getMetricExpressParamList();
             if (CollUtil.isEmpty(metricExpressList)) {
                 throw new RuntimeException("度量字段列表为空");
             }
-            this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList);
+            this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList, aviatorFunctionFactory);
         } else {
             String metricExpress = udafParam.getMetricExpress();
             if (StrUtil.isBlank(metricExpress)) {

@@ -47,7 +47,9 @@ public class DeriveBroadcastProcessFunction extends BroadcastProcessFunction<Met
     }
 
     @Override
-    public void processBroadcastElement(DeriveConfigData value, BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>.Context ctx, Collector<DeriveMetricCalculateResult> out) throws Exception {
+    public void processBroadcastElement(DeriveConfigData value,
+                                        BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>.Context ctx,
+                                        Collector<DeriveMetricCalculateResult> out) throws Exception {
         DeriveMetricCalculateUtil.initDeriveMetricCalculate(value);
         BroadcastState<Long, DeriveConfigData> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
         broadcastState.put(value.getDerive().getId(), value);

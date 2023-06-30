@@ -57,7 +57,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
                     .map(tempCompareField -> new FieldOrderParam(tempCompareField.getAviatorExpressParam(), true))
                     .collect(Collectors.toList());
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, collect);
+                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, collect, aviatorFunctionFactory);
         }
 
         int retainStrategy = objective.retainStrategy();

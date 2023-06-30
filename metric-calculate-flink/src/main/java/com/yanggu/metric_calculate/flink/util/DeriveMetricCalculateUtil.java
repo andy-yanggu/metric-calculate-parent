@@ -7,10 +7,13 @@ import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONArray;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
@@ -69,6 +72,7 @@ public class DeriveMetricCalculateUtil {
         }
     }
 
+    @SneakyThrows
     public static void initDeriveMetricCalculate(DeriveConfigData deriveConfigData) {
         if (deriveConfigData == null) {
             log.error("传入的deriveData为null");
@@ -77,7 +81,11 @@ public class DeriveMetricCalculateUtil {
         Long tableId = deriveConfigData.getTableId();
         Map<String, Class<?>> fieldMap = deriveConfigData.getFieldMap();
         Derive derive = deriveConfigData.getDerive();
-        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(derive, tableId, fieldMap);
+        AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory(deriveConfigData.getAviatorFunctionJarPathList());
+        aviatorFunctionFactory.init();
+        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(deriveConfigData.getUdafJarPathList());
+        aggregateFunctionFactory.init();
+        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(derive, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
         deriveConfigData.setDeriveMetricCalculate(deriveMetricCalculate);
     }
 

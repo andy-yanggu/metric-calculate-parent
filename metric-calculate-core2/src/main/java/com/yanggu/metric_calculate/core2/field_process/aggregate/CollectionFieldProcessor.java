@@ -54,11 +54,11 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         //设置了去重字段
         if (keyStrategy == 1) {
             this.multiFieldDistinctFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldList());
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldListParamList(), aviatorFunctionFactory);
             //设置了排序字段
         } else if (keyStrategy == 2) {
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList());
+                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList(), aviatorFunctionFactory);
         }
 
         //设置了保留字段

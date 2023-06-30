@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
@@ -24,6 +25,8 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     private MixUdafParam mixUdafParam;
 
     private Map<String, Class<?>> fieldMap;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     private AggregateFunctionFactory aggregateFunctionFactory;
 
@@ -49,7 +52,7 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
         Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             FieldProcessor<JSONObject, Object> metricFieldProcessor =
-                    FieldProcessorUtil.getBaseFieldProcessor(entry.getValue(), fieldMap, aggregateFunctionFactory);
+                    FieldProcessorUtil.getBaseFieldProcessor(entry.getValue(), fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
             map.put(entry.getKey(), metricFieldProcessor);
         }
 

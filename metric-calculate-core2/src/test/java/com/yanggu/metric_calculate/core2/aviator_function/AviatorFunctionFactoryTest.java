@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.core2.aviator_function;
 
+import org.junit.Test;
+
 import static org.junit.Assert.*;
 
 /**
@@ -7,7 +9,28 @@ import static org.junit.Assert.*;
  */
 public class AviatorFunctionFactoryTest {
 
+    private static AviatorFunctionFactory aviatorFunctionFactory;
 
+    static {
+        aviatorFunctionFactory = new AviatorFunctionFactory();
+        try {
+            aviatorFunctionFactory.init();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static AviatorFunctionFactory getAviatorFunctionFactory() {
+        return aviatorFunctionFactory;
+    }
+
+    @Test
+    public void test1() throws Exception {
+        AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
+        aviatorFunctionFactory.init();
+        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("coalesce");
+        System.out.println(aviatorFunction);
+    }
 
 
 }

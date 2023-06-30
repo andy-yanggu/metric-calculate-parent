@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -46,7 +47,7 @@ public class ObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("FIRSTFIELD");
 
-        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -72,7 +73,7 @@ public class ObjectFieldProcessorTest {
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("FIRSTOBJECT");
 
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -99,7 +100,7 @@ public class ObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("LAGFIELD");
 
-        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -125,7 +126,7 @@ public class ObjectFieldProcessorTest {
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("LAGOBJECT");
 
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -152,7 +153,7 @@ public class ObjectFieldProcessorTest {
         udafParam.setRetainExpress("name");
         udafParam.setAggregateType("LASTFIELD");
 
-        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, String> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -178,7 +179,7 @@ public class ObjectFieldProcessorTest {
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("LASTOBJECT");
 
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -207,7 +208,7 @@ public class ObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -238,7 +239,7 @@ public class ObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
         udafParam.setAggregateType("MAXOBJECT");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -270,7 +271,7 @@ public class ObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -301,7 +302,7 @@ public class ObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -332,7 +333,7 @@ public class ObjectFieldProcessorTest {
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
         udafParam.setAggregateType("MINOBJECT");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -364,7 +365,7 @@ public class ObjectFieldProcessorTest {
         //金额作为比较字段
         udafParam.setObjectiveCompareFieldList(Collections.singletonList("amount"));
 
-        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(udafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         //构造原始数据
         JSONObject input = new JSONObject();

@@ -54,4 +54,14 @@ public class DataDetailsWideTable {
      */
     private List<Global> globalList;
 
+    /**
+     * 自定义udf-jar的路径
+     */
+    private List<String> aviatorFunctionJarPathList;
+
+    /**
+     * 自定义udaf-jar的路径
+     */
+    private List<String> udafJarPathList;
+
 }

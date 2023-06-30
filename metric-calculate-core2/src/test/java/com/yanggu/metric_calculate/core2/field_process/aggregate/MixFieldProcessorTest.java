@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
 import static org.junit.Assert.*;
 
 public class MixFieldProcessorTest {
@@ -87,7 +88,7 @@ public class MixFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
 
-        MixFieldProcessor<Map<String, Long>> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, getAggregateFunctionFactory());
+        MixFieldProcessor<Map<String, Long>> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         JSONObject input1 = new JSONObject();
         input1.set("amount", 100L);

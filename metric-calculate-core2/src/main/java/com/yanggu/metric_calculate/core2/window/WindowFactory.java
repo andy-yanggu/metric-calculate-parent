@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.window;
 
 
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
@@ -20,6 +21,8 @@ public class WindowFactory<IN, ACC, OUT> {
     private WindowParam windowParam;
 
     private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     private TimeFieldProcessor timeFieldProcessor;
 

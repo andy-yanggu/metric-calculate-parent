@@ -4,13 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * 时间字段
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeColumn {
+public class TimeColumn implements Serializable {
+
+    private static final long serialVersionUID = -1398712073824800181L;
 
     /**
      * 时间字段名

@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.field.FieldCalculate;
 import com.yanggu.metric_calculate.core2.calculate.field.RealFieldCalculate;
@@ -18,7 +19,6 @@ import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcess
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
@@ -26,10 +26,7 @@ import com.yanggu.metric_calculate.core2.window.WindowFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core2.enums.FieldTypeEnum.REAL;
@@ -51,6 +48,7 @@ public class MetricUtil {
      * @param tableData
      * @return
      */
+    @SneakyThrows
     public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
         if (tableData == null) {
             throw new RuntimeException("明细宽表为空");
@@ -64,11 +62,15 @@ public class MetricUtil {
         //设置宽表字段
         setFieldMap(metricCalculate);
 
+        //初始化AviatorFunctionFactory
+        AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory(metricCalculate.getAviatorFunctionJarPathList());
+        aviatorFunctionFactory.init();
+
         //初始化字段计算
-        initFieldCalculate(metricCalculate);
+        initFieldCalculate(metricCalculate, aviatorFunctionFactory);
 
         //初始化派生指标
-        initAllDerive(metricCalculate);
+        initAllDerive(metricCalculate, aviatorFunctionFactory);
 
         return metricCalculate;
     }
@@ -77,8 +79,9 @@ public class MetricUtil {
      * 初始化字段计算
      *
      * @param metricCalculate
+     * @param aviatorFunctionFactory
      */
-    private static void initFieldCalculate(MetricCalculate metricCalculate) {
+    private static void initFieldCalculate(MetricCalculate metricCalculate, AviatorFunctionFactory aviatorFunctionFactory) {
         if (metricCalculate == null) {
             return;
         }
@@ -87,13 +90,6 @@ public class MetricUtil {
             return;
         }
         List<FieldCalculate<JSONObject, Object>> fieldCalculateList = new ArrayList<>();
-
-        for (Fields fields : fieldsList) {
-            AviatorExpressParam expressParam = fields.getExpressParam();
-            if (expressParam == null) {
-                //expressParam.getUseUdfFunction() && CollUtil.isNotEmpty(expressParam.getUdfAviatorFunctionParamList())
-            }
-        }
         for (Fields fields : fieldsList) {
             FieldTypeEnum fieldType = fields.getFieldType();
             //真实字段
@@ -109,6 +105,7 @@ public class MetricUtil {
                 virtualFieldCalculate.setColumnName(fields.getName());
                 virtualFieldCalculate.setAviatorExpressParam(fields.getExpressParam());
                 virtualFieldCalculate.setFieldMap(metricCalculate.getFieldMap());
+                virtualFieldCalculate.setAviatorFunctionFactory(aviatorFunctionFactory);
                 virtualFieldCalculate.init();
                 fieldCalculateList.add(virtualFieldCalculate);
             } else {
@@ -122,8 +119,11 @@ public class MetricUtil {
      * 初始化所有派生指标
      *
      * @param metricCalculate
+     * @param aviatorFunctionFactory
      */
-    private static void initAllDerive(MetricCalculate metricCalculate) {
+    @SneakyThrows
+    private static void initAllDerive(MetricCalculate metricCalculate,
+                                      AviatorFunctionFactory aviatorFunctionFactory) {
         if (metricCalculate == null) {
             return;
         }
@@ -136,6 +136,8 @@ public class MetricUtil {
         DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleStore.init();
 
+        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(metricCalculate.getUdafJarPathList());
+        aggregateFunctionFactory.init();
 
         Long tableId = metricCalculate.getId();
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
@@ -143,7 +145,8 @@ public class MetricUtil {
                 .map(tempDerive -> {
                     metricTypeMap.put(tempDerive.getName(), DERIVE);
                     //初始化派生指标计算类
-                    DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(tempDerive, tableId, fieldMap);
+                    DeriveMetricCalculate deriveMetricCalculate =
+                            MetricUtil.initDerive(tempDerive, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
                     deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
                     return deriveMetricCalculate;
                 })
@@ -156,12 +159,16 @@ public class MetricUtil {
      * 初始化派生指标
      *
      * @param tempDerive
+     * @param aviatorFunctionFactory
+     * @param aggregateFunctionFactory
      * @return
      */
     @SneakyThrows
-    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive(Derive tempDerive,
-                                                                                Long tableId,
-                                                                                Map<String, Class<?>> fieldMap) {
+    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive
+                                            (Derive tempDerive, Long tableId,
+                                             Map<String, Class<?>> fieldMap,
+                                             AviatorFunctionFactory aviatorFunctionFactory,
+                                             AggregateFunctionFactory aggregateFunctionFactory) {
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
         //设置id
@@ -178,15 +185,12 @@ public class MetricUtil {
 
         //设置前置过滤条件处理器
         FilterFieldProcessor filterFieldProcessor =
-                FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilter());
+                FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilterExpressParam(), aviatorFunctionFactory);
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
-
-        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(tempDerive.getAggregateFunctionParam().getUdafJarPathList());
-        aggregateFunctionFactory.init();
 
         //设置聚合字段处理器
         AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
-                FieldProcessorUtil.getAggregateFieldProcessor(tempDerive.getAggregateFunctionParam(), fieldMap, aggregateFunctionFactory);
+                FieldProcessorUtil.getAggregateFieldProcessor(tempDerive.getAggregateFunctionParam(), fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
         deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
@@ -198,6 +202,7 @@ public class MetricUtil {
         windowFactory.setTimeFieldProcessor(timeFieldProcessor);
         windowFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
         windowFactory.setFieldMap(fieldMap);
+        windowFactory.setAviatorFunctionFactory(aviatorFunctionFactory);
 
         deriveMetricCalculate.setWindowFactory(windowFactory);
 

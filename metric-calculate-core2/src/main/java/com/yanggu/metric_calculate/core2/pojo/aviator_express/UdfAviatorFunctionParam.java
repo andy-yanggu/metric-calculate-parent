@@ -25,11 +25,6 @@ public class UdfAviatorFunctionParam implements Serializable {
     private Boolean isUdf;
 
     /**
-     * 自定义udaf-jar的路径
-     */
-    private List<String> udafJarPathList;
-
-    /**
      * Aviator函数的参数, key和Java字段名称一致
      */
     private Map<String, Object> param;

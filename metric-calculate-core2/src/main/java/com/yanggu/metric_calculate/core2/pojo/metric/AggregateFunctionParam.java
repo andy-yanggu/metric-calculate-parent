@@ -27,11 +27,6 @@ public class AggregateFunctionParam implements Serializable {
     private Boolean isUdaf;
 
     /**
-     * 自定义udaf-jar的路径
-     */
-    private List<String> udafJarPathList;
-
-    /**
      * 基本类型聚合函数参数
      */
     private BaseUdafParam baseUdafParam;

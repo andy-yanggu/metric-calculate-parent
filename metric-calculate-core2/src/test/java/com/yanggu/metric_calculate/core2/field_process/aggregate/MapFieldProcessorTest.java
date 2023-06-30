@@ -15,6 +15,8 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -47,9 +49,7 @@ public class MapFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
 
-        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
-        aggregateFunctionFactory.init();
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, aggregateFunctionFactory, mapUdafParam);
+        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");
@@ -58,7 +58,7 @@ public class MapFieldProcessorTest {
 
         Pair<MultiFieldDistinctKey, Integer> process = mapFieldProcessor.process(input1);
         assertEquals(new MultiFieldDistinctKey(CollUtil.toList("b")), process.getKey());
-        assertEquals(new Integer(1), process.getValue());
+        assertEquals(Integer.valueOf(1), process.getValue());
     }
 
 }

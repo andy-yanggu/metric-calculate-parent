@@ -6,7 +6,9 @@ import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,6 +28,10 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
      * 宽表字段
      */
     private Map<String, Class<?>> fieldMap;
+
+    private AviatorExpressParam filterExpressParam;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
      * 前置过滤条件表达式

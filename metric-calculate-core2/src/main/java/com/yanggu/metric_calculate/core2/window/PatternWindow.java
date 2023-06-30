@@ -2,6 +2,8 @@ package com.yanggu.metric_calculate.core2.window;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
@@ -32,6 +34,8 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private TimeBaselineDimension timeBaselineDimension;
 
+    private AviatorFunctionFactory aviatorFunctionFactory;
+
     private TreeMap<NodePattern, FilterFieldProcessor> filterFieldProcessorMap;
 
     private TimeFieldProcessor timeFieldProcessor;
@@ -47,7 +51,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
         for (NodePattern node : nodePatternList) {
             FilterFieldProcessor filterFieldProcessor =
-                    FieldProcessorUtil.getFilterFieldProcessor(fieldMap, node.getMatchExpress());
+                    FieldProcessorUtil.getFilterFieldProcessor(fieldMap, node.getMatchExpressParam(), aviatorFunctionFactory);
             tempFilterFieldProcessorMap.put(node, filterFieldProcessor);
         }
         this.filterFieldProcessorMap = tempFilterFieldProcessorMap;

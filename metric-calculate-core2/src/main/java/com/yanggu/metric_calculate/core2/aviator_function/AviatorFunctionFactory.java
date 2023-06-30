@@ -8,6 +8,7 @@ import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.SneakyThrows;
 
 import java.io.File;
@@ -33,11 +34,12 @@ public class AviatorFunctionFactory {
      */
     private static final Map<String, Class<? extends AbstractUdfAviatorFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
 
-    private Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();
+    private final Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
      */
+    @Setter
     private List<String> udafJarPathList;
 
     static {
@@ -46,9 +48,11 @@ public class AviatorFunctionFactory {
                 && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
         //扫描系统自带的聚合函数
         Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, classFilter);
-        for (Class<?> tempClazz : classSet) {
-            //添加到内置的map中
-            addClassToMap(tempClazz, BUILT_IN_FUNCTION_MAP);
+        if (CollUtil.isNotEmpty(classSet)) {
+            for (Class<?> tempClazz : classSet) {
+                //添加到内置的map中
+                addClassToMap(tempClazz, BUILT_IN_FUNCTION_MAP);
+            }
         }
     }
 
@@ -135,19 +139,14 @@ public class AviatorFunctionFactory {
      */
     @SneakyThrows
     public AbstractUdfAviatorFunction getAviatorFunction(String aviatorFunctionName) {
-        Class<? extends AbstractUdfAviatorFunction> clazz = getAviatorFunctionClass(aviatorFunctionName);
-        return clazz.getDeclaredConstructor().newInstance();
-    }
-
-    private Class<? extends AbstractUdfAviatorFunction> getAviatorFunctionClass(String aggregate) {
-        if (StrUtil.isBlank(aggregate)) {
+        if (StrUtil.isBlank(aviatorFunctionName)) {
             throw new RuntimeException("传入的聚合类型为空");
         }
-        Class<? extends AbstractUdfAviatorFunction> clazz = functionMap.get(aggregate);
+        Class<? extends AbstractUdfAviatorFunction> clazz = functionMap.get(aviatorFunctionName);
         if (clazz == null) {
-            throw new RuntimeException("传入的" + aggregate + "有误");
+            throw new RuntimeException("传入的" + aviatorFunctionName + "有误");
         }
-        return clazz;
+        return clazz.getDeclaredConstructor().newInstance();
     }
 
     private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap) {

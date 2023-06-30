@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.core2.window;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
@@ -27,6 +29,10 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
 
+    private AviatorFunctionFactory aviatorFunctionFactory;
+
+    private List<AviatorExpressParam> statusExpressParamList;
+
     private List<String> statusExpressList;
 
     private MetricListFieldProcessor metricListFieldProcessor;
@@ -37,7 +43,7 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     @Override
     public void init() {
-        this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, statusExpressList);
+        this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, statusExpressParamList, aviatorFunctionFactory);
     }
 
     @Override

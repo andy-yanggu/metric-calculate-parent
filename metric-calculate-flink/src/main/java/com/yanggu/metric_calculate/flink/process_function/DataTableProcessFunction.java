@@ -35,6 +35,8 @@ public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTab
         MetricUtil.setFieldMap(metricCalculate);
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         Long tableId = metricCalculate.getId();
+        List<String> aviatorFunctionJarPathList = metricCalculate.getAviatorFunctionJarPathList();
+        List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
 
         List<Derive> deriveList = dataDetailsWideTable.getDeriveList();
         if (CollUtil.isNotEmpty(deriveList)) {
@@ -43,6 +45,8 @@ public class DataTableProcessFunction extends ProcessFunction<DataDetailsWideTab
                 deriveConfigData.setTableId(tableId);
                 deriveConfigData.setFieldMap(fieldMap);
                 deriveConfigData.setDerive(tempDerive);
+                deriveConfigData.setAviatorFunctionJarPathList(aviatorFunctionJarPathList);
+                deriveConfigData.setUdafJarPathList(udafJarPathList);
                 ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveConfigData.class)), deriveConfigData);
             });
         }
