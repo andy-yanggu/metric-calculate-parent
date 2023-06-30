@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.core2.field_process.metric_list;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
@@ -19,9 +21,13 @@ import java.util.stream.Collectors;
 @Data
 public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List<Object>> {
 
-    private List<String> metricExpressList;
+    private List<AviatorExpressParam> metricExpressParamList;
 
     private Map<String, Class<?>> fieldMap;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
+
+    private List<String> metricExpressList;
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
@@ -35,8 +41,8 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
         }
-        this.metricFieldProcessorList = metricExpressList.stream()
-                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
+        this.metricFieldProcessorList = metricExpressParamList.stream()
+                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
                 .collect(Collectors.toList());
     }
 

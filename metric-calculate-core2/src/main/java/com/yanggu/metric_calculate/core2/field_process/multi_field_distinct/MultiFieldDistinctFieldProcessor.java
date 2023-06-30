@@ -2,8 +2,10 @@ package com.yanggu.metric_calculate.core2.field_process.multi_field_distinct;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,9 +21,13 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObject, MultiFieldDistinctKey> {
 
+    private List<AviatorExpressParam> distinctFieldListParamList;
+
     private List<String> distinctFieldList;
 
     private Map<String, Class<?>> fieldMap;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
@@ -34,8 +40,8 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
         if (CollUtil.isEmpty(distinctFieldList)) {
             throw new RuntimeException("去重字段表达式列表为空");
         }
-        this.metricFieldProcessorList = distinctFieldList.stream()
-                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress))
+        this.metricFieldProcessorList = distinctFieldListParamList.stream()
+                .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
                 .collect(Collectors.toList());
     }
 

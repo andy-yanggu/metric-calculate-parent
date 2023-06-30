@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFac
 import com.yanggu.metric_calculate.core2.aggregate_function.map.AbstractMapAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.mix.AbstractMixAggregateFunction;
 import com.yanggu.metric_calculate.core2.annotation.*;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
@@ -20,8 +21,8 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.Mult
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
@@ -90,15 +91,17 @@ public class FieldProcessorUtil {
      * 生成度量值字段处理器
      *
      * @param fieldMap      宽表字段
-     * @param metricExpress 度量表达式
+     * @param aviatorExpressParam 度量表达式
      * @return 度量值字段处理器
      */
     @SneakyThrows
     public static <R> MetricFieldProcessor<R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                      String metricExpress) {
+                                                                      AviatorExpressParam aviatorExpressParam,
+                                                                      AviatorFunctionFactory aviatorFunctionFactory) {
         MetricFieldProcessor<R> metricFieldProcessor = new MetricFieldProcessor<>();
         metricFieldProcessor.setFieldMap(fieldMap);
-        metricFieldProcessor.setMetricExpress(metricExpress);
+        metricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
+        metricFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
         metricFieldProcessor.init();
         return metricFieldProcessor;
     }
@@ -152,6 +155,18 @@ public class FieldProcessorUtil {
         tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
         tempMultiFieldOrderFieldProcessor.init();
         return tempMultiFieldOrderFieldProcessor;
+    }
+
+    @SneakyThrows
+    public static <IN> NumberFieldProcessor<IN> getNumberFieldProcessor(BaseUdafParam baseUdafParam,
+                                                                        Map<String, Class<?>> fieldMap,
+                                                                        Numerical numerical) {
+        NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>();
+        numberFieldProcessor.setUdafParam(baseUdafParam);
+        numberFieldProcessor.setFieldMap(fieldMap);
+        numberFieldProcessor.setNumerical(numerical);
+        numberFieldProcessor.init();
+        return numberFieldProcessor;
     }
 
     /**
@@ -298,11 +313,7 @@ public class FieldProcessorUtil {
         Class<? extends AggregateFunction> aggregateFunctionClass = factory.getAggregateFunctionClass(aggregateType);
         if (aggregateFunctionClass.isAnnotationPresent(Numerical.class)) {
             //数值型
-            NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>();
-            numberFieldProcessor.setUdafParam(baseUdafParam);
-            numberFieldProcessor.setFieldMap(fieldMap);
-            numberFieldProcessor.setNumerical(aggregateFunctionClass.getAnnotation(Numerical.class));
-            fieldProcessor = numberFieldProcessor;
+            fieldProcessor = getNumberFieldProcessor(baseUdafParam, fieldMap, aggregateFunctionClass.getAnnotation(Numerical.class));
         } else if (aggregateFunctionClass.isAnnotationPresent(Objective.class)) {
             //对象型
             Objective objective = aggregateFunctionClass.getAnnotation(Objective.class);

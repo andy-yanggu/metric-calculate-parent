@@ -4,9 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
+import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
+import com.yanggu.metric_calculate.core2.aviator_function.AbstractUdfAviatorFunction;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.UdfAviatorFunctionParam;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
@@ -29,9 +34,11 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
     private Map<String, Class<?>> fieldMap;
 
     /**
-     * 度量值表达式
+     *
      */
-    private String metricExpress;
+    private AviatorExpressParam aviatorExpressParam;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
      * 度量字段表达式
@@ -40,15 +47,34 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
 
     @Override
     public void init() throws Exception {
-        if (StrUtil.isBlank(metricExpress)) {
-            throw new RuntimeException("度量表达式为空");
-        }
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
-        //编译度量字段表达式
-        AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        Expression tempMetricExpression = AviatorEvaluator.compile(metricExpress, true);
+        if (aviatorExpressParam == null) {
+            throw new RuntimeException("Aviator表达式配置为空");
+        }
+        String metricExpress = aviatorExpressParam.getExpress();
+        if (StrUtil.isBlank(metricExpress)) {
+            throw new RuntimeException("度量表达式为空");
+        }
+
+        AviatorEvaluatorInstance aviatorEvaluatorInstance = AviatorEvaluator.getInstance();
+        //是否使用自定义Aviator函数
+        if (Boolean.TRUE.equals(aviatorExpressParam.getUseUdfFunction())
+                && CollUtil.isNotEmpty(aviatorExpressParam.getUdfAviatorFunctionParamList())) {
+            aviatorEvaluatorInstance = AviatorEvaluator.newInstance();
+            //设置自定义Aviator函数
+            for (UdfAviatorFunctionParam udfAviatorFunctionParam : aviatorExpressParam.getUdfAviatorFunctionParamList()) {
+                String name = udfAviatorFunctionParam.getName();
+                AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name);
+                AviatorFunctionFactory.setUdafParam(aviatorFunction, udfAviatorFunctionParam.getParam());
+                aviatorFunction.init();
+                aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
+            }
+        }
+
+        aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
+        Expression tempMetricExpression = aviatorEvaluatorInstance.compile(metricExpress, true);
         List<String> variableNames = tempMetricExpression.getVariableNames();
         //检查数据明细宽表中是否包含当前参数
         if (CollUtil.isNotEmpty(variableNames)) {
@@ -58,6 +84,7 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
                 }
             });
         }
+
         this.metricExpression = tempMetricExpression;
     }
 

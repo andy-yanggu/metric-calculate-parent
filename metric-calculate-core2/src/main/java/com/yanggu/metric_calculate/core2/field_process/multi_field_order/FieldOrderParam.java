@@ -1,18 +1,20 @@
 package com.yanggu.metric_calculate.core2.field_process.multi_field_order;
 
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FieldOrderParam {
+public class FieldOrderParam implements Serializable {
 
-    /**
-     * 计算表达式
-     */
-    private String express;
+    private static final long serialVersionUID = 7805565551770455038L;
+
+    private AviatorExpressParam aviatorExpressParam;
 
     /**
      * 是否升序, true升序, false降序

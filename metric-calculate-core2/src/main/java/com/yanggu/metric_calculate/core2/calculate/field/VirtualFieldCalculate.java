@@ -1,7 +1,9 @@
 package com.yanggu.metric_calculate.core2.calculate.field;
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import lombok.Data;
 
@@ -18,15 +20,17 @@ public class VirtualFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
 
     private String columnName;
 
-    private String express;
+    private AviatorExpressParam aviatorExpressParam;
 
     private Map<String, Class<?>> fieldMap;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     private MetricFieldProcessor<R> metricFieldProcessor;
 
     @Override
     public void init() {
-        this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, express);
+        this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, aviatorExpressParam, aviatorFunctionFactory);
     }
 
     @Override

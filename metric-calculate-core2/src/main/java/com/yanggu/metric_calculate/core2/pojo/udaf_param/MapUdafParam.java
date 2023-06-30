@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.udaf_param;
 
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public class MapUdafParam {
      * 聚合类型
      */
     private String aggregateType;
+
+    private List<AviatorExpressParam> distinctFieldParamList;
 
     /**
      * key的生成逻辑(去重字段列表)

@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.field_process.multi_field_order;
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -28,8 +29,12 @@ public class MultiFieldOrderFieldProcessorTest {
         multiFieldOrderFieldProcessor.setFieldMap(fieldMap);
 
         List<FieldOrderParam> fieldOrderParamList = new ArrayList<>();
-        fieldOrderParamList.add(new FieldOrderParam("name", true));
-        fieldOrderParamList.add(new FieldOrderParam("age", false));
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("name");
+        fieldOrderParamList.add(new FieldOrderParam(aviatorExpressParam, true));
+        AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
+        aviatorExpressParam2.setExpress("age");
+        fieldOrderParamList.add(new FieldOrderParam(aviatorExpressParam2, false));
         multiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
 
         multiFieldOrderFieldProcessor.init();

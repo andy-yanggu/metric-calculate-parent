@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 import com.yanggu.metric_calculate.core2.annotation.Collective;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
@@ -29,6 +30,8 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     private Map<String, Class<?>> fieldMap;
 
     private Collective collective;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
      * 多字段去重字段处理器
@@ -65,7 +68,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         }
         if (retainStrategy == 1) {
             this.retainFieldValueFieldProcessor =
-                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpress());
+                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpressParam(), aviatorFunctionFactory);
         }
     }
 

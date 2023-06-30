@@ -18,6 +18,7 @@ import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcess
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
@@ -86,6 +87,13 @@ public class MetricUtil {
             return;
         }
         List<FieldCalculate<JSONObject, Object>> fieldCalculateList = new ArrayList<>();
+
+        for (Fields fields : fieldsList) {
+            AviatorExpressParam expressParam = fields.getExpressParam();
+            if (expressParam == null) {
+                //expressParam.getUseUdfFunction() && CollUtil.isNotEmpty(expressParam.getUdfAviatorFunctionParamList())
+            }
+        }
         for (Fields fields : fieldsList) {
             FieldTypeEnum fieldType = fields.getFieldType();
             //真实字段
@@ -99,7 +107,7 @@ public class MetricUtil {
             } else if (VIRTUAL.equals(fieldType)) {
                 VirtualFieldCalculate<Object> virtualFieldCalculate = new VirtualFieldCalculate<>();
                 virtualFieldCalculate.setColumnName(fields.getName());
-                virtualFieldCalculate.setExpress(fields.getExpress());
+                virtualFieldCalculate.setAviatorExpressParam(fields.getExpressParam());
                 virtualFieldCalculate.setFieldMap(metricCalculate.getFieldMap());
                 virtualFieldCalculate.init();
                 fieldCalculateList.add(virtualFieldCalculate);

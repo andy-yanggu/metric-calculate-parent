@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core2.pojo.metric;
 
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -48,6 +49,11 @@ public class Derive implements Serializable {
      * 前置过滤条件
      */
     private String filter;
+
+    /**
+     * Aviator表达式参数
+     */
+    private AviatorExpressParam filterExpressParam;
 
     /**
      * 聚合函数参数

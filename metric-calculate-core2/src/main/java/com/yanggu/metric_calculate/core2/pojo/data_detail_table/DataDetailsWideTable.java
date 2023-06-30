@@ -30,6 +30,11 @@ public class DataDetailsWideTable {
     private String displayName;
 
     /**
+     * 描述信息
+     */
+    private String description;
+
+    /**
      * 宽表字段
      */
     private List<Fields> fieldList;

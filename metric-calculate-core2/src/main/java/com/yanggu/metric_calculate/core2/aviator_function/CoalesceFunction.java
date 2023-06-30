@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core2.aviator_function;
 
-import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
 import com.googlecode.aviator.runtime.type.AviatorNil;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
@@ -11,11 +10,16 @@ import java.util.Map;
  * 自定义Aviator函数
  * <p>返回第一个不为null的值, 如果都为null, 则返回nil</p>
  */
-public class CoalesceFunction extends AbstractVariadicFunction {
+@AviatorFunctionName("coalesce")
+public class CoalesceFunction extends AbstractUdfAviatorFunction {
+
+    private static final long serialVersionUID = -8698263751319322038L;
+
+    private static final String NAME = CoalesceFunction.class.getAnnotation(AviatorFunctionName.class).value();
 
     @Override
     public String getName() {
-        return "coalesce";
+        return NAME;
     }
 
     /**

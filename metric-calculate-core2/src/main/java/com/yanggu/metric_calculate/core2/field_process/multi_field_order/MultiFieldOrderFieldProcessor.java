@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.multi_field_order;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
@@ -22,6 +23,8 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
 
     private List<FieldOrderParam> fieldOrderParamList;
 
+    private AviatorFunctionFactory aviatorFunctionFactory;
+
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
     @Override
@@ -34,7 +37,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
             throw new RuntimeException("排序字段为空");
         }
         this.metricFieldProcessorList = fieldOrderParamList.stream()
-                .map(tempFieldOrderParam -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getExpress()))
+                .map(tempFieldOrderParam -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getAviatorExpressParam(), aviatorFunctionFactory))
                 .collect(Collectors.toList());
     }
 

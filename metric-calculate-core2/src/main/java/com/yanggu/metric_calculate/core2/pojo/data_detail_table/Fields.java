@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.pojo.data_detail_table;
 
 import com.yanggu.metric_calculate.core2.enums.BasicType;
 import com.yanggu.metric_calculate.core2.enums.FieldTypeEnum;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
 /**
@@ -37,8 +38,8 @@ public class Fields {
     private FieldTypeEnum fieldType;
 
     /**
-     * 字段表达式
+     * Aviator表达式参数
      */
-    private String express;
+    private AviatorExpressParam expressParam;
 
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
@@ -28,6 +29,8 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
     private Numerical numerical;
 
+    private AviatorFunctionFactory aviatorFunctionFactory;
+
     private MetricFieldProcessor<Number> metricFieldProcessor;
 
     private MetricListFieldProcessor metricListFieldProcessor;
@@ -45,7 +48,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
             if (StrUtil.isBlank(metricExpress)) {
                 throw new RuntimeException("度量字段为空");
             }
-            this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, metricExpress);
+            this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getMetricExpressParam(), aviatorFunctionFactory);
         }
     }
 

@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 import com.yanggu.metric_calculate.core2.annotation.Objective;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
@@ -32,6 +33,8 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
     private Objective objective;
 
+    private AviatorFunctionFactory aviatorFunctionFactory;
+
     /**
      * 多字段排序字段处理器
      */
@@ -50,8 +53,8 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
             if (CollUtil.isEmpty(udafParam.getObjectiveCompareFieldList())) {
                 throw new RuntimeException("对象型比较字段列表为空");
             }
-            List<FieldOrderParam> collect = udafParam.getObjectiveCompareFieldList().stream()
-                    .map(tempCompareField -> new FieldOrderParam(tempCompareField, true))
+            List<FieldOrderParam> collect = udafParam.getCollectiveSortFieldList().stream()
+                    .map(tempCompareField -> new FieldOrderParam(tempCompareField.getAviatorExpressParam(), true))
                     .collect(Collectors.toList());
             this.multiFieldOrderFieldProcessor =
                     FieldProcessorUtil.getOrderFieldProcessor(fieldMap, collect);
@@ -64,7 +67,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         //如果设置了保留字段
         if (retainStrategy == 1) {
             this.retainFieldValueFieldProcessor =
-                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpress());
+                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpressParam(), aviatorFunctionFactory);
         }
     }
 
