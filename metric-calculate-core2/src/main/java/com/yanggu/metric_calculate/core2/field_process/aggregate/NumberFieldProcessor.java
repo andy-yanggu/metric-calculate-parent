@@ -45,11 +45,11 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
             }
             this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList, aviatorFunctionFactory);
         } else {
-            String metricExpress = udafParam.getMetricExpress();
-            if (StrUtil.isBlank(metricExpress)) {
+            AviatorExpressParam metricExpress = udafParam.getMetricExpressParam();
+            if (metricExpress == null || StrUtil.isBlank(metricExpress.getExpress())) {
                 throw new RuntimeException("度量字段为空");
             }
-            this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getMetricExpressParam(), aviatorFunctionFactory);
+            this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, metricExpress, aviatorFunctionFactory);
         }
     }
 

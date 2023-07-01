@@ -27,14 +27,12 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
 
     private AviatorFunctionFactory aviatorFunctionFactory;
 
-    private List<String> metricExpressList;
-
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
     @SneakyThrows
     @Override
     public void init() {
-        if (CollUtil.isEmpty(metricExpressList)) {
+        if (CollUtil.isEmpty(metricExpressParamList)) {
             throw new RuntimeException("表达式列表为空");
         }
 

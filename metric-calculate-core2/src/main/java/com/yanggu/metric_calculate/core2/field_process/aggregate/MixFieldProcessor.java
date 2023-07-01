@@ -52,7 +52,7 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
         Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             FieldProcessor<JSONObject, Object> metricFieldProcessor =
-                    FieldProcessorUtil.getBaseFieldProcessor(entry.getValue(), fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+                    FieldProcessorUtil.getBaseFieldProcessor(fieldMap, entry.getValue(), aviatorFunctionFactory, aggregateFunctionFactory);
             map.put(entry.getKey(), metricFieldProcessor);
         }
 

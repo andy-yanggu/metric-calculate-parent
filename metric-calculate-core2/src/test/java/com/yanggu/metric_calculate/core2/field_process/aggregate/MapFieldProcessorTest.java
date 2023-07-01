@@ -5,18 +5,15 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
-import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
+import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getMapFieldProcessor;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -49,7 +46,7 @@ public class MapFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
 
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");

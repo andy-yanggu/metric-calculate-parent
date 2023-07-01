@@ -58,7 +58,7 @@ public class WindowFactory<IN, ACC, OUT> {
             StatusWindow<IN, ACC, OUT> statusWindowTable = new StatusWindow<>();
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             statusWindowTable.setFieldMap(fieldMap);
-            statusWindowTable.setStatusExpressList(windowParam.getStatusExpressList());
+            statusWindowTable.setStatusExpressParamList(windowParam.getStatusExpressParamList());
             statusWindowTable.init();
             return statusWindowTable;
             //全窗口
@@ -110,7 +110,7 @@ public class WindowFactory<IN, ACC, OUT> {
             StatusWindow<IN, ACC, OUT> statusWindowTable = ((StatusWindow<IN, ACC, OUT>) window);
             statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
             statusWindowTable.setFieldMap(fieldMap);
-            statusWindowTable.setStatusExpressList(windowParam.getStatusExpressList());
+            statusWindowTable.setStatusExpressParamList(windowParam.getStatusExpressParamList());
             statusWindowTable.init();
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {

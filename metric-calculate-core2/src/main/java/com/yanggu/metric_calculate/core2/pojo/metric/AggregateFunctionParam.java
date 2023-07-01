@@ -6,7 +6,6 @@ import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * 聚合函数参数配置类

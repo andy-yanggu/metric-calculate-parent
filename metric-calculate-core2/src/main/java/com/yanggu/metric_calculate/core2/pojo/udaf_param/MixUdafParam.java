@@ -3,13 +3,14 @@ package com.yanggu.metric_calculate.core2.pojo.udaf_param;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Map;
 
 /**
  * 混合聚合类型参数
  */
 @Data
-public class MixUdafParam {
+public class MixUdafParam implements Serializable {
 
     /**
      * 聚合类型
@@ -22,12 +23,10 @@ public class MixUdafParam {
      */
     private Map<String, BaseUdafParam> mixAggMap;
 
-    private AviatorExpressParam metricExpressParam;
-
     /**
      * 多个聚合值的计算表达式
      */
-    private String express;
+    private AviatorExpressParam metricExpressParam;
 
     /**
      * udaf函数中的参数

@@ -23,8 +23,6 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
 
     private List<AviatorExpressParam> distinctFieldListParamList;
 
-    private List<String> distinctFieldList;
-
     private Map<String, Class<?>> fieldMap;
 
     private AviatorFunctionFactory aviatorFunctionFactory;
@@ -37,7 +35,7 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
             throw new RuntimeException("明细宽表字段map为空");
         }
 
-        if (CollUtil.isEmpty(distinctFieldList)) {
+        if (CollUtil.isEmpty(distinctFieldListParamList)) {
             throw new RuntimeException("去重字段表达式列表为空");
         }
         this.metricFieldProcessorList = distinctFieldListParamList.stream()

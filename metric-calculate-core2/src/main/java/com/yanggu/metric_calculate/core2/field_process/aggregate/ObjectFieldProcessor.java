@@ -50,11 +50,11 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         int keyStrategy = objective.keyStrategy();
         //如果是设置了比较字段
         if (keyStrategy == 3) {
-            if (CollUtil.isEmpty(udafParam.getObjectiveCompareFieldList())) {
+            if (CollUtil.isEmpty(udafParam.getObjectiveCompareFieldParamList())) {
                 throw new RuntimeException("对象型比较字段列表为空");
             }
-            List<FieldOrderParam> collect = udafParam.getCollectiveSortFieldList().stream()
-                    .map(tempCompareField -> new FieldOrderParam(tempCompareField.getAviatorExpressParam(), true))
+            List<FieldOrderParam> collect = udafParam.getObjectiveCompareFieldParamList().stream()
+                    .map(tempCompareField -> new FieldOrderParam(tempCompareField, true))
                     .collect(Collectors.toList());
             this.multiFieldOrderFieldProcessor =
                     FieldProcessorUtil.getOrderFieldProcessor(fieldMap, collect, aviatorFunctionFactory);

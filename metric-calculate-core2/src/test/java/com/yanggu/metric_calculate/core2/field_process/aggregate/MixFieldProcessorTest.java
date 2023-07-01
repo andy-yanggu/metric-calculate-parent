@@ -5,7 +5,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
-import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
+import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getMixFieldProcessor;
 import static org.junit.Assert.*;
 
 public class MixFieldProcessorTest {
@@ -88,7 +87,7 @@ public class MixFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
 
-        MixFieldProcessor<Map<String, Long>> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MixFieldProcessor<Map<String, Long>> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("amount", 100L);

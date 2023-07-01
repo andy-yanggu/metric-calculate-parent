@@ -34,7 +34,7 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
     private Map<String, Class<?>> fieldMap;
 
     /**
-     *
+     * 表达式配置
      */
     private AviatorExpressParam aviatorExpressParam;
 
@@ -47,15 +47,11 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
 
     @Override
     public void init() throws Exception {
-        if (CollUtil.isEmpty(fieldMap)) {
-            throw new RuntimeException("明细宽表字段map为空");
-        }
-        if (aviatorExpressParam == null) {
+        if (aviatorExpressParam == null || StrUtil.isBlank(aviatorExpressParam.getExpress())) {
             throw new RuntimeException("Aviator表达式配置为空");
         }
-        String metricExpress = aviatorExpressParam.getExpress();
-        if (StrUtil.isBlank(metricExpress)) {
-            throw new RuntimeException("度量表达式为空");
+        if (CollUtil.isEmpty(fieldMap)) {
+            throw new RuntimeException("明细宽表字段map为空");
         }
 
         AviatorEvaluatorInstance aviatorEvaluatorInstance = AviatorEvaluator.getInstance();
@@ -74,7 +70,7 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
         }
 
         aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        Expression tempMetricExpression = aviatorEvaluatorInstance.compile(metricExpress, true);
+        Expression tempMetricExpression = aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
         List<String> variableNames = tempMetricExpression.getVariableNames();
         //检查数据明细宽表中是否包含当前参数
         if (CollUtil.isNotEmpty(variableNames)) {

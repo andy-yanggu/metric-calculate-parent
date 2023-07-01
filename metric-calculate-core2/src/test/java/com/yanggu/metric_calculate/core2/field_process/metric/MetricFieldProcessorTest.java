@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.metric;
 
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -24,7 +25,12 @@ public class MetricFieldProcessorTest {
         MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
-        assertEquals("度量表达式为空", runtimeException.getMessage());
+        assertEquals("Aviator表达式配置为空", runtimeException.getMessage());
+
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        metricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
+        runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
+        assertEquals("Aviator表达式配置为空", runtimeException.getMessage());
     }
 
     /**
@@ -32,11 +38,13 @@ public class MetricFieldProcessorTest {
      */
     @Test
     public void init2() {
-        //MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
-        //metricFieldProcessor.setMetricExpress("metricExpress");
-        //
-        //RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
-        //assertEquals("明细宽表字段map为空", runtimeException.getMessage());
+        MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("test");
+        metricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
+        assertEquals("明细宽表字段map为空", runtimeException.getMessage());
     }
 
     /**
@@ -48,7 +56,9 @@ public class MetricFieldProcessorTest {
     public void init3() throws Exception {
         String metricExpress = "amount";
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
-        //objectMetricFieldProcessor.setMetricExpress(metricExpress);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(metricExpress);
+        objectMetricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount2", BigDecimal.class);
@@ -67,7 +77,9 @@ public class MetricFieldProcessorTest {
     @Test
     public void init4() throws Exception {
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
-        //objectMetricFieldProcessor.setMetricExpress("amount");
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("amount");
+        objectMetricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
@@ -76,7 +88,7 @@ public class MetricFieldProcessorTest {
         objectMetricFieldProcessor.init();
 
         assertEquals(AviatorEvaluator.compile("amount", true).toString(), objectMetricFieldProcessor.getMetricExpression().toString());
-        //assertEquals("amount", objectMetricFieldProcessor.getMetricExpress());
+        assertEquals(aviatorExpressParam, objectMetricFieldProcessor.getAviatorExpressParam());
         assertEquals(fieldMap, objectMetricFieldProcessor.getFieldMap());
 
     }
@@ -89,7 +101,9 @@ public class MetricFieldProcessorTest {
     @Test
     public void process() throws Exception {
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
-        //objectMetricFieldProcessor.setMetricExpress("amount");
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("amount");
+        objectMetricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
         HashMap<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
         }};

@@ -50,7 +50,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         //map的value字段处理器
         this.valueAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseFieldProcessor(mapUdafParam.getValueAggParam(), fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+                FieldProcessorUtil.getBaseFieldProcessor(fieldMap, mapUdafParam.getValueAggParam(), aviatorFunctionFactory, aggregateFunctionFactory);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
             throw new RuntimeException("宽表字段为空");
         }
 
-        if (CollUtil.isEmpty(mapUdafParam.getDistinctFieldList())) {
+        if (CollUtil.isEmpty(mapUdafParam.getDistinctFieldParamList())) {
             throw new RuntimeException("去重字段列表为空");
         }
     }

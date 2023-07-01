@@ -72,8 +72,8 @@ public class BaseMixAggregateFunctionTest {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         accumulator.put("test1", 1.0D);
         accumulator.put("test2", 2.0D);
-        Object result = baseMixAggregateFunction.getResult(accumulator);
-        assertEquals(3.0D, ((Double) result), 0.0D);
+        Double result = baseMixAggregateFunction.getResult(accumulator);
+        assertEquals(3.0D, result, 0.0D);
     }
 
     @Test

@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.metric_list;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -22,7 +23,9 @@ public class MetricListFieldProcessorTest {
     @Test
     public void init2() {
         MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
-        metricListFieldProcessor.setMetricExpressList(CollUtil.toList("test1"));
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("test1");
+        metricListFieldProcessor.setMetricExpressParamList(CollUtil.toList(aviatorExpressParam));
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
         assertEquals("宽表字段为空", runtimeException.getMessage());
     }
@@ -36,7 +39,11 @@ public class MetricListFieldProcessorTest {
         fieldMap.put("test2", String.class);
 
         metricListFieldProcessor.setFieldMap(fieldMap);
-        metricListFieldProcessor.setMetricExpressList(CollUtil.toList("test1", "test2"));
+        AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
+        aviatorExpressParam1.setExpress("test1");
+        AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
+        aviatorExpressParam2.setExpress("test2");
+        metricListFieldProcessor.setMetricExpressParamList(CollUtil.toList(aviatorExpressParam1, aviatorExpressParam2));
         metricListFieldProcessor.init();
 
         JSONObject input = new JSONObject();

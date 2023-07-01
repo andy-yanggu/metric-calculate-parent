@@ -3,14 +3,16 @@ package com.yanggu.metric_calculate.core2.pojo.udaf_param;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
-public class NodePattern implements Comparable<NodePattern> {
+public class NodePattern implements Comparable<NodePattern>, Serializable {
+
+    private static final long serialVersionUID = 2449075043333799390L;
 
     private Integer index;
 
     private String name;
-
-    private String matchExpress;
 
     /**
      * Aviator表达式参数

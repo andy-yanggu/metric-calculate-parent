@@ -29,30 +29,31 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
      */
     private Map<String, Class<?>> fieldMap;
 
-    private AviatorExpressParam filterExpressParam;
-
-    private AviatorFunctionFactory aviatorFunctionFactory;
-
     /**
      * 前置过滤条件表达式
      */
-    private String filterExpress;
+    private AviatorExpressParam filterExpressParam;
+
+    private AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
      * 前置过滤表达式
      */
     private Expression filterExpression;
 
-    public FilterFieldProcessor(Map<String, Class<?>> fieldMap, String filterExpress) {
+    public FilterFieldProcessor(Map<String, Class<?>> fieldMap, AviatorExpressParam filterExpressParam) {
         this.fieldMap = fieldMap;
-        this.filterExpress = filterExpress;
+        this.filterExpressParam = filterExpressParam;
     }
 
-    //编译前置过滤表达式
+    /**
+     * 编译前置过滤表达式
+     * @throws Exception
+     */
     @Override
     public void init() throws Exception {
         //如果前置为空, 直接return
-        if (StrUtil.isBlank(filterExpress)) {
+        if (filterExpressParam == null || StrUtil.isBlank(filterExpressParam.getExpress())) {
             return;
         }
         if (CollUtil.isEmpty(fieldMap)) {
@@ -60,10 +61,10 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
         }
         //设置反射调用
         AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        Expression tempFilterExpression = AviatorEvaluator.compile(filterExpress, true);
+        Expression tempFilterExpression = AviatorEvaluator.compile(filterExpressParam.getExpress(), true);
         List<String> variableNames = tempFilterExpression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
-            throw new RuntimeException("过滤条件为常量表达式, 没有意义: " + filterExpress);
+            throw new RuntimeException("过滤条件为常量表达式, 没有意义: " + filterExpressParam.getExpress());
         }
         //验证数据明细宽表中是否包含该字段
         variableNames.forEach(tempName -> {
@@ -78,7 +79,7 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
     @Override
     public Boolean process(JSONObject input) {
         //如果表达式为空, 直接return true
-        if (StrUtil.isBlank(filterExpress)) {
+        if (filterExpressParam == null || StrUtil.isBlank(filterExpressParam.getExpress())) {
             return true;
         }
         //执行过滤表达式

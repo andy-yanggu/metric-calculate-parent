@@ -33,7 +33,7 @@ public class ListObjectAggregateFunctionTest {
     @Test
     public void testConstructor() {
         ListObjectAggregateFunction<Integer> listObjectAggregateFunction = new ListObjectAggregateFunction<>();
-        assertEquals(new Integer(10), listObjectAggregateFunction.getLimit());
+        assertEquals(Integer.valueOf(10), listObjectAggregateFunction.getLimit());
     }
 
     @Test

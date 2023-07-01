@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.filter;
 
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -37,7 +38,9 @@ public class FilterFieldProcessorTest {
     public void init2() throws Exception {
         String filterExpress = "true";
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
-        filterFieldProcessor.setFilterExpress(filterExpress);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(filterExpress);
+        filterFieldProcessor.setFilterExpressParam(aviatorExpressParam);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, filterFieldProcessor::init);
         assertEquals("明细宽表字段map为空", runtimeException.getMessage());
@@ -57,7 +60,9 @@ public class FilterFieldProcessorTest {
             put("amount", BigDecimal.class);
         }};
         filterFieldProcessor.setFieldMap(fieldMap);
-        filterFieldProcessor.setFilterExpress(filterExpress);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(filterExpress);
+        filterFieldProcessor.setFilterExpressParam(aviatorExpressParam);
         RuntimeException runtimeException = assertThrows(RuntimeException.class, filterFieldProcessor::init);
 
         assertEquals("过滤条件为常量表达式, 没有意义: " + filterExpress, runtimeException.getMessage());
@@ -73,7 +78,9 @@ public class FilterFieldProcessorTest {
         String filterExpress = "amount > 100.00";
 
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
-        filterFieldProcessor.setFilterExpress(filterExpress);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(filterExpress);
+        filterFieldProcessor.setFilterExpressParam(aviatorExpressParam);
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount2", BigDecimal.class);
         }};
@@ -93,7 +100,9 @@ public class FilterFieldProcessorTest {
         String filterExpress = "amount > 100.00";
 
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
-        filterFieldProcessor.setFilterExpress(filterExpress);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(filterExpress);
+        filterFieldProcessor.setFilterExpressParam(aviatorExpressParam);
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
         }};
@@ -101,7 +110,7 @@ public class FilterFieldProcessorTest {
         filterFieldProcessor.init();
 
         assertEquals(AviatorEvaluator.compile(filterExpress, true).toString(), filterFieldProcessor.getFilterExpression().toString());
-        assertEquals(filterExpress, filterFieldProcessor.getFilterExpress());
+        assertEquals(aviatorExpressParam, filterFieldProcessor.getFilterExpressParam());
         assertEquals(fieldMap, filterFieldProcessor.getFieldMap());
     }
 
@@ -117,7 +126,9 @@ public class FilterFieldProcessorTest {
             put("amount", BigDecimal.class);
         }};
 
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, aviatorExpressParam);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -142,7 +153,9 @@ public class FilterFieldProcessorTest {
             put("name", String.class);
         }};
 
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, aviatorExpressParam);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -167,7 +180,9 @@ public class FilterFieldProcessorTest {
             put("amount", Long.class);
         }};
 
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, aviatorExpressParam);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -192,7 +207,9 @@ public class FilterFieldProcessorTest {
             put("result", Boolean.class);
         }};
 
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, aviatorExpressParam);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -218,7 +235,9 @@ public class FilterFieldProcessorTest {
             put("age", Long.class);
         }};
 
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, aviatorExpressParam);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();
@@ -244,7 +263,9 @@ public class FilterFieldProcessorTest {
             put("amount", BigDecimal.class);
         }};
 
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, express);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress(express);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, aviatorExpressParam);
         filterFieldProcessor.init();
 
         JSONObject jsonObject = new JSONObject();

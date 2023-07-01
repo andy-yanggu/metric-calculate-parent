@@ -28,7 +28,7 @@ public class SlidingCountWindowAggregateFunctionTest {
     @Test
     public void testConstructor() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
-        assertEquals(new Integer(10), slidingCountWindowAggregateFunction.getLimit());
+        assertEquals(Integer.valueOf(10), slidingCountWindowAggregateFunction.getLimit());
         assertNull(slidingCountWindowAggregateFunction.getAggregateFunction());
     }
 
@@ -49,17 +49,17 @@ public class SlidingCountWindowAggregateFunctionTest {
         List<Integer> accumulator = slidingCountWindowAggregateFunction.createAccumulator();
         slidingCountWindowAggregateFunction.add(1, accumulator);
         assertEquals(1, accumulator.size());
-        assertEquals(new Integer(1), accumulator.get(0));
+        assertEquals(Integer.valueOf(1), accumulator.get(0));
 
         slidingCountWindowAggregateFunction.add(2, accumulator);
         assertEquals(2, accumulator.size());
-        assertEquals(new Integer(1), accumulator.get(0));
-        assertEquals(new Integer(2), accumulator.get(1));
+        assertEquals(Integer.valueOf(1), accumulator.get(0));
+        assertEquals(Integer.valueOf(2), accumulator.get(1));
 
         slidingCountWindowAggregateFunction.add(3, accumulator);
         assertEquals(2, accumulator.size());
-        assertEquals(new Integer(2), accumulator.get(0));
-        assertEquals(new Integer(3), accumulator.get(1));
+        assertEquals(Integer.valueOf(2), accumulator.get(0));
+        assertEquals(Integer.valueOf(3), accumulator.get(1));
     }
 
     @Test

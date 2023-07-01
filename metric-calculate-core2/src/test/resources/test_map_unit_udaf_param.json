@@ -1,10 +1,14 @@
 {
   "aggregateType": "BASEMAP",
-  "distinctFieldList": [
-    "account_no_in"
+  "distinctFieldParamList" : [
+    {
+      "express" : "account_no_in"
+    }
   ],
   "valueAggParam": {
     "aggregateType": "SUM",
-    "metricExpress": "amount"
+    "metricExpressParam": {
+      "express": "amount"
+    }
   }
 }

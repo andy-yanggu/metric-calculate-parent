@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -11,8 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
-import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
+import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getBaseFieldProcessor;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -28,10 +27,12 @@ public class NumberFieldProcessorTest {
 
         String aggregateType = "SUM";
         BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setMetricExpress("amount");
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("amount");
+        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
         baseUdafParam.setAggregateType(aggregateType);
 
-        FieldProcessor<JSONObject, Double> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAviatorFunctionFactory() ,getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", 100.0D);
@@ -48,13 +49,18 @@ public class NumberFieldProcessorTest {
     public void testProcess_CovUnit() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("COV");
-        baseUdafParam.setMetricExpressList(Arrays.asList("amount", "amount1"));
+        AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
+        aviatorExpressParam1.setExpress("amount");
+
+        AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
+        aviatorExpressParam2.setExpress("amount1");
+        baseUdafParam.setMetricExpressParamList(Arrays.asList(aviatorExpressParam1, aviatorExpressParam2));
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Long.class);
         fieldMap.put("amount1", Long.class);
 
-        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = FieldProcessorUtil.getBaseFieldProcessor(baseUdafParam, fieldMap, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject input = new JSONObject();
         input.set("amount", 1L);
@@ -64,7 +70,6 @@ public class NumberFieldProcessorTest {
         assertEquals(2, process.size());
         assertEquals(1L, process.get(0));
         assertEquals(2L, process.get(1));
-
     }
 
 }

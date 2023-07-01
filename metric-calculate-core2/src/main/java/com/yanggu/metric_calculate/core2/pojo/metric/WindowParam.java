@@ -42,12 +42,10 @@ public class WindowParam implements Serializable {
      */
     private Integer limit;
 
-    private List<AviatorExpressParam> statusExpressParamList;
-
     /**
      * 状态窗口表达式列表
      */
-    private List<String> statusExpressList;
+    private List<AviatorExpressParam> statusExpressParamList;
 
     /**
      * 事件模式数据

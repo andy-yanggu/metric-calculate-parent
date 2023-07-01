@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core2.field_process.multi_field_distinct;
 
 import cn.hutool.json.JSONObject;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -29,8 +30,10 @@ public class MultiFieldDistinctFieldProcessorTest {
         fieldMap.put("age", Integer.class);
         multiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
 
-        List<String> metricList = Collections.singletonList("name");
-        multiFieldDistinctFieldProcessor.setDistinctFieldList(metricList);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("name");
+        List<AviatorExpressParam> metricList = Collections.singletonList(aviatorExpressParam);
+        multiFieldDistinctFieldProcessor.setDistinctFieldListParamList(metricList);
 
         multiFieldDistinctFieldProcessor.init();
 

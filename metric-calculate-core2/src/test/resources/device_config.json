@@ -25,20 +25,28 @@
           "mixAggMap": {
             "max_timestamp": {
               "aggregateType": "MAX",
-              "metricExpress": "timestamp"
+              "metricExpressParam" : {
+                "express": "timestamp"
+              }
             },
             "min_timestamp": {
               "aggregateType": "MIN",
-              "metricExpress": "timestamp"
+              "metricExpressParam" : {
+                "express": "timestamp"
+              }
             }
           },
-          "express": "max_timestamp - min_timestamp"
+          "metricExpressParam" : {
+            "express": "max_timestamp - min_timestamp"
+          }
         }
       },
       "windowParam": {
         "windowType": "STATUS_WINDOW",
-        "statusExpressList": [
-          "status"
+        "statusExpressParamList": [
+          {
+            "express": "status"
+          }
         ]
       }
     }

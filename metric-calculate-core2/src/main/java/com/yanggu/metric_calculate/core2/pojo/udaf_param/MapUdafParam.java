@@ -17,12 +17,10 @@ public class MapUdafParam {
      */
     private String aggregateType;
 
-    private List<AviatorExpressParam> distinctFieldParamList;
-
     /**
      * key的生成逻辑(去重字段列表)
      */
-    private List<String> distinctFieldList;
+    private List<AviatorExpressParam> distinctFieldParamList;
 
     /**
      * value的聚合函数参数。只能是数值型、集合型、对象型

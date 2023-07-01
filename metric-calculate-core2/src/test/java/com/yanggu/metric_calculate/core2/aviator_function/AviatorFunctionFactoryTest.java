@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  */
 public class AviatorFunctionFactoryTest {
 
-    private static AviatorFunctionFactory aviatorFunctionFactory;
+    private static final AviatorFunctionFactory aviatorFunctionFactory;
 
     static {
         aviatorFunctionFactory = new AviatorFunctionFactory();

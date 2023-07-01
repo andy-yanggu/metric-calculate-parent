@@ -49,7 +49,7 @@ public class NumberTest {
                 ClassLoader.getSystemClassLoader()  /// parent
         );
         Class<?> clazz = cl.loadClass("com.yanggu.metric_calculate.core2.aggregate_function.numeric.Sum_Double_AggregateFunction");
-        Object obj = clazz.newInstance();
+        Object obj = clazz.getDeclaredConstructor().newInstance();
         AggregateFunction<Double, Double, Double> aggregateFunction = (AggregateFunction) obj;
         Double accumulator = aggregateFunction.createAccumulator();
         accumulator = aggregateFunction.add(1.0D, accumulator);

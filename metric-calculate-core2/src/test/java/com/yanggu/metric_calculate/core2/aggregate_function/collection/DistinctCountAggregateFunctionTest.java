@@ -69,7 +69,7 @@ public class DistinctCountAggregateFunctionTest {
         HashSet<Integer> mock = Mockito.mock(HashSet.class);
         Mockito.when(mock.size()).thenReturn(1);
         Integer result = distinctCount.getResult(mock);
-        assertEquals(new Integer(1), result);
+        assertEquals(Integer.valueOf(1), result);
         //验证依赖方法
         Mockito.verify(mock, Mockito.times(1)).size();
     }

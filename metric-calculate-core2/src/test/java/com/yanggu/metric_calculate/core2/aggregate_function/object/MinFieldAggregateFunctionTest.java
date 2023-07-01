@@ -45,10 +45,10 @@ public class MinFieldAggregateFunctionTest {
         MutableObj<Integer> accumulator = minFieldAggregateFunction.createAccumulator();
 
         minFieldAggregateFunction.add(1, accumulator);
-        assertEquals(new Integer(1), accumulator.get());
+        assertEquals(Integer.valueOf(1), accumulator.get());
 
         minFieldAggregateFunction.add(2, accumulator);
-        assertEquals(new Integer(1), accumulator.get());
+        assertEquals(Integer.valueOf(1), accumulator.get());
 
     }
 
@@ -60,7 +60,7 @@ public class MinFieldAggregateFunctionTest {
         minFieldAggregateFunction.add(1, accumulator);
         Integer result = minFieldAggregateFunction.getResult(accumulator);
 
-        assertEquals(new Integer(1), result);
+        assertEquals(Integer.valueOf(1), result);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MinFieldAggregateFunctionTest {
         minFieldAggregateFunction.add(2, accumulator2);
 
         MutableObj<Integer> merge = minFieldAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(new Integer(1), merge.get());
+        assertEquals(Integer.valueOf(1), merge.get());
     }
 
 }

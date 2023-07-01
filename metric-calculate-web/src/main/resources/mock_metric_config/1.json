@@ -23,7 +23,9 @@
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress": "debit_amt_out"
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
         }
       },
       "windowParam": {
@@ -59,7 +61,9 @@
         "calculateLogic": "MIN",
         "baseUdafParam": {
           "aggregateType": "MIN",
-          "metricExpress": "debit_amt_out"
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
         }
       },
       "windowParam": {
@@ -94,11 +98,16 @@
       "aggregateFunctionParam": {
         "calculateLogic": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
+          "calculateLogic": "SORTEDLIMITLISTFIELD",
           "aggregateType": "SORTEDLIMITLISTFIELD",
-          "retainExpress": "debit_amt_out",
+          "retainExpressParam" : {
+            "express": "debit_amt_out"
+          },
           "collectiveSortFieldList": [
             {
-              "express": "debit_amt_out",
+              "aviatorExpressParam": {
+                "express": "debit_amt_out"
+              },
               "asc": false
             }
           ],
@@ -140,9 +149,13 @@
         "calculateLogic": "MAXFIELD",
         "baseUdafParam": {
           "aggregateType": "MAXFIELD",
-          "retainExpress": "trans_timestamp",
-          "objectiveCompareFieldList": [
-            "debit_amt_out"
+          "retainExpressParam" : {
+            "express": "trans_timestamp"
+          },
+          "objectiveCompareFieldParamList": [
+            {
+              "express": "debit_amt_out"
+            }
           ]
         }
       },
@@ -179,7 +192,9 @@
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress": "debit_amt_out"
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
         }
       },
       "windowParam": {
@@ -254,7 +269,9 @@
           "aggregateType": "SORTEDLIMITLISTOBJECT",
           "collectiveSortFieldList": [
             {
-              "express": "debit_amt_out",
+              "aviatorExpressParam" : {
+                "express": "debit_amt_out"
+              },
               "asc": true
             }
           ],
@@ -296,12 +313,16 @@
         "calculateLogic": "BASEMAP",
         "mapUdafParam": {
           "aggregateType": "BASEMAP",
-          "distinctFieldList": [
-            "account_no_in"
+          "distinctFieldParamList" : [
+            {
+              "express": "account_no_in"
+            }
           ],
           "valueAggParam": {
             "aggregateType": "SUM",
-            "metricExpress": "debit_amt_out"
+            "metricExpressParam" : {
+              "express": "debit_amt_out"
+            }
           }
         }
       },
@@ -341,14 +362,20 @@
           "mixAggMap": {
             "zhangsan_sum_amount": {
               "aggregateType": "SUM",
-              "metricExpress": "account_no_in == '张三' ? debit_amt_out : 0"
+              "metricExpressParam" : {
+                "express": "account_no_in == '张三' ? debit_amt_out : 0"
+              }
             },
             "total_sum_amount": {
               "aggregateType": "SUM",
-              "metricExpress": "debit_amt_out"
+              "metricExpressParam" : {
+                "express": "debit_amt_out"
+              }
             }
           },
-          "express": "zhangsan_sum_amount / total_sum_amount"
+          "metricExpressParam" : {
+            "express": "zhangsan_sum_amount / total_sum_amount"
+          }
         }
       },
       "windowParam": {
@@ -384,7 +411,9 @@
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress": "debit_amt_out"
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
         }
       },
       "windowParam": {
@@ -395,19 +424,25 @@
           {
             "index": 0,
             "name": "start",
-            "matchExpress": "debit_amt_out > 100",
+            "matchExpressParam" : {
+              "express": "debit_amt_out > 100"
+            },
             "interval": 0
           },
           {
             "index": 1,
             "name": "mid",
-            "matchExpress": "debit_amt_out > 200",
+            "matchExpressParam" : {
+              "express": "debit_amt_out > 200"
+            },
             "interval": 10
           },
           {
             "index": 2,
             "name": "end",
-            "matchExpress": "debit_amt_out > 300",
+            "matchExpressParam" : {
+              "express": "debit_amt_out > 300"
+            },
             "interval": 10
           }
         ]
@@ -439,7 +474,9 @@
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress": "debit_amt_out"
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
         }
       },
       "windowParam": {
@@ -474,7 +511,9 @@
         "calculateLogic": "FIRSTFIELD",
         "baseUdafParam": {
           "aggregateType": "FIRSTFIELD",
-          "retainExpress": "trans_timestamp"
+          "retainExpressParam" : {
+            "express": "trans_timestamp"
+          }
         }
       },
       "windowParam": {
@@ -507,7 +546,9 @@
         "calculateLogic": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
-          "metricExpress": "debit_amt_out"
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
         }
       },
       "windowParam": {

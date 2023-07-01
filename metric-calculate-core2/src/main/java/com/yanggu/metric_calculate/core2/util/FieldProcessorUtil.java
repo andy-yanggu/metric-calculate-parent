@@ -176,10 +176,10 @@ public class FieldProcessorUtil {
      * @param <IN>
      */
     @SneakyThrows
-    public static <IN> NumberFieldProcessor<IN> getNumberFieldProcessor(BaseUdafParam baseUdafParam,
-                                                                        Map<String, Class<?>> fieldMap,
-                                                                        Numerical numerical,
-                                                                        AviatorFunctionFactory aviatorFunctionFactory) {
+    private static <IN> NumberFieldProcessor<IN> getNumberFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                         BaseUdafParam baseUdafParam,
+                                                                         Numerical numerical,
+                                                                         AviatorFunctionFactory aviatorFunctionFactory) {
         NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>();
         numberFieldProcessor.setUdafParam(baseUdafParam);
         numberFieldProcessor.setFieldMap(fieldMap);
@@ -200,10 +200,10 @@ public class FieldProcessorUtil {
      * @param <IN>
      */
     @SneakyThrows
-    public static <IN> ObjectFieldProcessor<IN> getObjectFieldProcessor(BaseUdafParam baseUdafParam,
-                                                                        Map<String, Class<?>> fieldMap,
-                                                                        Objective objective,
-                                                                        AviatorFunctionFactory aviatorFunctionFactory) {
+    private static <IN> ObjectFieldProcessor<IN> getObjectFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                         BaseUdafParam baseUdafParam,
+                                                                         Objective objective,
+                                                                         AviatorFunctionFactory aviatorFunctionFactory) {
         ObjectFieldProcessor<IN> objectFieldProcessor = new ObjectFieldProcessor<>();
         objectFieldProcessor.setObjective(objective);
         objectFieldProcessor.setUdafParam(baseUdafParam);
@@ -224,9 +224,9 @@ public class FieldProcessorUtil {
      * @param <IN>
      */
     @SneakyThrows
-    public static <IN> CollectionFieldProcessor<IN> getCollectionFieldProcessor(
-                                                                        BaseUdafParam baseUdafParam,
+    private static <IN> CollectionFieldProcessor<IN> getCollectionFieldProcessor(
                                                                         Map<String, Class<?>> fieldMap,
+                                                                        BaseUdafParam baseUdafParam,
                                                                         Collective collective,
                                                                         AviatorFunctionFactory aviatorFunctionFactory) {
         CollectionFieldProcessor<IN> collectionFieldProcessor = new CollectionFieldProcessor<>();
@@ -300,8 +300,8 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                            AggregateFunctionParam aggregateFunctionParam,
                                                             Map<String, Class<?>> fieldMap,
+                                                            AggregateFunctionParam aggregateFunctionParam,
                                                             AviatorFunctionFactory aviatorFunctionFactory,
                                                             AggregateFunctionFactory aggregateFunctionFactory) {
         String aggregateType = aggregateFunctionParam.getCalculateLogic();
@@ -316,7 +316,7 @@ public class FieldProcessorUtil {
             BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
             AggregateFunctionFactory.setUdafParam(aggregateFunction, baseUdafParam.getParam());
             FieldProcessor<JSONObject, IN> baseFieldProcessor =
-                    getBaseFieldProcessor(baseUdafParam, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+                    getBaseFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
             return new AggregateFieldProcessor<>(baseFieldProcessor, aggregateFunction);
         }
 
@@ -381,8 +381,8 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseFieldProcessor(
-                                                                    BaseUdafParam baseUdafParam,
                                                                     Map<String, Class<?>> fieldMap,
+                                                                    BaseUdafParam baseUdafParam,
                                                                     AviatorFunctionFactory aviatorFunctionFactory,
                                                                     AggregateFunctionFactory aggregateFunctionFactory) {
 
@@ -391,15 +391,15 @@ public class FieldProcessorUtil {
         if (aggregateFunctionClass.isAnnotationPresent(Numerical.class)) {
             //数值型
             Numerical numerical = aggregateFunctionClass.getAnnotation(Numerical.class);
-            return getNumberFieldProcessor(baseUdafParam, fieldMap, numerical, aviatorFunctionFactory);
+            return getNumberFieldProcessor(fieldMap, baseUdafParam, numerical, aviatorFunctionFactory);
         } else if (aggregateFunctionClass.isAnnotationPresent(Objective.class)) {
             //对象型
             Objective objective = aggregateFunctionClass.getAnnotation(Objective.class);
-            return getObjectFieldProcessor(baseUdafParam, fieldMap, objective, aviatorFunctionFactory);
+            return getObjectFieldProcessor(fieldMap, baseUdafParam, objective, aviatorFunctionFactory);
         } else if (aggregateFunctionClass.isAnnotationPresent(Collective.class)) {
             //集合型
             Collective collective = aggregateFunctionClass.getAnnotation(Collective.class);
-            return getCollectionFieldProcessor(baseUdafParam, fieldMap, collective, aviatorFunctionFactory);
+            return getCollectionFieldProcessor(fieldMap, baseUdafParam, collective, aviatorFunctionFactory);
         } else {
             throw new RuntimeException("不支持的聚合类型: " + aggregateType);
         }

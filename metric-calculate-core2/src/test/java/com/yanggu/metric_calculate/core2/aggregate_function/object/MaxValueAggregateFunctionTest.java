@@ -45,10 +45,10 @@ public class MaxValueAggregateFunctionTest {
         MutableObj<Integer> accumulator = maxValueAggregateFunction.createAccumulator();
 
         maxValueAggregateFunction.add(1, accumulator);
-        assertEquals(new Integer(1), accumulator.get());
+        assertEquals(Integer.valueOf(1), accumulator.get());
 
         maxValueAggregateFunction.add(2, accumulator);
-        assertEquals(new Integer(2), accumulator.get());
+        assertEquals(Integer.valueOf(2), accumulator.get());
 
     }
 
@@ -60,7 +60,7 @@ public class MaxValueAggregateFunctionTest {
         maxValueAggregateFunction.add(1, accumulator);
         Integer result = maxValueAggregateFunction.getResult(accumulator);
 
-        assertEquals(new Integer(1), result);
+        assertEquals(Integer.valueOf(1), result);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MaxValueAggregateFunctionTest {
         maxValueAggregateFunction.add(2, accumulator2);
 
         MutableObj<Integer> merge = maxValueAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(new Integer(2), merge.get());
+        assertEquals(Integer.valueOf(2), merge.get());
     }
 
 }

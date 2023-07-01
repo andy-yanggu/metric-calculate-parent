@@ -26,7 +26,7 @@ public class ListFieldAggregateFunctionTest {
     @Test
     public void testConstructor() {
         ListFieldAggregateFunction<Integer> listFieldAggregateFunction = new ListFieldAggregateFunction<>();
-        assertEquals(new Integer(10), listFieldAggregateFunction.getLimit());
+        assertEquals(Integer.valueOf(10), listFieldAggregateFunction.getLimit());
     }
 
 }
