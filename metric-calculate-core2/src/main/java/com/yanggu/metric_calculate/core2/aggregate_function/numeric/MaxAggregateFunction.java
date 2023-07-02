@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
 
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
 
 /**
  * 最大值

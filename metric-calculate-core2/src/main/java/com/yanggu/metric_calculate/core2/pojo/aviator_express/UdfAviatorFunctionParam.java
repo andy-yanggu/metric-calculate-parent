@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core2.pojo.aviator_express;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Map;
 
 /**

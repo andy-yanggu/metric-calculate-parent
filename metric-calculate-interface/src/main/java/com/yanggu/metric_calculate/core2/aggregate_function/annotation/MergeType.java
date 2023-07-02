@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.annotation;
+package com.yanggu.metric_calculate.core2.aggregate_function.annotation;
 
 
 import java.lang.annotation.ElementType;

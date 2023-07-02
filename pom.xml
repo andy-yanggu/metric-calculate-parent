@@ -9,8 +9,8 @@
 
     <modules>
         <module>metric-calculate-web</module>
-        <module>udaf-interface</module>
-        <module>udaf-test</module>
+        <module>metric-calculate-interface</module>
+        <module>metric-calculate-test</module>
         <module>jmh-test</module>
         <module>metric-calculate-core2</module>
         <module>metric-calculate-flink</module>
@@ -88,7 +88,7 @@
             </dependency>
             <dependency>
                 <groupId>com.yanggu</groupId>
-                <artifactId>udaf-interface</artifactId>
+                <artifactId>metric-calculate-interface</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

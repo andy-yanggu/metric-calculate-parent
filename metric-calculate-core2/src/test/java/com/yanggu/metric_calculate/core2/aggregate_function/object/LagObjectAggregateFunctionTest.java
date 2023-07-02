@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.object;
 
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.Objective;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
 import org.junit.Test;
 
 import java.util.LinkedList;

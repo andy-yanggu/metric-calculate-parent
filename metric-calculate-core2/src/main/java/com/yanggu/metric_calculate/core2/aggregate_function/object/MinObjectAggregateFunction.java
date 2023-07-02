@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core2.aggregate_function.object;
 
 import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.Objective;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
 
 /**
  * 最小对象

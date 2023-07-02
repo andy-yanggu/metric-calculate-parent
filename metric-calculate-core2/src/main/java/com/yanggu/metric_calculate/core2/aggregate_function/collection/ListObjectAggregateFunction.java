@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core2.annotation.Collective;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.UdafCustomParam;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.UdafCustomParam;
 import lombok.Data;
 
 import java.util.ArrayList;

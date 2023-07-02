@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core2.field_process.aggregate;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;

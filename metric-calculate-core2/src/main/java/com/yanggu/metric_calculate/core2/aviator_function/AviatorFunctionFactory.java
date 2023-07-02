@@ -27,7 +27,7 @@ public class AviatorFunctionFactory {
      */
     public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core2.aviator_function";
 
-    private static final String ERROR_MESSAGE = "自定义聚合函数唯一标识重复, 重复的全类名: ";
+    private static final String ERROR_MESSAGE = "自定义Aviator函数一标识重复, 重复的全类名: ";
 
     /**
      * 内置的AbstractUdfAviatorFunction
@@ -37,10 +37,10 @@ public class AviatorFunctionFactory {
     private final Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();
 
     /**
-     * udaf的jar包路径
+     * udf的jar包路径
      */
     @Setter
-    private List<String> udafJarPathList;
+    private List<String> udfJarPathList;
 
     static {
         //扫描有MergeType注解
@@ -56,8 +56,8 @@ public class AviatorFunctionFactory {
         }
     }
 
-    public AviatorFunctionFactory(List<String> udafJarPathList) {
-        this.udafJarPathList = udafJarPathList;
+    public AviatorFunctionFactory(List<String> udfJarPathList) {
+        this.udfJarPathList = udfJarPathList;
     }
 
     /**
@@ -69,16 +69,16 @@ public class AviatorFunctionFactory {
         //放入内置的BUILT_IN_UNIT_MAP
         functionMap.putAll(BUILT_IN_FUNCTION_MAP);
 
-        //自定义的udaf的jar路径
-        if (CollUtil.isEmpty(udafJarPathList)) {
+        //自定义的udf的jar路径
+        if (CollUtil.isEmpty(udfJarPathList)) {
             return;
         }
 
         //支持添加自定义的聚合函数
-        URL[] urls = new URL[udafJarPathList.size()];
+        URL[] urls = new URL[udfJarPathList.size()];
         List<JarEntry> jarEntries = new ArrayList<>();
-        for (int i = 0; i < udafJarPathList.size(); i++) {
-            String udafJarPath = udafJarPathList.get(i);
+        for (int i = 0; i < udfJarPathList.size(); i++) {
+            String udafJarPath = udfJarPathList.get(i);
             File file = new File(udafJarPath);
             urls[i] = file.toURI().toURL();
 
@@ -116,8 +116,8 @@ public class AviatorFunctionFactory {
      * @param abstractUdfAviatorFunction
      * @param params
      */
-    public static void setUdafParam(AbstractUdfAviatorFunction abstractUdfAviatorFunction,
-                                    Map<String, Object> params) {
+    public static void setUdfParam(AbstractUdfAviatorFunction abstractUdfAviatorFunction,
+                                   Map<String, Object> params) {
         Field[] declaredFields = abstractUdfAviatorFunction.getClass().getDeclaredFields();
         //通过反射给聚合函数的参数赋值
         if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {
@@ -140,7 +140,7 @@ public class AviatorFunctionFactory {
     @SneakyThrows
     public AbstractUdfAviatorFunction getAviatorFunction(String aviatorFunctionName) {
         if (StrUtil.isBlank(aviatorFunctionName)) {
-            throw new RuntimeException("传入的聚合类型为空");
+            throw new RuntimeException("传入的Aviator函数名为空");
         }
         Class<? extends AbstractUdfAviatorFunction> clazz = functionMap.get(aviatorFunctionName);
         if (clazz == null) {

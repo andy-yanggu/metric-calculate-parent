@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
-import com.yanggu.metric_calculate.core2.annotation.Objective;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOrderParam;

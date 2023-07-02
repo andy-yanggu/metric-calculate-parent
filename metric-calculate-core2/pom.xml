@@ -20,8 +20,7 @@
     <dependencies>
         <dependency>
             <groupId>com.yanggu</groupId>
-            <artifactId>udaf-interface</artifactId>
-            <version>${project.version}</version>
+            <artifactId>metric-calculate-interface</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

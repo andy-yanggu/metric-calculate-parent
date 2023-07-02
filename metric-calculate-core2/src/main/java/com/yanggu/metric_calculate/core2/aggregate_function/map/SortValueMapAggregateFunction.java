@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 import cn.hutool.core.lang.Pair;
-import com.yanggu.metric_calculate.core2.annotation.MapType;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import lombok.Data;
 
 import java.util.Comparator;

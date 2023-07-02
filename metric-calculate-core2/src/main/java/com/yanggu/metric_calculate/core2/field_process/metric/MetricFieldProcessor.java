@@ -63,7 +63,7 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
             for (UdfAviatorFunctionParam udfAviatorFunctionParam : aviatorExpressParam.getUdfAviatorFunctionParamList()) {
                 String name = udfAviatorFunctionParam.getName();
                 AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name);
-                AviatorFunctionFactory.setUdafParam(aviatorFunction, udfAviatorFunctionParam.getParam());
+                AviatorFunctionFactory.setUdfParam(aviatorFunction, udfAviatorFunctionParam.getParam());
                 aviatorFunction.init();
                 aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
             }

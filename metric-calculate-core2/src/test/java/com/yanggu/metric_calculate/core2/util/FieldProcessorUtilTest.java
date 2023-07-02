@@ -14,7 +14,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.map.BaseMapAggregate
 import com.yanggu.metric_calculate.core2.aggregate_function.mix.BaseMixAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstObjectAggregateFunction;
-import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;

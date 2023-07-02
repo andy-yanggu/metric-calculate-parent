@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core2.annotation.Collective;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import org.junit.Test;
 import org.mockito.Mockito;
 

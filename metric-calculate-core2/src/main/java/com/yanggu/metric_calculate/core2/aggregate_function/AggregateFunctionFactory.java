@@ -7,7 +7,7 @@ import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 

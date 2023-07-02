@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.mix;
 
 
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.Mix;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Mix;
 import lombok.Data;
 
 /**

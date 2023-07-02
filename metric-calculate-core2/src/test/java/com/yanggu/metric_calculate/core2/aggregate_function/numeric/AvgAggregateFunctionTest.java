@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
 import cn.hutool.core.lang.mutable.MutablePair;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
-import com.yanggu.metric_calculate.core2.annotation.Numerical;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
 import org.junit.Test;
 
 import static org.junit.Assert.*;

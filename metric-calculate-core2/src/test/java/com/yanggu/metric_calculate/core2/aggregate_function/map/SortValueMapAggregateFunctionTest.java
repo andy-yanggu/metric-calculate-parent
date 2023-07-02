@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core2.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
-import com.yanggu.metric_calculate.core2.annotation.MapType;
-import com.yanggu.metric_calculate.core2.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import org.junit.Test;
 

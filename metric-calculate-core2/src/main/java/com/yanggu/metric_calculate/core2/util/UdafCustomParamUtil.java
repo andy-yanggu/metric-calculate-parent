@@ -6,7 +6,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.ReflectUtil;
-import com.yanggu.metric_calculate.core2.annotation.UdafCustomParam;
+import com.yanggu.metric_calculate.core2.aggregate_function.annotation.UdafCustomParam;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Field;
