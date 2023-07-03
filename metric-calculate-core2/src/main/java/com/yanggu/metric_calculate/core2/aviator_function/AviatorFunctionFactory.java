@@ -112,27 +112,6 @@ public class AviatorFunctionFactory {
     }
 
     /**
-     * 通过反射给聚合函数设置参数
-     *
-     * @param abstractUdfAviatorFunction
-     * @param params
-     */
-    public static void setUdfParam(AbstractUdfAviatorFunction abstractUdfAviatorFunction,
-                                   Map<String, Object> params) {
-        Field[] declaredFields = abstractUdfAviatorFunction.getClass().getDeclaredFields();
-        //通过反射给聚合函数的参数赋值
-        if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {
-            for (Field field : declaredFields) {
-                Object fieldData = params.get(field.getName());
-                if (fieldData != null) {
-                    //通过反射给字段赋值
-                    ReflectUtil.setFieldValue(abstractUdfAviatorFunction, field, fieldData);
-                }
-            }
-        }
-    }
-
-    /**
      * 通过反射使用空参构造创建聚合函数
      *
      * @param aviatorFunctionName
@@ -148,6 +127,28 @@ public class AviatorFunctionFactory {
             throw new RuntimeException("传入的" + aviatorFunctionName + "有误");
         }
         return clazz.getDeclaredConstructor().newInstance();
+    }
+
+    /**
+     * 通过反射给聚合函数设置参数
+     *
+     * @param abstractUdfAviatorFunction
+     * @param params
+     */
+    public static void init(AbstractUdfAviatorFunction abstractUdfAviatorFunction,
+                            Map<String, Object> params) {
+        Field[] declaredFields = abstractUdfAviatorFunction.getClass().getDeclaredFields();
+        //通过反射给聚合函数的参数赋值
+        if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {
+            for (Field field : declaredFields) {
+                Object fieldData = params.get(field.getName());
+                if (fieldData != null) {
+                    //通过反射给字段赋值
+                    ReflectUtil.setFieldValue(abstractUdfAviatorFunction, field, fieldData);
+                }
+            }
+        }
+        abstractUdfAviatorFunction.init();
     }
 
     private static void addClassToMap(Class<?> tempClazz,

@@ -80,6 +80,11 @@
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.yanggu</groupId>
+            <artifactId>metric-calculate-test</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

@@ -116,8 +116,8 @@ public class AggregateFunctionFactory {
      * @param aggregateFunction
      * @param params
      */
-    public static <IN, ACC, OUT> void setUdafParam(AggregateFunction<IN, ACC, OUT> aggregateFunction,
-                                                   Map<String, Object> params) {
+    public static <IN, ACC, OUT> void initAggregateFunction(AggregateFunction<IN, ACC, OUT> aggregateFunction,
+                                                            Map<String, Object> params) {
         Field[] declaredFields = aggregateFunction.getClass().getDeclaredFields();
         //通过反射给聚合函数的参数赋值
         if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {

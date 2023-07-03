@@ -43,8 +43,7 @@ public class ExpressionUtil {
             for (UdfAviatorFunctionParam udfAviatorFunctionParam : aviatorExpressParam.getUdfAviatorFunctionParamList()) {
                 String name = udfAviatorFunctionParam.getName();
                 AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name);
-                AviatorFunctionFactory.setUdfParam(aviatorFunction, udfAviatorFunctionParam.getParam());
-                aviatorFunction.init();
+                AviatorFunctionFactory.init(aviatorFunction, udfAviatorFunctionParam.getParam());
                 aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
             }
         }

@@ -39,7 +39,7 @@ import org.mockito.Mockito;
 
 import java.util.*;
 
-import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.*;
 import static org.junit.Assert.*;

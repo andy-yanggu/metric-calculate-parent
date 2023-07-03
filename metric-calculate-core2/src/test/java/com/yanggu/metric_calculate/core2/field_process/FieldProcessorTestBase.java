@@ -21,7 +21,7 @@ import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
 
 public class FieldProcessorTestBase {
