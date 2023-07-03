@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 
 import java.util.Map;
@@ -50,7 +50,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         //map的value字段处理器
         this.valueAggregateFieldProcessor =
-                FieldProcessorUtil.getBaseFieldProcessor(fieldMap, mapUdafParam.getValueAggParam(), aviatorFunctionFactory, aggregateFunctionFactory);
+                FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, mapUdafParam.getValueAggParam(), aviatorFunctionFactory, aggregateFunctionFactory);
     }
 
     @Override

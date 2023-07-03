@@ -36,44 +36,33 @@ public class WindowFactory<IN, ACC, OUT> {
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeWindow<>();
-            tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
-            tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            setTumblingTimeWindow(tumblingTimeTable);
             return tumblingTimeTable;
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
             SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable = new SlidingTimeWindow<>();
-            slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
-            slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            setSlidingTimeWindow(slidingTimeTable);
             return slidingTimeTable;
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
             SlidingCountWindow<IN, ACC, OUT> slidingCountWindowTable = new SlidingCountWindow<>();
-            slidingCountWindowTable.setLimit(windowParam.getLimit());
-            slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            setSlidingCountWindow(slidingCountWindowTable);
             return slidingCountWindowTable;
             //状态窗口
         } else if (windowType == STATUS_WINDOW) {
             StatusWindow<IN, ACC, OUT> statusWindowTable = new StatusWindow<>();
-            statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            statusWindowTable.setFieldMap(fieldMap);
-            statusWindowTable.setStatusExpressParamList(windowParam.getStatusExpressParamList());
+            setStatusWindow(statusWindowTable);
             statusWindowTable.init();
             return statusWindowTable;
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
             GlobalWindow<IN, ACC, OUT> globalTable = new GlobalWindow<>();
-            globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            setGlobalWindow(globalTable);
             return globalTable;
             //CEP类型
         } else if (windowType == EVENT_WINDOW) {
             PatternWindow<IN, ACC, OUT> patternTable = new PatternWindow<>();
-            patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(windowParam.getNodePatternList());
-            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.setTimeFieldProcessor(timeFieldProcessor);
-            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            setPatternWindow(patternTable);
             patternTable.init();
             return patternTable;
         } else {
@@ -91,43 +80,69 @@ public class WindowFactory<IN, ACC, OUT> {
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
             TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = ((TumblingTimeWindow<IN, ACC, OUT>) window);
-            tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
-            tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            setTumblingTimeWindow(tumblingTimeTable);
             //滑动时间窗口
         } else if (windowType == SLIDING_TIME_WINDOW) {
             SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable = ((SlidingTimeWindow<IN, ACC, OUT>) window);
-            slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
-            slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            setSlidingTimeWindow(slidingTimeTable);
             //滑动计数窗口
         } else if (windowType == SLIDING_COUNT_WINDOW) {
             SlidingCountWindow<IN, ACC, OUT> slidingCountWindowTable = ((SlidingCountWindow<IN, ACC, OUT>) window);
-            slidingCountWindowTable.setLimit(windowParam.getLimit());
-            slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            setSlidingCountWindow(slidingCountWindowTable);
             //状态窗口
         } else if (windowType == STATUS_WINDOW) {
             StatusWindow<IN, ACC, OUT> statusWindowTable = ((StatusWindow<IN, ACC, OUT>) window);
-            statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            statusWindowTable.setFieldMap(fieldMap);
-            statusWindowTable.setStatusExpressParamList(windowParam.getStatusExpressParamList());
+            setStatusWindow(statusWindowTable);
             statusWindowTable.init();
             //全窗口
         } else if (windowType == GLOBAL_WINDOW) {
             GlobalWindow<IN, ACC, OUT> globalTable = ((GlobalWindow<IN, ACC, OUT>) window);
-            globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+            setGlobalWindow(globalTable);
             //CEP类型
         } else if (windowType == EVENT_WINDOW) {
             PatternWindow<IN, ACC, OUT> patternTable = ((PatternWindow<IN, ACC, OUT>) window);
-            patternTable.setFieldMap(fieldMap);
-            patternTable.setNodePatternList(windowParam.getNodePatternList());
-            patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
-            patternTable.setTimeFieldProcessor(timeFieldProcessor);
-            patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
+            setPatternWindow(patternTable);
             patternTable.init();
         } else {
             throw new RuntimeException("窗口类型异常");
         }
+    }
+
+    private void setGlobalWindow(GlobalWindow<IN, ACC, OUT> globalTable) {
+        globalTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+    }
+
+    private void setSlidingCountWindow(SlidingCountWindow<IN, ACC, OUT> slidingCountWindowTable) {
+        slidingCountWindowTable.setLimit(windowParam.getLimit());
+        slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+    }
+
+    private void setTumblingTimeWindow(TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable) {
+        tumblingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+        tumblingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
+        tumblingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
+    }
+
+    private void setPatternWindow(PatternWindow<IN, ACC, OUT> patternTable) {
+        patternTable.setFieldMap(fieldMap);
+        patternTable.setNodePatternList(windowParam.getNodePatternList());
+        patternTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+        patternTable.setTimeFieldProcessor(timeFieldProcessor);
+        patternTable.setTimeBaselineDimension(createTimeBaselineDimension());
+        patternTable.setAviatorFunctionFactory(aviatorFunctionFactory);
+    }
+
+    private void setStatusWindow(StatusWindow<IN, ACC, OUT> statusWindowTable) {
+        statusWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+        statusWindowTable.setFieldMap(fieldMap);
+        statusWindowTable.setStatusExpressParamList(windowParam.getStatusExpressParamList());
+        statusWindowTable.setAviatorFunctionFactory(aviatorFunctionFactory);
+    }
+
+    private void setSlidingTimeWindow(SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable) {
+        slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
+        slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
+        slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
     }
 
     private TimeBaselineDimension createTimeBaselineDimension() {

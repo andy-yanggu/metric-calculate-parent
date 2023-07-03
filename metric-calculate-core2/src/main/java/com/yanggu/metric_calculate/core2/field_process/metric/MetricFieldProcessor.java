@@ -3,21 +3,16 @@ package com.yanggu.metric_calculate.core2.field_process.metric;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
-import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
-import com.yanggu.metric_calculate.core2.aviator_function.AbstractUdfAviatorFunction;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core2.pojo.aviator_express.UdfAviatorFunctionParam;
+import com.yanggu.metric_calculate.core2.util.ExpressionUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +33,9 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
      */
     private AviatorExpressParam aviatorExpressParam;
 
+    /**
+     * Aviator函数工厂类
+     */
     private AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
@@ -53,33 +51,13 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
-
-        AviatorEvaluatorInstance aviatorEvaluatorInstance = AviatorEvaluator.getInstance();
-        //是否使用自定义Aviator函数
-        if (Boolean.TRUE.equals(aviatorExpressParam.getUseUdfFunction())
-                && CollUtil.isNotEmpty(aviatorExpressParam.getUdfAviatorFunctionParamList())) {
-            aviatorEvaluatorInstance = AviatorEvaluator.newInstance();
-            //设置自定义Aviator函数
-            for (UdfAviatorFunctionParam udfAviatorFunctionParam : aviatorExpressParam.getUdfAviatorFunctionParamList()) {
-                String name = udfAviatorFunctionParam.getName();
-                AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name);
-                AviatorFunctionFactory.setUdfParam(aviatorFunction, udfAviatorFunctionParam.getParam());
-                aviatorFunction.init();
-                aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
-            }
+        if (aviatorFunctionFactory == null) {
+            throw new RuntimeException("Aviator函数工厂类为空");
         }
-
-        aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        Expression tempMetricExpression = aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
-        List<String> variableNames = tempMetricExpression.getVariableNames();
-        //检查数据明细宽表中是否包含当前参数
-        if (CollUtil.isNotEmpty(variableNames)) {
-            variableNames.forEach(tempName -> {
-                if (!fieldMap.containsKey(tempName)) {
-                    throw new RuntimeException("数据明细宽表中没有该度量字段: " + tempName);
-                }
-            });
-        }
+        //编译表达式
+        Expression tempMetricExpression = ExpressionUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory);
+        //验证数据明细宽表中是否包含该字段
+        ExpressionUtil.checkVariable(tempMetricExpression, fieldMap);
 
         this.metricExpression = tempMetricExpression;
     }

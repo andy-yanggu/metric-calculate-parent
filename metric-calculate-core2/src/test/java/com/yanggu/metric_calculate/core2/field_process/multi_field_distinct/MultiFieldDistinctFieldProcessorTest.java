@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getDistinctFieldFieldProcessor;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -23,19 +24,15 @@ public class MultiFieldDistinctFieldProcessorTest {
 
     @Test
     public void process() throws Exception {
-        MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("age", Integer.class);
-        multiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         List<AviatorExpressParam> metricList = Collections.singletonList(aviatorExpressParam);
-        multiFieldDistinctFieldProcessor.setDistinctFieldListParamList(metricList);
-
-        multiFieldDistinctFieldProcessor.init();
+        MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor = getDistinctFieldFieldProcessor(fieldMap, metricList);
 
         JSONObject input = new JSONObject();
         input.set("name", "张三");

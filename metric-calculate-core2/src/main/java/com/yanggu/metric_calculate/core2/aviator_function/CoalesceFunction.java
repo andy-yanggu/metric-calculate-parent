@@ -15,13 +15,6 @@ public class CoalesceFunction extends AbstractUdfAviatorFunction {
 
     private static final long serialVersionUID = -8698263751319322038L;
 
-    private static final String NAME = CoalesceFunction.class.getAnnotation(AviatorFunctionName.class).value();
-
-    @Override
-    public String getName() {
-        return NAME;
-    }
-
     /**
      * 参数的个数不确定, 返回第一个不为null的值
      *

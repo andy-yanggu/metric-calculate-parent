@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getMetricListFieldProcessor;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThrows;
 
 public class MetricListFieldProcessorTest {
 
@@ -31,20 +33,30 @@ public class MetricListFieldProcessorTest {
     }
 
     @Test
-    public void process() throws Exception {
+    public void init3() {
         MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("test1", String.class);
+        metricListFieldProcessor.setFieldMap(fieldMap);
+        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        aviatorExpressParam.setExpress("test1");
+        metricListFieldProcessor.setMetricExpressParamList(CollUtil.toList(aviatorExpressParam));
+
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
+        assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
+    }
+
+    @Test
+    public void process() throws Exception {
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", String.class);
         fieldMap.put("test2", String.class);
-
-        metricListFieldProcessor.setFieldMap(fieldMap);
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("test1");
         AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
         aviatorExpressParam2.setExpress("test2");
-        metricListFieldProcessor.setMetricExpressParamList(CollUtil.toList(aviatorExpressParam1, aviatorExpressParam2));
-        metricListFieldProcessor.init();
+        MetricListFieldProcessor metricListFieldProcessor = getMetricListFieldProcessor(fieldMap, CollUtil.toList(aviatorExpressParam1, aviatorExpressParam2));
 
         JSONObject input = new JSONObject();
         input.set("test1", "aaa");

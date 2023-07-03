@@ -16,6 +16,7 @@ import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregate
 import com.yanggu.metric_calculate.core2.aggregate_function.object.FirstObjectAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -40,7 +41,7 @@ import java.util.*;
 
 import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.*;
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.*;
 import static org.junit.Assert.*;
 
 public class FieldProcessorUtilTest {
@@ -164,7 +165,7 @@ public class FieldProcessorUtilTest {
         fieldOrderParamList.add(field1);
         fieldOrderParamList.add(field2);
 
-        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = FieldProcessorUtil.getOrderFieldProcessor(fieldMap, fieldOrderParamList, getAviatorFunctionFactory());
+        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, fieldOrderParamList, getAviatorFunctionFactory());
 
         assertNotNull(tempMultiFieldOrderFieldProcessor);
         assertEquals(fieldMap, tempMultiFieldOrderFieldProcessor.getFieldMap());
@@ -199,7 +200,7 @@ public class FieldProcessorUtilTest {
         assertEquals(getAggregateFunctionFactory(), mixFieldProcessor.getAggregateFunctionFactory());
         Map<String, FieldProcessor<JSONObject, Object>> multiBaseAggProcessorMap = mixFieldProcessor.getMultiBaseAggProcessorMap();
         assertEquals(1, multiBaseAggProcessorMap.size());
-        assertEquals(getBaseFieldProcessor(fieldMap, baseUdafParam), multiBaseAggProcessorMap.get("SUM"));
+        assertEquals(getBaseAggregateFieldProcessor(fieldMap, baseUdafParam), multiBaseAggProcessorMap.get("SUM"));
     }
 
     @Test
@@ -230,7 +231,7 @@ public class FieldProcessorUtilTest {
         assertEquals(factory, mapFieldProcessor.getAggregateFunctionFactory());
 
         assertEquals(FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldParamList(), getAviatorFunctionFactory()), mapFieldProcessor.getKeyFieldProcessor());
-        assertEquals(FieldProcessorUtil.getBaseFieldProcessor(fieldMap, valueAggParam, getAviatorFunctionFactory(), getAggregateFunctionFactory()), mapFieldProcessor.getValueAggregateFieldProcessor());
+        assertEquals(FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, valueAggParam, getAviatorFunctionFactory(), getAggregateFunctionFactory()), mapFieldProcessor.getValueAggregateFieldProcessor());
     }
 
     /**
@@ -252,7 +253,7 @@ public class FieldProcessorUtilTest {
 
         AggregateFieldProcessor<Integer, Double, Double> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
-        FieldProcessor<JSONObject, Integer> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Integer> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
         assertEquals(SumAggregateFunction.class, aggregateFieldProcessor.getAggregateFunction().getClass());
     }
@@ -273,7 +274,7 @@ public class FieldProcessorUtilTest {
 
         AggregateFieldProcessor<JSONObject, MutableObj<JSONObject>, JSONObject> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
         assertEquals(FirstObjectAggregateFunction.class, aggregateFieldProcessor.getAggregateFunction().getClass());
     }
@@ -294,7 +295,7 @@ public class FieldProcessorUtilTest {
 
         AggregateFieldProcessor<JSONObject, List<JSONObject>, List<JSONObject>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
         assertEquals(new ListObjectAggregateFunction<JSONObject>(), aggregateFieldProcessor.getAggregateFunction());
     }
@@ -399,7 +400,7 @@ public class FieldProcessorUtilTest {
         baseUdafParam.setAggregateType("SUM");
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", Double.class);
-        FieldProcessor<JSONObject, Double> fieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Double> fieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertTrue(fieldProcessor instanceof NumberFieldProcessor);
         NumberFieldProcessor<Double> numberFieldProcessor = (NumberFieldProcessor<Double>) fieldProcessor;
         assertEquals(baseUdafParam, numberFieldProcessor.getUdafParam());
@@ -419,7 +420,7 @@ public class FieldProcessorUtilTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("field1", String.class);
         fieldMap.put("field2", Integer.class);
-        FieldProcessor<JSONObject, String> fieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, String> fieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertTrue(fieldProcessor instanceof ObjectFieldProcessor);
     }
 
@@ -428,7 +429,7 @@ public class FieldProcessorUtilTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        FieldProcessor<JSONObject, JSONObject> fieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, JSONObject> fieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertTrue(fieldProcessor instanceof CollectionFieldProcessor);
     }
 
@@ -437,7 +438,7 @@ public class FieldProcessorUtilTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("BASEMIX");
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getBaseFieldProcessor(fieldMap, baseUdafParam));
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getBaseAggregateFieldProcessor(fieldMap, baseUdafParam));
         assertEquals("不支持的聚合类型: BASEMIX", runtimeException.getMessage());
     }
 

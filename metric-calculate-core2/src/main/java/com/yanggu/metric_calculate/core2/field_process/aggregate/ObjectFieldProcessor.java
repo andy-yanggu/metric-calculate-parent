@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOr
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -57,7 +57,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
                     .map(tempCompareField -> new FieldOrderParam(tempCompareField, true))
                     .collect(Collectors.toList());
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, collect, aviatorFunctionFactory);
+                    FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, collect, aviatorFunctionFactory);
         }
 
         int retainStrategy = objective.retainStrategy();

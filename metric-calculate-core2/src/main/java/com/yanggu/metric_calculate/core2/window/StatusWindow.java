@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 
 import java.util.ArrayList;

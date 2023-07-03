@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getBaseFieldProcessor;
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -32,7 +32,7 @@ public class NumberFieldProcessorTest {
         baseUdafParam.setMetricExpressParam(aviatorExpressParam);
         baseUdafParam.setAggregateType(aggregateType);
 
-        FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject jsonObject = new JSONObject();
         jsonObject.set("amount", 100.0D);
@@ -60,7 +60,7 @@ public class NumberFieldProcessorTest {
         fieldMap.put("amount", Long.class);
         fieldMap.put("amount1", Long.class);
 
-        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject input = new JSONObject();
         input.set("amount", 1L);

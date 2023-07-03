@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryBase.getAggregateFunctionFactory;
-import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getMixFieldProcessor;
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getMixFieldProcessor;
 import static org.junit.Assert.*;
 
 public class MixFieldProcessorTest {
@@ -65,15 +65,23 @@ public class MixFieldProcessorTest {
     }
 
     @Test
-    public void testInit5() throws Exception {
+    public void testInit5() {
         MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
         mixFieldProcessor.setFieldMap(fieldMap);
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
-        mixFieldProcessor.setMixUdafParam(mixUdafParam);
         mixFieldProcessor.setAggregateFunctionFactory(getAggregateFunctionFactory());
+        mixFieldProcessor.setMixUdafParam(mixUdafParam);
 
-        mixFieldProcessor.init();
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
+        assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
+    }
+
+    @Test
+    public void testInit6() throws Exception {
+        String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
+        MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
+        MixFieldProcessor<Object> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUdafParam);
 
         assertSame(fieldMap, mixFieldProcessor.getFieldMap());
         assertSame(mixUdafParam, mixFieldProcessor.getMixUdafParam());

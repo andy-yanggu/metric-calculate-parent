@@ -7,7 +7,7 @@ import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -39,6 +39,11 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
         }
+
+        if (aviatorFunctionFactory == null) {
+            throw new RuntimeException("Aviator函数工厂类为空");
+        }
+
         this.metricFieldProcessorList = metricExpressParamList.stream()
                 .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
                 .collect(Collectors.toList());

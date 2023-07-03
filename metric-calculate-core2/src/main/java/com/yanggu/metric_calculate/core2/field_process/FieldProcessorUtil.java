@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.util;
+package com.yanggu.metric_calculate.core2.field_process;
 
 
 import cn.hutool.json.JSONObject;
@@ -8,7 +8,6 @@ import com.yanggu.metric_calculate.core2.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core2.aggregate_function.map.AbstractMapAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.mix.AbstractMixAggregateFunction;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -154,9 +153,10 @@ public class FieldProcessorUtil {
      * @return 多字段排序字段处理器
      */
     @SneakyThrows
-    public static MultiFieldOrderFieldProcessor getOrderFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                       List<FieldOrderParam> fieldOrderParamList,
-                                                                       AviatorFunctionFactory aviatorFunctionFactory) {
+    public static MultiFieldOrderFieldProcessor getFieldOrderFieldProcessor(
+                                                                        Map<String, Class<?>> fieldMap,
+                                                                        List<FieldOrderParam> fieldOrderParamList,
+                                                                        AviatorFunctionFactory aviatorFunctionFactory) {
         MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
         tempMultiFieldOrderFieldProcessor.setFieldMap(fieldMap);
         tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
@@ -316,7 +316,7 @@ public class FieldProcessorUtil {
             BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
             AggregateFunctionFactory.setUdafParam(aggregateFunction, baseUdafParam.getParam());
             FieldProcessor<JSONObject, IN> baseFieldProcessor =
-                    getBaseFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
+                    getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
             return new AggregateFieldProcessor<>(baseFieldProcessor, aggregateFunction);
         }
 
@@ -380,7 +380,7 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseFieldProcessor(
+    public static <IN, ACC, OUT> FieldProcessor<JSONObject, IN> getBaseAggregateFieldProcessor(
                                                                     Map<String, Class<?>> fieldMap,
                                                                     BaseUdafParam baseUdafParam,
                                                                     AviatorFunctionFactory aviatorFunctionFactory,

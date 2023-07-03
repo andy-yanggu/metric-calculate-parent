@@ -43,7 +43,7 @@ public class AviatorFunctionFactory {
     private List<String> udfJarPathList;
 
     static {
-        //扫描有MergeType注解
+        //扫描有AviatorFunctionName注解且是AbstractUdfAviatorFunction子类的类
         Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
                 && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
         //扫描系统自带的聚合函数
@@ -92,8 +92,9 @@ public class AviatorFunctionFactory {
         //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类,
         //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
         try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
-            //扫描有MergeType注解
-            Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class);
+            //扫描有AviatorFunctionName注解且是AbstractUdfAviatorFunction子类的类
+            Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
+                    && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
             for (JarEntry entry : jarEntries) {
                 if (entry.isDirectory() || !entry.getName().endsWith(".class") || entry.getName().contains("$")) {
                     continue;
@@ -149,7 +150,8 @@ public class AviatorFunctionFactory {
         return clazz.getDeclaredConstructor().newInstance();
     }
 
-    private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap) {
+    private static void addClassToMap(Class<?> tempClazz,
+                                      Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap) {
         AviatorFunctionName annotation = tempClazz.getAnnotation(AviatorFunctionName.class);
         if (annotation == null) {
             return;

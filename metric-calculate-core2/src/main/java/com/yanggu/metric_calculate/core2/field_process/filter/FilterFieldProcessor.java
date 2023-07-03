@@ -3,12 +3,11 @@ package com.yanggu.metric_calculate.core2.field_process.filter;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
-import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
-import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
+import com.yanggu.metric_calculate.core2.util.ExpressionUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +33,9 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
      */
     private AviatorExpressParam filterExpressParam;
 
+    /**
+     * Aviator函数工厂类
+     */
     private AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
@@ -59,20 +61,18 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
-        //设置反射调用
-        AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        Expression tempFilterExpression = AviatorEvaluator.compile(filterExpressParam.getExpress(), true);
+        if (aviatorFunctionFactory == null) {
+            throw new RuntimeException("Aviator函数工厂类为空");
+        }
+
+        //编译表达式
+        Expression tempFilterExpression = ExpressionUtil.compileExpress(filterExpressParam, aviatorFunctionFactory);
         List<String> variableNames = tempFilterExpression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
             throw new RuntimeException("过滤条件为常量表达式, 没有意义: " + filterExpressParam.getExpress());
         }
         //验证数据明细宽表中是否包含该字段
-        variableNames.forEach(tempName -> {
-            if (!fieldMap.containsKey(tempName)) {
-                throw new RuntimeException("数据明细宽表中没有该字段: " + tempName);
-            }
-        });
-
+        ExpressionUtil.checkVariable(tempFilterExpression, fieldMap);
         this.filterExpression = tempFilterExpression;
     }
 

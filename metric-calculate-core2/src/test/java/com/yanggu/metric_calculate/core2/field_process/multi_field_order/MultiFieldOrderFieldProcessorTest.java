@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getFieldOrderFieldProcessor;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -22,11 +23,9 @@ public class MultiFieldOrderFieldProcessorTest {
 
     @Test
     public void process() throws Exception {
-        MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("age", Integer.class);
-        multiFieldOrderFieldProcessor.setFieldMap(fieldMap);
 
         List<FieldOrderParam> fieldOrderParamList = new ArrayList<>();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -35,9 +34,8 @@ public class MultiFieldOrderFieldProcessorTest {
         AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
         aviatorExpressParam2.setExpress("age");
         fieldOrderParamList.add(new FieldOrderParam(aviatorExpressParam2, false));
-        multiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
 
-        multiFieldOrderFieldProcessor.init();
+        MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor = getFieldOrderFieldProcessor(fieldMap, fieldOrderParamList);
 
         JSONObject input = new JSONObject();
         input.set("name", "张三");

@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +38,11 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
         if (CollUtil.isEmpty(distinctFieldListParamList)) {
             throw new RuntimeException("去重字段表达式列表为空");
         }
+
+        if (aviatorFunctionFactory == null) {
+            throw new RuntimeException("Aviator函数工厂类为空");
+        }
+
         this.metricFieldProcessorList = distinctFieldListParamList.stream()
                 .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
                 .collect(Collectors.toList());

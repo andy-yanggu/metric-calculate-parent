@@ -13,7 +13,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getMapFieldProcessor;
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getMapFieldProcessor;
 import static org.junit.Assert.assertEquals;
 
 /**

@@ -5,7 +5,7 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

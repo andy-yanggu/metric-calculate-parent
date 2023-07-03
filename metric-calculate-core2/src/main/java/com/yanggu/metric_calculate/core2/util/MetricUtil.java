@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.core2.calculate.field.VirtualFieldCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.FieldTypeEnum;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;

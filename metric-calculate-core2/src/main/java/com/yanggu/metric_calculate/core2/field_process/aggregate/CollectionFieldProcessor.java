@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.Mult
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -58,7 +58,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
             //设置了排序字段
         } else if (keyStrategy == 2) {
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList(), aviatorFunctionFactory);
         }
 
         //设置了保留字段

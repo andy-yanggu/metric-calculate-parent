@@ -10,7 +10,7 @@ import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcess
 import com.yanggu.metric_calculate.core2.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 
 import java.util.List;

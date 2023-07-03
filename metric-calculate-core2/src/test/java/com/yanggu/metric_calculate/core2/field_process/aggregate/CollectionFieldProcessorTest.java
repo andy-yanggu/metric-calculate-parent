@@ -16,7 +16,7 @@ import org.junit.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core2.field_process.aggregate.FieldProcessorTestBase.getBaseFieldProcessor;
+import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -50,7 +50,7 @@ public class CollectionFieldProcessorTest {
         baseUdafParam.setRetainExpressParam(aviatorExpressParam);
         baseUdafParam.setAggregateType("LISTFIELD");
 
-        FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -71,7 +71,7 @@ public class CollectionFieldProcessorTest {
 
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -99,7 +99,7 @@ public class CollectionFieldProcessorTest {
         aviatorExpressParam.setExpress("amount");
         baseUdafParam.setCollectiveSortFieldList(CollUtil.toList(new FieldOrderParam(aviatorExpressParam, false)));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -131,7 +131,7 @@ public class CollectionFieldProcessorTest {
         aviatorExpressParam1.setExpress("name");
         baseUdafParam.setRetainExpressParam(aviatorExpressParam1);
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -159,7 +159,7 @@ public class CollectionFieldProcessorTest {
         aviatorExpressParam.setExpress("amount");
         baseUdafParam.setCollectiveSortFieldList(CollUtil.toList(new FieldOrderParam(aviatorExpressParam, false)));
 
-        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -186,7 +186,7 @@ public class CollectionFieldProcessorTest {
         baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLISTOBJECT");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -212,7 +212,7 @@ public class CollectionFieldProcessorTest {
         baseUdafParam.setRetainExpressParam(aviatorExpressParam2);
         baseUdafParam.setAggregateType("DISTINCTLISTFIELD");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -235,7 +235,7 @@ public class CollectionFieldProcessorTest {
         baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLIST");
 
-        FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -257,7 +257,7 @@ public class CollectionFieldProcessorTest {
         baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTCOUNT");
 
-        FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
@@ -279,7 +279,7 @@ public class CollectionFieldProcessorTest {
         baseUdafParam.setRetainExpressParam(aviatorExpressParam);
         baseUdafParam.setAggregateType("SLIDINGCOUNTWINDOW");
 
-        FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();

@@ -7,7 +7,7 @@ import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -49,10 +49,15 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
         if (aggregateFunctionFactory == null) {
             throw new RuntimeException("聚合函数工厂类为空");
         }
+
+        if (aviatorFunctionFactory == null) {
+            throw new RuntimeException("Aviator函数工厂类为空");
+        }
+
         Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
         for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
             FieldProcessor<JSONObject, Object> metricFieldProcessor =
-                    FieldProcessorUtil.getBaseFieldProcessor(fieldMap, entry.getValue(), aviatorFunctionFactory, aggregateFunctionFactory);
+                    FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, entry.getValue(), aviatorFunctionFactory, aggregateFunctionFactory);
             map.put(entry.getKey(), metricFieldProcessor);
         }
 

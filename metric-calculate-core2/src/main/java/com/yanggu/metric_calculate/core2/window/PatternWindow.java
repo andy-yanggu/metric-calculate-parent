@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core2.window;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -11,7 +10,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
-import com.yanggu.metric_calculate.core2.util.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
 
 import java.util.*;
