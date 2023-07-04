@@ -8,11 +8,14 @@ import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideT
 import lombok.Data;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Data
-public class TableDataSourceFunction extends RichSourceFunction<DataDetailsWideTable> {
+public class TableDataSourceFunction extends RichSourceFunction<DataDetailsWideTable> implements Serializable {
+
+    private static final long serialVersionUID = 6954978801103140496L;
 
     private volatile boolean flag = true;
 

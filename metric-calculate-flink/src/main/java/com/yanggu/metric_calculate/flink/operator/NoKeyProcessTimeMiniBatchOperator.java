@@ -3,11 +3,11 @@ package com.yanggu.metric_calculate.flink.operator;
 
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.flink.api.common.operators.ProcessingTimeService;
 import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
-import org.apache.flink.api.common.typeutils.TypeSerializer;
 import org.apache.flink.runtime.state.StateInitializationContext;
 import org.apache.flink.runtime.state.StateSnapshotContext;
 import org.apache.flink.streaming.api.operators.AbstractStreamOperator;
@@ -25,6 +25,7 @@ import java.util.concurrent.ScheduledFuture;
  * <p>使用处理时间, 不需要进行keyBy</p>
  */
 @Data
+@NoArgsConstructor
 public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
         implements OneInputStreamOperator<T, List<T>>, ProcessingTimeService.ProcessingTimeCallback, Serializable {
 
@@ -41,7 +42,7 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
     private Long intervalMs = 200L;
 
     /**
-     * list中数据序列化方式
+     * list中数据信息
      */
     private TypeInformation<T> elementTypeInfo;
 
@@ -69,7 +70,8 @@ public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator
                 localBuffer.add(element);
             }
             //状态恢复强制向下游输出
-            //由于这时候没有注册定时器, 如果本地缓冲有数据, 但是后面没有新的数据来
+            //由于这时候没有注册定时器, 如果本地缓冲有数据
+            //但是后面没有新的数据来, 不会注册新的定时器
             //可能会造成永远不会向下游输出
             if (CollUtil.isNotEmpty(localBuffer)) {
                 flush();

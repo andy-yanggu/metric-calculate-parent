@@ -7,6 +7,8 @@ import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.ReadOnlyBroadcastState;
@@ -21,6 +23,8 @@ import java.io.Serializable;
 import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.deriveMapStateDescriptor;
 
 @Slf4j
+@Data
+@NoArgsConstructor
 public class KeyedDeriveBroadcastProcessFunction extends KeyedBroadcastProcessFunction<DimensionSet, DeriveCalculateData, DeriveConfigData, MetricCube>
                 implements CheckpointedFunction, Serializable {
 

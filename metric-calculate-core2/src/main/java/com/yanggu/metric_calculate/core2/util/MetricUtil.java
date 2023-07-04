@@ -82,7 +82,8 @@ public class MetricUtil {
      * @param metricCalculate
      * @param aviatorFunctionFactory
      */
-    private static void initFieldCalculate(MetricCalculate metricCalculate, AviatorFunctionFactory aviatorFunctionFactory) {
+    private static void initFieldCalculate(MetricCalculate metricCalculate,
+                                           AviatorFunctionFactory aviatorFunctionFactory) {
         if (metricCalculate == null) {
             return;
         }
@@ -204,7 +205,6 @@ public class MetricUtil {
         windowFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
         windowFactory.setFieldMap(fieldMap);
         windowFactory.setAviatorFunctionFactory(aviatorFunctionFactory);
-
         deriveMetricCalculate.setWindowFactory(windowFactory);
 
         //维度字段处理器

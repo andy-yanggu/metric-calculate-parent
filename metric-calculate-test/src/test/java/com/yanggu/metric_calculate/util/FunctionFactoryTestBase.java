@@ -35,7 +35,7 @@ public class FunctionFactoryTestBase {
         String directoryPath = canonicalPath + separator + testModuleName + separator + "target";
         File directory = new File(directoryPath);
 
-        String pathname = directoryPath + separator + testModuleName + "-" + version + ".jar ";
+        String pathname = directoryPath + separator + testModuleName + "-" + version + ".jar";
         if (directory.exists()) {
             for (File file : Objects.requireNonNull(directory.listFiles())) {
                 String name = file.getName();
