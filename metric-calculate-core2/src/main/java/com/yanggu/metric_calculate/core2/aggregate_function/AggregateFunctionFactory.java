@@ -3,27 +3,23 @@ package com.yanggu.metric_calculate.core2.aggregate_function;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core2.util.FunctionFactory;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 
-import java.io.File;
-import java.lang.reflect.Field;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.*;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 聚合函数工厂类
  */
 @NoArgsConstructor
-public class AggregateFunctionFactory {
+public class AggregateFunctionFactory extends FunctionFactory {
 
     /**
      * 内置AggregateFunction的包路径
@@ -31,6 +27,12 @@ public class AggregateFunctionFactory {
     public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core2.aggregate_function";
 
     private static final String ERROR_MESSAGE = "自定义聚合函数唯一标识重复, 重复的全类名: ";
+
+    /**
+     * 扫描有MergeType注解并且是AggregateFunction子类
+     */
+    private static final Filter<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(MergeType.class)
+            && AggregateFunction.class.isAssignableFrom(clazz);
 
     /**
      * 内置的AggregateFunction
@@ -45,11 +47,8 @@ public class AggregateFunctionFactory {
     private List<String> udafJarPathList;
 
     static {
-        //扫描有MergeType注解
-        Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class)
-                && AggregateFunction.class.isAssignableFrom(clazz);
         //扫描系统自带的聚合函数
-        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, classFilter);
+        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, CLASS_FILTER);
         for (Class<?> tempClazz : classSet) {
             //添加到内置的map中
             addClassToMap(tempClazz, BUILT_IN_FUNCTION_MAP);
@@ -75,39 +74,7 @@ public class AggregateFunctionFactory {
         }
 
         //支持添加自定义的聚合函数
-        URL[] urls = new URL[udafJarPathList.size()];
-        List<JarEntry> jarEntries = new ArrayList<>();
-        for (int i = 0; i < udafJarPathList.size(); i++) {
-            String udafJarPath = udafJarPathList.get(i);
-            File file = new File(udafJarPath);
-            urls[i] = file.toURI().toURL();
-
-            JarFile jarFile = new JarFile(udafJarPath);
-            Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                jarEntries.add(entries.nextElement());
-            }
-        }
-
-        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类,
-        //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
-        try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
-            //扫描有MergeType注解
-            Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(MergeType.class);
-            for (JarEntry entry : jarEntries) {
-                if (entry.isDirectory() || !entry.getName().endsWith(".class") || entry.getName().contains("$")) {
-                    continue;
-                }
-                String entryName = entry.getName()
-                        .substring(0, entry.getName().indexOf(".class"))
-                        .replace("/", ".");
-                Class<?> loadClass = urlClassLoader.loadClass(entryName);
-                if (classFilter.accept(loadClass)) {
-                    //添加到map中
-                    addClassToMap(loadClass, functionMap);
-                }
-            }
-        }
+        loadClassFromJar(udafJarPathList, CLASS_FILTER, loadClass -> addClassToMap(loadClass, functionMap));
     }
 
     /**
@@ -118,17 +85,7 @@ public class AggregateFunctionFactory {
      */
     public static <IN, ACC, OUT> void initAggregateFunction(AggregateFunction<IN, ACC, OUT> aggregateFunction,
                                                             Map<String, Object> params) {
-        Field[] declaredFields = aggregateFunction.getClass().getDeclaredFields();
-        //通过反射给聚合函数的参数赋值
-        if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {
-            for (Field field : declaredFields) {
-                Object fieldData = params.get(field.getName());
-                if (fieldData != null) {
-                    //通过反射给字段赋值
-                    ReflectUtil.setFieldValue(aggregateFunction, field, fieldData);
-                }
-            }
-        }
+        setParam(aggregateFunction, params);
         aggregateFunction.init();
     }
 
