@@ -11,6 +11,7 @@ import com.yanggu.metric_calculate.core2.calculate.field.FieldCalculate;
 import com.yanggu.metric_calculate.core2.calculate.field.RealFieldCalculate;
 import com.yanggu.metric_calculate.core2.calculate.field.VirtualFieldCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core2.calculate.metric.GlobalMetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.FieldTypeEnum;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
@@ -23,6 +24,7 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core2.pojo.metric.Global;
 import com.yanggu.metric_calculate.core2.window.WindowFactory;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -72,6 +74,9 @@ public class MetricUtil {
 
         //初始化派生指标
         initAllDerive(metricCalculate, aviatorFunctionFactory);
+
+        //初始化全局指标
+        initAllGlobal(metricCalculate, aviatorFunctionFactory);
 
         return metricCalculate;
     }
@@ -160,6 +165,40 @@ public class MetricUtil {
         metricCalculate.setDeriveMetricCalculateList(collect);
     }
 
+    @SneakyThrows
+    private static void initAllGlobal(MetricCalculate metricCalculate, AviatorFunctionFactory aviatorFunctionFactory) {
+        if (metricCalculate == null) {
+            return;
+        }
+        List<Global> globalList = metricCalculate.getGlobalList();
+        if (CollUtil.isEmpty(globalList)) {
+            return;
+        }
+
+        Map<String, MetricTypeEnum> metricTypeMap = metricCalculate.getMetricTypeMap();
+        //默认是内存的并发HashMap
+        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        deriveMetricMiddleStore.init();
+
+        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(metricCalculate.getUdafJarPathList());
+        aggregateFunctionFactory.init();
+
+        Long tableId = metricCalculate.getId();
+        Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
+        List<GlobalMetricCalculate> collect = globalList.stream()
+                .map(tempGlobal -> {
+                    metricTypeMap.put(tempGlobal.getName(), DERIVE);
+                    //初始化派生指标计算类
+                    GlobalMetricCalculate globalMetricCalculate =
+                            MetricUtil.initGlobal(tempGlobal, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+                    globalMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
+                    return globalMetricCalculate;
+                })
+                .collect(Collectors.toList());
+
+        metricCalculate.setGlobalMetricCalculateList(collect);
+    }
+
     /**
      * 初始化派生指标
      *
@@ -223,6 +262,17 @@ public class MetricUtil {
         deriveMetricCalculate.setIncludeCurrent(tempDerive.getIncludeCurrent());
 
         return deriveMetricCalculate;
+    }
+
+    @SneakyThrows
+    public static <IN, ACC, OUT> GlobalMetricCalculate<IN, ACC, OUT> initGlobal(
+                                                                    Global global,
+                                                                    Long tableId,
+                                                                    Map<String, Class<?>> fieldMap,
+                                                                    AviatorFunctionFactory aviatorFunctionFactory,
+                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
+        DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = initDerive(global, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+        return BeanUtil.copyProperties(deriveMetricCalculate, GlobalMetricCalculate.class);
     }
 
     public static void setFieldMap(MetricCalculate metricCalculate) {
