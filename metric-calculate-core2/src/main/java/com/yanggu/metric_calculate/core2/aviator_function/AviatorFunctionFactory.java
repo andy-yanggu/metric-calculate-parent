@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 @NoArgsConstructor
-public class AviatorFunctionFactory extends FunctionFactory {
+public class AviatorFunctionFactory {
 
     /**
      * 内置AbstractUdfAviatorFunction的包路径
@@ -74,7 +74,7 @@ public class AviatorFunctionFactory extends FunctionFactory {
         }
 
         //加载jar包中的自定义函数, 并添加到functionMap中
-        loadClassFromJar(udfJarPathList, classFilter, loadClass -> addClassToMap(loadClass, functionMap));
+        FunctionFactory.loadClassFromJar(udfJarPathList, classFilter, loadClass -> addClassToMap(loadClass, functionMap));
     }
 
     /**
@@ -103,7 +103,7 @@ public class AviatorFunctionFactory extends FunctionFactory {
      */
     public static void init(AbstractUdfAviatorFunction abstractUdfAviatorFunction,
                             Map<String, Object> params) {
-        setParam(abstractUdfAviatorFunction, params);
+        FunctionFactory.setParam(abstractUdfAviatorFunction, params);
         abstractUdfAviatorFunction.init();
     }
 

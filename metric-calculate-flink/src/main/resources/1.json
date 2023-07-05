@@ -7,7 +7,7 @@
       "name": "today_debit_asset",
       "displayName": "当天借方金额总和",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 0,
@@ -42,7 +42,7 @@
       "name": "today_debit_asset_min",
       "displayName": "当天借方金额最小值",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 0,
@@ -78,7 +78,7 @@
       "name": "top4_debit_amt_out_desc",
       "displayName": "交易金额降序列表, 最多4个",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_in",
           "columnIndex": 2,
@@ -123,7 +123,7 @@
       "name": "max_amount_timestamp",
       "displayName": "最大交易的金额的交易时间戳",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_in",
           "columnIndex": 0,
@@ -162,7 +162,7 @@
       "name": "credit_sum_5",
       "displayName": "近5笔交易贷方金额总和",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_in",
           "columnIndex": 2,
@@ -197,7 +197,7 @@
       "name": "test_list_object",
       "displayName": "测试list_object",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_in",
           "columnIndex": 2,
@@ -235,7 +235,7 @@
       "name": "test_sort_list_object",
       "displayName": "测试sort_list_object",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_in",
           "columnIndex": 2,
@@ -279,7 +279,7 @@
       "name": "test_base_map_unit_sum",
       "displayName": "所有交易账号的累计交易金额",
       "description": "账号为key, value是对金额求和",
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 2,
@@ -321,7 +321,7 @@
       "name": "张三_transfer_amount_proportion",
       "displayName": "给张三转账的金额占给所有交易对象转账金额的比例",
       "description": "",
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 2,
@@ -367,7 +367,7 @@
       "name": "pattern_test",
       "displayName": "cep类型的指标测试",
       "description": "",
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 2,
@@ -423,7 +423,7 @@
       "name": "limit_5_sum_debit_asset",
       "displayName": "最近5笔借方金额总和",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 0,
@@ -457,7 +457,7 @@
       "name": "first_trade_timestamp",
       "displayName": "首次交易时间戳",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_in",
           "columnIndex": 0,
@@ -491,7 +491,7 @@
       "name": "status_sum_debit_asset",
       "displayName": "借方金额总和",
       "description": null,
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "account_no_out",
           "columnIndex": 0,

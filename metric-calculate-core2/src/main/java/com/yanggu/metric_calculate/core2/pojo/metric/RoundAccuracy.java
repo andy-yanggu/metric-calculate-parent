@@ -4,12 +4,16 @@ import com.yanggu.metric_calculate.core2.enums.AccuracyEnum;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * 精度信息
  */
 @Data
 @Accessors(chain = true)
-public class RoundAccuracy {
+public class RoundAccuracy implements Serializable {
+
+    private static final long serialVersionUID = 4279405219240970430L;
 
     /**
      * 是否使用精度, true使用, false不使用

@@ -7,7 +7,7 @@
       "id": 1,
       "name": "device_on_line_or_offline_time",
       "displayName": "设备在线或者离线时长（毫秒）",
-      "dimension": [
+      "dimensionList": [
         {
           "columnName": "device_id",
           "columnIndex": 0,

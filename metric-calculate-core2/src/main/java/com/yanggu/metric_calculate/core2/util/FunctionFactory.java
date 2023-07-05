@@ -20,6 +20,9 @@ import java.util.jar.JarFile;
 
 public class FunctionFactory {
 
+    private FunctionFactory() {
+    }
+
     public static void setParam(Object function,
                                 Map<String, Object> params) {
         if (function == null) {
@@ -59,7 +62,7 @@ public class FunctionFactory {
             }
         }
 
-        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类,
+        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类
         //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
         try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
             //过滤出对应的类

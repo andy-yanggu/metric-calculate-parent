@@ -12,6 +12,8 @@ import java.util.Map;
 @Data
 public class MixUdafParam implements Serializable {
 
+    private static final long serialVersionUID = 6154062766089115154L;
+
     /**
      * 聚合类型
      */

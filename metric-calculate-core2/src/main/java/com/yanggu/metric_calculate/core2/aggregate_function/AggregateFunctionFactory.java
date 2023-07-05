@@ -19,7 +19,7 @@ import java.util.Set;
  * 聚合函数工厂类
  */
 @NoArgsConstructor
-public class AggregateFunctionFactory extends FunctionFactory {
+public class AggregateFunctionFactory {
 
     /**
      * 内置AggregateFunction的包路径
@@ -74,7 +74,7 @@ public class AggregateFunctionFactory extends FunctionFactory {
         }
 
         //支持添加自定义的聚合函数
-        loadClassFromJar(udafJarPathList, CLASS_FILTER, loadClass -> addClassToMap(loadClass, functionMap));
+        FunctionFactory.loadClassFromJar(udafJarPathList, CLASS_FILTER, loadClass -> addClassToMap(loadClass, functionMap));
     }
 
     /**
@@ -85,7 +85,7 @@ public class AggregateFunctionFactory extends FunctionFactory {
      */
     public static <IN, ACC, OUT> void initAggregateFunction(AggregateFunction<IN, ACC, OUT> aggregateFunction,
                                                             Map<String, Object> params) {
-        setParam(aggregateFunction, params);
+        FunctionFactory.setParam(aggregateFunction, params);
         aggregateFunction.init();
     }
 

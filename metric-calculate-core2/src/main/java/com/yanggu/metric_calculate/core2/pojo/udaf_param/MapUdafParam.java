@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.pojo.udaf_param;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,9 @@ import java.util.Map;
  * 映射类型udaf参数
  */
 @Data
-public class MapUdafParam {
+public class MapUdafParam implements Serializable {
+
+    private static final long serialVersionUID = 4843035217837455297L;
 
     /**
      * 聚合类型

@@ -87,6 +87,9 @@ public class MetricUtil {
         if (metricCalculate == null) {
             return;
         }
+        if (aviatorFunctionFactory == null) {
+            return;
+        }
         List<Fields> fieldsList = metricCalculate.getFieldList();
         if (CollUtil.isEmpty(fieldsList)) {
             return;
@@ -166,11 +169,12 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive
-                                            (Derive tempDerive, Long tableId,
-                                             Map<String, Class<?>> fieldMap,
-                                             AviatorFunctionFactory aviatorFunctionFactory,
-                                             AggregateFunctionFactory aggregateFunctionFactory) {
+    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive(
+                                                                 Derive tempDerive,
+                                                                 Long tableId,
+                                                                 Map<String, Class<?>> fieldMap,
+                                                                 AviatorFunctionFactory aviatorFunctionFactory,
+                                                                 AggregateFunctionFactory aggregateFunctionFactory) {
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
         //设置id
@@ -209,7 +213,7 @@ public class MetricUtil {
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor =
-                FieldProcessorUtil.getDimensionSetProcessor(key, name, tempDerive.getDimension());
+                FieldProcessorUtil.getDimensionSetProcessor(key, name, tempDerive.getDimensionList());
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
         //精度数据

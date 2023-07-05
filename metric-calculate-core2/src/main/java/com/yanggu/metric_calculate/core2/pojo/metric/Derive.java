@@ -38,7 +38,7 @@ public class Derive implements Serializable {
     /**
      * 维度字段
      */
-    private List<Dimension> dimension;
+    private List<Dimension> dimensionList;
 
     /**
      * 时间字段
@@ -47,11 +47,7 @@ public class Derive implements Serializable {
 
     /**
      * 前置过滤条件
-     */
-    private String filter;
-
-    /**
-     * Aviator表达式参数
+     * <p>Aviator表达式参数</p>
      */
     private AviatorExpressParam filterExpressParam;
 
