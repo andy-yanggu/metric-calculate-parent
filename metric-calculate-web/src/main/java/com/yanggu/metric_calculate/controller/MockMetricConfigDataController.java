@@ -5,7 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import com.yanggu.metric_calculate.pojo.DeriveData;
@@ -39,9 +39,9 @@ public class MockMetricConfigDataController {
      */
     @Operation(summary = "返回指标配置数据")
     @GetMapping("/{tableId}")
-    public DataDetailsWideTable getTableAndMetricByTableId(@Parameter(description = "明细宽表id", required = true) @PathVariable("tableId") Long tableId) {
+    public Model getTableAndMetricByTableId(@Parameter(description = "明细宽表id", required = true) @PathVariable("tableId") Long tableId) {
         String jsonString = FileUtil.readUtf8String("mock_metric_config/" + tableId + SUFFIX);
-        return JSONUtil.toBean(jsonString, DataDetailsWideTable.class);
+        return JSONUtil.toBean(jsonString, Model.class);
     }
 
     @Operation(summary = "获取所有宽表id")
@@ -55,21 +55,21 @@ public class MockMetricConfigDataController {
 
     @Operation(summary = "所有宽表数据")
     @GetMapping("/all-data")
-    List<DataDetailsWideTable> allTableData() {
+    List<Model> allTableData() {
         return FileUtil.loopFiles("mock_metric_config", fileFilter)
                 .stream()
-                .map(file -> JSONUtil.toBean(FileUtil.readUtf8String(file), DataDetailsWideTable.class))
+                .map(file -> JSONUtil.toBean(FileUtil.readUtf8String(file), Model.class))
                 .collect(Collectors.toList());
     }
 
     @Operation(summary = "所有派生指标数据")
     @GetMapping("/all-derive-data")
     List<DeriveData> allDeriveData() {
-        List<DataDetailsWideTable> dataDetailsWideTables = allTableData();
-        if (CollUtil.isEmpty(dataDetailsWideTables)) {
+        List<Model> models = allTableData();
+        if (CollUtil.isEmpty(models)) {
             return Collections.emptyList();
         }
-        return dataDetailsWideTables.stream()
+        return models.stream()
                 .flatMap(tempTable -> {
                     MetricCalculate metricCalculate = BeanUtil.copyProperties(tempTable, MetricCalculate.class);
                     MetricUtil.setFieldMap(metricCalculate);

@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.client.metric_config;
 
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +20,7 @@ public interface MetricConfigClient {
      * @return
      */
     @GetMapping("/{tableId}")
-    DataDetailsWideTable getTableAndMetricByTableId(@PathVariable("tableId") Long tableId);
+    Model getTableAndMetricByTableId(@PathVariable("tableId") Long tableId);
 
     /**
      * 获取所有宽表id
@@ -36,6 +36,6 @@ public interface MetricConfigClient {
      * @return
      */
     @GetMapping("/all-data")
-    List<DataDetailsWideTable> getAllTableData();
+    List<Model> getAllTableData();
 
 }

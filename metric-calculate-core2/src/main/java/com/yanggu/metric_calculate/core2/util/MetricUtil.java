@@ -21,8 +21,8 @@ import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcess
 import com.yanggu.metric_calculate.core2.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Fields;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.ModelColumn;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Global;
 import com.yanggu.metric_calculate.core2.window.WindowFactory;
@@ -52,7 +52,7 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    public static MetricCalculate initMetricCalculate(DataDetailsWideTable tableData) {
+    public static MetricCalculate initMetricCalculate(Model tableData) {
         if (tableData == null) {
             throw new RuntimeException("明细宽表为空");
         }
@@ -95,25 +95,25 @@ public class MetricUtil {
         if (aviatorFunctionFactory == null) {
             return;
         }
-        List<Fields> fieldsList = metricCalculate.getFieldList();
-        if (CollUtil.isEmpty(fieldsList)) {
+        List<ModelColumn> modelColumnList = metricCalculate.getFieldList();
+        if (CollUtil.isEmpty(modelColumnList)) {
             return;
         }
         List<FieldCalculate<JSONObject, Object>> fieldCalculateList = new ArrayList<>();
-        for (Fields fields : fieldsList) {
-            FieldTypeEnum fieldType = fields.getFieldType();
+        for (ModelColumn modelColumn : modelColumnList) {
+            FieldTypeEnum fieldType = modelColumn.getFieldType();
             //真实字段
             if (REAL.equals(fieldType)) {
                 RealFieldCalculate<Object> realFieldCalculate = new RealFieldCalculate<>();
-                realFieldCalculate.setColumnName(fields.getName());
-                realFieldCalculate.setDataClass((Class<Object>) fields.getValueType().getType());
+                realFieldCalculate.setColumnName(modelColumn.getName());
+                realFieldCalculate.setDataClass((Class<Object>) modelColumn.getDataType().getType());
                 realFieldCalculate.init();
                 fieldCalculateList.add(realFieldCalculate);
                 //虚拟字段
             } else if (VIRTUAL.equals(fieldType)) {
                 VirtualFieldCalculate<Object> virtualFieldCalculate = new VirtualFieldCalculate<>();
-                virtualFieldCalculate.setColumnName(fields.getName());
-                virtualFieldCalculate.setAviatorExpressParam(fields.getExpressParam());
+                virtualFieldCalculate.setColumnName(modelColumn.getName());
+                virtualFieldCalculate.setAviatorExpressParam(modelColumn.getExpressParam());
                 virtualFieldCalculate.setFieldMap(metricCalculate.getFieldMap());
                 virtualFieldCalculate.setAviatorFunctionFactory(aviatorFunctionFactory);
                 virtualFieldCalculate.init();
@@ -279,13 +279,13 @@ public class MetricUtil {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }
-        List<Fields> fields = metricCalculate.getFieldList();
+        List<ModelColumn> fields = metricCalculate.getFieldList();
         if (CollUtil.isEmpty(fields)) {
             throw new RuntimeException("宽表字段为空, 宽表数据: " + JSONUtil.toJsonStr(metricCalculate));
         }
         //宽表字段
         Map<String, Class<?>> fieldMap = new HashMap<>();
-        fields.forEach(temp -> fieldMap.put(temp.getName(), temp.getValueType().getType()));
+        fields.forEach(temp -> fieldMap.put(temp.getName(), temp.getDataType().getType()));
         metricCalculate.setFieldMap(fieldMap);
     }
 

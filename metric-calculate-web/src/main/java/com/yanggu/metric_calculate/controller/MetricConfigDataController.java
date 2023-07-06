@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.controller;
 
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.service.MetricConfigDataService;
 import com.yanggu.metric_calculate.util.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,13 +24,13 @@ public class MetricConfigDataController {
 
     @Operation(summary = "所有指标配置数据")
     @GetMapping("/all")
-    public ApiResponse<List<DataDetailsWideTable>> allMetricConfigData() {
+    public ApiResponse<List<Model>> allMetricConfigData() {
         return ApiResponse.success(metricConfigDataService.allMetricConfigData());
     }
 
     @Operation(summary = "获取某个宽表的指标配置数据")
     @GetMapping("/{tableId}")
-    public ApiResponse<DataDetailsWideTable> metricConfigDataById(
+    public ApiResponse<Model> metricConfigDataById(
             @NotNull(message = "宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true)
             @PathVariable("tableId") Long tableId) {
         return ApiResponse.success(metricConfigDataService.metricConfigDataById(tableId));

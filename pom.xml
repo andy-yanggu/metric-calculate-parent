@@ -14,6 +14,7 @@
         <module>jmh-test</module>
         <module>metric-calculate-core2</module>
         <module>metric-calculate-flink</module>
+        <module>metric-calculate-config</module>
     </modules>
     <packaging>pom</packaging>
 

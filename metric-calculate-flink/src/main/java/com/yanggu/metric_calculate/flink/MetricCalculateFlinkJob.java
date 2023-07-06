@@ -18,7 +18,7 @@ import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoCollectionSeri
 import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoMapSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.util.KryoTreeMapSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.window.*;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
 import com.yanggu.metric_calculate.core2.window.*;
 import com.yanggu.metric_calculate.flink.operator.NoKeyProcessTimeMiniBatchOperator;
@@ -89,7 +89,7 @@ public class MetricCalculateFlinkJob {
         env.registerTypeWithKryoSerializer(MetricCube.class, new MetricCubeSerializer<>());
 
         //数据明细宽表配置流
-        DataStreamSource<DataDetailsWideTable> tableSourceDataStream = env.addSource(new TableDataSourceFunction(), "Table-Source");
+        DataStreamSource<Model> tableSourceDataStream = env.addSource(new TableDataSourceFunction(), "Table-Source");
 
         //分流出派生指标配置流和全局指标配置流
         SingleOutputStreamOperator<Void> tableConfigDataStream = tableSourceDataStream.process(new DataTableProcessFunction());
@@ -100,8 +100,8 @@ public class MetricCalculateFlinkJob {
                 .broadcast(deriveMapStateDescriptor);
 
         //将数据明细宽表数据流进行广播
-        BroadcastStream<DataDetailsWideTable> tableSourceBroadcast = tableSourceDataStream
-                .broadcast(new MapStateDescriptor<>("DataDetailsWideTable", Long.class, DataDetailsWideTable.class));
+        BroadcastStream<Model> tableSourceBroadcast = tableSourceDataStream
+                .broadcast(new MapStateDescriptor<>("Model", Long.class, Model.class));
 
         //KafkaSource<String> kafkaSource = KafkaSource.<String>builder()
         //        .setBootstrapServers("172.20.7.143:9092")

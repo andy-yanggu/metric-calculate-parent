@@ -5,8 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import org.junit.Test;
@@ -24,8 +23,8 @@ public class DeriveMetricCalculateStatusWindowTest {
     private static final MetricCalculate metricCalculate;
 
     static {
-        DataDetailsWideTable dataDetailsWideTable = JSONUtil.toBean(FileUtil.readUtf8String("device_config.json"), DataDetailsWideTable.class);
-        metricCalculate = MetricUtil.initMetricCalculate(dataDetailsWideTable);
+        Model model = JSONUtil.toBean(FileUtil.readUtf8String("device_config.json"), Model.class);
+        metricCalculate = MetricUtil.initMetricCalculate(model);
     }
 
     /**

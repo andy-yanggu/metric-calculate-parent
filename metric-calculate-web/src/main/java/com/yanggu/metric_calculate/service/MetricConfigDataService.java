@@ -7,7 +7,7 @@ import com.yanggu.metric_calculate.client.metric_config.MetricConfigClient;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +52,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      *
      * @return
      */
-    public List<DataDetailsWideTable> allMetricConfigData() {
+    public List<Model> allMetricConfigData() {
         if (CollUtil.isEmpty(metricMap)) {
             return Collections.emptyList();
         }
@@ -61,7 +61,7 @@ public class MetricConfigDataService implements ApplicationRunner {
                     Lock readLock = readWriteLockStriped.get(temp.getId()).readLock();
                     readLock.lock();
                     try {
-                        return BeanUtil.copyProperties(temp, DataDetailsWideTable.class);
+                        return BeanUtil.copyProperties(temp, Model.class);
                     } finally {
                         readLock.unlock();
                     }
@@ -75,7 +75,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      * @param tableId
      * @return
      */
-    public DataDetailsWideTable metricConfigDataById(Long tableId) {
+    public Model metricConfigDataById(Long tableId) {
         if (CollUtil.isEmpty(metricMap)) {
             return null;
         }
@@ -83,7 +83,7 @@ public class MetricConfigDataService implements ApplicationRunner {
         readLock.lock();
         try {
             return Optional.ofNullable(metricMap.get(tableId))
-                    .map(temp -> BeanUtil.copyProperties(temp, DataDetailsWideTable.class))
+                    .map(temp -> BeanUtil.copyProperties(temp, Model.class))
                     .orElseThrow(() -> new RuntimeException("传入的tableId: " + tableId + "有误"));
         } finally {
             readLock.unlock();
@@ -273,7 +273,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      */
     private MetricCalculate buildMetric(Long tableId) {
         //根据明细宽表id查询指标数据和宽表数据
-        DataDetailsWideTable tableData = metricConfigClient.getTableAndMetricByTableId(tableId);
+        Model tableData = metricConfigClient.getTableAndMetricByTableId(tableId);
         if (tableData == null || tableData.getId() == null) {
             log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
             throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);

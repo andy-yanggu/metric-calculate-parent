@@ -9,7 +9,7 @@ import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.yanggu.metric_calculate.core2.aviator_function.AbstractUdfAviatorFunction;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core2.pojo.aviator_express.UdfAviatorFunctionParam;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorFunctionInstance;
 
 import java.util.List;
 import java.util.Map;
@@ -33,20 +33,22 @@ public class ExpressionUtil {
                                             AviatorFunctionFactory aviatorFunctionFactory) {
         //默认使用全局单例的AviatorEvaluator
         AviatorEvaluatorInstance aviatorEvaluatorInstance = AviatorEvaluator.getInstance();
-        aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
+        List<AviatorFunctionInstance> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
         //是否使用自定义Aviator函数
-        if (Boolean.TRUE.equals(aviatorExpressParam.getUseUdfFunction()) && CollUtil.isNotEmpty(aviatorExpressParam.getUdfAviatorFunctionParamList())) {
+        if (CollUtil.isNotEmpty(aviatorFunctionInstanceList)) {
             //如果有自定义函数, 使用单独的AviatorEvaluator
             //例如多个同名的自定义函数, 但是参数不同, 是无法区分的
             aviatorEvaluatorInstance = AviatorEvaluator.newInstance();
             //设置自定义Aviator函数
-            for (UdfAviatorFunctionParam udfAviatorFunctionParam : aviatorExpressParam.getUdfAviatorFunctionParamList()) {
-                String name = udfAviatorFunctionParam.getName();
+            for (AviatorFunctionInstance aviatorFunctionInstance : aviatorFunctionInstanceList) {
+                String name = aviatorFunctionInstance.getName();
                 AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name);
-                AviatorFunctionFactory.init(aviatorFunction, udfAviatorFunctionParam.getParam());
+                AviatorFunctionFactory.init(aviatorFunction, aviatorFunctionInstance.getParam());
                 aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
             }
         }
+        //设置Java反射调用
+        aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
         return aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
     }
 

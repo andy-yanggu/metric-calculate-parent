@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import lombok.Data;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Data
-public class TableDataSourceFunction extends RichSourceFunction<DataDetailsWideTable> implements Serializable {
+public class TableDataSourceFunction extends RichSourceFunction<Model> implements Serializable {
 
     private static final long serialVersionUID = 6954978801103140496L;
 
@@ -24,7 +24,7 @@ public class TableDataSourceFunction extends RichSourceFunction<DataDetailsWideT
     private Long interval = 5L;
 
     @Override
-    public void run(SourceContext<DataDetailsWideTable> sourceContext) throws Exception {
+    public void run(SourceContext<Model> sourceContext) throws Exception {
         while (flag) {
             //获取所有指标配置数据
             String jsonArray = HttpUtil.get(url);
@@ -32,13 +32,13 @@ public class TableDataSourceFunction extends RichSourceFunction<DataDetailsWideT
                 sleep();
                 continue;
             }
-            List<DataDetailsWideTable> list = JSONUtil.toList(jsonArray, DataDetailsWideTable.class);
+            List<Model> list = JSONUtil.toList(jsonArray, Model.class);
             if (CollUtil.isEmpty(list)) {
                 sleep();
                 continue;
             }
-            for (DataDetailsWideTable dataDetailsWideTable : list) {
-                sourceContext.collect(dataDetailsWideTable);
+            for (Model model : list) {
+                sourceContext.collect(model);
             }
             sleep();
         }

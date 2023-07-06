@@ -524,67 +524,67 @@
   "fieldList": [
     {
       "name": "trans_no",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "trans_jnls_no",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "account_no_out",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "account_no_in",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "credit_amt_out",
-      "valueType": "DOUBLE",
+      "dataType": "DOUBLE",
       "fieldType": "REAL"
     },
     {
       "name": "credit_amt_in",
-      "valueType": "DOUBLE",
+      "dataType": "DOUBLE",
       "fieldType": "REAL"
     },
     {
       "name": "debit_amt_out",
-      "valueType": "DOUBLE",
+      "dataType": "DOUBLE",
       "fieldType": "REAL"
     },
     {
       "name": "debit_amt_in",
-      "valueType": "DOUBLE",
+      "dataType": "DOUBLE",
       "fieldType": "REAL"
     },
     {
       "name": "d_c_flag_out",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "d_c_flag_in",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "trans_date",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "trans_time",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {
       "name": "trans_timestamp",
-      "valueType": "STRING",
+      "dataType": "STRING",
       "fieldType": "REAL"
     }
   ]

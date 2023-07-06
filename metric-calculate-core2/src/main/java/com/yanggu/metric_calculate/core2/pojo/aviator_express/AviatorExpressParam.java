@@ -20,14 +20,8 @@ public class AviatorExpressParam implements Serializable {
     private String express;
 
     /**
-     * 是否使用自定义Aviator函数
-     * <p>默认不使用</p>
-     */
-    private Boolean useUdfFunction = false;
-
-    /**
      * 自定义Aviator函数参数
      */
-    private List<UdfAviatorFunctionParam> udfAviatorFunctionParamList;
+    private List<AviatorFunctionInstance> aviatorFunctionInstanceList;
 
 }

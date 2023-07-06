@@ -12,7 +12,7 @@ import java.util.List;
  * 数据明细宽表
  */
 @Data
-public class DataDetailsWideTable {
+public class Model {
 
     /**
      * 数据明细宽表id
@@ -37,7 +37,7 @@ public class DataDetailsWideTable {
     /**
      * 宽表字段
      */
-    private List<Fields> fieldList;
+    private List<ModelColumn> fieldList;
 
     /**
      * 派生指标

@@ -10,7 +10,12 @@ import lombok.Data;
  * 宽表字段信息
  */
 @Data
-public class Fields {
+public class ModelColumn {
+
+    /**
+     * 字段id
+     */
+    private Long id;
 
     /**
      * 字段名
@@ -25,7 +30,7 @@ public class Fields {
     /**
      * 字段数据类型
      */
-    private BasicType valueType;
+    private BasicType dataType;
 
     /**
      * 描述信息

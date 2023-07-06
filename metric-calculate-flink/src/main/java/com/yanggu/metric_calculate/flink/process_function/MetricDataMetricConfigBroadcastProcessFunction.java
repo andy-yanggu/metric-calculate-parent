@@ -8,7 +8,7 @@ import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.DataDetailsWideTable;
+import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import lombok.extern.slf4j.Slf4j;
@@ -32,19 +32,19 @@ import java.util.stream.Collectors;
 import static com.yanggu.metric_calculate.flink.util.Constant.*;
 
 @Slf4j
-public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastProcessFunction<String, DataDetailsWideTable, Void>
+public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastProcessFunction<String, Model, Void>
         implements CheckpointedFunction, Serializable {
 
     private static final long serialVersionUID = 7881762197491832138L;
 
     private final MapStateDescriptor<Long, MetricCalculate> mapStateDescriptor =
-            new MapStateDescriptor<>("DataDetailsWideTable", Long.class, MetricCalculate.class);
+            new MapStateDescriptor<>("Model", Long.class, MetricCalculate.class);
 
     private String url = "http://localhost:8888/mock-model/all-data";
 
     @Override
     public void processElement(String jsonString,
-                               BroadcastProcessFunction<String, DataDetailsWideTable, Void>.ReadOnlyContext readOnlyContext,
+                               BroadcastProcessFunction<String, Model, Void>.ReadOnlyContext readOnlyContext,
                                Collector<Void> collector) throws Exception {
         JSONObject input = JSONUtil.parseObj(jsonString);
         Long tableId = input.getLong("tableId");
@@ -93,11 +93,11 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
     }
 
     @Override
-    public void processBroadcastElement(DataDetailsWideTable dataDetailsWideTable,
-                                        BroadcastProcessFunction<String, DataDetailsWideTable, Void>.Context context,
+    public void processBroadcastElement(Model model,
+                                        BroadcastProcessFunction<String, Model, Void>.Context context,
                                         Collector<Void> collector) throws Exception {
         BroadcastState<Long, MetricCalculate> broadcastState = context.getBroadcastState(mapStateDescriptor);
-        broadcastState.put(dataDetailsWideTable.getId(), MetricUtil.initMetricCalculate(dataDetailsWideTable));
+        broadcastState.put(model.getId(), MetricUtil.initMetricCalculate(model));
     }
 
     @Override
@@ -116,13 +116,13 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
             if (StrUtil.isBlank(jsonArray)) {
                 return;
             }
-            List<DataDetailsWideTable> list = JSONUtil.toList(jsonArray, DataDetailsWideTable.class);
+            List<Model> list = JSONUtil.toList(jsonArray, Model.class);
             if (CollUtil.isEmpty(list)) {
                 return;
             }
             Map<Long, MetricCalculate> tempMap = list.stream()
                     .map(MetricUtil::initMetricCalculate)
-                    .collect(Collectors.toMap(DataDetailsWideTable::getId, Function.identity()));
+                    .collect(Collectors.toMap(Model::getId, Function.identity()));
 
             broadcastState.putAll(tempMap);
         }

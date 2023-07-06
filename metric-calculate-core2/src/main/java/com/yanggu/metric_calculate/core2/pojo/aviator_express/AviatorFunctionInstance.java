@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * 自定义Aviator函数配置类
+ * Aviator函数实例
  */
 @Data
-public class UdfAviatorFunctionParam implements Serializable {
+public class AviatorFunctionInstance implements Serializable {
 
     private static final long serialVersionUID = 337965557491005190L;
 
@@ -17,11 +17,6 @@ public class UdfAviatorFunctionParam implements Serializable {
      * 自定义Aviator函数名称
      */
     private String name;
-
-    /**
-     * 是否是自定义udf
-     */
-    private Boolean isUdf;
 
     /**
      * Aviator函数的参数, key和Java字段名称一致
