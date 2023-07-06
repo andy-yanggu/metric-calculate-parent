@@ -11,7 +11,7 @@
         <module>metric-calculate-web</module>
         <module>metric-calculate-interface</module>
         <module>metric-calculate-test</module>
-        <module>jmh-test</module>
+        <module>metric-calculate-jmh-test</module>
         <module>metric-calculate-core2</module>
         <module>metric-calculate-flink</module>
         <module>metric-calculate-config</module>
@@ -41,6 +41,9 @@
         <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
+        <mybatis-flex.version>1.4.6</mybatis-flex.version>
+        <lombok.version>1.18.26</lombok.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
     </properties>
 
     <dependencyManagement>
@@ -169,6 +172,17 @@
                 <artifactId>metric-calculate-test</artifactId>
                 <version>${metric-calculate-test.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-spring-boot-starter</artifactId>
+                <version>${mybatis-flex.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-processor</artifactId>
+                <version>${mybatis-flex.version}</version>
+                <scope>provided</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
