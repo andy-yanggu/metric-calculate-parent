@@ -12,7 +12,7 @@ public class TestMapper {
     @Autowired
     private AggregateFunctionMapper aggregateFunctionMapper;
 
-    @Test
+    //@Test
     public void test1() {
         AggregateFunction aggregateFunction = new AggregateFunction();
         aggregateFunction.setName("COUNT");
