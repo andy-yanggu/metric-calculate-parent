@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.AviatorFunctionField;
 /**
  * Aviator函数字段模板 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface AviatorFunctionFieldService extends IService<AviatorFunctionField> {

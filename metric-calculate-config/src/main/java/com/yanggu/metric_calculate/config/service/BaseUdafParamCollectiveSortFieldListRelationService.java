@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.BaseUdafParamCollectiveSortFiel
 /**
  * 基本聚合参数，排序字段列表（sortFieldList）中间表 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface BaseUdafParamCollectiveSortFieldListRelationService extends IService<BaseUdafParamCollectiveSortFieldListRelation> {

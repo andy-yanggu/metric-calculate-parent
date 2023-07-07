@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 混合聚合参数，多个聚合值的计算表达式中间表 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

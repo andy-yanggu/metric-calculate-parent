@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.AggregateFunctionParam;
 /**
  *  映射层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface AggregateFunctionParamMapper extends BaseMapper<AggregateFunctionParam> {

@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.BaseUdafParamObjectiveCompareFi
 /**
  * 基本聚合参数，对象型比较字段列表中间表 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface BaseUdafParamObjectiveCompareFieldExpressListRelationService extends IService<BaseUdafParamObjectiveCompareFieldExpressListRelation> {

@@ -35,7 +35,7 @@ public class Codegen {
         GlobalConfig globalConfig = new GlobalConfig();
 
         //设置根包
-        globalConfig.setSourceDir("D://test/java");
+        globalConfig.setSourceDir("E://test/java");
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
         
         globalConfig.setLogicDeleteColumn("is_deleted");

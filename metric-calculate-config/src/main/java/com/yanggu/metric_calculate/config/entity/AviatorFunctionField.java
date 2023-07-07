@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * Aviator函数字段模板 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

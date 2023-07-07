@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 宽表字段表达式关系表 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

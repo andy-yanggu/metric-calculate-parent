@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 派生指标前置过滤条件中间表 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.MixUdafParamMetricExpressRelati
 /**
  * 混合聚合参数，多个聚合值的计算表达式中间表 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface MixUdafParamMetricExpressRelationService extends IService<MixUdafParamMetricExpressRelation> {

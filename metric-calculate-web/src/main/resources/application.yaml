@@ -6,7 +6,7 @@ server:
 
 spring:
   application:
-    name: metric-calculate
+    name: metric-calculate-web
     version: '1.0.0'
     description: '指标计算服务'
   mvc:
@@ -105,7 +105,7 @@ springdoc:
   group-configs:
   - group: 'default'
     paths-to-match: '/**'
-    packages-to-scan: 'com.yanggu.metric_calculate.controller'
+    packages-to-scan: 'com.yanggu.metric_calculate.web.controller'
 
 # knife4j的增强配置，不需要增强可以不配
 knife4j:

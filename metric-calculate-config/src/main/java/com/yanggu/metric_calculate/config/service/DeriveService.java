@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.Derive;
 /**
  * 派生指标 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface DeriveService extends IService<Derive> {

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.yanggu.metric_calculate.config.entity.MixUdafParamMetricExpressRelation;
 import com.yanggu.metric_calculate.config.service.MixUdafParamMetricExpressRelationService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * 混合聚合参数，多个聚合值的计算表达式中间表 控制层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @RestController

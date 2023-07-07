@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.ModelColumn;
 /**
  * 宽表字段 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface ModelColumnService extends IService<ModelColumn> {

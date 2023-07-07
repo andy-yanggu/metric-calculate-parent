@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.entity.ModelColumnAviatorExpressRelati
 /**
  * 宽表字段表达式关系表 服务层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 public interface ModelColumnAviatorExpressRelationService extends IService<ModelColumnAviatorExpressRelation> {

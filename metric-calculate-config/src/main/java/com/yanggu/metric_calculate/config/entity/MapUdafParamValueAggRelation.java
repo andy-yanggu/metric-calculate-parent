@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 映射聚合参数，value的聚合函数参数。只能是数值型、集合型、对象型中间表 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

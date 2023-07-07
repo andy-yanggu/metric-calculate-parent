@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.yanggu.metric_calculate.config.entity.BaseUdafParam;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * 数值型、集合型、对象型聚合函数相关参数 控制层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @RestController

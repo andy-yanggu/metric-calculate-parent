@@ -1,6 +1,36 @@
+server:
+  port: 8082
+
 spring:
+  application:
+    name: metric-calculate-config
+    version: '1.0.0'
+    description: '指标配置服务'
+  mvc:
+    pathmatch:
+      # 配置策略
+      matching-strategy: ANT_PATH_MATCHER
+
   datasource:
     #    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/metric_calculate_config?characterEncoding=utf-8
     username: root
     password: root
+
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 'default'
+      paths-to-match: '/**'
+      packages-to-scan: 'com.yanggu.metric_calculate.config.controller'
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true

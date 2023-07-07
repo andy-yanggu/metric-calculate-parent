@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 聚合函数 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

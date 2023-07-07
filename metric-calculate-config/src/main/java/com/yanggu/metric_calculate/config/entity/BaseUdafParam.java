@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 数值型、集合型、对象型聚合函数相关参数 实体类。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @Data

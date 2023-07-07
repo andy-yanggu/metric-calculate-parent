@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.yanggu.metric_calculate.config.entity.MixUdafParamMixAggMapRelation;
 import com.yanggu.metric_calculate.config.service.MixUdafParamMixAggMapRelationService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * 混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表 控制层。
  *
- * @author MondayLi
+ * @author 杨顾
  * @since 2023-07-07
  */
 @RestController
