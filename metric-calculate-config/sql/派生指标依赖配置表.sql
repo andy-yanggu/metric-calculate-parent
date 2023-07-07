@@ -210,11 +210,11 @@ CREATE TABLE `mix_udaf_param_mix_agg_map_relation`
   COLLATE = utf8mb4_0900_ai_ci COMMENT = '混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表';
 
 -- 多个聚合值的计算表达式
-CREATE TABLE `map_udaf_param_metric_express_relation`
+CREATE TABLE `mix_udaf_param_metric_express_relation`
 (
     `id`                       int      NOT NULL AUTO_INCREMENT,
-    `map_udaf_param_id`        int      NOT NULL COMMENT '映射聚合函数参数id',
-    `aviator_express_param_id` int      NOT NULL COMMENT 'Aviator函数参数id',
+    `mix_udaf_param_id`        int      NOT NULL COMMENT '混合聚合函数参数id',
+    `aviator_express_param_id` int      NOT NULL COMMENT 'Aviator表达式参数id',
     `is_deleted`               int      NOT NULL DEFAULT '0' COMMENT '是否删除(缺省为0,即未删除)',
     `created_time`             datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`              datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
