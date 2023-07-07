@@ -21,19 +21,9 @@ public class AggregateFunctionParam implements Serializable {
     private String calculateLogic;
 
     /**
-     * 是否是自定义udaf
-     */
-    private Boolean isUdaf;
-
-    /**
      * 基本类型聚合函数参数
      */
     private BaseUdafParam baseUdafParam;
-
-    /**
-     * 额外的基本聚合函数参数
-     */
-    private BaseUdafParam externalBaseUdafParam;
 
     /**
      * 映射类型聚合函数参数

@@ -108,7 +108,7 @@
               "aviatorExpressParam": {
                 "express": "debit_amt_out"
               },
-              "asc": false
+              "is_asc": false
             }
           ],
           "param": {
@@ -272,7 +272,7 @@
               "aviatorExpressParam" : {
                 "express": "debit_amt_out"
               },
-              "asc": true
+              "is_asc": true
             }
           ],
           "param": {

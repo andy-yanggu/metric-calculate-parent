@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+/**
+ * 字段排序配置类
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +23,6 @@ public class FieldOrderParam implements Serializable {
      * 是否升序, true升序, false降序
      * <p>默认升序</p>
      */
-    private Boolean asc = true;
+    private Boolean isAsc = true;
 
 }
