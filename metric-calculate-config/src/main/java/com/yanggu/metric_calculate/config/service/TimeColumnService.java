@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.config.entity.TimeCloumn;
  * @author 杨顾
  * @since 2023-07-07
  */
-public interface TimeCloumnService extends IService<TimeCloumn> {
+public interface TimeColumnService extends IService<TimeCloumn> {
 
 }

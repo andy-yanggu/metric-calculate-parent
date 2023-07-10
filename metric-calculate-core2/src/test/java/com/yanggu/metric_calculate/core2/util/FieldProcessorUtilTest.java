@@ -240,7 +240,7 @@ public class FieldProcessorUtilTest {
     @Test
     public void testNumberGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
-        aggregateFunctionParam.setCalculateLogic("SUM");
+        aggregateFunctionParam.setAggregateType("SUM");
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SUM");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -264,7 +264,7 @@ public class FieldProcessorUtilTest {
     @Test
     public void testObjectGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
-        aggregateFunctionParam.setCalculateLogic("FIRSTOBJECT");
+        aggregateFunctionParam.setAggregateType("FIRSTOBJECT");
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("FIRSTOBJECT");
         aggregateFunctionParam.setBaseUdafParam(baseUdafParam);
@@ -285,7 +285,7 @@ public class FieldProcessorUtilTest {
     @Test
     public void testCollectionGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
-        aggregateFunctionParam.setCalculateLogic("LISTOBJECT");
+        aggregateFunctionParam.setAggregateType("LISTOBJECT");
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
         aggregateFunctionParam.setBaseUdafParam(baseUdafParam);
@@ -306,7 +306,7 @@ public class FieldProcessorUtilTest {
     @Test
     public void testMapGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
-        aggregateFunctionParam.setCalculateLogic("BASEMAP");
+        aggregateFunctionParam.setAggregateType("BASEMAP");
 
         MapUdafParam mapUdafParam = new MapUdafParam();
         mapUdafParam.setAggregateType("BASEMAP");
@@ -343,7 +343,7 @@ public class FieldProcessorUtilTest {
     @Test
     public void testMixGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
-        aggregateFunctionParam.setCalculateLogic("BASEMIX");
+        aggregateFunctionParam.setAggregateType("BASEMIX");
 
         MixUdafParam mixUdafParam = new MixUdafParam();
         mixUdafParam.setAggregateType("BASEMIX");
@@ -379,7 +379,7 @@ public class FieldProcessorUtilTest {
     @Test
     public void testInvalidGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
-        aggregateFunctionParam.setCalculateLogic("invalid");
+        aggregateFunctionParam.setAggregateType("invalid");
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Integer.class);

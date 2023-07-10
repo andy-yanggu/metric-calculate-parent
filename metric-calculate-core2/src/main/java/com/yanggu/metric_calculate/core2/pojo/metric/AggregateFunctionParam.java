@@ -16,9 +16,9 @@ public class AggregateFunctionParam implements Serializable {
     private static final long serialVersionUID = 474654595932207481L;
 
     /**
-     * 聚合逻辑
+     * 聚合类型
      */
-    private String calculateLogic;
+    private String aggregateType;
 
     /**
      * 基本类型聚合函数参数

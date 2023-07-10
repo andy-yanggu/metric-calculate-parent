@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "dimension_cloumn", schema = "metric_calculate_config")
-public class DimensionCloumn implements Serializable {
+@Table(value = "dimension_column", schema = "metric_calculate_config")
+public class DimensionColumn implements Serializable {
 
     /**
      * 主键自增

@@ -304,7 +304,7 @@ public class FieldProcessorUtil {
                                                             AggregateFunctionParam aggregateFunctionParam,
                                                             AviatorFunctionFactory aviatorFunctionFactory,
                                                             AggregateFunctionFactory aggregateFunctionFactory) {
-        String aggregateType = aggregateFunctionParam.getCalculateLogic();
+        String aggregateType = aggregateFunctionParam.getAggregateType();
 
         AggregateFunction<IN, ACC, OUT> aggregateFunction = aggregateFunctionFactory.getAggregateFunction(aggregateType);
         Class<? extends AggregateFunction> aggregateFunctionClass = aggregateFunction.getClass();

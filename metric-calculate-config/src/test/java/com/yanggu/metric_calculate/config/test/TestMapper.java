@@ -2,22 +2,23 @@ package com.yanggu.metric_calculate.config.test;
 
 import com.yanggu.metric_calculate.config.entity.AggregateFunction;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-public class TestMapper {
+//@SpringBootTest
+class TestMapper {
 
     @Autowired
     private AggregateFunctionMapper aggregateFunctionMapper;
 
     //@Test
-    public void test1() {
+    void test1() {
         AggregateFunction aggregateFunction = new AggregateFunction();
-        aggregateFunction.setName("COUNT");
+        aggregateFunction.setName("SUM");
+        aggregateFunction.setDisplayName("求和");
         aggregateFunction.setUserId(1);
-        int insert = aggregateFunctionMapper.insert(aggregateFunction);
+        int insert = aggregateFunctionMapper.insertSelective(aggregateFunction);
         System.out.println(insert);
     }
 

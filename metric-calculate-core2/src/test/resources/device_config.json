@@ -19,7 +19,7 @@
         "timeFormat": "timestamp"
       },
       "aggregateFunctionParam": {
-        "calculateLogic": "BASEMIX",
+        "aggregateType": "BASEMIX",
         "mixUdafParam": {
           "aggregateType": "BASEMIX",
           "mixAggMap": {

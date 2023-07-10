@@ -20,7 +20,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SUM",
+        "aggregateType": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
@@ -56,7 +56,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "MIN",
+        "aggregateType": "MIN",
         "baseUdafParam": {
           "aggregateType": "MIN",
           "metricExpress": "debit_amt_out"
@@ -92,7 +92,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SORTEDLIMITLISTFIELD",
+        "aggregateType": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTFIELD",
           "retainExpress": "debit_amt_out",
@@ -137,7 +137,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "MAXFIELD",
+        "aggregateType": "MAXFIELD",
         "baseUdafParam": {
           "aggregateType": "MAXFIELD",
           "retainExpress": "trans_timestamp",
@@ -176,7 +176,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SUM",
+        "aggregateType": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
@@ -211,7 +211,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "LISTOBJECT",
+        "aggregateType": "LISTOBJECT",
         "baseUdafParam": {
           "aggregateType": "LISTOBJECT",
           "param": {
@@ -249,7 +249,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SORTEDLIMITLISTOBJECT",
+        "aggregateType": "SORTEDLIMITLISTOBJECT",
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTOBJECT",
           "collectiveSortFieldList": [
@@ -293,7 +293,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "BASEMAP",
+        "aggregateType": "BASEMAP",
         "mapUdafParam": {
           "aggregateType": "BASEMAP",
           "distinctFieldList": [
@@ -335,7 +335,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "BASEMIX",
+        "aggregateType": "BASEMIX",
         "mixUdafParam": {
           "aggregateType": "BASEMIX",
           "mixAggMap": {
@@ -381,7 +381,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SUM",
+        "aggregateType": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
@@ -436,7 +436,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SUM",
+        "aggregateType": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"
@@ -471,7 +471,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "FIRSTFIELD",
+        "aggregateType": "FIRSTFIELD",
         "baseUdafParam": {
           "aggregateType": "FIRSTFIELD",
           "retainExpress": "trans_timestamp"
@@ -504,7 +504,7 @@
       },
       "filter": null,
       "aggregateFunctionParam": {
-        "calculateLogic": "SUM",
+        "aggregateType": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpress": "debit_amt_out"

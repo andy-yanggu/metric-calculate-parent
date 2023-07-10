@@ -12,11 +12,14 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
 
   datasource:
-    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/metric_calculate_config?characterEncoding=utf-8
     username: root
     password: root
 
+mybatis-flex:
+  mapper-locations:
+    - classpath*:/mapper/*.xml
 
 # springdoc-openapi项目配置
 springdoc:
