@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.entity.TimeCloumn;
+import com.yanggu.metric_calculate.config.entity.TimeColumn;
 import com.yanggu.metric_calculate.config.service.TimeColumnService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * 时间字段 控制层。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @RestController
 @RequestMapping("/timeColumn")
@@ -36,7 +36,7 @@ public class TimeColumnController {
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
     @PostMapping("save")
-    public boolean save(@RequestBody TimeCloumn timeColumn) {
+    public boolean save(@RequestBody TimeColumn timeColumn) {
         return timeColumnService.save(timeColumn);
     }
 
@@ -58,7 +58,7 @@ public class TimeColumnController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
-    public boolean update(@RequestBody TimeCloumn timeColumn) {
+    public boolean update(@RequestBody TimeColumn timeColumn) {
         return timeColumnService.updateById(timeColumn);
     }
 
@@ -68,7 +68,7 @@ public class TimeColumnController {
      * @return 所有数据
      */
     @GetMapping("list")
-    public List<TimeCloumn> list() {
+    public List<TimeColumn> list() {
         return timeColumnService.list();
     }
 
@@ -79,7 +79,7 @@ public class TimeColumnController {
      * @return 时间字段详情
      */
     @GetMapping("getInfo/{id}")
-    public TimeCloumn getInfo(@PathVariable Serializable id) {
+    public TimeColumn getInfo(@PathVariable Serializable id) {
         return timeColumnService.getById(id);
     }
 
@@ -90,7 +90,7 @@ public class TimeColumnController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public Page<TimeCloumn> page(Page<TimeCloumn> page) {
+    public Page<TimeColumn> page(Page<TimeColumn> page) {
         return timeColumnService.page(page);
     }
 

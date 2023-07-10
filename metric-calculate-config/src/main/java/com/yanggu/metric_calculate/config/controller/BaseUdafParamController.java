@@ -19,8 +19,8 @@ import java.util.List;
 /**
  * 数值型、集合型、对象型聚合函数相关参数 控制层。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @RestController
 @RequestMapping("/baseUdafParam")

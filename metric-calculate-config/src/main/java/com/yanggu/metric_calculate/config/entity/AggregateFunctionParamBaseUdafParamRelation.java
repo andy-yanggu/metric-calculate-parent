@@ -12,38 +12,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 时间字段 实体类。
+ * 聚合函数参数-基本聚合参数中间表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "time_cloumn", schema = "metric_calculate_config")
-public class TimeCloumn implements Serializable {
+@Table(value = "aggregate_function_param_base_udaf_param_relation")
+public class AggregateFunctionParamBaseUdafParamRelation implements Serializable {
 
-    /**
-     * 主键自增
-     */
+    
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
     /**
-     * 宽表id
+     * 聚合函数参数id
      */
-    private Integer modelId;
+    private Integer aggregateFunctionParamId;
 
     /**
-     * 中文名称
+     * 基本聚合参数id
      */
-    private String timeFormat;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
+    private Integer baseUdafParamId;
 
     /**
      * 是否删除(缺省为0,即未删除)

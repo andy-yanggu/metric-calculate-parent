@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 映射聚合参数，value的聚合函数参数。只能是数值型、集合型、对象型中间表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "map_udaf_param_value_agg_relation", schema = "metric_calculate_config")
+@Table(value = "map_udaf_param_value_agg_relation")
 public class MapUdafParamValueAggRelation implements Serializable {
 
     

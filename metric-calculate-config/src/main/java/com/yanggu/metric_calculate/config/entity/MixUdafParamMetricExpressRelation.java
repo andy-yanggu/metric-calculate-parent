@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 混合聚合参数，多个聚合值的计算表达式中间表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "mix_udaf_param_metric_express_relation", schema = "metric_calculate_config")
+@Table(value = "mix_udaf_param_metric_express_relation")
 public class MixUdafParamMetricExpressRelation implements Serializable {
 
     

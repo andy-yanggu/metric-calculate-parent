@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
  * 窗口相关参数 服务层实现。
  *
  * @author MondayLi
- * @since 2023-07-07
+ * @since 2023-07-10
  */
 @Service
 public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, WindowParam> implements WindowParamService {

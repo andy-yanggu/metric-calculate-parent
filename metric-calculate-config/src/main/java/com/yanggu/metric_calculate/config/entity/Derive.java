@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 派生指标 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "derive", schema = "metric_calculate_config")
+@Table(value = "derive")
 public class Derive implements Serializable {
 
     

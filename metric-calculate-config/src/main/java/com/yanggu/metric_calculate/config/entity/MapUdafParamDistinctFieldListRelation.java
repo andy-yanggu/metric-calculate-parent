@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 映射聚合参数，key的生成逻辑(去重字段列表)中间表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "map_udaf_param_distinct_field_list_relation", schema = "metric_calculate_config")
+@Table(value = "map_udaf_param_distinct_field_list_relation")
 public class MapUdafParamDistinctFieldListRelation implements Serializable {
 
     

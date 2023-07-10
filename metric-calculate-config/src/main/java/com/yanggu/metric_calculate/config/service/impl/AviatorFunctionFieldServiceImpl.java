@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * Aviator函数字段模板 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class AviatorFunctionFieldServiceImpl extends ServiceImpl<AviatorFunctionFieldMapper, AviatorFunctionField> implements AviatorFunctionFieldService {

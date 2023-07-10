@@ -6,8 +6,8 @@ import com.yanggu.metric_calculate.config.entity.MapUdafParam;
 /**
  * 映射类型udaf参数 服务层。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 public interface MapUdafParamService extends IService<MapUdafParam> {
 

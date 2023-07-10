@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 派生指标前置过滤条件中间表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "derive_filter_express_relation", schema = "metric_calculate_config")
+@Table(value = "derive_filter_express_relation")
 public class DeriveFilterExpressRelation implements Serializable {
 
     

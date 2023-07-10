@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 聚合函数 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "aggregate_function", schema = "metric_calculate_config")
+@Table(value = "aggregate_function")
 public class AggregateFunction implements Serializable {
 
     /**

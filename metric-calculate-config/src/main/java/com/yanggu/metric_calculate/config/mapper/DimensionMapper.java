@@ -6,8 +6,8 @@ import com.yanggu.metric_calculate.config.entity.Dimension;
 /**
  * 维度表 映射层。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 public interface DimensionMapper extends BaseMapper<Dimension> {
 

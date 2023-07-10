@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 基本聚合参数，排序字段列表（sortFieldList）中间表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "base_udaf_param_collective_sort_field_list_relation", schema = "metric_calculate_config")
+@Table(value = "base_udaf_param_collective_sort_field_list_relation")
 public class BaseUdafParamCollectiveSortFieldListRelation implements Serializable {
 
     

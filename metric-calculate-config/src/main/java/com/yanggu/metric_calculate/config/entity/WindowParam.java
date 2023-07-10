@@ -15,13 +15,13 @@ import lombok.NoArgsConstructor;
  * 窗口相关参数 实体类。
  *
  * @author MondayLi
- * @since 2023-07-07
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "window_param", schema = "metric_calculate_config")
+@Table(value = "window_param")
 public class WindowParam implements Serializable {
 
     /**
@@ -29,21 +29,6 @@ public class WindowParam implements Serializable {
      */
     @Id(keyType = KeyType.Auto)
     private Integer id;
-
-    /**
-     * 派生指标id
-     */
-    private Integer deriveId;
-
-    /**
-     * 中文名称
-     */
-    private String displayName;
-
-    /**
-     * 描述
-     */
-    private String description;
 
     /**
      * 用户id

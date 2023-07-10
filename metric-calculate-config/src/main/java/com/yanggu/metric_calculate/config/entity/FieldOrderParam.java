@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 字段排序配置类 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "field_order_param", schema = "metric_calculate_config")
+@Table(value = "field_order_param")
 public class FieldOrderParam implements Serializable {
 
     /**

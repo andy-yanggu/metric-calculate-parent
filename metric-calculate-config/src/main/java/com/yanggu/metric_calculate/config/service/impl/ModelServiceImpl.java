@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 数据明细宽表 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements ModelService {

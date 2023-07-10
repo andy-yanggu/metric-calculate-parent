@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 数值型、集合型、对象型聚合函数相关参数 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "base_udaf_param", schema = "metric_calculate_config")
+@Table(value = "base_udaf_param")
 public class BaseUdafParam implements Serializable {
 
     

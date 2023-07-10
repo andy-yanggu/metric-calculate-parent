@@ -12,16 +12,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- *  实体类。
+ * 聚合函数参数配置类 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "aggregate_function_param", schema = "metric_calculate_config")
+@Table(value = "aggregate_function_param")
 public class AggregateFunctionParam implements Serializable {
 
     /**
@@ -31,9 +31,9 @@ public class AggregateFunctionParam implements Serializable {
     private Integer id;
 
     /**
-     * 聚合函数id
+     * 聚合类型
      */
-    private Integer aggregateFunctionId;
+    private String aggregateType;
 
     /**
      * 用户id

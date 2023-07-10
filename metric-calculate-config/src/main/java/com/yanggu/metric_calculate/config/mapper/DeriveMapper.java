@@ -6,8 +6,8 @@ import com.yanggu.metric_calculate.config.entity.Derive;
 /**
  * 派生指标 映射层。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 public interface DeriveMapper extends BaseMapper<Derive> {
 

@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 维度表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "dimension", schema = "metric_calculate_config")
+@Table(value = "dimension")
 public class Dimension implements Serializable {
 
     

@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 宽表字段表达式关系表 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "model_column_aviator_express_relation", schema = "metric_calculate_config")
+@Table(value = "model_column_aviator_express_relation")
 public class ModelColumnAviatorExpressRelation implements Serializable {
 
     

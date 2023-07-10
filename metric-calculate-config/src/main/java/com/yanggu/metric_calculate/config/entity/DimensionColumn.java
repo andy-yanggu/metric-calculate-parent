@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 维度字段 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "dimension_column", schema = "metric_calculate_config")
+@Table(value = "dimension_column")
 public class DimensionColumn implements Serializable {
 
     /**
@@ -31,9 +31,9 @@ public class DimensionColumn implements Serializable {
     private Integer id;
 
     /**
-     * 宽表id
+     * 宽表字段id
      */
-    private Integer modelId;
+    private Integer modelColumnId;
 
     /**
      * 维度id

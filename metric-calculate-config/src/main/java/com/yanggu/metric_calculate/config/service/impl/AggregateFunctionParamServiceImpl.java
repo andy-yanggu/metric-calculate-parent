@@ -7,10 +7,10 @@ import com.yanggu.metric_calculate.config.service.AggregateFunctionParamService;
 import org.springframework.stereotype.Service;
 
 /**
- *  服务层实现。
+ * 聚合函数参数配置类 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunctionParamMapper, AggregateFunctionParam> implements AggregateFunctionParamService {

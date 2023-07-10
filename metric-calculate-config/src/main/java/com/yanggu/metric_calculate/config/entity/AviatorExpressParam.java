@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * Aviator表达式配置 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "aviator_express_param", schema = "metric_calculate_config")
+@Table(value = "aviator_express_param")
 public class AviatorExpressParam implements Serializable {
 
     /**

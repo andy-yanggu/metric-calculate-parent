@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 基本聚合参数，对象型比较字段列表中间表 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class BaseUdafParamObjectiveCompareFieldExpressListRelationServiceImpl extends ServiceImpl<BaseUdafParamObjectiveCompareFieldExpressListRelationMapper, BaseUdafParamObjectiveCompareFieldExpressListRelation> implements BaseUdafParamObjectiveCompareFieldExpressListRelationService {

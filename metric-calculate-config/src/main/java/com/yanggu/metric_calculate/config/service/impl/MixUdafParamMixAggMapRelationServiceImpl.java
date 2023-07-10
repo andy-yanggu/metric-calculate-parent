@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class MixUdafParamMixAggMapRelationServiceImpl extends ServiceImpl<MixUdafParamMixAggMapRelationMapper, MixUdafParamMixAggMapRelation> implements MixUdafParamMixAggMapRelationService {

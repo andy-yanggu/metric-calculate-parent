@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 字段排序配置类 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class FieldOrderParamServiceImpl extends ServiceImpl<FieldOrderParamMapper, FieldOrderParam> implements FieldOrderParamService {

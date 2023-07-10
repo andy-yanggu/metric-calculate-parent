@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 /**
  * 数值型、集合型、对象型聚合函数相关参数 服务层实现。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Service
 public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, BaseUdafParam> implements BaseUdafParamService {

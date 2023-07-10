@@ -14,14 +14,14 @@ import lombok.NoArgsConstructor;
 /**
  * 混合类型udaf参数 实体类。
  *
- * @author 杨顾
- * @since 2023-07-07
+ * @author MondayLi
+ * @since 2023-07-10
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "mix_udaf_param", schema = "metric_calculate_config")
+@Table(value = "mix_udaf_param")
 public class MixUdafParam implements Serializable {
 
     
