@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.BaseUdafParamCollectiveSortFieldListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamCollectiveSortFieldListRelation;
 
 /**
  * 基本聚合参数，排序字段列表（sortFieldList）中间表 服务层。

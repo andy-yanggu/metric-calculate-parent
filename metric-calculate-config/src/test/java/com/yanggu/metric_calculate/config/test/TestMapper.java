@@ -1,10 +1,8 @@
 package com.yanggu.metric_calculate.config.test;
 
-import com.yanggu.metric_calculate.config.entity.AggregateFunction;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 //@SpringBootTest
 class TestMapper {

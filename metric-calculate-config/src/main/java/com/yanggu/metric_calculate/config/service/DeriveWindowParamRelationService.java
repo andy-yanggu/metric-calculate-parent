@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.DeriveWindowParamRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveWindowParamRelation;
 
 /**
  * 派生指标-窗口参数中间表 服务层。

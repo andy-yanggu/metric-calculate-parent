@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.entity.AviatorFunctionField;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionField;
 
 /**
  * Aviator函数字段模板 映射层。

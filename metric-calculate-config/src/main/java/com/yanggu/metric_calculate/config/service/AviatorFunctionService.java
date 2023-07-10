@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.AviatorFunction;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunction;
 
 /**
  * Aviator函数 服务层。

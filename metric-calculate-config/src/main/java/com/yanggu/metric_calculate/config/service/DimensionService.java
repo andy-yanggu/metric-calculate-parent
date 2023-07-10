@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.Dimension;
+import com.yanggu.metric_calculate.config.pojo.entity.Dimension;
 
 /**
  * 维度表 服务层。

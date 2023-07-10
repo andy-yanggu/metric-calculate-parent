@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 
 /**
  * 宽表字段 服务层。

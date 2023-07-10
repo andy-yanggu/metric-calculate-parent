@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.entity.Derive;
+import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 import com.yanggu.metric_calculate.config.service.DeriveService;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -79,7 +79,7 @@ public class DeriveController {
      * @return 派生指标详情
      */
     @GetMapping("getInfo/{id}")
-    public Derive getInfo(@PathVariable Serializable id) {
+    public Derive getInfo(@PathVariable Long id) {
         return deriveService.getById(id);
     }
 

@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.DeriveAggregateFunctionParamRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveAggregateFunctionParamRelation;
 
 /**
  * 派生指标聚合函数参数中间表 服务层。

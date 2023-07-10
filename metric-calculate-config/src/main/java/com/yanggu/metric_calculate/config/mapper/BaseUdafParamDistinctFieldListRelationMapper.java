@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.entity.BaseUdafParamDistinctFieldListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamDistinctFieldListRelation;
 
 /**
  * 基本聚合参数，去重字段列表中间表 映射层。

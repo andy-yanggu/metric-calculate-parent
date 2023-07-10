@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.entity.ModelColumnAviatorExpressRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnAviatorExpressRelation;
 
 /**
  * 宽表字段表达式关系表 映射层。

@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.entity.AviatorExpressParam;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
 
 /**
  * Aviator表达式配置 映射层。

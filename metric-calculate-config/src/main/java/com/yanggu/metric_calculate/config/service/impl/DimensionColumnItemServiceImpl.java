@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.entity.DimensionColumnItem;
+import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumnItem;
 import com.yanggu.metric_calculate.config.mapper.DimensionColumnItemMapper;
 import com.yanggu.metric_calculate.config.service.DimensionColumnItemService;
 import org.springframework.stereotype.Service;

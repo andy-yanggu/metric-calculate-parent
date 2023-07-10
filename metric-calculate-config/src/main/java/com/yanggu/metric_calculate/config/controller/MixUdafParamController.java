@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.entity.MixUdafParam;
+import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParam;
 import com.yanggu.metric_calculate.config.service.MixUdafParamService;
 import org.springframework.web.bind.annotation.RestController;
 

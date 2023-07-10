@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.entity.BaseUdafParamDistinctFieldListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamDistinctFieldListRelation;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamDistinctFieldListRelationService;
 import org.springframework.web.bind.annotation.RestController;
 

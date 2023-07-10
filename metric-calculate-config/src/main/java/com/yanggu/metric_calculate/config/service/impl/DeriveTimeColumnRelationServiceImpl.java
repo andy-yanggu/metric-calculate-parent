@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.entity.DeriveTimeColumnRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveTimeColumnRelation;
 import com.yanggu.metric_calculate.config.mapper.DeriveTimeColumnRelationMapper;
 import com.yanggu.metric_calculate.config.service.DeriveTimeColumnRelationService;
 import org.springframework.stereotype.Service;

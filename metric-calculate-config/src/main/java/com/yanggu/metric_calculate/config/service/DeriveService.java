@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.entity.Derive;
+import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 
 /**
  * 派生指标 服务层。
@@ -10,5 +10,4 @@ import com.yanggu.metric_calculate.config.entity.Derive;
  * @since 2023-07-10
  */
 public interface DeriveService extends IService<Derive> {
-
 }

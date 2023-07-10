@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.entity.AggregateFunctionParam;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParam;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionParamService;
 import org.springframework.web.bind.annotation.RestController;
 

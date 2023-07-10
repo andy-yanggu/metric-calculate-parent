@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.entity.BaseUdafParamObjectiveCompareFieldExpressListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamObjectiveCompareFieldExpressListRelation;
 import com.yanggu.metric_calculate.config.mapper.BaseUdafParamObjectiveCompareFieldExpressListRelationMapper;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamObjectiveCompareFieldExpressListRelationService;
 import org.springframework.stereotype.Service;
