@@ -39,7 +39,9 @@ public class TimeColumnServiceImpl extends ServiceImpl<TimeColumnMapper, TimeCol
                 })
                 .collect(Collectors.toList());
 
-        saveBatch(timeColumnList);
+        if (CollUtil.isNotEmpty(timeColumnList)) {
+            saveBatch(timeColumnList);
+        }
     }
 
 }

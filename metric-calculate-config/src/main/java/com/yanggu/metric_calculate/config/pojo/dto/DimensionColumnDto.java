@@ -9,15 +9,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 时间字段 实体类。
+ * 维度字段 实体类。
+ *
+ * @author MondayLi
+ * @since 2023-07-11
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeColumnDto implements Serializable {
-
-    private static final long serialVersionUID = 7617995233100366213L;
+public class DimensionColumnDto implements Serializable {
 
     /**
      * 主键自增
@@ -30,9 +31,9 @@ public class TimeColumnDto implements Serializable {
     private Integer modelColumnId;
 
     /**
-     * 中文名称
+     * 维度id
      */
-    private String timeFormat;
+    private Integer dimensionId;
 
     /**
      * 用户id

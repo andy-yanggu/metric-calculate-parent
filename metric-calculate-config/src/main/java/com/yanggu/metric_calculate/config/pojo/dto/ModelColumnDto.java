@@ -48,6 +48,11 @@ public class ModelColumnDto {
     private TimeColumnDto timeColumn;
 
     /**
+     * 维度字段
+     */
+    private DimensionColumnDto dimensionColumn;
+
+    /**
      * 宽表id
      */
     private Integer modelId;
