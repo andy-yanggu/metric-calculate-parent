@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config;
 
 import com.mybatisflex.codegen.Generator;
+import com.mybatisflex.codegen.config.ColumnConfig;
 import com.mybatisflex.codegen.config.GlobalConfig;
 import com.mybatisflex.codegen.dialect.JdbcTypeMapping;
 import com.mybatisflex.core.BaseMapper;
@@ -37,8 +38,6 @@ public class Codegen {
         globalConfig.setSourceDir("D://test");
         //设置包名
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
-        //设置逻辑删除字段名
-        globalConfig.setLogicDeleteColumn("is_deleted");
 
         //设置生成 entity 并启用 Lombok
         globalConfig.enableEntity()
@@ -72,6 +71,26 @@ public class Codegen {
         globalConfig.enableMapperXml()
                 .setFileSuffix("Mapper")
                 .setOverwriteEnable(true);
+
+        //设置逻辑删除字段名
+        ColumnConfig isDeletedColumnConfig = new ColumnConfig();
+        isDeletedColumnConfig.setColumnName("is_deleted");
+        isDeletedColumnConfig.setLogicDelete(true);
+        isDeletedColumnConfig.setOnInsertValue("0");
+        globalConfig.setColumnConfig(isDeletedColumnConfig);
+
+        //设置创建时间
+        ColumnConfig createTimeColumnConfig = new ColumnConfig();
+        createTimeColumnConfig.setColumnName("create_time");
+        createTimeColumnConfig.setOnInsertValue("CURRENT_TIMESTAMP");
+        globalConfig.setColumnConfig(createTimeColumnConfig);
+
+        //设置更新时间
+        ColumnConfig updateTimeColumnConfig = new ColumnConfig();
+        updateTimeColumnConfig.setColumnName("update_time");
+        updateTimeColumnConfig.setOnInsertValue("CURRENT_TIMESTAMP");
+        updateTimeColumnConfig.setOnUpdateValue("CURRENT_TIMESTAMP");
+        globalConfig.setColumnConfig(updateTimeColumnConfig);
 
         globalConfig.disableTableDef();
 

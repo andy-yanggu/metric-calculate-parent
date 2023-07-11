@@ -1,6 +1,9 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +20,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 数据明细宽表 控制层。
- *
- * @author MondayLi
- * @since 2023-07-10
+ * 数据明细宽表
  */
 @RestController
+@Tag(name = "数据明细宽表")
 @RequestMapping("/model")
 public class ModelController {
 
@@ -30,14 +31,12 @@ public class ModelController {
     private ModelService modelService;
 
     /**
-     * 添加数据明细宽表。
-     *
-     * @param model 数据明细宽表
-     * @return {@code true} 添加成功，{@code false} 添加失败
+     * 添加数据明细宽表
      */
     @PostMapping("save")
-    public boolean save(@RequestBody Model model) {
-        return modelService.save(model);
+    @Operation(summary = "新增数据明细宽表")
+    public void save(@RequestBody ModelDto model) {
+        modelService.create(model);
     }
 
     /**
@@ -78,9 +77,10 @@ public class ModelController {
      * @param id 数据明细宽表主键
      * @return 数据明细宽表详情
      */
+    @Operation(summary = "根据主键查询数据")
     @GetMapping("getInfo/{id}")
-    public Model getInfo(@PathVariable Serializable id) {
-        return modelService.getById(id);
+    public ModelDto getInfo(@PathVariable Integer id) {
+        return modelService.queryById(id);
     }
 
     /**

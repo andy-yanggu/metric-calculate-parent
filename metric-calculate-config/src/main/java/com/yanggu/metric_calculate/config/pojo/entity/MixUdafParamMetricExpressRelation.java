@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
  * 混合聚合参数，多个聚合值的计算表达式中间表 实体类。
  *
  * @author MondayLi
- * @since 2023-07-10
+ * @since 2023-07-11
  */
 @Data
 @Builder
@@ -41,17 +41,19 @@ public class MixUdafParamMetricExpressRelation implements Serializable {
     /**
      * 是否删除(缺省为0,即未删除)
      */
-    @Column(isLogicDelete = true)
+    @Column(onInsertValue = "0", isLogicDelete = true)
     private Integer isDeleted;
 
     /**
      * 创建时间
      */
-    private Date createdTime;
+    @Column(onInsertValue = "CURRENT_TIMESTAMP")
+    private Date createTime;
 
     /**
      * 更新时间
      */
+    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
     private Date updateTime;
 
 }

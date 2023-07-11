@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,25 +19,18 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 派生指标 控制层。
- *
- * @author MondayLi
- * @since 2023-07-10
+ * 派生指标
  */
 @RestController
+@Tag(name = "派生指标")
 @RequestMapping("/derive")
 public class DeriveController {
 
     @Autowired
     private DeriveService deriveService;
 
-    /**
-     * 添加派生指标。
-     *
-     * @param derive 派生指标
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
     @PostMapping("save")
+    @Operation(summary = "新增派生指标")
     public boolean save(@RequestBody Derive derive) {
         return deriveService.save(derive);
     }

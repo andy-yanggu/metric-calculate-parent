@@ -10,5 +10,4 @@ import com.yanggu.metric_calculate.config.pojo.entity.Model;
  * @since 2023-07-10
  */
 public interface ModelMapper extends BaseMapper<Model> {
-
 }

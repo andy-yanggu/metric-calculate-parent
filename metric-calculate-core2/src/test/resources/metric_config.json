@@ -569,11 +569,6 @@
       "fieldType": "REAL"
     },
     {
-      "name": "trans_jnls_no",
-      "dataType": "STRING",
-      "fieldType": "REAL"
-    },
-    {
       "name": "account_no_out",
       "dataType": "STRING",
       "fieldType": "REAL"
@@ -601,16 +596,6 @@
     {
       "name": "debit_amt_in",
       "dataType": "DOUBLE",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "d_c_flag_out",
-      "dataType": "STRING",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "d_c_flag_in",
-      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {

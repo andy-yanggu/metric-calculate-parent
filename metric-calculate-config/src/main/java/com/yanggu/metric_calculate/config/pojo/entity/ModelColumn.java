@@ -1,21 +1,16 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
-import java.io.Serializable;
-import java.util.Date;
+import com.mybatisflex.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * 宽表字段 实体类。
- *
- * @author MondayLi
- * @since 2023-07-10
  */
 @Data
 @Builder
@@ -24,7 +19,8 @@ import lombok.NoArgsConstructor;
 @Table(value = "model_column")
 public class ModelColumn implements Serializable {
 
-    
+    private static final long serialVersionUID = 1424390731821599400L;
+
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
@@ -66,22 +62,34 @@ public class ModelColumn implements Serializable {
     /**
      * 索引
      */
-    private Integer index;
+    private Integer sort;
 
     /**
      * 是否删除(缺省为0,即未删除)
      */
-    @Column(isLogicDelete = true)
+    @Column(onInsertValue = "0", isLogicDelete = true)
     private Integer isDeleted;
 
     /**
      * 创建时间
      */
-    private Date createdTime;
+    @Column(onInsertValue = "CURRENT_TIMESTAMP")
+    private Date createTime;
 
     /**
      * 更新时间
      */
+    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
     private Date updateTime;
+
+    /**
+     * 如果是虚拟字段，增加Aviator表达式
+     */
+    @RelationManyToMany(
+            joinTable = "model_column_aviator_express_relation",
+            selfField = "id", joinSelfColumn = "model_column_id",
+            targetField = "id", joinTargetColumn = "aviator_express_param_id"
+    )
+    private AviatorExpressParam aviatorExpressParam;
 
 }
