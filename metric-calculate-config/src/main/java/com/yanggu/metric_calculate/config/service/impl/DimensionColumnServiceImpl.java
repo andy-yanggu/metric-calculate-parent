@@ -25,7 +25,7 @@ public class DimensionColumnServiceImpl extends ServiceImpl<DimensionColumnMappe
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveTimeColumn(List<ModelColumnDto> modelColumnDtoList) {
+    public void saveDimensionColumn(List<ModelColumnDto> modelColumnDtoList) {
         if (CollUtil.isEmpty(modelColumnDtoList)) {
             return;
         }

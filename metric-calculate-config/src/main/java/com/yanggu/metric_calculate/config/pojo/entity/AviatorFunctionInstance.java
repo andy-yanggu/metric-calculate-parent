@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -13,9 +11,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * Aviator函数实例 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -24,16 +19,13 @@ import lombok.NoArgsConstructor;
 @Table(value = "aviator_function_instance")
 public class AviatorFunctionInstance implements Serializable {
 
+    private static final long serialVersionUID = -566558748751401811L;
+
     /**
      * 主键自增
      */
     @Id(keyType = KeyType.Auto)
     private Integer id;
-
-    /**
-     * 唯一标识
-     */
-    private String name;
 
     /**
      * 中文名称
@@ -56,6 +48,11 @@ public class AviatorFunctionInstance implements Serializable {
     private String param;
 
     /**
+     * 用户id
+     */
+    private Integer userId;
+
+    /**
      * 是否删除(缺省为0,即未删除)
      */
     @Column(onInsertValue = "0", isLogicDelete = true)
@@ -72,5 +69,11 @@ public class AviatorFunctionInstance implements Serializable {
      */
     @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
     private Date updateTime;
+
+    /**
+     * 对应的AggregateFunction
+     */
+    @RelationManyToOne(selfField = "aviatorFunctionId", targetField = "id")
+    private AviatorFunction aviatorFunction;
 
 }

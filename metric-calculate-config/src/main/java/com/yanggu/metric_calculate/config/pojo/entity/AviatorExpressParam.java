@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,5 +56,15 @@ public class AviatorExpressParam implements Serializable {
      */
     @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
     private Date updateTime;
+
+    /**
+     * 使用的Aviator函数实例列表
+     */
+    @RelationManyToMany(
+            joinTable = "aviator_express_param_aviator_function_instance_relation",
+            selfField = "id", joinSelfColumn = "aviator_express_param_id",
+            targetField = "id", joinTargetColumn = "aviator_function_instance_id"
+    )
+    private List<AviatorFunctionInstance> aviatorFunctionInstanceList;
 
 }

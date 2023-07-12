@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * Aviator函数 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -23,6 +20,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(value = "aviator_function")
 public class AviatorFunction implements Serializable {
+
+    private static final long serialVersionUID = -990784661474142084L;
 
     /**
      * 主键自增
@@ -67,5 +66,11 @@ public class AviatorFunction implements Serializable {
      */
     @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
     private Date updateTime;
+
+    /**
+     * Aviator函数成员变量列表
+     */
+    @RelationOneToMany(selfField = "id", targetField = "aviatorFunctionId")
+    private List<AviatorFunctionField> aviatorFunctionFieldList;
 
 }

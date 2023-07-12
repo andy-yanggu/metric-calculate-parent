@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface DimensionColumnService extends IService<DimensionColumn> {
 
-    void saveTimeColumn(List<ModelColumnDto> modelColumnDtoList);
+    /**
+     * 保存维度字段
+     *
+     * @param modelColumnDtoList
+     */
+    void saveDimensionColumn(List<ModelColumnDto> modelColumnDtoList);
 
 }

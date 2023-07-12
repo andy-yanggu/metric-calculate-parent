@@ -11,6 +11,11 @@ import java.util.List;
  */
 public interface TimeColumnService extends IService<TimeColumn> {
 
+    /**
+     * 保存时间字段
+     *
+     * @param modelColumnDtoList
+     */
     void saveTimeColumn(List<ModelColumnDto> modelColumnDtoList);
 
 }

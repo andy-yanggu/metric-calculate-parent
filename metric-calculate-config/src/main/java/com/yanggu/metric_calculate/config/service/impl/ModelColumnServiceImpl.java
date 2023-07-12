@@ -43,7 +43,7 @@ public class ModelColumnServiceImpl extends ServiceImpl<ModelColumnMapper, Model
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void insertModelColumnList(List<ModelColumnDto> modelColumnDtoList) {
+    public void saveModelColumn(List<ModelColumnDto> modelColumnDtoList) {
         //新增宽表字段
         modelColumnDtoList.forEach(tempColumnDto -> {
             ModelColumn modelColumn = modelColumnMapstruct.toEntity(tempColumnDto);

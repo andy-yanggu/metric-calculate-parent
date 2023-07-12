@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * 聚合函数的字段 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -23,6 +20,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(value = "aggregate_function_field")
 public class AggregateFunctionField implements Serializable {
+
+    private static final long serialVersionUID = -1255374352282442715L;
 
     /**
      * 主键自增
