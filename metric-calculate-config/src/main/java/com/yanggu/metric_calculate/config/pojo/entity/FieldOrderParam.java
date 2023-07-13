@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -34,6 +32,9 @@ public class FieldOrderParam implements Serializable {
      * 表达式id
      */
     private Integer aviatorExpressParamId;
+
+    @RelationOneToOne(selfField = "aviatorExpressParamId", targetField = "id")
+    private AviatorExpressParam aviatorExpressParam;
 
     /**
      * 是否升序, true升序, false降序

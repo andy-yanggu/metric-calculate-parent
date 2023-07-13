@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * 维度字段选项 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -23,6 +20,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(value = "dimension_column_item")
 public class DimensionColumnItem implements Serializable {
+
+    private static final long serialVersionUID = 6517027739456307877L;
 
     /**
      * 主键自增

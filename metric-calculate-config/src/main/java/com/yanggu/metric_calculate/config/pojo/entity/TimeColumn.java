@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * 时间字段 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -23,6 +20,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(value = "time_column")
 public class TimeColumn implements Serializable {
+
+    private static final long serialVersionUID = 518994644896526018L;
 
     /**
      * 主键自增

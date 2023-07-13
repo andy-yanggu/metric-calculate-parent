@@ -1,11 +1,12 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,6 +33,30 @@ public class MixUdafParam implements Serializable {
      * 聚合函数id
      */
     private Integer aggregateFunctionId;
+
+    @RelationOneToOne(selfField = "aggregateFunctionId", targetField = "id")
+    private AggregateFunction aggregateFunction;
+
+    /**
+     * 混合聚合类型定义
+     * <p>k是名字, value是基本聚合类型的参数, 用于定义聚合计算逻辑</p>
+     */
+    @RelationManyToMany(
+            joinTable = "mix_udaf_param_mix_agg_map_relation",
+            selfField = "id", joinSelfColumn = "mix_udaf_param_id",
+            targetField = "id", joinTargetColumn = "base_udaf_param_id"
+    )
+    private List<AviatorExpressParam> mixAggList;
+
+    /**
+     * 多个聚合值的计算表达式
+     */
+    @RelationManyToMany(
+            joinTable = "mix_udaf_param_metric_express_relation",
+            selfField = "id", joinSelfColumn = "mix_udaf_param_id",
+            targetField = "id", joinTargetColumn = "base_udaf_param_id"
+    )
+    private AviatorExpressParam metricExpressParam;
 
     /**
      * Aviator函数参数的JSON数据

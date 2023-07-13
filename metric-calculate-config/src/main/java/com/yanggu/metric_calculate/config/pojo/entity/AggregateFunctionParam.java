@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -13,9 +11,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * 聚合函数参数配置类 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -23,6 +18,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(value = "aggregate_function_param")
 public class AggregateFunctionParam implements Serializable {
+
+    private static final long serialVersionUID = -8675494863416206181L;
 
     /**
      * 主键自增
@@ -34,6 +31,36 @@ public class AggregateFunctionParam implements Serializable {
      * 聚合类型
      */
     private String aggregateType;
+
+    /**
+     * 基本类型聚合函数参数
+     */
+    @RelationManyToMany(
+            joinTable = "aggregate_function_param_base_udaf_param_relation",
+            selfField = "id", joinSelfColumn = "aggregate_function_param_id",
+            targetField = "id", joinTargetColumn = "base_udaf_param_id"
+    )
+    private BaseUdafParam baseUdafParam;
+
+    /**
+     * 映射类型聚合函数参数
+     */
+    @RelationManyToMany(
+            joinTable = "aggregate_function_param_map_udaf_param_relation",
+            selfField = "id", joinSelfColumn = "aggregate_function_param_id",
+            targetField = "id", joinTargetColumn = "map_udaf_param_id"
+    )
+    private MapUdafParam mapUdafParam;
+
+    /**
+     * 混合类型聚合函数参数
+     */
+    @RelationManyToMany(
+            joinTable = "aggregate_function_param_mix_udaf_param_relation",
+            selfField = "id", joinSelfColumn = "aggregate_function_param_id",
+            targetField = "id", joinTargetColumn = "mix_udaf_param_id"
+    )
+    private MixUdafParam mixUdafParam;
 
     /**
      * 用户id

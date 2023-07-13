@@ -29,9 +29,9 @@ public class MixUdafParamMetricExpressRelation implements Serializable {
     private Integer id;
 
     /**
-     * 映射聚合函数参数id
+     * 混合聚合函数参数id
      */
-    private Integer mapUdafParamId;
+    private Integer mixUdafParamId;
 
     /**
      * Aviator函数参数id

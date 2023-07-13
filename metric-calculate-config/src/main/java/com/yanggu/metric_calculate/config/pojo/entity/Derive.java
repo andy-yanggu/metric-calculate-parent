@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * 派生指标 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -24,7 +21,8 @@ import lombok.NoArgsConstructor;
 @Table(value = "derive")
 public class Derive implements Serializable {
 
-    
+    private static final long serialVersionUID = 2470923557083328784L;
+
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
@@ -47,6 +45,53 @@ public class Derive implements Serializable {
      * 宽表id
      */
     private Integer modelId;
+
+    /**
+     * 维度字段
+     */
+    @RelationOneToMany(selfField = "id", targetField = "deriveId")
+    private List<DimensionColumnItem> dimensionList;
+
+    /**
+     * 时间字段
+     */
+    @RelationManyToMany(
+            joinTable = "derive_time_column_relation",
+            selfField = "id", joinSelfColumn = "derive_id",
+            targetField = "id", joinTargetColumn = "time_column_id"
+    )
+    private TimeColumn timeColumn;
+
+    /**
+     * 前置过滤条件
+     * <p>Aviator表达式参数</p>
+     */
+    @RelationManyToMany(
+            joinTable = "derive_filter_express_relation",
+            selfField = "id", joinSelfColumn = "derive_id",
+            targetField = "id", joinTargetColumn = "aviator_express_param_id"
+    )
+    private AviatorExpressParam filterExpressParam;
+
+    /**
+     * 聚合函数参数
+     */
+    @RelationManyToMany(
+            joinTable = "derive_aggregate_function_param_relation",
+            selfField = "id", joinSelfColumn = "derive_id",
+            targetField = "id", joinTargetColumn = "aggregate_function_param_id"
+    )
+    private AggregateFunctionParam aggregateFunctionParam;
+
+    /**
+     * 窗口相关参数
+     */
+    @RelationManyToMany(
+            joinTable = "derive_window_param_relation",
+            selfField = "id", joinSelfColumn = "derive_id",
+            targetField = "id", joinTargetColumn = "window_param_id"
+    )
+    private WindowParam windowParam;
 
     /**
      * 计量单位

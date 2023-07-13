@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 宽表字段 实体类。
@@ -91,5 +92,17 @@ public class ModelColumn implements Serializable {
             targetField = "id", joinTargetColumn = "aviator_express_param_id"
     )
     private AviatorExpressParam aviatorExpressParam;
+
+    /**
+     * 时间字段
+     */
+    @RelationOneToMany(selfField = "id", targetField = "model_column_id")
+    private List<TimeColumn> timeColumn;
+
+    /**
+     * 维度字段
+     */
+    @RelationOneToMany(selfField = "id", targetField = "model_column_id")
+    private List<DimensionColumn> dimensionColumn;
 
 }
