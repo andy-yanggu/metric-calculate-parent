@@ -9,8 +9,18 @@ import com.yanggu.metric_calculate.config.pojo.entity.Model;
  */
 public interface ModelService extends IService<Model> {
 
+    /**
+     * 新增宽表
+     * @param modelDto
+     */
     void create(ModelDto modelDto);
 
+    /**
+     * 根据主键查询
+     *
+     * @param id
+     * @return
+     */
     ModelDto queryById(Integer id);
 
 }

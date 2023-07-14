@@ -2,10 +2,10 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.mapstruct.TimeColumnMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelColumnDto;
-import com.yanggu.metric_calculate.config.pojo.entity.TimeColumn;
 import com.yanggu.metric_calculate.config.mapper.TimeColumnMapper;
+import com.yanggu.metric_calculate.config.mapstruct.TimeColumnMapstruct;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.TimeColumn;
 import com.yanggu.metric_calculate.config.service.TimeColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,14 +25,15 @@ public class TimeColumnServiceImpl extends ServiceImpl<TimeColumnMapper, TimeCol
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveTimeColumn(List<ModelColumnDto> modelColumnDtoList) {
-        if (CollUtil.isEmpty(modelColumnDtoList)) {
+    public void saveTimeColumnList(List<ModelColumn> modelColumnList) {
+        if (CollUtil.isEmpty(modelColumnList)) {
             return;
         }
-        List<TimeColumn> timeColumnList = modelColumnDtoList.stream()
+        List<TimeColumn> timeColumnList = modelColumnList.stream()
                 .filter(tempModelColumn -> tempModelColumn.getTimeColumn() != null)
                 .map(tempModelColumn -> {
-                    TimeColumn timeColumn = timeColumnMapstruct.toEntity(tempModelColumn.getTimeColumn());
+                    TimeColumn timeColumn = tempModelColumn.getTimeColumn();
+                    timeColumn.setModelId(tempModelColumn.getModelId());
                     timeColumn.setUserId(tempModelColumn.getUserId());
                     timeColumn.setModelColumnId(tempModelColumn.getModelId());
                     return timeColumn;

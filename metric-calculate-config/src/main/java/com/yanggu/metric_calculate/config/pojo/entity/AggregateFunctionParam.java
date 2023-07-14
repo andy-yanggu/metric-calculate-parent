@@ -35,7 +35,7 @@ public class AggregateFunctionParam implements Serializable {
     /**
      * 基本类型聚合函数参数
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "aggregate_function_param_base_udaf_param_relation",
             selfField = "id", joinSelfColumn = "aggregate_function_param_id",
             targetField = "id", joinTargetColumn = "base_udaf_param_id"
@@ -45,7 +45,7 @@ public class AggregateFunctionParam implements Serializable {
     /**
      * 映射类型聚合函数参数
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "aggregate_function_param_map_udaf_param_relation",
             selfField = "id", joinSelfColumn = "aggregate_function_param_id",
             targetField = "id", joinTargetColumn = "map_udaf_param_id"
@@ -55,7 +55,7 @@ public class AggregateFunctionParam implements Serializable {
     /**
      * 混合类型聚合函数参数
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "aggregate_function_param_mix_udaf_param_relation",
             selfField = "id", joinSelfColumn = "aggregate_function_param_id",
             targetField = "id", joinTargetColumn = "mix_udaf_param_id"

@@ -42,7 +42,7 @@
         <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
-        <mybatis-flex.version>1.4.8</mybatis-flex.version>
+        <mybatis-flex.version>1.4.9</mybatis-flex.version>
         <lombok.version>1.18.26</lombok.version>
         <mapstruct.version>1.5.3.Final</mapstruct.version>
     </properties>

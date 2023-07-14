@@ -1,23 +1,28 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * 宽表
+ * 维度表 实体类。
  */
 @Data
-public class ModelDto {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class DimensionDto implements Serializable {
 
-    /**
-     * 主键自增
-     */
+    private static final long serialVersionUID = -2963633798023385948L;
+
     private Integer id;
 
     /**
-     * 宽表名称
+     * 维度名称
      */
     private String name;
 
@@ -27,14 +32,9 @@ public class ModelDto {
     private String displayName;
 
     /**
-     * 描述
+     * 备注
      */
     private String description;
-
-    /**
-     * 目录id
-     */
-    private Integer directoryId;
 
     /**
      * 用户id
@@ -55,10 +55,5 @@ public class ModelDto {
      * 更新时间
      */
     private Date updateTime;
-
-    /**
-     * 宽表字段列表
-     */
-    private List<ModelColumnDto> modelColumnList;
 
 }

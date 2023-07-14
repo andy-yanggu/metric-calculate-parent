@@ -2,10 +2,10 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.mapstruct.DimensionColumnMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelColumnDto;
-import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumn;
 import com.yanggu.metric_calculate.config.mapper.DimensionColumnMapper;
+import com.yanggu.metric_calculate.config.mapstruct.DimensionColumnMapstruct;
+import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import com.yanggu.metric_calculate.config.service.DimensionColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,16 +25,17 @@ public class DimensionColumnServiceImpl extends ServiceImpl<DimensionColumnMappe
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveDimensionColumn(List<ModelColumnDto> modelColumnDtoList) {
-        if (CollUtil.isEmpty(modelColumnDtoList)) {
+    public void saveDimensionColumnList(List<ModelColumn> modelColumnList) {
+        if (CollUtil.isEmpty(modelColumnList)) {
             return;
         }
-        List<DimensionColumn> dimensionColumnList = modelColumnDtoList.stream()
-                .filter(tempModelColumnDto -> tempModelColumnDto.getDimensionColumn() != null)
-                .map(tempModelColumnDto -> {
-                    DimensionColumn dimensionColumn = dimensionColumnMapstruct.toEntity(tempModelColumnDto.getDimensionColumn());
-                    dimensionColumn.setModelColumnId(tempModelColumnDto.getId());
-                    dimensionColumn.setUserId(tempModelColumnDto.getUserId());
+        List<DimensionColumn> dimensionColumnList = modelColumnList.stream()
+                .filter(tempModelColumn -> tempModelColumn.getDimensionColumn() != null)
+                .map(tempModelColumn -> {
+                    DimensionColumn dimensionColumn = tempModelColumn.getDimensionColumn();
+                    dimensionColumn.setModelColumnId(tempModelColumn.getId());
+                    dimensionColumn.setModelId(tempModelColumn.getModelId());
+                    dimensionColumn.setUserId(tempModelColumn.getUserId());
                     return dimensionColumn;
                 })
                 .collect(Collectors.toList());

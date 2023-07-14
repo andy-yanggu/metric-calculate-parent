@@ -30,6 +30,11 @@ public class TimeColumn implements Serializable {
     private Integer id;
 
     /**
+     * 宽表id
+     */
+    private Integer modelId;
+
+    /**
      * 宽表字段id
      */
     private Integer modelColumnId;
@@ -38,6 +43,11 @@ public class TimeColumn implements Serializable {
      * 中文名称
      */
     private String timeFormat;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
     /**
      * 用户id

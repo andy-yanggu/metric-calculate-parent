@@ -13,9 +13,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * Aviator函数字段模板 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -23,6 +20,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Table(value = "aviator_function_field")
 public class AviatorFunctionField implements Serializable {
+
+    private static final long serialVersionUID = -5711687238733531339L;
 
     /**
      * 主键自增

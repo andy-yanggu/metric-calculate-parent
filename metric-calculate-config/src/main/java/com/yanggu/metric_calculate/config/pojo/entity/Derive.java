@@ -55,7 +55,7 @@ public class Derive implements Serializable {
     /**
      * 时间字段
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "derive_time_column_relation",
             selfField = "id", joinSelfColumn = "derive_id",
             targetField = "id", joinTargetColumn = "time_column_id"
@@ -66,7 +66,7 @@ public class Derive implements Serializable {
      * 前置过滤条件
      * <p>Aviator表达式参数</p>
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "derive_filter_express_relation",
             selfField = "id", joinSelfColumn = "derive_id",
             targetField = "id", joinTargetColumn = "aviator_express_param_id"
@@ -76,7 +76,7 @@ public class Derive implements Serializable {
     /**
      * 聚合函数参数
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "derive_aggregate_function_param_relation",
             selfField = "id", joinSelfColumn = "derive_id",
             targetField = "id", joinTargetColumn = "aggregate_function_param_id"
@@ -86,7 +86,7 @@ public class Derive implements Serializable {
     /**
      * 窗口相关参数
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "derive_window_param_relation",
             selfField = "id", joinSelfColumn = "derive_id",
             targetField = "id", joinTargetColumn = "window_param_id"

@@ -10,9 +10,6 @@ import java.util.Date;
 
 /**
  * 维度字段 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -20,10 +17,17 @@ import java.util.Date;
 @AllArgsConstructor
 public class DimensionColumnDto implements Serializable {
 
+    private static final long serialVersionUID = 3720677788471627294L;
+
     /**
      * 主键自增
      */
     private Integer id;
+
+    /**
+     * 宽表id
+     */
+    private Integer modelId;
 
     /**
      * 宽表字段id
@@ -34,6 +38,16 @@ public class DimensionColumnDto implements Serializable {
      * 维度id
      */
     private Integer dimensionId;
+
+    /**
+     * 维度
+     */
+    private DimensionDto dimension;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
     /**
      * 用户id

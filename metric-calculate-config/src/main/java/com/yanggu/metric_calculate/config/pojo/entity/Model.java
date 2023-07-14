@@ -69,7 +69,7 @@ public class Model implements Serializable {
     private Date updateTime;
 
     /**
-     * 宽表字段
+     * 宽表字段列表
      */
     @RelationOneToMany(selfField = "id", targetField = "modelId", orderBy = "sort")
     private List<ModelColumn> modelColumnList;

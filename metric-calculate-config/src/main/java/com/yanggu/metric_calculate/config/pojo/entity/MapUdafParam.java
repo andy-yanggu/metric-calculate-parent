@@ -37,7 +37,7 @@ public class MapUdafParam implements Serializable {
     /**
      * key的生成逻辑(去重字段列表)
      */
-    @RelationManyToMany(
+    @RelationOneToMany(
             joinTable = "map_udaf_param_distinct_field_list_relation",
             selfField = "id", joinSelfColumn = "map_udaf_param_id",
             targetField = "id", joinTargetColumn = "aviator_express_param_id"
@@ -47,7 +47,7 @@ public class MapUdafParam implements Serializable {
     /**
      * value的聚合函数参数。只能是数值型、集合型、对象型
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "map_udaf_param_value_agg_relation",
             selfField = "id", joinSelfColumn = "map_udaf_param_id",
             targetField = "id", joinTargetColumn = "base_udaf_param_id"

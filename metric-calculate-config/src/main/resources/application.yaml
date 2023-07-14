@@ -6,24 +6,30 @@ spring:
     name: metric-calculate-config
     version: '1.0.0'
     description: '指标配置服务'
+  main:
+    #允许循环依赖
+    allow-circular-references: true
   mvc:
     pathmatch:
       # 配置策略
       matching-strategy: ANT_PATH_MATCHER
 
+  #数据源配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/metric_calculate_config?characterEncoding=utf-8
     username: root
     password: root
 
+  #jackson配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: NON_NULL
     time-zone: GMT+8
 
 mybatis-flex:
   mapper-locations:
-    - classpath*:/mapper/*.xml
+    - classpath*:/mapper/*Mapper.xml
 
 # springdoc-openapi项目配置
 springdoc:

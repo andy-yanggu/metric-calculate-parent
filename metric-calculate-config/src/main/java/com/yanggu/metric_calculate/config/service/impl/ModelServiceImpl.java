@@ -4,9 +4,9 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelColumnDto;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import com.yanggu.metric_calculate.config.service.DimensionColumnService;
 import com.yanggu.metric_calculate.config.service.ModelColumnService;
 import com.yanggu.metric_calculate.config.service.ModelService;
@@ -44,21 +44,24 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     @Transactional(rollbackFor = RuntimeException.class)
     public void create(ModelDto modelDto) {
         Model model = modelMapstruct.toEntity(modelDto);
+
+        //TODO 相关字段唯一性校验
         //新增宽表
         modelMapper.insertSelective(model);
 
-        List<ModelColumnDto> modelColumnDtoList = modelDto.getModelColumnList();
+        List<ModelColumn> modelColumnList = model.getModelColumnList();
+
         //设置modelId
-        modelColumnDtoList.forEach(tempColumnDto -> tempColumnDto.setModelId(model.getId()));
+        modelColumnList.forEach(tempColumnDto -> tempColumnDto.setModelId(model.getId()));
 
         //保存宽表字段
-        modelColumnService.saveModelColumn(modelColumnDtoList);
+        modelColumnService.saveModelColumnList(modelColumnList);
 
         //保存时间字段
-        timeColumnService.saveTimeColumn(modelColumnDtoList);
+        timeColumnService.saveTimeColumnList(modelColumnList);
 
         //保存维度字段
-        dimensionColumnService.saveDimensionColumn(modelColumnDtoList);
+        dimensionColumnService.saveDimensionColumnList(modelColumnList);
 
     }
 

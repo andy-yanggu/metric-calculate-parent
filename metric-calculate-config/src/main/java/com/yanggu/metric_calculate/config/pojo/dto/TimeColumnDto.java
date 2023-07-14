@@ -25,14 +25,29 @@ public class TimeColumnDto implements Serializable {
     private Integer id;
 
     /**
+     * 宽表id
+     */
+    private Integer modelId;
+
+    /**
      * 宽表字段id
      */
     private Integer modelColumnId;
 
     /**
+     * 宽表字段名称
+     */
+    private String modelColumnName;
+
+    /**
      * 中文名称
      */
     private String timeFormat;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
     /**
      * 用户id

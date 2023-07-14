@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 13/07/2023 18:58:02
+ Date: 14/07/2023 18:43:55
 */
 
 SET NAMES utf8mb4;
@@ -499,8 +499,10 @@ DROP TABLE IF EXISTS `dimension_column`;
 CREATE TABLE `dimension_column`
 (
     `id`              int(0)      NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+    `model_id`        int(0)      NULL     DEFAULT NULL COMMENT '宽表id',
     `model_column_id` int(0)      NOT NULL COMMENT '宽表字段id',
     `dimension_id`    int(0)      NOT NULL COMMENT '维度id',
+    `sort`            int(0)      NOT NULL COMMENT '索引',
     `user_id`         int(0)      NOT NULL COMMENT '用户id',
     `is_deleted`      tinyint(0)  NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
     `create_time`     datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -703,8 +705,8 @@ CREATE TABLE `model_column`
     `description`  varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL     DEFAULT NULL COMMENT '描述',
     `field_type`   varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '字段类型(REAL、VIRTUAL)',
     `model_id`     int(0)                                                        NULL     DEFAULT NULL COMMENT '宽表id',
-    `user_id`      int(0)                                                        NOT NULL COMMENT '用户id',
     `sort`         int(0)                                                        NOT NULL COMMENT '索引',
+    `user_id`      int(0)                                                        NOT NULL COMMENT '用户id',
     `is_deleted`   tinyint(0)                                                    NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
     `create_time`  datetime(0)                                                   NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `update_time`  datetime(0)                                                   NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
@@ -741,8 +743,10 @@ DROP TABLE IF EXISTS `time_column`;
 CREATE TABLE `time_column`
 (
     `id`              int(0)                                                       NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+    `model_id`        int(0)                                                       NULL     DEFAULT NULL COMMENT '宽表id',
     `model_column_id` int(0)                                                       NOT NULL COMMENT '宽表字段id',
     `time_format`     varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中文名称',
+    `sort`            int(0)                                                       NOT NULL COMMENT '索引',
     `user_id`         int(0)                                                       NOT NULL COMMENT '用户id',
     `is_deleted`      tinyint(0)                                                   NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
     `create_time`     datetime(0)                                                  NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

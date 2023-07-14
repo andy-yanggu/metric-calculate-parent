@@ -41,7 +41,7 @@ public class MixUdafParam implements Serializable {
      * 混合聚合类型定义
      * <p>k是名字, value是基本聚合类型的参数, 用于定义聚合计算逻辑</p>
      */
-    @RelationManyToMany(
+    @RelationOneToMany(
             joinTable = "mix_udaf_param_mix_agg_map_relation",
             selfField = "id", joinSelfColumn = "mix_udaf_param_id",
             targetField = "id", joinTargetColumn = "base_udaf_param_id"
@@ -51,7 +51,7 @@ public class MixUdafParam implements Serializable {
     /**
      * 多个聚合值的计算表达式
      */
-    @RelationManyToMany(
+    @RelationOneToOne(
             joinTable = "mix_udaf_param_metric_express_relation",
             selfField = "id", joinSelfColumn = "mix_udaf_param_id",
             targetField = "id", joinTargetColumn = "base_udaf_param_id"

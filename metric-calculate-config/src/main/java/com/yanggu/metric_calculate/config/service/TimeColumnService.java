@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelColumnDto;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import com.yanggu.metric_calculate.config.pojo.entity.TimeColumn;
 
 import java.util.List;
@@ -14,8 +14,8 @@ public interface TimeColumnService extends IService<TimeColumn> {
     /**
      * 保存时间字段
      *
-     * @param modelColumnDtoList
+     * @param modelColumnList
      */
-    void saveTimeColumn(List<ModelColumnDto> modelColumnDtoList);
+    void saveTimeColumnList(List<ModelColumn> modelColumnList);
 
 }

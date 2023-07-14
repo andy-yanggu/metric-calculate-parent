@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -13,9 +11,6 @@ import lombok.NoArgsConstructor;
 
 /**
  * 维度字段 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
 @Builder
@@ -24,11 +19,18 @@ import lombok.NoArgsConstructor;
 @Table(value = "dimension_column")
 public class DimensionColumn implements Serializable {
 
+    private static final long serialVersionUID = 5538736519253522391L;
+
     /**
      * 主键自增
      */
     @Id(keyType = KeyType.Auto)
     private Integer id;
+
+    /**
+     * 宽表id
+     */
+    private Integer modelId;
 
     /**
      * 宽表字段id
@@ -39,6 +41,17 @@ public class DimensionColumn implements Serializable {
      * 维度id
      */
     private Integer dimensionId;
+
+    /**
+     * 维度
+     */
+    @RelationManyToOne(selfField = "dimensionId", targetField = "id")
+    private Dimension dimension;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
     /**
      * 用户id
