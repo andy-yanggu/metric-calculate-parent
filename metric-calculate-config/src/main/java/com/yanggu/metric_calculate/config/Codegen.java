@@ -52,18 +52,18 @@ public class Codegen {
         //设置service
         globalConfig.enableService()
                 .setClassSuffix("Service")
-                .setSupperClass(IService.class)
+                .setSuperClass(IService.class)
                 .setOverwriteEnable(true);
 
         //设置serviceImpl
         globalConfig.enableServiceImpl()
                 .setClassSuffix("ServiceImpl")
-                .setSupperClass(ServiceImpl.class)
+                .setSuperClass(ServiceImpl.class)
                 .setOverwriteEnable(true);
 
         //设置mapper
         globalConfig.enableMapper()
-                .setSupperClass(BaseMapper.class)
+                .setSuperClass(BaseMapper.class)
                 .setClassSuffix("Mapper")
                 .setOverwriteEnable(true);
 

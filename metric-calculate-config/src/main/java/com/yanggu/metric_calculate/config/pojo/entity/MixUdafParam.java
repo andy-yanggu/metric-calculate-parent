@@ -44,9 +44,10 @@ public class MixUdafParam implements Serializable {
     @RelationOneToMany(
             joinTable = "mix_udaf_param_mix_agg_map_relation",
             selfField = "id", joinSelfColumn = "mix_udaf_param_id",
-            targetField = "id", joinTargetColumn = "base_udaf_param_id"
+            targetField = "id", joinTargetColumn = "base_udaf_param_id",
+            mapKeyField = "key_name"
     )
-    private List<AviatorExpressParam> mixAggList;
+    private Map<String, AviatorExpressParam> mixAggMap;
 
     /**
      * 多个聚合值的计算表达式

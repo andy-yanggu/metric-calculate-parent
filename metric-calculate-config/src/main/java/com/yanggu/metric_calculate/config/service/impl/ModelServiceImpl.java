@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.relation.RelationManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
@@ -69,6 +70,8 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     public ModelDto queryById(Integer id) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 .where(MODEL.ID.eq(id));
+        //设置递归查询深度
+        RelationManager.setMaxDepth(10);
         //根据主键查询, 同时关联查询其他表数据
         Model model = modelMapper.selectOneWithRelationsByQuery(queryWrapper);
         return modelMapstruct.toDTO(model);
