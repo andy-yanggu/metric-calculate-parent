@@ -1,13 +1,19 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 
 /**
  * 派生指标 服务层。
- *
- * @author MondayLi
- * @since 2023-07-10
  */
 public interface DeriveService extends IService<Derive> {
+
+    /**
+     * 新增派生指标
+     *
+     * @param deriveDto
+     */
+    void create(DeriveDto deriveDto);
+
 }

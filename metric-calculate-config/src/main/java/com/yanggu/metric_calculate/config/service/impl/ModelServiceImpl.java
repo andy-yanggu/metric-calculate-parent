@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
 import com.yanggu.metric_calculate.config.service.DimensionColumnService;
 import com.yanggu.metric_calculate.config.service.ModelColumnService;
 import com.yanggu.metric_calculate.config.service.ModelService;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_EXIST;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
 
 /**
@@ -46,7 +48,9 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     public void create(ModelDto modelDto) {
         Model model = modelMapstruct.toEntity(modelDto);
 
-        //TODO 相关字段唯一性校验
+        //检查name、displayName是否重复
+        checkExist(model);
+
         //新增宽表
         modelMapper.insertSelective(model);
 
@@ -75,6 +79,22 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         //根据主键查询, 同时关联查询其他表数据
         Model model = modelMapper.selectOneWithRelationsByQuery(queryWrapper);
         return modelMapstruct.toDTO(model);
+    }
+
+    /**
+     * 检查name、displayName是否重复
+     * @param model
+     */
+    private void checkExist(Model model) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                //当id存在时为更新
+                .where(MODEL.ID.ne(model.getId()).when(model.getId() != null))
+                .and(MODEL.NAME.eq(model.getName()).or(MODEL.DISPLAY_NAME.eq(model.getDisplayName())))
+                .and(MODEL.USER_ID.eq(model.getUserId()));
+        long count = modelMapper.selectCountByQuery(queryWrapper);
+        if (count > 0) {
+            throw new BusinessException(MODEL_EXIST);
+        }
     }
 
 }

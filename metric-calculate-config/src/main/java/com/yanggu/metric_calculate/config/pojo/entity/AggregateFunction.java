@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,6 +44,26 @@ public class AggregateFunction implements Serializable {
      * 描述
      */
     private String description;
+
+    /**
+     * 聚合函数类型（数值、集合、对象、混合、映射）
+     */
+    private AggregateFunctionTypeEnums type;
+
+    /**
+     * 集合型和对象型主键策略（0没有主键、1去重字段、2排序字段、3比较字段）
+     */
+    private Integer keyStrategy;
+
+    /**
+     * 集合型和对象型保留字段策略（0不保留任何数据、1保留指定字段、2保留原始数据）
+     */
+    private Integer retainStrategy;
+
+    /**
+     * 数值型是否需要多个参数（0否，1是需要多个例如协方差）
+     */
+    private Boolean multiNumber;
 
     /**
      * 用户id
