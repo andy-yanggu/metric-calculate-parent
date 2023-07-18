@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,8 +32,8 @@ public class DeriveController {
 
     @PostMapping("save")
     @Operation(summary = "新增派生指标")
-    public boolean save(@RequestBody Derive derive) {
-        return deriveService.save(derive);
+    public void save(@RequestBody DeriveDto derive) {
+        deriveService.create(derive);
     }
 
     /**

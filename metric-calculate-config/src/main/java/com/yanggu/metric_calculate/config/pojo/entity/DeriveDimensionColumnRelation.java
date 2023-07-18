@@ -12,14 +12,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 维度字段选项 实体类。
+ * 派生指标维度字段中间表 实体类。
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "dimension_column_item")
-public class DimensionColumnItem implements Serializable {
+@Table(value = "derive_dimension_column_relation")
+public class DeriveDimensionColumnRelation implements Serializable {
 
     private static final long serialVersionUID = 6517027739456307877L;
 
@@ -30,11 +30,6 @@ public class DimensionColumnItem implements Serializable {
     private Integer id;
 
     /**
-     * 序号
-     */
-    private Integer sort;
-
-    /**
      * 派生指标id
      */
     private Integer deriveId;
@@ -43,6 +38,11 @@ public class DimensionColumnItem implements Serializable {
      * 维度字段id
      */
     private Integer dimensionColumnId;
+
+    /**
+     * 序号
+     */
+    private Integer sort;
 
     /**
      * 用户id

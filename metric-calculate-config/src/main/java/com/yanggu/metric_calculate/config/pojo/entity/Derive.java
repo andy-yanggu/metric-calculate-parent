@@ -6,7 +6,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import com.yanggu.metric_calculate.config.pojo.dto.DimensionColumnItemDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -50,8 +49,11 @@ public class Derive implements Serializable {
     /**
      * 维度字段
      */
-    @RelationOneToMany(selfField = "id", targetField = "deriveId")
-    private List<DimensionColumnItemDto> dimensionList;
+    @RelationManyToMany(
+            joinTable = "derive_dimension_column_relation",
+            selfField = "id", joinSelfColumn = "derive_id",
+            targetField = "id", joinTargetColumn = "dimension_column_id")
+    private List<DimensionColumn> dimensionColumnList;
 
     /**
      * 时间字段

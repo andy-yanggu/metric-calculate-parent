@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumnItem;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveDimensionColumnRelation;
 
 /**
  * 维度字段选项 映射层。
@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumnItem;
  * @author MondayLi
  * @since 2023-07-10
  */
-public interface DimensionColumnItemMapper extends BaseMapper<DimensionColumnItem> {
+public interface DimensionColumnItemMapper extends BaseMapper<DeriveDimensionColumnRelation> {
 
 }

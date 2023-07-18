@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveDimensionColumnRelation;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,8 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumnItem;
-import com.yanggu.metric_calculate.config.service.DimensionColumnItemService;
+import com.yanggu.metric_calculate.config.service.DeriveDimensionColumnRelationService;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
@@ -27,17 +27,17 @@ import java.util.List;
 public class DimensionColumnItemController {
 
     @Autowired
-    private DimensionColumnItemService dimensionColumnItemService;
+    private DeriveDimensionColumnRelationService deriveDimensionColumnRelationService;
 
     /**
      * 添加维度字段选项。
      *
-     * @param dimensionColumnItem 维度字段选项
+     * @param deriveDimensionColumnRelation 维度字段选项
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
     @PostMapping("save")
-    public boolean save(@RequestBody DimensionColumnItem dimensionColumnItem) {
-        return dimensionColumnItemService.save(dimensionColumnItem);
+    public boolean save(@RequestBody DeriveDimensionColumnRelation deriveDimensionColumnRelation) {
+        return deriveDimensionColumnRelationService.save(deriveDimensionColumnRelation);
     }
 
     /**
@@ -48,18 +48,18 @@ public class DimensionColumnItemController {
      */
     @DeleteMapping("remove/{id}")
     public boolean remove(@PathVariable Serializable id) {
-        return dimensionColumnItemService.removeById(id);
+        return deriveDimensionColumnRelationService.removeById(id);
     }
 
     /**
      * 根据主键更新维度字段选项。
      *
-     * @param dimensionColumnItem 维度字段选项
+     * @param deriveDimensionColumnRelation 维度字段选项
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
-    public boolean update(@RequestBody DimensionColumnItem dimensionColumnItem) {
-        return dimensionColumnItemService.updateById(dimensionColumnItem);
+    public boolean update(@RequestBody DeriveDimensionColumnRelation deriveDimensionColumnRelation) {
+        return deriveDimensionColumnRelationService.updateById(deriveDimensionColumnRelation);
     }
 
     /**
@@ -68,8 +68,8 @@ public class DimensionColumnItemController {
      * @return 所有数据
      */
     @GetMapping("list")
-    public List<DimensionColumnItem> list() {
-        return dimensionColumnItemService.list();
+    public List<DeriveDimensionColumnRelation> list() {
+        return deriveDimensionColumnRelationService.list();
     }
 
     /**
@@ -79,8 +79,8 @@ public class DimensionColumnItemController {
      * @return 维度字段选项详情
      */
     @GetMapping("getInfo/{id}")
-    public DimensionColumnItem getInfo(@PathVariable Serializable id) {
-        return dimensionColumnItemService.getById(id);
+    public DeriveDimensionColumnRelation getInfo(@PathVariable Serializable id) {
+        return deriveDimensionColumnRelationService.getById(id);
     }
 
     /**
@@ -90,8 +90,8 @@ public class DimensionColumnItemController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public Page<DimensionColumnItem> page(Page<DimensionColumnItem> page) {
-        return dimensionColumnItemService.page(page);
+    public Page<DeriveDimensionColumnRelation> page(Page<DeriveDimensionColumnRelation> page) {
+        return deriveDimensionColumnRelationService.page(page);
     }
 
 }

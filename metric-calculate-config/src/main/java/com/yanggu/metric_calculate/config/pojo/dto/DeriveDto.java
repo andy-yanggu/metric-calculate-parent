@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParam;
-import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumnItem;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveDimensionColumnRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.DimensionColumn;
 import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,7 +48,7 @@ public class DeriveDto implements Serializable {
     /**
      * 维度字段
      */
-    private List<DimensionColumnItem> dimensionList;
+    private List<DimensionColumnDto> dimensionColumnList;
 
     /**
      * 时间字段
