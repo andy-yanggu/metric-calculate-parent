@@ -123,11 +123,11 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     }
 
     @Override
-    public Derive getById(Serializable id) {
+    public DeriveDto queryById(Integer id) {
         RelationManager.setMaxDepth(10);
-        QueryWrapper queryWrapper = QueryWrapper.create()
-                .where(DERIVE.ID.eq(id));
-        return deriveMapper.selectOneWithRelationsByQuery(queryWrapper);
+        QueryWrapper queryWrapper = QueryWrapper.create().where(DERIVE.ID.eq(id));
+        Derive derive = deriveMapper.selectOneWithRelationsByQuery(queryWrapper);
+        return deriveMapstruct.toDTO(derive);
     }
 
 }

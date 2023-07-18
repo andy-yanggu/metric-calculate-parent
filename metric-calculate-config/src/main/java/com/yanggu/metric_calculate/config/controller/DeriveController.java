@@ -75,8 +75,8 @@ public class DeriveController {
      * @return 派生指标详情
      */
     @GetMapping("getInfo/{id}")
-    public Derive getInfo(@PathVariable Long id) {
-        return deriveService.getById(id);
+    public DeriveDto getInfo(@PathVariable Integer id) {
+        return deriveService.queryById(id);
     }
 
     /**
