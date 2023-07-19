@@ -118,12 +118,12 @@ class RealFieldCalculateTest {
         //输入"1"字符串, 应该得到Long类型
         input.set(fieldName, data);
         Long process = realFieldCalculate.process(input);
-        assertEquals(new Long(data), process);
+        assertEquals(Long.parseLong(data), process);
 
         //输入1 Long类型, 应该得到Long类型
         input.set(fieldName, 1L);
         process = realFieldCalculate.process(input);
-        assertEquals(new Long(data), process);
+        assertEquals(Long.parseLong(data), process);
         assertEquals(1L, process.longValue());
     }
 

@@ -24,7 +24,7 @@ class SortedListAggregateFunctionTest {
     @Test
     void testConstructor() {
         SortedListAggregateFunction<Integer> sortedListAggregateFunction = new SortedListAggregateFunction<>();
-        assertEquals(new Integer(10), sortedListAggregateFunction.getLimit());
+        assertEquals(Integer.valueOf(10), sortedListAggregateFunction.getLimit());
     }
 
 }
