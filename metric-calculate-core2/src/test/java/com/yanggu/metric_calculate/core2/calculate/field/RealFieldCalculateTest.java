@@ -1,19 +1,19 @@
 package com.yanggu.metric_calculate.core2.calculate.field;
 
 import cn.hutool.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 真实字段处理器单元测试类
  */
-public class RealFieldCalculateTest {
+class RealFieldCalculateTest {
 
     @Test
-    public void testInit() {
+    void testInit() {
         RealFieldCalculate<String> realFieldCalculate = new RealFieldCalculate<>();
         RuntimeException runtimeException = assertThrows(RuntimeException.class, realFieldCalculate::init);
         assertEquals("字段名为空", runtimeException.getMessage());
@@ -29,7 +29,7 @@ public class RealFieldCalculateTest {
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         RealFieldCalculate<String> realFieldCalculate = new RealFieldCalculate<>();
         assertNull(realFieldCalculate.getName());
 
@@ -38,7 +38,7 @@ public class RealFieldCalculateTest {
     }
 
     @Test
-    public void process1() throws Exception {
+    void process1() throws Exception {
         RealFieldCalculate<String> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName("test");
         realFieldCalculate.setDataClass(String.class);
@@ -49,7 +49,7 @@ public class RealFieldCalculateTest {
     }
 
     @Test
-    public void process2() throws Exception {
+    void process2() throws Exception {
         RealFieldCalculate<String> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName("test");
         realFieldCalculate.setDataClass(String.class);
@@ -62,7 +62,7 @@ public class RealFieldCalculateTest {
     }
 
     @Test
-    public void process3() throws Exception {
+    void process3() throws Exception {
         RealFieldCalculate<String> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName("test");
         realFieldCalculate.setDataClass(String.class);
@@ -80,7 +80,7 @@ public class RealFieldCalculateTest {
      * @throws Exception
      */
     @Test
-    public void process4() throws Exception {
+    void process4() throws Exception {
         String fieldName = "key";
         RealFieldCalculate<String> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName(fieldName);
@@ -106,7 +106,7 @@ public class RealFieldCalculateTest {
      * @throws Exception
      */
     @Test
-    public void process5() throws Exception {
+    void process5() throws Exception {
         String fieldName = "key";
         RealFieldCalculate<Long> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName(fieldName);
@@ -133,7 +133,7 @@ public class RealFieldCalculateTest {
      * @throws Exception
      */
     @Test
-    public void process6() throws Exception {
+    void process6() throws Exception {
         String fieldName = "key";
         RealFieldCalculate<BigDecimal> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName(fieldName);
@@ -167,7 +167,7 @@ public class RealFieldCalculateTest {
      * 测试宽表字段是boolean, 输入其他类型数据和boolean
      */
     @Test
-    public void process7()  throws Exception {
+    void process7()  throws Exception {
         String fieldName = "key";
         RealFieldCalculate<Boolean> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName(fieldName);

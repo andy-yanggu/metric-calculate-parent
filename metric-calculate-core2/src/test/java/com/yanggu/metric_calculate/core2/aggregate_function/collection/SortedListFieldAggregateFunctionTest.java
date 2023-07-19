@@ -2,27 +2,27 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SortedListFieldAggregateFunctionTest {
+class SortedListFieldAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = SortedListFieldAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("SORTEDLIMITLISTFIELD", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = SortedListFieldAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(1, collective.retainStrategy());
         assertEquals(2, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         SortedListFieldAggregateFunction<Integer> sortedListFieldAggregateFunction = new SortedListFieldAggregateFunction<>();
         assertEquals(new Integer(10), sortedListFieldAggregateFunction.getLimit());
     }

@@ -4,36 +4,36 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SlidingCountWindowAggregateFunctionTest {
+class SlidingCountWindowAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = SlidingCountWindowAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("SLIDINGCOUNTWINDOW", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = SlidingCountWindowAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(1, collective.retainStrategy());
         assertEquals(0, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         assertEquals(Integer.valueOf(10), slidingCountWindowAggregateFunction.getLimit());
         assertNull(slidingCountWindowAggregateFunction.getAggregateFunction());
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         List<Integer> accumulator = slidingCountWindowAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -41,7 +41,7 @@ public class SlidingCountWindowAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         slidingCountWindowAggregateFunction.setLimit(2);
         slidingCountWindowAggregateFunction.setAggregateFunction(new SumAggregateFunction<>());
@@ -63,7 +63,7 @@ public class SlidingCountWindowAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         slidingCountWindowAggregateFunction.setLimit(2);
         slidingCountWindowAggregateFunction.setAggregateFunction(new SumAggregateFunction<>());
@@ -77,7 +77,7 @@ public class SlidingCountWindowAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         slidingCountWindowAggregateFunction.setLimit(2);
 

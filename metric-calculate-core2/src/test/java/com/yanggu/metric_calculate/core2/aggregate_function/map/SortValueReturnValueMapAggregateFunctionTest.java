@@ -4,38 +4,38 @@ import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregate
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class SortValueReturnValueMapAggregateFunctionTest {
+class SortValueReturnValueMapAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = SortValueReturnValueMapAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("SORTVALUERETURNVALUEMAP", mergeType.value());
     }
 
     @Test
-    public void testMapType() {
+    void testMapType() {
         MapType mapType = SortValueReturnValueMapAggregateFunction.class.getAnnotation(MapType.class);
         assertNotNull(mapType);
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         SortValueReturnValueMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> aggregateFunction = new SortValueReturnValueMapAggregateFunction<>();
         assertNotNull(aggregateFunction);
         assertNull(aggregateFunction.getValueAggregateFunction());
     }
 
     @Test
-    public void testGetResult_Positive() {
+    void testGetResult_Positive() {
         // 创建一个包含键值对的 HashMap
         Map<String, Double> accumulator = new HashMap<>();
         accumulator.put("key1", 5.0D);
@@ -56,7 +56,7 @@ public class SortValueReturnValueMapAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResult_WithSameValues_Positive() {
+    void testGetResult_WithSameValues_Positive() {
         // 创建一个包含键值对的 HashMap
         Map<String, Double> accumulator = new HashMap<>();
         accumulator.put("key1", 5.0D);

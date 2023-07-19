@@ -1,19 +1,19 @@
 package com.yanggu.metric_calculate.core2.field_process.multi_field_order;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 多字段排序单元测试类
  */
-public class MultiFieldOrderCompareKeyTest {
+class MultiFieldOrderCompareKeyTest {
 
     @Test
-    public void compareTo() {
+    void compareTo() {
         MultiFieldOrderCompareKey multiFieldOrderCompareKey1 = new MultiFieldOrderCompareKey();
         List<FieldOrder> fieldOrderList1 = new ArrayList<>();
         fieldOrderList1.add(new FieldOrder().setResult(1).setAsc(true));

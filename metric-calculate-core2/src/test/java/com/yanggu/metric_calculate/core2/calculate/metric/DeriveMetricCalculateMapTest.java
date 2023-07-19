@@ -5,25 +5,25 @@ import cn.hutool.core.lang.Pair;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 映射型派生指标单元测试类
  */
-public class DeriveMetricCalculateMapTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculateMapTest extends DeriveMetricCalculateBase {
 
     /**
      * 测试基本映射BASEMAP
      * 所有交易账号的累计交易金额
      */
     @Test
-    public void testBaseMap() {
+    void testBaseMap() {
         DeriveMetricCalculate<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
                         Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
                 = metricCalculate.getDeriveMetricCalculateById(8L);

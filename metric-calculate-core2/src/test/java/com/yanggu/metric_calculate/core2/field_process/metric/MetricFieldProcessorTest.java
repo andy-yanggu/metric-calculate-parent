@@ -3,26 +3,25 @@ package com.yanggu.metric_calculate.core2.field_process.metric;
 import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 度量字段处理器单元测试类
  */
-public class MetricFieldProcessorTest {
+class MetricFieldProcessorTest {
 
     /**
      * 没有传递metricExpress, 应该报错
      */
     @Test
-    public void init1() {
+    void init1() {
         MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricFieldProcessor::init);
@@ -38,7 +37,7 @@ public class MetricFieldProcessorTest {
      * 没有传递fieldMap, 应该报错
      */
     @Test
-    public void init2() {
+    void init2() {
         MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test");
@@ -52,7 +51,7 @@ public class MetricFieldProcessorTest {
      * 没有传递AviatorFunctionFactory应该报错
      */
     @Test
-    public void init3() {
+    void init3() {
         MetricFieldProcessor<Object> metricFieldProcessor = new MetricFieldProcessor<>();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test");
@@ -71,7 +70,7 @@ public class MetricFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init4() throws Exception {
+    void init4() throws Exception {
         String metricExpress = "amount";
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -94,7 +93,7 @@ public class MetricFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init5() throws Exception {
+    void init5() throws Exception {
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
@@ -119,7 +118,7 @@ public class MetricFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process() throws Exception {
+    void process() throws Exception {
         MetricFieldProcessor<Object> objectMetricFieldProcessor = new MetricFieldProcessor<>();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");

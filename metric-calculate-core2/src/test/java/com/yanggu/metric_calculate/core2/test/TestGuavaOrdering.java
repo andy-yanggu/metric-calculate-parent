@@ -6,12 +6,14 @@ import com.google.common.collect.Ordering;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 多字段排序需求
@@ -19,10 +21,10 @@ import java.util.List;
  * <p>类似SQL中的ORDER BY语义</p>
  * <p>升序时, 字段的值为null放在最前面, 降序时, 字段的值为null放在最后面</p>
  */
-public class TestGuavaOrdering {
+class TestGuavaOrdering {
 
     @Test
-    public void test1() {
+    void test1() {
         //id升序、age降序
         //升序时, 字段的值为null放在最前面, 降序时, 字段的值为null放在最后面
         //该数据需要在前端进行配置
@@ -59,7 +61,7 @@ public class TestGuavaOrdering {
         List<JSONObject> userList = Arrays.asList(user1, user2, user3, user4, user5, user6, user7);
         userList.sort(userOrdering);
 
-        Assert.assertEquals(Arrays.asList(user5, user6, user2, user1, user4, user3, user7), userList);
+        assertEquals(Arrays.asList(user5, user6, user2, user1, user4, user3, user7), userList);
 
     }
 

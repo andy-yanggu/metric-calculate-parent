@@ -1,17 +1,17 @@
 package com.yanggu.metric_calculate.core2.kryo;
 
 import cn.hutool.core.lang.mutable.MutablePair;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * KryoUtil测试类
  */
-public class KryoUtilTest {
+class KryoUtilTest {
 
     @Test
-    public void testMutablePair1() {
+    void testMutablePair1() {
         MutablePair<String, Integer> pair = new MutablePair<>("zhangsan", 1);
         byte[] serialize = KryoUtil.serialize(pair);
         Object deserialize = KryoUtil.deserialize(serialize);

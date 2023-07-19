@@ -3,48 +3,48 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 对象列表单元测试类
  */
-public class ListObjectAggregateFunctionTest {
+class ListObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = ListObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("LISTOBJECT", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = ListObjectAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(2, collective.retainStrategy());
         assertEquals(0, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         ListObjectAggregateFunction<Integer> listObjectAggregateFunction = new ListObjectAggregateFunction<>();
         assertEquals(Integer.valueOf(10), listObjectAggregateFunction.getLimit());
     }
 
     @Test
-    public void testCreateAccumulator() {
+    void testCreateAccumulator() {
         AggregateFunction<String, List<String>, List<String>> function = new ListObjectAggregateFunction<>();
         List<String> accumulator = function.createAccumulator();
         assertEquals(0, accumulator.size());
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         AggregateFunction<String, List<String>, List<String>> function = new ListObjectAggregateFunction<>();
         List<String> accumulator = new ArrayList<>();
 
@@ -62,7 +62,7 @@ public class ListObjectAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResult() {
+    void testGetResult() {
         AggregateFunction<String, List<String>, List<String>> function = new ListObjectAggregateFunction<>();
         List<String> accumulator = new ArrayList<>();
         accumulator = function.add("a", accumulator);
@@ -73,7 +73,7 @@ public class ListObjectAggregateFunctionTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         ListObjectAggregateFunction<String> function = new ListObjectAggregateFunction<>();
 
         List<String> accumulator1 = new ArrayList<>();

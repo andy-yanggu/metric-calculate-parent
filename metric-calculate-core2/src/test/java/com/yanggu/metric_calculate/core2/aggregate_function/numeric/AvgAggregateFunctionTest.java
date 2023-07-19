@@ -3,35 +3,35 @@ package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 import cn.hutool.core.lang.mutable.MutablePair;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * AvgAggregateFunction单元测试类
  */
-public class AvgAggregateFunctionTest {
+class AvgAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = AvgAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("AVG", mergeType.value());
     }
 
     @Test
-    public void testNumerical() {
+    void testNumerical() {
         Numerical numerical = AvgAggregateFunction.class.getAnnotation(Numerical.class);
         assertFalse(numerical.multiNumber());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         assertNotNull(avgAggregateFunction);
     }
 
     @Test
-    public void testCreateAccumulator() {
+    void testCreateAccumulator() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         assertEquals(0.0D, accumulator.getKey(), 0.0);
@@ -39,7 +39,7 @@ public class AvgAggregateFunctionTest {
     }
 
     @Test
-    public void testAdd() {
+    void testAdd() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(1, accumulator);
@@ -48,7 +48,7 @@ public class AvgAggregateFunctionTest {
     }
 
     @Test
-    public void testAddNegative() {
+    void testAddNegative() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(-1, accumulator);
@@ -57,7 +57,7 @@ public class AvgAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResult() {
+    void testGetResult() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(1, accumulator);
@@ -67,7 +67,7 @@ public class AvgAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResultNegative() {
+    void testGetResultNegative() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(-1, accumulator);
@@ -77,7 +77,7 @@ public class AvgAggregateFunctionTest {
     }
 
     @Test
-    public void testMerge() {
+    void testMerge() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> thisAccumulator = avgAggregateFunction.createAccumulator();
         thisAccumulator = avgAggregateFunction.add(1, thisAccumulator);
@@ -89,7 +89,7 @@ public class AvgAggregateFunctionTest {
     }
 
     @Test
-    public void testMergeNegative() {
+    void testMergeNegative() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> thisAccumulator = avgAggregateFunction.createAccumulator();
         thisAccumulator = avgAggregateFunction.add(-1, thisAccumulator);

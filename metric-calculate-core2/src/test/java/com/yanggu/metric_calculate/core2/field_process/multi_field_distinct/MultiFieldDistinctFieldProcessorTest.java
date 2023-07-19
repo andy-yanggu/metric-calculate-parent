@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.multi_field_distinct;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -10,20 +10,20 @@ import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getDistinctFieldFieldProcessor;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * 多字段去重字段处理器
  */
-public class MultiFieldDistinctFieldProcessorTest {
+class MultiFieldDistinctFieldProcessorTest {
 
     @Test
-    public void init() {
+    void init() {
     }
 
     @Test
-    public void process() throws Exception {
+    void process() throws Exception {
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);

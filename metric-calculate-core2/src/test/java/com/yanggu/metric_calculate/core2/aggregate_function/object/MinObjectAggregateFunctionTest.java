@@ -3,36 +3,36 @@ package com.yanggu.metric_calculate.core2.aggregate_function.object;
 import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 最小对象单元测试类
  */
-public class MinObjectAggregateFunctionTest {
+class MinObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = MinObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("MINOBJECT", mergeType.value());
     }
 
     @Test
-    public void testObjective() {
+    void testObjective() {
         Objective objective = MinObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
         assertEquals(3, objective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
         assertNotNull(minObjectAggregateFunction);
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
         MutableObj<Integer> accumulator = minObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -40,7 +40,7 @@ public class MinObjectAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
         MutableObj<Integer> accumulator = minObjectAggregateFunction.createAccumulator();
 
@@ -53,7 +53,7 @@ public class MinObjectAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
         MutableObj<Integer> accumulator = minObjectAggregateFunction.createAccumulator();
 
@@ -64,7 +64,7 @@ public class MinObjectAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
         MutableObj<Integer> accumulator1 = minObjectAggregateFunction.createAccumulator();
         MutableObj<Integer> accumulator2 = minObjectAggregateFunction.createAccumulator();

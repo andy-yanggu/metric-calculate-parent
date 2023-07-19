@@ -2,18 +2,20 @@ package com.yanggu.metric_calculate.core2.test;
 
 
 import org.codehaus.janino.*;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-public class JaninoTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class JaninoTest {
 
     @Test
-    public void test4() throws Exception {
+    void test4() throws Exception {
         ExpressionEvaluator ee = new ExpressionEvaluator();
 
         // The expression will have two "int" parameters: "a" and "b".
@@ -26,11 +28,11 @@ public class JaninoTest {
         ee.cook("a + b");
 
         int result = (Integer) ee.evaluate(new Object[]{12, 23});
-        Assert.assertEquals(35, result);
+        assertEquals(35, result);
     }
 
     @Test
-    public void test5() throws Exception {
+    void test5() throws Exception {
         String[] strings = ExpressionEvaluator.guessParameterNames(new Scanner(null, new StringReader("a + b")));
         System.out.println(Arrays.toString(strings));
         Set<String> parameterNames = new HashSet<>(
@@ -40,7 +42,7 @@ public class JaninoTest {
                                 + "a + b.c + d.e() + f() + g.h.I.j() + k.l.M"
                 ))))
         );
-        Assert.assertEquals(new HashSet<>(Arrays.asList("a", "b", "d")), parameterNames);
+        assertEquals(new HashSet<>(Arrays.asList("a", "b", "d")), parameterNames);
 
         parameterNames = new HashSet<>(
                 Arrays.asList(ScriptEvaluator.guessParameterNames(new Scanner(null, new StringReader(
@@ -50,11 +52,11 @@ public class JaninoTest {
                                 + "return a + b.c + d.e() + f() + g.h.I.j() + k.l.M;"
                 ))))
         );
-        Assert.assertEquals(new HashSet<>(Arrays.asList("b", "d")), parameterNames);
+        assertEquals(new HashSet<>(Arrays.asList("b", "d")), parameterNames);
     }
 
     @Test
-    public void test6() throws Exception {
+    void test6() throws Exception {
         String express = "x * x - x";
         Parser parser = new Parser(new Scanner(null, new StringReader(express)));
         Java.Rvalue rvalue = parser.parseExpression();

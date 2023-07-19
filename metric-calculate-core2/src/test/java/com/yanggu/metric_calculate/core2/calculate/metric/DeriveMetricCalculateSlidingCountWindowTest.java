@@ -3,20 +3,20 @@ package com.yanggu.metric_calculate.core2.calculate.metric;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 滑动计数求和派生指标单元测试类
  */
-public class DeriveMetricCalculateSlidingCountWindowTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculateSlidingCountWindowTest extends DeriveMetricCalculateBase {
 
     /**
      * 测试滑动计数窗口limit限制为5, 最近5笔交易, 进行求和
      */
     @Test
-    public void testSum() throws Exception {
+    void testSum() throws Exception {
         DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(11L);
 

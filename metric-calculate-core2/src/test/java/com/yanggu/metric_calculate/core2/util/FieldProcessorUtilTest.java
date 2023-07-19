@@ -34,7 +34,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.*;
@@ -42,12 +42,12 @@ import java.util.*;
 import static com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.*;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class FieldProcessorUtilTest {
+class FieldProcessorUtilTest {
 
     @Test
-    public void testGetFilterFieldProcessor_Positive() {
+    void testGetFilterFieldProcessor_Positive() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("age", Integer.class);
@@ -59,7 +59,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetFilterFieldProcessor_Negative() {
+    void testGetFilterFieldProcessor_Negative() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("age", Integer.class);
@@ -70,7 +70,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetTimeFieldProcessor() {
+    void testGetTimeFieldProcessor() {
         TimeColumn timeColumn = new TimeColumn("time", "HH:mm:ss");
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(timeColumn);
         assertNotNull(timeFieldProcessor);
@@ -79,7 +79,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetDimensionSetProcessor_Positive() {
+    void testGetDimensionSetProcessor_Positive() {
         String key = "key";
         String metricName = "metricName";
         List<Dimension> dimensionList = new ArrayList<>();
@@ -91,7 +91,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void getMetricFieldProcessor_positiveTestCase() {
+    void getMetricFieldProcessor_positiveTestCase() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("field1", Integer.class);
         fieldMap.put("field2", Integer.class);
@@ -107,7 +107,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetMetricListFieldProcessor() {
+    void testGetMetricListFieldProcessor() {
         // Positive Test Case
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("metric1", Integer.class);
@@ -129,7 +129,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetDistinctFieldFieldProcessor_Positive() {
+    void testGetDistinctFieldFieldProcessor_Positive() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("field1", String.class);
         fieldMap.put("field2", Integer.class);
@@ -149,7 +149,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetOrderFieldProcessor() {
+    void testGetOrderFieldProcessor() {
         // Positive Test Case
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("field1", String.class);
@@ -177,7 +177,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetMixFieldProcessor() {
+    void testGetMixFieldProcessor() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("id", Integer.class);
         fieldMap.put("amount", String.class);
@@ -204,7 +204,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testGetMapFieldProcessor_Positive() {
+    void testGetMapFieldProcessor_Positive() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("amount", Integer.class);
@@ -238,7 +238,7 @@ public class FieldProcessorUtilTest {
      * 数值类型
      */
     @Test
-    public void testNumberGetAggregateFieldProcessor() {
+    void testNumberGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
         aggregateFunctionParam.setAggregateType("SUM");
         BaseUdafParam baseUdafParam = new BaseUdafParam();
@@ -262,7 +262,7 @@ public class FieldProcessorUtilTest {
      * 对象类型
      */
     @Test
-    public void testObjectGetAggregateFieldProcessor() {
+    void testObjectGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
         aggregateFunctionParam.setAggregateType("FIRSTOBJECT");
         BaseUdafParam baseUdafParam = new BaseUdafParam();
@@ -283,7 +283,7 @@ public class FieldProcessorUtilTest {
      * 集合类型
      */
     @Test
-    public void testCollectionGetAggregateFieldProcessor() {
+    void testCollectionGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
         aggregateFunctionParam.setAggregateType("LISTOBJECT");
         BaseUdafParam baseUdafParam = new BaseUdafParam();
@@ -304,7 +304,7 @@ public class FieldProcessorUtilTest {
      * 映射类型
      */
     @Test
-    public void testMapGetAggregateFieldProcessor() {
+    void testMapGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
         aggregateFunctionParam.setAggregateType("BASEMAP");
 
@@ -341,7 +341,7 @@ public class FieldProcessorUtilTest {
      * 混合类型
      */
     @Test
-    public void testMixGetAggregateFieldProcessor() {
+    void testMixGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
         aggregateFunctionParam.setAggregateType("BASEMIX");
 
@@ -377,7 +377,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void testInvalidGetAggregateFieldProcessor() {
+    void testInvalidGetAggregateFieldProcessor() {
         AggregateFunctionParam aggregateFunctionParam = new AggregateFunctionParam();
         aggregateFunctionParam.setAggregateType("invalid");
 
@@ -392,7 +392,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void getBaseFieldProcessor_Numerical_Test() {
+    void getBaseFieldProcessor_Numerical_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test1");
@@ -411,7 +411,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void getBaseFieldProcessor_Objective_Test() {
+    void getBaseFieldProcessor_Objective_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("FIRSTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -425,7 +425,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void getBaseFieldProcessor_Collective_Test() {
+    void getBaseFieldProcessor_Collective_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
         Map<String, Class<?>> fieldMap = new HashMap<>();
@@ -434,7 +434,7 @@ public class FieldProcessorUtilTest {
     }
 
     @Test
-    public void getBaseFieldProcessor_Invalid_Test() {
+    void getBaseFieldProcessor_Invalid_Test() {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("BASEMIX");
         Map<String, Class<?>> fieldMap = new HashMap<>();

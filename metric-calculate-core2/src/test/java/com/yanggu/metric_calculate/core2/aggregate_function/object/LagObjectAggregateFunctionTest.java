@@ -3,36 +3,36 @@ package com.yanggu.metric_calculate.core2.aggregate_function.object;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LagObjectAggregateFunctionTest {
+class LagObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = LagObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("LAGOBJECT", mergeType.value());
     }
 
     @Test
-    public void testObjective() {
+    void testObjective() {
         Objective objective = LagObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
         assertEquals(0, objective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         LagObjectAggregateFunction<String> lagObjectAggregateFunction = new LagObjectAggregateFunction<>();
         assertEquals(1, lagObjectAggregateFunction.getOffset());
         assertNull(lagObjectAggregateFunction.getDefaultValue());
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         LagObjectAggregateFunction<String> lagObjectAggregateFunction = new LagObjectAggregateFunction<>();
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -40,7 +40,7 @@ public class LagObjectAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         LagObjectAggregateFunction<String> lagObjectAggregateFunction = new LagObjectAggregateFunction<>();
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
         lagObjectAggregateFunction.add("test1", accumulator);
@@ -67,7 +67,7 @@ public class LagObjectAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         LagObjectAggregateFunction<String> lagObjectAggregateFunction = new LagObjectAggregateFunction<>();
         lagObjectAggregateFunction.setDefaultValue("defaultValue");
 
@@ -107,7 +107,7 @@ public class LagObjectAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         LagObjectAggregateFunction<String> lagObjectAggregateFunction = new LagObjectAggregateFunction<>();
         lagObjectAggregateFunction.setOffset(4);
 

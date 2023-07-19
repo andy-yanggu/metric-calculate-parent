@@ -4,19 +4,19 @@ import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 前置过滤条件字段处理器单元测试类
  */
-public class FilterFieldProcessorTest {
+class FilterFieldProcessorTest {
 
     /**
      * 如果没有设置前置过滤条件和fieldMap应该正常执行
@@ -24,7 +24,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init1() throws Exception {
+    void init1() throws Exception {
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         filterFieldProcessor.init();
 
@@ -37,7 +37,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init2() throws Exception {
+    void init2() throws Exception {
         String filterExpress = "true";
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -54,7 +54,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init3() throws Exception {
+    void init3() throws Exception {
         String filterExpress = "abc";
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -76,7 +76,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init4() throws Exception {
+    void init4() throws Exception {
         String filterExpress = "true";
 
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
@@ -99,7 +99,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init5() throws Exception {
+    void init5() throws Exception {
         String filterExpress = "amount > 100.00";
 
         FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
@@ -122,7 +122,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void init6() throws Exception {
+    void init6() throws Exception {
         String filterExpress = "amount > 100.00";
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -143,7 +143,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process1() throws Exception {
+    void process1() throws Exception {
         String express = "amount > 100.00";
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
@@ -169,7 +169,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process2() throws Exception {
+    void process2() throws Exception {
         String express = "name == '张三'";
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("name", String.class);
@@ -195,7 +195,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process3() throws Exception {
+    void process3() throws Exception {
         String express = "amount > 500";
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", Long.class);
@@ -221,7 +221,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process4() throws Exception {
+    void process4() throws Exception {
         String express = "result";
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("result", Boolean.class);
@@ -247,7 +247,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process5() throws Exception {
+    void process5() throws Exception {
         String express = "amount > 100.00 && age >= 20";
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
@@ -275,7 +275,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void process6() throws Exception {
+    void process6() throws Exception {
         String express = "amount > 100.00";
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
@@ -301,7 +301,7 @@ public class FilterFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void test6() throws Exception {
+    void test6() throws Exception {
         Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
             put("amount", BigDecimal.class);
         }};

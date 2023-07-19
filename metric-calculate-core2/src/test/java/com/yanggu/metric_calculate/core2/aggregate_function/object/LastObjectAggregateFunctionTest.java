@@ -3,36 +3,36 @@ package com.yanggu.metric_calculate.core2.aggregate_function.object;
 import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 取代对象单元测试类
  */
-public class LastObjectAggregateFunctionTest {
+class LastObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = LastObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("LASTOBJECT", mergeType.value());
     }
 
     @Test
-    public void testObjective() {
+    void testObjective() {
         Objective objective = LastObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
         assertEquals(0, objective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         LastObjectAggregateFunction<String> lastObjectAggregateFunction = new LastObjectAggregateFunction<>();
         assertNotNull(lastObjectAggregateFunction);
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         LastObjectAggregateFunction<String> lastObjectAggregateFunction = new LastObjectAggregateFunction<>();
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -40,7 +40,7 @@ public class LastObjectAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         LastObjectAggregateFunction<String> lastObjectAggregateFunction = new LastObjectAggregateFunction<>();
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
 
@@ -53,7 +53,7 @@ public class LastObjectAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         LastObjectAggregateFunction<String> lastObjectAggregateFunction = new LastObjectAggregateFunction<>();
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
 
@@ -64,7 +64,7 @@ public class LastObjectAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         LastObjectAggregateFunction<String> lastObjectAggregateFunction = new LastObjectAggregateFunction<>();
         MutableObj<String> accumulator1 = lastObjectAggregateFunction.createAccumulator();
         MutableObj<String> accumulator2 = lastObjectAggregateFunction.createAccumulator();

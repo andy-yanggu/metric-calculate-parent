@@ -2,39 +2,39 @@ package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Numerical;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class MinAggregateFunctionTest {
+class MinAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = MinAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("MIN", mergeType.value());
     }
 
     @Test
-    public void testNumerical() {
+    void testNumerical() {
         Numerical numerical = MinAggregateFunction.class.getAnnotation(Numerical.class);
         assertFalse(numerical.multiNumber());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         assertNotNull(minAggregateFunction);
     }
 
     @Test
-    public void testCreateAccumulator() {
+    void testCreateAccumulator() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double accumulator = minAggregateFunction.createAccumulator();
         assertEquals(Double.MAX_VALUE, accumulator, 0.0D);
     }
 
     @Test
-    public void testAddPositive() {
+    void testAddPositive() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double accumulator = minAggregateFunction.createAccumulator();
         Double result = minAggregateFunction.add(1, accumulator);
@@ -42,7 +42,7 @@ public class MinAggregateFunctionTest {
     }
 
     @Test
-    public void testAddNegative() {
+    void testAddNegative() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double accumulator = minAggregateFunction.createAccumulator();
         Double result = minAggregateFunction.add(-1, accumulator);
@@ -50,7 +50,7 @@ public class MinAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResultPositive() {
+    void testGetResultPositive() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double accumulator = minAggregateFunction.createAccumulator();
         Double result = minAggregateFunction.getResult(accumulator);
@@ -58,7 +58,7 @@ public class MinAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResultNegative() {
+    void testGetResultNegative() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double accumulator = minAggregateFunction.add(-1, minAggregateFunction.createAccumulator());
         Double result = minAggregateFunction.getResult(accumulator);
@@ -66,7 +66,7 @@ public class MinAggregateFunctionTest {
     }
 
     @Test
-    public void testMergePositive() {
+    void testMergePositive() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double thisAccumulator = minAggregateFunction.add(1, minAggregateFunction.createAccumulator());
         Double thatAccumulator = minAggregateFunction.add(2, minAggregateFunction.createAccumulator());
@@ -75,7 +75,7 @@ public class MinAggregateFunctionTest {
     }
 
     @Test
-    public void testMergeNegative() {
+    void testMergeNegative() {
         MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
         Double thisAccumulator = minAggregateFunction.add(-1, minAggregateFunction.createAccumulator());
         Double thatAccumulator = minAggregateFunction.add(-2, minAggregateFunction.createAccumulator());

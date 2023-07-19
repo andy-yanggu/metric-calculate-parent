@@ -5,50 +5,50 @@ import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregate
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 基本映射类型单元测试类
  */
-public class BaseMapAggregateFunctionTest {
+class BaseMapAggregateFunctionTest {
 
     private BaseMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> basemap;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         this.basemap = new BaseMapAggregateFunction<>();
         SumAggregateFunction<Double> sumAggregateFunction = new SumAggregateFunction<>();
         this.basemap.setValueAggregateFunction(sumAggregateFunction);
     }
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = BaseMapAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("BASEMAP", mergeType.value());
     }
 
     @Test
-    public void testMapType() {
+    void testMapType() {
         MapType mapType = BaseMapAggregateFunction.class.getAnnotation(MapType.class);
         assertNotNull(mapType);
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         BaseMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> aggregateFunction = new BaseMapAggregateFunction<>();
         assertNotNull(aggregateFunction);
         assertNull(aggregateFunction.getValueAggregateFunction());
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
@@ -56,7 +56,7 @@ public class BaseMapAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
 
         MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey(Collections.singletonList("张三"));
@@ -88,7 +88,7 @@ public class BaseMapAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
         Map<MultiFieldDistinctKey, Double> accumulator1 = basemap.createAccumulator();
         MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("张三"));
@@ -100,7 +100,7 @@ public class BaseMapAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
         MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("张三"));
         Map<MultiFieldDistinctKey, Double> add = basemap.add(Pair.of(key, 100.0D), accumulator);

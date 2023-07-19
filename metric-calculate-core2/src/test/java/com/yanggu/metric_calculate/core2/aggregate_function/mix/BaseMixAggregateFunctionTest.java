@@ -4,20 +4,20 @@ import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class BaseMixAggregateFunctionTest {
+class BaseMixAggregateFunctionTest {
 
     private BaseMixAggregateFunction<Double> baseMixAggregateFunction;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         baseMixAggregateFunction = new BaseMixAggregateFunction<>();
         Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
         mixAggregateFunctionMap.put("test1", new SumAggregateFunction<>());
@@ -37,14 +37,14 @@ public class BaseMixAggregateFunctionTest {
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
     }
 
     @Test
-    public void add() {
+    void add() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         Map<String, Object> input = new HashMap<>();
 
@@ -68,7 +68,7 @@ public class BaseMixAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         accumulator.put("test1", 1.0D);
         accumulator.put("test2", 2.0D);
@@ -77,7 +77,7 @@ public class BaseMixAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         accumulator.put("test1", 1.0D);
         accumulator.put("test2", 2.0D);

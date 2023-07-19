@@ -4,20 +4,20 @@ package com.yanggu.metric_calculate.core2.calculate.metric;
 import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 全窗口派生指标单元测试类
  */
-public class DeriveMetricCalculateGlobalWindowTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculateGlobalWindowTest extends DeriveMetricCalculateBase {
 
     /**
      * 占位，首次交易时间
      */
     @Test
-    public void testOccupiedField() throws Exception {
+    void testOccupiedField() throws Exception {
         DeriveMetricCalculate<Long, MutableObj<Long>, Long> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(12L);
 

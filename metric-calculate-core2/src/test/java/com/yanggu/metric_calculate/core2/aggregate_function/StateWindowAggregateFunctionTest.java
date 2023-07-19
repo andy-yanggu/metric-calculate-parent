@@ -3,28 +3,28 @@ package com.yanggu.metric_calculate.core2.aggregate_function;
 import cn.hutool.core.lang.mutable.MutablePair;
 import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 状态窗口单元测试类
  */
-public class StateWindowAggregateFunctionTest {
+class StateWindowAggregateFunctionTest {
 
     private StateWindowAggregateFunction<Integer, Double, Double> sumStateWindow;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         sumStateWindow = new StateWindowAggregateFunction<>();
         sumStateWindow.setAggregateFunction(new SumAggregateFunction<>());
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         MutablePair<MultiFieldDistinctKey, Double> accumulator = sumStateWindow.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.getKey());
@@ -32,7 +32,7 @@ public class StateWindowAggregateFunctionTest {
     }
 
     @Test
-    public void add1() {
+    void add1() {
         MutablePair<MultiFieldDistinctKey, Double> accumulator = sumStateWindow.createAccumulator();
         MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("1"));
         MutablePair<MultiFieldDistinctKey, Integer> input = new MutablePair<>(key, 100);
@@ -43,7 +43,7 @@ public class StateWindowAggregateFunctionTest {
     }
 
     @Test
-    public void add2() {
+    void add2() {
         MutablePair<MultiFieldDistinctKey, Double> accumulator = sumStateWindow.createAccumulator();
         MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("1"));
         MutablePair<MultiFieldDistinctKey, Integer> input = new MutablePair<>(key, 100);
@@ -67,7 +67,7 @@ public class StateWindowAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         MutablePair<MultiFieldDistinctKey, Double> accumulator = sumStateWindow.createAccumulator();
         MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("1"));
         MutablePair<MultiFieldDistinctKey, Integer> input = new MutablePair<>(key, 100);

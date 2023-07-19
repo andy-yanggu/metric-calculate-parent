@@ -1,30 +1,27 @@
 package com.yanggu.metric_calculate.core2.aviator_function;
 
 import com.googlecode.aviator.AviatorEvaluator;
-import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.runtime.type.AviatorBigInt;
-import com.googlecode.aviator.runtime.type.AviatorLong;
 import com.googlecode.aviator.runtime.type.AviatorNil;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class CoalesceFunctionTest {
+class CoalesceFunctionTest {
 
     private CoalesceFunction coalesceFunction;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         coalesceFunction = new CoalesceFunction();
     }
 
     @Test
-    public void testGetName() {
+    void testGetName() {
         assertEquals("coalesce", coalesceFunction.getName());
     }
 
@@ -32,7 +29,7 @@ public class CoalesceFunctionTest {
      * 测试两个参数的情况
      */
     @Test
-    public void testCall_Two_Args() {
+    void testCall_Two_Args() {
         Map<String, Object> env = Collections.emptyMap();
         assertEquals(AviatorNil.NIL, coalesceFunction.variadicCall(env, AviatorNil.NIL, AviatorNil.NIL));
 
@@ -43,7 +40,7 @@ public class CoalesceFunctionTest {
      * 测试三个参数的情况
      */
     @Test
-    public void testCall_Three_Args() {
+    void testCall_Three_Args() {
         Map<String, Object> env = Collections.emptyMap();
         assertEquals(AviatorNil.NIL, coalesceFunction.variadicCall(env, AviatorNil.NIL, AviatorNil.NIL, AviatorNil.NIL));
 
@@ -58,22 +55,22 @@ public class CoalesceFunctionTest {
      * 对于Aviator表达式表示null, 需要用Nil
      */
     @Test
-    public void testExpress() {
+    void testExpress() {
         AviatorEvaluator.addFunction(coalesceFunction);
 
         //两个参数的情况
-        Assert.assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil)"));
+        assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil)"));
         assertEquals(1L, AviatorEvaluator.execute("coalesce(1, Nil)"));
         assertEquals(2L, AviatorEvaluator.execute("coalesce(Nil, 2)"));
 
         //三个参数的情况
-        Assert.assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil, Nil)"));
+        assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil, Nil)"));
         assertEquals(3L, AviatorEvaluator.execute("coalesce(3, Nil, Nil)"));
         assertEquals(4L, AviatorEvaluator.execute("coalesce(Nil, 4, Nil)"));
         assertEquals(5L, AviatorEvaluator.execute("coalesce(Nil, Nil, 5)"));
 
         //四个参数的情况
-        Assert.assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil, Nil, Nil)"));
+        assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil, Nil, Nil)"));
         assertEquals(6L, AviatorEvaluator.execute("coalesce(6, Nil, Nil, Nil)"));
         assertEquals(7L, AviatorEvaluator.execute("coalesce(Nil, 7, Nil, Nil)"));
         assertEquals(8L, AviatorEvaluator.execute("coalesce(Nil, Nil, 8, Nil)"));

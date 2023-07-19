@@ -4,22 +4,20 @@ package com.yanggu.metric_calculate.core2.util;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static java.util.Calendar.*;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class DateUtilsTest {
+class DateUtilsTest {
 
     /**
      * test format
      */
     @Test
-    public void test1() {
+    void test1() {
         long timestamp = 1679988328000L;
         assertEquals("2023-03-28 15:25:28", DateUtils.formatDateTime(timestamp));
     }
@@ -28,7 +26,7 @@ public class DateUtilsTest {
      * test parse
      */
     @Test
-    public void test2() {
+    void test2() {
         long time = DateUtils.parseDateTime("2023-03-28 15:25:28");
         assertEquals(1679988328000L, time);
     }
@@ -37,7 +35,7 @@ public class DateUtilsTest {
      * 测试毫秒、秒、分钟、小时、天、周、月、年
      */
     @Test
-    public void test3() {
+    void test3() {
         long timestamp = System.currentTimeMillis();
         Date date = new Date(timestamp);
         //毫秒
@@ -78,7 +76,7 @@ public class DateUtilsTest {
      * 测试季度
      */
     @Test
-    public void test4() {
+    void test4() {
         long currentTimeMills = 1674972486000L;
 
         //第一季度

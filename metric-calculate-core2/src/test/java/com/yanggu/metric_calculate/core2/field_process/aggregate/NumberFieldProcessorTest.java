@@ -4,7 +4,7 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * NumberFieldProcessor单元测试类
  * <p>数值型聚合字段处理器单元测试类</p>
  */
-public class NumberFieldProcessorTest {
+class NumberFieldProcessorTest {
 
     @Test
-    public void testProcess1() throws Exception {
+    void testProcess1() throws Exception {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Double.class);
 
@@ -46,7 +46,7 @@ public class NumberFieldProcessorTest {
      * @throws Exception
      */
     @Test
-    public void testProcess_CovUnit() throws Exception {
+    void testProcess_CovUnit() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("COV");
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();

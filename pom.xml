@@ -39,7 +39,7 @@
         <tlog.version>1.5.0</tlog.version>
         <jctools-core.version>4.0.1</jctools-core.version>
         <flink.version>1.17.1</flink.version>
-        <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
+        <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
         <mybatis-flex.version>1.5.1</mybatis-flex.version>

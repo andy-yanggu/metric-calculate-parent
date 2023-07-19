@@ -3,12 +3,12 @@ package com.yanggu.metric_calculate.core2.util;
 
 import com.yanggu.metric_calculate.core2.enums.AccuracyEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.RoundAccuracy;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.yanggu.metric_calculate.core2.util.RoundAccuracyUtil.handlerRoundAccuracy;
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class RoundAccuracyUtilTest {
+class RoundAccuracyUtilTest {
 
     /**
      * 场景1、传入的数据为null, 应该返回null
@@ -16,7 +16,7 @@ public class RoundAccuracyUtilTest {
      * 处理精度
      */
     @Test
-    public void testObjectNull() throws Exception {
+    void testObjectNull() throws Exception {
         Object result = handlerRoundAccuracy(null, null);
         assertNull(result);
     }
@@ -26,7 +26,7 @@ public class RoundAccuracyUtilTest {
      * 应该原样返回
      */
     @Test
-    public void testNotNumber() {
+    void testNotNumber() {
         Object result = new Object();
         Object invoke = handlerRoundAccuracy(result, null);
         assertEquals(result, invoke);
@@ -38,7 +38,7 @@ public class RoundAccuracyUtilTest {
      * 应该原样返回
      */
     @Test
-    public void testCase3() throws Exception {
+    void testCase3() throws Exception {
         Long result = 10L;
         Object invoke = handlerRoundAccuracy(result, new RoundAccuracy());
         assertEquals(result, invoke);
@@ -51,7 +51,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase4() throws Exception {
+    void testCase4() throws Exception {
         Long result = 10L;
         Object invoke = handlerRoundAccuracy(result, new RoundAccuracy().setUseAccuracy(true));
         assertEquals(result, invoke);
@@ -64,7 +64,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase5() throws Exception {
+    void testCase5() throws Exception {
         Long result = 10L;
         RoundAccuracy roundAccuracy = new RoundAccuracy().setUseAccuracy(true).setLength(-1);
 
@@ -80,7 +80,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase6() throws Exception {
+    void testCase6() throws Exception {
         Long result = 10L;
         RoundAccuracy roundAccuracy = new RoundAccuracy().setUseAccuracy(true).setLength(2);
 
@@ -97,7 +97,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase7() throws Exception {
+    void testCase7() throws Exception {
         Double result = 10.123D;
         RoundAccuracy roundAccuracy = new RoundAccuracy().setUseAccuracy(true).setLength(2).setType(AccuracyEnum.ROUNDING);
 
@@ -115,7 +115,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase8() throws Exception {
+    void testCase8() throws Exception {
         Double result = 10.123D;
         RoundAccuracy roundAccuracy = new RoundAccuracy().setUseAccuracy(true).setLength(2).setType(AccuracyEnum.KEEP_UP);
 
@@ -133,7 +133,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase9() throws Exception {
+    void testCase9() throws Exception {
         Double result = 10.123D;
         RoundAccuracy roundAccuracy = new RoundAccuracy().setUseAccuracy(true).setLength(0).setType(AccuracyEnum.ROUNDING);
 
@@ -151,7 +151,7 @@ public class RoundAccuracyUtilTest {
      * @throws Exception
      */
     @Test
-    public void testCase10() throws Exception {
+    void testCase10() throws Exception {
         Double result = 10.123D;
         RoundAccuracy roundAccuracy = new RoundAccuracy().setUseAccuracy(true).setLength(0).setType(AccuracyEnum.KEEP_UP);
 

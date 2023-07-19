@@ -8,39 +8,39 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFi
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * ObjectFieldProcessor单元测试类
  * <p>聚合对象型字段处理器单元测试类</p>
  */
-public class ObjectFieldProcessorTest {
+class ObjectFieldProcessorTest {
 
     private final Map<String, Class<?>> fieldMap = new HashMap<>();
 
-    @Before
-    public void before() {
+    @BeforeEach
+    void before() {
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
     }
 
     @Test
-    public void init() {
+    void init() {
     }
 
     /**
      * 测试FIRSTFIELD, 对象型, 没有比较字段以及保留指定字段
      */
     @Test
-    public void process1() throws Exception {
+    void process1() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -69,7 +69,7 @@ public class ObjectFieldProcessorTest {
      * 测试FIRSTOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      */
     @Test
-    public void process2() throws Exception {
+    void process2() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("FIRSTOBJECT");
@@ -95,7 +95,7 @@ public class ObjectFieldProcessorTest {
      * 测试LAGFIELD, 对象型, 没有比较字段以及保留指定字段
      */
     @Test
-    public void process3() throws Exception {
+    void process3() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -124,7 +124,7 @@ public class ObjectFieldProcessorTest {
      * 测试LAGOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      */
     @Test
-    public void process4() throws Exception {
+    void process4() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("LAGOBJECT");
@@ -150,7 +150,7 @@ public class ObjectFieldProcessorTest {
      * 测试LASTFIELD, 对象型, 没有比较字段以及保留指定字段
      */
     @Test
-    public void process5() throws Exception {
+    void process5() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -179,7 +179,7 @@ public class ObjectFieldProcessorTest {
      * 测试LASTOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      */
     @Test
-    public void process6() throws Exception {
+    void process6() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("LASTOBJECT");
@@ -205,7 +205,7 @@ public class ObjectFieldProcessorTest {
      * MAXFIELD: 有比较字段以及保留指定字段
      */
     @Test
-    public void process7() throws Exception {
+    void process7() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -242,7 +242,7 @@ public class ObjectFieldProcessorTest {
      * 测试MAXOBJECT, 对象型, 需要比较字段以及保留原始对象数据
      */
     @Test
-    public void process8() throws Exception {
+    void process8() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
@@ -275,7 +275,7 @@ public class ObjectFieldProcessorTest {
      * MAXVALUE: 有比较字段和不保留任何数据
      */
     @Test
-    public void process9() throws Exception {
+    void process9() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("MAXVALUE");
@@ -307,7 +307,7 @@ public class ObjectFieldProcessorTest {
      * MINFIELD: 有比较字段以及保留指定字段
      */
     @Test
-    public void process10() throws Exception {
+    void process10() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -344,7 +344,7 @@ public class ObjectFieldProcessorTest {
      * 测试MINOBJECT, 对象型, 需要比较字段以及保留原始对象数据
      */
     @Test
-    public void process11() throws Exception {
+    void process11() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
@@ -377,7 +377,7 @@ public class ObjectFieldProcessorTest {
      * MINVALUE: 有比较字段和不保留任何数据
      */
     @Test
-    public void process12() throws Exception {
+    void process12() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
         udafParam.setAggregateType("MINVALUE");

@@ -12,7 +12,7 @@ import java.util.Map;
  * <p>声明侧由于定义在源代码中, 被定义在运行时常量池可以获取到</p>
  * <p>使用侧由于泛型擦除的缘故, 无法获取</p>
  */
-public class MyTest extends TestClass<String> implements TestInterface1<Integer>, TestInterface2<Long> {
+class MyTest extends TestClass<String> implements TestInterface1<Integer>, TestInterface2<Long> {
 
     private List<Integer> list;
 
@@ -22,7 +22,7 @@ public class MyTest extends TestClass<String> implements TestInterface1<Integer>
         return null;
     }
 
-    public void bb(List<Long> list) {
+    void bb(List<Long> list) {
 
     }
 

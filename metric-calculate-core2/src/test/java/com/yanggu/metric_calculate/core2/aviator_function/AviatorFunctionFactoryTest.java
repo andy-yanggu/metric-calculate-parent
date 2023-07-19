@@ -3,14 +3,14 @@ package com.yanggu.metric_calculate.core2.aviator_function;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core2.test.TestJarUtil;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 自定义Aviator函数单元测试类
@@ -33,7 +33,7 @@ public class AviatorFunctionFactoryTest {
     }
 
     @Test
-    public void test1() throws Exception {
+    void test1() {
         AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("coalesce");
         AviatorEvaluator.addFunction(aviatorFunction);
         Expression expression = AviatorEvaluator.compile("coalesce(a, b, 1)");
@@ -43,8 +43,8 @@ public class AviatorFunctionFactoryTest {
     }
 
     @Test
-    @Ignore
-    public void test2() {
+    @Disabled
+    void test2() {
         AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("test_add");
         AviatorEvaluator.addFunction(aviatorFunction);
         Map<String, Object> params = new HashMap<>();

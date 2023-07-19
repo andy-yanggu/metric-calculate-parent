@@ -3,36 +3,36 @@ package com.yanggu.metric_calculate.core2.aggregate_function.object;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class LagFieldAggregateFunctionTest {
+class LagFieldAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = LagFieldAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("LAGFIELD", mergeType.value());
     }
 
     @Test
-    public void testObjective() {
+    void testObjective() {
         Objective objective = LagFieldAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(1, objective.retainStrategy());
         assertEquals(0, objective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         LagFieldAggregateFunction<String> lagFieldAggregateFunction = new LagFieldAggregateFunction<>();
         assertEquals(1, lagFieldAggregateFunction.getOffset());
         assertNull(lagFieldAggregateFunction.getDefaultValue());
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         LagFieldAggregateFunction<String> lagFieldAggregateFunction = new LagFieldAggregateFunction<>();
         LinkedList<String> accumulator = lagFieldAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -40,7 +40,7 @@ public class LagFieldAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         LagFieldAggregateFunction<String> lagFieldAggregateFunction = new LagFieldAggregateFunction<>();
         LinkedList<String> accumulator = lagFieldAggregateFunction.createAccumulator();
         lagFieldAggregateFunction.add("test1", accumulator);
@@ -67,7 +67,7 @@ public class LagFieldAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         LagFieldAggregateFunction<String> lagFieldAggregateFunction = new LagFieldAggregateFunction<>();
         lagFieldAggregateFunction.setDefaultValue("defaultValue");
 
@@ -107,7 +107,7 @@ public class LagFieldAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         LagFieldAggregateFunction<String> lagFieldAggregateFunction = new LagFieldAggregateFunction<>();
         lagFieldAggregateFunction.setOffset(4);
 

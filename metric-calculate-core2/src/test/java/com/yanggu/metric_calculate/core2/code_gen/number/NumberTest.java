@@ -12,17 +12,17 @@ import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.StringResource;
 import org.codehaus.janino.Compiler;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class NumberTest {
+class NumberTest {
 
     @Test
-    public void test1() throws Exception {
+    void test1() throws Exception {
         TemplateConfig templateConfig = new TemplateConfig("merged_unit_template", TemplateConfig.ResourceMode.CLASSPATH);
         TemplateEngine engine = TemplateUtil.createEngine(templateConfig);
         Template template = engine.getTemplate("number.ftl");
@@ -62,7 +62,7 @@ public class NumberTest {
     }
 
     @Test
-    public void test2() throws Exception {
+    void test2() throws Exception {
         Compiler compiler = new Compiler();
 
         // Store generated .class files in a Map:

@@ -3,23 +3,23 @@ package com.yanggu.metric_calculate.core2.calculate.metric;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 混合型派生指标单元测试类
  */
-public class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
 
     /**
      * 测试混合类型BASEMIX
      */
     @Test
-    public void testBaseMix() throws Exception {
+    void testBaseMix() throws Exception {
         DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(9L);
 

@@ -2,21 +2,21 @@ package com.yanggu.metric_calculate.core2.field_process.time;
 
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * 时间字段处理器
  */
-public class TimeFieldProcessorTest {
+class TimeFieldProcessorTest {
 
     /**
      * 测试是否校验时间字段
      */
     @Test
-    public void init1() {
+    void init1() {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
         assertEquals("时间字段的值为空", runtimeException.getMessage());
@@ -26,7 +26,7 @@ public class TimeFieldProcessorTest {
      * 测试是否校验时间格式
      */
     @Test
-    public void init2() {
+    void init2() {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
         timeFieldProcessor.setTimeColumnName("TimeColumnName");
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
@@ -37,7 +37,7 @@ public class TimeFieldProcessorTest {
      * 测试正常流程
      */
     @Test
-    public void init3() {
+    void init3() {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timeFormat", "TimeColumnName");
         timeFieldProcessor.init();
 
@@ -49,7 +49,7 @@ public class TimeFieldProcessorTest {
      * 时间格式是时间戳
      */
     @Test
-    public void process1() {
+    void process1() {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timestamp", "tran_timestamp");
 
         JSONObject jsonObject = new JSONObject();
@@ -64,7 +64,7 @@ public class TimeFieldProcessorTest {
      * 时间格式是yyyyMMdd
      */
     @Test
-    public void process2() {
+    void process2() {
 
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("yyyyMMdd", "tran_date");
 

@@ -3,27 +3,28 @@ package com.yanggu.metric_calculate.core2.field_process.metric_list;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getMetricListFieldProcessor;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class MetricListFieldProcessorTest {
+
+class MetricListFieldProcessorTest {
 
     @Test
-    public void init1() {
+    void init1() {
         MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
         assertEquals("表达式列表为空", runtimeException.getMessage());
     }
 
     @Test
-    public void init2() {
+    void init2() {
         MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test1");
@@ -33,7 +34,7 @@ public class MetricListFieldProcessorTest {
     }
 
     @Test
-    public void init3() {
+    void init3() {
         MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", String.class);
@@ -47,7 +48,7 @@ public class MetricListFieldProcessorTest {
     }
 
     @Test
-    public void process() throws Exception {
+    void process() throws Exception {
 
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", String.class);

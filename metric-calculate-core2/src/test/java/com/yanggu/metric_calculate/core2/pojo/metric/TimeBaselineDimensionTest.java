@@ -2,18 +2,18 @@ package com.yanggu.metric_calculate.core2.pojo.metric;
 
 import com.yanggu.metric_calculate.core2.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class TimeBaselineDimensionTest {
+class TimeBaselineDimensionTest {
 
     private final long timestamp = DateUtils.parseDateTime("2023-03-30 14:02:23");
 
     @Test
-    public void testGetCurrentAggregateTimestamp() {
+    void testGetCurrentAggregateTimestamp() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.HOUR);
         Long currentAggregateTimestamp = timeBaselineDimension.getCurrentAggregateTimestamp(timestamp);
         assertEquals("2023-03-30 14:00:00", DateUtils.formatDateTime(currentAggregateTimestamp));
@@ -23,7 +23,7 @@ public class TimeBaselineDimensionTest {
      * 测试毫秒
      */
     @Test
-    public void getTimeWindow_MillisSecond() {
+    void getTimeWindow_MillisSecond() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.MILLS);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(5L);
         assertEquals(2, timeWindowDataList.size());
@@ -41,7 +41,7 @@ public class TimeBaselineDimensionTest {
      * 测试秒
      */
     @Test
-    public void getTimeWindow_Second() {
+    void getTimeWindow_Second() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.SECOND);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -59,7 +59,7 @@ public class TimeBaselineDimensionTest {
      * 测试分钟
      */
     @Test
-    public void getTimeWindow_Minute() {
+    void getTimeWindow_Minute() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.MINUTE);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -77,7 +77,7 @@ public class TimeBaselineDimensionTest {
      * 测试小时
      */
     @Test
-    public void getTimeWindow_Hour() {
+    void getTimeWindow_Hour() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.HOUR);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -95,7 +95,7 @@ public class TimeBaselineDimensionTest {
      * 测试天
      */
     @Test
-    public void getTimeWindow_Day() {
+    void getTimeWindow_Day() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.DAY);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -114,7 +114,7 @@ public class TimeBaselineDimensionTest {
      * <p>一周的开始是周一</p>
      */
     @Test
-    public void getTimeWindow_Week() {
+    void getTimeWindow_Week() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.WEEK);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -132,7 +132,7 @@ public class TimeBaselineDimensionTest {
      * 测试月
      */
     @Test
-    public void getTimeWindow_Month() {
+    void getTimeWindow_Month() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.MONTH);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -150,7 +150,7 @@ public class TimeBaselineDimensionTest {
      * 测试季度
      */
     @Test
-    public void getTimeWindow_Quarter() {
+    void getTimeWindow_Quarter() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.QUARTER);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -168,7 +168,7 @@ public class TimeBaselineDimensionTest {
      * 测试年
      */
     @Test
-    public void getTimeWindow_Year() {
+    void getTimeWindow_Year() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.YEAR);
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
@@ -186,7 +186,7 @@ public class TimeBaselineDimensionTest {
      * 测试小时
      */
     @Test
-    public void testGetExpireTimestamp_hour() {
+    void testGetExpireTimestamp_hour() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.HOUR);
         Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
         assertEquals("2023-03-30 10:00:00", DateUtils.formatDateTime(expireTimestamp));
@@ -196,7 +196,7 @@ public class TimeBaselineDimensionTest {
      * 测试天
      */
     @Test
-    public void testGetExpireTimestamp_day() {
+    void testGetExpireTimestamp_day() {
         TimeBaselineDimension timeBaselineDimension = new TimeBaselineDimension(2, TimeUnitEnum.DAY);
         Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
         assertEquals("2023-03-26 00:00:00", DateUtils.formatDateTime(expireTimestamp));

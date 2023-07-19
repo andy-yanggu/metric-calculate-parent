@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-public class CustomObjectExample {
+class CustomObjectExample {
 
     public static void main(String[] args) {
         // Fury应该在多个对象序列化之间复用，不要每次创建新的Fury实例

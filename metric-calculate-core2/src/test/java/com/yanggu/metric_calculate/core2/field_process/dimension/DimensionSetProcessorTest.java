@@ -2,22 +2,22 @@ package com.yanggu.metric_calculate.core2.field_process.dimension;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.Dimension;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 维度字段处理器单元测试类
  */
-public class DimensionSetProcessorTest {
+class DimensionSetProcessorTest {
 
     /**
      * 验证是否按照ColumnIndex进行排序
      */
     @Test
-    public void testInit() {
+    void testInit() {
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor();
         List<Dimension> dimensionList = new ArrayList<>();
         dimensionSetProcessor.setDimensionList(dimensionList);
@@ -48,7 +48,7 @@ public class DimensionSetProcessorTest {
      * 测试能否提取出维度数据
      */
     @Test
-    public void process() {
+    void process() {
         DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor();
 
         dimensionSetProcessor.setMetricName("metricName");

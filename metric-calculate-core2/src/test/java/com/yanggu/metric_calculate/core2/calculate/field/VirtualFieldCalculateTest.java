@@ -6,26 +6,26 @@ import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 
 /**
  * 虚拟字段单元测试类
  */
-@RunWith(MockitoJUnitRunner.class)
-public class VirtualFieldCalculateTest {
+@ExtendWith(MockitoExtension.class)
+class VirtualFieldCalculateTest {
 
     @Mock
     private MetricFieldProcessor<String> mockMetricFieldProcessor;
@@ -36,7 +36,7 @@ public class VirtualFieldCalculateTest {
     private final String express = "username";
 
     @Test
-    public void init() {
+    void init() {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(express);
 
@@ -61,7 +61,7 @@ public class VirtualFieldCalculateTest {
     }
 
     @Test
-    public void process() {
+    void process() {
         VirtualFieldCalculate<String> virtualFieldCalculate = new VirtualFieldCalculate<>();
 
         Map<String, Class<?>> tempFieldMap = new HashMap<>();
@@ -83,7 +83,7 @@ public class VirtualFieldCalculateTest {
     }
 
     @Test
-    public void getColumnName() {
+    void getColumnName() {
         VirtualFieldCalculate<String> virtualFieldCalculate = new VirtualFieldCalculate<>();
         virtualFieldCalculate.setColumnName("tran_date");
         assertEquals("tran_date", virtualFieldCalculate.getColumnName());

@@ -4,33 +4,33 @@ import com.yanggu.metric_calculate.core2.aggregate_function.numeric.SumAggregate
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * SortValueMapAggregateFunction单元测试类
  */
-public class SortValueMapAggregateFunctionTest {
+class SortValueMapAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = SortValueMapAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("SORTVALUEMAP", mergeType.value());
     }
 
     @Test
-    public void testMapType() {
+    void testMapType() {
         MapType mapType = SortValueMapAggregateFunction.class.getAnnotation(MapType.class);
         assertNotNull(mapType);
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         SortValueMapAggregateFunction<MultiFieldDistinctKey, Double, Double, Double> aggregateFunction = new SortValueMapAggregateFunction<>();
         assertNotNull(aggregateFunction);
         assertNull(aggregateFunction.getValueAggregateFunction());
@@ -40,7 +40,7 @@ public class SortValueMapAggregateFunctionTest {
      * 默认升序取Top5
      */
     @Test
-    public void testGetResult() {
+    void testGetResult() {
         Map<String, Double> accumulator = new HashMap<>();
         accumulator.put("key1", 1.0D);
         accumulator.put("key2", 2.0D);
@@ -71,7 +71,7 @@ public class SortValueMapAggregateFunctionTest {
      * 降序取Top5
      */
     @Test
-    public void testGetResult_Negative() {
+    void testGetResult_Negative() {
         Map<String, Double> accumulator = new HashMap<>();
         accumulator.put("key1", 1.0D);
         accumulator.put("key2", 2.0D);

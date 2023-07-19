@@ -8,24 +8,24 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.FieldOr
 import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 集合型派生指标单元测试类
  */
-public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBase {
 
     /**
      * 测试LISTOBJECT类型, limit限制为5, 最多只能存储5个
      */
     @Test
-    public void testListObject() {
+    void testListObject() {
         DeriveMetricCalculate<JSONObject, List<JSONObject>, List<JSONObject>> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(6L);
 
@@ -106,7 +106,7 @@ public class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBa
      * <p>SORTEDLIMITLISTOBJECT</p>
      */
     @Test
-    public void testSort_list_object() throws Exception {
+    void testSort_list_object() throws Exception {
         DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, JSONObject>, BoundedPriorityQueue<KeyValue<MultiFieldOrderCompareKey, JSONObject>>, List<KeyValue<MultiFieldOrderCompareKey, JSONObject>>> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(7L);
         JSONObject input1 = new JSONObject();

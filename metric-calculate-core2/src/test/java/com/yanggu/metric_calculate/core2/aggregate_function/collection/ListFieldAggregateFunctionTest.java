@@ -3,27 +3,28 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ListFieldAggregateFunctionTest {
+
+class ListFieldAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = ListFieldAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("LISTFIELD", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = ListFieldAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(1, collective.retainStrategy());
         assertEquals(0, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         ListFieldAggregateFunction<Integer> listFieldAggregateFunction = new ListFieldAggregateFunction<>();
         assertEquals(Integer.valueOf(10), listFieldAggregateFunction.getLimit());
     }

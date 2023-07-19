@@ -8,17 +8,17 @@ import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 状态窗口派生指标单元测试类
  */
-public class DeriveMetricCalculateStatusWindowTest {
+class DeriveMetricCalculateStatusWindowTest {
 
     private static final MetricCalculate metricCalculate;
 
@@ -31,7 +31,7 @@ public class DeriveMetricCalculateStatusWindowTest {
      * 计算设备当前在线时长或者离线时长
      */
     @Test
-    public void testBaseMix() throws Exception {
+    void testBaseMix() throws Exception {
         DeriveMetricCalculate<Long, Map<String, Object>, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
 
         JSONObject input = new JSONObject();

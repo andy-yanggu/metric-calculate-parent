@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process.multi_field_order;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getFieldOrderFieldProcessor;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 多字段排序字段处理器
  */
-public class MultiFieldOrderFieldProcessorTest {
+class MultiFieldOrderFieldProcessorTest {
 
     @Test
-    public void init() {
+    void init() {
     }
 
     @Test
-    public void process() throws Exception {
+    void process() throws Exception {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("name", String.class);
         fieldMap.put("age", Integer.class);

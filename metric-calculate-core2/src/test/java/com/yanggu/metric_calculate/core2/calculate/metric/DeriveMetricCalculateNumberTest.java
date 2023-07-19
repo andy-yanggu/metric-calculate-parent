@@ -3,20 +3,20 @@ package com.yanggu.metric_calculate.core2.calculate.metric;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 数值型派生指标单元测试类
  */
-public class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
 
     /**
      * 测试SUM求和
      */
     @Test
-    public void testSum() {
+    void testSum() {
         DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(1L);
 
@@ -43,7 +43,7 @@ public class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
      * 测试MIN, 最小值
      */
     @Test
-    public void testMin() {
+    void testMin() {
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(2L);
 

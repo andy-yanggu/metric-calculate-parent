@@ -7,24 +7,24 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getMapFieldProcessor;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 映射类型字段处理器单元测试类
  */
-public class MapFieldProcessorTest {
+class MapFieldProcessorTest {
 
     private Map<String, Class<?>> fieldMap;
 
-    @Before
-    public void init() throws Exception {
+    @BeforeEach
+    void init() throws Exception {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("account_no_out", String.class);
         fieldMap.put("account_no_in", String.class);
@@ -36,11 +36,11 @@ public class MapFieldProcessorTest {
      * 测试init方法
      */
     @Test
-    public void testInit() {
+    void testInit() {
     }
 
     @Test
-    public void testProcess() throws Exception {
+    void testProcess() throws Exception {
 
         //out给in转账, 记录out给每个in转账的总金额
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");

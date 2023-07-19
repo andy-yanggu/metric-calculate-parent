@@ -3,36 +3,36 @@ package com.yanggu.metric_calculate.core2.aggregate_function.object;
 import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Objective;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 最大对象单元测试类
  */
-public class MaxObjectAggregateFunctionTest {
+class MaxObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = MaxObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("MAXOBJECT", mergeType.value());
     }
 
     @Test
-    public void testObjective() {
+    void testObjective() {
         Objective objective = MaxObjectAggregateFunction.class.getAnnotation(Objective.class);
         assertEquals(2, objective.retainStrategy());
         assertEquals(3, objective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         MaxObjectAggregateFunction<Integer> maxObjectAggregateFunction = new MaxObjectAggregateFunction<>();
         assertNotNull(maxObjectAggregateFunction);
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         MaxObjectAggregateFunction<Integer> maxObjectAggregateFunction = new MaxObjectAggregateFunction<>();
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -40,7 +40,7 @@ public class MaxObjectAggregateFunctionTest {
     }
 
     @Test
-    public void add() {
+    void add() {
         MaxObjectAggregateFunction<Integer> maxObjectAggregateFunction = new MaxObjectAggregateFunction<>();
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
 
@@ -53,7 +53,7 @@ public class MaxObjectAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         MaxObjectAggregateFunction<Integer> maxObjectAggregateFunction = new MaxObjectAggregateFunction<>();
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
 
@@ -64,7 +64,7 @@ public class MaxObjectAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         MaxObjectAggregateFunction<Integer> maxObjectAggregateFunction = new MaxObjectAggregateFunction<>();
         MutableObj<Integer> accumulator1 = maxObjectAggregateFunction.createAccumulator();
         MutableObj<Integer> accumulator2 = maxObjectAggregateFunction.createAccumulator();

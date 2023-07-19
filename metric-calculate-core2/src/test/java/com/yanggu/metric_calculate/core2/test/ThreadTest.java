@@ -4,7 +4,7 @@ package com.yanggu.metric_calculate.core2.test;
 import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +13,10 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
-public class ThreadTest {
+class ThreadTest {
 
     @Test
-    public void test1() throws InterruptedException {
+    void test1() throws InterruptedException {
         MyRunnable<String> runnable = new MyRunnable<>();
         runnable.setLimit(10);
         runnable.setInterval(1000);

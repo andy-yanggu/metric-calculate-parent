@@ -2,40 +2,40 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 去重计数单元测试类
  */
-public class DistinctCountAggregateFunctionTest {
+class DistinctCountAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = DistinctCountAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("DISTINCTCOUNT", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = DistinctCountAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(0, collective.retainStrategy());
         assertEquals(1, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         DistinctCountAggregateFunction<Object> distinctCountAggregateFunction = new DistinctCountAggregateFunction<>();
         assertNotNull(distinctCountAggregateFunction);
     }
 
     @Test
-    public void testCreateAccumulator() {
+    void testCreateAccumulator() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
         Set<Integer> accumulator = distinctCount.createAccumulator();
         assertNotNull(accumulator);
@@ -43,7 +43,7 @@ public class DistinctCountAggregateFunctionTest {
     }
 
     @Test
-    public void testAddElement() {
+    void testAddElement() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
         Set<Integer> accumulator = new HashSet<>();
         accumulator = distinctCount.add(1, accumulator);
@@ -53,7 +53,7 @@ public class DistinctCountAggregateFunctionTest {
     }
 
     @Test
-    public void testAddDuplicate() {
+    void testAddDuplicate() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
         Set<Integer> accumulator = new HashSet<>();
         accumulator = distinctCount.add(1, accumulator);
@@ -64,7 +64,7 @@ public class DistinctCountAggregateFunctionTest {
     }
 
     @Test
-    public void testGetResult() {
+    void testGetResult() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
         HashSet<Integer> mock = Mockito.mock(HashSet.class);
         Mockito.when(mock.size()).thenReturn(1);
@@ -75,7 +75,7 @@ public class DistinctCountAggregateFunctionTest {
     }
 
     @Test
-    public void testMergeAccumulators() {
+    void testMergeAccumulators() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
         Set<Integer> accumulator1 = new HashSet<>();
         Set<Integer> accumulator2 = new HashSet<>();
@@ -89,7 +89,7 @@ public class DistinctCountAggregateFunctionTest {
     }
 
     @Test
-    public void testMergeDuplicateElements() {
+    void testMergeDuplicateElements() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
         Set<Integer> accumulator1 = new HashSet<>();
         Set<Integer> accumulator2 = new HashSet<>();

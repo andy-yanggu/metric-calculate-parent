@@ -10,25 +10,25 @@ import com.yanggu.metric_calculate.core2.field_process.multi_field_order.MultiFi
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * CollectionFieldProcessor单元测试类
  * <p>聚合对集合型字段处理器单元测试类</p>
  */
-public class CollectionFieldProcessorTest {
+class CollectionFieldProcessorTest {
 
     private Map<String, Class<?>> fieldMap;
 
-    @Before
-    public void init() throws Exception {
+    @BeforeEach
+    void init() throws Exception {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
@@ -36,14 +36,14 @@ public class CollectionFieldProcessorTest {
     }
 
     @Test
-    public void testInit() {
+    void testInit() {
     }
 
     /**
      * LISTFIELD: 没有去重字段、没有排序字段和保留指定字段
      */
     @Test
-    public void process1() throws Exception {
+    void process1() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
@@ -67,7 +67,7 @@ public class CollectionFieldProcessorTest {
      * LISTOBJECT: 没有去重字段、没有排序字段和保留原始数据
      */
     @Test
-    public void process2() throws Exception {
+    void process2() throws Exception {
 
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("LISTOBJECT");
@@ -92,7 +92,7 @@ public class CollectionFieldProcessorTest {
      * SORTEDLIMITLISTOBJECT: 有排序字段、没有去重字段和保留原始数据
      */
     @Test
-    public void process3() throws Exception {
+    void process3() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -120,7 +120,7 @@ public class CollectionFieldProcessorTest {
      * SORTEDLIMITLISTFIELD: 有排序字段、没有去重字段和保留指定字段
      */
     @Test
-    public void process4() throws Exception {
+    void process4() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLISTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -152,7 +152,7 @@ public class CollectionFieldProcessorTest {
      * SORTEDLIMITLIST: 有排序字段、没有去重字段和不保留任何数据
      */
     @Test
-    public void process5() throws Exception {
+    void process5() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLIST");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -179,7 +179,7 @@ public class CollectionFieldProcessorTest {
      * DISTINCTLISTOBJECT: 没有排序字段、有去重字段和保留原始数据
      */
     @Test
-    public void process6() throws Exception {
+    void process6() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
@@ -202,7 +202,7 @@ public class CollectionFieldProcessorTest {
      * DISTINCTLISTFIELD: 没有排序字段、有去重字段和保留指定字段
      */
     @Test
-    public void process7() throws Exception {
+    void process7() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
@@ -228,7 +228,7 @@ public class CollectionFieldProcessorTest {
      * DISTINCTLIST: 没有排序字段、有去重字段和不保留任何数据
      */
     @Test
-    public void process8() throws Exception {
+    void process8() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
@@ -250,7 +250,7 @@ public class CollectionFieldProcessorTest {
      * DISTINCTCOUNT: 没有排序字段、有去重字段和保留原始数据
      */
     @Test
-    public void process9() throws Exception {
+    void process9() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
@@ -272,7 +272,7 @@ public class CollectionFieldProcessorTest {
      * SLIDINGCOUNTWINDOW、滑动计数窗口函数: 没有去重字段、没有排序字段和保留指定字段
      */
     @Test
-    public void process10() throws Exception {
+    void process10() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");

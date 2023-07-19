@@ -2,35 +2,35 @@ package com.yanggu.metric_calculate.core2.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 去重对象列表单元测试类
  */
-public class DistinctListObjectAggregateFunctionTest {
+class DistinctListObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = DistinctListObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("DISTINCTLISTOBJECT", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = DistinctListObjectAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(2, collective.retainStrategy());
         assertEquals(1, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         DistinctListObjectAggregateFunction<Object> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
         assertNotNull(distinctListObjectAggregateFunction);
     }
@@ -39,7 +39,7 @@ public class DistinctListObjectAggregateFunctionTest {
      * 测试创建累加器是否正常
      */
     @Test
-    public void testCreateAccumulator() {
+    void testCreateAccumulator() {
         DistinctListObjectAggregateFunction<Integer> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
         Set<Integer> accumulator = distinctListObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator); // 确认累加器不为空
@@ -50,7 +50,7 @@ public class DistinctListObjectAggregateFunctionTest {
      * 测试添加元素是否正常
      */
     @Test
-    public void testAdd() {
+    void testAdd() {
         DistinctListObjectAggregateFunction<Integer> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
         Set<Integer> accumulator = distinctListObjectAggregateFunction.createAccumulator();
         accumulator = distinctListObjectAggregateFunction.add(1, accumulator);
@@ -63,7 +63,7 @@ public class DistinctListObjectAggregateFunctionTest {
      * 测试获取结果是否正常
      */
     @Test
-    public void testGetResult() {
+    void testGetResult() {
         DistinctListObjectAggregateFunction<Integer> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
         Set<Integer> accumulator = distinctListObjectAggregateFunction.createAccumulator();
         accumulator = distinctListObjectAggregateFunction.add(1, accumulator);
@@ -76,7 +76,7 @@ public class DistinctListObjectAggregateFunctionTest {
      * 测试合并累加器是否正常
      */
     @Test
-    public void testMerge() {
+    void testMerge() {
         DistinctListObjectAggregateFunction<Integer> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
         Set<Integer> thisAccumulator = distinctListObjectAggregateFunction.createAccumulator();
         thisAccumulator = distinctListObjectAggregateFunction.add(1, thisAccumulator);

@@ -3,15 +3,15 @@ package com.yanggu.metric_calculate.core2.calculate.metric;
 
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * CEP型派生指标单元测试类
  */
-public class DeriveMetricCalculatePatternTest extends DeriveMetricCalculateBase {
+class DeriveMetricCalculatePatternTest extends DeriveMetricCalculateBase {
 
     @Test
-    public void testCEP() {
+    void testCEP() {
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(10L);
 

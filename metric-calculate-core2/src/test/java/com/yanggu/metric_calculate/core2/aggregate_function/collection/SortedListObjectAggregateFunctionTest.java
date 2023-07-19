@@ -5,38 +5,38 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * SortedListObjectAggregateFunction有界有序对象列表单元测试类
  */
-public class SortedListObjectAggregateFunctionTest {
+class SortedListObjectAggregateFunctionTest {
 
     @Test
-    public void testMergeType() {
+    void testMergeType() {
         MergeType mergeType = SortedListObjectAggregateFunction.class.getAnnotation(MergeType.class);
         assertEquals("SORTEDLIMITLISTOBJECT", mergeType.value());
     }
 
     @Test
-    public void testCollective() {
+    void testCollective() {
         Collective collective = SortedListObjectAggregateFunction.class.getAnnotation(Collective.class);
         assertEquals(2, collective.retainStrategy());
         assertEquals(2, collective.keyStrategy());
     }
 
     @Test
-    public void testConstructor() {
+    void testConstructor() {
         SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
-        assertEquals(new Integer(10), sortedListObjectAggregateFunction.getLimit());
+        assertEquals(Integer.valueOf(10), sortedListObjectAggregateFunction.getLimit());
     }
 
     @Test
-    public void createAccumulator() {
+    void createAccumulator() {
         SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
         BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
@@ -45,7 +45,7 @@ public class SortedListObjectAggregateFunctionTest {
     }
 
     @Test
-    public void testAdd1() {
+    void testAdd1() {
         SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
         //设置为3个
         sortedListObjectAggregateFunction.setLimit(3);
@@ -73,7 +73,7 @@ public class SortedListObjectAggregateFunctionTest {
     }
 
     @Test
-    public void getResult() {
+    void getResult() {
         SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
         BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
 
@@ -84,7 +84,7 @@ public class SortedListObjectAggregateFunctionTest {
     }
 
     @Test
-    public void merge() {
+    void merge() {
         SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
         sortedListObjectAggregateFunction.setLimit(3);
 
