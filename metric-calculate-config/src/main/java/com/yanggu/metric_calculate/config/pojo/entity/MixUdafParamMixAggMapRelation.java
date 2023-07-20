@@ -44,6 +44,11 @@ public class MixUdafParamMixAggMapRelation implements Serializable {
     private Integer baseUdafParamId;
 
     /**
+     * 用户id
+     */
+    private Integer userId;
+
+    /**
      * 是否删除(缺省为0,即未删除)
      */
     @Column(onInsertValue = "0", isLogicDelete = true)
