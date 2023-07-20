@@ -21,7 +21,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AviatorTest {
+class AviatorTest {
 
     /**
      * 过去30天的交易账号数据，不包含当天
@@ -52,8 +52,7 @@ public class AviatorTest {
         dayCount.put("2023-05-15", 20);
         dayCount.put("2023-05-12", 5);
 
-        String express =
-                "return count(filter(dayCount, lambda (entry) -> getValue(entry) >= 10 end));";
+        String express = "return count(filter(dayCount, lambda (entry) -> getValue(entry) >= 10 end));";
         AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
         Expression compile = AviatorEvaluator.compile(express);
         Map<String, Object> env = new HashMap<>();
@@ -89,7 +88,7 @@ public class AviatorTest {
     }
 
     @Test
-    @Disabled
+    @Disabled("执行时间较长")
     void test4() {
         int count = 0;
         int total = 1000000000;

@@ -28,6 +28,8 @@ spring:
     time-zone: GMT+8
 
 mybatis-flex:
+  global-config:
+    defaultRelationQueryDepth: 10
   mapper-locations:
     - classpath*:/mapper/*Mapper.xml
 
