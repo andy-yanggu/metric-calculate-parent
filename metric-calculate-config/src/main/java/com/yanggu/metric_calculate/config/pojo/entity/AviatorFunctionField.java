@@ -50,6 +50,11 @@ public class AviatorFunctionField implements Serializable {
     private Integer aviatorFunctionId;
 
     /**
+     * 用户id
+     */
+    private Integer userId;
+
+    /**
      * 是否删除(缺省为0,即未删除)
      */
     @Column(onInsertValue = "0", isLogicDelete = true)
