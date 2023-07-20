@@ -33,7 +33,7 @@ public class AviatorFunctionFactory {
     /**
      * 扫描有AviatorFunctionName注解且是AbstractUdfAviatorFunction子类的类
      */
-    private static final Filter<Class<?>> classFilter = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
+    private static final Filter<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
             && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
 
     private final Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();
@@ -46,7 +46,7 @@ public class AviatorFunctionFactory {
 
     static {
         //扫描系统自带的聚合函数
-        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, classFilter);
+        Set<Class<?>> classSet = ClassUtil.scanPackage(SCAN_PACKAGE, CLASS_FILTER);
         if (CollUtil.isNotEmpty(classSet)) {
             for (Class<?> tempClazz : classSet) {
                 //添加到内置的map中
@@ -74,7 +74,7 @@ public class AviatorFunctionFactory {
         }
 
         //加载jar包中的自定义函数, 并添加到functionMap中
-        FunctionFactory.loadClassFromJar(udfJarPathList, classFilter, loadClass -> addClassToMap(loadClass, functionMap));
+        FunctionFactory.loadClassFromJar(udfJarPathList, CLASS_FILTER, loadClass -> addClassToMap(loadClass, functionMap));
     }
 
     /**

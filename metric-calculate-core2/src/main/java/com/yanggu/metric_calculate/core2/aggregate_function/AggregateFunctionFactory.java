@@ -39,7 +39,7 @@ public class AggregateFunctionFactory {
      */
     private static final Map<String, Class<? extends AggregateFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
 
-    private Map<String, Class<? extends AggregateFunction>> functionMap = new HashMap<>();
+    private final Map<String, Class<? extends AggregateFunction>> functionMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
