@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static com.yanggu.metric_calculate.config.pojo.entity.table.MixUdafParamTableDef.MIX_UDAF_PARAM;
 
 /**
  * 混合类型udaf参数 控制层。
@@ -79,8 +82,8 @@ public class MixUdafParamController {
      * @return 混合类型udaf参数详情
      */
     @GetMapping("getInfo/{id}")
-    public MixUdafParam getInfo(@PathVariable Serializable id) {
-        return mixUdafParamService.getById(id);
+    public MixUdafParam getInfo(@PathVariable Integer id) {
+        return mixUdafParamService.getMapper().selectOneWithRelationsByQuery(QueryWrapper.create().where(MIX_UDAF_PARAM.ID.eq(id)));
     }
 
     /**

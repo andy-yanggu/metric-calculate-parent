@@ -29,6 +29,7 @@ spring:
 
 mybatis-flex:
   global-config:
+    # 设置relation注解递归查询深度
     defaultRelationQueryDepth: 10
   mapper-locations:
     - classpath*:/mapper/*Mapper.xml

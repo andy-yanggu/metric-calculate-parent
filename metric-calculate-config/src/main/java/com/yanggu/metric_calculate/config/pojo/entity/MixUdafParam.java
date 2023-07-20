@@ -1,16 +1,14 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 混合类型udaf参数 实体类。
@@ -25,7 +23,8 @@ import lombok.NoArgsConstructor;
 @Table(value = "mix_udaf_param")
 public class MixUdafParam implements Serializable {
 
-    
+    private static final long serialVersionUID = -827357754476085192L;
+
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
@@ -44,10 +43,10 @@ public class MixUdafParam implements Serializable {
     @RelationOneToMany(
             joinTable = "mix_udaf_param_mix_agg_map_relation",
             selfField = "id", joinSelfColumn = "mix_udaf_param_id",
-            targetField = "id", joinTargetColumn = "base_udaf_param_id",
-            mapKeyField = "key_name"
+            targetField = "id", joinTargetColumn = "base_udaf_param_id"/*,
+            mapKeyField = "key_name"*/
     )
-    private Map<String, AviatorExpressParam> mixAggMap;
+    private List<BaseUdafParam> mixAggMap;
 
     /**
      * 多个聚合值的计算表达式
