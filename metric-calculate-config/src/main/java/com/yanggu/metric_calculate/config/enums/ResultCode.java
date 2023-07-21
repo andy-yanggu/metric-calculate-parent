@@ -18,6 +18,7 @@ public enum ResultCode {
     FAIL("500", "服务器异常, 异常信息: {}"),
 
     MODEL_EXIST("10000", "宽表名称或者中文名已经存在"),
+    DERIVE_EXIST("10001", "宽表名称或者中文名已经存在"),
     ;
 
     private final String code;

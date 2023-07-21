@@ -1,22 +1,22 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.query.QueryWrapper;
-import com.mybatisflex.core.relation.RelationManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
 import com.yanggu.metric_calculate.config.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_EXIST;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveTableDef.DERIVE;
 
 /**
@@ -59,6 +59,9 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     @Transactional(rollbackFor = RuntimeException.class)
     public void create(DeriveDto deriveDto) {
         Derive derive = deriveMapstruct.toEntity(deriveDto);
+
+        //检查name、displayName是否重复
+        checkExist(derive);
         //保存派生指标
         deriveMapper.insertSelective(derive);
 
@@ -124,10 +127,25 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     public DeriveDto queryById(Integer id) {
-        RelationManager.setMaxDepth(10);
         QueryWrapper queryWrapper = QueryWrapper.create().where(DERIVE.ID.eq(id));
         Derive derive = deriveMapper.selectOneWithRelationsByQuery(queryWrapper);
         return deriveMapstruct.toDTO(derive);
+    }
+
+    /**
+     * 检查name、displayName是否重复
+     * @param derive
+     */
+    private void checkExist(Derive derive) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                //当id存在时为更新
+                .where(DERIVE.ID.ne(derive.getId()).when(derive.getId() != null))
+                .and(DERIVE.NAME.eq(derive.getName()).or(DERIVE.DISPLAY_NAME.eq(derive.getDisplayName())))
+                .and(DERIVE.USER_ID.eq(derive.getUserId()));
+        long count = deriveMapper.selectCountByQuery(queryWrapper);
+        if (count > 0) {
+            throw new BusinessException(DERIVE_EXIST);
+        }
     }
 
 }
