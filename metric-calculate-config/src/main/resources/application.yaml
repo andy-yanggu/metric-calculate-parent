@@ -34,6 +34,30 @@ mybatis-flex:
   mapper-locations:
     - classpath*:/mapper/*Mapper.xml
 
+# 端点控制配置
+management:
+  server:
+    # 启用独立运维端口
+    port: 50001
+  endpoint:
+    # 开启shutdown
+    shutdown:
+      enabled: true
+    # 开启liveness和readiness端点
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  endpoints:
+    web:
+      # 指定上下文路径，启用相应端点
+      base-path: /actuator
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
 # springdoc-openapi项目配置
 springdoc:
   swagger-ui:
