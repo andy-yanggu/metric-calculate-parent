@@ -32,10 +32,10 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     private DeriveMapper deriveMapper;
 
     @Autowired
-    private DeriveDimensionColumnRelationService deriveDimensionColumnRelationService;
+    private DeriveModelDimensionColumnRelationService deriveModelDimensionColumnRelationService;
 
     @Autowired
-    private DeriveTimeColumnRelationService deriveTimeColumnRelationService;
+    private DeriveModelTimeColumnRelationService deriveModelTimeColumnRelationService;
 
     @Autowired
     private AviatorExpressParamService aviatorExpressParamService;
@@ -69,25 +69,25 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
         AtomicInteger index = new AtomicInteger(0);
         //转换成派生指标和维度字段中间数据
-        List<DeriveDimensionColumnRelation> collect = modelDimensionColumnList.stream()
+        List<DeriveModelDimensionColumnRelation> collect = modelDimensionColumnList.stream()
                 .map(dimensionColumn -> {
-                    DeriveDimensionColumnRelation relation = new DeriveDimensionColumnRelation();
+                    DeriveModelDimensionColumnRelation relation = new DeriveModelDimensionColumnRelation();
                     relation.setDeriveId(derive.getId());
-                    relation.setDimensionColumnId(dimensionColumn.getId());
+                    relation.setModelDimensionColumnId(dimensionColumn.getId());
                     relation.setUserId(derive.getUserId());
                     relation.setSort(index.incrementAndGet());
                     return relation;
                 })
                 .collect(Collectors.toList());
-        deriveDimensionColumnRelationService.saveBatch(collect);
+        deriveModelDimensionColumnRelationService.saveBatch(collect);
 
         //保存时间字段
         ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
-        DeriveTimeColumnRelation deriveTimeColumnRelation = new DeriveTimeColumnRelation();
-        deriveTimeColumnRelation.setDeriveId(derive.getId());
-        deriveTimeColumnRelation.setTimeColumnId(modelTimeColumn.getId());
-        deriveTimeColumnRelation.setUserId(derive.getUserId());
-        deriveTimeColumnRelationService.save(deriveTimeColumnRelation);
+        DeriveModelTimeColumnRelation deriveModelTimeColumnRelation = new DeriveModelTimeColumnRelation();
+        deriveModelTimeColumnRelation.setDeriveId(derive.getId());
+        deriveModelTimeColumnRelation.setModelTimeColumnId(modelTimeColumn.getId());
+        deriveModelTimeColumnRelation.setUserId(derive.getUserId());
+        deriveModelTimeColumnRelationService.save(deriveModelTimeColumnRelation);
 
         //保存前置过滤条件
         AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();

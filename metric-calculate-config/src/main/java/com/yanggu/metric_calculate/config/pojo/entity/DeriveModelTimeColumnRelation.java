@@ -12,20 +12,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * 派生指标维度字段中间表 实体类。
+ * 派生指标和时间字段中间表 实体类。
+ *
+ * @author MondayLi
+ * @since 2023-07-11
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "derive_dimension_column_relation")
-public class DeriveDimensionColumnRelation implements Serializable {
+@Table(value = "derive_model_time_column_relation")
+public class DeriveModelTimeColumnRelation implements Serializable {
 
-    private static final long serialVersionUID = 6517027739456307877L;
+    private static final long serialVersionUID = 7410286289383498072L;
 
-    /**
-     * 主键自增
-     */
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
@@ -35,14 +35,9 @@ public class DeriveDimensionColumnRelation implements Serializable {
     private Integer deriveId;
 
     /**
-     * 维度字段id
+     * 时间字段id
      */
-    private Integer dimensionColumnId;
-
-    /**
-     * 序号
-     */
-    private Integer sort;
+    private Integer modelTimeColumnId;
 
     /**
      * 用户id

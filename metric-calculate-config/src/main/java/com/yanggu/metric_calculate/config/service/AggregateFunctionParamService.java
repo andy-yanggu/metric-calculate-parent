@@ -10,5 +10,4 @@ import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParam;
  * @since 2023-07-10
  */
 public interface AggregateFunctionParamService extends IService<AggregateFunctionParam> {
-
 }

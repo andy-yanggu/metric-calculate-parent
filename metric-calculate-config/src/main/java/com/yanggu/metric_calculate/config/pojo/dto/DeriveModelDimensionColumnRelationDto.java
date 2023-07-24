@@ -15,7 +15,7 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DimensionColumnItemDto implements Serializable {
+public class DeriveModelDimensionColumnRelationDto implements Serializable {
 
     private static final long serialVersionUID = 5533781924640114353L;
 

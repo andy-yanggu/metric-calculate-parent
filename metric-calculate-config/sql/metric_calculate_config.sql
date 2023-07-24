@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 24/07/2023 17:07:30
+ Date: 24/07/2023 18:46:47
 */
 
 SET NAMES utf8mb4;
@@ -57,7 +57,7 @@ CREATE TABLE `aggregate_function_field`  (
 DROP TABLE IF EXISTS `aggregate_function_param`;
 CREATE TABLE `aggregate_function_param`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
-  `aggregate_type` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '聚合类型',
+  `aggregate_function_id` int(0) NOT NULL COMMENT '聚合函数id',
   `user_id` int(0) NOT NULL COMMENT '用户id',
   `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -333,22 +333,6 @@ CREATE TABLE `derive_aggregate_function_param_relation`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标聚合函数参数中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for derive_dimension_column_relation
--- ----------------------------
-DROP TABLE IF EXISTS `derive_dimension_column_relation`;
-CREATE TABLE `derive_dimension_column_relation`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
-  `derive_id` int(0) NOT NULL COMMENT '派生指标id',
-  `dimension_column_id` int(0) NOT NULL COMMENT '维度字段id',
-  `sort` int(0) NOT NULL DEFAULT 1 COMMENT '序号',
-  `user_id` int(0) NOT NULL COMMENT '用户id',
-  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标维度字段中间表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- Table structure for derive_filter_express_relation
 -- ----------------------------
 DROP TABLE IF EXISTS `derive_filter_express_relation`;
@@ -364,19 +348,35 @@ CREATE TABLE `derive_filter_express_relation`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标前置过滤条件中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for derive_time_column_relation
+-- Table structure for derive_model_dimension_column_relation
 -- ----------------------------
-DROP TABLE IF EXISTS `derive_time_column_relation`;
-CREATE TABLE `derive_time_column_relation`  (
+DROP TABLE IF EXISTS `derive_model_dimension_column_relation`;
+CREATE TABLE `derive_model_dimension_column_relation`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `derive_id` int(0) NOT NULL COMMENT '派生指标id',
+  `model_dimension_column_id` int(0) NOT NULL COMMENT '维度字段id',
+  `sort` int(0) NOT NULL DEFAULT 1 COMMENT '序号',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标维度字段中间表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for derive_model_time_column_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `derive_model_time_column_relation`;
+CREATE TABLE `derive_model_time_column_relation`  (
   `id` int(0) NOT NULL AUTO_INCREMENT,
   `derive_id` int(0) NOT NULL COMMENT '派生指标id',
-  `time_column_id` int(0) NOT NULL COMMENT '时间字段id',
+  `model_time_column_id` int(0) NOT NULL COMMENT '时间字段id',
   `user_id` int(0) NOT NULL COMMENT '用户id',
   `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 8 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标和时间字段中间表' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 9 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标和时间字段中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for derive_window_param_relation

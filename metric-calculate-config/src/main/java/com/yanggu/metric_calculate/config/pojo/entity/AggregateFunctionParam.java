@@ -28,9 +28,9 @@ public class AggregateFunctionParam implements Serializable {
     private Integer id;
 
     /**
-     * 聚合类型
+     * 聚合函数id
      */
-    private String aggregateType;
+    private Integer aggregateFunctionId;
 
     /**
      * 基本类型聚合函数参数

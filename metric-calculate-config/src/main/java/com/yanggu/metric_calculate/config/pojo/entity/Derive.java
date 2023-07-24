@@ -50,18 +50,18 @@ public class Derive implements Serializable {
      * 维度字段
      */
     @RelationManyToMany(
-            joinTable = "derive_dimension_column_relation",
+            joinTable = "derive_model_dimension_column_relation",
             selfField = "id", joinSelfColumn = "derive_id",
-            targetField = "id", joinTargetColumn = "dimension_column_id")
+            targetField = "id", joinTargetColumn = "model_dimension_column_id", orderBy = "sort")
     private List<ModelDimensionColumn> modelDimensionColumnList;
 
     /**
      * 时间字段
      */
     @RelationManyToOne(
-            joinTable = "derive_time_column_relation",
+            joinTable = "derive_model_time_column_relation",
             selfField = "id", joinSelfColumn = "derive_id",
-            targetField = "id", joinTargetColumn = "time_column_id"
+            targetField = "id", joinTargetColumn = "model_time_column_id"
     )
     private ModelTimeColumn modelTimeColumn;
 

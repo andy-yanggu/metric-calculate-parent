@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.yanggu.metric_calculate.config.pojo.entity.DeriveTimeColumnRelation;
-import com.yanggu.metric_calculate.config.service.DeriveTimeColumnRelationService;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveModelTimeColumnRelation;
+import com.yanggu.metric_calculate.config.service.DeriveModelTimeColumnRelationService;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.Serializable;
@@ -27,17 +27,17 @@ import java.util.List;
 public class DeriveTimeColumnRelationController {
 
     @Autowired
-    private DeriveTimeColumnRelationService deriveTimeColumnRelationService;
+    private DeriveModelTimeColumnRelationService deriveTimeColumnRelationService;
 
     /**
      * 添加派生指标和时间字段中间表。
      *
-     * @param deriveTimeColumnRelation 派生指标和时间字段中间表
+     * @param deriveModelTimeColumnRelation 派生指标和时间字段中间表
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
     @PostMapping("save")
-    public boolean save(@RequestBody DeriveTimeColumnRelation deriveTimeColumnRelation) {
-        return deriveTimeColumnRelationService.save(deriveTimeColumnRelation);
+    public boolean save(@RequestBody DeriveModelTimeColumnRelation deriveModelTimeColumnRelation) {
+        return deriveTimeColumnRelationService.save(deriveModelTimeColumnRelation);
     }
 
     /**
@@ -54,12 +54,12 @@ public class DeriveTimeColumnRelationController {
     /**
      * 根据主键更新派生指标和时间字段中间表。
      *
-     * @param deriveTimeColumnRelation 派生指标和时间字段中间表
+     * @param deriveModelTimeColumnRelation 派生指标和时间字段中间表
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
-    public boolean update(@RequestBody DeriveTimeColumnRelation deriveTimeColumnRelation) {
-        return deriveTimeColumnRelationService.updateById(deriveTimeColumnRelation);
+    public boolean update(@RequestBody DeriveModelTimeColumnRelation deriveModelTimeColumnRelation) {
+        return deriveTimeColumnRelationService.updateById(deriveModelTimeColumnRelation);
     }
 
     /**
@@ -68,7 +68,7 @@ public class DeriveTimeColumnRelationController {
      * @return 所有数据
      */
     @GetMapping("list")
-    public List<DeriveTimeColumnRelation> list() {
+    public List<DeriveModelTimeColumnRelation> list() {
         return deriveTimeColumnRelationService.list();
     }
 
@@ -79,7 +79,7 @@ public class DeriveTimeColumnRelationController {
      * @return 派生指标和时间字段中间表详情
      */
     @GetMapping("getInfo/{id}")
-    public DeriveTimeColumnRelation getInfo(@PathVariable Serializable id) {
+    public DeriveModelTimeColumnRelation getInfo(@PathVariable Serializable id) {
         return deriveTimeColumnRelationService.getById(id);
     }
 
@@ -90,7 +90,7 @@ public class DeriveTimeColumnRelationController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public Page<DeriveTimeColumnRelation> page(Page<DeriveTimeColumnRelation> page) {
+    public Page<DeriveModelTimeColumnRelation> page(Page<DeriveModelTimeColumnRelation> page) {
         return deriveTimeColumnRelationService.page(page);
     }
 

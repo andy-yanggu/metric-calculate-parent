@@ -46,12 +46,12 @@ public class DeriveDto implements Serializable {
     /**
      * 维度字段
      */
-    private List<ModelDimensionColumnDto> dimensionColumnList;
+    private List<ModelDimensionColumnDto> modelDimensionColumnList;
 
     /**
      * 时间字段
      */
-    private ModelTimeColumnDto timeColumn;
+    private ModelTimeColumnDto modelTimeColumn;
 
     /**
      * 前置过滤条件
