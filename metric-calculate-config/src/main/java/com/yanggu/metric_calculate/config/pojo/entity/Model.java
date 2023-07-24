@@ -74,4 +74,16 @@ public class Model implements Serializable {
     @RelationOneToMany(selfField = "id", targetField = "modelId", orderBy = "sort")
     private List<ModelColumn> modelColumnList;
 
+    /**
+     * 时间字段列表
+     */
+    @RelationOneToMany(selfField = "id", targetField = "modelId", orderBy = "sort")
+    private List<ModelTimeColumn> modelTimeColumnList;
+
+    /**
+     * 维度字段列表
+     */
+    @RelationOneToMany(selfField = "id", targetField = "modelId", orderBy = "sort")
+    private List<ModelDimensionColumn> modelDimensionColumnList;
+
 }

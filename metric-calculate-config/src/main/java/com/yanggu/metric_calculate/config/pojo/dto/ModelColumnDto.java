@@ -43,16 +43,6 @@ public class ModelColumnDto {
     private AviatorExpressParamDto aviatorExpressParam;
 
     /**
-     * 时间字段
-     */
-    private TimeColumnDto timeColumn;
-
-    /**
-     * 维度字段
-     */
-    private DimensionColumnDto dimensionColumn;
-
-    /**
      * 宽表id
      */
     private Integer modelId;

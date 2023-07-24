@@ -92,16 +92,4 @@ public class ModelColumn implements Serializable {
     )
     private AviatorExpressParam aviatorExpressParam;
 
-    /**
-     * 时间字段
-     */
-    @RelationOneToOne(selfField = "id", targetField = "modelColumnId")
-    private TimeColumn timeColumn;
-
-    /**
-     * 维度字段
-     */
-    @RelationOneToOne(selfField = "id", targetField = "modelColumnId")
-    private DimensionColumn dimensionColumn;
-
 }

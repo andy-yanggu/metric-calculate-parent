@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "dimension_column")
-public class DimensionColumn implements Serializable {
+@Table(value = "model_dimension_column")
+public class ModelDimensionColumn implements Serializable {
 
     private static final long serialVersionUID = 5538736519253522391L;
 
@@ -36,6 +36,18 @@ public class DimensionColumn implements Serializable {
      * 宽表字段id
      */
     private Integer modelColumnId;
+
+    /**
+     * 宽表字段名
+     */
+    @Column(ignore = true)
+    private String modelColumnName;
+
+    /**
+     * 宽表字段
+     */
+    @RelationOneToOne(selfField = "modelColumnId", targetField = "id")
+    private ModelColumn modelColumn;
 
     /**
      * 维度id

@@ -8,6 +8,8 @@ import java.io.Serializable;
 @Data
 public class Result<T> implements Serializable {
 
+    private static final long serialVersionUID = -6826494148838485626L;
+
     private boolean success;
 
     private T data;
@@ -40,7 +42,7 @@ public class Result<T> implements Serializable {
     /**
      * 异常返回-指定错误码
      */
-    public static  Result<Void> fail(ResultCode resultCode) {
+    public static Result<Void> fail(ResultCode resultCode) {
         return new Result<>(Boolean.FALSE, null, resultCode);
     }
 

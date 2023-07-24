@@ -7,18 +7,12 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ResultCode {
 
-    /**
-     * 成功
-     */
     SUCCESS("200", "成功"),
-
-    /**
-     * 失败
-     */
     FAIL("500", "服务器异常, 异常信息: {}"),
-
     MODEL_EXIST("10000", "宽表名称或者中文名已经存在"),
     DERIVE_EXIST("10001", "宽表名称或者中文名已经存在"),
+    MODEL_COLUMN_NAME_ERROR("10002", "宽表字段名异常"),
+    MODEL_COLUMN_EMPTY("10003", "宽表字段为空"),
     ;
 
     private final String code;

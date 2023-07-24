@@ -66,10 +66,10 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         deriveMapper.insertSelective(derive);
 
         //保存维度
-        List<DimensionColumn> dimensionColumnList = derive.getDimensionColumnList();
+        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
         AtomicInteger index = new AtomicInteger(0);
         //转换成派生指标和维度字段中间数据
-        List<DeriveDimensionColumnRelation> collect = dimensionColumnList.stream()
+        List<DeriveDimensionColumnRelation> collect = modelDimensionColumnList.stream()
                 .map(dimensionColumn -> {
                     DeriveDimensionColumnRelation relation = new DeriveDimensionColumnRelation();
                     relation.setDeriveId(derive.getId());
@@ -82,10 +82,10 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         deriveDimensionColumnRelationService.saveBatch(collect);
 
         //保存时间字段
-        TimeColumn timeColumn = derive.getTimeColumn();
+        ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
         DeriveTimeColumnRelation deriveTimeColumnRelation = new DeriveTimeColumnRelation();
         deriveTimeColumnRelation.setDeriveId(derive.getId());
-        deriveTimeColumnRelation.setTimeColumnId(timeColumn.getId());
+        deriveTimeColumnRelation.setTimeColumnId(modelTimeColumn.getId());
         deriveTimeColumnRelation.setUserId(derive.getUserId());
         deriveTimeColumnRelationService.save(deriveTimeColumnRelation);
 

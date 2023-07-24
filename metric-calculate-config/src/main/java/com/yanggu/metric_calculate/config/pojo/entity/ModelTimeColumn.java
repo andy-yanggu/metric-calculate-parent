@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import lombok.AllArgsConstructor;
@@ -18,8 +16,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "time_column")
-public class TimeColumn implements Serializable {
+@Table(value = "model_time_column")
+public class ModelTimeColumn implements Serializable {
 
     private static final long serialVersionUID = 518994644896526018L;
 
@@ -40,7 +38,19 @@ public class TimeColumn implements Serializable {
     private Integer modelColumnId;
 
     /**
-     * 中文名称
+     * 宽表字段名
+     */
+    @Column(ignore = true)
+    private String modelColumnName;
+
+    /**
+     * 宽表字段
+     */
+    @RelationOneToOne(selfField = "modelColumnId", targetField = "id")
+    private ModelColumn modelColumn;
+
+    /**
+     * 时间格式
      */
     private String timeFormat;
 

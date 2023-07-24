@@ -61,4 +61,14 @@ public class ModelDto {
      */
     private List<ModelColumnDto> modelColumnList;
 
+    /**
+     * 时间字段列表
+     */
+    private List<ModelTimeColumnDto> modelTimeColumnList;
+
+    /**
+     * 维度字段列表
+     */
+    private List<ModelDimensionColumnDto> modelDimensionColumnList;
+
 }

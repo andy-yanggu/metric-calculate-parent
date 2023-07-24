@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,15 +10,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 时间字段 实体类。
+ * 维度字段 实体类。
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class TimeColumnDto implements Serializable {
+public class ModelDimensionColumnDto implements Serializable {
 
-    private static final long serialVersionUID = 7617995233100366213L;
+    private static final long serialVersionUID = 3720677788471627294L;
 
     /**
      * 主键自增
@@ -40,9 +41,19 @@ public class TimeColumnDto implements Serializable {
     private String modelColumnName;
 
     /**
-     * 中文名称
+     * 宽表字段
      */
-    private String timeFormat;
+    private ModelColumn modelColumn;
+
+    /**
+     * 维度id
+     */
+    private Integer dimensionId;
+
+    /**
+     * 维度
+     */
+    private DimensionDto dimension;
 
     /**
      * 索引

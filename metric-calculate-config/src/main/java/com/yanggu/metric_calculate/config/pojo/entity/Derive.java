@@ -53,7 +53,7 @@ public class Derive implements Serializable {
             joinTable = "derive_dimension_column_relation",
             selfField = "id", joinSelfColumn = "derive_id",
             targetField = "id", joinTargetColumn = "dimension_column_id")
-    private List<DimensionColumn> dimensionColumnList;
+    private List<ModelDimensionColumn> modelDimensionColumnList;
 
     /**
      * 时间字段
@@ -63,7 +63,7 @@ public class Derive implements Serializable {
             selfField = "id", joinSelfColumn = "derive_id",
             targetField = "id", joinTargetColumn = "time_column_id"
     )
-    private TimeColumn timeColumn;
+    private ModelTimeColumn modelTimeColumn;
 
     /**
      * 前置过滤条件
