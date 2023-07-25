@@ -13,6 +13,12 @@ import static com.yanggu.metric_calculate.config.enums.ResultCode.FAIL;
 @RestControllerAdvice(basePackages = {"com.yanggu.metric_calculate.config.controller"})
 public class GlobalExceptionHandler {
 
+    /**
+     * 捕获业务异常
+     *
+     * @param exception
+     * @return
+     */
     @ExceptionHandler(BusinessException.class)
     public Result<Void> handlerBusinessException(BusinessException exception) {
         log.warn("[业务异常] 异常code: {}, 异常信息: {}", exception.getCode(), exception.getMessage());

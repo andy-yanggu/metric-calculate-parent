@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yanggu.metric_calculate.config.mapper.AviatorExpressParamModelColumnRelationMapper">
+    <resultMap id="BaseResultMap"
+               type="com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamModelColumnRelation">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="aviator_express_param_id" jdbcType="INTEGER" property="aviatorExpressParamId"/>
+        <result column="model_column_id" jdbcType="INTEGER" property="modelColumnId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        `id`, `aviator_express_param_id`, `model_column_id`, `user_id`, `is_deleted`, `create_time`, `update_time`
+    </sql>
+
+</mapper>

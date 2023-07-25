@@ -104,6 +104,23 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         return modelMapstruct.toDTO(model);
     }
 
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateById(ModelDto modelDto) {
+        Model model = modelMapstruct.toEntity(modelDto);
+        //检查name、displayName是否重复
+        checkExist(model);
+        //更新宽表数据
+        updateById(model, false);
+        //处理宽表字段
+        modelColumnService.updateModelColumnList(model);
+
+        //处理维度字段
+        List<ModelDimensionColumn> modelDimensionColumnList = model.getModelDimensionColumnList();
+        //处理时间字段
+        List<ModelTimeColumn> modelTimeColumnList = model.getModelTimeColumnList();
+    }
+
     /**
      * 检查name、displayName是否重复
      * @param model

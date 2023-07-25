@@ -43,11 +43,6 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
      */
     private Expression filterExpression;
 
-    public FilterFieldProcessor(Map<String, Class<?>> fieldMap, AviatorExpressParam filterExpressParam) {
-        this.fieldMap = fieldMap;
-        this.filterExpressParam = filterExpressParam;
-    }
-
     /**
      * 编译前置过滤表达式
      * @throws Exception

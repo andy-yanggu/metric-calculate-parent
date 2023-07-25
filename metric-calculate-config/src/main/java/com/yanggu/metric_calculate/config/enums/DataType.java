@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.enums;
+package com.yanggu.metric_calculate.config.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Getter
 @AllArgsConstructor
-public enum BasicType {
+public enum DataType {
 
     /**
      * 字符串类型

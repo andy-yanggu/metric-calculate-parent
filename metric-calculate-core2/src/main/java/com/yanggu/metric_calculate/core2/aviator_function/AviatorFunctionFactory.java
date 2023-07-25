@@ -21,7 +21,7 @@ public class AviatorFunctionFactory {
     /**
      * 内置AbstractUdfAviatorFunction的包路径
      */
-    public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core2.aviator_function";
+    private static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core2.aviator_function";
 
     private static final String ERROR_MESSAGE = "自定义Aviator函数一标识重复, 重复的全类名: ";
 

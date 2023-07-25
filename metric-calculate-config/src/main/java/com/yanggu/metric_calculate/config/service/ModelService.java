@@ -23,4 +23,11 @@ public interface ModelService extends IService<Model> {
      */
     ModelDto queryById(Integer id);
 
+    /**
+     * 根据主键更新
+     *
+     * @param modelDto
+     */
+    void updateById(ModelDto modelDto);
+
 }

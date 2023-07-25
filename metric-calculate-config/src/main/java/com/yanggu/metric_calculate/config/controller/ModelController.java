@@ -57,8 +57,8 @@ public class ModelController {
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
-    public boolean update(@RequestBody Model model) {
-        return modelService.updateById(model);
+    public void update(@RequestBody ModelDto model) {
+        modelService.updateById(model);
     }
 
     /**

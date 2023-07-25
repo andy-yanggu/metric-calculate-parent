@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorExpressParamDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
 
 /**
@@ -9,7 +8,8 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
  */
 public interface AviatorExpressParamService extends IService<AviatorExpressParam> {
 
+    void saveData(AviatorExpressParam aviatorExpressParam) throws Exception;
 
-    boolean checkAviatorExpress(AviatorExpressParamDto aviatorExpressParamDto);
+    boolean checkAviatorExpress(AviatorExpressParam aviatorExpressParam) throws Exception;
 
 }

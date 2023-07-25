@@ -67,4 +67,14 @@ public class AviatorExpressParam implements Serializable {
     )
     private List<AviatorFunctionInstance> aviatorFunctionInstanceList;
 
+    /**
+     * 依赖的宽表字段
+     */
+    @RelationManyToMany(
+            joinTable = "aviator_express_param_model_column_relation",
+            selfField = "id", joinSelfColumn = "aviator_express_param_id",
+            targetField = "id", joinTargetColumn = "model_column_id"
+    )
+    private List<ModelColumn> modelColumnList;
+
 }
