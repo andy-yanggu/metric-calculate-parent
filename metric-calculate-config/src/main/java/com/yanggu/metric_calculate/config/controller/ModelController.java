@@ -35,7 +35,7 @@ public class ModelController {
      */
     @PostMapping("save")
     @Operation(summary = "新增数据明细宽表")
-    public void save(@RequestBody ModelDto model) {
+    public void save(@RequestBody ModelDto model) throws Exception {
         modelService.create(model);
     }
 

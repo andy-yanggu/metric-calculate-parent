@@ -29,7 +29,11 @@ public abstract class AbstractUdfAviatorFunction extends AbstractVariadicFunctio
      */
     @Override
     public String getName() {
-        return this.getClass().getAnnotation(AviatorFunctionName.class).value();
+        AviatorFunctionName annotation = this.getClass().getAnnotation(AviatorFunctionName.class);
+        if (annotation == null) {
+            throw new RuntimeException("自定义函数必须有AviatorFunctionName注解");
+        }
+        return annotation.value();
     }
 
 }

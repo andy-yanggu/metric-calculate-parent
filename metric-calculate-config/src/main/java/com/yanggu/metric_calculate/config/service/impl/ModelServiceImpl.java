@@ -49,7 +49,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(ModelDto modelDto) {
+    public void create(ModelDto modelDto) throws Exception {
         Model model = modelMapstruct.toEntity(modelDto);
 
         //检查name、displayName是否重复
@@ -97,10 +97,8 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     public ModelDto queryById(Integer id) {
-        QueryWrapper queryWrapper = QueryWrapper.create()
-                .where(MODEL.ID.eq(id));
         //根据主键查询, 同时关联查询其他表数据
-        Model model = modelMapper.selectOneWithRelationsByQuery(queryWrapper);
+        Model model = modelMapper.selectOneWithRelationsById(id);
         return modelMapstruct.toDTO(model);
     }
 
@@ -123,6 +121,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     /**
      * 检查name、displayName是否重复
+     *
      * @param model
      */
     private void checkExist(Model model) {

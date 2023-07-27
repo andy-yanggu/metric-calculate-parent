@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstance;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Aviator表达式配置 实体类。
@@ -52,5 +51,15 @@ public class AviatorExpressParamDto implements Serializable {
      * 更新时间
      */
     private Date updateTime;
+
+    /**
+     * 使用的Aviator函数实例列表
+     */
+    private List<AviatorFunctionInstance> aviatorFunctionInstanceList;
+
+    /**
+     * 依赖的宽表字段
+     */
+    private List<ModelColumn> modelColumnList;
 
 }

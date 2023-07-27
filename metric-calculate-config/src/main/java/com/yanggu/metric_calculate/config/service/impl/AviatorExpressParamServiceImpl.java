@@ -59,7 +59,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                     .map(modelColumn -> {
                         AviatorExpressParamModelColumnRelation relation = new AviatorExpressParamModelColumnRelation();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-                        relation.setModelColumnId(modelColumn.getModelId());
+                        relation.setModelColumnId(modelColumn.getId());
                         relation.setUserId(aviatorExpressParam.getUserId());
                         return relation;
                     })

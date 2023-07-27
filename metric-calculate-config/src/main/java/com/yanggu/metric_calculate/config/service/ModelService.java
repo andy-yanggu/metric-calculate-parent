@@ -13,7 +13,7 @@ public interface ModelService extends IService<Model> {
      * 新增宽表
      * @param modelDto
      */
-    void create(ModelDto modelDto);
+    void create(ModelDto modelDto) throws Exception;
 
     /**
      * 根据主键查询

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface ModelColumnService extends IService<ModelColumn> {
 
-    void saveModelColumnList(List<ModelColumn> modelColumnList);
+    void saveModelColumnList(List<ModelColumn> modelColumnList) throws Exception;
 
     void updateModelColumnList(Model model);
 

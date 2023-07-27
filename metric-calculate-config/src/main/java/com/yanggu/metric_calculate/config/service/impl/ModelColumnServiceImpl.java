@@ -13,10 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ModelColumnFieldType.VIRTUAL;
@@ -40,16 +38,29 @@ public class ModelColumnServiceImpl extends ServiceImpl<ModelColumnMapper, Model
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveModelColumnList(List<ModelColumn> modelColumnList) {
+    public void saveModelColumnList(List<ModelColumn> modelColumnList) throws Exception {
         //校验名称或者中文名是否重复
         checkModelColumList(modelColumnList);
         //批量保存宽表字段
         saveBatch(modelColumnList);
-        modelColumnList.forEach(modelColumn -> {
+        Map<String, ModelColumn> collect = modelColumnList.stream().collect(Collectors.toMap(ModelColumn::getName, Function.identity()));
+        for (ModelColumn modelColumn : modelColumnList) {
             //如果是虚拟字段, 保存Aviator表达式和中间表数据
             if (VIRTUAL.name().equals(modelColumn.getFieldType())) {
                 AviatorExpressParam aviatorExpressParam = modelColumn.getAviatorExpressParam();
-                aviatorExpressParamService.save(aviatorExpressParam);
+                List<ModelColumn> tempModelColumnList = aviatorExpressParam.getModelColumnList();
+                if (CollUtil.isNotEmpty(tempModelColumnList)) {
+                    List<ModelColumn> newTempModelColumnList = new ArrayList<>();
+                    for (ModelColumn column : tempModelColumnList) {
+                        ModelColumn tempModelColumn = collect.get(column.getName());
+                        if (tempModelColumn == null) {
+                            throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
+                        }
+                        newTempModelColumnList.add(tempModelColumn);
+                    }
+                    aviatorExpressParam.setModelColumnList(newTempModelColumnList);
+                }
+                aviatorExpressParamService.saveData(aviatorExpressParam);
 
                 ModelColumnAviatorExpressRelation relation = new ModelColumnAviatorExpressRelation();
                 relation.setModelColumnId(modelColumn.getId());
@@ -57,7 +68,7 @@ public class ModelColumnServiceImpl extends ServiceImpl<ModelColumnMapper, Model
                 relation.setUserId(modelColumn.getUserId());
                 modelColumnAviatorExpressRelationService.save(relation);
             }
-        });
+        }
     }
 
     @Override

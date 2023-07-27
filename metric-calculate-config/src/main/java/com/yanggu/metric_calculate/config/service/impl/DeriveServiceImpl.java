@@ -127,8 +127,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     public DeriveDto queryById(Integer id) {
-        QueryWrapper queryWrapper = QueryWrapper.create().where(DERIVE.ID.eq(id));
-        Derive derive = deriveMapper.selectOneWithRelationsByQuery(queryWrapper);
+        Derive derive = deriveMapper.selectOneWithRelationsById(id);
         return deriveMapstruct.toDTO(derive);
     }
 

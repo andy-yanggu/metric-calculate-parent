@@ -18,7 +18,7 @@ public enum ResultCode {
     MODEL_COLUMN_NAME_DUPLICATE("10004", "宽表字段名重复"),
     MODEL_COLUMN_DISPLAY_NAME_DUPLICATE("10005", "宽表字段中文名重复"),
     AVIATOR_EXPRESS_CHECK_ERROR("10006", "Aviator表达式校验失败"),
-    AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR("10007", "Aviator表达式依赖宽表字段错误")
+    AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR("10007", "Aviator表达式依赖宽表字段错误"),
     ;
 
     private final String code;

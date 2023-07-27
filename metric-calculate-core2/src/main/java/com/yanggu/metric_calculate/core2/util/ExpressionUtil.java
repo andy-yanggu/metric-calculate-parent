@@ -49,7 +49,11 @@ public class ExpressionUtil {
         }
         //设置Java反射调用
         aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
-        return aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
+        try {
+            return aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
+        } catch (Exception e) {
+            throw new RuntimeException("Aviator表达式编译失败, 请检查表达式编写是否正确或者传参是否正确");
+        }
     }
 
     public static void checkVariable(Expression expression, Map<String, Class<?>> fieldMap) {
