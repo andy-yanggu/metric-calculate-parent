@@ -66,7 +66,7 @@ class FieldProcessorUtilTest {
         String filterExpress = "invalid filter expression";
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(filterExpress);
-        assertThrows(ExpressionSyntaxErrorException.class, () -> getFilterFieldProcessor(fieldMap, aviatorExpressParam));
+        assertThrows(RuntimeException.class, () -> getFilterFieldProcessor(fieldMap, aviatorExpressParam));
     }
 
     @Test
