@@ -119,6 +119,10 @@
                     <artifactId>janino</artifactId>
                     <groupId>org.codehaus.janino</groupId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>freemarker</artifactId>
+                    <groupId>org.freemarker</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
@@ -134,8 +138,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
                     <compilerArgs>
                         <arg>-AaddExports=java.compiler/com.sun.tools.javac.api=com.yanggu.metric_calculate.config.mapstruct</arg>
                     </compilerArgs>
