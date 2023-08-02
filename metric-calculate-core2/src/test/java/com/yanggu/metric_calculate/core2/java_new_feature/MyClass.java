@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core2.test;
+package com.yanggu.metric_calculate.core2.java_new_feature;
 
 public class MyClass implements MyInterface {
     @Override

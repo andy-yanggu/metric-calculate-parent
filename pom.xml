@@ -28,8 +28,8 @@
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
         <spring-boot.version>3.1.2</spring-boot.version>
-        <spring-cloud.version>2022.0.3</spring-cloud.version>
-        <spring-cloud-alibaba.version>2022.0.0.0-RC2</spring-cloud-alibaba.version>
+        <spring-cloud.version>2022.0.4</spring-cloud.version>
+        <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
         <hutool.version>5.8.21</hutool.version>
         <knife4j-openapi3-jakarta.version>4.1.0</knife4j-openapi3-jakarta.version>

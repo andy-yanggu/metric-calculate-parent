@@ -1,7 +1,6 @@
-package com.yanggu.metric_calculate.core2.test;
+package com.yanggu.metric_calculate.core2.java_new_feature;
 
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,7 @@ import java.util.stream.StreamSupport;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("高版本语法特性")
-@Disabled("java语法和api学习, 不需要执行")
+//@Disabled("java语法和api学习, 不需要执行")
 class JavaNewFeatureTest {
 
     @Nested
@@ -339,6 +338,134 @@ class JavaNewFeatureTest {
             String text3 = "Hello, Java 12";
             String transformedText = text3.transform(s -> s.replace("Java", "Java SE"));
             System.out.println(transformedText);
+        }
+    }
+
+    @Nested
+    @DisplayName("Java14")
+    class Java14Test {
+
+        @Test
+        @DisplayName("Switch 表达式优化")
+        void test17() {
+            int day = 3;
+            //老版本java中switch case用法
+            switch (day) {
+                case 1:
+                    System.out.println("星期一");
+                    break;
+                case 2:
+                    System.out.println("星期二");
+                    break;
+                case 3:
+                    System.out.println("星期三");
+                    break;
+                case 4:
+                    System.out.println("星期四");
+                    break;
+                case 5:
+                    System.out.println("星期五");
+                    break;
+                case 6:
+                    System.out.println("星期六");
+                    break;
+                case 7:
+                    System.out.println("星期天");
+                    break;
+                default:
+                    System.out.println("未知");
+            }
+            //JAVA 14 Switch 表达式优化
+            //为 switch 表达式引入了类似 lambda 语法条件匹配成功后的执行块，不需要多写 break
+            //switch case表达式可以返回值
+            //提供了 yield 来在 block 中返回值
+            String dayName = switch (day) {
+                case 1 -> "星期一";
+                case 2 -> "星期二";
+                case 3 -> "星期三";
+                case 4 -> "星期四";
+                case 5 -> "星期五";
+                default -> "未知";
+            };
+            System.out.println(dayName); // 输出："星期三"
+
+            String value = "";
+            //如果需要case多个值, 使用","连接即可
+            String result = switch (value) {
+                case "A", "B", "C" -> "ABC";
+                case "D", "E", "F" -> "DEF";
+                default -> {
+                    if (value.isEmpty())
+                        yield "请输入有效的值。";
+                    else
+                        yield "看起来是一个不错的值。";
+                }
+            };
+            System.out.println(result);
+        }
+
+        @Test
+        @DisplayName("NullPointerException优化")
+        void test18() {
+            TestDemo testDemo = new TestDemo(null, 0);
+            try {
+                testDemo.getA().toString();
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            //老版本会打印如下：
+            //Exception in thread "main" java.lang.NullPointerException
+            //at com.xuesong.java.java14.null_pointer_exception.NullPointerExceptionTest.main(NullPointerExceptionTest.java:6)
+            //新版本会打印如下，打印内容十分具体，可以看到哪个值是 null：
+            //java.lang.NullPointerException: Cannot invoke "String.toString()" because the return value of "com.yanggu.metric_calculate.core2.java_new_feature.JavaNewFeatureTest$Java14Test$TestDemo.getA()" is null
+        }
+
+        static class TestDemo {
+            private String a;
+            private int b;
+
+            public TestDemo(String a, int b) {
+                this.a = a;
+                this.b = b;
+            }
+
+            public String getA() {
+                return a;
+            }
+
+            public int getB() {
+                return b;
+            }
+        }
+
+    }
+
+    @Nested
+    @DisplayName("Java15")
+    class Java15Test {
+
+        @Test
+        @DisplayName("新增文本块")
+        void test19() {
+            //终于支持了一种多行字符串文字，写起来更方便了，不用那么多引号加号了
+            // 原来的写法
+            String html = "<html>\n" +
+                    "<body>\n" +
+                    " <h1>Java 15以前写法，不方便</h1>\n" +
+                    " <p>xuesong</p>\n" +
+                    "</body>\n" +
+                    "</html>";
+            System.out.println(html);
+            // 新写法
+            html = """
+            <html>
+                <body>
+                    <h1>Java 15 新特性：文本块</h1>
+                    <p>xuesong</p>
+                </body>
+            </html>
+            """;
+            System.out.println(html);
         }
     }
 

@@ -43,5 +43,4 @@ class TemplateEngineUtilTest {
         assertEquals("Hello Hutool", result);
     }
 
-
 }
