@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.config.pojo.exception;
 import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.config.enums.ResultCode;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class BusinessException extends RuntimeException {
 
     private final String code;
