@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.web.pojo;
+package com.yanggu.metric_calculate.web.pojo.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

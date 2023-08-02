@@ -39,7 +39,7 @@ public class DeriveBroadcastProcessFunction extends BroadcastProcessFunction<Met
             return;
         }
         DeriveMetricCalculate deriveMetricCalculate = deriveConfigData.getDeriveMetricCalculate();
-        deriveMetricCalculate.getWindowFactory().setTable(value.getWindow());
+        deriveMetricCalculate.getWindowFactory().setWindow(value.getWindow());
         DeriveMetricCalculateResult deriveMetricCalculateResult = value.query();
         if (deriveMetricCalculateResult != null) {
             out.collect(deriveMetricCalculateResult);

@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.web.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.google.common.util.concurrent.Striped;
-import com.yanggu.metric_calculate.web.client.metric_config.MetricConfigClient;
+import com.yanggu.metric_calculate.web.client.metric_config.MockMetricConfigClient;
 import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
@@ -35,7 +35,7 @@ public class MetricConfigDataService implements ApplicationRunner {
     private final Striped<ReadWriteLock> readWriteLockStriped = Striped.lazyWeakReadWriteLock(20);
 
     @Autowired
-    private MetricConfigClient metricConfigClient;
+    private MockMetricConfigClient mockMetricConfigClient;
 
     @Autowired
     @Qualifier("redisDeriveMetricMiddleStore")
@@ -147,7 +147,7 @@ public class MetricConfigDataService implements ApplicationRunner {
     public synchronized void buildAllMetric() {
         log.info("初始化所有指标计算类");
         //获取所有宽表id
-        List<Long> allTableId = metricConfigClient.getAllTableId();
+        List<Long> allTableId = mockMetricConfigClient.getAllTableId();
         //删除原有的数据
         Iterator<Map.Entry<Long, MetricCalculate>> iterator = metricMap.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -273,7 +273,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      */
     private MetricCalculate buildMetric(Long tableId) {
         //根据明细宽表id查询指标数据和宽表数据
-        Model tableData = metricConfigClient.getTableAndMetricByTableId(tableId);
+        Model tableData = mockMetricConfigClient.getTableAndMetricByTableId(tableId);
         if (tableData == null || tableData.getId() == null) {
             log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
             throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);

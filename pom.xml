@@ -32,7 +32,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
         <hutool.version>5.8.21</hutool.version>
-        <knife4j-openapi3-jakarta.version>4.1.0</knife4j-openapi3-jakarta.version>
+        <knife4j-openapi3-jakarta.version>4.2.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>
         <mockito-inline.version>5.2.0</mockito-inline.version>
         <guava.version>32.0.1-jre</guava.version>
@@ -232,6 +232,7 @@
                     <argLine>
                         --add-opens java.base/java.lang=ALL-UNNAMED
                         --add-opens java.base/java.util=ALL-UNNAMED
+                        --enable-preview
                     </argLine>
                 </configuration>
             </plugin>

@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
-import com.yanggu.metric_calculate.web.pojo.DeriveData;
+import com.yanggu.metric_calculate.web.pojo.dto.DeriveData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,7 +55,7 @@ public class MockMetricConfigDataController {
 
     @Operation(summary = "所有宽表数据")
     @GetMapping("/all-data")
-    List<Model> allTableData() {
+    public List<Model> allTableData() {
         return FileUtil.loopFiles("mock_metric_config", fileFilter)
                 .stream()
                 .map(file -> JSONUtil.toBean(FileUtil.readUtf8String(file), Model.class))
@@ -64,7 +64,7 @@ public class MockMetricConfigDataController {
 
     @Operation(summary = "所有派生指标数据")
     @GetMapping("/all-derive-data")
-    List<DeriveData> allDeriveData() {
+    public List<DeriveData> allDeriveData() {
         List<Model> models = allTableData();
         if (CollUtil.isEmpty(models)) {
             return Collections.emptyList();

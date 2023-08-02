@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core2.calculate.metric;
 
 
+import cn.hutool.core.lang.mutable.MutableObj;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core2.field_process.filter.FilterFieldProcessor;
@@ -16,6 +16,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.function.Consumer;
 
 /**
  * 派生指标计算类
@@ -59,11 +61,6 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * <p>用于初始化窗口和给窗口实现类字段赋值</p>
      */
     private WindowFactory<IN, ACC, OUT> windowFactory;
-
-    /**
-     * 聚合函数字段处理器
-     */
-    private AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
      * 中间状态数据外部存储
@@ -116,41 +113,71 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (Boolean.TRUE.equals(includeCurrent) && Boolean.TRUE.equals(filterFieldProcessor.process(input))) {
             //添加度量值
             historyMetricCube = addInput(input, historyMetricCube, dimensionSet);
+            return historyMetricCube.query();
+        } else {
+            if (historyMetricCube == null) {
+                return null;
+            }
+            return historyMetricCube.query(input);
         }
-        if (historyMetricCube == null) {
-            return null;
-        }
-        return historyMetricCube.query();
     }
 
     /**
      * 有状态计算
+     * <p>直接读写外部数据</p>
      *
-     * @param input
+     * @param input 明细数据
      * @return
      */
     @SneakyThrows
     public DeriveMetricCalculateResult<OUT> stateExec(JSONObject input) {
-        //执行前置过滤条件
-        Boolean filter = filterFieldProcessor.process(input);
-        if (Boolean.FALSE.equals(filter)) {
-            return null;
-        }
-
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
         //根据维度查询外部数据
         MetricCube<IN, ACC, OUT> historyMetricCube = deriveMetricMiddleStore.get(dimensionSet);
+        MutableObj<DeriveMetricCalculateResult<OUT>> result = new MutableObj<>();
+        //前置过滤条件为true和false对应的消费者
+        //为true时直接查询
+        Consumer<MetricCube<IN, ACC, OUT>> filterFalseConsumer = metricCube -> result.set(metricCube.query(input));
+        //为false时更新到外部存储后查询
+        Consumer<MetricCube<IN, ACC, OUT>> filterTrueConsumer = newMetricCube -> {
+            deriveMetricMiddleStore.update(newMetricCube);
+            DeriveMetricCalculateResult<OUT> query = newMetricCube.query();
+            result.set(query);
+        };
+        stateExec(input, historyMetricCube, dimensionSet, filterFalseConsumer, filterTrueConsumer);
+        return result.get();
+    }
 
-        //添加度量值
-        historyMetricCube = addInput(input, historyMetricCube, dimensionSet);
+    /**
+     * 有状态计算
+     *
+     * @param input 明细数据
+     * @return
+     */
+    @SneakyThrows
+    public void stateExec(JSONObject input,
+                          MetricCube<IN, ACC, OUT> historyMetricCube,
+                          DimensionSet dimensionSet,
+                          Consumer<MetricCube<IN, ACC, OUT>> filterFalseConsumer,
+                          Consumer<MetricCube<IN, ACC, OUT>> filterTrueConsumer) {
 
-        //更新到外部存储
-        deriveMetricMiddleStore.update(historyMetricCube);
-
-        //查询数据, 并返回
-        return historyMetricCube.query();
+        //执行前置过滤条件
+        Boolean filter = filterFieldProcessor.process(input);
+        //如果为false，返回历史数据即可
+        if (Boolean.FALSE.equals(filter)) {
+            if (historyMetricCube != null) {
+                windowFactory.setWindow(historyMetricCube.getWindow());
+                //执行为false的逻辑
+                filterFalseConsumer.accept(historyMetricCube);
+            }
+        } else {
+            //如果为true, 需要将度量值添加到历史数据中
+            MetricCube<IN, ACC, OUT> newMetricCube = addInput(input, historyMetricCube, dimensionSet);
+            //执行为true的逻辑
+            filterTrueConsumer.accept(newMetricCube);
+        }
     }
 
     /**
@@ -164,7 +191,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (metricCube == null) {
             return null;
         }
-        windowFactory.setTable(metricCube.getWindow());
+        windowFactory.setWindow(metricCube.getWindow());
         return metricCube.query();
     }
 
@@ -182,10 +209,10 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         if (historyMetricCube == null) {
             historyMetricCube = new MetricCube<>();
             historyMetricCube.setDimensionSet(dimensionSet);
-            AbstractWindow<IN, ACC, OUT> window = windowFactory.createTable();
+            AbstractWindow<IN, ACC, OUT> window = windowFactory.createWindow();
             historyMetricCube.setWindow(window);
         } else {
-            windowFactory.setTable(historyMetricCube.getWindow());
+            windowFactory.setWindow(historyMetricCube.getWindow());
         }
         //放入明细数据进行累加
         historyMetricCube.put(input);

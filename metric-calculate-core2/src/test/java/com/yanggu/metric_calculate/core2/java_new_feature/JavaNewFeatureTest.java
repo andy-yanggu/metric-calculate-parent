@@ -385,7 +385,7 @@ class JavaNewFeatureTest {
                 case 3 -> "星期三";
                 case 4 -> "星期四";
                 case 5 -> "星期五";
-                default -> "未知";
+                default -> "未知: " + day;
             };
             System.out.println(dayName); // 输出："星期三"
 
@@ -395,10 +395,8 @@ class JavaNewFeatureTest {
                 case "A", "B", "C" -> "ABC";
                 case "D", "E", "F" -> "DEF";
                 default -> {
-                    if (value.isEmpty())
-                        yield "请输入有效的值。";
-                    else
-                        yield "看起来是一个不错的值。";
+                    if (value.isEmpty()) yield "请输入有效的值。";
+                    else yield "看起来是一个不错的值。";
                 }
             };
             System.out.println(result);
@@ -458,15 +456,55 @@ class JavaNewFeatureTest {
             System.out.println(html);
             // 新写法
             html = """
-            <html>
-                <body>
-                    <h1>Java 15 新特性：文本块</h1>
-                    <p>xuesong</p>
-                </body>
-            </html>
-            """;
+                    <html>
+                        <body>
+                            <h1>Java 15 新特性：文本块</h1>
+                            <p>xuesong</p>
+                        </body>
+                    </html>
+                    """;
             System.out.println(html);
         }
+    }
+
+    @Nested
+    @DisplayName("Java16")
+    class Java16Test {
+
+        @Test
+        @DisplayName("instance of增强")
+        void test20() {
+            Map<String, Object> data = new HashMap<>();
+            data.put("key1", "aaa");
+            data.put("key2", 111);
+            Object value = data.get("key1");
+            // 老版本写法，需要在 instanceof 之后在进行赋值操作
+            if (value instanceof String) {
+                String s = (String) value;
+                System.out.println(s.substring(1));
+            }
+            // JAVA16 可以直接在 instanceof 表达式中的最后写一个变量，直接赋值，写法更简单
+            Object value1 = data.get("key1");
+            if (value1 instanceof String aaa) {
+                System.out.println(aaa.substring(1));
+            }
+        }
+
+        @Test
+        @DisplayName("Switch表达式增强")
+        void test21() {
+            //case表达式直接包含数据类型和变量
+            Map<String, Object> data = new HashMap<>();
+            data.put("key1", "test1");
+            Object key1 = data.get("key1");
+            switch (key1) {
+                case String s -> System.out.println("字符串: " + s);
+                case Double d -> System.out.println("小数: " + d);
+                case Integer i -> System.out.println("整数: " + i);
+                default -> System.out.println("默认: 不知道数据类型: " + key1);
+            }
+        }
+
     }
 
 }

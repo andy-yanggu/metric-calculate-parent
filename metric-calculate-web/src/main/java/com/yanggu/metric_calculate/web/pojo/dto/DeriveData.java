@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.web.pojo;
+package com.yanggu.metric_calculate.web.pojo.dto;
 
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import lombok.Data;

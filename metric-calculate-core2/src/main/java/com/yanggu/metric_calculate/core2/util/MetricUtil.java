@@ -236,7 +236,6 @@ public class MetricUtil {
         //设置聚合字段处理器
         AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
                 FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, tempDerive.getAggregateFunctionParam(), aviatorFunctionFactory, aggregateFunctionFactory);
-        deriveMetricCalculate.setAggregateFieldProcessor(aggregateFieldProcessor);
 
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());

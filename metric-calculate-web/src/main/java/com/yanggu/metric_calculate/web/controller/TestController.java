@@ -37,8 +37,8 @@ public class TestController {
                 request.getCompletableFuture().complete(request.getUuid() + ", " + DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN));
             }
         };
-        this.component = new AccumulateBatchComponent<>("测试攒批组件", 1, 10, 200, consumer);
-        this.component2 = new AccumulateBatchComponent2<>("测试攒批组件", 1, 10, 200, consumer);
+        this.component = new AccumulateBatchComponent<>("测试攒批组件1", 1, 10, 200, consumer);
+        this.component2 = new AccumulateBatchComponent2<>("测试攒批组件2", 1, 10, 200, consumer);
     }
 
     /**

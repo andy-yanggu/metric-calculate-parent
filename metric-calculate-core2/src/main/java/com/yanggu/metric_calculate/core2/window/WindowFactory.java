@@ -27,11 +27,11 @@ public class WindowFactory<IN, ACC, OUT> {
     private TimeFieldProcessor timeFieldProcessor;
 
     /**
-     * 创建新的Table
+     * 创建新的Window
      *
      * @return
      */
-    public AbstractWindow<IN, ACC, OUT> createTable() {
+    public AbstractWindow<IN, ACC, OUT> createWindow() {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {
@@ -71,11 +71,11 @@ public class WindowFactory<IN, ACC, OUT> {
     }
 
     /**
-     * 给Table实现类的相关字段赋值
+     * 给Window实现类的相关字段赋值
      *
      * @param window
      */
-    public void setTable(AbstractWindow<IN, ACC, OUT> window) {
+    public void setWindow(AbstractWindow<IN, ACC, OUT> window) {
         WindowTypeEnum windowType = windowParam.getWindowType();
         //滚动时间窗口
         if (windowType == TUMBLING_TIME_WINDOW) {

@@ -9,12 +9,13 @@ import java.util.List;
 
 /**
  * 获取指标、宽表相关定义
+ * <p>实际调用本身controller</p>
  */
 @FeignClient(name = "metric-config-api", path = "/mock-model", url = "${feign.metric-config-api.url}")
-public interface MetricConfigClient {
+public interface MockMetricConfigClient {
 
     /**
-     * 根据数据明细宽表id获取明细宽表以及派生指标和复合指标
+     * 根据数据明细宽表id获取明细宽表以及相关指标
      *
      * @param tableId 数据明细宽表的id
      * @return
@@ -29,13 +30,5 @@ public interface MetricConfigClient {
      */
     @GetMapping("/all-id")
     List<Long> getAllTableId();
-
-    /**
-     * 所有宽表数据
-     *
-     * @return
-     */
-    @GetMapping("/all-data")
-    List<Model> getAllTableData();
 
 }
