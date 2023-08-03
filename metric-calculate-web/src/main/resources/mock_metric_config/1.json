@@ -576,7 +576,9 @@
         "columnName": "trans_timestamp",
         "timeFormat": "TIMESTAMP"
       },
-      "filter": "debit_amt_out > 100",
+      "filterExpressParam": {
+        "express": "debit_amt_out > 100"
+      },
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {

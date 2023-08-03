@@ -59,12 +59,13 @@ public class MetricDataService {
             return list;
         }
 
-        List<DimensionSet> dimensionSetList = new ArrayList<>();
+        Map<DimensionSet, DeriveMetricCalculate> map = new HashMap<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
             DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
-            dimensionSetList.add(dimensionSet);
+            map.put(dimensionSet, deriveMetricCalculate);
         }
 
+        List<DimensionSet> dimensionSetList = new ArrayList<>(map.keySet());
         //根据维度进行批量查询
         Map<DimensionSet, MetricCube> dimensionSetMetricCubeMap = deriveMetricMiddleStore.batchGet(dimensionSetList);
         if (dimensionSetMetricCubeMap == null) {
@@ -73,12 +74,10 @@ public class MetricDataService {
 
         for (DimensionSet dimensionSet : dimensionSetList) {
             MetricCube metricCube = dimensionSetMetricCubeMap.get(dimensionSet);
-            if (metricCube != null) {
-                //根据明细数据进行查询
-                DeriveMetricCalculateResult<Object> result = metricCube.query(input);
-                if (result != null) {
-                    list.add(result);
-                }
+            DeriveMetricCalculate deriveMetricCalculate = map.get(dimensionSet);
+            DeriveMetricCalculateResult query = deriveMetricCalculate.query(metricCube, input);
+            if (query != null) {
+                list.add(query);
             }
         }
         return list;

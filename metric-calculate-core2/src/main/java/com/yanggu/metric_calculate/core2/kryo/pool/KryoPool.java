@@ -23,6 +23,8 @@ import com.yanggu.metric_calculate.core2.kryo.serializer.acc.*;
 import com.yanggu.metric_calculate.core2.kryo.serializer.cube.DimensionSetSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.cube.MetricCubeSerializer;
 import com.yanggu.metric_calculate.core2.kryo.serializer.window.*;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
+import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorFunctionInstance;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core2.window.*;
 import com.yanggu.metric_calculate.core2.util.KeyValue;
@@ -49,7 +51,7 @@ public class KryoPool extends Pool<Kryo> {
         //设定默认的实例化器
         kryo.setInstantiatorStrategy(new DefaultInstantiatorStrategy(new StdInstantiatorStrategy()));
 
-        //添加Table序列化和反序列化器
+        //添加Window序列化和反序列化器
         kryo.register(TumblingTimeWindow.class, new TumblingTimeWindowSerializer<>(), 1);
         kryo.register(GlobalWindow.class, new GlobalWindowSerializer<>(), 2);
         kryo.register(SlidingTimeWindow.class, new SlidingTimeWindowSerializer<>(), 3);
@@ -58,25 +60,27 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(PatternWindow.class, new PatternWindowSerializer<>(), 6);
 
         //ACC序列化器和反序列化器
-        kryo.register(Tuple.class, new TupleSerializer(), 11);
-        kryo.register(MutablePair.class, new MutablePairSerializer<>(), 12);
-        kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 13);
-        kryo.register(MutableObj.class, new MutableObjectSerializer<>(), 14);
-        kryo.register(Pair.class, new PairSerializer<>(), 15);
-        kryo.register(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer(), 16);
-        kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 17);
-        kryo.register(FieldOrder.class, new FieldOrderSerializer(), 18);
-        kryo.register(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer(), 19);
-        kryo.register(JSONObject.class, 20);
-        kryo.register(KeyValue.class, new KeyValueSerializer<>(), 21);
-        kryo.register(String.class, new DefaultSerializers.StringSerializer(), 22);
-        kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 23);
-        kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 24);
-        kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 25);
+        kryo.register(Tuple.class, new TupleSerializer(), 21);
+        kryo.register(MutablePair.class, new MutablePairSerializer<>(), 22);
+        kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 23);
+        kryo.register(MutableObj.class, new MutableObjectSerializer<>(), 24);
+        kryo.register(Pair.class, new PairSerializer<>(), 25);
+        kryo.register(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer(), 26);
+        kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 27);
+        kryo.register(FieldOrder.class, new FieldOrderSerializer(), 28);
+        kryo.register(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer(), 29);
+        kryo.register(JSONObject.class, 30);
+        kryo.register(KeyValue.class, new KeyValueSerializer<>(), 31);
+        kryo.register(String.class, new DefaultSerializers.StringSerializer(), 32);
+        kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 33);
+        kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 34);
+        kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 35);
+        kryo.register(AviatorExpressParam.class, new BeanSerializer<>(kryo, AviatorExpressParam.class), 36);
+        kryo.register(AviatorFunctionInstance.class, new BeanSerializer<>(kryo, AviatorFunctionInstance.class), 37);
 
         //MetricCube序列化器和反序列化器
-        kryo.register(DimensionSet.class, new DimensionSetSerializer(), 40);
-        kryo.register(MetricCube.class, new MetricCubeSerializer<>(), 41);
+        kryo.register(DimensionSet.class, new DimensionSetSerializer(), 60);
+        kryo.register(MetricCube.class, new MetricCubeSerializer<>(), 61);
         return kryo;
     }
 

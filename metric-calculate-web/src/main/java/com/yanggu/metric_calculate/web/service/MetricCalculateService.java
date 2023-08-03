@@ -190,11 +190,21 @@ public class MetricCalculateService {
             DeriveMetricCalculate deriveMetricCalculate = map.get(dimensionSet);
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
             //为false的消费逻辑
-            Consumer<MetricCube> filterFalseConsumer = metricCube -> resultList.add(metricCube.query(detail));
+            Consumer<MetricCube> filterFalseConsumer = metricCube -> {
+                DeriveMetricCalculateResult query = deriveMetricCalculate.query(metricCube, input);
+                if (query != null) {
+                    resultList.add(query);
+                }
+            };
             //为true的消费逻辑
             Consumer<MetricCube> filterTrueConsumer = newMetricCube -> {
-                updateMetricCubeList.add(newMetricCube);
-                resultList.add(newMetricCube.query());
+                if (!newMetricCube.isEmpty()) {
+                    updateMetricCubeList.add(newMetricCube);
+                    DeriveMetricCalculateResult query = newMetricCube.query();
+                    if (query != null) {
+                        resultList.add(query);
+                    }
+                }
             };
             //执行有状态计算
             deriveMetricCalculate.stateExec(detail, historyMetricCube, dimensionSet, filterFalseConsumer, filterTrueConsumer);
@@ -202,16 +212,6 @@ public class MetricCalculateService {
 
         deriveMetricMiddleStore.batchUpdate(updateMetricCubeList);
         return resultList;
-    }
-
-    private Map<DimensionSet, DeriveMetricCalculate> getDimensionSetDeriveMetricCalculateMap(List<DeriveMetricCalculate> deriveMetricCalculateList, JSONObject detail) {
-        Map<DimensionSet, DeriveMetricCalculate> map = new HashMap<>();
-        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
-            //提取出维度字段
-            DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(detail);
-            map.put(dimensionSet, deriveMetricCalculate);
-        }
-        return map;
     }
 
     /**
@@ -242,9 +242,16 @@ public class MetricCalculateService {
                     .thenCompose(historyMetricCube -> {
                         CompletableFuture<DeriveMetricCalculateResult> future = new CompletableFuture<>();
                         //为false的消费逻辑
-                        Consumer<MetricCube> filterFalseConsumer = metricCube -> future.complete(metricCube.query(detail));
+                        Consumer<MetricCube> filterFalseConsumer = metricCube -> {
+                            DeriveMetricCalculateResult result = deriveMetricCalculate.query(metricCube, input);
+                            future.complete(result);
+                        };
                         //为true的消费逻辑
                         Consumer<MetricCube> filterTrueConsumer = newMetricCube -> {
+                            if (newMetricCube.isEmpty()) {
+                                future.complete(null);
+                                return;
+                            }
                             PutRequest putRequest = new PutRequest();
                             putRequest.setMetricCube(newMetricCube);
                             putRequest.setInput(detail);
@@ -266,6 +273,16 @@ public class MetricCalculateService {
         //当所有的更新都完成时, 进行输出
         setDeferredResult(deferredResult, completableFutureList);
         return deferredResult;
+    }
+
+    private Map<DimensionSet, DeriveMetricCalculate> getDimensionSetDeriveMetricCalculateMap(List<DeriveMetricCalculate> deriveMetricCalculateList, JSONObject detail) {
+        Map<DimensionSet, DeriveMetricCalculate> map = new HashMap<>();
+        for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
+            //提取出维度字段
+            DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(detail);
+            map.put(dimensionSet, deriveMetricCalculate);
+        }
+        return map;
     }
 
     private DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> createDeferredResult(Long duration) {

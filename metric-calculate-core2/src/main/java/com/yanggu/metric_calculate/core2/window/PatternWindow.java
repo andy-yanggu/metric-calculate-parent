@@ -134,14 +134,18 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         TreeMap<Long, IN> nextTable = null;
 
         Iterator<NodePattern> iterator = nodePatternList.iterator();
+        //获取第一个节点
         iterator.next();
         NodePattern nextNode;
 
-        //从第一个节点开始遍历
+        //从第二个节点开始遍历
         while (iterator.hasNext()) {
             nextNode = iterator.next();
             Long size = nextNode.getInterval();
             TreeMap<Long, IN> nextNodeTable = dataMap.get(nextNode);
+            if (nextNodeTable == null) {
+                break;
+            }
             nextTable = new TreeMap<>();
             for (Map.Entry<Long, IN> entry : nodeTable.entrySet()) {
                 Long tempTimestamp = entry.getKey();
@@ -154,7 +158,8 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
             nodeTable = nextTable;
         }
 
-        if (nextTable == null || nextTable.values().isEmpty()) {
+        //默认从最后一个node设置度量值
+        if (nextTable == null || nextTable.values().isEmpty() || iterator.hasNext()) {
             return null;
         }
 
