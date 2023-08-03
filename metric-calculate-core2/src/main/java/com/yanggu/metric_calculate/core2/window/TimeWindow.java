@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeBaselineDimension;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import com.yanggu.metric_calculate.core2.util.DateUtils;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     protected TimeFieldProcessor timeFieldProcessor;

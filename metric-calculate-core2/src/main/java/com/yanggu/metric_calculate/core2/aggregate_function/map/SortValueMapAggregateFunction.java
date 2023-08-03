@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @Data
 @MapType
 @MergeType("SORTVALUEMAP")
+@EqualsAndHashCode(callSuper=false)
 public class SortValueMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, Map<K, ValeOUT>> {
 

@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.cube.MetricCube;
 import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
 
 @Data
 @Slf4j
+@EqualsAndHashCode(callSuper=false)
 public class DeriveMetricMiddleRedisStore extends AbstractDeriveMetricMiddleStore {
 
     private RedisTemplate<String, byte[]> redisTemplate;

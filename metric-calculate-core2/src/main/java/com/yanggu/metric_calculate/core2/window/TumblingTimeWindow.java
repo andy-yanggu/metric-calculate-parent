@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core2.window;
 import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.*;
 
@@ -17,6 +18,7 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.TUMBLING_TI
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();

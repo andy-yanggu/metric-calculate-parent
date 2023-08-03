@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core2.aggregate_function.map;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 @Data
 @MapType
 @MergeType("BASEMAP")
+@EqualsAndHashCode(callSuper=false)
 public class BaseMapAggregateFunction<K, V, ValueACC, ValeOUT>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, Map<K, ValeOUT>> {
-
 }

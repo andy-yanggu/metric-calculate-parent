@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressPara
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.STATUS_WIND
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;

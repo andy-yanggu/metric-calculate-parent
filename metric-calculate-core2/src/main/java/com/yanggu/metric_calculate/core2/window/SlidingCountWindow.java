@@ -5,6 +5,7 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.SLIDING_COU
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Integer limit;

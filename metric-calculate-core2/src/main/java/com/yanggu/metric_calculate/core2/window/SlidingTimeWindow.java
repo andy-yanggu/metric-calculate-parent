@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,7 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.SLIDING_TIM
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();

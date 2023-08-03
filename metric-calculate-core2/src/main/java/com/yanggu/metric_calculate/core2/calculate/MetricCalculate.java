@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core2.calculate.metric.GlobalMetricCalculate;
 import com.yanggu.metric_calculate.core2.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 
 import java.io.Serializable;
@@ -21,6 +22,7 @@ import java.util.stream.Collectors;
  * <p>包含了衍生指标、复合指标、全局指标</p>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class MetricCalculate extends Model implements Serializable {
 
     private static final long serialVersionUID = 9035602780530630814L;

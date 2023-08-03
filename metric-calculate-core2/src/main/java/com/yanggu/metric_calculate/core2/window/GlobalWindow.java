@@ -6,6 +6,7 @@ import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.GLOBAL_WINDOW;
 
@@ -17,6 +18,7 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.GLOBAL_WIND
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private ACC accumulator;

@@ -11,12 +11,6 @@
 
     <artifactId>metric-calculate-config</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -139,7 +133,9 @@
                 <version>${maven-compiler-plugin.version}</version>
                 <configuration>
                     <compilerArgs>
-                        <arg>-AaddExports=java.compiler/com.sun.tools.javac.api=com.yanggu.metric_calculate.config.mapstruct</arg>
+                        <arg>
+                            -AaddExports=java.compiler/com.sun.tools.javac.api=com.yanggu.metric_calculate.config.mapstruct
+                        </arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>

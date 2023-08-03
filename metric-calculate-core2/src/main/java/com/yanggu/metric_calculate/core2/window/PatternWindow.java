@@ -12,6 +12,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeWindowData;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.*;
 
@@ -25,6 +26,7 @@ import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.EVENT_WINDO
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;

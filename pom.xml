@@ -26,6 +26,8 @@
         <maven.compiler.target>20</maven.compiler.target>
         <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.1.2</maven-surefire-plugin.version>
+        <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
+        <maven-shade-plugin.version>3.5.0</maven-shade-plugin.version>
         <maven-invoker.version>3.1.0</maven-invoker.version>
         <spring-boot.version>3.1.2</spring-boot.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>

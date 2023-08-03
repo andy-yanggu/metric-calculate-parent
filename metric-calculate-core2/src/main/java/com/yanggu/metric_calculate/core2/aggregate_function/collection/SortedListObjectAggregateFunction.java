@@ -4,6 +4,7 @@ import cn.hutool.core.collection.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.MergeType;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  */
 @Data
 @MergeType("SORTEDLIMITLISTOBJECT")
+@EqualsAndHashCode(callSuper=false)
 @Collective(keyStrategy = 2, retainStrategy = 2)
 public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
