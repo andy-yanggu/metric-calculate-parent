@@ -13,6 +13,14 @@ import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.enums.WindowTypeEnum.*;
 
+/**
+ * 窗口工厂类
+ * <p>构造窗口和给窗口字段赋值</p>
+ *
+ * @param <IN>
+ * @param <ACC>
+ * @param <OUT>
+ */
 @Data
 public class WindowFactory<IN, ACC, OUT> {
 

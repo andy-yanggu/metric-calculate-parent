@@ -23,6 +23,7 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleHashMapS
 import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.ModelColumn;
+import com.yanggu.metric_calculate.core2.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.pojo.metric.Global;
 import com.yanggu.metric_calculate.core2.window.WindowFactory;
@@ -38,6 +39,7 @@ import static com.yanggu.metric_calculate.core2.enums.MetricTypeEnum.DERIVE;
 
 /**
  * 指标工具类
+ * <p>主要是初始化指标</p>
  */
 @Slf4j
 public class MetricUtil {
@@ -66,7 +68,8 @@ public class MetricUtil {
         setFieldMap(metricCalculate);
 
         //初始化AviatorFunctionFactory
-        AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory(metricCalculate.getAviatorFunctionJarPathList());
+        List<String> aviatorFunctionJarPathList = metricCalculate.getAviatorFunctionJarPathList();
+        AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory(aviatorFunctionJarPathList);
         aviatorFunctionFactory.init();
 
         //初始化字段计算
@@ -146,7 +149,9 @@ public class MetricUtil {
         DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
         deriveMetricMiddleStore.init();
 
-        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(metricCalculate.getUdafJarPathList());
+        //初始化聚合函数工厂类
+        List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
+        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(udafJarPathList);
         aggregateFunctionFactory.init();
 
         Long tableId = metricCalculate.getId();
@@ -234,8 +239,9 @@ public class MetricUtil {
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //设置聚合字段处理器
+        AggregateFunctionParam aggregateFunctionParam = tempDerive.getAggregateFunctionParam();
         AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
-                FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, tempDerive.getAggregateFunctionParam(), aviatorFunctionFactory, aggregateFunctionFactory);
+                FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, aggregateFunctionParam, aviatorFunctionFactory, aggregateFunctionFactory);
 
         //时间字段处理器
         TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());

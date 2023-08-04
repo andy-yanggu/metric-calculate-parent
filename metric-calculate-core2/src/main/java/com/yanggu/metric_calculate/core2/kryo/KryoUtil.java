@@ -10,6 +10,9 @@ import com.yanggu.metric_calculate.core2.kryo.pool.InputPool;
 import com.yanggu.metric_calculate.core2.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core2.kryo.pool.OutputPool;
 
+/**
+ * Kryo序列化和反序列化工具类
+ */
 public class KryoUtil {
 
     private KryoUtil() {
@@ -44,8 +47,9 @@ public class KryoUtil {
             return output.toBytes();
         } finally {
             kryoPool.free(kryo);
-            kryo.reset();
             outputPool.free(output);
+            //兼容低版本的kryo重置kryo和output对象
+            kryo.reset();
             output.setPosition(0);
             ReflectUtil.setFieldValue(output, "total", 0L);
         }
@@ -70,6 +74,7 @@ public class KryoUtil {
         } finally {
             inputPool.free(input);
             kryoPool.free(kryo);
+            //兼容低版本的kryo重置kryo和input对象
             kryo.reset();
             input.setPosition(0);
             ReflectUtil.setFieldValue(input, "total", 0L);

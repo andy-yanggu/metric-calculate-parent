@@ -56,6 +56,12 @@ public class ExpressionUtil {
         }
     }
 
+    /**
+     * 验证依赖参数是否正确
+     *
+     * @param expression
+     * @param fieldMap
+     */
     public static void checkVariable(Expression expression, Map<String, Class<?>> fieldMap) {
         List<String> variableNames = expression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
