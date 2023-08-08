@@ -76,7 +76,6 @@ public class MetricCalculateFlinkJob {
         env.registerTypeWithKryoSerializer(MutableObj.class, new MutableObjectSerializer<>());
         env.registerTypeWithKryoSerializer(Pair.class, new PairSerializer<>());
         env.registerTypeWithKryoSerializer(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer());
-        //env.registerTypeWithKryoSerializer(NodePattern.class, new NodePatternSerializer());
         env.registerTypeWithKryoSerializer(FieldOrder.class, new FieldOrderSerializer());
         env.registerTypeWithKryoSerializer(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer());
         env.registerTypeWithKryoSerializer(KeyValue.class, new KeyValueSerializer<>());

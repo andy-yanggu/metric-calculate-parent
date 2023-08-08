@@ -8,10 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,6 +25,8 @@ public class MetricCalculateTestController {
     @Operation(summary = "无状态-计算接口")
     @PostMapping("/no-state-calculate")
     public Result<List<DeriveMetricCalculateResult<Object>>> noStateCalculateThread(
+            @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
+            @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
             @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) {
         //List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateCalculateThread(input);
         //return Result.ok(resultList);

@@ -4,8 +4,6 @@ package com.yanggu.metric_calculate.flink.util;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONArray;
-import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
@@ -19,8 +17,6 @@ import org.apache.flink.api.common.state.BroadcastState;
 import org.apache.flink.api.common.state.MapStateDescriptor;
 import org.apache.flink.runtime.state.FunctionInitializationContext;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,26 +38,7 @@ public class DeriveMetricCalculateUtil {
             if (StrUtil.isBlank(jsonArrayString)) {
                 return;
             }
-            JSONArray objects = JSONUtil.parseArray(jsonArrayString);
-            List<DeriveConfigData> list = new ArrayList<>();
-            for (Object object : objects) {
-                JSONObject tempObj = (JSONObject) object;
-                Long tableId = tempObj.getLong("tableId");
-                JSONObject tempFieldMap = tempObj.getJSONObject("fieldMap");
-                Derive derive = tempObj.get("derive", Derive.class);
-                Map<String, Class<?>> fieldMap = new HashMap<>();
-                for (Map.Entry<String, Object> entry : tempFieldMap) {
-                    String tempKey = entry.getKey();
-                    Object tempValue = entry.getValue();
-                    fieldMap.put(tempKey, Class.forName(tempValue.toString()));
-                }
-                DeriveConfigData deriveConfigData = new DeriveConfigData<>();
-                deriveConfigData.setTableId(tableId);
-                deriveConfigData.setFieldMap(fieldMap);
-                deriveConfigData.setDerive(derive);
-                list.add(deriveConfigData);
-            }
-            //List<DeriveConfigData> list = JSONUtil.toList(jsonArrayString, DeriveConfigData.class);
+            List<DeriveConfigData> list = JSONUtil.toList(jsonArrayString, DeriveConfigData.class);
             if (CollUtil.isEmpty(list)) {
                 return;
             }
