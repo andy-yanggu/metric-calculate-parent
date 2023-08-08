@@ -91,7 +91,7 @@ metric-calculate:
 
 #feign客户端url配置
 feign:
-  metric-config-api:
+  metric-config-mock-api:
     url: http://localhost:${server.port}
 
 # springdoc-openapi项目配置

@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
 import com.yanggu.metric_calculate.core2.util.MetricUtil;
+import com.yanggu.metric_calculate.web.exceptionhandler.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,6 +23,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.stream.Collectors;
+
+import static com.yanggu.metric_calculate.web.enums.ResultCode.*;
 
 /**
  * 指标配置数据Service
@@ -189,7 +192,7 @@ public class MetricConfigDataService implements ApplicationRunner {
             return deriveList.stream()
                     .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
                     .findFirst()
-                    .orElseThrow(() -> new RuntimeException("传入的派生指标id" + deriveId + "有误"));
+                    .orElseThrow(() -> new BusinessException(DERIVE_ID_ERROR, deriveId));
         } finally {
             readLock.unlock();
         }
@@ -236,6 +239,9 @@ public class MetricConfigDataService implements ApplicationRunner {
         readLock.lock();
         try {
             MetricCalculate metricCalculate = metricMap.get(tableId);
+            if (metricCalculate == null) {
+                return Collections.emptyList();
+            }
             List<Derive> deriveList = metricCalculate.getDeriveList();
             if (CollUtil.isEmpty(deriveList)) {
                 return Collections.emptyList();
@@ -276,12 +282,12 @@ public class MetricConfigDataService implements ApplicationRunner {
         Model tableData = mockMetricConfigClient.getTableAndMetricByTableId(tableId);
         if (tableData == null || tableData.getId() == null) {
             log.error("指标中心没有配置明细宽表, 明细宽表的id: {}", tableId);
-            throw new RuntimeException("指标中心没有配置明细宽表, 明细宽表的id: " + tableId);
+            throw new BusinessException(TABLE_ID_ERROR, tableId);
         }
         //初始化指标计算类
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tableData);
         if (metricCalculate == null) {
-            throw new RuntimeException("指标计算类初始化失败");
+            throw new BusinessException(METRIC_CALCULATE_INIT_ERROR);
         }
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {

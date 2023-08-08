@@ -4,8 +4,8 @@ import cn.hutool.json.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameter;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
 import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.pojo.dto.UpdateMetricData;
+import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.service.MetricDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,8 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-
 @Validated
 @RestController
 @Tag(name = "指标数据接口")
@@ -31,7 +29,7 @@ public class MetricDataController {
     private MetricDataService metricDataService;
 
     @Operation(summary = "查询单个派生指标数据（实时数据）")
-    @PostMapping(value = "/query-derive-data", produces = APPLICATION_JSON_VALUE)
+    @PostMapping("/query-derive-data")
     @DynamicParameters(name = "dimensionJson", properties = {
             @DynamicParameter(name = "name1", value = "value1", example = "key是维度名, value是维度值"),
             @DynamicParameter(name = "name2", value = "value2", example = "多个维度写多个kv")

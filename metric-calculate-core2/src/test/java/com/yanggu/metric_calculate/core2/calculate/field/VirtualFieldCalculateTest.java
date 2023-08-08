@@ -3,14 +3,13 @@ package com.yanggu.metric_calculate.core2.calculate.field;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
+import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core2.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core2.field_process.FieldProcessorUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Date;
@@ -18,8 +17,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mockStatic;
 
 /**
  * 虚拟字段单元测试类
@@ -40,7 +40,7 @@ class VirtualFieldCalculateTest {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(express);
 
-        MockedStatic<FieldProcessorUtil> fieldProcessorUtilMockedStatic = Mockito.mockStatic(FieldProcessorUtil.class);
+        MockedStatic<FieldProcessorUtil> fieldProcessorUtilMockedStatic = mockStatic(FieldProcessorUtil.class);
         AviatorFunctionFactory aviatorFunctionFactory = getAviatorFunctionFactory();
         fieldProcessorUtilMockedStatic.when(() -> FieldProcessorUtil.getMetricFieldProcessor(eq(fieldMap), eq(aviatorExpressParam), eq(aviatorFunctionFactory)))
                 .thenReturn(mockMetricFieldProcessor);

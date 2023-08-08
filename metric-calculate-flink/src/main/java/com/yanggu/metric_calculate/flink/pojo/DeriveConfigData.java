@@ -14,8 +14,14 @@ public class DeriveConfigData<IN, ACC, OUT> implements Serializable {
 
     private static final long serialVersionUID = 8555083618866402099L;
 
+    /**
+     * 宽表id
+     */
     private Long tableId;
 
+    /**
+     * 宽表字段
+     */
     private Map<String, Class<?>> fieldMap;
 
     /**
@@ -28,8 +34,14 @@ public class DeriveConfigData<IN, ACC, OUT> implements Serializable {
      */
     private List<String> udafJarPathList;
 
+    /**
+     * 派生指标配置类
+     */
     private Derive derive;
 
+    /**
+     * 派生指标计算类
+     */
     private transient DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate;
 
 }

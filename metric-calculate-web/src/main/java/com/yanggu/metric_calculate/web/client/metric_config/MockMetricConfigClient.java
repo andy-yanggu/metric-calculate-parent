@@ -11,7 +11,7 @@ import java.util.List;
  * 获取指标、宽表相关定义
  * <p>实际调用本身controller</p>
  */
-@FeignClient(name = "metric-config-api", path = "/mock-model", url = "${feign.metric-config-api.url}")
+@FeignClient(name = "metric-config-mock-api", path = "/mock-model", url = "${feign.metric-config-mock-api.url}")
 public interface MockMetricConfigClient {
 
     /**
