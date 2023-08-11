@@ -1,0 +1,73 @@
+{
+  "id": 2,
+  "name": "device_run_log",
+  "displayName": "设备运行日志",
+  "deriveList": [
+    {
+      "id": 1,
+      "name": "device_on_line_or_offline_time",
+      "displayName": "设备在线或者离线时长（毫秒）",
+      "dimensionList": [
+        {
+          "columnName": "device_id",
+          "columnIndex": 0,
+          "dimensionName": "device_id"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "timestamp",
+        "timeFormat": "timestamp"
+      },
+      "aggregateFunctionParam": {
+        "aggregateType": "BASEMIX",
+        "mixUdafParam": {
+          "aggregateType": "BASEMIX",
+          "mixAggMap": {
+            "max_timestamp": {
+              "aggregateType": "MAX",
+              "metricExpressParam" : {
+                "express": "timestamp"
+              }
+            },
+            "min_timestamp": {
+              "aggregateType": "MIN",
+              "metricExpressParam" : {
+                "express": "timestamp"
+              }
+            }
+          },
+          "metricExpressParam" : {
+            "express": "max_timestamp - min_timestamp"
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "STATUS_WINDOW",
+        "statusExpressParamList": [
+          {
+            "express": "status"
+          }
+        ]
+      }
+    }
+  ],
+  "fieldList": [
+    {
+      "name": "device_id",
+      "dataType": "STRING",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "status",
+      "dataType": "LONG",
+      "description": "设备状态0表示离线, 1表示在线",
+      "fieldType": "REAL"
+    },
+    {
+      "name": "timestamp",
+      "dataType": "LONG",
+      "description": "数据上报的时间戳",
+      "fieldType": "REAL"
+    }
+  ]
+}

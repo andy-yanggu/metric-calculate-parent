@@ -28,3 +28,4 @@ mvnw.cmd
 /**/target/**
 result.json
 /**/dependency-reduced-pom.xml
+/logs/*

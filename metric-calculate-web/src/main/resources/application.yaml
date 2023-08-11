@@ -1,21 +1,112 @@
 server:
   port: 8888
+  #开启压缩
+  compression:
+    enabled: true
 
 spring:
   application:
-    name: metric-calculate
-    version: 1.0.0
+    name: metric-calculate-web
+    version: '1.0.0'
+    description: '指标计算服务'
   mvc:
     pathmatch:
       # 配置策略
-      matching-strategy: ant-path-matcher
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    client-type: lettuce
-    database: 1
-#    password: Redis6379
+      matching-strategy: ANT_PATH_MATCHER
 
+  output:
+    #日志彩色打印
+    ansi:
+      enabled: always
+
+  #kafka相关配置
+  kafka:
+    #消费者相关配置
+    consumer:
+      bootstrap-servers: 172.20.7.143:9092
+      topic: 'metric-calculate'
+    #开启批量消费
+    listener:
+      type: batch
+
+  data:
+    #redis相关配置
+    redis:
+      client-type: lettuce
+      host: 172.20.7.106
+      port: 16379
+      database: 1
+      password: Redis6379
+
+  cloud:
+    #feign相关的配置
+    openfeign:
+      okhttp:
+        enabled: true
+
+# 端点控制配置
+management:
+  server:
+    # 启用独立运维端口
+    port: 50000
+  endpoint:
+    # 开启shutdown
+    shutdown:
+      enabled: true
+    # 开启liveness和readiness端点
+    health:
+      probes:
+        enabled: true
+      show-details: always
+  endpoints:
+    web:
+      # 指定上下文路径，启用相应端点
+      base-path: /actuator
+      exposure:
+        include: '*'
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+#指标计算配置参数
+metric-calculate:
+  #指标计算线程池配置
+  t-log-thread-pool:
+    core-size: 8
+    max-size: 16
+    keep-alive-second: 100
+    queue-length: 100
+    thread-name-prefix: ${spring.application.name}
+
+  #攒批组件配置参数
+  accumulate-batch-component:
+    read:
+      thread-num: 1
+      limit: 100
+      interval: 50
+    write:
+      thread-num: 1
+      limit: 100
+      interval: 50
+
+#feign客户端url配置
 feign:
-  magiccube-api:
-    host: http://localhost:${server.port}
+  metric-config-mock-api:
+    url: http://localhost:${server.port}
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: order
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+  - group: 'default'
+    paths-to-match: '/**'
+    packages-to-scan: 'com.yanggu.metric_calculate.web.controller'
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
