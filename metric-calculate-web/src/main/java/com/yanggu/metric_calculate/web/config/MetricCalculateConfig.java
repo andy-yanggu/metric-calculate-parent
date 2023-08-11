@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.web.config;
 
 import cn.hutool.core.thread.NamedThreadFactory;
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleRedisStore;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.web.pojo.PutRequest;
 import com.yanggu.metric_calculate.web.pojo.QueryRequest;
 import com.yanggu.metric_calculate.web.util.TLogThreadPoolTaskExecutor;

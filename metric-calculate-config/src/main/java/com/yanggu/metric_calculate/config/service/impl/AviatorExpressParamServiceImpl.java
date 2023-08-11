@@ -11,8 +11,8 @@ import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamAviatorFunctionInstanceRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamModelColumnRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
-import com.yanggu.metric_calculate.core2.aviator_function.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core2.util.ExpressionUtil;
+import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFactory;
+import com.yanggu.metric_calculate.core.util.ExpressionUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,16 +93,16 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
             return false;
         }
 
-        com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam expressParam = new com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorExpressParam();
+        com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam expressParam = new com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam();
         expressParam.setExpress(express);
 
         List<AviatorFunctionInstance> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
         if (CollUtil.isNotEmpty(aviatorFunctionInstanceList)) {
-            List<com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorFunctionInstance> aviatorFunctionInstanceList2 = new ArrayList<>();
+            List<com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance> aviatorFunctionInstanceList2 = new ArrayList<>();
             for (AviatorFunctionInstance aviatorFunctionInstance : aviatorFunctionInstanceList) {
                 String param = aviatorFunctionInstance.getParam();
                 String name = aviatorFunctionInstance.getAviatorFunction().getName();
-                com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorFunctionInstance aviatorFunctionInstance1 = new com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorFunctionInstance();
+                com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance aviatorFunctionInstance1 = new com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance();
                 aviatorFunctionInstance1.setName(name);
                 if (StrUtil.isNotBlank(param)) {
                     aviatorFunctionInstance1.setParam(JSONUtil.parseObj(param));

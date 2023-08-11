@@ -1,0 +1,33 @@
+package com.yanggu.metric_calculate.core.aggregate_function_test;
+
+
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+
+
+@Numerical
+@MergeType("TEST_SUM")
+public class TestSumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
+
+    @Override
+    public Double createAccumulator() {
+        return 0.0D;
+    }
+
+    @Override
+    public Double add(T input, Double accumulator) {
+        return input.doubleValue() + accumulator;
+    }
+
+    @Override
+    public Double getResult(Double accumulator) {
+        return accumulator;
+    }
+
+    @Override
+    public Double merge(Double thisAccumulator, Double thatAccumulator) {
+        return thisAccumulator + thatAccumulator;
+    }
+
+}

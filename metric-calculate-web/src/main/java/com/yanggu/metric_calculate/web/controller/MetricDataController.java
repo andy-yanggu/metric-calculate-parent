@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.web.controller;
 import cn.hutool.json.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameter;
 import com.github.xiaoymin.knife4j.annotations.DynamicParameters;
-import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.web.pojo.dto.UpdateMetricData;
 import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.service.MetricDataService;

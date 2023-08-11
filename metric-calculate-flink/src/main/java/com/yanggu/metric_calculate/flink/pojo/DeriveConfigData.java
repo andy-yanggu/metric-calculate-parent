@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.flink.pojo;
 
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core.pojo.metric.Derive;
 import lombok.Data;
 
 import java.io.Serializable;

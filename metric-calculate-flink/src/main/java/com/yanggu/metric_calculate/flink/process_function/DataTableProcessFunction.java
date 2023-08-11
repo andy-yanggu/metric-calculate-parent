@@ -3,11 +3,11 @@ package com.yanggu.metric_calculate.flink.process_function;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core2.calculate.MetricCalculate;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
-import com.yanggu.metric_calculate.core2.pojo.metric.Derive;
-import com.yanggu.metric_calculate.core2.pojo.metric.Global;
-import com.yanggu.metric_calculate.core2.util.MetricUtil;
+import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
+import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.Global;
+import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.streaming.api.functions.ProcessFunction;

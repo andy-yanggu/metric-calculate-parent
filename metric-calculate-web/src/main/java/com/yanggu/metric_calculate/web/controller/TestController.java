@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.web.controller;
 
 import cn.hutool.core.date.DateUtil;
-import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent;
-import com.yanggu.metric_calculate.core2.util.AccumulateBatchComponent2;
+import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
+import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent2;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;

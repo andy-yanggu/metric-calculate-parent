@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
 
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
+import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil;
 import lombok.extern.slf4j.Slf4j;

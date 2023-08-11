@@ -4,7 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import lombok.Data;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 

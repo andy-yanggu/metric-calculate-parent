@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
-import com.yanggu.metric_calculate.core2.middle_store.DeriveMetricMiddleStore;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import lombok.Data;
 import org.apache.flink.configuration.Configuration;

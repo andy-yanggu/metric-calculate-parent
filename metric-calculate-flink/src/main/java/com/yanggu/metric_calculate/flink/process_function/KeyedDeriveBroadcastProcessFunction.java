@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
 
-import com.yanggu.metric_calculate.core2.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil;

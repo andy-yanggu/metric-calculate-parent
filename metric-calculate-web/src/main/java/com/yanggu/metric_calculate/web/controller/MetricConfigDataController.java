@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.web.controller;
 
-import com.yanggu.metric_calculate.core2.pojo.data_detail_table.Model;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.service.MetricConfigDataService;
 import io.swagger.v3.oas.annotations.Operation;

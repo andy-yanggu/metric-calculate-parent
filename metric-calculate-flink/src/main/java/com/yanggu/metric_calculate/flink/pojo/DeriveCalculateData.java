@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.flink.pojo;
 
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core2.cube.MetricCube;
-import com.yanggu.metric_calculate.core2.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.cube.MetricCube;
+import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import lombok.Data;
 
 /**

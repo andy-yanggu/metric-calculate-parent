@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.config.controller;
 import cn.hutool.json.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
-import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;

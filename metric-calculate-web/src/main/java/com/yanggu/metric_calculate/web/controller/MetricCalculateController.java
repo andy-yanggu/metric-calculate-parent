@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.web.controller;
 
 import cn.hutool.json.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
-import com.yanggu.metric_calculate.core2.pojo.metric.DeriveMetricCalculateResult;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.service.MetricCalculateService;
 import io.swagger.v3.oas.annotations.Operation;

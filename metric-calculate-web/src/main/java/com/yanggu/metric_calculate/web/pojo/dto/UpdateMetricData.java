@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.web.pojo.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.yanggu.metric_calculate.core2.window.*;
+import com.yanggu.metric_calculate.core.window.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

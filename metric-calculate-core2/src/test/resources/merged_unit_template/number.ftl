@@ -1,6 +1,6 @@
-package com.yanggu.metric_calculate.core2.aggregate_function.numeric;
+package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 
 public class Sum_${class_name}_AggregateFunction implements AggregateFunction<${class_name}, ${class_name}, ${class_name}> {
 
