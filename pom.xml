@@ -12,7 +12,7 @@
         <module>metric-calculate-interface</module>
         <module>metric-calculate-test</module>
         <module>metric-calculate-jmh-test</module>
-        <module>metric-calculate-core2</module>
+        <module>metric-calculate-core</module>
         <module>metric-calculate-flink</module>
         <module>metric-calculate-config</module>
     </modules>
@@ -105,7 +105,7 @@
             </dependency>
             <dependency>
                 <groupId>com.yanggu</groupId>
-                <artifactId>metric-calculate-core2</artifactId>
+                <artifactId>metric-calculate-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

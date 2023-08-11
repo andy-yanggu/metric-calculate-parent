@@ -9,7 +9,7 @@
         <version>1.0.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>metric-calculate-core2</artifactId>
+    <artifactId>metric-calculate-core</artifactId>
 
     <dependencies>
         <dependency>

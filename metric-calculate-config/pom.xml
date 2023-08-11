@@ -95,7 +95,7 @@
         </dependency>
         <dependency>
             <groupId>com.yanggu</groupId>
-            <artifactId>metric-calculate-core2</artifactId>
+            <artifactId>metric-calculate-core</artifactId>
             <exclusions>
                 <exclusion>
                     <artifactId>fury-core</artifactId>

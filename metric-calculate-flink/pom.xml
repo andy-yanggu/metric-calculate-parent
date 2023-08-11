@@ -37,7 +37,7 @@
         </dependency>
         <dependency>
             <groupId>com.yanggu</groupId>
-            <artifactId>metric-calculate-core2</artifactId>
+            <artifactId>metric-calculate-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.flink</groupId>
