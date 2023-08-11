@@ -14,7 +14,8 @@ public interface FieldProcessor<T, R> {
      *
      * @throws Exception
      */
-    void init() throws Exception;
+    default void init() throws Exception {
+    }
 
     R process(T input) throws Exception;
 

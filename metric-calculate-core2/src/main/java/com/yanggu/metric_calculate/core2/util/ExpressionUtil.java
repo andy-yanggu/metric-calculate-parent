@@ -14,6 +14,8 @@ import com.yanggu.metric_calculate.core2.pojo.aviator_express.AviatorFunctionIns
 import java.util.List;
 import java.util.Map;
 
+import static com.googlecode.aviator.Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY;
+
 /**
  * Aviator表达式工具类
  */
@@ -42,13 +44,14 @@ public class ExpressionUtil {
             //设置自定义Aviator函数
             for (AviatorFunctionInstance aviatorFunctionInstance : aviatorFunctionInstanceList) {
                 String name = aviatorFunctionInstance.getName();
-                AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name);
-                AviatorFunctionFactory.init(aviatorFunction, aviatorFunctionInstance.getParam());
+                Map<String, Object> param = aviatorFunctionInstance.getParam();
+                AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name, param);
                 aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
             }
         }
         //设置Java反射调用
         aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
+        aviatorEvaluatorInstance.setOption(USE_USER_ENV_AS_TOP_ENV_DIRECTLY, false);
         try {
             return aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
         } catch (Exception e) {

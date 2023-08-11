@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core2.field_process;
 
 
 import cn.hutool.json.JSONObject;
+import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core2.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core2.aggregate_function.annotation.*;
@@ -24,6 +25,7 @@ import com.yanggu.metric_calculate.core2.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core2.pojo.udaf_param.MixUdafParam;
+import com.yanggu.metric_calculate.core2.util.ExpressionUtil;
 import lombok.SneakyThrows;
 
 import java.util.HashMap;
@@ -386,9 +388,9 @@ public class FieldProcessorUtil {
             }
 
             //设置表达式
-            MetricFieldProcessor<Object> metricFieldProcessor = FieldProcessorUtil
-                        .getMetricFieldProcessor(tempMap, mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
-            abstractMixAggregateFunction.setExpression(metricFieldProcessor.getMetricExpression());
+            Expression expression = ExpressionUtil.compileExpress(mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
+            ExpressionUtil.checkVariable(expression, tempMap);
+            abstractMixAggregateFunction.setExpression(expression);
 
             //设置mixAggregateFunctionMap
             Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();

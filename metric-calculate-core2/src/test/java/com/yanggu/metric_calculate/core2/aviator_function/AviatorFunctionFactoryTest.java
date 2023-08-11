@@ -34,7 +34,7 @@ public class AviatorFunctionFactoryTest {
 
     @Test
     void test1() {
-        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("coalesce");
+        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("coalesce", null);
         AviatorEvaluator.addFunction(aviatorFunction);
         Expression expression = AviatorEvaluator.compile("coalesce(a, b, 1)");
         Map<String, Object> env = new HashMap<>();
@@ -45,11 +45,10 @@ public class AviatorFunctionFactoryTest {
     @Test
     @Disabled
     void test2() {
-        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("test_add");
-        AviatorEvaluator.addFunction(aviatorFunction);
         Map<String, Object> params = new HashMap<>();
         params.put("length", 2);
-        AviatorFunctionFactory.init(aviatorFunction, params);
+        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("test_add", params);
+        AviatorEvaluator.addFunction(aviatorFunction);
         Expression expression = AviatorEvaluator.compile("test_add(1, 2)");
         Object execute = expression.execute();
         assertEquals(new BigDecimal("3.00"), execute);
