@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
 import com.google.common.collect.Ordering;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -14,19 +13,50 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderCompareKey> {
 
-    private List<FieldOrder> fieldOrderList;
+    private List<Object> dataList;
+
+    private Ordering<List<Object>> multiFieldOrderOrdering;
+
+    public MultiFieldOrderCompareKey(List<Object> dataList) {
+        this.dataList = dataList;
+    }
 
     @Override
     public int compareTo(@NonNull MultiFieldOrderCompareKey that) {
-        List<Ordering<List<FieldOrder>>> orderingList = new ArrayList<>();
-        for (int i = 0; i < fieldOrderList.size(); i++) {
-            FieldOrder fieldOrder = fieldOrderList.get(i);
+        if (this.multiFieldOrderOrdering == null) {
+            this.multiFieldOrderOrdering = that.multiFieldOrderOrdering;
+        }
+        return multiFieldOrderOrdering.compare(dataList, that.dataList);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        MultiFieldOrderCompareKey that = (MultiFieldOrderCompareKey) o;
+
+        return dataList.equals(that.dataList);
+    }
+
+    @Override
+    public int hashCode() {
+        return dataList.hashCode();
+    }
+
+    public static Ordering<List<Object>> getOrdering(List<Boolean> booleanList) {
+        List<Ordering<List<Object>>> orderingList = new ArrayList<>();
+        for (int i = 0; i < booleanList.size(); i++) {
+            Boolean result = booleanList.get(i);
             Ordering<Comparable<?>> comparableOrdering;
             //降序排序
-            if (Boolean.FALSE.equals(fieldOrder.getAsc())) {
+            if (Boolean.FALSE.equals(result)) {
                 //降序时, null放在最后面
                 comparableOrdering = Ordering.natural().reverse().nullsLast();
             } else {
@@ -34,13 +64,12 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
                 comparableOrdering = Ordering.natural().nullsFirst();
             }
             int finalIndex = i;
-            Ordering<List<FieldOrder>> ordering = comparableOrdering.onResultOf(
-                    input -> (Comparable<?>) input.get(finalIndex).getResult());
+            Ordering<List<Object>> ordering = comparableOrdering.onResultOf(
+                    input -> (Comparable<?>) input.get(finalIndex));
             orderingList.add(ordering);
         }
         //合并多个比较器
-        Ordering<List<FieldOrder>> multiFieldOrderOrdering = Ordering.compound(orderingList);
-        return multiFieldOrderOrdering.compare(fieldOrderList, that.fieldOrderList);
+        return Ordering.compound(orderingList);
     }
 
 }

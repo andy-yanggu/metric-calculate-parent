@@ -2,10 +2,11 @@ package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
+import com.google.common.collect.Ordering;
 import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
+    private Ordering<List<Object>> multiFieldOrderOrdering;
+
     @Override
     public void init() throws Exception {
         if (CollUtil.isEmpty(fieldMap)) {
@@ -44,23 +47,27 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
         this.metricFieldProcessorList = fieldOrderParamList.stream()
                 .map(tempFieldOrderParam -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getAviatorExpressParam(), aviatorFunctionFactory))
                 .collect(Collectors.toList());
+
+        List<Boolean> collect = fieldOrderParamList.stream()
+                .map(FieldOrderParam::getIsAsc)
+                .collect(Collectors.toList());
+
+        //合并多个比较器
+        this.multiFieldOrderOrdering = MultiFieldOrderCompareKey.getOrdering(collect);
     }
 
     @Override
     public MultiFieldOrderCompareKey process(JSONObject input) throws Exception {
         int size = fieldOrderParamList.size();
-        List<FieldOrder> fieldOrderList = new ArrayList<>(size);
+        List<Object> dataList = new ArrayList<>();
         for (int i = 0; i < size; i++) {
-            FieldOrderParam fieldOrderParam = fieldOrderParamList.get(i);
             MetricFieldProcessor<Object> expression = metricFieldProcessorList.get(i);
             Object execute = expression.process(input);
-            FieldOrder fieldOrder = new FieldOrder();
-            fieldOrder.setResult(execute);
-            fieldOrder.setAsc(fieldOrderParam.getIsAsc());
-            fieldOrderList.add(fieldOrder);
+            dataList.add(execute);
         }
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setFieldOrderList(fieldOrderList);
+        multiFieldOrderCompareKey.setDataList(dataList);
+        multiFieldOrderCompareKey.setMultiFieldOrderOrdering(multiFieldOrderOrdering);
         return multiFieldOrderCompareKey;
     }
 

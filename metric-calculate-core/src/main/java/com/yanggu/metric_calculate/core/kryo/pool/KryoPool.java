@@ -17,7 +17,6 @@ import com.esotericsoftware.kryo.util.Pool;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrder;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.kryo.serializer.acc.*;
 import com.yanggu.metric_calculate.core.kryo.serializer.cube.DimensionSetSerializer;
@@ -26,8 +25,8 @@ import com.yanggu.metric_calculate.core.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
-import com.yanggu.metric_calculate.core.window.*;
 import com.yanggu.metric_calculate.core.util.KeyValue;
+import com.yanggu.metric_calculate.core.window.*;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.util.ArrayList;
@@ -67,16 +66,15 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(Pair.class, new PairSerializer<>(), 25);
         kryo.register(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer(), 26);
         kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 27);
-        kryo.register(FieldOrder.class, new FieldOrderSerializer(), 28);
-        kryo.register(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer(), 29);
-        kryo.register(JSONObject.class, 30);
-        kryo.register(KeyValue.class, new KeyValueSerializer<>(), 31);
-        kryo.register(String.class, new DefaultSerializers.StringSerializer(), 32);
-        kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 33);
-        kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 34);
-        kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 35);
-        kryo.register(AviatorExpressParam.class, new BeanSerializer<>(kryo, AviatorExpressParam.class), 36);
-        kryo.register(AviatorFunctionInstance.class, new BeanSerializer<>(kryo, AviatorFunctionInstance.class), 37);
+        kryo.register(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer(), 28);
+        kryo.register(JSONObject.class, 29);
+        kryo.register(KeyValue.class, new KeyValueSerializer<>(), 30);
+        kryo.register(String.class, new DefaultSerializers.StringSerializer(), 31);
+        kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 32);
+        kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 33);
+        kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 34);
+        kryo.register(AviatorExpressParam.class, new BeanSerializer<>(kryo, AviatorExpressParam.class), 35);
+        kryo.register(AviatorFunctionInstance.class, new BeanSerializer<>(kryo, AviatorFunctionInstance.class), 36);
 
         //MetricCube序列化器和反序列化器
         kryo.register(DimensionSet.class, new DimensionSetSerializer(), 60);

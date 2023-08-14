@@ -22,13 +22,13 @@ public class MultiFieldOrderCompareKeySerializer extends Serializer<MultiFieldOr
 
     @Override
     public void write(Kryo kryo, Output output, MultiFieldOrderCompareKey multiFieldOrderCompareKey) {
-        listCollectionSerializer.write(kryo, output, multiFieldOrderCompareKey.getFieldOrderList());
+        listCollectionSerializer.write(kryo, output, multiFieldOrderCompareKey.getDataList());
     }
 
     @Override
     public MultiFieldOrderCompareKey read(Kryo kryo, Input input, Class<? extends MultiFieldOrderCompareKey> type) {
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setFieldOrderList(listCollectionSerializer.read(kryo, input, ArrayList.class));
+        multiFieldOrderCompareKey.setDataList(listCollectionSerializer.read(kryo, input, ArrayList.class));
         return multiFieldOrderCompareKey;
     }
 

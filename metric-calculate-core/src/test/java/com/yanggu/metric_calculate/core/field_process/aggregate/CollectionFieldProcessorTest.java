@@ -4,7 +4,6 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrder;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
@@ -17,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * CollectionFieldProcessor单元测试类
@@ -108,10 +107,7 @@ class CollectionFieldProcessorTest {
 
         KeyValue<MultiFieldOrderCompareKey, JSONObject> process = baseFieldProcessor.process(input);
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        FieldOrder fieldOrder = new FieldOrder();
-        fieldOrder.setResult(100);
-        fieldOrder.setAsc(false);
-        multiFieldOrderCompareKey.setFieldOrderList(CollUtil.toList(fieldOrder));
+        multiFieldOrderCompareKey.setDataList(CollUtil.toList(100));
         assertEquals(multiFieldOrderCompareKey, process.getKey());
         assertEquals(input, process.getValue());
     }
@@ -140,10 +136,7 @@ class CollectionFieldProcessorTest {
 
         KeyValue<MultiFieldOrderCompareKey, String> process = baseFieldProcessor.process(input);
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        FieldOrder fieldOrder = new FieldOrder();
-        fieldOrder.setResult(100);
-        fieldOrder.setAsc(false);
-        multiFieldOrderCompareKey.setFieldOrderList(CollUtil.toList(fieldOrder));
+        multiFieldOrderCompareKey.setDataList(CollUtil.toList(100));
         assertEquals(multiFieldOrderCompareKey, process.getKey());
         assertEquals("张三", process.getValue());
     }
@@ -168,10 +161,7 @@ class CollectionFieldProcessorTest {
 
         MultiFieldOrderCompareKey process = baseFieldProcessor.process(input);
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        FieldOrder fieldOrder = new FieldOrder();
-        fieldOrder.setResult(100);
-        fieldOrder.setAsc(false);
-        multiFieldOrderCompareKey.setFieldOrderList(CollUtil.toList(fieldOrder));
+        multiFieldOrderCompareKey.setDataList(CollUtil.toList(100));
         assertEquals(multiFieldOrderCompareKey, process);
     }
 

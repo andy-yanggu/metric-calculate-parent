@@ -1,11 +1,13 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
+import cn.hutool.core.collection.CollUtil;
+import com.google.common.collect.Ordering;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 多字段排序单元测试类
@@ -15,20 +17,16 @@ class MultiFieldOrderCompareKeyTest {
     @Test
     void compareTo() {
         MultiFieldOrderCompareKey multiFieldOrderCompareKey1 = new MultiFieldOrderCompareKey();
-        List<FieldOrder> fieldOrderList1 = new ArrayList<>();
-        fieldOrderList1.add(new FieldOrder().setResult(1).setAsc(true));
-        fieldOrderList1.add(new FieldOrder().setResult(20).setAsc(false));
-        multiFieldOrderCompareKey1.setFieldOrderList(fieldOrderList1);
+        multiFieldOrderCompareKey1.setDataList(CollUtil.toList(1, 20));
 
         MultiFieldOrderCompareKey multiFieldOrderCompareKey2 = new MultiFieldOrderCompareKey();
-        List<FieldOrder> fieldOrderList2 = new ArrayList<>();
-        fieldOrderList2.add(new FieldOrder().setResult(1).setAsc(true));
-        fieldOrderList2.add(new FieldOrder().setResult(30).setAsc(false));
-        multiFieldOrderCompareKey2.setFieldOrderList(fieldOrderList2);
+        multiFieldOrderCompareKey2.setDataList(CollUtil.toList(1, 30));
 
+        List<Boolean> booleanList = CollUtil.toList(true, false);
+        Ordering<List<Object>> multiFieldOrderOrdering = MultiFieldOrderCompareKey.getOrdering(booleanList);
+        multiFieldOrderCompareKey1.setMultiFieldOrderOrdering(multiFieldOrderOrdering);
         int i = multiFieldOrderCompareKey1.compareTo(multiFieldOrderCompareKey2);
         assertEquals(1, i);
-
     }
 
 }

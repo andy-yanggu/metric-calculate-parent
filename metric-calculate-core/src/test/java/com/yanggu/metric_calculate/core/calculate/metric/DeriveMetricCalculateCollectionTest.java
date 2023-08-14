@@ -4,7 +4,6 @@ package com.yanggu.metric_calculate.core.calculate.metric;
 import cn.hutool.core.collection.BoundedPriorityQueue;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrder;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.util.KeyValue;
@@ -14,7 +13,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 集合型派生指标单元测试类
@@ -120,7 +119,7 @@ class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBase {
         List<KeyValue<MultiFieldOrderCompareKey, JSONObject>> stateExec = deriveMetricCalculate.stateExec(input1).getResult();
         assertEquals(1, stateExec.size());
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setFieldOrderList(CollUtil.toList(new FieldOrder().setAsc(true).setResult(800)));
+        multiFieldOrderCompareKey.setDataList(CollUtil.toList(800));
         KeyValue<MultiFieldOrderCompareKey, JSONObject> expected = new KeyValue<>(multiFieldOrderCompareKey, input1);
         KeyValue<MultiFieldOrderCompareKey, JSONObject> actual = stateExec.get(0);
         assertEquals(expected, actual);
@@ -129,8 +128,8 @@ class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBase {
         input2.set("debit_amt_out", 900);
         stateExec = deriveMetricCalculate.stateExec(input2).getResult();
         assertEquals(2, stateExec.size());
-        assertEquals(new KeyValue<>(new MultiFieldOrderCompareKey(CollUtil.toList(new FieldOrder().setAsc(true).setResult(800))), input2), stateExec.get(0));
-        assertEquals(new KeyValue<>(new MultiFieldOrderCompareKey(CollUtil.toList(new FieldOrder().setAsc(true).setResult(900))), input1), stateExec.get(1));
+        assertEquals(new KeyValue<>(new MultiFieldOrderCompareKey(CollUtil.toList(800)), input2), stateExec.get(0));
+        assertEquals(new KeyValue<>(new MultiFieldOrderCompareKey(CollUtil.toList(900)), input1), stateExec.get(1));
     }
 
 }

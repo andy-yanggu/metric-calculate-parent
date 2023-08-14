@@ -9,7 +9,6 @@ import cn.hutool.core.lang.mutable.MutablePair;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrder;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.kryo.serializer.acc.*;
 import com.yanggu.metric_calculate.core.kryo.serializer.cube.DimensionSetSerializer;
@@ -76,7 +75,6 @@ public class MetricCalculateFlinkJob {
         env.registerTypeWithKryoSerializer(MutableObj.class, new MutableObjectSerializer<>());
         env.registerTypeWithKryoSerializer(Pair.class, new PairSerializer<>());
         env.registerTypeWithKryoSerializer(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer());
-        env.registerTypeWithKryoSerializer(FieldOrder.class, new FieldOrderSerializer());
         env.registerTypeWithKryoSerializer(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer());
         env.registerTypeWithKryoSerializer(KeyValue.class, new KeyValueSerializer<>());
         env.registerTypeWithKryoSerializer(ArrayList.class, new KryoCollectionSerializer<ArrayList<Object>>());
