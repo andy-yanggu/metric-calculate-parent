@@ -77,7 +77,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> noStateCalculateBatch(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> noStateCalculateBatch(JSONObject input) throws Exception {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
@@ -166,7 +166,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> stateCalculateBatch(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> stateCalculateBatch(JSONObject input) throws Exception {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算

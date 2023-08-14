@@ -34,7 +34,7 @@ public class BatchReadProcessFunction extends ProcessFunction<List<DeriveCalcula
     @Override
     public void processElement(List<DeriveCalculateData> inputList,
                                ProcessFunction<List<DeriveCalculateData>, DeriveCalculateData>.Context ctx,
-                               Collector<DeriveCalculateData> out) {
+                               Collector<DeriveCalculateData> out) throws Exception {
         List<DimensionSet> collect = inputList.stream()
                 .map(DeriveCalculateData::getDimensionSet)
                 .collect(Collectors.toList());

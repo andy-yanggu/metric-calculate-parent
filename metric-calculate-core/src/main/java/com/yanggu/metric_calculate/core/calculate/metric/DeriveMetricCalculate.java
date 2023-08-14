@@ -143,7 +143,11 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
         //为true时更新到外部存储后查询
         Consumer<MetricCube<IN, ACC, OUT>> filterTrueConsumer = newMetricCube -> {
             if (newMetricCube != null && !newMetricCube.isEmpty()) {
-                deriveMetricMiddleStore.update(newMetricCube);
+                try {
+                    deriveMetricMiddleStore.update(newMetricCube);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
                 DeriveMetricCalculateResult<OUT> query = newMetricCube.query();
                 result.set(query);
             }
@@ -185,7 +189,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @param dimensionSet
      * @return
      */
-    public DeriveMetricCalculateResult<OUT> query(DimensionSet dimensionSet) {
+    public DeriveMetricCalculateResult<OUT> query(DimensionSet dimensionSet) throws Exception {
         MetricCube<IN, ACC, OUT> metricCube = deriveMetricMiddleStore.get(dimensionSet);
         if (metricCube == null) {
             return null;

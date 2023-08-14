@@ -28,7 +28,7 @@ public class KafkaConsumer {
      * @param records
      */
     @KafkaListener(groupId = "${spring.application.name}", topics = "${spring.kafka.consumer.topic}")
-    public void onMessage(List<ConsumerRecord<String, String>> records) {
+    public void onMessage(List<ConsumerRecord<String, String>> records) throws Exception {
         if (CollUtil.isEmpty(records)) {
             return;
         }
@@ -36,7 +36,11 @@ public class KafkaConsumer {
                 .map(ConsumerRecord::value)
                 .map(JSONUtil::parseObj)
                 .collect(Collectors.groupingBy(temp -> temp.getLong("tableId")));
-        collect.forEach((tempTableId, tempList) -> metricDataService.fullFillDeriveData(tempList, tempTableId));
+        for (Map.Entry<Long, List<JSONObject>> entry : collect.entrySet()) {
+            Long tempTableId = entry.getKey();
+            List<JSONObject> tempList = entry.getValue();
+            metricDataService.fullFillDeriveData(tempList, tempTableId);
+        }
     }
 
 }

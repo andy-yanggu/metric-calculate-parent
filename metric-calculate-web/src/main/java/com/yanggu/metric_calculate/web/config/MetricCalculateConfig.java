@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.web.config;
 
 import cn.hutool.core.thread.NamedThreadFactory;
+import cn.hutool.core.util.ReflectUtil;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
@@ -9,11 +10,16 @@ import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.web.pojo.PutRequest;
 import com.yanggu.metric_calculate.web.pojo.QueryRequest;
 import com.yanggu.metric_calculate.web.util.TLogThreadPoolTaskExecutor;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
+import org.springframework.data.redis.connection.lettuce.LettuceConnectionProvider;
+import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 
 import java.util.Collections;
 import java.util.List;
@@ -33,9 +39,13 @@ public class MetricCalculateConfig {
      * 派生指标中间存储配置
      */
     @Bean
-    public DeriveMetricMiddleStore redisDeriveMetricMiddleStore(RedisTemplate<String, byte[]> kryoRedisTemplate) {
+    public DeriveMetricMiddleStore redisDeriveMetricMiddleStore(LettuceConnectionFactory lettuceConnectionFactory) {
+        LettuceConnectionProvider connectionProvider = (LettuceConnectionProvider) ReflectUtil.getFieldValue(lettuceConnectionFactory, "connectionProvider");
+        LettucePoolingClientConfiguration clientConfiguration = (LettucePoolingClientConfiguration) lettuceConnectionFactory.getClientConfiguration();
+        GenericObjectPool<StatefulRedisConnection<byte[], byte[]>> genericObjectPool = ConnectionPoolSupport.createGenericObjectPool(() -> connectionProvider.getConnection(StatefulRedisConnection.class),
+                clientConfiguration.getPoolConfig(), false);
         DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
-        deriveMetricMiddleStore.setRedisTemplate(kryoRedisTemplate);
+        deriveMetricMiddleStore.setRedisConnectionPool(genericObjectPool);
         deriveMetricMiddleStore.init();
         log.info("派生指标外部存储初始化完成: 指标存储类: {}", deriveMetricMiddleStore.getClass().getName());
         return deriveMetricMiddleStore;
@@ -49,7 +59,7 @@ public class MetricCalculateConfig {
             DeriveMetricMiddleStore deriveMetricMiddleStore,
             @Value("${metric-calculate.accumulate-batch-component.read.thread-num}") Integer threadNum,
             @Value("${metric-calculate.accumulate-batch-component.read.limit}") Integer limit,
-            @Value("${metric-calculate.accumulate-batch-component.read.interval}") Integer interval) {
+            @Value("${metric-calculate.accumulate-batch-component.read.interval}") Integer interval) throws Exception {
         Consumer<List<QueryRequest>> batchGetConsumer = queryRequests -> {
             List<DimensionSet> collect = queryRequests.stream()
                     .map(QueryRequest::getDimensionSet)
@@ -58,7 +68,12 @@ public class MetricCalculateConfig {
                     .collect(Collectors.toList());
 
             //批量查询
-            Map<DimensionSet, MetricCube> map = deriveMetricMiddleStore.batchGet(collect);
+            Map<DimensionSet, MetricCube> map = null;
+            try {
+                map = deriveMetricMiddleStore.batchGet(collect);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             if (map == null) {
                 map = Collections.emptyMap();
             }
@@ -89,7 +104,11 @@ public class MetricCalculateConfig {
             //TODO 需要考虑请求合并
 
             //批量更新
-            deriveMetricMiddleStore.batchUpdate(collect);
+            try {
+                deriveMetricMiddleStore.batchUpdate(collect);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
             //批量更新完成后, 进行回调通知
             for (PutRequest putRequest : putRequests) {
                 MetricCube metricCube = putRequest.getMetricCube();

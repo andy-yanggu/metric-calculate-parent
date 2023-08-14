@@ -40,7 +40,7 @@ public class MetricDataService {
      */
     public <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> queryDeriveData(Long tableId,
                                                                            Long deriveId,
-                                                                           LinkedHashMap<String, Object> dimensionMap) {
+                                                                           LinkedHashMap<String, Object> dimensionMap) throws Exception {
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate =
                 metricConfigDataService.getDeriveMetricCalculateById(tableId, deriveId);
         DimensionSet dimensionSet = getDimensionSet(tableId, deriveId, dimensionMap);
@@ -49,7 +49,7 @@ public class MetricDataService {
 
     public List<DeriveMetricCalculateResult<Object>> queryDeriveCurrentData(Long tableId,
                                                                             List<Long> deriveIdList,
-                                                                            JSONObject input) {
+                                                                            JSONObject input) throws Exception {
 
         //获宽表下的派生指标
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricConfigDataService.getDeriveMetricCalculateList(tableId, deriveIdList);
@@ -83,14 +83,14 @@ public class MetricDataService {
         return list;
     }
 
-    public void fillDeriveDataById(Long tableId, Long deriveId, List<JSONObject> dataList) {
+    public void fillDeriveDataById(Long tableId, Long deriveId, List<JSONObject> dataList) throws Exception {
         fullFillDeriveDataByDeriveIdList(dataList, tableId, Collections.singletonList(deriveId));
     }
 
     /**
      * 全量铺底接口, 计算宽表下的所有派生指标
      */
-    public void fullFillDeriveData(List<JSONObject> dataList, Long tableId) {
+    public void fullFillDeriveData(List<JSONObject> dataList, Long tableId) throws Exception {
         List<Long> allDeriveIdList = metricConfigDataService.getAllDeriveIdList(tableId);
         fullFillDeriveDataByDeriveIdList(dataList, tableId, allDeriveIdList);
     }
@@ -98,7 +98,7 @@ public class MetricDataService {
     /**
      * 计算宽表下的指定派生指标
      */
-    public void fullFillDeriveDataByDeriveIdList(List<JSONObject> dataList, Long tableId, List<Long> deriveIdList) {
+    public void fullFillDeriveDataByDeriveIdList(List<JSONObject> dataList, Long tableId, List<Long> deriveIdList) throws Exception {
         MetricCalculate metricCalculate = metricConfigDataService.getMetricCalculate(tableId);
 
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateListById(deriveIdList);
@@ -152,7 +152,7 @@ public class MetricDataService {
      * @param deriveId
      * @param dimensionMap
      */
-    public void deleteDeriveData(Long tableId, Long deriveId, LinkedHashMap<String, Object> dimensionMap) {
+    public void deleteDeriveData(Long tableId, Long deriveId, LinkedHashMap<String, Object> dimensionMap) throws Exception {
         DimensionSet dimensionSet = getDimensionSet(tableId, deriveId, dimensionMap);
         deriveMetricMiddleStore.deleteData(dimensionSet);
     }
@@ -160,7 +160,7 @@ public class MetricDataService {
     /**
      * 更新派生指标数据
      */
-    public <IN, ACC, OUT> void correctDeriveData(UpdateMetricData<IN, ACC, OUT> updateMetricData) {
+    public <IN, ACC, OUT> void correctDeriveData(UpdateMetricData<IN, ACC, OUT> updateMetricData) throws Exception {
         if (updateMetricData.getWindow().isEmpty()) {
             throw new RuntimeException("传入的window为空");
         }

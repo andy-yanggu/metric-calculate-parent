@@ -37,7 +37,7 @@ public class MetricDataController {
     public <IN, ACC, OUT> Result<DeriveMetricCalculateResult<OUT>> queryDeriveData(
                         @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
                         @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                        @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) {
+                        @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) throws Exception {
         DeriveMetricCalculateResult<OUT> result = metricDataService.<IN, ACC, OUT>queryDeriveData(tableId, deriveId, dimensionMap);
         return Result.ok(result);
     }
@@ -47,7 +47,7 @@ public class MetricDataController {
     public Result<List<DeriveMetricCalculateResult<Object>>> queryDeriveCurrentData(
             @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
             @NotEmpty(message = "派生指标id列表不能为空") @Parameter(description = "派生指标id列表", required = true) @RequestParam List<Long> deriveIdList,
-            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) {
+            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) throws Exception {
         List<DeriveMetricCalculateResult<Object>> list = metricDataService.queryDeriveCurrentData(tableId, deriveIdList, input);
         return Result.ok(list);
     }
@@ -56,7 +56,7 @@ public class MetricDataController {
     @PostMapping("/full-fill-derive-data")
     public Result<Void> fullUpdate(
             @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
-            @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) {
+            @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) throws Exception {
         metricDataService.fullFillDeriveData(dataList, tableId);
         return Result.ok();
     }
@@ -66,7 +66,7 @@ public class MetricDataController {
     public Result<Void> fillDeriveDataById(
                  @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
                  @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                 @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) {
+                 @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) throws Exception {
         metricDataService.fillDeriveDataById(tableId, deriveId, dataList);
         return Result.ok();
     }
@@ -80,7 +80,7 @@ public class MetricDataController {
     public Result<Void> deleteDeriveData(
                         @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
                         @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                        @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) {
+                        @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) throws Exception {
         metricDataService.deleteDeriveData(tableId, deriveId, dimensionMap);
         return Result.ok();
     }
@@ -88,7 +88,7 @@ public class MetricDataController {
     @Operation(summary = "修正派生指标数据")
     @PutMapping("/correct-derive-data")
     public <IN, ACC, OUT> Result<Void> updateDeriveData(
-            @NotNull(message = "维度数据和表数据不能为空") @Parameter(description = "维度数据和表数据", required = true) @RequestBody @Validated UpdateMetricData<IN, ACC, OUT> updateMetricData) {
+            @NotNull(message = "维度数据和表数据不能为空") @Parameter(description = "维度数据和表数据", required = true) @RequestBody @Validated UpdateMetricData<IN, ACC, OUT> updateMetricData) throws Exception {
         metricDataService.correctDeriveData(updateMetricData);
         return Result.ok();
     }

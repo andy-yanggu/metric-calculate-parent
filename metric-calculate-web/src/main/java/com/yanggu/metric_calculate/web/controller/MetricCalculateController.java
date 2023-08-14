@@ -41,7 +41,7 @@ public class MetricCalculateController {
     @Operation(summary = "无状态-计算接口（批查询）")
     @PostMapping("/no-state-calculate/batch")
     public Result<List<DeriveMetricCalculateResult<Object>>> noStateCalculateBatch(
-            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) {
+            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) throws Exception {
         List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.noStateCalculateBatch(input);
         return Result.ok(resultList);
     }
@@ -67,7 +67,7 @@ public class MetricCalculateController {
     @Operation(summary = "有状态-计算接口（批处理）")
     @PostMapping("/state-calculate/batch")
     public Result<List<DeriveMetricCalculateResult<Object>>> stateCalculateBatch(
-            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) {
+            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) throws Exception {
         List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateCalculateBatch(input);
         return Result.ok(resultList);
     }

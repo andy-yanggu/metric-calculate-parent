@@ -24,14 +24,14 @@ public interface DeriveMetricMiddleStore {
      *
      * @return
      */
-    <IN, ACC, OUT> MetricCube<IN, ACC, OUT> get(DimensionSet dimensionSet);
+    <IN, ACC, OUT> MetricCube<IN, ACC, OUT> get(DimensionSet dimensionSet) throws Exception;
 
     /**
      * 通过维度进行更新
      *
      * @param updateMetricCube
      */
-    <IN, ACC, OUT> void update(MetricCube<IN, ACC, OUT> updateMetricCube);
+    <IN, ACC, OUT> void update(MetricCube<IN, ACC, OUT> updateMetricCube) throws Exception;
 
     /**
      * 批量查询, 默认实现是for循环调用get
@@ -40,7 +40,7 @@ public interface DeriveMetricMiddleStore {
      * @param dimensionSetList
      * @return
      */
-    default Map<DimensionSet, MetricCube> batchGet(List<DimensionSet> dimensionSetList) {
+    default Map<DimensionSet, MetricCube> batchGet(List<DimensionSet> dimensionSetList) throws Exception {
         Map<DimensionSet, MetricCube> map = new HashMap<>();
         for (DimensionSet dimensionSet : dimensionSetList) {
             MetricCube historyMetricCube = get(dimensionSet);
@@ -57,8 +57,10 @@ public interface DeriveMetricMiddleStore {
      *
      * @param cubeList
      */
-    default void batchUpdate(List<MetricCube> cubeList) {
-        cubeList.forEach(this::update);
+    default void batchUpdate(List<MetricCube> cubeList) throws Exception {
+        for (MetricCube metricCube : cubeList) {
+            update(metricCube);
+        }
     }
 
     /**
@@ -66,15 +68,17 @@ public interface DeriveMetricMiddleStore {
      *
      * @param dimensionSet
      */
-    void deleteData(DimensionSet dimensionSet);
+    void deleteData(DimensionSet dimensionSet) throws Exception;
 
     /**
      * 批量删除
      *
      * @param dimensionSetList
      */
-    default void batchDeleteData(List<DimensionSet> dimensionSetList) {
-        dimensionSetList.forEach(this::deleteData);
+    default void batchDeleteData(List<DimensionSet> dimensionSetList) throws Exception {
+        for (DimensionSet dimensionSet : dimensionSetList) {
+            deleteData(dimensionSet);
+        }
     }
 
 }
