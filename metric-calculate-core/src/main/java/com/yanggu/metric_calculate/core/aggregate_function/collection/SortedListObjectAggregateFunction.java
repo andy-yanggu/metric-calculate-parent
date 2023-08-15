@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import cn.hutool.core.collection.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 
 import java.util.List;
 

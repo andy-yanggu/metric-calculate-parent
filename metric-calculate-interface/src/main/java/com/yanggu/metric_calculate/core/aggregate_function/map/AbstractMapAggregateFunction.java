@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 
-import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import lombok.Data;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Data
 public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT>
-        implements AggregateFunction<Pair<K, V>, Map<K, ValueACC>, OUT> {
+        implements AggregateFunction<AbstractMap.SimpleImmutableEntry<K, V>, Map<K, ValueACC>, OUT> {
 
     protected AggregateFunction<V, ValueACC, ValueOUT> valueAggregateFunction;
 
@@ -29,7 +29,7 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     }
 
     @Override
-    public Map<K, ValueACC> add(Pair<K, V> input, Map<K, ValueACC> accumulator) {
+    public Map<K, ValueACC> add(AbstractMap.SimpleImmutableEntry<K, V> input, Map<K, ValueACC> accumulator) {
         K key = input.getKey();
 
         ValueACC oldAcc = accumulator.getOrDefault(key, valueAggregateFunction.createAccumulator());

@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import cn.hutool.core.collection.CollUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.AviatorEvaluatorInstance;
 import com.googlecode.aviator.Expression;
@@ -10,6 +9,7 @@ import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunct
 import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance;
+import org.dromara.hutool.core.collection.CollUtil;
 
 import java.util.List;
 import java.util.Map;

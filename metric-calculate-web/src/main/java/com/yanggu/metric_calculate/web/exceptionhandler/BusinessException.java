@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.web.exceptionhandler;
 
-import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.web.enums.ResultCode;
 import lombok.Data;
+import org.dromara.hutool.core.text.StrUtil;
 
 @Data
 public class BusinessException extends RuntimeException {

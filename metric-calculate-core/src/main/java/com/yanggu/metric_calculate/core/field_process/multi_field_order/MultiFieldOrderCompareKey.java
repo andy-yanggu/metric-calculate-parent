@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
-import cn.hutool.core.comparator.ComparatorChain;
-import cn.hutool.core.comparator.FuncComparator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import org.dromara.hutool.core.comparator.ComparatorChain;
+import org.dromara.hutool.core.comparator.FuncComparator;
 
 import java.util.Comparator;
 import java.util.List;

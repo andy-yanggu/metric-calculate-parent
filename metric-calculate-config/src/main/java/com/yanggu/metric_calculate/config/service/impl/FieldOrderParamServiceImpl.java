@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.FieldOrderParam;
 import com.yanggu.metric_calculate.config.mapper.FieldOrderParamMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.FieldOrderParam;
 import com.yanggu.metric_calculate.config.service.FieldOrderParamService;
 import org.springframework.stereotype.Service;
 

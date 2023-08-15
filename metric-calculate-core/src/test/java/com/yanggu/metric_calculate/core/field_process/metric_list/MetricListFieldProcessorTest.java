@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.field_process.metric_list;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -28,7 +28,7 @@ class MetricListFieldProcessorTest {
         MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test1");
-        metricListFieldProcessor.setMetricExpressParamList(CollUtil.toList(aviatorExpressParam));
+        metricListFieldProcessor.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
         assertEquals("宽表字段为空", runtimeException.getMessage());
     }
@@ -41,7 +41,7 @@ class MetricListFieldProcessorTest {
         metricListFieldProcessor.setFieldMap(fieldMap);
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test1");
-        metricListFieldProcessor.setMetricExpressParamList(CollUtil.toList(aviatorExpressParam));
+        metricListFieldProcessor.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
         assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
@@ -57,7 +57,7 @@ class MetricListFieldProcessorTest {
         aviatorExpressParam1.setExpress("test1");
         AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
         aviatorExpressParam2.setExpress("test2");
-        MetricListFieldProcessor metricListFieldProcessor = getMetricListFieldProcessor(fieldMap, CollUtil.toList(aviatorExpressParam1, aviatorExpressParam2));
+        MetricListFieldProcessor metricListFieldProcessor = getMetricListFieldProcessor(fieldMap, ListUtil.of(aviatorExpressParam1, aviatorExpressParam2));
 
         JSONObject input = new JSONObject();
         input.set("test1", "aaa");

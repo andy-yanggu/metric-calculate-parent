@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.DeriveAggregateFunctionParamRelation;
 import com.yanggu.metric_calculate.config.mapper.DeriveAggregateFunctionParamRelationMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveAggregateFunctionParamRelation;
 import com.yanggu.metric_calculate.config.service.DeriveAggregateFunctionParamRelationService;
 import org.springframework.stereotype.Service;
 

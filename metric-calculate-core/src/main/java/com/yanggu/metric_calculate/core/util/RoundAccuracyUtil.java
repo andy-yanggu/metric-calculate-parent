@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import cn.hutool.core.util.NumberUtil;
 import com.yanggu.metric_calculate.core.enums.AccuracyEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.RoundAccuracy;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.math.NumberUtil;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -38,14 +38,10 @@ public class RoundAccuracyUtil {
             }
             //处理保留多少位
             if (length != 0) {
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < length; i++) {
-                    sb.append("0");
-                }
-                returnData = NumberUtil.decimalFormat("#." + sb, returnData);
+                returnData = NumberUtil.format("#." + "0".repeat(length), returnData);
             } else {
                 //保留0位就是整数
-                returnData = NumberUtil.decimalFormat("#", returnData);
+                returnData = NumberUtil.format("#", returnData);
             }
             if (log.isDebugEnabled()) {
                 log.debug("原始数据: {}, 精度配置: {}, 处理精度后的数据: {}", result, roundAccuracy, returnData);

@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.window;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
+import org.dromara.hutool.json.JSONObject;
 
 /**
  * 对无界的数据进行切分, 变成有界

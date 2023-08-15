@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
 import com.yanggu.metric_calculate.config.mapper.WindowParamMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
 import com.yanggu.metric_calculate.config.service.WindowParamService;
 import org.springframework.stereotype.Service;
 

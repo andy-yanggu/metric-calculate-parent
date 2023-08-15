@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
+import org.dromara.hutool.json.JSONObject;
 
 /**
  * 数据切分核心接口

@@ -1,10 +1,6 @@
 package com.yanggu.metric_calculate.core.code_gen.number;
 
 
-import cn.hutool.extra.template.Template;
-import cn.hutool.extra.template.TemplateConfig;
-import cn.hutool.extra.template.TemplateEngine;
-import cn.hutool.extra.template.TemplateUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import org.codehaus.commons.compiler.util.ResourceFinderClassLoader;
 import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
@@ -12,19 +8,23 @@ import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.StringResource;
 import org.codehaus.janino.Compiler;
+import org.dromara.hutool.extra.template.Template;
+import org.dromara.hutool.extra.template.TemplateConfig;
+import org.dromara.hutool.extra.template.TemplateUtil;
+import org.dromara.hutool.extra.template.engine.TemplateEngine;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NumberTest {
 
     @Test
     void test1() throws Exception {
         TemplateConfig templateConfig = new TemplateConfig("merged_unit_template", TemplateConfig.ResourceMode.CLASSPATH);
-        TemplateEngine engine = TemplateUtil.createEngine(templateConfig);
+        TemplateEngine engine = TemplateUtil.getEngine().init(templateConfig);
         Template template = engine.getTemplate("number.ftl");
 
         Map<String, Object> param = new HashMap<>();
@@ -42,7 +42,7 @@ class NumberTest {
         Map<String, byte[]> classes = new HashMap<>();
         compiler.setClassFileCreator((new MapResourceCreator(classes)));
 
-        compiler.compile(new Resource[] {new StringResource("com.yanggu.metric_calculate.core.aggregate_function.numeric/Sum_Double_AggregateFunction.java", templateCode)});
+        compiler.compile(new Resource[]{new StringResource("com.yanggu.metric_calculate.core.aggregate_function.numeric/Sum_Double_AggregateFunction.java", templateCode)});
 
         ClassLoader cl = new ResourceFinderClassLoader(
                 new MapResourceFinder(classes),  /// resourceFinder

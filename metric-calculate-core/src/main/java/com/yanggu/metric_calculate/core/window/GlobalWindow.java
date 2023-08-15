@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.JSONObject;
 
 import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.GLOBAL_WINDOW;
 
@@ -18,7 +18,7 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.GLOBAL_WINDO
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private ACC accumulator;
@@ -49,7 +49,7 @@ public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     //@Override
     public GlobalWindow<IN, ACC, OUT> merge(GlobalWindow<IN, ACC, OUT> thatGlobalWindow) {
         GlobalWindow<IN, ACC, OUT> globalWindow = new GlobalWindow<>();
-        ACC acc = aggregateFieldProcessor.mergeAccList(CollUtil.toList(accumulator, thatGlobalWindow.getAccumulator()));
+        ACC acc = aggregateFieldProcessor.mergeAccList(ListUtil.of(accumulator, thatGlobalWindow.getAccumulator()));
         globalWindow.setAccumulator(acc);
         return globalWindow;
     }

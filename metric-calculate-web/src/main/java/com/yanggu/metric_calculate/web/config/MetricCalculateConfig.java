@@ -1,7 +1,5 @@
 package com.yanggu.metric_calculate.web.config;
 
-import cn.hutool.core.thread.NamedThreadFactory;
-import cn.hutool.core.util.ReflectUtil;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
@@ -14,6 +12,8 @@ import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.dromara.hutool.core.reflect.FieldUtil;
+import org.dromara.hutool.core.thread.NamedThreadFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,7 +40,7 @@ public class MetricCalculateConfig {
      */
     @Bean
     public DeriveMetricMiddleStore redisDeriveMetricMiddleStore(LettuceConnectionFactory lettuceConnectionFactory) {
-        LettuceConnectionProvider connectionProvider = (LettuceConnectionProvider) ReflectUtil.getFieldValue(lettuceConnectionFactory, "connectionProvider");
+        LettuceConnectionProvider connectionProvider = (LettuceConnectionProvider) FieldUtil.getFieldValue(lettuceConnectionFactory, "connectionProvider");
         LettucePoolingClientConfiguration clientConfiguration = (LettucePoolingClientConfiguration) lettuceConnectionFactory.getClientConfiguration();
         GenericObjectPool<StatefulRedisConnection<byte[], byte[]>> genericObjectPool = ConnectionPoolSupport.createGenericObjectPool(() -> connectionProvider.getConnection(StatefulRedisConnection.class),
                 clientConfiguration.getPoolConfig(), false);

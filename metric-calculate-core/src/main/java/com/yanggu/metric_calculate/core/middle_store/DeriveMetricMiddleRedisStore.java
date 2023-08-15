@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.middle_store;
 
 
-import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import io.lettuce.core.KeyValue;
@@ -11,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.pool2.impl.GenericObjectPool;
+import org.dromara.hutool.core.collection.CollUtil;
 
 import java.util.HashMap;
 import java.util.List;

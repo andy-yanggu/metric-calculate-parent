@@ -1,15 +1,15 @@
 package com.yanggu.metric_calculate.jmh_test;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.lang.TypeReference;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapKryoStore;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
+import org.dromara.hutool.core.bean.BeanUtil;
+import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.reflect.TypeReference;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.format.ResultFormatType;
@@ -37,7 +37,7 @@ public class JmhTest2 {
     public static void setup() throws Exception {
         InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("metric_config.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {}, true);
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {});
 
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> tempDeriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);

@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.flink.pojo;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import lombok.Data;
+import org.dromara.hutool.json.JSONObject;
 
 /**
  * 派生指标计算数据

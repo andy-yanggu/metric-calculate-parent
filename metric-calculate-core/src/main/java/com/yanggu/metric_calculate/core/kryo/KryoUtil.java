@@ -1,14 +1,14 @@
 package com.yanggu.metric_calculate.core.kryo;
 
 
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.kryo.pool.InputPool;
 import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.kryo.pool.OutputPool;
+import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.reflect.FieldUtil;
 
 /**
  * Kryo序列化和反序列化工具类
@@ -51,7 +51,7 @@ public class KryoUtil {
             //兼容低版本的kryo重置kryo和output对象
             kryo.reset();
             output.setPosition(0);
-            ReflectUtil.setFieldValue(output, "total", 0L);
+            FieldUtil.setFieldValue(output, "total", 0L);
         }
     }
 
@@ -77,7 +77,7 @@ public class KryoUtil {
             //兼容低版本的kryo重置kryo和input对象
             kryo.reset();
             input.setPosition(0);
-            ReflectUtil.setFieldValue(input, "total", 0L);
+            FieldUtil.setFieldValue(input, "total", 0L);
         }
     }
 

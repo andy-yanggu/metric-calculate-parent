@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.test;
 
 
-import cn.hutool.core.comparator.ComparatorChain;
-import cn.hutool.core.comparator.FuncComparator;
-import cn.hutool.json.JSONObject;
+import org.dromara.hutool.core.comparator.ComparatorChain;
+import org.dromara.hutool.core.comparator.FuncComparator;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

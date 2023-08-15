@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
 
 import java.util.*;
 
@@ -66,7 +67,7 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
             if (thisAcc == null) {
                 treeMap.put(tempLong, thatAcc);
             } else {
-                treeMap.put(tempLong, aggregateFieldProcessor.mergeAccList(CollUtil.toList(thatAcc, thisAcc)));
+                treeMap.put(tempLong, aggregateFieldProcessor.mergeAccList(ListUtil.of(thatAcc, thisAcc)));
             }
         });
 

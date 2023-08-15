@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.aggregate_function;
 
-import cn.hutool.core.lang.mutable.MutablePair;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import lombok.Data;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
 
 import java.util.Objects;
 
@@ -11,18 +11,18 @@ import java.util.Objects;
  * <p>MultiFieldDistinctKey相同时进行累加, 不相同时重新累加</p>
  */
 @Data
-public class StateWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<MutablePair<MultiFieldDistinctKey, IN>, MutablePair<MultiFieldDistinctKey, ACC>, MutablePair<MultiFieldDistinctKey, OUT>> {
+public class StateWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<MutableEntry<MultiFieldDistinctKey, IN>, MutableEntry<MultiFieldDistinctKey, ACC>, MutableEntry<MultiFieldDistinctKey, OUT>> {
 
     private AggregateFunction<IN, ACC, OUT> aggregateFunction;
 
     @Override
-    public MutablePair<MultiFieldDistinctKey, ACC> createAccumulator() {
-        return new MutablePair<>(null, aggregateFunction.createAccumulator());
+    public MutableEntry<MultiFieldDistinctKey, ACC> createAccumulator() {
+        return new MutableEntry<>(null, aggregateFunction.createAccumulator());
     }
 
     @Override
-    public MutablePair<MultiFieldDistinctKey, ACC> add(MutablePair<MultiFieldDistinctKey, IN> input,
-                                                       MutablePair<MultiFieldDistinctKey, ACC> accumulator) {
+    public MutableEntry<MultiFieldDistinctKey, ACC> add(MutableEntry<MultiFieldDistinctKey, IN> input,
+                                                        MutableEntry<MultiFieldDistinctKey, ACC> accumulator) {
         MultiFieldDistinctKey oldStatus = accumulator.getKey();
         MultiFieldDistinctKey newStatus = input.getKey();
 
@@ -44,13 +44,13 @@ public class StateWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunc
     }
 
     @Override
-    public MutablePair<MultiFieldDistinctKey, OUT> getResult(MutablePair<MultiFieldDistinctKey, ACC> accumulator) {
-        return new MutablePair<>(accumulator.getKey(), aggregateFunction.getResult(accumulator.getValue()));
+    public MutableEntry<MultiFieldDistinctKey, OUT> getResult(MutableEntry<MultiFieldDistinctKey, ACC> accumulator) {
+        return new MutableEntry<>(accumulator.getKey(), aggregateFunction.getResult(accumulator.getValue()));
     }
 
     @Override
-    public MutablePair<MultiFieldDistinctKey, ACC> merge(MutablePair<MultiFieldDistinctKey, ACC> thisAccumulator,
-                                                         MutablePair<MultiFieldDistinctKey, ACC> thatAccumulator) {
+    public MutableEntry<MultiFieldDistinctKey, ACC> merge(MutableEntry<MultiFieldDistinctKey, ACC> thisAccumulator,
+                                                          MutableEntry<MultiFieldDistinctKey, ACC> thatAccumulator) {
         return null;
     }
 

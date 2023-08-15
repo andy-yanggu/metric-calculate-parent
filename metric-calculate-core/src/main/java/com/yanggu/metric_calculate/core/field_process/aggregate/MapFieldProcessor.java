@@ -1,17 +1,17 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
-import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import lombok.Data;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.json.JSONObject;
 
+import java.util.AbstractMap;
 import java.util.Map;
 
 /**
@@ -57,7 +57,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     public IN process(JSONObject input) throws Exception {
         MultiFieldDistinctKey key = keyFieldProcessor.process(input);
         Object value = valueAggregateFieldProcessor.process(input);
-        return (IN) Pair.of(key, value);
+        return (IN) new AbstractMap.SimpleImmutableEntry<>(key, value);
     }
 
     private void check() {

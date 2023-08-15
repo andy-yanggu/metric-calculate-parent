@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

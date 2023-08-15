@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import cn.hutool.core.collection.BoundedPriorityQueue;
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ReflectUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
+import org.dromara.hutool.core.reflect.FieldUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -41,7 +41,7 @@ class SortedListObjectAggregateFunctionTest {
         BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
-        assertEquals(10, ReflectUtil.getFieldValue(accumulator, "capacity"));
+        assertEquals(10, FieldUtil.getFieldValue(accumulator, "capacity"));
     }
 
     @Test
@@ -53,23 +53,23 @@ class SortedListObjectAggregateFunctionTest {
 
         sortedListObjectAggregateFunction.add(1, accumulator);
         List<Integer> integers = accumulator.toList();
-        assertEquals(CollUtil.toList(1), integers);
+        assertEquals(ListUtil.of(1), integers);
 
         sortedListObjectAggregateFunction.add(3, accumulator);
         integers = accumulator.toList();
-        assertEquals(CollUtil.toList(1, 3), integers);
+        assertEquals(ListUtil.of(1, 3), integers);
 
         sortedListObjectAggregateFunction.add(2, accumulator);
         integers = accumulator.toList();
-        assertEquals(CollUtil.toList(1, 2, 3), integers);
+        assertEquals(ListUtil.of(1, 2, 3), integers);
 
         sortedListObjectAggregateFunction.add(4, accumulator);
         integers = accumulator.toList();
-        assertEquals(CollUtil.toList(1, 2, 3), integers);
+        assertEquals(ListUtil.of(1, 2, 3), integers);
 
         sortedListObjectAggregateFunction.add(1, accumulator);
         integers = accumulator.toList();
-        assertEquals(CollUtil.toList(1, 1, 2), integers);
+        assertEquals(ListUtil.of(1, 1, 2), integers);
     }
 
     @Test
@@ -80,7 +80,7 @@ class SortedListObjectAggregateFunctionTest {
         sortedListObjectAggregateFunction.add(1, accumulator);
 
         List<Integer> result = sortedListObjectAggregateFunction.getResult(accumulator);
-        assertEquals(CollUtil.toList(1), result);
+        assertEquals(ListUtil.of(1), result);
     }
 
     @Test
@@ -103,7 +103,7 @@ class SortedListObjectAggregateFunctionTest {
 
         List<Integer> result = sortedListObjectAggregateFunction.getResult(sortedListObjectAggregateFunction.merge(accumulator1, accumulator2));
 
-        assertEquals(CollUtil.toList(-1, 0, 1), result);
+        assertEquals(ListUtil.of(-1, 0, 1), result);
     }
 
 }

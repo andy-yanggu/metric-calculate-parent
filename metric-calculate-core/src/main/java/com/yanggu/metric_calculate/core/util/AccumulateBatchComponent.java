@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.core.util;
 
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.thread.NamedThreadFactory;
-import cn.hutool.core.util.RuntimeUtil;
+
 import com.yomahub.tlog.core.thread.TLogInheritableTask;
 import lombok.extern.slf4j.Slf4j;
+import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.thread.NamedThreadFactory;
+import org.dromara.hutool.core.util.RuntimeUtil;
 import org.jctools.queues.MpscArrayQueue;
 
 import java.util.ArrayList;
@@ -17,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static cn.hutool.core.date.DatePattern.NORM_DATETIME_MS_PATTERN;
+import static org.dromara.hutool.core.date.DatePattern.NORM_DATETIME_MS_PATTERN;
+
 
 /**
  * 攒批组件

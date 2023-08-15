@@ -1,15 +1,15 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import cn.hutool.core.date.DateField;
-import cn.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.date.DateField;
+import org.dromara.hutool.core.date.DateUtil;
 import org.joda.time.DateTime;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
 import static java.util.Calendar.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DateUtilsTest {
 

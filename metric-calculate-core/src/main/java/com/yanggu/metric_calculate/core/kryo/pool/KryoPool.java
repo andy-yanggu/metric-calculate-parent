@@ -1,12 +1,6 @@
 package com.yanggu.metric_calculate.core.kryo.pool;
 
 
-import cn.hutool.core.collection.BoundedPriorityQueue;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.lang.Tuple;
-import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.core.lang.mutable.MutablePair;
-import cn.hutool.json.JSONObject;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.serializers.BeanSerializer;
 import com.esotericsoftware.kryo.serializers.CollectionSerializer;
@@ -27,6 +21,12 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInst
 import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core.util.KeyValue;
 import com.yanggu.metric_calculate.core.window.*;
+import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.tuple.Tuple;
+import org.dromara.hutool.json.JSONObject;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class KryoPool extends Pool<Kryo> {
 
         //ACC序列化器和反序列化器
         kryo.register(Tuple.class, new TupleSerializer(), 21);
-        kryo.register(MutablePair.class, new MutablePairSerializer<>(), 22);
+        kryo.register(MutableEntry.class, new MutableEntrySerializer<>(), 22);
         kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 23);
         kryo.register(MutableObj.class, new MutableObjectSerializer<>(), 24);
         kryo.register(Pair.class, new PairSerializer<>(), 25);

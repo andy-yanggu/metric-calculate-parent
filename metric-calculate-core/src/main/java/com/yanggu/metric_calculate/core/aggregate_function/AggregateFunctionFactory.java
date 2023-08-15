@@ -1,19 +1,19 @@
 package com.yanggu.metric_calculate.core.aggregate_function;
 
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.util.FunctionFactory;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * 聚合函数工厂类
@@ -31,7 +31,7 @@ public class AggregateFunctionFactory {
     /**
      * 扫描有MergeType注解并且是AggregateFunction子类
      */
-    private static final Filter<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(MergeType.class)
+    private static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(MergeType.class)
             && AggregateFunction.class.isAssignableFrom(clazz);
 
     /**

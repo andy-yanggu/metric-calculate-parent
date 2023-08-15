@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamDistinctFieldListRelation;
 import com.yanggu.metric_calculate.config.mapper.BaseUdafParamDistinctFieldListRelationMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamDistinctFieldListRelation;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamDistinctFieldListRelationService;
 import org.springframework.stereotype.Service;
 

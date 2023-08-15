@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.pojo.exception;
 
-import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.config.enums.ResultCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.text.StrUtil;
 
 @Data
 @EqualsAndHashCode(callSuper=false)

@@ -1,7 +1,5 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
@@ -9,6 +7,8 @@ import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFie
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.util.KeyValue;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -96,7 +96,7 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setCollectiveSortFieldList(CollUtil.toList(new FieldOrderParam(aviatorExpressParam, false)));
+        baseUdafParam.setCollectiveSortFieldList(ListUtil.of(new FieldOrderParam(aviatorExpressParam, false)));
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
@@ -107,7 +107,7 @@ class CollectionFieldProcessorTest {
 
         KeyValue<MultiFieldOrderCompareKey, JSONObject> process = baseFieldProcessor.process(input);
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(CollUtil.toList(100));
+        multiFieldOrderCompareKey.setDataList(ListUtil.of(100));
         assertEquals(multiFieldOrderCompareKey, process.getKey());
         assertEquals(input, process.getValue());
     }
@@ -121,7 +121,7 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLIMITLISTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setCollectiveSortFieldList(CollUtil.toList(new FieldOrderParam(aviatorExpressParam, false)));
+        baseUdafParam.setCollectiveSortFieldList(ListUtil.of(new FieldOrderParam(aviatorExpressParam, false)));
 
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("name");
@@ -136,7 +136,7 @@ class CollectionFieldProcessorTest {
 
         KeyValue<MultiFieldOrderCompareKey, String> process = baseFieldProcessor.process(input);
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(CollUtil.toList(100));
+        multiFieldOrderCompareKey.setDataList(ListUtil.of(100));
         assertEquals(multiFieldOrderCompareKey, process.getKey());
         assertEquals("张三", process.getValue());
     }
@@ -150,7 +150,7 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLIMITLIST");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setCollectiveSortFieldList(CollUtil.toList(new FieldOrderParam(aviatorExpressParam, false)));
+        baseUdafParam.setCollectiveSortFieldList(ListUtil.of(new FieldOrderParam(aviatorExpressParam, false)));
 
         FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
@@ -161,7 +161,7 @@ class CollectionFieldProcessorTest {
 
         MultiFieldOrderCompareKey process = baseFieldProcessor.process(input);
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(CollUtil.toList(100));
+        multiFieldOrderCompareKey.setDataList(ListUtil.of(100));
         assertEquals(multiFieldOrderCompareKey, process);
     }
 
@@ -173,7 +173,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
+        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLISTOBJECT");
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -196,7 +196,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
+        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
         AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
         aviatorExpressParam2.setExpress("name");
         baseUdafParam.setRetainExpressParam(aviatorExpressParam2);
@@ -222,7 +222,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
+        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLIST");
 
         FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -244,7 +244,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(CollUtil.toList(aviatorExpressParam));
+        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTCOUNT");
 
         FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);

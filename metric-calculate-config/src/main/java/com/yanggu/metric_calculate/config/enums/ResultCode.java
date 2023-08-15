@@ -3,8 +3,6 @@ package com.yanggu.metric_calculate.config.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamModelColumnRelationTableDef.AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION;
-
 @Getter
 @AllArgsConstructor
 public enum ResultCode {

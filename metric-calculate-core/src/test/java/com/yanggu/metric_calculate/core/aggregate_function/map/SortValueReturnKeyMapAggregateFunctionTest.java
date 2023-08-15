@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -52,7 +52,7 @@ class SortValueReturnKeyMapAggregateFunctionTest {
         accumulator.put("test5", 1.0D);
 
         List<String> result = aggregateFunction.getResult(accumulator);
-        assertEquals(CollUtil.toList("test2", "test1", "test5", "test4"), result);
+        assertEquals(ListUtil.of("test2", "test1", "test5", "test4"), result);
     }
 
 }

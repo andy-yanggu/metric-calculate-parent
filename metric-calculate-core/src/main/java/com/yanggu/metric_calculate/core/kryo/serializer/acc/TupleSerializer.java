@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.core.kryo.serializer.acc;
 
-import cn.hutool.core.lang.Tuple;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 
 import java.io.Serializable;
 

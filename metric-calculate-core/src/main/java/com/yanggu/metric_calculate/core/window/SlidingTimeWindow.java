@@ -1,12 +1,13 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeWindowData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -60,7 +61,7 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
         Long expireTimestamp = timeBaselineDimension.getExpireTimestamp(timestamp);
         Iterator<Map.Entry<Pair<Long, Long>, ACC>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
-            Long key = iterator.next().getKey().getKey();
+            Long key = iterator.next().getKey().getLeft();
             if (key < expireTimestamp) {
                 iterator.remove();
             }
@@ -75,7 +76,7 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
             if (thisAcc == null) {
                 map.put(tempPair, thatAcc);
             } else {
-                map.put(tempPair, aggregateFieldProcessor.mergeAccList(CollUtil.toList(thisAcc, thatAcc)));
+                map.put(tempPair, aggregateFieldProcessor.mergeAccList(ListUtil.of(thisAcc, thatAcc)));
             }
         });
 

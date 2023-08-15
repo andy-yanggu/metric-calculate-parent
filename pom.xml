@@ -34,6 +34,7 @@
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
         <hutool.version>5.8.21</hutool.version>
+        <hutool6.version>6.0.0-M5</hutool6.version>
         <knife4j-openapi3-jakarta.version>4.3.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>
         <mockito-core.version>5.4.0</mockito-core.version>
@@ -79,9 +80,9 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>cn.hutool</groupId>
+                <groupId>org.dromara.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
+                <version>${hutool6.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>

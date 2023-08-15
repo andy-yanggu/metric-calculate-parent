@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.test;
 
 
-import cn.hutool.core.collection.CollUtil;
 import lombok.Data;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getFieldOrderFieldProcessor;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 多字段排序字段处理器

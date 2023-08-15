@@ -1,11 +1,6 @@
 package com.yanggu.metric_calculate.flink;
 
 
-import cn.hutool.core.collection.BoundedPriorityQueue;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.lang.Tuple;
-import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.core.lang.mutable.MutablePair;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
@@ -35,6 +30,10 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.OutputTag;
+import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.lang.tuple.Tuple;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,7 +69,7 @@ public class MetricCalculateFlinkJob {
 
         //ACC序列化器和反序列化器
         env.registerTypeWithKryoSerializer(Tuple.class, new TupleSerializer());
-        env.registerTypeWithKryoSerializer(MutablePair.class, new MutablePairSerializer<>());
+        env.registerTypeWithKryoSerializer(MutableEntrySerializer.class, new MutableEntrySerializer<>());
         env.registerTypeWithKryoSerializer(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>());
         env.registerTypeWithKryoSerializer(MutableObj.class, new MutableObjectSerializer<>());
         env.registerTypeWithKryoSerializer(Pair.class, new PairSerializer<>());

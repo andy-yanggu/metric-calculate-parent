@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import cn.hutool.core.collection.CollUtil;
-import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -91,7 +91,7 @@ class SlidingCountWindowAggregateFunctionTest {
         accumulator2.add(4);
 
         List<Integer> merge = slidingCountWindowAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(CollUtil.toList(3, 4), merge);
+        assertEquals(ListUtil.of(3, 4), merge);
     }
 
 }

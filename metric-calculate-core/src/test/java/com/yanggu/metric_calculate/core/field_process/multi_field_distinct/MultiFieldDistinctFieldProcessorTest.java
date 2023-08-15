@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_distinct;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getDistinctFieldFieldProcessor;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**

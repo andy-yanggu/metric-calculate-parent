@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import cn.hutool.core.collection.CollUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -122,7 +122,7 @@ class LagFieldAggregateFunctionTest {
         accumulator2.add("test6");
 
         LinkedList<String> merge = lagFieldAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(CollUtil.newLinkedList("test2", "test3", "test4", "test5", "test6"), merge);
+        assertEquals(ListUtil.ofLinked("test2", "test3", "test4", "test5", "test6"), merge);
     }
 
 }

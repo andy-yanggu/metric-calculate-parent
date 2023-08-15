@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import cn.hutool.core.lang.Pair;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.AbstractMap;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValeOUT exte
 
     @Override
     public List<K> getResult(Map<K, ValueACC> accumulator) {
-        Comparator<Pair<K, ValeOUT>> pairComparator = (o1, o2) -> {
+        Comparator<AbstractMap.SimpleImmutableEntry<K, ValeOUT>> pairComparator = (o1, o2) -> {
             if (Boolean.TRUE.equals(asc)) {
                 return o1.getValue().compareTo(o2.getValue());
             } else {
@@ -42,9 +42,9 @@ public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValeOUT exte
             }
         };
         return accumulator.entrySet().stream()
-                .map(tempEntry -> Pair.of(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
+                .map(tempEntry -> new AbstractMap.SimpleImmutableEntry<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
                 .sorted(pairComparator)
-                .map(Pair::getKey)
+                .map(AbstractMap.SimpleImmutableEntry::getKey)
                 .limit(limit)
                 .collect(Collectors.toList());
     }

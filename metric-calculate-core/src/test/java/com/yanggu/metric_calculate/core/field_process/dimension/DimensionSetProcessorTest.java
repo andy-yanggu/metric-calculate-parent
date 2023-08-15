@@ -1,12 +1,14 @@
 package com.yanggu.metric_calculate.core.field_process.dimension;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 维度字段处理器单元测试类

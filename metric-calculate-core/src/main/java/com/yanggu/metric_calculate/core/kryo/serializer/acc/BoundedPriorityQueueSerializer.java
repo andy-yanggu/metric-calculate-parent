@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.core.kryo.serializer.acc;
 
 
-import cn.hutool.core.collection.BoundedPriorityQueue;
-import cn.hutool.core.util.ReflectUtil;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
+import org.dromara.hutool.core.reflect.FieldUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class BoundedPriorityQueueSerializer<T> extends Serializer<BoundedPriorit
 
     @Override
     public void write(Kryo kryo, Output output, BoundedPriorityQueue<T> boundedPriorityQueue) {
-        kryo.writeObject(output, ReflectUtil.getFieldValue(boundedPriorityQueue, "capacity"));
-        kryo.writeObjectOrNull(output, ReflectUtil.getFieldValue(boundedPriorityQueue, "comparator"), Comparator.class);
+        kryo.writeObject(output, FieldUtil.getFieldValue(boundedPriorityQueue, "capacity"));
+        kryo.writeObjectOrNull(output, FieldUtil.getFieldValue(boundedPriorityQueue, "comparator"), Comparator.class);
         kryo.writeClassAndObject(output, new ArrayList<>(boundedPriorityQueue));
     }
 

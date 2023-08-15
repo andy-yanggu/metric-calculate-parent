@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParam;
 import com.yanggu.metric_calculate.config.mapper.MixUdafParamMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParam;
 import com.yanggu.metric_calculate.config.service.MixUdafParamService;
 import org.springframework.stereotype.Service;
 

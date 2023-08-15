@@ -1,14 +1,14 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 混合型派生指标单元测试类

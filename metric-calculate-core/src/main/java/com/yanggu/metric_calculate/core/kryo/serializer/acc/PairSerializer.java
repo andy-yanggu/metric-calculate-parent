@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.core.kryo.serializer.acc;
 
 
-import cn.hutool.core.lang.Pair;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
 import java.io.Serializable;
 
@@ -21,8 +21,8 @@ public class PairSerializer<K, V> extends Serializer<Pair<K, V>> implements Seri
 
     @Override
     public void write(Kryo kryo, Output output, Pair<K, V> pair) {
-        kryo.writeClassAndObject(output, pair.getKey());
-        kryo.writeClassAndObject(output, pair.getValue());
+        kryo.writeClassAndObject(output, pair.getLeft());
+        kryo.writeClassAndObject(output, pair.getRight());
     }
 
     @Override

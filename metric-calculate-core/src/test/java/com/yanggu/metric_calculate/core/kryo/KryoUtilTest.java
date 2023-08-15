@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.kryo;
 
-import cn.hutool.core.lang.mutable.MutablePair;
+import org.dromara.hutool.core.lang.mutable.MutablePair;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * KryoUtil测试类

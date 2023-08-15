@@ -1,19 +1,19 @@
 package com.yanggu.metric_calculate.core.aviator_function;
 
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ClassUtil;
-import cn.hutool.core.util.StrUtil;
 import com.yanggu.metric_calculate.core.util.FunctionFactory;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Predicate;
 
 @NoArgsConstructor
 public class AviatorFunctionFactory {
@@ -33,7 +33,7 @@ public class AviatorFunctionFactory {
     /**
      * 扫描有AviatorFunctionName注解且是AbstractUdfAviatorFunction子类的类
      */
-    private static final Filter<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
+    private static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
             && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
 
     private final Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();

@@ -1,19 +1,15 @@
 package com.yanggu.metric_calculate.core.util;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.json.JSONObject;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core.aggregate_function.collection.ListObjectAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.map.BaseMapAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.mix.BaseMixAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.object.FirstObjectAggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.aggregate.*;
@@ -33,6 +29,9 @@ import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -213,7 +212,7 @@ class FieldProcessorUtilTest {
         MapUdafParam mapUdafParam = new MapUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
-        mapUdafParam.setDistinctFieldParamList(CollUtil.toList(aviatorExpressParam));
+        mapUdafParam.setDistinctFieldParamList(ListUtil.of(aviatorExpressParam));
 
         BaseUdafParam valueAggParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
@@ -222,7 +221,7 @@ class FieldProcessorUtilTest {
         valueAggParam.setAggregateType("SUM");
         mapUdafParam.setValueAggParam(valueAggParam);
 
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MapFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         assertNotNull(mapFieldProcessor);
         assertEquals(fieldMap, mapFieldProcessor.getFieldMap());
@@ -311,7 +310,7 @@ class FieldProcessorUtilTest {
         mapUdafParam.setAggregateType("BASEMAP");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
-        mapUdafParam.setDistinctFieldParamList(CollUtil.toList(aviatorExpressParam));
+        mapUdafParam.setDistinctFieldParamList(ListUtil.of(aviatorExpressParam));
 
         BaseUdafParam valueAggParam = new BaseUdafParam();
         valueAggParam.setAggregateType("SUM");
@@ -326,9 +325,9 @@ class FieldProcessorUtilTest {
         fieldMap.put("name", String.class);
         fieldMap.put("amount", Integer.class);
 
-        AggregateFieldProcessor<Pair<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<MultiFieldDistinctKey, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
+        AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<MultiFieldDistinctKey, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
-        FieldProcessor<JSONObject, Pair<MultiFieldDistinctKey, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
+        FieldProcessor<JSONObject, AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
 
         BaseMapAggregateFunction<MultiFieldDistinctKey, Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();

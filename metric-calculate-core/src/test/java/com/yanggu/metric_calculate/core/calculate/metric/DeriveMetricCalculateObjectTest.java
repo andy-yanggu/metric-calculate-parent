@@ -1,14 +1,14 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.json.JSONObject;
-import com.yanggu.metric_calculate.core.util.KeyValue;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
+import com.yanggu.metric_calculate.core.util.KeyValue;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 对象型派生指标单元测试类

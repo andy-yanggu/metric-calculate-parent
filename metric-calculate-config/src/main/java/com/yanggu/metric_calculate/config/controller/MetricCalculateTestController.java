@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.config.controller;
 
-import cn.hutool.json.JSONObject;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
@@ -9,6 +8,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import org.dromara.hutool.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunction;
 import com.yanggu.metric_calculate.config.mapper.AviatorFunctionMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunction;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
 import org.springframework.stereotype.Service;
 

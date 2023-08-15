@@ -1,13 +1,13 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import cn.hutool.core.lang.Pair;
-import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,7 +60,8 @@ class BaseMapAggregateFunctionTest {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
 
         MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey(Collections.singletonList("张三"));
-        Pair<MultiFieldDistinctKey, Double> tuple2 = Pair.of(multiFieldDistinctKey, 100.0D);
+        AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Double> tuple2 = new AbstractMap.SimpleImmutableEntry<>
+                (multiFieldDistinctKey, 100.0D);
         Map<MultiFieldDistinctKey, Double> add = basemap.add(tuple2, accumulator);
         assertSame(add, accumulator);
         //应该是张三:100
@@ -72,7 +73,8 @@ class BaseMapAggregateFunctionTest {
         assertEquals(200.0D, add.get(multiFieldDistinctKey), 0.0D);
 
         MultiFieldDistinctKey multiFieldDistinctKey2 = new MultiFieldDistinctKey(Collections.singletonList("李四"));
-        Pair<MultiFieldDistinctKey, Double> otherTuple2 = Pair.of(multiFieldDistinctKey2, 100.0D);
+        AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Double> otherTuple2 = new AbstractMap.SimpleImmutableEntry<>
+                (multiFieldDistinctKey2, 100.0D);
         basemap.add(otherTuple2, accumulator);
         assertEquals(2, accumulator.size());
         //李四100
@@ -103,7 +105,7 @@ class BaseMapAggregateFunctionTest {
     void getResult() {
         Map<MultiFieldDistinctKey, Double> accumulator = basemap.createAccumulator();
         MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("张三"));
-        Map<MultiFieldDistinctKey, Double> add = basemap.add(Pair.of(key, 100.0D), accumulator);
+        Map<MultiFieldDistinctKey, Double> add = basemap.add(new AbstractMap.SimpleImmutableEntry<>(key, 100.0D), accumulator);
 
         Map<MultiFieldDistinctKey, Double> result = basemap.getResult(add);
         assertNotNull(result);

@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.test;
 
 
 import org.codehaus.janino.*;
-
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
@@ -10,7 +9,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class JaninoTest {
 

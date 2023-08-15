@@ -1,10 +1,9 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.lang.Filter;
-import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.ReflectUtil;
+import org.dromara.hutool.core.array.ArrayUtil;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.reflect.FieldUtil;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -15,6 +14,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -35,14 +35,14 @@ public class FunctionFactory {
                 Object fieldData = params.get(field.getName());
                 if (fieldData != null) {
                     //通过反射给字段赋值
-                    ReflectUtil.setFieldValue(function, field, fieldData);
+                    FieldUtil.setFieldValue(function, field, fieldData);
                 }
             }
         }
     }
 
     public static void loadClassFromJar(List<String> jarPathList,
-                                        Filter<Class<?>> classFilter,
+                                        Predicate<Class<?>> classFilter,
                                         Consumer<Class<?>> consumer) throws Exception {
         if (CollUtil.isEmpty(jarPathList)) {
             return;
@@ -74,7 +74,7 @@ public class FunctionFactory {
                         .substring(0, entry.getName().indexOf(".class"))
                         .replace("/", ".");
                 Class<?> loadClass = urlClassLoader.loadClass(entryName);
-                if (classFilter.accept(loadClass)) {
+                if (classFilter.test(loadClass)) {
                     //消费class数据
                     consumer.accept(loadClass);
                 }

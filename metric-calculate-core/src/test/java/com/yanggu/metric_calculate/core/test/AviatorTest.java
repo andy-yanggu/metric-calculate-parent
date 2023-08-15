@@ -1,16 +1,16 @@
 package com.yanggu.metric_calculate.core.test;
 
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.ListUtil;
-import cn.hutool.core.date.DateUtil;
-import cn.hutool.core.util.RandomUtil;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.seq.MapSequence;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.collection.set.SetUtil;
+import org.dromara.hutool.core.date.DateUtil;
+import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +39,7 @@ class AviatorTest {
                         "return set;";
         Expression compile = AviatorEvaluator.compile(express);
         Object execute = compile.execute();
-        assertEquals(CollUtil.newHashSet("test1", "test2", "test3"), execute);
+        assertEquals(SetUtil.of("test1", "test2", "test3"), execute);
     }
 
     /**
@@ -93,7 +93,7 @@ class AviatorTest {
         int count = 0;
         int total = 1000000000;
         for (int j = 0; j < total; j++) {
-            List<Integer> list = ListUtil.toList(RandomUtil.randomInt(0, 100), RandomUtil.randomInt(0, 100), RandomUtil.randomInt(0, 100));
+            List<Integer> list = ListUtil.of(RandomUtil.randomInt(0, 100), RandomUtil.randomInt(0, 100), RandomUtil.randomInt(0, 100));
             for (int i = 0; i < 12; i++) {
                 boolean contains = list.contains(RandomUtil.randomInt(0, 100));
                 if (contains) {

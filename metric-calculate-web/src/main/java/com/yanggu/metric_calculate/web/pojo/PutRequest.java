@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.web.pojo;
 
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
+import org.dromara.hutool.json.JSONObject;
 
 import java.util.concurrent.CompletableFuture;
 

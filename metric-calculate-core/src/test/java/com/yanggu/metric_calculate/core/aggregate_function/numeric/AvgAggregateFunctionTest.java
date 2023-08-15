@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import cn.hutool.core.lang.mutable.MutablePair;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -33,7 +33,7 @@ class AvgAggregateFunctionTest {
     @Test
     void testCreateAccumulator() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         assertEquals(0.0D, accumulator.getKey(), 0.0);
         assertEquals(0L, accumulator.getValue().longValue());
     }
@@ -41,7 +41,7 @@ class AvgAggregateFunctionTest {
     @Test
     void testAdd() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(1, accumulator);
         assertEquals(1.0D, accumulator.getKey(), 0.0);
         assertEquals(1L, accumulator.getValue().longValue());
@@ -50,7 +50,7 @@ class AvgAggregateFunctionTest {
     @Test
     void testAddNegative() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(-1, accumulator);
         assertEquals(-1.0D, accumulator.getKey(), 0.0);
         assertEquals(1L, accumulator.getValue().longValue());
@@ -59,7 +59,7 @@ class AvgAggregateFunctionTest {
     @Test
     void testGetResult() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(1, accumulator);
         accumulator = avgAggregateFunction.add(2, accumulator);
         Double result = avgAggregateFunction.getResult(accumulator);
@@ -69,7 +69,7 @@ class AvgAggregateFunctionTest {
     @Test
     void testGetResultNegative() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(-1, accumulator);
         accumulator = avgAggregateFunction.add(-2, accumulator);
         Double result = avgAggregateFunction.getResult(accumulator);
@@ -79,9 +79,9 @@ class AvgAggregateFunctionTest {
     @Test
     void testMerge() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> thisAccumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> thisAccumulator = avgAggregateFunction.createAccumulator();
         thisAccumulator = avgAggregateFunction.add(1, thisAccumulator);
-        MutablePair<Double, Long> thatAccumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> thatAccumulator = avgAggregateFunction.createAccumulator();
         thatAccumulator = avgAggregateFunction.add(2, thatAccumulator);
         thisAccumulator = avgAggregateFunction.merge(thisAccumulator, thatAccumulator);
         assertEquals(3.0D, thisAccumulator.getKey(), 0.0);
@@ -91,9 +91,9 @@ class AvgAggregateFunctionTest {
     @Test
     void testMergeNegative() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        MutablePair<Double, Long> thisAccumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> thisAccumulator = avgAggregateFunction.createAccumulator();
         thisAccumulator = avgAggregateFunction.add(-1, thisAccumulator);
-        MutablePair<Double, Long> thatAccumulator = avgAggregateFunction.createAccumulator();
+        MutableEntry<Double, Long> thatAccumulator = avgAggregateFunction.createAccumulator();
         thatAccumulator = avgAggregateFunction.add(-2, thatAccumulator);
         thisAccumulator = avgAggregateFunction.merge(thisAccumulator, thatAccumulator);
         assertEquals(-3.0D, thisAccumulator.getKey(), 0.0);

@@ -1,16 +1,15 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
-
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 聚合函数 实体类。

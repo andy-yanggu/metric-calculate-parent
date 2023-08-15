@@ -1,10 +1,5 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.StrUtil;
-import cn.hutool.http.HttpUtil;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
@@ -22,6 +17,11 @@ import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
 import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
 import org.apache.flink.util.Collector;
 import org.apache.flink.util.OutputTag;
+import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.text.StrUtil;
+import org.dromara.hutool.http.HttpUtil;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 
 import java.io.Serializable;
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.yanggu.metric_calculate.flink.util.Constant.*;
+import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE;
 
 @Slf4j
 public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastProcessFunction<String, Model, Void>

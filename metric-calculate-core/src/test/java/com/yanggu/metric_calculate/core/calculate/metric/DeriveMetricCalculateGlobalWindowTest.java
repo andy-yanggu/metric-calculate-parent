@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import cn.hutool.core.lang.mutable.MutableObj;
-import cn.hutool.json.JSONObject;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 全窗口派生指标单元测试类

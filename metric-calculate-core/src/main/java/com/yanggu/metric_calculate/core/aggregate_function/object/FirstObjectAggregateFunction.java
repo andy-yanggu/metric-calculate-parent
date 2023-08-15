@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import cn.hutool.core.lang.mutable.MutableObj;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import org.dromara.hutool.core.lang.mutable.MutableObj;
 
 /**
  * 最先写入的非NULL值

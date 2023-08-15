@@ -1,20 +1,20 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.lang.Pair;
-import cn.hutool.json.JSONObject;
-import cn.hutool.json.JSONUtil;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
+import org.dromara.hutool.core.collection.ListUtil;
+import org.dromara.hutool.core.io.file.FileUtil;
+import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getMapFieldProcessor;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 映射类型字段处理器单元测试类
@@ -46,15 +46,15 @@ class MapFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
 
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
+        MapFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");
         input1.set("account_no_in", "b");
         input1.set("amount", 1);
 
-        Pair<MultiFieldDistinctKey, Integer> process = mapFieldProcessor.process(input1);
-        assertEquals(new MultiFieldDistinctKey(CollUtil.toList("b")), process.getKey());
+        AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer> process = mapFieldProcessor.process(input1);
+        assertEquals(new MultiFieldDistinctKey(ListUtil.of("b")), process.getKey());
         assertEquals(Integer.valueOf(1), process.getValue());
     }
 
