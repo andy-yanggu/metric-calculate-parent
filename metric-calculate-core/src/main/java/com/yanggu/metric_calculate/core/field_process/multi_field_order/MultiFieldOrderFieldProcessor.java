@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.comparator.ComparatorChain;
 import cn.hutool.json.JSONObject;
-import com.google.common.collect.Ordering;
 import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
@@ -28,7 +28,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
-    private Ordering<List<Object>> multiFieldOrderOrdering;
+    private ComparatorChain<List<Object>> comparatorChain;
 
     @Override
     public void init() throws Exception {
@@ -53,7 +53,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
                 .collect(Collectors.toList());
 
         //合并多个比较器
-        this.multiFieldOrderOrdering = MultiFieldOrderCompareKey.getOrdering(collect);
+        this.comparatorChain = MultiFieldOrderCompareKey.getComparatorChain(collect);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
         }
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
         multiFieldOrderCompareKey.setDataList(dataList);
-        multiFieldOrderCompareKey.setMultiFieldOrderOrdering(multiFieldOrderOrdering);
+        multiFieldOrderCompareKey.setComparatorChain(comparatorChain);
         return multiFieldOrderCompareKey;
     }
 

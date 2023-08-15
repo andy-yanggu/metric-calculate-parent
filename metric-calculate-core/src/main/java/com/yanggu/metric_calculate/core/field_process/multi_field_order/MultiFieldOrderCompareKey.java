@@ -1,12 +1,14 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
-import com.google.common.collect.Ordering;
+import cn.hutool.core.comparator.ComparatorChain;
+import cn.hutool.core.comparator.FuncComparator;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 多字段排序
@@ -17,7 +19,7 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
 
     private List<Object> dataList;
 
-    private Ordering<List<Object>> multiFieldOrderOrdering;
+    private ComparatorChain<List<Object>> comparatorChain;
 
     public MultiFieldOrderCompareKey(List<Object> dataList) {
         this.dataList = dataList;
@@ -25,10 +27,10 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
 
     @Override
     public int compareTo(@NonNull MultiFieldOrderCompareKey that) {
-        if (this.multiFieldOrderOrdering == null) {
-            this.multiFieldOrderOrdering = that.multiFieldOrderOrdering;
+        if (this.comparatorChain == null) {
+            this.comparatorChain = that.comparatorChain;
         }
-        return multiFieldOrderOrdering.compare(dataList, that.dataList);
+        return this.comparatorChain.compare(dataList, that.dataList);
     }
 
     @Override
@@ -42,34 +44,33 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
 
         MultiFieldOrderCompareKey that = (MultiFieldOrderCompareKey) o;
 
-        return dataList.equals(that.dataList);
+        return this.dataList.equals(that.dataList);
     }
 
     @Override
     public int hashCode() {
-        return dataList.hashCode();
+        return this.dataList.hashCode();
     }
 
-    public static Ordering<List<Object>> getOrdering(List<Boolean> booleanList) {
-        List<Ordering<List<Object>>> orderingList = new ArrayList<>();
+    public static ComparatorChain<List<Object>> getComparatorChain(List<Boolean> booleanList) {
+        ComparatorChain<List<Object>> comparatorChain = new ComparatorChain<>();
         for (int i = 0; i < booleanList.size(); i++) {
             Boolean result = booleanList.get(i);
-            Ordering<Comparable<?>> comparableOrdering;
+            int finalIndex = i;
+            Function<List<Object>, Comparable<?>> function =
+                    tempList -> (Comparable<?>) tempList.get(finalIndex);
+            Comparator tempComparator;
             //降序排序
             if (Boolean.FALSE.equals(result)) {
                 //降序时, null放在最后面
-                comparableOrdering = Ordering.natural().reverse().nullsLast();
+                tempComparator = new FuncComparator<>(true, function).reversed();
             } else {
                 //升序排序, null放在最前面
-                comparableOrdering = Ordering.natural().nullsFirst();
+                tempComparator = new FuncComparator<>(false, function);
             }
-            int finalIndex = i;
-            Ordering<List<Object>> ordering = comparableOrdering.onResultOf(
-                    input -> (Comparable<?>) input.get(finalIndex));
-            orderingList.add(ordering);
+            comparatorChain.addComparator(tempComparator);
         }
-        //合并多个比较器
-        return Ordering.compound(orderingList);
+        return comparatorChain;
     }
 
 }
