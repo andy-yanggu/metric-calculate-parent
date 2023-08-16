@@ -1,28 +1,19 @@
 package com.yanggu.metric_calculate.core.util;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.StringJoiner;
 
+@Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class KeyValue<K extends Comparable<K>, V> implements Comparable<KeyValue<K, V>> {
 
     private K key;
 
     private V value;
-
-    public KeyValue(K key, V value) {
-        this.key = key;
-        this.value = value;
-    }
-
-    public K getKey() {
-        return key;
-    }
-
-    public V getValue() {
-        return value;
-    }
 
     @Override
     public int compareTo(KeyValue<K, V> that) {

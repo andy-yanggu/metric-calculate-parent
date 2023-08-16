@@ -12,6 +12,7 @@ import org.dromara.hutool.extra.template.Template;
 import org.dromara.hutool.extra.template.TemplateConfig;
 import org.dromara.hutool.extra.template.TemplateUtil;
 import org.dromara.hutool.extra.template.engine.TemplateEngine;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -19,9 +20,11 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@DisplayName("测试数值类型聚合函数codegen方式")
 class NumberTest {
 
     @Test
+    @DisplayName("测试使用模板生成代码并进行编译")
     void test1() throws Exception {
         TemplateConfig templateConfig = new TemplateConfig("merged_unit_template", TemplateConfig.ResourceMode.CLASSPATH);
         TemplateEngine engine = TemplateUtil.getEngine().init(templateConfig);
@@ -44,13 +47,12 @@ class NumberTest {
 
         compiler.compile(new Resource[]{new StringResource("com.yanggu.metric_calculate.core.aggregate_function.numeric/Sum_Double_AggregateFunction.java", templateCode)});
 
-        ClassLoader cl = new ResourceFinderClassLoader(
+        ClassLoader classLoader = new ResourceFinderClassLoader(
                 new MapResourceFinder(classes),  /// resourceFinder
                 ClassLoader.getSystemClassLoader()  /// parent
         );
-        Class<?> clazz = cl.loadClass("com.yanggu.metric_calculate.core.aggregate_function.numeric.Sum_Double_AggregateFunction");
-        Object obj = clazz.getDeclaredConstructor().newInstance();
-        AggregateFunction<Double, Double, Double> aggregateFunction = (AggregateFunction) obj;
+        Class<?> clazz = classLoader.loadClass("com.yanggu.metric_calculate.core.aggregate_function.numeric.Sum_Double_AggregateFunction");
+        AggregateFunction<Double, Double, Double> aggregateFunction = (AggregateFunction<Double, Double, Double>) clazz.getDeclaredConstructor().newInstance();
         Double accumulator = aggregateFunction.createAccumulator();
         accumulator = aggregateFunction.add(1.0D, accumulator);
         Double result = aggregateFunction.getResult(accumulator);
@@ -59,34 +61,6 @@ class NumberTest {
         Double accumulator1 = aggregateFunction.createAccumulator();
         Double merge = aggregateFunction.merge(accumulator1, accumulator);
         assertEquals(1.0D, merge, 0.0D);
-    }
-
-    @Test
-    void test2() throws Exception {
-        Compiler compiler = new Compiler();
-
-        // Store generated .class files in a Map:
-        Map<String, byte[]> classes = new HashMap<>();
-        compiler.setClassFileCreator((new MapResourceCreator(classes)));
-
-        // Now compile two units from strings:
-        compiler.compile(new Resource[]{
-                new StringResource(
-                        "pkg1/A.java",
-                        "package pkg1; public class A { public static int meth() { return pkg2.B.meth(); } }"
-                ),
-                new StringResource(
-                        "pkg2/B.java",
-                        "package pkg2; public class B { public static int meth() { return 77;            } }"
-                ),
-        });
-
-        // Set up a class loader that uses the generated classes.
-        ClassLoader cl = new ResourceFinderClassLoader(
-                new MapResourceFinder(classes),  /// resourceFinder
-                ClassLoader.getSystemClassLoader()  /// parent
-        );
-        assertEquals(77, cl.loadClass("pkg1.A").getDeclaredMethod(("meth")).invoke(null));
     }
 
 }

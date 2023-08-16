@@ -4,7 +4,7 @@ package com.yanggu.metric_calculate.core.aviator_function;
 import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
 
 /**
- * 用户自定义AviatorFunction
+ * 用户自定义AviatorFunction需要继承该抽象类
  */
 public abstract class AbstractUdfAviatorFunction extends AbstractVariadicFunction {
 

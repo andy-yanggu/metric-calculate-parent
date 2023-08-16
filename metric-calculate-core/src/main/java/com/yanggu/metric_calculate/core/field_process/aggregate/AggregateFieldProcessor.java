@@ -49,6 +49,15 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
     }
 
     /**
+     * 创建累加器
+     *
+     * @return
+     */
+    public ACC createAcc() {
+        return aggregateFunction.createAccumulator();
+    }
+
+    /**
      * 将度量值添加到累加器中, 并返回累加器
      *
      * @param oldAcc 历史中间状态数据
@@ -60,29 +69,6 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
             oldAcc = createAcc();
         }
         return aggregateFunction.add(in, oldAcc);
-    }
-
-    /**
-     * 创建累加器
-     *
-     * @return
-     */
-    public ACC createAcc() {
-        return aggregateFunction.createAccumulator();
-    }
-
-    /**
-     * 输入明细, 返回聚合值
-     *
-     * @param inList
-     * @return
-     */
-    public OUT getOutFromInList(List<IN> inList) {
-        ACC acc = aggregateFunction.createAccumulator();
-        for (IN in : inList) {
-            acc = aggregateFunction.add(in, acc);
-        }
-        return aggregateFunction.getResult(acc);
     }
 
     /**
@@ -108,7 +94,7 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         if (CollUtil.isEmpty(accList)) {
             return null;
         }
-        ACC accumulator = aggregateFunction.createAccumulator();
+        ACC accumulator = createAcc();
         for (ACC acc : accList) {
             accumulator = aggregateFunction.merge(accumulator, acc);
         }
@@ -127,6 +113,20 @@ public class AggregateFieldProcessor<IN, ACC, OUT> {
         }
         ACC accumulator = mergeAccList(accList);
         return getOutFromAcc(accumulator);
+    }
+
+    /**
+     * 输入明细, 返回聚合值
+     *
+     * @param inList
+     * @return
+     */
+    public OUT getOutFromInList(List<IN> inList) {
+        ACC acc = createAcc();
+        for (IN in : inList) {
+            acc = aggregateFunction.add(in, acc);
+        }
+        return getOutFromAcc(acc);
     }
 
 }

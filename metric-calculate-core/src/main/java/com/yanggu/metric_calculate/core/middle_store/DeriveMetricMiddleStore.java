@@ -34,6 +34,13 @@ public interface DeriveMetricMiddleStore {
     <IN, ACC, OUT> void update(MetricCube<IN, ACC, OUT> updateMetricCube) throws Exception;
 
     /**
+     * 根据维度删除数据
+     *
+     * @param dimensionSet
+     */
+    void deleteData(DimensionSet dimensionSet) throws Exception;
+
+    /**
      * 批量查询, 默认实现是for循环调用get
      * <p>如果外部存储支持批量查询, 可以重写该方法</p>
      *
@@ -62,13 +69,6 @@ public interface DeriveMetricMiddleStore {
             update(metricCube);
         }
     }
-
-    /**
-     * 根据维度删除数据
-     *
-     * @param dimensionSet
-     */
-    void deleteData(DimensionSet dimensionSet) throws Exception;
 
     /**
      * 批量删除

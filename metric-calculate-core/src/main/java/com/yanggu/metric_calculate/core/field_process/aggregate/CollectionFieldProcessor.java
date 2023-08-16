@@ -51,6 +51,9 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     @Override
     public void init() throws Exception {
         int keyStrategy = collective.keyStrategy();
+        if (keyStrategy != 0 && keyStrategy != 1 && keyStrategy != 2) {
+            throw new RuntimeException("主键策略错误: " + keyStrategy);
+        }
         //设置了去重字段
         if (keyStrategy == 1) {
             this.multiFieldDistinctFieldProcessor =

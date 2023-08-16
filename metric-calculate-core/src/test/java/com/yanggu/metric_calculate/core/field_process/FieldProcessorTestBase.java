@@ -7,6 +7,7 @@ import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldPr
 import com.yanggu.metric_calculate.core.field_process.aggregate.MapFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.aggregate.MixFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
@@ -30,6 +31,11 @@ public class FieldProcessorTestBase {
 
     public static final AggregateFunctionFactory AGGREGATE_FUNCTION_FACTORY = getAggregateFunctionFactory();
 
+    public static <R> MetricFieldProcessor<R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                      AviatorExpressParam metricExpressParam) {
+        return FieldProcessorUtil.getMetricFieldProcessor(fieldMap, metricExpressParam, AVIATOR_FUNCTION_FACTORY);
+    }
+
     public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                AviatorExpressParam filterExpressParam) {
         return FieldProcessorUtil.getFilterFieldProcessor(fieldMap, filterExpressParam, AVIATOR_FUNCTION_FACTORY);
@@ -41,8 +47,8 @@ public class FieldProcessorTestBase {
     }
 
     public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(
-                                                                Map<String, Class<?>> fieldMap,
-                                                                List<AviatorExpressParam> distinctFieldListParamList) {
+            Map<String, Class<?>> fieldMap,
+            List<AviatorExpressParam> distinctFieldListParamList) {
         return FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, distinctFieldListParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
@@ -65,15 +71,15 @@ public class FieldProcessorTestBase {
     }
 
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                                      Map<String, Class<?>> fieldMap,
-                                                                      AggregateFunctionParam aggregateFunctionParam,
-                                                                      AggregateFunctionFactory aggregateFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            AggregateFunctionParam aggregateFunctionParam,
+            AggregateFunctionFactory aggregateFunctionFactory) {
         return FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, aggregateFunctionParam, AVIATOR_FUNCTION_FACTORY, aggregateFunctionFactory);
     }
 
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                                      Map<String, Class<?>> fieldMap,
-                                                                      AggregateFunctionParam aggregateFunctionParam) {
+            Map<String, Class<?>> fieldMap,
+            AggregateFunctionParam aggregateFunctionParam) {
         return FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, aggregateFunctionParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
     }
 

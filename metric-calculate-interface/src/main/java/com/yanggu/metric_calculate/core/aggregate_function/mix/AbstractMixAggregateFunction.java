@@ -43,10 +43,9 @@ public abstract class AbstractMixAggregateFunction<OUT>
         accumulator.forEach((tempKey, tempAcc) -> {
             AggregateFunction<Object, Object, Object> tempAggFunction = mixAggregateFunctionMap.get(tempKey);
             Object result = tempAggFunction.getResult(tempAcc);
-            if (result == null) {
-                return;
+            if (result != null) {
+                env.put(tempKey, result);
             }
-            env.put(tempKey, result);
         });
         return (OUT) expression.execute(env);
     }
