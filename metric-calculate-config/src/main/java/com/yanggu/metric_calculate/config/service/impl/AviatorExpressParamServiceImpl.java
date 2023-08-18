@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamAviatorFunctionInstanceRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamModelColumnRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFactory;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.util.ExpressionUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;

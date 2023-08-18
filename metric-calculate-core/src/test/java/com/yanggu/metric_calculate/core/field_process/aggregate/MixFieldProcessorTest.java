@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getMixFieldProcessor;
 import static org.junit.jupiter.api.Assertions.*;
 
