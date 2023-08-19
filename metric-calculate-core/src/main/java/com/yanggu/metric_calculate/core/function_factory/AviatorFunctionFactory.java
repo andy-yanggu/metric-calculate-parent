@@ -109,7 +109,7 @@ public class AviatorFunctionFactory {
         String value = annotation.value();
         Class<? extends AbstractUdfAviatorFunction> put = functionMap.put(value, (Class<? extends AbstractUdfAviatorFunction>) tempClazz);
         if (put != null) {
-            //throw new RuntimeException(ERROR_MESSAGE + put.getName());
+            throw new RuntimeException(ERROR_MESSAGE + put.getName());
         }
     }
 

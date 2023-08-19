@@ -123,7 +123,7 @@ public class AggregateFunctionFactory {
         String value = annotation.value();
         Class<? extends AggregateFunction> put = functionMap.put(value, (Class<? extends AggregateFunction>) tempClazz);
         if (put != null) {
-            //throw new RuntimeException(ERROR_MESSAGE + put.getName());
+            throw new RuntimeException(ERROR_MESSAGE + put.getName());
         }
     }
 

@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.yanggu.metric-calculate</groupId>
     <artifactId>metric-calculate-parent</artifactId>
-    <name>metric-calculate</name>
+    <name>metric-calculate-parent</name>
     <version>1.0.0-SNAPSHOT</version>
 
     <modules>
@@ -17,6 +17,7 @@
         <module>aviator-function-impl</module>
         <module>aggregate-function-interface</module>
         <module>aviator-function-interface</module>
+        <module>metric-calculate-jmh-test</module>
     </modules>
     <packaging>pom</packaging>
 
@@ -194,12 +195,6 @@
                 <groupId>org.apache.maven.shared</groupId>
                 <artifactId>maven-invoker</artifactId>
                 <version>${maven-invoker.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.yanggu.metric-calculate</groupId>
-                <artifactId>metric-calculate-test</artifactId>
-                <version>${metric-calculate-test.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
