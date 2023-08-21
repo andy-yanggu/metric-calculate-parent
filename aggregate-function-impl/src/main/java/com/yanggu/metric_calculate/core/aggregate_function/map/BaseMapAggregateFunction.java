@@ -13,12 +13,12 @@ import java.util.Map;
  * @param <K> map的key类型
  * @param <V> map的value类型
  * @param <ValueACC> value的累加器类型
- * @param <ValeOUT> value的输出类型
+ * @param <ValueOUT> value的输出类型
  */
 @Data
 @MapType
 @MergeType("BASEMAP")
 @EqualsAndHashCode(callSuper=false)
-public class BaseMapAggregateFunction<K, V, ValueACC, ValeOUT>
-        extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, Map<K, ValeOUT>> {
+public class BaseMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>>
+        extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {
 }

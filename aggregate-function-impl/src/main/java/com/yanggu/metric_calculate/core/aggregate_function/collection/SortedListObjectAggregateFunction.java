@@ -31,11 +31,4 @@ public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends 
         return accumulator.toList();
     }
 
-    @Override
-    public BoundedPriorityQueue<T> merge(BoundedPriorityQueue<T> thisAccumulator,
-                                         BoundedPriorityQueue<T> thatAccumulator) {
-        thisAccumulator.addAll(thatAccumulator);
-        return thisAccumulator;
-    }
-
 }

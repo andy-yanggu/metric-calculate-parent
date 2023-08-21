@@ -18,7 +18,8 @@ public @interface Objective {
      * <p>1去重字段</p>
      * <p>2排序字段</p>
      * <p>3比较字段</p>
-     * @return
+     *
+     * @return 0、3
      */
     int keyStrategy() default 0;
 
@@ -28,7 +29,7 @@ public @interface Objective {
      * <p>1保留指定字段</p>
      * <p>2保留原始数据</p>
      *
-     * @return
+     * @return 0、1、2
      */
     int retainStrategy() default 0;
 

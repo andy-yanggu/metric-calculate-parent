@@ -28,10 +28,4 @@ public class DistinctListObjectAggregateFunction<T> extends AbstractCollectionFu
         return new ArrayList<>(accumulator);
     }
 
-    @Override
-    public Set<T> merge(Set<T> thisAccumulator, Set<T> thatAccumulator) {
-        thisAccumulator.addAll(thatAccumulator);
-        return thisAccumulator;
-    }
-
 }

@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>aggregate-function-interface</artifactId>
-    <description>自定义aggregate-function, 需要使用该依赖</description>
+    <description>自定义aggregate-function接口定义, 需要使用该依赖</description>
 
     <dependencies>
         <dependency>

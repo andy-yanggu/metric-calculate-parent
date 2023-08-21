@@ -23,6 +23,7 @@ public @interface MergeType {
 
     /**
      * 描述信息
+     *
      * @return
      */
     String description() default "";

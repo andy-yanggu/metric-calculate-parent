@@ -26,10 +26,4 @@ public class DistinctCountAggregateFunction<T> extends AbstractCollectionFunctio
         return accumulator.size();
     }
 
-    @Override
-    public Set<T> merge(Set<T> thisAccumulator, Set<T> thatAccumulator) {
-        thisAccumulator.addAll(thatAccumulator);
-        return thisAccumulator;
-    }
-
 }

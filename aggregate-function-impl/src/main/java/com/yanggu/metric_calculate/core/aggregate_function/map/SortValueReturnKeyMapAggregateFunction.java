@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.AbstractMap;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -19,14 +18,14 @@ import java.util.stream.Collectors;
  * @param <K>
  * @param <V>
  * @param <ValueACC>
- * @param <ValeOUT>
+ * @param <ValueOUT>
  */
 @Data
 @MapType
 @EqualsAndHashCode(callSuper=false)
 @MergeType("SORTVALUERETURNKEYMAP")
-public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValeOUT extends Comparable<ValeOUT>>
-        extends AbstractMapAggregateFunction<K, V, ValueACC, ValeOUT, List<K>> {
+public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
+        extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, List<K>> {
 
     private Integer limit = 10;
 
@@ -34,18 +33,8 @@ public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValeOUT exte
 
     @Override
     public List<K> getResult(Map<K, ValueACC> accumulator) {
-        Comparator<AbstractMap.SimpleImmutableEntry<K, ValeOUT>> pairComparator = (o1, o2) -> {
-            if (Boolean.TRUE.equals(asc)) {
-                return o1.getValue().compareTo(o2.getValue());
-            } else {
-                return o2.getValue().compareTo(o1.getValue());
-            }
-        };
-        return accumulator.entrySet().stream()
-                .map(tempEntry -> new AbstractMap.SimpleImmutableEntry<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
-                .sorted(pairComparator)
+        return getCompareLimitStream(accumulator, asc, limit)
                 .map(AbstractMap.SimpleImmutableEntry::getKey)
-                .limit(limit)
                 .collect(Collectors.toList());
     }
 

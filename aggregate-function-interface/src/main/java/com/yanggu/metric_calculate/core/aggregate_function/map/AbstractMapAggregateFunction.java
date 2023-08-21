@@ -5,11 +5,14 @@ import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import lombok.Data;
 
 import java.util.AbstractMap;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /**
  * 映射类型的基类
+ * <p>子类可以根据需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
  * @param <K>        map的key
  * @param <V>        map的value输入值
@@ -58,6 +61,35 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
             thisAccumulator.put(tempKey, thisAcc);
         });
         return thisAccumulator;
+    }
+
+    /**
+     * 根据value进行排序并进行截取
+     *
+     * @param accumulator
+     * @param asc
+     * @param limit
+     * @return
+     */
+    protected Stream<AbstractMap.SimpleImmutableEntry<K, ValueOUT>> getCompareLimitStream(
+                                                                            Map<K, ValueACC> accumulator,
+                                                                            Boolean asc,
+                                                                            Integer limit) {
+        Comparator<AbstractMap.SimpleImmutableEntry<K, ValueOUT>> pairComparator = (o1, o2) -> {
+            Comparable value1 = (Comparable) o1.getValue();
+            Comparable value2 = (Comparable) o2.getValue();
+            int compareTo = value1.compareTo(value2);
+            if (Boolean.TRUE.equals(asc)) {
+                return compareTo;
+            } else {
+                return -compareTo;
+            }
+        };
+        return accumulator.entrySet().stream()
+                .map(tempEntry -> new AbstractMap.SimpleImmutableEntry<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
+                .filter(tempEntry -> tempEntry.getValue() != null)
+                .sorted(pairComparator)
+                .limit(limit);
     }
 
 }
