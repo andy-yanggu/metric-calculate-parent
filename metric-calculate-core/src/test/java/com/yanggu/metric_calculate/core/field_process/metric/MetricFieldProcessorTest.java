@@ -20,27 +20,26 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class MetricFieldProcessorTest {
 
     /**
-     * 没有传递metricExpress, 应该报错
+     * 没有传递fieldMap, 应该报错
      */
     @Test
     void init1() {
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMetricFieldProcessor(null, null));
-        assertEquals("Aviator表达式配置为空", runtimeException.getMessage());
-
-        runtimeException = assertThrows(RuntimeException.class, () -> getMetricFieldProcessor(null, new AviatorExpressParam()));
-        assertEquals("Aviator表达式配置为空", runtimeException.getMessage());
+        assertEquals("明细宽表字段map为空", runtimeException.getMessage());
     }
 
     /**
-     * 没有传递fieldMap, 应该报错
+     * 没有传递metricExpress, 应该报错
      */
     @Test
     void init2() {
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("test");
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount2", BigDecimal.class);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMetricFieldProcessor(fieldMap, null));
+        assertEquals("Aviator表达式配置为空", runtimeException.getMessage());
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMetricFieldProcessor(null, aviatorExpressParam));
-        assertEquals("明细宽表字段map为空", runtimeException.getMessage());
+        runtimeException = assertThrows(RuntimeException.class, () -> getMetricFieldProcessor(fieldMap, new AviatorExpressParam()));
+        assertEquals("Aviator表达式配置为空", runtimeException.getMessage());
     }
 
     /**

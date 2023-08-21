@@ -36,7 +36,7 @@
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
-        <hutool6.version>6.0.0-M5</hutool6.version>
+        <hutool.version>6.0.0-M5</hutool.version>
         <knife4j-openapi3-jakarta.version>4.3.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>
         <mockito-core.version>5.4.0</mockito-core.version>
@@ -47,7 +47,7 @@
         <jctools-core.version>4.0.1</jctools-core.version>
         <flink.version>1.17.1</flink.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
-        <mybatis-flex.version>1.5.7</mybatis-flex.version>
+        <mybatis-flex.version>1.5.8</mybatis-flex.version>
         <lombok.version>1.18.28</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
@@ -84,7 +84,7 @@
             <dependency>
                 <groupId>org.dromara.hutool</groupId>
                 <artifactId>hutool-all</artifactId>
-                <version>${hutool6.version}</version>
+                <version>${hutool.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>

@@ -51,10 +51,7 @@ public class FieldProcessorUtil {
     public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                AviatorExpressParam filterExpressParam,
                                                                AviatorFunctionFactory aviatorFunctionFactory) {
-        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor();
-        filterFieldProcessor.setFieldMap(fieldMap);
-        filterFieldProcessor.setFilterExpressParam(filterExpressParam);
-        filterFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+        FilterFieldProcessor filterFieldProcessor = new FilterFieldProcessor(fieldMap, filterExpressParam, aviatorFunctionFactory);
         filterFieldProcessor.init();
         return filterFieldProcessor;
     }
@@ -100,10 +97,7 @@ public class FieldProcessorUtil {
     public static <R> MetricFieldProcessor<R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                       AviatorExpressParam aviatorExpressParam,
                                                                       AviatorFunctionFactory aviatorFunctionFactory) {
-        MetricFieldProcessor<R> metricFieldProcessor = new MetricFieldProcessor<>();
-        metricFieldProcessor.setFieldMap(fieldMap);
-        metricFieldProcessor.setAviatorExpressParam(aviatorExpressParam);
-        metricFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+        MetricFieldProcessor<R> metricFieldProcessor = new MetricFieldProcessor<>(fieldMap, aviatorExpressParam, aviatorFunctionFactory);
         metricFieldProcessor.init();
         return metricFieldProcessor;
     }
@@ -119,10 +113,7 @@ public class FieldProcessorUtil {
     public static MetricListFieldProcessor getMetricListFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                        List<AviatorExpressParam> metricExpressParamList,
                                                                        AviatorFunctionFactory aviatorFunctionFactory) {
-        MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
-        metricListFieldProcessor.setFieldMap(fieldMap);
-        metricListFieldProcessor.setMetricExpressParamList(metricExpressParamList);
-        metricListFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+        MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor(fieldMap, metricExpressParamList, aviatorFunctionFactory);
         metricListFieldProcessor.init();
         return metricListFieldProcessor;
     }
@@ -139,10 +130,7 @@ public class FieldProcessorUtil {
                                                               Map<String, Class<?>> fieldMap,
                                                               List<AviatorExpressParam> distinctFieldListParamList,
                                                               AviatorFunctionFactory aviatorFunctionFactory) {
-        MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor();
-        tempMultiFieldDistinctFieldProcessor.setFieldMap(fieldMap);
-        tempMultiFieldDistinctFieldProcessor.setDistinctFieldListParamList(distinctFieldListParamList);
-        tempMultiFieldDistinctFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+        MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor(fieldMap, distinctFieldListParamList, aviatorFunctionFactory);
         tempMultiFieldDistinctFieldProcessor.init();
         return tempMultiFieldDistinctFieldProcessor;
     }
@@ -159,10 +147,7 @@ public class FieldProcessorUtil {
                                                                         Map<String, Class<?>> fieldMap,
                                                                         List<FieldOrderParam> fieldOrderParamList,
                                                                         AviatorFunctionFactory aviatorFunctionFactory) {
-        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor();
-        tempMultiFieldOrderFieldProcessor.setFieldMap(fieldMap);
-        tempMultiFieldOrderFieldProcessor.setFieldOrderParamList(fieldOrderParamList);
-        tempMultiFieldOrderFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor(fieldMap, fieldOrderParamList, aviatorFunctionFactory);
         tempMultiFieldOrderFieldProcessor.init();
         return tempMultiFieldOrderFieldProcessor;
     }

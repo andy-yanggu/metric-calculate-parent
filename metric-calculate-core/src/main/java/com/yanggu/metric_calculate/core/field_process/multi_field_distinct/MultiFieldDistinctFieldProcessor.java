@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_distinct;
 
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 
@@ -17,17 +17,25 @@ import java.util.stream.Collectors;
 /**
  * 多字段去重字段处理器
  */
-@Data
-@NoArgsConstructor
+@Getter
+@EqualsAndHashCode
 public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObject, MultiFieldDistinctKey> {
 
-    private List<AviatorExpressParam> distinctFieldListParamList;
+    private final Map<String, Class<?>> fieldMap;
 
-    private Map<String, Class<?>> fieldMap;
+    private final List<AviatorExpressParam> distinctFieldListParamList;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
+
+    public MultiFieldDistinctFieldProcessor(Map<String, Class<?>> fieldMap,
+                                            List<AviatorExpressParam> distinctFieldListParamList,
+                                            AviatorFunctionFactory aviatorFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.distinctFieldListParamList = distinctFieldListParamList;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+    }
 
     @Override
     public void init() throws Exception {

@@ -1,12 +1,13 @@
 package com.yanggu.metric_calculate.core.field_process.metric_list;
 
 
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -18,26 +19,35 @@ import java.util.stream.Collectors;
 /**
  * 多表达式字段处理器
  */
-@Data
+@Getter
+@EqualsAndHashCode
 public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List<Object>> {
 
-    private List<AviatorExpressParam> metricExpressParamList;
+    private final Map<String, Class<?>> fieldMap;
 
-    private Map<String, Class<?>> fieldMap;
+    private final List<AviatorExpressParam> metricExpressParamList;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
-    @SneakyThrows
-    @Override
-    public void init() {
-        if (CollUtil.isEmpty(metricExpressParamList)) {
-            throw new RuntimeException("表达式列表为空");
-        }
+    public MetricListFieldProcessor(Map<String, Class<?>> fieldMap,
+                                    List<AviatorExpressParam> metricExpressParamList,
+                                    AviatorFunctionFactory aviatorFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.metricExpressParamList = metricExpressParamList;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+    }
 
+    @Override
+    @SneakyThrows
+    public void init() {
         if (CollUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
+        }
+
+        if (CollUtil.isEmpty(metricExpressParamList)) {
+            throw new RuntimeException("表达式列表为空");
         }
 
         if (aviatorFunctionFactory == null) {

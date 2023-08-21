@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core.field_process.time;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.util.DateUtils;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -13,9 +13,9 @@ import org.dromara.hutool.json.JSONUtil;
 /**
  * 时间字段处理器, 从输入的明细数据中, 提取出时间戳
  */
-@Data
 @Slf4j
-@NoArgsConstructor
+@Getter
+@EqualsAndHashCode
 public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
 
     private static final String TIMESTAMP = "TIMESTAMP";
@@ -23,12 +23,12 @@ public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
     /**
      * 时间格式
      */
-    private String timeFormat;
+    private final String timeFormat;
 
     /**
      * 时间字段名称
      */
-    private String timeColumnName;
+    private final String timeColumnName;
 
     public TimeFieldProcessor(String timeFormat, String timeColumnName) {
         this.timeFormat = timeFormat;
@@ -37,11 +37,11 @@ public class TimeFieldProcessor implements FieldProcessor<JSONObject, Long> {
 
     @Override
     public void init() {
-        if (StrUtil.isBlank(timeColumnName)) {
-            throw new RuntimeException("时间字段的值为空");
-        }
         if (StrUtil.isBlank(timeFormat)) {
             throw new RuntimeException("时间格式为空");
+        }
+        if (StrUtil.isBlank(timeColumnName)) {
+            throw new RuntimeException("时间字段的值为空");
         }
     }
 

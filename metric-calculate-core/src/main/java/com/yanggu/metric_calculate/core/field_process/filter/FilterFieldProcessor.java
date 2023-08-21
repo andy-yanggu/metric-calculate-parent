@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.core.field_process.filter;
 
 import com.googlecode.aviator.Expression;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.util.ExpressionUtil;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -18,30 +18,38 @@ import java.util.Map;
 /**
  * 前置过滤表达式处理器, 输入明细数据, 执行表达式, 返回Boolean
  */
-@Data
 @Slf4j
-@NoArgsConstructor
+@Getter
+@EqualsAndHashCode
 public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean> {
 
     /**
      * 宽表字段
      */
-    private Map<String, Class<?>> fieldMap;
+    private final Map<String, Class<?>> fieldMap;
 
     /**
      * 前置过滤条件表达式
      */
-    private AviatorExpressParam filterExpressParam;
+    private final AviatorExpressParam filterExpressParam;
 
     /**
      * Aviator函数工厂类
      */
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
      * 前置过滤表达式
      */
     private Expression filterExpression;
+
+    public FilterFieldProcessor(Map<String, Class<?>> fieldMap,
+                                AviatorExpressParam filterExpressParam,
+                                AviatorFunctionFactory aviatorFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.filterExpressParam = filterExpressParam;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+    }
 
     /**
      * 编译前置过滤表达式

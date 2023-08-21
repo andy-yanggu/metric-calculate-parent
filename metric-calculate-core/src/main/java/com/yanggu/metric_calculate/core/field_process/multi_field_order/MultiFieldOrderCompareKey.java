@@ -30,7 +30,7 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
         if (this.comparatorChain == null) {
             this.comparatorChain = that.comparatorChain;
         }
-        return this.comparatorChain.compare(dataList, that.dataList);
+        return this.comparatorChain.compare(this.dataList, that.dataList);
     }
 
     @Override
@@ -60,7 +60,6 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
             Function<List<Object>, Comparable<?>> function =
                     tempList -> (Comparable<?>) tempList.get(finalIndex);
             Comparator tempComparator;
-            //降序排序
             if (Boolean.FALSE.equals(result)) {
                 //降序时, null放在最后面
                 tempComparator = new FuncComparator<>(true, function).reversed();

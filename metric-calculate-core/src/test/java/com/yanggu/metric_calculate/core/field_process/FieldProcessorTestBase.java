@@ -41,14 +41,26 @@ public class FieldProcessorTestBase {
         return FieldProcessorUtil.getFilterFieldProcessor(fieldMap, filterExpressParam, AVIATOR_FUNCTION_FACTORY);
     }
 
+    public static FilterFieldProcessor getFilterFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                               AviatorExpressParam filterExpressParam,
+                                                               AviatorFunctionFactory aviatorFunctionFactory) {
+        return FieldProcessorUtil.getFilterFieldProcessor(fieldMap, filterExpressParam, aviatorFunctionFactory);
+    }
+
     public static MetricListFieldProcessor getMetricListFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                        List<AviatorExpressParam> metricExpressParamList) {
         return FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
+    public static MetricListFieldProcessor getMetricListFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                       List<AviatorExpressParam> metricExpressParamList,
+                                                                       AviatorFunctionFactory aviatorFunctionFactory) {
+        return FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressParamList, aviatorFunctionFactory);
+    }
+
     public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(
-            Map<String, Class<?>> fieldMap,
-            List<AviatorExpressParam> distinctFieldListParamList) {
+                                                                Map<String, Class<?>> fieldMap,
+                                                                List<AviatorExpressParam> distinctFieldListParamList) {
         return FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, distinctFieldListParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
@@ -62,18 +74,20 @@ public class FieldProcessorTestBase {
         return FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
     }
 
-    public static <T> MapFieldProcessor<T> getMapFieldProcessor(Map<String, Class<?>> fieldMap, MapUdafParam mapUdafParam) {
+    public static <T> MapFieldProcessor<T> getMapFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                MapUdafParam mapUdafParam) {
         return FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
     }
 
-    public static <T> MixFieldProcessor<T> getMixFieldProcessor(Map<String, Class<?>> fieldMap, MixUdafParam mixUdafParam) {
+    public static <T> MixFieldProcessor<T> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                MixUdafParam mixUdafParam) {
         return FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
     }
 
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-            Map<String, Class<?>> fieldMap,
-            AggregateFunctionParam aggregateFunctionParam,
-            AggregateFunctionFactory aggregateFunctionFactory) {
+                                                                    Map<String, Class<?>> fieldMap,
+                                                                    AggregateFunctionParam aggregateFunctionParam,
+                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
         return FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, aggregateFunctionParam, AVIATOR_FUNCTION_FACTORY, aggregateFunctionFactory);
     }
 

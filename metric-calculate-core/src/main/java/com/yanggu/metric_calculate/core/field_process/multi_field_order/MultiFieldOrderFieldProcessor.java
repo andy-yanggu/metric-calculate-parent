@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import lombok.Data;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.comparator.ComparatorChain;
 import org.dromara.hutool.json.JSONObject;
@@ -17,18 +18,27 @@ import java.util.stream.Collectors;
 /**
  * 多字段排序字段处理器
  */
-@Data
+@Getter
+@EqualsAndHashCode
 public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject, MultiFieldOrderCompareKey> {
 
-    private Map<String, Class<?>> fieldMap;
+    private final Map<String, Class<?>> fieldMap;
 
-    private List<FieldOrderParam> fieldOrderParamList;
+    private final List<FieldOrderParam> fieldOrderParamList;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
     private ComparatorChain<List<Object>> comparatorChain;
+
+    public MultiFieldOrderFieldProcessor(Map<String, Class<?>> fieldMap,
+                                         List<FieldOrderParam> fieldOrderParamList,
+                                         AviatorFunctionFactory aviatorFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.fieldOrderParamList = fieldOrderParamList;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+    }
 
     @Override
     public void init() throws Exception {

@@ -18,9 +18,9 @@ class TimeFieldProcessorTest {
      */
     @Test
     void init1() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(null, null);
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
-        assertEquals("时间字段的值为空", runtimeException.getMessage());
+        assertEquals("时间格式为空", runtimeException.getMessage());
     }
 
     /**
@@ -28,10 +28,9 @@ class TimeFieldProcessorTest {
      */
     @Test
     void init2() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor();
-        timeFieldProcessor.setTimeColumnName("TimeColumnName");
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("TimeColumnName", null);
         RuntimeException runtimeException = assertThrows(RuntimeException.class, timeFieldProcessor::init);
-        assertEquals("时间格式为空", runtimeException.getMessage());
+        assertEquals("时间字段的值为空", runtimeException.getMessage());
     }
 
     /**

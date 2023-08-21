@@ -18,38 +18,31 @@ class MetricListFieldProcessorTest {
 
     @Test
     void init1() {
-        MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
-        assertEquals("表达式列表为空", runtimeException.getMessage());
-    }
-
-    @Test
-    void init2() {
-        MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("test1");
-        metricListFieldProcessor.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMetricListFieldProcessor(null, null));
         assertEquals("宽表字段为空", runtimeException.getMessage());
     }
 
     @Test
-    void init3() {
-        MetricListFieldProcessor metricListFieldProcessor = new MetricListFieldProcessor();
+    void init2() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", String.class);
-        metricListFieldProcessor.setFieldMap(fieldMap);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMetricListFieldProcessor(fieldMap, null));
+        assertEquals("表达式列表为空", runtimeException.getMessage());
+    }
+
+    @Test
+    void init3() {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("test1", String.class);
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("test1");
-        metricListFieldProcessor.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, metricListFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMetricListFieldProcessor(fieldMap, ListUtil.of(aviatorExpressParam), null));
         assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
     }
 
     @Test
     void process() throws Exception {
-
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", String.class);
         fieldMap.put("test2", String.class);
