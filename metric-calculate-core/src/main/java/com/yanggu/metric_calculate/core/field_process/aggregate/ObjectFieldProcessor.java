@@ -1,16 +1,17 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.util.KeyValue;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -24,16 +25,17 @@ import java.util.stream.Collectors;
  *
  * @param <IN>
  */
-@Data
+@Getter
+@EqualsAndHashCode
 public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
-    private BaseUdafParam udafParam;
+    private final Map<String, Class<?>> fieldMap;
 
-    private Map<String, Class<?>> fieldMap;
+    private final BaseUdafParam udafParam;
 
-    private Objective objective;
+    private final Objective objective;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
     /**
      * 多字段排序字段处理器
@@ -44,6 +46,16 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
      * 保留字段字段处理器
      */
     private MetricFieldProcessor<Object> retainFieldValueFieldProcessor;
+
+    public ObjectFieldProcessor(Map<String, Class<?>> fieldMap,
+                                BaseUdafParam udafParam,
+                                Objective objective,
+                                AviatorFunctionFactory aviatorFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.udafParam = udafParam;
+        this.objective = objective;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+    }
 
     @Override
     public void init() throws Exception {

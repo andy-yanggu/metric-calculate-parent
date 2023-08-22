@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.AVIATOR_FUNCTION_FACTORY;
 import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getMixFieldProcessor;
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,52 +30,37 @@ class MixFieldProcessorTest {
 
     @Test
     void testInit1() {
-        MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMixFieldProcessor(null, null));
         assertEquals("宽表字段为空", runtimeException.getMessage());
     }
 
     @Test
     void testInit2() {
-        MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
-        mixFieldProcessor.setFieldMap(fieldMap);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMixFieldProcessor(fieldMap, null));
         assertEquals("混合参数为空", runtimeException.getMessage());
     }
 
     @Test
     void testInit3() {
-        MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
-        mixFieldProcessor.setFieldMap(fieldMap);
-        mixFieldProcessor.setMixUdafParam(new MixUdafParam());
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMixFieldProcessor(fieldMap, new MixUdafParam()));
         assertEquals("map参数为空", runtimeException.getMessage());
     }
 
     @Test
     void testInit4() {
-        MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
-        mixFieldProcessor.setFieldMap(fieldMap);
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
-        mixFieldProcessor.setMixUdafParam(mixUdafParam);
 
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
-        assertEquals("聚合函数工厂类为空", runtimeException.getMessage());
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMixFieldProcessor(fieldMap, mixUdafParam, null));
+        assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
     }
 
     @Test
     void testInit5() {
-        MixFieldProcessor<Object> mixFieldProcessor = new MixFieldProcessor<>();
-        mixFieldProcessor.setFieldMap(fieldMap);
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
-        mixFieldProcessor.setAggregateFunctionFactory(getAggregateFunctionFactory());
-        mixFieldProcessor.setMixUdafParam(mixUdafParam);
-
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, mixFieldProcessor::init);
-        assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMixFieldProcessor(fieldMap, mixUdafParam, AVIATOR_FUNCTION_FACTORY, null));
+        assertEquals("聚合函数工厂类为空", runtimeException.getMessage());
     }
 
     @Test

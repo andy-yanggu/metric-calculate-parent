@@ -43,7 +43,7 @@ public class FieldProcessorUtil {
     /**
      * 生成前置过滤条件字段字段处理器
      *
-     * @param fieldMap      宽表字段
+     * @param fieldMap           宽表字段
      * @param filterExpressParam 过滤表达式
      * @return 前置过滤条件字段处理器
      */
@@ -89,8 +89,8 @@ public class FieldProcessorUtil {
     /**
      * 生成度量值字段处理器
      *
-     * @param fieldMap      宽表字段
      * @param aviatorExpressParam 度量表达式
+     * @param fieldMap            宽表字段
      * @return 度量值字段处理器
      */
     @SneakyThrows
@@ -121,7 +121,7 @@ public class FieldProcessorUtil {
     /**
      * 生成多字段去重字段处理器
      *
-     * @param fieldMap          宽表字段
+     * @param fieldMap                   宽表字段
      * @param distinctFieldListParamList 维度表达式列表
      * @return 多字段去重字段处理器
      */
@@ -155,23 +155,20 @@ public class FieldProcessorUtil {
     /**
      * 数值型字段提取器
      *
-     * @param baseUdafParam
      * @param fieldMap
+     * @param baseUdafParam
      * @param numerical
      * @param aviatorFunctionFactory
-     * @return
      * @param <IN>
+     * @return
      */
     @SneakyThrows
-    private static <IN> NumberFieldProcessor<IN> getNumberFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                         BaseUdafParam baseUdafParam,
-                                                                         Numerical numerical,
-                                                                         AviatorFunctionFactory aviatorFunctionFactory) {
-        NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>();
-        numberFieldProcessor.setUdafParam(baseUdafParam);
-        numberFieldProcessor.setFieldMap(fieldMap);
-        numberFieldProcessor.setNumerical(numerical);
-        numberFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+    private static <IN> NumberFieldProcessor<IN> getNumberFieldProcessor(
+                                                                     Map<String, Class<?>> fieldMap,
+                                                                     BaseUdafParam baseUdafParam,
+                                                                     Numerical numerical,
+                                                                     AviatorFunctionFactory aviatorFunctionFactory) {
+        NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>(fieldMap, baseUdafParam, numerical, aviatorFunctionFactory);
         numberFieldProcessor.init();
         return numberFieldProcessor;
     }
@@ -179,12 +176,12 @@ public class FieldProcessorUtil {
     /**
      * 集合型字段处理器
      *
-     * @param baseUdafParam
      * @param fieldMap
+     * @param baseUdafParam
      * @param collective
      * @param aviatorFunctionFactory
-     * @return
      * @param <IN>
+     * @return
      */
     @SneakyThrows
     private static <IN> CollectionFieldProcessor<IN> getCollectionFieldProcessor(
@@ -192,11 +189,7 @@ public class FieldProcessorUtil {
                                                                         BaseUdafParam baseUdafParam,
                                                                         Collective collective,
                                                                         AviatorFunctionFactory aviatorFunctionFactory) {
-        CollectionFieldProcessor<IN> collectionFieldProcessor = new CollectionFieldProcessor<>();
-        collectionFieldProcessor.setUdafParam(baseUdafParam);
-        collectionFieldProcessor.setFieldMap(fieldMap);
-        collectionFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
-        collectionFieldProcessor.setCollective(collective);
+        CollectionFieldProcessor<IN> collectionFieldProcessor = new CollectionFieldProcessor<>(fieldMap, baseUdafParam, collective, aviatorFunctionFactory);
         collectionFieldProcessor.init();
         return collectionFieldProcessor;
     }
@@ -204,23 +197,19 @@ public class FieldProcessorUtil {
     /**
      * 对象型字段处理器
      *
-     * @param baseUdafParam
      * @param fieldMap
+     * @param baseUdafParam
      * @param objective
      * @param aviatorFunctionFactory
-     * @return
      * @param <IN>
+     * @return
      */
     @SneakyThrows
     private static <IN> ObjectFieldProcessor<IN> getObjectFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                          BaseUdafParam baseUdafParam,
                                                                          Objective objective,
                                                                          AviatorFunctionFactory aviatorFunctionFactory) {
-        ObjectFieldProcessor<IN> objectFieldProcessor = new ObjectFieldProcessor<>();
-        objectFieldProcessor.setObjective(objective);
-        objectFieldProcessor.setUdafParam(baseUdafParam);
-        objectFieldProcessor.setFieldMap(fieldMap);
-        objectFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
+        ObjectFieldProcessor<IN> objectFieldProcessor = new ObjectFieldProcessor<>(fieldMap, baseUdafParam, objective, aviatorFunctionFactory);
         objectFieldProcessor.init();
         return objectFieldProcessor;
     }
@@ -229,22 +218,17 @@ public class FieldProcessorUtil {
      * 映射型字段处理器
      *
      * @param fieldMap
-     * @param aggregateFunctionFactory
      * @param mapUdafParam
-     * @return
+     * @param aggregateFunctionFactory
      * @param <IN>
-     * @throws Exception
+     * @return
      */
     @SneakyThrows
     public static <IN> MapFieldProcessor<IN> getMapFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                   MapUdafParam mapUdafParam,
                                                                   AviatorFunctionFactory aviatorFunctionFactory,
                                                                   AggregateFunctionFactory aggregateFunctionFactory) {
-        MapFieldProcessor<IN> mapFieldProcessor = new MapFieldProcessor<>();
-        mapFieldProcessor.setFieldMap(fieldMap);
-        mapFieldProcessor.setMapUdafParam(mapUdafParam);
-        mapFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
-        mapFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
+        MapFieldProcessor<IN> mapFieldProcessor = new MapFieldProcessor<>(fieldMap, mapUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
         mapFieldProcessor.init();
         return mapFieldProcessor;
     }
@@ -255,19 +239,15 @@ public class FieldProcessorUtil {
      * @param fieldMap
      * @param mixUdafParam
      * @param aggregateFunctionFactory
-     * @return
      * @param <IN>
+     * @return
      */
     @SneakyThrows
     public static <IN> MixFieldProcessor<IN> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                   MixUdafParam mixUdafParam,
                                                                   AviatorFunctionFactory aviatorFunctionFactory,
                                                                   AggregateFunctionFactory aggregateFunctionFactory) {
-        MixFieldProcessor<IN> mixFieldProcessor = new MixFieldProcessor<>();
-        mixFieldProcessor.setFieldMap(fieldMap);
-        mixFieldProcessor.setMixUdafParam(mixUdafParam);
-        mixFieldProcessor.setAviatorFunctionFactory(aviatorFunctionFactory);
-        mixFieldProcessor.setAggregateFunctionFactory(aggregateFunctionFactory);
+        MixFieldProcessor<IN> mixFieldProcessor = new MixFieldProcessor<>(fieldMap, mixUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
         mixFieldProcessor.init();
         return mixFieldProcessor;
     }
@@ -275,8 +255,8 @@ public class FieldProcessorUtil {
     /**
      * 生成基础聚合字段处理器（数值型、对象型和集合型）
      *
-     * @param baseUdafParam
      * @param fieldMap
+     * @param baseUdafParam
      * @return
      */
     @SneakyThrows
@@ -288,7 +268,7 @@ public class FieldProcessorUtil {
 
         String aggregateType = baseUdafParam.getAggregateType();
         Class<? extends AggregateFunction> aggregateFunctionClass =
-                                        aggregateFunctionFactory.getAggregateFunctionClass(aggregateType);
+                aggregateFunctionFactory.getAggregateFunctionClass(aggregateType);
         if (aggregateFunctionClass.isAnnotationPresent(Numerical.class)) {
             //数值型
             Numerical numerical = aggregateFunctionClass.getAnnotation(Numerical.class);
@@ -313,8 +293,8 @@ public class FieldProcessorUtil {
      * @param <IN>
      * @param <ACC>
      * @param <OUT>
-     * @param aggregateFunctionParam
      * @param fieldMap
+     * @param aggregateFunctionParam
      * @param aviatorFunctionFactory
      * @param aggregateFunctionFactory
      * @return

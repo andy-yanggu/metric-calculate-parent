@@ -1,12 +1,13 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
+import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -19,18 +20,26 @@ import java.util.Map;
  *
  * @param <IN>
  */
-@Data
+@Getter
+@EqualsAndHashCode
 public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
-    private MixUdafParam mixUdafParam;
+    private final Map<String, Class<?>> fieldMap;
 
-    private Map<String, Class<?>> fieldMap;
+    private final MixUdafParam mixUdafParam;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
-    private AggregateFunctionFactory aggregateFunctionFactory;
+    private final AggregateFunctionFactory aggregateFunctionFactory;
 
     private Map<String, FieldProcessor<JSONObject, Object>> multiBaseAggProcessorMap;
+
+    public MixFieldProcessor(Map<String, Class<?>> fieldMap, MixUdafParam mixUdafParam, AviatorFunctionFactory aviatorFunctionFactory, AggregateFunctionFactory aggregateFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.mixUdafParam = mixUdafParam;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+        this.aggregateFunctionFactory = aggregateFunctionFactory;
+    }
 
     @Override
     @SneakyThrows

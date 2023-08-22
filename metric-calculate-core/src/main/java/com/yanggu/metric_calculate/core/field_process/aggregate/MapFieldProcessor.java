@@ -1,13 +1,14 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 
@@ -17,16 +18,17 @@ import java.util.Map;
 /**
  * 映射型字段处理器
  */
-@Data
+@Getter
+@EqualsAndHashCode
 public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
-    private MapUdafParam mapUdafParam;
+    private final Map<String, Class<?>> fieldMap;
 
-    private Map<String, Class<?>> fieldMap;
+    private final MapUdafParam mapUdafParam;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
-    private AggregateFunctionFactory aggregateFunctionFactory;
+    private final AggregateFunctionFactory aggregateFunctionFactory;
 
     /**
      * key生成字段处理器
@@ -37,6 +39,16 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
      * value生成字段处理器
      */
     private FieldProcessor<JSONObject, Object> valueAggregateFieldProcessor;
+
+    public MapFieldProcessor(Map<String, Class<?>> fieldMap,
+                             MapUdafParam mapUdafParam,
+                             AviatorFunctionFactory aviatorFunctionFactory,
+                             AggregateFunctionFactory aggregateFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.mapUdafParam = mapUdafParam;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+        this.aggregateFunctionFactory = aggregateFunctionFactory;
+    }
 
     @Override
     public void init() throws Exception {

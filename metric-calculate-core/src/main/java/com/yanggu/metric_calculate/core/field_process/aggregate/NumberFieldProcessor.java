@@ -1,14 +1,15 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -21,20 +22,31 @@ import java.util.Map;
  *
  * @param <IN>
  */
-@Data
+@Getter
+@EqualsAndHashCode
 public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
-    private BaseUdafParam udafParam;
+    private final Map<String, Class<?>> fieldMap;
 
-    private Map<String, Class<?>> fieldMap;
+    private final BaseUdafParam udafParam;
 
-    private Numerical numerical;
+    private final Numerical numerical;
 
-    private AviatorFunctionFactory aviatorFunctionFactory;
+    private final AviatorFunctionFactory aviatorFunctionFactory;
 
     private MetricFieldProcessor<Number> metricFieldProcessor;
 
     private MetricListFieldProcessor metricListFieldProcessor;
+
+    public NumberFieldProcessor(Map<String, Class<?>> fieldMap,
+                                BaseUdafParam udafParam,
+                                Numerical numerical,
+                                AviatorFunctionFactory aviatorFunctionFactory) {
+        this.fieldMap = fieldMap;
+        this.udafParam = udafParam;
+        this.numerical = numerical;
+        this.aviatorFunctionFactory = aviatorFunctionFactory;
+    }
 
     @Override
     public void init() throws Exception {

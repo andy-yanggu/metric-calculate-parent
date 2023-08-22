@@ -84,6 +84,19 @@ public class FieldProcessorTestBase {
         return FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
     }
 
+    public static <T> MixFieldProcessor<T> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                MixUdafParam mixUdafParam,
+                                                                AviatorFunctionFactory aviatorFunctionFactory) {
+        return FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, aviatorFunctionFactory, AGGREGATE_FUNCTION_FACTORY);
+    }
+
+    public static <T> MixFieldProcessor<T> getMixFieldProcessor(Map<String, Class<?>> fieldMap,
+                                                                MixUdafParam mixUdafParam,
+                                                                AviatorFunctionFactory aviatorFunctionFactory,
+                                                                AggregateFunctionFactory aggregateFunctionFactory) {
+        return FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
+    }
+
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
                                                                     Map<String, Class<?>> fieldMap,
                                                                     AggregateFunctionParam aggregateFunctionParam,
