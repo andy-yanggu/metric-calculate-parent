@@ -35,9 +35,9 @@ public class BaseUdafParamDistinctFieldListRelation implements Serializable {
     private Integer baseUdafParamId;
 
     /**
-     * 字段排序配置id
+     * Aviator函数参数id
      */
-    private Integer fieldOrderParamId;
+    private Integer aviatorExpressParamId;
 
     /**
      * 用户id

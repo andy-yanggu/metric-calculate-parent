@@ -11,7 +11,7 @@ import java.util.List;
  * 派生指标
  */
 @Data
-public class Derive implements Serializable {
+public class DeriveMetrics implements Serializable {
 
     private static final long serialVersionUID = 7997617771105250097L;
 

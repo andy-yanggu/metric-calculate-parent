@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.config.controller;
 import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
+import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DeriveService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -25,8 +26,9 @@ public class DeriveController {
 
     @PostMapping("save")
     @Operation(summary = "新增派生指标")
-    public void save(@RequestBody DeriveDto derive) {
+    public Result<Void> save(@RequestBody DeriveDto derive) {
         deriveService.create(derive);
+        return Result.ok();
     }
 
     /**

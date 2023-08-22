@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 滑动计数求和派生指标单元测试类
  */
-class DeriveMetricCalculateSlidingCountWindowTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateSlidingCountWindowTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试滑动计数窗口limit限制为5, 最近5笔交易, 进行求和

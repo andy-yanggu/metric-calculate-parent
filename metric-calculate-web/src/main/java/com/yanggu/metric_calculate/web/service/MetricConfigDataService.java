@@ -5,7 +5,7 @@ import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.web.client.metric_config.MockMetricConfigClient;
 import com.yanggu.metric_calculate.web.exceptionhandler.BusinessException;
@@ -176,7 +176,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      * @param deriveId
      * @return
      */
-    public Derive getDerive(Long tableId, Long deriveId) {
+    public DeriveMetrics getDerive(Long tableId, Long deriveId) {
         ReadWriteLock readWriteLock = readWriteLockStriped.get(tableId);
         Lock readLock = readWriteLock.readLock();
         readLock.lock();
@@ -185,11 +185,11 @@ public class MetricConfigDataService implements ApplicationRunner {
             if (metricCalculate == null) {
                 return null;
             }
-            List<Derive> deriveList = metricCalculate.getDeriveList();
-            if (CollUtil.isEmpty(deriveList)) {
+            List<DeriveMetrics> deriveMetricsList = metricCalculate.getDeriveMetricsList();
+            if (CollUtil.isEmpty(deriveMetricsList)) {
                 return null;
             }
-            return deriveList.stream()
+            return deriveMetricsList.stream()
                     .filter(tempDerive -> deriveId.equals(tempDerive.getId()))
                     .findFirst()
                     .orElseThrow(() -> new BusinessException(DERIVE_ID_ERROR, deriveId));
@@ -242,12 +242,12 @@ public class MetricConfigDataService implements ApplicationRunner {
             if (metricCalculate == null) {
                 return Collections.emptyList();
             }
-            List<Derive> deriveList = metricCalculate.getDeriveList();
-            if (CollUtil.isEmpty(deriveList)) {
+            List<DeriveMetrics> deriveMetricsList = metricCalculate.getDeriveMetricsList();
+            if (CollUtil.isEmpty(deriveMetricsList)) {
                 return Collections.emptyList();
             }
-            return deriveList.stream()
-                    .map(Derive::getId)
+            return deriveMetricsList.stream()
+                    .map(DeriveMetrics::getId)
                     .collect(Collectors.toList());
         } finally {
             readLock.unlock();

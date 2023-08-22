@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.flink.process_function;
 
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.pojo.metric.Global;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
@@ -38,13 +38,13 @@ public class DataTableProcessFunction extends ProcessFunction<Model, Void> {
         List<String> aviatorFunctionJarPathList = metricCalculate.getAviatorFunctionJarPathList();
         List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
 
-        List<Derive> deriveList = model.getDeriveList();
-        if (CollUtil.isNotEmpty(deriveList)) {
-            deriveList.forEach(tempDerive -> {
+        List<DeriveMetrics> deriveMetricsList = model.getDeriveMetricsList();
+        if (CollUtil.isNotEmpty(deriveMetricsList)) {
+            deriveMetricsList.forEach(tempDerive -> {
                 DeriveConfigData deriveConfigData = new DeriveConfigData<>();
                 deriveConfigData.setTableId(tableId);
                 deriveConfigData.setFieldMap(fieldMap);
-                deriveConfigData.setDerive(tempDerive);
+                deriveConfigData.setDeriveMetrics(tempDerive);
                 deriveConfigData.setAviatorFunctionJarPathList(aviatorFunctionJarPathList);
                 deriveConfigData.setUdafJarPathList(udafJarPathList);
                 ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveConfigData.class)), deriveConfigData);

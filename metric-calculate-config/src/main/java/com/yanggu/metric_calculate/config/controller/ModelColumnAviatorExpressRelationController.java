@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnAviatorExpressRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnAviatorExpressParamRelation;
 import com.yanggu.metric_calculate.config.service.ModelColumnAviatorExpressRelationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +25,12 @@ public class ModelColumnAviatorExpressRelationController {
     /**
      * 添加宽表字段表达式关系表。
      *
-     * @param modelColumnAviatorExpressRelation 宽表字段表达式关系表
+     * @param modelColumnAviatorExpressParamRelation 宽表字段表达式关系表
      * @return {@code true} 添加成功，{@code false} 添加失败
      */
     @PostMapping("save")
-    public boolean save(@RequestBody ModelColumnAviatorExpressRelation modelColumnAviatorExpressRelation) {
-        return modelColumnAviatorExpressRelationService.save(modelColumnAviatorExpressRelation);
+    public boolean save(@RequestBody ModelColumnAviatorExpressParamRelation modelColumnAviatorExpressParamRelation) {
+        return modelColumnAviatorExpressRelationService.save(modelColumnAviatorExpressParamRelation);
     }
 
     /**
@@ -47,12 +47,12 @@ public class ModelColumnAviatorExpressRelationController {
     /**
      * 根据主键更新宽表字段表达式关系表。
      *
-     * @param modelColumnAviatorExpressRelation 宽表字段表达式关系表
+     * @param modelColumnAviatorExpressParamRelation 宽表字段表达式关系表
      * @return {@code true} 更新成功，{@code false} 更新失败
      */
     @PutMapping("update")
-    public boolean update(@RequestBody ModelColumnAviatorExpressRelation modelColumnAviatorExpressRelation) {
-        return modelColumnAviatorExpressRelationService.updateById(modelColumnAviatorExpressRelation);
+    public boolean update(@RequestBody ModelColumnAviatorExpressParamRelation modelColumnAviatorExpressParamRelation) {
+        return modelColumnAviatorExpressRelationService.updateById(modelColumnAviatorExpressParamRelation);
     }
 
     /**
@@ -61,7 +61,7 @@ public class ModelColumnAviatorExpressRelationController {
      * @return 所有数据
      */
     @GetMapping("list")
-    public List<ModelColumnAviatorExpressRelation> list() {
+    public List<ModelColumnAviatorExpressParamRelation> list() {
         return modelColumnAviatorExpressRelationService.list();
     }
 
@@ -72,7 +72,7 @@ public class ModelColumnAviatorExpressRelationController {
      * @return 宽表字段表达式关系表详情
      */
     @GetMapping("getInfo/{id}")
-    public ModelColumnAviatorExpressRelation getInfo(@PathVariable Serializable id) {
+    public ModelColumnAviatorExpressParamRelation getInfo(@PathVariable Serializable id) {
         return modelColumnAviatorExpressRelationService.getById(id);
     }
 
@@ -83,7 +83,7 @@ public class ModelColumnAviatorExpressRelationController {
      * @return 分页对象
      */
     @GetMapping("page")
-    public Page<ModelColumnAviatorExpressRelation> page(Page<ModelColumnAviatorExpressRelation> page) {
+    public Page<ModelColumnAviatorExpressParamRelation> page(Page<ModelColumnAviatorExpressParamRelation> page) {
         return modelColumnAviatorExpressRelationService.page(page);
     }
 

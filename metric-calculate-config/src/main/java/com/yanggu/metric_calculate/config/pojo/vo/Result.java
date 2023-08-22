@@ -35,6 +35,13 @@ public class Result<T> implements Serializable {
     /**
      * 成功返回
      */
+    public static <T> Result<T> ok() {
+        return new Result<>(Boolean.TRUE, null, ResultCode.SUCCESS);
+    }
+
+    /**
+     * 成功返回
+     */
     public static <T> Result<T> ok(T data) {
         return new Result<>(Boolean.TRUE, data, ResultCode.SUCCESS);
     }

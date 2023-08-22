@@ -4,7 +4,7 @@ package com.yanggu.metric_calculate.flink.util;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import lombok.SneakyThrows;
@@ -44,7 +44,7 @@ public class DeriveMetricCalculateUtil {
             }
             for (DeriveConfigData deriveConfigData : list) {
                 initDeriveMetricCalculate(deriveConfigData);
-                broadcastState.put(deriveConfigData.getDerive().getId(), deriveConfigData);
+                broadcastState.put(deriveConfigData.getDeriveMetrics().getId(), deriveConfigData);
             }
         }
     }
@@ -57,12 +57,12 @@ public class DeriveMetricCalculateUtil {
         }
         Long tableId = deriveConfigData.getTableId();
         Map<String, Class<?>> fieldMap = deriveConfigData.getFieldMap();
-        Derive derive = deriveConfigData.getDerive();
+        DeriveMetrics deriveMetrics = deriveConfigData.getDeriveMetrics();
         AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory(deriveConfigData.getAviatorFunctionJarPathList());
         aviatorFunctionFactory.init();
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(deriveConfigData.getUdafJarPathList());
         aggregateFunctionFactory.init();
-        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(derive, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(deriveMetrics, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
         deriveConfigData.setDeriveMetricCalculate(deriveMetricCalculate);
     }
 

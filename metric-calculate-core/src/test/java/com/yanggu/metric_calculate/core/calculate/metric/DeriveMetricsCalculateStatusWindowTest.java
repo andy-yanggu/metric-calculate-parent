@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 状态窗口派生指标单元测试类
  */
-class DeriveMetricCalculateStatusWindowTest {
+class DeriveMetricsCalculateStatusWindowTest {
 
     private static final MetricCalculate metricCalculate;
 

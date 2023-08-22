@@ -5,10 +5,9 @@ import com.yanggu.metric_calculate.config.pojo.entity.MapUdafParam;
 
 /**
  * 映射类型udaf参数 服务层。
- *
- * @author MondayLi
- * @since 2023-07-10
  */
 public interface MapUdafParamService extends IService<MapUdafParam> {
+
+    void saveData(MapUdafParam mapUdafParam) throws Exception;
 
 }

@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.mybatisflex.core.handler.JacksonTypeHandler;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 映射类型udaf参数 实体类。
@@ -54,9 +56,10 @@ public class MapUdafParam implements Serializable {
     private BaseUdafParam valueAggParam;
 
     /**
-     * Aviator函数参数的JSON数据
+     * 聚合函数参数的JSON数据
      */
-    private String param;
+    @Column(typeHandler = JacksonTypeHandler.class)
+    private Map<String, Object> param;
 
     /**
      * 用户id

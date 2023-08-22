@@ -2,7 +2,7 @@
   "id": 2,
   "name": "device_run_log",
   "displayName": "设备运行日志",
-  "deriveList": [
+  "deriveMetricsList": [
     {
       "id": 1,
       "name": "device_on_line_or_offline_time",

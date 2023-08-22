@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.config.pojo.exception;
+package com.yanggu.metric_calculate.config.exceptionhandler;
 
 import com.yanggu.metric_calculate.config.enums.ResultCode;
 import lombok.Data;

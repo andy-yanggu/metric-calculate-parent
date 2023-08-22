@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 映射型派生指标单元测试类
  */
-class DeriveMetricCalculateMapTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试基本映射BASEMAP

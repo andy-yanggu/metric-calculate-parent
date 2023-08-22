@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 /**
  * CEP型派生指标单元测试类
  */
-class DeriveMetricCalculatePatternTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculatePatternTest extends DeriveMetricsCalculateBase {
 
     @Test
     void testCEP() {

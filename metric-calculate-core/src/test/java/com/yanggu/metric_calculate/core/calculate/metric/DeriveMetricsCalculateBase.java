@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 派生指标计算单元测试基类
  */
-class DeriveMetricCalculateBase {
+class DeriveMetricsCalculateBase {
 
     public static MetricCalculate metricCalculate;
 

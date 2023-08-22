@@ -57,16 +57,6 @@ public class AviatorExpressParam implements Serializable {
     private Date updateTime;
 
     /**
-     * 使用的Aviator函数实例列表
-     */
-    @RelationManyToMany(
-            joinTable = "aviator_express_param_aviator_function_instance_relation",
-            selfField = "id", joinSelfColumn = "aviator_express_param_id",
-            targetField = "id", joinTargetColumn = "aviator_function_instance_id"
-    )
-    private List<AviatorFunctionInstance> aviatorFunctionInstanceList;
-
-    /**
      * 依赖的宽表字段
      */
     @RelationManyToMany(
@@ -75,5 +65,15 @@ public class AviatorExpressParam implements Serializable {
             targetField = "id", joinTargetColumn = "model_column_id"
     )
     private List<ModelColumn> modelColumnList;
+
+    /**
+     * 使用的Aviator函数实例列表
+     */
+    @RelationManyToMany(
+            joinTable = "aviator_express_param_aviator_function_instance_relation",
+            selfField = "id", joinSelfColumn = "aviator_express_param_id",
+            targetField = "id", joinTargetColumn = "aviator_function_instance_id"
+    )
+    private List<AviatorFunctionInstance> aviatorFunctionInstanceList;
 
 }

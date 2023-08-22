@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -43,6 +40,14 @@ public class MixUdafParamMixAggMapRelation implements Serializable {
      * 基本聚合函数参数id
      */
     private Integer baseUdafParamId;
+
+    @RelationManyToOne(selfField = "baseUdafParamId", targetField = "id")
+    private BaseUdafParam baseUdafParam;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
     /**
      * 用户id

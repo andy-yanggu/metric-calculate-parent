@@ -22,10 +22,11 @@ import java.util.Date;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "model_column_aviator_express_relation")
-public class ModelColumnAviatorExpressRelation implements Serializable {
+@Table(value = "model_column_aviator_express_param_relation")
+public class ModelColumnAviatorExpressParamRelation implements Serializable {
 
-    
+    private static final long serialVersionUID = -4156625855782096027L;
+
     @Id(keyType = KeyType.Auto)
     private Integer id;
 

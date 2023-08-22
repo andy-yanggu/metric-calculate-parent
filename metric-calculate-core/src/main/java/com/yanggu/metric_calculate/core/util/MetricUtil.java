@@ -20,7 +20,7 @@ import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn;
 import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.pojo.metric.Global;
 import com.yanggu.metric_calculate.core.window.WindowFactory;
 import lombok.SneakyThrows;
@@ -143,8 +143,8 @@ public class MetricUtil {
         if (metricCalculate == null) {
             return;
         }
-        List<Derive> deriveList = metricCalculate.getDeriveList();
-        if (CollUtil.isEmpty(deriveList)) {
+        List<DeriveMetrics> deriveMetricsList = metricCalculate.getDeriveMetricsList();
+        if (CollUtil.isEmpty(deriveMetricsList)) {
             return;
         }
         Map<String, MetricTypeEnum> metricTypeMap = metricCalculate.getMetricTypeMap();
@@ -159,7 +159,7 @@ public class MetricUtil {
 
         Long tableId = metricCalculate.getId();
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
-        List<DeriveMetricCalculate> collect = deriveList.stream()
+        List<DeriveMetricCalculate> collect = deriveMetricsList.stream()
                 .map(tempDerive -> {
                     metricTypeMap.put(tempDerive.getName(), DERIVE);
                     //初始化派生指标计算类
@@ -210,22 +210,23 @@ public class MetricUtil {
     /**
      * 初始化派生指标
      *
-     * @param tempDerive
+     * @param deriveMetrics
      * @param aviatorFunctionFactory
      * @param aggregateFunctionFactory
      * @return
      */
     @SneakyThrows
     public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive(
-                                                                 Derive tempDerive,
-                                                                 Long tableId,
-                                                                 Map<String, Class<?>> fieldMap,
-                                                                 AviatorFunctionFactory aviatorFunctionFactory,
-                                                                 AggregateFunctionFactory aggregateFunctionFactory) {
+                                                                   DeriveMetrics deriveMetrics,
+                                                                   Long tableId,
+                                                                   Map<String, Class<?>> fieldMap,
+                                                                   AviatorFunctionFactory aviatorFunctionFactory,
+                                                                   AggregateFunctionFactory aggregateFunctionFactory) {
+
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 
         //设置id
-        Long id = tempDerive.getId();
+        Long id = deriveMetrics.getId();
         deriveMetricCalculate.setId(id);
 
         //设置key
@@ -233,25 +234,25 @@ public class MetricUtil {
         deriveMetricCalculate.setKey(key);
 
         //设置name
-        String name = tempDerive.getName();
+        String name = deriveMetrics.getName();
         deriveMetricCalculate.setName(name);
 
         //设置前置过滤条件处理器
         FilterFieldProcessor filterFieldProcessor =
-                FieldProcessorUtil.getFilterFieldProcessor(fieldMap, tempDerive.getFilterExpressParam(), aviatorFunctionFactory);
+                FieldProcessorUtil.getFilterFieldProcessor(fieldMap, deriveMetrics.getFilterExpressParam(), aviatorFunctionFactory);
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
         //设置聚合字段处理器
-        AggregateFunctionParam aggregateFunctionParam = tempDerive.getAggregateFunctionParam();
+        AggregateFunctionParam aggregateFunctionParam = deriveMetrics.getAggregateFunctionParam();
         AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
                 FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, aggregateFunctionParam, aviatorFunctionFactory, aggregateFunctionFactory);
 
         //时间字段处理器
-        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(tempDerive.getTimeColumn());
+        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(deriveMetrics.getTimeColumn());
 
         //设置WindowFactory
         WindowFactory<IN, ACC, OUT> windowFactory = new WindowFactory<>();
-        windowFactory.setWindowParam(tempDerive.getWindowParam());
+        windowFactory.setWindowParam(deriveMetrics.getWindowParam());
         windowFactory.setTimeFieldProcessor(timeFieldProcessor);
         windowFactory.setAggregateFieldProcessor(aggregateFieldProcessor);
         windowFactory.setFieldMap(fieldMap);
@@ -260,14 +261,14 @@ public class MetricUtil {
 
         //维度字段处理器
         DimensionSetProcessor dimensionSetProcessor =
-                FieldProcessorUtil.getDimensionSetProcessor(key, name, tempDerive.getDimensionList());
+                FieldProcessorUtil.getDimensionSetProcessor(key, name, deriveMetrics.getDimensionList());
         deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
         //精度数据
-        deriveMetricCalculate.setRoundAccuracy(tempDerive.getRoundAccuracy());
+        deriveMetricCalculate.setRoundAccuracy(deriveMetrics.getRoundAccuracy());
 
         //设置是否包含当前笔
-        deriveMetricCalculate.setIncludeCurrent(tempDerive.getIncludeCurrent());
+        deriveMetricCalculate.setIncludeCurrent(deriveMetrics.getIncludeCurrent());
 
         return deriveMetricCalculate;
     }
@@ -292,9 +293,18 @@ public class MetricUtil {
             throw new RuntimeException("宽表字段为空, 宽表数据: " + JSONUtil.toJsonStr(metricCalculate));
         }
         //宽表字段
+        Map<String, Class<?>> fieldMap = getFieldMap(fields);
+        metricCalculate.setFieldMap(fieldMap);
+    }
+
+    public static Map<String, Class<?>> getFieldMap(List<ModelColumn> fields) {
+        if (CollUtil.isEmpty(fields)) {
+            throw new RuntimeException("宽表字段为空");
+        }
+        //宽表字段
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fields.forEach(temp -> fieldMap.put(temp.getName(), temp.getDataType().getType()));
-        metricCalculate.setFieldMap(fieldMap);
+        return fieldMap;
     }
 
 }

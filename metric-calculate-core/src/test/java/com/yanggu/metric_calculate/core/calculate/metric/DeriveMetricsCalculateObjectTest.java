@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 对象型派生指标单元测试类
  */
-class DeriveMetricCalculateObjectTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateObjectTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试对象型MAXFIELD

@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.config.controller;
 import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
+import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.ModelService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,8 +29,9 @@ public class ModelController {
      */
     @PostMapping("save")
     @Operation(summary = "新增数据明细宽表")
-    public void save(@RequestBody ModelDto model) throws Exception {
+    public Result<Void> save(@RequestBody ModelDto model) throws Exception {
         modelService.create(model);
+        return Result.ok();
     }
 
     /**

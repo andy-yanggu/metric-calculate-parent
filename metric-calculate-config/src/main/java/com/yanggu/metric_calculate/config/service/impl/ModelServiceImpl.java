@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.Model;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelDimensionColumn;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelTimeColumn;
-import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.service.ModelColumnService;
 import com.yanggu.metric_calculate.config.service.ModelDimensionColumnService;
 import com.yanggu.metric_calculate.config.service.ModelService;
@@ -55,12 +55,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         //检查name、displayName是否重复
         checkExist(model);
 
-        //新增宽表
+        //1. 保存宽表
         modelMapper.insertSelective(model);
         //获取回显的主键
         Integer modelId = model.getId();
 
-        //保存宽表字段
+        //2. 保存宽表字段
         List<ModelColumn> modelColumnList = model.getModelColumnList();
         //设置宽表字段中的modelId
         modelColumnList.forEach(tempColumnDto -> tempColumnDto.setModelId(modelId));
@@ -68,7 +68,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         Map<String, Integer> modelColumnNameIdMap = modelColumnList.stream()
                 .collect(Collectors.toMap(ModelColumn::getName, ModelColumn::getId));
 
-        //保存时间字段
+        //3. 保存时间字段
         List<ModelTimeColumn> modelTimeColumnList = model.getModelTimeColumnList();
         modelTimeColumnList.forEach(modelTimeColumn -> {
             modelTimeColumn.setModelId(modelId);
@@ -81,7 +81,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         });
         modelTimeColumnService.saveBatch(modelTimeColumnList);
 
-        //保存维度字段
+        //4. 保存维度字段
         List<ModelDimensionColumn> modelDimensionColumnList = model.getModelDimensionColumnList();
         modelDimensionColumnList.forEach(modelDimensionColumn -> {
             modelDimensionColumn.setModelId(modelId);

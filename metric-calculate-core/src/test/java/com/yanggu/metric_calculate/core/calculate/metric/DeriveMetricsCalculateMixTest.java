@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 混合型派生指标单元测试类
  */
-class DeriveMetricCalculateMixTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateMixTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试混合类型BASEMIX

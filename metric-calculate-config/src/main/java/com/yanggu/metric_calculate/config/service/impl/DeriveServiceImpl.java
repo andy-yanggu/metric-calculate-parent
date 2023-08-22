@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +57,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(DeriveDto deriveDto) {
+    public void create(DeriveDto deriveDto) throws Exception {
         Derive derive = deriveMapstruct.toEntity(deriveDto);
 
         //检查name、displayName是否重复
@@ -105,7 +105,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         //保存聚合函数参数
         AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
         aggregateFunctionParam.setUserId(derive.getUserId());
-        aggregateFunctionParamService.save(aggregateFunctionParam);
+        aggregateFunctionParamService.saveData(aggregateFunctionParam);
         //保存派生指标和聚合函数参数中间表数据
         DeriveAggregateFunctionParamRelation deriveAggregateFunctionParamRelation = new DeriveAggregateFunctionParamRelation();
         deriveAggregateFunctionParamRelation.setDeriveId(derive.getId());

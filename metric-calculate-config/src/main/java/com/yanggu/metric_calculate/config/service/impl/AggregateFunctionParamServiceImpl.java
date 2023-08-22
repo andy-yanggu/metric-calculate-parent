@@ -37,13 +37,13 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public boolean save(AggregateFunctionParam aggregateFunctionParam) {
+    public void saveData(AggregateFunctionParam aggregateFunctionParam) throws Exception {
         super.save(aggregateFunctionParam);
         //基本配置类型
         BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
         if (baseUdafParam != null) {
             baseUdafParam.setUserId(aggregateFunctionParam.getUserId());
-            baseUdafParamService.save(baseUdafParam);
+            baseUdafParamService.saveData(baseUdafParam);
             AggregateFunctionParamBaseUdafParamRelation relation = new AggregateFunctionParamBaseUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setUserId(aggregateFunctionParam.getUserId());
@@ -54,7 +54,7 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
         MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
         if (mapUdafParam != null) {
             mapUdafParam.setUserId(aggregateFunctionParam.getUserId());
-            mapUdafParamService.save(mapUdafParam);
+            mapUdafParamService.saveData(mapUdafParam);
             AggregateFunctionParamMapUdafParamRelation relation = new AggregateFunctionParamMapUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setUserId(aggregateFunctionParam.getUserId());
@@ -65,13 +65,12 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
         MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
         if (mixUdafParam != null) {
             mixUdafParam.setUserId(aggregateFunctionParam.getUserId());
-            mixUdafParamService.save(mixUdafParam);
+            mixUdafParamService.saveData(mixUdafParam);
             AggregateFunctionParamMixUdafParamRelation relation = new AggregateFunctionParamMixUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMixUdafParamId(mixUdafParam.getId());
             relation.setUserId(aggregateFunctionParam.getUserId());
             aggregateFunctionParamMixUdafParamRelationService.save(relation);
         }
-        return true;
     }
 }

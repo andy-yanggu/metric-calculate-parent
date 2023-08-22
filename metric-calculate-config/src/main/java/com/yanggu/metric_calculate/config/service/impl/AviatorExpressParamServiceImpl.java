@@ -2,9 +2,10 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.googlecode.aviator.Expression;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorExpressParamMapper;
+import com.yanggu.metric_calculate.config.mapstruct.AviatorExpressParamMapstruct;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamAviatorFunctionInstanceRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamModelColumnRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
@@ -12,12 +13,10 @@ import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.util.ExpressionUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +39,9 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
     @Autowired
     private AviatorExpressParamAviatorFunctionInstanceRelationService aviatorExpressParamAviatorFunctionInstanceRelationService;
+
+    @Autowired
+    private AviatorExpressParamMapstruct aviatorExpressParamMapstruct;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -93,24 +95,8 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
             return false;
         }
 
-        com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam expressParam = new com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam();
-        expressParam.setExpress(express);
+        com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam expressParam = aviatorExpressParamMapstruct.toCoreData(aviatorExpressParam);
 
-        List<AviatorFunctionInstance> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
-        if (CollUtil.isNotEmpty(aviatorFunctionInstanceList)) {
-            List<com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance> aviatorFunctionInstanceList2 = new ArrayList<>();
-            for (AviatorFunctionInstance aviatorFunctionInstance : aviatorFunctionInstanceList) {
-                String param = aviatorFunctionInstance.getParam();
-                String name = aviatorFunctionInstance.getAviatorFunction().getName();
-                com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance aviatorFunctionInstance1 = new com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance();
-                aviatorFunctionInstance1.setName(name);
-                if (StrUtil.isNotBlank(param)) {
-                    aviatorFunctionInstance1.setParam(JSONUtil.parseObj(param));
-                }
-                aviatorFunctionInstanceList2.add(aviatorFunctionInstance1);
-            }
-            expressParam.setAviatorFunctionInstanceList(aviatorFunctionInstanceList2);
-        }
         AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
         aviatorFunctionFactory.init();
         Expression expression = ExpressionUtil.compileExpress(expressParam, aviatorFunctionFactory);
@@ -121,10 +107,6 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
             fieldMap.put(modelColumn.getName(), modelColumn.getDataType().getType());
         }
         ExpressionUtil.checkVariable(expression, fieldMap);
-        List<String> variableNames = expression.getVariableNames();
-        if (fieldMap.size() != variableNames.size()) {
-            throw new BusinessException(AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR);
-        }
         return true;
     }
 

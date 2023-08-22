@@ -11,4 +11,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.FieldOrderParam;
  */
 public interface FieldOrderParamService extends IService<FieldOrderParam> {
 
+    void saveData(FieldOrderParam fieldOrderParam) throws Exception;
+
 }

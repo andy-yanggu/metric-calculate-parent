@@ -20,6 +20,14 @@ spring:
     url: jdbc:mysql://localhost:3306/metric_calculate_config?characterEncoding=utf-8
     username: root
     password: root
+  data:
+    #redis相关配置
+    redis:
+      client-type: lettuce
+      host: 172.20.7.106
+      port: 16379
+      database: 2
+      password: Redis6379
 
   #jackson配置
   jackson:

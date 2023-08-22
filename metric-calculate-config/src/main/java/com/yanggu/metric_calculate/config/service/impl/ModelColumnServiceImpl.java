@@ -4,7 +4,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.ModelColumnMapper;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.ModelColumnAviatorExpressRelationService;
 import com.yanggu.metric_calculate.config.service.ModelColumnService;
@@ -43,31 +43,33 @@ public class ModelColumnServiceImpl extends ServiceImpl<ModelColumnMapper, Model
         checkModelColumList(modelColumnList);
         //批量保存宽表字段
         saveBatch(modelColumnList);
-        Map<String, ModelColumn> collect = modelColumnList.stream().collect(Collectors.toMap(ModelColumn::getName, Function.identity()));
+        Map<String, ModelColumn> collect = modelColumnList.stream()
+                .collect(Collectors.toMap(ModelColumn::getName, Function.identity()));
         for (ModelColumn modelColumn : modelColumnList) {
-            //如果是虚拟字段, 保存Aviator表达式和中间表数据
-            if (VIRTUAL.name().equals(modelColumn.getFieldType())) {
-                AviatorExpressParam aviatorExpressParam = modelColumn.getAviatorExpressParam();
-                List<ModelColumn> tempModelColumnList = aviatorExpressParam.getModelColumnList();
-                if (CollUtil.isNotEmpty(tempModelColumnList)) {
-                    List<ModelColumn> newTempModelColumnList = new ArrayList<>();
-                    for (ModelColumn column : tempModelColumnList) {
-                        ModelColumn tempModelColumn = collect.get(column.getName());
-                        if (tempModelColumn == null) {
-                            throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
-                        }
-                        newTempModelColumnList.add(tempModelColumn);
-                    }
-                    aviatorExpressParam.setModelColumnList(newTempModelColumnList);
-                }
-                aviatorExpressParamService.saveData(aviatorExpressParam);
-
-                ModelColumnAviatorExpressRelation relation = new ModelColumnAviatorExpressRelation();
-                relation.setModelColumnId(modelColumn.getId());
-                relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-                relation.setUserId(modelColumn.getUserId());
-                modelColumnAviatorExpressRelationService.save(relation);
+            if (!VIRTUAL.equals(modelColumn.getFieldType())) {
+                continue;
             }
+            //如果是虚拟字段, 保存Aviator表达式和中间表数据
+            AviatorExpressParam aviatorExpressParam = modelColumn.getAviatorExpressParam();
+            List<ModelColumn> tempModelColumnList = aviatorExpressParam.getModelColumnList();
+            if (CollUtil.isNotEmpty(tempModelColumnList)) {
+                List<ModelColumn> newTempModelColumnList = new ArrayList<>();
+                for (ModelColumn column : tempModelColumnList) {
+                    ModelColumn tempModelColumn = collect.get(column.getName());
+                    if (tempModelColumn == null) {
+                        throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
+                    }
+                    newTempModelColumnList.add(tempModelColumn);
+                }
+                aviatorExpressParam.setModelColumnList(newTempModelColumnList);
+            }
+            aviatorExpressParamService.saveData(aviatorExpressParam);
+
+            ModelColumnAviatorExpressParamRelation relation = new ModelColumnAviatorExpressParamRelation();
+            relation.setModelColumnId(modelColumn.getId());
+            relation.setAviatorExpressParamId(aviatorExpressParam.getId());
+            relation.setUserId(modelColumn.getUserId());
+            modelColumnAviatorExpressRelationService.save(relation);
         }
     }
 

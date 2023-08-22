@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.config.exceptionhandler;
 
-import com.yanggu.metric_calculate.config.pojo.exception.BusinessException;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

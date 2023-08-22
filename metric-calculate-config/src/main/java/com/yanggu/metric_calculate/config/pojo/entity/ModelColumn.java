@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
 import com.yanggu.metric_calculate.config.enums.DataType;
+import com.yanggu.metric_calculate.config.enums.ModelColumnFieldType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -48,7 +49,7 @@ public class ModelColumn implements Serializable {
     /**
      * 字段类型(REAL、VIRTUAL)
      */
-    private String fieldType;
+    private ModelColumnFieldType fieldType;
 
     /**
      * 宽表id
@@ -87,7 +88,7 @@ public class ModelColumn implements Serializable {
      * 如果是虚拟字段，增加Aviator表达式
      */
     @RelationOneToOne(
-            joinTable = "model_column_aviator_express_relation",
+            joinTable = "model_column_aviator_express_param_relation",
             selfField = "id", joinSelfColumn = "model_column_id",
             targetField = "id", joinTargetColumn = "aviator_express_param_id"
     )

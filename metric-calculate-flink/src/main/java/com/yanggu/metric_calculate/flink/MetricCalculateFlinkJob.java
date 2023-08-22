@@ -127,7 +127,7 @@ public class MetricCalculateFlinkJob {
                 //分流出派生指标数据
                 .getSideOutput(new OutputTag<>(DERIVE, deriveCalculateDataTypeInformation))
                 //攒批读组件
-                .transform("Derive Batch Read Operator", TypeInformation.of(new TypeHint<List<DeriveCalculateData>>() {}), deriveNoKeyProcessTimeMiniBatchOperator)
+                .transform("DeriveMetrics Batch Read Operator", TypeInformation.of(new TypeHint<List<DeriveCalculateData>>() {}), deriveNoKeyProcessTimeMiniBatchOperator)
                 //批读
                 .process(batchReadProcessFunction)
                 //根据维度进行keyBy
@@ -137,7 +137,7 @@ public class MetricCalculateFlinkJob {
                 //计算派生指标
                 .process(new KeyedDeriveBroadcastProcessFunction())
                 //攒批写组件
-                .transform("Derive Batch Update Operator", TypeInformation.of(new TypeHint<List<MetricCube>>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
+                .transform("DeriveMetrics Batch Update Operator", TypeInformation.of(new TypeHint<List<MetricCube>>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
                 //批写
                 .process(new BatchWriteProcessFunction())
                 //连接派生指标配置流

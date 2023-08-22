@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 /**
  * 数值型派生指标单元测试类
  */
-class DeriveMetricCalculateNumberTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试SUM求和

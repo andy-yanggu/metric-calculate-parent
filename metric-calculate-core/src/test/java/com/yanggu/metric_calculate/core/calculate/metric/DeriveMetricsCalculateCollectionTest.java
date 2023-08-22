@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 集合型派生指标单元测试类
  */
-class DeriveMetricCalculateCollectionTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试LISTOBJECT类型, limit限制为5, 最多只能存储5个

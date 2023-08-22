@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 全窗口派生指标单元测试类
  */
-class DeriveMetricCalculateGlobalWindowTest extends DeriveMetricCalculateBase {
+class DeriveMetricsCalculateGlobalWindowTest extends DeriveMetricsCalculateBase {
 
     /**
      * 占位，首次交易时间

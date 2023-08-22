@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.pojo.data_detail_table;
 
 import com.yanggu.metric_calculate.core.pojo.metric.Composite;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.pojo.metric.Global;
 import lombok.Data;
 
@@ -42,7 +42,7 @@ public class Model {
     /**
      * 派生指标
      */
-    private List<Derive> deriveList;
+    private List<DeriveMetrics> deriveMetricsList;
 
     /**
      * 复合指标

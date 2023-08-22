@@ -1,7 +1,7 @@
 {
   "id": 1,
   "name": "trade_detail",
-  "deriveList": [
+  "deriveMetricsList": [
     {
       "id": 1,
       "name": "today_debit_asset",

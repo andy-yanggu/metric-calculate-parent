@@ -14,7 +14,7 @@ public interface DeriveService extends IService<Derive> {
      *
      * @param deriveDto
      */
-    void create(DeriveDto deriveDto);
+    void create(DeriveDto deriveDto) throws Exception;
 
     DeriveDto queryById(Integer id);
 

@@ -339,7 +339,7 @@ public class MetricCalculateService {
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return Collections.emptyList();
         }
-        List<DeriveMetricCalculateResult<Object>> deriveList = new CopyOnWriteArrayList<>();
+        List<DeriveMetricCalculateResult<Object>> deriveMetricsList = new CopyOnWriteArrayList<>();
         CompletableFuture[] array = deriveMetricCalculateList.stream()
             .map(deriveMetricCalculate ->
                 CompletableFuture.runAsync(() -> {
@@ -350,7 +350,7 @@ public class MetricCalculateService {
                         temp = deriveMetricCalculate.noStateExec(detail);
                     }
                     if (temp != null) {
-                        deriveList.add(temp);
+                        deriveMetricsList.add(temp);
                     }
                 }, threadPoolExecutor)
             )
@@ -359,13 +359,13 @@ public class MetricCalculateService {
         //等待所有线程完成
         CompletableFuture.allOf(array).join();
 
-        log.info("输入的明细数据: {}, 派生指标计算后的数据: {}", JSONUtil.toJsonStr(detail), JSONUtil.toJsonStr(deriveList));
+        log.info("输入的明细数据: {}, 派生指标计算后的数据: {}", JSONUtil.toJsonStr(detail), JSONUtil.toJsonStr(deriveMetricsList));
         //按照key进行排序
-        if (CollUtil.isNotEmpty(deriveList)) {
+        if (CollUtil.isNotEmpty(deriveMetricsList)) {
             //按照指标key进行排序
-            deriveList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
+            deriveMetricsList.sort(Comparator.comparing(DeriveMetricCalculateResult::getKey));
         }
-        return deriveList;
+        return deriveMetricsList;
     }
 
     private MetricCalculate getMetricCalculate(JSONObject input) {

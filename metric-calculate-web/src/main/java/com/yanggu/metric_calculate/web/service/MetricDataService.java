@@ -5,7 +5,7 @@ import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.web.pojo.dto.UpdateMetricData;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -181,13 +181,13 @@ public class MetricDataService {
      */
     private DimensionSet getDimensionSet(Long tableId, Long deriveId, LinkedHashMap<String, Object> dimensionMap) {
         //获取派生指标
-        Derive derive = metricConfigDataService.getDerive(tableId, deriveId);
-        if (derive == null) {
+        DeriveMetrics deriveMetrics = metricConfigDataService.getDerive(tableId, deriveId);
+        if (deriveMetrics == null) {
             throw new RuntimeException("传入的tableId: " + tableId + "或者deriveId: " + deriveId + "有误");
         }
         DimensionSet dimension = new DimensionSet();
-        dimension.setKey(tableId + "_" + derive.getId());
-        dimension.setMetricName(derive.getName());
+        dimension.setKey(tableId + "_" + deriveMetrics.getId());
+        dimension.setMetricName(deriveMetrics.getName());
         dimension.setDimensionMap(dimensionMap);
         return dimension;
     }

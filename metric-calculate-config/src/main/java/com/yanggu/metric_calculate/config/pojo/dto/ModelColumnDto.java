@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.enums.DataType;
+import com.yanggu.metric_calculate.config.enums.ModelColumnFieldType;
 import lombok.Data;
 
 import java.util.Date;
@@ -25,7 +27,7 @@ public class ModelColumnDto {
     /**
      * 数据类型(STRING、BOOLEAN、LONG、DOUBLE)
      */
-    private String dataType;
+    private DataType dataType;
 
     /**
      * 描述
@@ -35,7 +37,7 @@ public class ModelColumnDto {
     /**
      * 字段类型(REAL、VIRTUAL)
      */
-    private String fieldType;
+    private ModelColumnFieldType fieldType;
 
     /**
      * 如果是虚拟字段，增加Aviator表达式

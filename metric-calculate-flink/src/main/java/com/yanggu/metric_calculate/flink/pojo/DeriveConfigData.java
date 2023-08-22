@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.flink.pojo;
 
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core.pojo.metric.Derive;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -37,7 +37,7 @@ public class DeriveConfigData<IN, ACC, OUT> implements Serializable {
     /**
      * 派生指标配置类
      */
-    private Derive derive;
+    private DeriveMetrics deriveMetrics;
 
     /**
      * 派生指标计算类

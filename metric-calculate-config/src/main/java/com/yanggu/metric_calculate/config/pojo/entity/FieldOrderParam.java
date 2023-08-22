@@ -22,6 +22,8 @@ import java.util.Date;
 @Table(value = "field_order_param")
 public class FieldOrderParam implements Serializable {
 
+    private static final long serialVersionUID = 1261890367844204905L;
+
     /**
      * 主键自增
      */

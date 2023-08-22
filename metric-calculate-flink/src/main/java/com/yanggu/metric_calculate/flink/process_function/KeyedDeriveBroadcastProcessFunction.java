@@ -57,7 +57,7 @@ public class KeyedDeriveBroadcastProcessFunction extends KeyedBroadcastProcessFu
                                         Collector<MetricCube> out) throws Exception {
         DeriveMetricCalculateUtil.initDeriveMetricCalculate(value);
         BroadcastState<Long, DeriveConfigData> broadcastState = ctx.getBroadcastState(deriveMapStateDescriptor);
-        broadcastState.put(value.getDerive().getId(), value);
+        broadcastState.put(value.getDeriveMetrics().getId(), value);
     }
 
     @Override
