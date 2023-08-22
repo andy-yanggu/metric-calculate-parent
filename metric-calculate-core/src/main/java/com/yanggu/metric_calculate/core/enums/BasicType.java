@@ -50,7 +50,7 @@ public enum BasicType {
     /**
      * 小数集合
      */
-    LIST_DECIMAL(List.class),
+    LIST_DOUBLE(List.class),
     ;
 
     /**

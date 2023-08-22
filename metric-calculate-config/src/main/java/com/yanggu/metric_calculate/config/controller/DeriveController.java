@@ -26,7 +26,7 @@ public class DeriveController {
 
     @PostMapping("save")
     @Operation(summary = "新增派生指标")
-    public Result<Void> save(@RequestBody DeriveDto derive) {
+    public Result<Void> save(@RequestBody DeriveDto derive) throws Exception {
         deriveService.create(derive);
         return Result.ok();
     }

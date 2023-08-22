@@ -69,9 +69,6 @@ public class ExpressionUtil {
         if (CollUtil.isEmpty(variableNames)) {
             return;
         }
-        if (fieldMap.size() != variableNames.size()) {
-            throw new RuntimeException("Aviator表达式依赖宽表字段错误");
-        }
         //验证数据明细宽表中是否包含该字段
         variableNames.forEach(tempName -> {
             if (!fieldMap.containsKey(tempName)) {

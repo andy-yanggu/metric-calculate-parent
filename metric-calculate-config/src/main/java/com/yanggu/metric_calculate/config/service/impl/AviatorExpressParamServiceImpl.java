@@ -107,6 +107,10 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
             fieldMap.put(modelColumn.getName(), modelColumn.getDataType().getType());
         }
         ExpressionUtil.checkVariable(expression, fieldMap);
+        List<String> variableNames = expression.getVariableNames();
+        if (fieldMap.size() != variableNames.size()) {
+            throw new BusinessException(AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR);
+        }
         return true;
     }
 
