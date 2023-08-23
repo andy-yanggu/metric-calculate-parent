@@ -8,8 +8,22 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
  */
 public interface AviatorExpressParamService extends IService<AviatorExpressParam> {
 
-    void saveData(AviatorExpressParam aviatorExpressParam) throws Exception;
+    /**
+     * <p>1. 保存表达式</p>
+     * <p>2. 宽表字段依赖关系</p>
+     * <p>3. 保存依赖的Aviator函数实例</>
+     * @param aviatorExpressParam
+     * @throws Exception
+     */
+    void saveDataByModelColumn(AviatorExpressParam aviatorExpressParam) throws Exception;
 
-    boolean checkAviatorExpress(AviatorExpressParam aviatorExpressParam) throws Exception;
+    /**
+     * <p>1. 保存表达式</p>
+     * <p>2. MixUdafParam实例依赖关系</p>
+     * <p>3. 保存依赖的Aviator函数实例</>
+     * @param aviatorExpressParam
+     * @throws Exception
+     */
+    void saveDataByMixUdafParamItem(AviatorExpressParam aviatorExpressParam) throws Exception;
 
 }

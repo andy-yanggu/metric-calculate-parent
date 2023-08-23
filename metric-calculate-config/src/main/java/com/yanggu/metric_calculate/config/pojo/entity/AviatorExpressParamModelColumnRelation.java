@@ -31,7 +31,7 @@ public class AviatorExpressParamModelColumnRelation {
     private Integer aviatorExpressParamId;
 
     /**
-     * 宽表id
+     * 宽表字段id
      */
     @Column("model_column_id")
     private Integer modelColumnId;

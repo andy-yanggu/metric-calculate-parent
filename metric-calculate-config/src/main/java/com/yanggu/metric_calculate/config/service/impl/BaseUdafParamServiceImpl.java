@@ -47,7 +47,8 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
         super.save(baseUdafParam);
         AviatorExpressParam metricExpressParam = baseUdafParam.getMetricExpressParam();
         if (metricExpressParam != null) {
-            aviatorExpressParamService.saveData(metricExpressParam);
+            metricExpressParam.setUserId(baseUdafParam.getUserId());
+            aviatorExpressParamService.saveDataByModelColumn(metricExpressParam);
             BaseUdafParamMetricExpressRelation relation = new BaseUdafParamMetricExpressRelation();
             relation.setBaseUdafParamId(baseUdafParam.getId());
             relation.setAviatorExpressParamId(metricExpressParam.getId());
@@ -57,7 +58,7 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
         List<AviatorExpressParam> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
         if (CollUtil.isNotEmpty(metricExpressParamList)) {
             for (AviatorExpressParam aviatorExpressParam : metricExpressParamList) {
-                aviatorExpressParamService.saveData(aviatorExpressParam);
+                aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
                 BaseUdafParamMetricExpressListRelation relation = new BaseUdafParamMetricExpressListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
@@ -67,7 +68,7 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
         }
         AviatorExpressParam retainExpressParam = baseUdafParam.getRetainExpressParam();
         if (retainExpressParam != null) {
-            aviatorExpressParamService.saveData(retainExpressParam);
+            aviatorExpressParamService.saveDataByModelColumn(retainExpressParam);
             BaseUdafParamRetainExpressRelation relation = new BaseUdafParamRetainExpressRelation();
             relation.setBaseUdafParamId(baseUdafParam.getId());
             relation.setAviatorExpressParamId(retainExpressParam.getId());
@@ -77,7 +78,7 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
         List<AviatorExpressParam> objectiveCompareFieldParamList = baseUdafParam.getObjectiveCompareFieldParamList();
         if (CollUtil.isNotEmpty(objectiveCompareFieldParamList)) {
             for (AviatorExpressParam aviatorExpressParam : objectiveCompareFieldParamList) {
-                aviatorExpressParamService.saveData(aviatorExpressParam);
+                aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
                 BaseUdafParamObjectiveCompareFieldExpressListRelation relation = new BaseUdafParamObjectiveCompareFieldExpressListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
@@ -99,7 +100,7 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
         List<AviatorExpressParam> distinctFieldListParamList = baseUdafParam.getDistinctFieldListParamList();
         if (CollUtil.isNotEmpty(distinctFieldListParamList)) {
             for (AviatorExpressParam aviatorExpressParam : distinctFieldListParamList) {
-                aviatorExpressParamService.saveData(aviatorExpressParam);
+                aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
                 BaseUdafParamDistinctFieldListRelation relation = new BaseUdafParamDistinctFieldListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());

@@ -11,4 +11,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
  */
 public interface WindowParamService extends IService<WindowParam> {
 
+    void saveData(WindowParam windowParam);
+
 }

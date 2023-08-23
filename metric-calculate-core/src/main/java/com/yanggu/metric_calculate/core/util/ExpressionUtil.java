@@ -13,6 +13,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.googlecode.aviator.Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY;
 
@@ -62,16 +63,16 @@ public class ExpressionUtil {
      * 验证依赖参数是否正确
      *
      * @param expression
-     * @param fieldMap
+     * @param fieldSet
      */
-    public static void checkVariable(Expression expression, Map<String, Class<?>> fieldMap) {
+    public static void checkVariable(Expression expression, Set<String> fieldSet) {
         List<String> variableNames = expression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
             return;
         }
         //验证数据明细宽表中是否包含该字段
         variableNames.forEach(tempName -> {
-            if (!fieldMap.containsKey(tempName)) {
+            if (!fieldSet.contains(tempName)) {
                 throw new RuntimeException("数据明细宽表中没有该字段: " + tempName);
             }
         });

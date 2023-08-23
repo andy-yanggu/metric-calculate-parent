@@ -8,6 +8,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParam;
  */
 public interface MixUdafParamService extends IService<MixUdafParam> {
 
-    void saveData(MixUdafParam mixUdafParam);
+    void saveData(MixUdafParam mixUdafParam) throws Exception;
 
 }

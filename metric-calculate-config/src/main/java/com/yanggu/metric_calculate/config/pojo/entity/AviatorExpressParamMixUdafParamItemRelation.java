@@ -1,53 +1,41 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.*;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.Table;
+import java.io.Serializable;
+import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.Date;
-
 /**
- * 混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表 实体类。
+ * Aviator表达式和混合类型参数中间表 实体类。
  *
  * @author MondayLi
- * @since 2023-07-11
+ * @since 2023-08-23
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "mix_udaf_param_mix_agg_map_relation")
-public class MixUdafParamMixAggMapRelation implements Serializable {
+@Table(value = "aviator_express_param_mix_udaf_param_item_relation")
+public class AviatorExpressParamMixUdafParamItemRelation implements Serializable {
 
-    
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
     /**
-     * 混合聚合函数参数id
+     * Aviator表达式id
      */
-    private Integer mixUdafParamId;
+    private Integer aviatorExpressParamId;
 
     /**
-     * map的key名称
+     * 混合类型参数id
      */
-    private String keyName;
-
-    /**
-     * 基本聚合函数参数id
-     */
-    private Integer baseUdafParamId;
-
-    @RelationManyToOne(selfField = "baseUdafParamId", targetField = "id")
-    private BaseUdafParam baseUdafParam;
-
-    /**
-     * 索引
-     */
-    private Integer sort;
+    private Integer mixUdafParamItemId;
 
     /**
      * 用户id

@@ -347,14 +347,10 @@ public class FieldProcessorUtil {
             AbstractMixAggregateFunction<OUT> abstractMixAggregateFunction = (AbstractMixAggregateFunction<OUT>) aggregateFunction;
 
             Map<String, BaseUdafParam> mixAggMap = mixUdafParam.getMixAggMap();
-            Map<String, Class<?>> tempMap = new HashMap<>();
-            for (String key : mixAggMap.keySet()) {
-                tempMap.put(key, Object.class);
-            }
 
             //设置表达式
             Expression expression = ExpressionUtil.compileExpress(mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
-            ExpressionUtil.checkVariable(expression, tempMap);
+            ExpressionUtil.checkVariable(expression, mixAggMap.keySet());
             abstractMixAggregateFunction.setExpression(expression);
 
             //设置mixAggregateFunctionMap

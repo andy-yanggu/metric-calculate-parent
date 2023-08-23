@@ -66,6 +66,13 @@ public class AviatorExpressParam implements Serializable {
     )
     private List<ModelColumn> modelColumnList;
 
+    @RelationOneToMany(
+            joinTable = "aviator_express_param_mix_udaf_param_item_relation",
+            selfField = "id", joinSelfColumn = "aviator_express_param_id",
+            targetField = "id", joinTargetColumn = "mix_udaf_param_item_id"
+    )
+    private List<MixUdafParamItem> mixUdafParamItemList;
+
     /**
      * 使用的Aviator函数实例列表
      */

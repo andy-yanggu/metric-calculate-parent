@@ -63,7 +63,7 @@ public class ModelColumnServiceImpl extends ServiceImpl<ModelColumnMapper, Model
                 }
                 aviatorExpressParam.setModelColumnList(newTempModelColumnList);
             }
-            aviatorExpressParamService.saveData(aviatorExpressParam);
+            aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
 
             ModelColumnAviatorExpressParamRelation relation = new ModelColumnAviatorExpressParamRelation();
             relation.setModelColumnId(modelColumn.getId());

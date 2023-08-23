@@ -65,7 +65,7 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
         //编译表达式
         Expression tempMetricExpression = ExpressionUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory);
         //验证数据明细宽表中是否包含该字段
-        ExpressionUtil.checkVariable(tempMetricExpression, fieldMap);
+        ExpressionUtil.checkVariable(tempMetricExpression, fieldMap.keySet());
 
         this.metricExpression = tempMetricExpression;
     }

@@ -93,7 +93,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
         if (filterExpressParam != null) {
             filterExpressParam.setUserId(derive.getUserId());
-            aviatorExpressParamService.save(filterExpressParam);
+            aviatorExpressParamService.saveDataByModelColumn(filterExpressParam);
             //保存派生指标和前置过滤条件中间表数据
             DeriveFilterExpressRelation deriveFilterExpressRelation = new DeriveFilterExpressRelation();
             deriveFilterExpressRelation.setDeriveId(derive.getId());
@@ -116,7 +116,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         //保存窗口数据
         WindowParam windowParam = derive.getWindowParam();
         windowParam.setUserId(derive.getUserId());
-        windowParamService.save(windowParam);
+        windowParamService.saveData(windowParam);
         //保存派生指标和窗口数据中间表
         DeriveWindowParamRelation deriveWindowParamRelation = new DeriveWindowParamRelation();
         deriveWindowParamRelation.setDeriveId(derive.getId());

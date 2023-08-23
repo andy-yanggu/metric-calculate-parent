@@ -26,7 +26,7 @@ public class FieldOrderParamServiceImpl extends ServiceImpl<FieldOrderParamMappe
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(FieldOrderParam fieldOrderParam) throws Exception {
         AviatorExpressParam aviatorExpressParam = fieldOrderParam.getAviatorExpressParam();
-        aviatorExpressParamService.saveData(aviatorExpressParam);
+        aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
         fieldOrderParam.setAviatorExpressParamId(aviatorExpressParam.getId());
         super.save(fieldOrderParam);
     }

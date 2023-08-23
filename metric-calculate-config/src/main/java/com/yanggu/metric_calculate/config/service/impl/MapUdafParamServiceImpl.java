@@ -35,7 +35,7 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
 
         List<AviatorExpressParam> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
         for (AviatorExpressParam aviatorExpressParam : distinctFieldParamList) {
-            aviatorExpressParamService.saveData(aviatorExpressParam);
+            aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
             MapUdafParamDistinctFieldListRelation relation = new MapUdafParamDistinctFieldListRelation();
             relation.setMapUdafParamId(mapUdafParam.getId());
             relation.setAviatorExpressParamId(aviatorExpressParam.getId());

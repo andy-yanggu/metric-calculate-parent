@@ -35,11 +35,15 @@ public class Codegen {
         GlobalConfig globalConfig = new GlobalConfig();
 
         //产物路径
-        globalConfig.setSourceDir("D://test");
+        globalConfig.setSourceDir("D://test2");
         //设置包名
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
+        //设置生成的表名
+        //globalConfig.setGenerateTable("aviator_express_param_mix_udaf_param_item_relation");
+        //设置生成的mapper的xml路径
+        globalConfig.setMapperXmlPath("D://test2/mapper");
 
-        //设置生成 entity 并启用 Lombok
+        //设置生成entity
         globalConfig.enableEntity()
                 .setWithLombok(true)
                 .setOverwriteEnable(true);

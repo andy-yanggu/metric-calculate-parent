@@ -75,7 +75,7 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
             throw new RuntimeException("过滤条件为常量表达式, 没有意义: " + filterExpressParam.getExpress());
         }
         //验证数据明细宽表中是否包含该字段
-        ExpressionUtil.checkVariable(tempFilterExpression, fieldMap);
+        ExpressionUtil.checkVariable(tempFilterExpression, fieldMap.keySet());
         this.filterExpression = tempFilterExpression;
     }
 

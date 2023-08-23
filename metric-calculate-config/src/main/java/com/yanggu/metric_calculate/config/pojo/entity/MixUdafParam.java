@@ -43,7 +43,7 @@ public class MixUdafParam implements Serializable {
      * <p>k是名字, value是基本聚合类型的参数, 用于定义聚合计算逻辑</p>
      */
     @RelationOneToMany(selfField = "id", targetField = "mixUdafParamId", orderBy = "sort")
-    private List<MixUdafParamMixAggMapRelation> mixUdafParamMixAggMapRelationList;
+    private List<MixUdafParamItem> mixUdafParamItemList;
 
     /**
      * 多个聚合值的计算表达式

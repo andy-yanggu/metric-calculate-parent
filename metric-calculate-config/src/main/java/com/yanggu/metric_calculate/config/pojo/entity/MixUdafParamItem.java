@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,25 +10,42 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 窗口相关参数 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
+ * 混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表 实体类。
  */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(value = "window_param")
-public class WindowParam implements Serializable {
+@Table(value = "mix_udaf_param_item")
+public class MixUdafParamItem implements Serializable {
 
-    private static final long serialVersionUID = 7153009252948514786L;
+    private static final long serialVersionUID = -9143234002581892763L;
 
-    /**
-     * 主键自增
-     */
     @Id(keyType = KeyType.Auto)
     private Integer id;
+
+    /**
+     * 名称
+     */
+    private String name;
+
+    /**
+     * 混合聚合函数参数id
+     */
+    private Integer mixUdafParamId;
+
+    /**
+     * 基本聚合函数参数id
+     */
+    private Integer baseUdafParamId;
+
+    @RelationManyToOne(selfField = "baseUdafParamId", targetField = "id")
+    private BaseUdafParam baseUdafParam;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
     /**
      * 用户id

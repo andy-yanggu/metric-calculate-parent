@@ -73,4 +73,5 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
             aggregateFunctionParamMixUdafParamRelationService.save(relation);
         }
     }
+
 }
