@@ -32,6 +32,9 @@ public class AggregateFunctionParam implements Serializable {
      */
     private Integer aggregateFunctionId;
 
+    @RelationManyToOne(selfField = "aggregateFunctionId", targetField = "id")
+    private AggregateFunction aggregateFunction;
+
     /**
      * 基本类型聚合函数参数
      */

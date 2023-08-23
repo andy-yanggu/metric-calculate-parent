@@ -116,7 +116,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
         }
 
         com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam expressParam =
-                                            aviatorExpressParamMapstruct.toCoreData(aviatorExpressParam);
+                                            aviatorExpressParamMapstruct.toCoreAviatorExpressParam(aviatorExpressParam);
 
         AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
         aviatorFunctionFactory.init();

@@ -1,10 +1,12 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DeriveService;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,10 @@ public class DeriveController {
     @Autowired
     private DeriveService deriveService;
 
-    @PostMapping("save")
+    @Autowired
+    private DeriveMapstruct deriveMapstruct;
+
+    @PostMapping("/save")
     @Operation(summary = "新增派生指标")
     public Result<Void> save(@RequestBody DeriveDto derive) throws Exception {
         deriveService.create(derive);
@@ -83,6 +88,13 @@ public class DeriveController {
     @GetMapping("page")
     public Page<Derive> page(Page<Derive> page) {
         return deriveService.page(page);
+    }
+
+    @GetMapping("/test/{deriveId}")
+    public Result<DeriveMetrics> getDeriveMetrics(@PathVariable Integer deriveId) {
+        Derive derive = deriveService.getMapper().selectOneWithRelationsById(deriveId);
+        DeriveMetrics deriveMetrics = deriveMapstruct.toDeriveMetrics(derive);
+        return Result.ok(deriveMetrics);
     }
 
 }

@@ -103,12 +103,12 @@ public class Derive implements Serializable {
     /**
      * 精度
      */
-    private Integer roundAccuracy;
+    //private Integer roundAccuracy;
 
     /**
      * 精度类型(0不处理 1四舍五入 2向上保留)
      */
-    private Integer roundAccuracyType;
+    //private Integer roundAccuracyType;
 
     /**
      * 数据类型
@@ -123,7 +123,7 @@ public class Derive implements Serializable {
     /**
      * 是否包含当前笔
      */
-    private Integer includeCurrent;
+    private Boolean includeCurrent;
 
     /**
      * 用户id

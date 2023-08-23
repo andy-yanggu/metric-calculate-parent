@@ -18,13 +18,13 @@ public class Dimension implements Serializable {
     private String columnName;
 
     /**
-     * 维度的顺序
-     */
-    private Integer columnIndex;
-
-    /**
      * 绑定维度名称
      */
     private String dimensionName;
+
+    /**
+     * 维度的顺序
+     */
+    private Integer columnIndex;
 
 }

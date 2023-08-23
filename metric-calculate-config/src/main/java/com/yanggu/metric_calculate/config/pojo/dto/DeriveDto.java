@@ -97,7 +97,7 @@ public class DeriveDto implements Serializable {
     /**
      * 是否包含当前笔
      */
-    private Integer includeCurrent;
+    private Boolean includeCurrent;
 
     /**
      * 用户id

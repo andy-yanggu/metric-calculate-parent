@@ -41,7 +41,7 @@ public class FieldOrderParam implements Serializable {
     /**
      * 是否升序, true升序, false降序
      */
-    private Integer isAsc;
+    private Boolean isAsc;
 
     /**
      * 用户id
