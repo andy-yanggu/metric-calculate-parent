@@ -1,23 +1,21 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.RelationManyToOne;
+import com.mybatisflex.annotation.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表 实体类。
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Table(value = "mix_udaf_param_item")
-public class MixUdafParamItem implements Serializable {
+public class MixUdafParamItem extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -9143234002581892763L;
 
@@ -46,28 +44,5 @@ public class MixUdafParamItem implements Serializable {
      * 索引
      */
     private Integer sort;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    @Column(onInsertValue = "0", isLogicDelete = true)
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
-    private Date updateTime;
 
 }

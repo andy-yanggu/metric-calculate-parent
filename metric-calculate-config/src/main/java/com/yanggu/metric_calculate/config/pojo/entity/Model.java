@@ -1,24 +1,22 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.RelationOneToMany;
+import com.mybatisflex.annotation.Table;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
  * 数据明细宽表 实体类。
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(value = "model")
-public class Model implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class Model extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 193942509865715855L;
 
@@ -44,29 +42,6 @@ public class Model implements Serializable {
      * 目录id
      */
     private Integer directoryId;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    @Column(onInsertValue = "0", isLogicDelete = true)
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
-    private Date updateTime;
 
     /**
      * 宽表字段列表

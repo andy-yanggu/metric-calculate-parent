@@ -2,28 +2,20 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
 import com.mybatisflex.core.handler.JacksonTypeHandler;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 /**
  * 混合类型udaf参数 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(value = "mix_udaf_param")
-public class MixUdafParam implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class MixUdafParam extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = -827357754476085192L;
 
@@ -60,28 +52,5 @@ public class MixUdafParam implements Serializable {
      */
     @Column(typeHandler = JacksonTypeHandler.class)
     private Map<String, Object> param;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    @Column(onInsertValue = "0", isLogicDelete = true)
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
-    private Date updateTime;
 
 }

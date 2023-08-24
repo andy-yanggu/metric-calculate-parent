@@ -1,31 +1,23 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 基本聚合参数，对象型比较字段列表中间表 实体类。
- *
- * @author MondayLi
- * @since 2023-07-11
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 @Table(value = "base_udaf_param_objective_compare_field_express_list_relation")
-public class BaseUdafParamObjectiveCompareFieldExpressListRelation implements Serializable {
+public class BaseUdafParamObjectiveCompareFieldExpressListRelation extends BaseEntity implements Serializable {
 
-    
+    private static final long serialVersionUID = -7763676833687928633L;
+
     @Id(keyType = KeyType.Auto)
     private Integer id;
 
@@ -38,28 +30,5 @@ public class BaseUdafParamObjectiveCompareFieldExpressListRelation implements Se
      * Aviator函数参数id
      */
     private Integer aviatorExpressParamId;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    @Column(onInsertValue = "0", isLogicDelete = true)
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
-    private Date updateTime;
 
 }

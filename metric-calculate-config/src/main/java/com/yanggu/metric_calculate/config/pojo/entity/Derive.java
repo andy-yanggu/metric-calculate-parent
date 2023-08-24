@@ -1,24 +1,19 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
  * 派生指标 实体类。
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(value = "derive")
-public class Derive implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class Derive extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 2470923557083328784L;
 
@@ -124,28 +119,5 @@ public class Derive implements Serializable {
      * 是否包含当前笔
      */
     private Boolean includeCurrent;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    @Column(onInsertValue = "0", isLogicDelete = true)
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
-    private Date updateTime;
 
 }

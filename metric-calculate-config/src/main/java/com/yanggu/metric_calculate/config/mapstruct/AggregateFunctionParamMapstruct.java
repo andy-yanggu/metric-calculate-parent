@@ -8,7 +8,13 @@ import org.mapstruct.Named;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("AggregateFunctionParamMapstruct")
-@Mapper(uses = {BaseUdafParamMapstruct.class, MapUdafParamMapstruct.class, MixUdafParamMapstruct.class}, componentModel = SPRING)
+@Mapper(
+        uses = {
+                BaseUdafParamMapstruct.class,
+                MapUdafParamMapstruct.class,
+                MixUdafParamMapstruct.class
+        },
+        componentModel = SPRING)
 public interface AggregateFunctionParamMapstruct {
 
     @Named("toCoreAggregateFunctionParam")

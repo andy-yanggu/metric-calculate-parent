@@ -1,25 +1,23 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.*;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.RelationOneToOne;
+import com.mybatisflex.annotation.Table;
 import com.yanggu.metric_calculate.config.enums.DataType;
 import com.yanggu.metric_calculate.config.enums.ModelColumnFieldType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 宽表字段 实体类。
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(value = "model_column")
-public class ModelColumn implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class ModelColumn extends BaseEntity implements Serializable {
 
     private static final long serialVersionUID = 1424390731821599400L;
 
@@ -60,29 +58,6 @@ public class ModelColumn implements Serializable {
      * 索引
      */
     private Integer sort;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    @Column(onInsertValue = "0", isLogicDelete = true)
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP")
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    @Column(onInsertValue = "CURRENT_TIMESTAMP", onUpdateValue = "CURRENT_TIMESTAMP")
-    private Date updateTime;
 
     /**
      * 如果是虚拟字段，增加Aviator表达式

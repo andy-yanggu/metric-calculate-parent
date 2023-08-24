@@ -1,12 +1,11 @@
-package com.yanggu.metric_calculate.config;
+package com.yanggu.metric_calculate.config.test;
 
-import com.mybatisflex.codegen.Generator;
-import com.mybatisflex.codegen.config.ColumnConfig;
 import com.mybatisflex.codegen.config.GlobalConfig;
 import com.mybatisflex.codegen.dialect.JdbcTypeMapping;
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.service.IService;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseEntity;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.time.LocalDateTime;
@@ -24,7 +23,7 @@ public class Codegen {
         GlobalConfig globalConfig = createGlobalConfigUseStyle1();
 
         //通过 datasource 和 globalConfig 创建代码生成器
-        Generator generator = new Generator(dataSource, globalConfig);
+        MyGenerator generator = new MyGenerator(dataSource, globalConfig);
 
         //生成代码
         generator.generate();
@@ -39,13 +38,17 @@ public class Codegen {
         //设置包名
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
         //设置生成的表名
-        //globalConfig.setGenerateTable("aviator_express_param_mix_udaf_param_item_relation");
+        globalConfig.setGenerateTable("aviator_express_param_mix_udaf_param_item_relation");
         //设置生成的mapper的xml路径
         globalConfig.setMapperXmlPath("D://test2/mapper");
+        //设置entity的模板路径
+        globalConfig.setEntityTemplatePath("entity.tpl");
 
         //设置生成entity
         globalConfig.enableEntity()
                 .setWithLombok(true)
+                //设置父类
+                .setSuperClass(BaseEntity.class)
                 .setOverwriteEnable(true);
 
         //设置controller
@@ -76,26 +79,28 @@ public class Codegen {
                 .setFileSuffix("Mapper")
                 .setOverwriteEnable(true);
 
+        //已经在父类中定义了相关字段
         //设置逻辑删除字段名
-        ColumnConfig isDeletedColumnConfig = new ColumnConfig();
-        isDeletedColumnConfig.setColumnName("is_deleted");
-        isDeletedColumnConfig.setLogicDelete(true);
-        isDeletedColumnConfig.setOnInsertValue("0");
-        globalConfig.setColumnConfig(isDeletedColumnConfig);
+        //ColumnConfig isDeletedColumnConfig = new ColumnConfig();
+        //isDeletedColumnConfig.setColumnName("is_deleted");
+        //isDeletedColumnConfig.setLogicDelete(true);
+        //isDeletedColumnConfig.setOnInsertValue("0");
+        //globalConfig.setColumnConfig(isDeletedColumnConfig);
+        //
+        ////设置创建时间
+        //ColumnConfig createTimeColumnConfig = new ColumnConfig();
+        //createTimeColumnConfig.setColumnName("create_time");
+        //createTimeColumnConfig.setOnInsertValue("CURRENT_TIMESTAMP");
+        //globalConfig.setColumnConfig(createTimeColumnConfig);
+        //
+        ////设置更新时间
+        //ColumnConfig updateTimeColumnConfig = new ColumnConfig();
+        //updateTimeColumnConfig.setColumnName("update_time");
+        //updateTimeColumnConfig.setOnInsertValue("CURRENT_TIMESTAMP");
+        //updateTimeColumnConfig.setOnUpdateValue("CURRENT_TIMESTAMP");
+        //globalConfig.setColumnConfig(updateTimeColumnConfig);
 
-        //设置创建时间
-        ColumnConfig createTimeColumnConfig = new ColumnConfig();
-        createTimeColumnConfig.setColumnName("create_time");
-        createTimeColumnConfig.setOnInsertValue("CURRENT_TIMESTAMP");
-        globalConfig.setColumnConfig(createTimeColumnConfig);
-
-        //设置更新时间
-        ColumnConfig updateTimeColumnConfig = new ColumnConfig();
-        updateTimeColumnConfig.setColumnName("update_time");
-        updateTimeColumnConfig.setOnInsertValue("CURRENT_TIMESTAMP");
-        updateTimeColumnConfig.setOnUpdateValue("CURRENT_TIMESTAMP");
-        globalConfig.setColumnConfig(updateTimeColumnConfig);
-
+        //禁止生成TableDef
         globalConfig.disableTableDef();
 
         //设置Date类型
