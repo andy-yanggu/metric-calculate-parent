@@ -19,10 +19,9 @@ import java.io.InputStream;
 public class JmhTest3 {
 
     public static void main(String[] args) {
-        InputStream resourceAsStream = JmhTest3.class.getClassLoader().getResourceAsStream("metric_config.json");
+        InputStream resourceAsStream = JmhTest3.class.getClassLoader().getResourceAsStream("mock_metric_config/1.json");
         String jsonString = IoUtil.read(resourceAsStream).toString();
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {
-        });
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {});
 
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);

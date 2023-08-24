@@ -6,6 +6,7 @@ import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactor
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -13,6 +14,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -50,9 +52,9 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
         if (mixUdafParam == null) {
             throw new RuntimeException("混合参数为空");
         }
-        Map<String, BaseUdafParam> mixAggMap = mixUdafParam.getMixAggMap();
-        if (CollUtil.isEmpty(mixAggMap)) {
-            throw new RuntimeException("map参数为空");
+        List<MixUdafParamItem> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
+        if (CollUtil.isEmpty(mixUdafParamItemList)) {
+            throw new RuntimeException("基本聚合函数参数列表为空");
         }
 
         if (aggregateFunctionFactory == null) {
@@ -64,10 +66,10 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
         }
 
         Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
-        for (Map.Entry<String, BaseUdafParam> entry : mixAggMap.entrySet()) {
+        for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
             FieldProcessor<JSONObject, Object> metricFieldProcessor =
-                    FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, entry.getValue(), aviatorFunctionFactory, aggregateFunctionFactory);
-            map.put(entry.getKey(), metricFieldProcessor);
+                    FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, mixUdafParamItem.getBaseUdafParam(), aviatorFunctionFactory, aggregateFunctionFactory);
+            map.put(mixUdafParamItem.getName(), metricFieldProcessor);
         }
 
         this.multiBaseAggProcessorMap = map;

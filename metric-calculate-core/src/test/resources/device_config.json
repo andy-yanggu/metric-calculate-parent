@@ -22,21 +22,29 @@
         "aggregateType": "BASEMIX",
         "mixUdafParam": {
           "aggregateType": "BASEMIX",
-          "mixAggMap": {
-            "max_timestamp": {
-              "aggregateType": "MAX",
-              "metricExpressParam" : {
-                "express": "timestamp"
-              }
+          "mixUdafParamItemList": [
+            {
+              "name": "max_timestamp",
+              "baseUdafParam": {
+                "aggregateType": "MAX",
+                "metricExpressParam": {
+                  "express": "timestamp"
+                }
+              },
+              "sort": 1
             },
-            "min_timestamp": {
-              "aggregateType": "MIN",
-              "metricExpressParam" : {
-                "express": "timestamp"
-              }
+            {
+              "name": "min_timestamp",
+              "baseUdafParam": {
+                "aggregateType": "MIN",
+                "metricExpressParam": {
+                  "express": "timestamp"
+                }
+              },
+              "sort": 2
             }
-          },
-          "metricExpressParam" : {
+          ],
+          "metricExpressParam": {
             "express": "max_timestamp - min_timestamp"
           }
         }

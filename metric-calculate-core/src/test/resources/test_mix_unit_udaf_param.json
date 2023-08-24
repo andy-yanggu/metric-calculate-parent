@@ -1,19 +1,27 @@
 {
   "aggregateType": "BASEMIX",
-  "mixAggMap": {
-    "上海_sum": {
-      "aggregateType": "SUM",
-      "metricExpressParam": {
-        "express": "city == '上海' ? amount : 0"
-      }
+  "mixUdafParamItemList": [
+    {
+      "name": "上海_sum",
+      "baseUdafParam": {
+        "aggregateType": "SUM",
+        "metricExpressParam" : {
+          "express": "city == '上海' ? amount : 0"
+        }
+      },
+      "sort": 1
     },
-    "全国_sum": {
-      "aggregateType": "SUM",
-      "metricExpressParam": {
-        "express": "amount"
-      }
+    {
+      "name": "全国_sum",
+      "baseUdafParam": {
+        "aggregateType": "SUM",
+        "metricExpressParam" : {
+          "express": "amount"
+        }
+      },
+      "sort": 2
     }
-  },
+  ],
   "metricExpressParam": {
     "express": "上海_sum / 全国_sum"
   }

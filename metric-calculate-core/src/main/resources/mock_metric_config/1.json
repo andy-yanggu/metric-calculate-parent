@@ -99,7 +99,6 @@
         "aggregateType": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTFIELD",
-          "aggregateType": "SORTEDLIMITLISTFIELD",
           "retainExpressParam" : {
             "express": "debit_amt_out"
           },
@@ -359,20 +358,28 @@
         "aggregateType": "BASEMIX",
         "mixUdafParam": {
           "aggregateType": "BASEMIX",
-          "mixAggMap": {
-            "zhangsan_sum_amount": {
-              "aggregateType": "SUM",
-              "metricExpressParam" : {
-                "express": "account_no_in == '张三' ? debit_amt_out : 0"
-              }
+          "mixUdafParamItemList": [
+            {
+              "name": "zhangsan_sum_amount",
+              "baseUdafParam": {
+                "aggregateType": "SUM",
+                "metricExpressParam" : {
+                  "express": "account_no_in == '张三' ? debit_amt_out : 0"
+                }
+              },
+              "sort": 1
             },
-            "total_sum_amount": {
-              "aggregateType": "SUM",
-              "metricExpressParam" : {
-                "express": "debit_amt_out"
-              }
+            {
+              "name": "total_sum_amount",
+              "baseUdafParam": {
+                "aggregateType": "SUM",
+                "metricExpressParam" : {
+                  "express": "debit_amt_out"
+                }
+              },
+              "sort": 2
             }
-          },
+          ],
           "metricExpressParam" : {
             "express": "zhangsan_sum_amount / total_sum_amount"
           }
@@ -554,6 +561,45 @@
       "windowParam": {
         "windowType": "SLIDING_COUNT_WINDOW",
         "limit": 5
+      },
+      "roundAccuracy": {
+        "useAccuracy": false,
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
+    },
+    {
+      "id": 14,
+      "name": "today_debit_asset_amount_gt_100",
+      "displayName": "当天借方金额总和大于100",
+      "description": null,
+      "dimensionList": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 0,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "TIMESTAMP"
+      },
+      "filterExpressParam": {
+        "express": "debit_amt_out > 100"
+      },
+      "aggregateFunctionParam": {
+        "aggregateType": "SUM",
+        "baseUdafParam": {
+          "aggregateType": "SUM",
+          "metricExpressParam" : {
+            "express": "debit_amt_out"
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "DAY"
       },
       "roundAccuracy": {
         "useAccuracy": false,

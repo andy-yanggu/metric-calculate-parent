@@ -29,6 +29,7 @@ import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.json.JSONObject;
@@ -182,14 +183,18 @@ class FieldProcessorUtilTest {
 
         MixUdafParam mixUdafParam = new MixUdafParam();
         mixUdafParam.setAggregateType("BASEMIX");
-        Map<String, BaseUdafParam> mixAggMap = new HashMap<>();
-        mixUdafParam.setMixAggMap(mixAggMap);
+        List<MixUdafParamItem> mixUdafParamItemList = new ArrayList<>();
+        mixUdafParam.setMixUdafParamItemList(mixUdafParamItemList);
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SUM");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
         baseUdafParam.setMetricExpressParam(aviatorExpressParam);
-        mixAggMap.put("SUM", baseUdafParam);
+        MixUdafParamItem mixUdafParamItem = new MixUdafParamItem();
+        mixUdafParamItem.setName("SUM");
+        mixUdafParamItem.setBaseUdafParam(baseUdafParam);
+        mixUdafParamItem.setSort(0);
+        mixUdafParamItemList.add(mixUdafParamItem);
 
         MixFieldProcessor<Object> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
@@ -345,15 +350,18 @@ class FieldProcessorUtilTest {
 
         MixUdafParam mixUdafParam = new MixUdafParam();
         mixUdafParam.setAggregateType("BASEMIX");
-
-        HashMap<String, BaseUdafParam> mixAggMap = new HashMap<>();
+        List<MixUdafParamItem> mixUdafParamItemList = new ArrayList<>();
+        mixUdafParam.setMixUdafParamItemList(mixUdafParamItemList);
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SUM");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
         baseUdafParam.setMetricExpressParam(aviatorExpressParam);
-        mixAggMap.put("amount", baseUdafParam);
-        mixUdafParam.setMixAggMap(mixAggMap);
+        MixUdafParamItem mixUdafParamItem = new MixUdafParamItem();
+        mixUdafParamItem.setName("amount");
+        mixUdafParamItem.setBaseUdafParam(baseUdafParam);
+        mixUdafParamItem.setSort(0);
+        mixUdafParamItemList.add(mixUdafParamItem);
 
         mixUdafParam.setMetricExpressParam(aviatorExpressParam);
         aggregateFunctionParam.setMixUdafParam(mixUdafParam);

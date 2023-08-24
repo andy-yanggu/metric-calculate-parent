@@ -24,13 +24,13 @@ import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import com.yanggu.metric_calculate.core.util.ExpressionUtil;
 import lombok.SneakyThrows;
 import org.dromara.hutool.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 字段处理器工具类
@@ -346,23 +346,29 @@ public class FieldProcessorUtil {
 
             AbstractMixAggregateFunction<OUT> abstractMixAggregateFunction = (AbstractMixAggregateFunction<OUT>) aggregateFunction;
 
-            Map<String, BaseUdafParam> mixAggMap = mixUdafParam.getMixAggMap();
+            List<MixUdafParamItem> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
 
-            //设置表达式
-            Expression expression = ExpressionUtil.compileExpress(mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
-            ExpressionUtil.checkVariable(expression, mixAggMap.keySet());
-            abstractMixAggregateFunction.setExpression(expression);
 
             //设置mixAggregateFunctionMap
+            Set<String> keySet = new HashSet<>();
             Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
-            mixAggMap.forEach((tempParam, tempBaseUdafParam) -> {
+            mixUdafParamItemList.forEach(mixUdafParamItem -> {
+                BaseUdafParam tempBaseUdafParam = mixUdafParamItem.getBaseUdafParam();
+                String name = mixUdafParamItem.getName();
+                keySet.add(name);
                 AggregateFunction<Object, Object, Object> tempAggregateFunction =
                         aggregateFunctionFactory.getAggregateFunction(tempBaseUdafParam.getAggregateType());
                 AggregateFunctionFactory.initAggregateFunction(tempAggregateFunction, tempBaseUdafParam.getParam());
 
-                mixAggregateFunctionMap.put(tempParam, tempAggregateFunction);
+                mixAggregateFunctionMap.put(name, tempAggregateFunction);
             });
             abstractMixAggregateFunction.setMixAggregateFunctionMap(mixAggregateFunctionMap);
+
+            //设置表达式
+            Expression expression = ExpressionUtil.compileExpress(mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
+            ExpressionUtil.checkVariable(expression, keySet);
+            abstractMixAggregateFunction.setExpression(expression);
+
             return new AggregateFieldProcessor<>(mixFieldProcessor, aggregateFunction);
         }
 

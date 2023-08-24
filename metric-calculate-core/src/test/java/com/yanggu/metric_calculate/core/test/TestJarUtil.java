@@ -29,4 +29,8 @@ public class TestJarUtil {
         //System.out.println(pathname);
     }
 
+    public static void main(String[] args) {
+
+    }
+
 }

@@ -43,7 +43,7 @@ class MixFieldProcessorTest {
     @Test
     void testInit3() {
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getMixFieldProcessor(fieldMap, new MixUdafParam()));
-        assertEquals("map参数为空", runtimeException.getMessage());
+        assertEquals("基本聚合函数参数列表为空", runtimeException.getMessage());
     }
 
     @Test

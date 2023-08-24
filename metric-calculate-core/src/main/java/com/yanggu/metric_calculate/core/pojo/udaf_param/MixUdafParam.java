@@ -21,11 +21,8 @@ public class MixUdafParam implements Serializable {
     private String aggregateType;
 
     /**
-     * 混合聚合类型定义
-     * <p>k是名字, value是基本聚合类型的参数, 用于定义聚合计算逻辑</p>
+     * 多个基本聚合函数参数
      */
-    private Map<String, BaseUdafParam> mixAggMap;
-
     private List<MixUdafParamItem> mixUdafParamItemList;
 
     /**

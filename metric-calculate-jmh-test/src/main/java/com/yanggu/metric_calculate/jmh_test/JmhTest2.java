@@ -35,7 +35,7 @@ public class JmhTest2 {
 
     @Setup(Level.Trial)
     public static void setup() throws Exception {
-        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("metric_config.json");
+        InputStream resourceAsStream = JmhTest2.class.getClassLoader().getResourceAsStream("mock_metric_config/1.json" );
         String jsonString = IoUtil.read(resourceAsStream).toString();
         MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {});
 

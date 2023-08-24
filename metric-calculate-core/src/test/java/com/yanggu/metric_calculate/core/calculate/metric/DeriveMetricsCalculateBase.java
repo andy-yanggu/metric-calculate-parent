@@ -20,7 +20,7 @@ class DeriveMetricsCalculateBase {
 
     //初始化配置文件中的所有派生指标
     static {
-        String jsonString = FileUtil.readUtf8String("metric_config.json");
+        String jsonString = FileUtil.readUtf8String("mock_metric_config/1.json");
         metricCalculate = MetricUtil.initMetricCalculate(JSONUtil.toBean(jsonString, MetricCalculate.class));
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {

@@ -8,12 +8,12 @@ import org.mapstruct.Named;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("MixUdafParamMapstruct")
-@Mapper(uses = {AviatorExpressParamMapstruct.class}, componentModel = SPRING)
+@Mapper(uses = {AviatorExpressParamMapstruct.class, MixUdafParamItemMapstruct.class}, componentModel = SPRING)
 public interface MixUdafParamMapstruct {
 
     @Named("toCoreMixUdafParam")
     @Mapping(source = "aggregateFunction.name", target = "aggregateType")
-    //TODO 将原来的map数据类型修改成list
+    @Mapping(source = "mixUdafParamItemList", target = "mixUdafParamItemList", qualifiedByName = {"MixUdafParamItemMapstruct", "toCoreMixUdafParamItem"})
     @Mapping(source = "metricExpressParam", target = "metricExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
     @Mapping(source = "param", target = "param")
     com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam toCoreMixUdafParam(MixUdafParam mixUdafParam);
