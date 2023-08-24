@@ -87,7 +87,7 @@ public class BaseUdafParam extends BaseEntity implements Serializable {
     @RelationOneToMany(
             joinTable = "base_udaf_param_distinct_field_list_relation",
             selfField = "id", joinSelfColumn = "base_udaf_param_id",
-            targetField = "id", joinTargetColumn = "field_order_param_id"
+            targetField = "id", joinTargetColumn = "aviator_express_param_id"
     )
     private List<AviatorExpressParam> distinctFieldListParamList;
 

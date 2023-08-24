@@ -18,7 +18,7 @@
         "columnName": "trans_timestamp",
         "timeFormat": "TIMESTAMP"
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {
@@ -56,7 +56,7 @@
         "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "MIN",
         "baseUdafParam": {
@@ -94,7 +94,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
@@ -140,10 +140,9 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
-        "columnIndex": null
+        "timeFormat": "timestamp"
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "MAXFIELD",
         "baseUdafParam": {
@@ -186,7 +185,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {
@@ -223,7 +222,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "LISTOBJECT",
         "baseUdafParam": {
@@ -261,7 +260,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SORTEDLIMITLISTOBJECT",
         "baseUdafParam": {
@@ -307,7 +306,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "BASEMAP",
         "mapUdafParam": {
@@ -353,7 +352,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "BASEMIX",
         "mixUdafParam": {
@@ -413,7 +412,7 @@
         "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {
@@ -476,7 +475,7 @@
         "columnName": "trans_timestamp",
         "timeFormat": "TIMESTAMP"
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {
@@ -513,7 +512,7 @@
         "timeFormat": "timestamp",
         "columnIndex": null
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "FIRSTFIELD",
         "baseUdafParam": {
@@ -548,7 +547,7 @@
         "columnName": "trans_timestamp",
         "timeFormat": "TIMESTAMP"
       },
-      "filter": null,
+      "filterExpressParam": null,
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {
