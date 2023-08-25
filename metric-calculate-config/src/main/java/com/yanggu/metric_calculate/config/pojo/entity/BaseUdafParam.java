@@ -43,7 +43,7 @@ public class BaseUdafParam extends BaseEntity implements Serializable {
     /**
      * 多字段度量字段表达式：数值型需要。例如协方差需要两个参数
      */
-    @RelationOneToOne(
+    @RelationOneToMany(
             joinTable = "base_udaf_param_metric_express_list_relation",
             selfField = "id", joinSelfColumn = "base_udaf_param_id",
             targetField = "id", joinTargetColumn = "aviator_express_param_id"
