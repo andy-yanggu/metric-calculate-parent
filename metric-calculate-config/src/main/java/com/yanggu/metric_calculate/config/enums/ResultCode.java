@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum ResultCode {
 
     SUCCESS("200", "成功"),
+    NO_LOGIN("401", "未认证"),
     FAIL("500", "服务器异常, 异常信息: {}"),
     MODEL_EXIST("10000", "宽表名称或者中文名已经存在"),
     DERIVE_EXIST("10001", "派生指标名称或者中文名已经存在"),

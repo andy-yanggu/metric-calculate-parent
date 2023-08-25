@@ -2,89 +2,61 @@ package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
+import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 聚合函数 控制层。
- *
- * @author MondayLi
- * @since 2023-07-10
- */
 @RestController
+@Tag(name = "聚合函数管理")
 @RequestMapping("/aggregateFunction")
 public class AggregateFunctionController {
 
     @Autowired
     private AggregateFunctionService aggregateFunctionService;
 
-    /**
-     * 添加聚合函数。
-     *
-     * @param aggregateFunction 聚合函数
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
-    @PostMapping("save")
-    public boolean save(@RequestBody AggregateFunction aggregateFunction) {
-        return aggregateFunctionService.save(aggregateFunction);
+    @PostMapping("/save")
+    @Operation(summary = "新增聚合函数")
+    public Result<Void> save(@RequestBody AggregateFunction aggregateFunction) {
+        aggregateFunctionService.save(aggregateFunction);
+        return Result.ok();
     }
 
-    /**
-     * 根据主键删除聚合函数。
-     *
-     * @param id 主键
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
-    @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Serializable id) {
-        return aggregateFunctionService.removeById(id);
+    @DeleteMapping("/remove/{id}")
+    @Operation(summary = "删除聚合函数")
+    public Result<Void> remove(@PathVariable Serializable id) {
+        aggregateFunctionService.removeById(id);
+        return Result.ok();
     }
 
-    /**
-     * 根据主键更新聚合函数。
-     *
-     * @param aggregateFunction 聚合函数
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
-    @PutMapping("update")
-    public boolean update(@RequestBody AggregateFunction aggregateFunction) {
-        return aggregateFunctionService.updateById(aggregateFunction);
+    @PutMapping("/update")
+    @Operation(summary = "修改聚合函数")
+    public Result<Void> update(@RequestBody AggregateFunction aggregateFunction) {
+        aggregateFunctionService.updateById(aggregateFunction);
+        return Result.ok();
     }
 
-    /**
-     * 查询所有聚合函数。
-     *
-     * @return 所有数据
-     */
-    @GetMapping("list")
-    public List<AggregateFunction> list() {
-        return aggregateFunctionService.list();
+    @GetMapping("/list")
+    @Operation(summary = "聚合函数列表")
+    public Result<List<AggregateFunction>> list() {
+        return Result.ok(aggregateFunctionService.list());
     }
 
-    /**
-     * 根据聚合函数主键获取详细信息。
-     *
-     * @param id 聚合函数主键
-     * @return 聚合函数详情
-     */
-    @GetMapping("getInfo/{id}")
-    public AggregateFunction getInfo(@PathVariable Serializable id) {
-        return aggregateFunctionService.getById(id);
+    @GetMapping("/getInfo/{id}")
+    @Operation(summary = "聚合函数详情")
+    public Result<AggregateFunction> getInfo(@PathVariable Serializable id) {
+        return Result.ok(aggregateFunctionService.getById(id));
     }
 
-    /**
-     * 分页查询聚合函数。
-     *
-     * @param page 分页对象
-     * @return 分页对象
-     */
-    @GetMapping("page")
-    public Page<AggregateFunction> page(Page<AggregateFunction> page) {
-        return aggregateFunctionService.page(page);
+    @GetMapping("/page")
+    @Operation(summary = "聚合函数分页")
+    public Result<Page<AggregateFunction>> page(Page<AggregateFunction> page) {
+        return Result.ok(aggregateFunctionService.page(page));
     }
 
 }

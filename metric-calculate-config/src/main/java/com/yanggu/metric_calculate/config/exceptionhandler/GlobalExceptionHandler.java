@@ -9,18 +9,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.FAIL;
 
 @Slf4j
-@RestControllerAdvice(basePackages = {"com.yanggu.metric_calculate.config.controller"})
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     /**
      * 捕获业务异常
-     *
-     * @param exception
-     * @return
      */
     @ExceptionHandler(BusinessException.class)
-    public Result<Void> handlerBusinessException(BusinessException exception) {
-        log.warn("[业务异常] 异常code: {}, 异常信息: {}", exception.getCode(), exception.getMessage());
+    public Result<Void> handlerBusinessException(BusinessException exception, HttpServletRequest request) {
+        log.warn("[业务异常] 请求url: {}, 请求方式: {}, 异常code: {}, 异常信息: {}", request.getRequestURI(), request.getMethod(), exception.getCode(), exception.getMessage());
         return Result.fail(exception.getCode(), exception.getMessage());
     }
 

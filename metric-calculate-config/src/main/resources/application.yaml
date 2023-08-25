@@ -15,14 +15,10 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
   login-interceptor:
     exclude-path-list:
-      - '/v2/api-docs'
-      - '/swagger-resources'
-      - '/swagger-resources/**'
-      - '/configuration/ui'
-      - '/configuration/security'
       - '/doc.html/**'
       - '/webjars/**'
       - '/favicon.ico'
+      - '/v3/api-docs/**'
 
   #数据源配置
   datasource:

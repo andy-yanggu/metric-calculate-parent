@@ -2,89 +2,61 @@ package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.pojo.entity.Dimension;
+import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DimensionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 维度表 控制层。
- *
- * @author MondayLi
- * @since 2023-07-10
- */
 @RestController
+@Tag(name = "维度管理")
 @RequestMapping("/dimension")
 public class DimensionController {
 
     @Autowired
     private DimensionService dimensionService;
 
-    /**
-     * 添加维度表。
-     *
-     * @param dimension 维度表
-     * @return {@code true} 添加成功，{@code false} 添加失败
-     */
-    @PostMapping("save")
-    public boolean save(@RequestBody Dimension dimension) {
-        return dimensionService.save(dimension);
+    @PostMapping("/save")
+    @Operation(summary = "新增维度")
+    public Result<Void> save(@RequestBody Dimension dimension) {
+        dimensionService.save(dimension);
+        return Result.ok();
     }
 
-    /**
-     * 根据主键删除维度表。
-     *
-     * @param id 主键
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
-    @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Serializable id) {
-        return dimensionService.removeById(id);
+    @DeleteMapping("/remove/{id}")
+    @Operation(summary = "删除维度")
+    public Result<Void> remove(@PathVariable Serializable id) {
+        dimensionService.removeById(id);
+        return Result.ok();
     }
 
-    /**
-     * 根据主键更新维度表。
-     *
-     * @param dimension 维度表
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
-    @PutMapping("update")
-    public boolean update(@RequestBody Dimension dimension) {
-        return dimensionService.updateById(dimension);
+    @PutMapping("/update")
+    @Operation(summary = "修改维度")
+    public Result<Void> update(@RequestBody Dimension dimension) {
+        dimensionService.updateById(dimension);
+        return Result.ok();
     }
 
-    /**
-     * 查询所有维度表。
-     *
-     * @return 所有数据
-     */
-    @GetMapping("list")
-    public List<Dimension> list() {
-        return dimensionService.list();
+    @GetMapping("/list")
+    @Operation(summary = "维度列表")
+    public Result<List<Dimension>> list() {
+        return Result.ok(dimensionService.list());
     }
 
-    /**
-     * 根据维度表主键获取详细信息。
-     *
-     * @param id 维度表主键
-     * @return 维度表详情
-     */
-    @GetMapping("getInfo/{id}")
-    public Dimension getInfo(@PathVariable Serializable id) {
-        return dimensionService.getById(id);
+    @GetMapping("/getInfo/{id}")
+    @Operation(summary = "维度详情")
+    public Result<Dimension> getInfo(@PathVariable Integer id) {
+        return Result.ok(dimensionService.getById(id));
     }
 
-    /**
-     * 分页查询维度表。
-     *
-     * @param page 分页对象
-     * @return 分页对象
-     */
-    @GetMapping("page")
-    public Page<Dimension> page(Page<Dimension> page) {
-        return dimensionService.page(page);
+    @GetMapping("/page")
+    @Operation(summary = "维度分页")
+    public Result<Page<Dimension>> page(Page<Dimension> page) {
+        return Result.ok(dimensionService.page(page));
     }
 
 }

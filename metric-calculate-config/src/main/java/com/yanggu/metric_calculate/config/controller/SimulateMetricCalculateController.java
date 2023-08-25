@@ -33,4 +33,15 @@ public class SimulateMetricCalculateController {
         return Result.ok(result);
     }
 
+    @ApiOperationSupport(order = 2)
+    @Operation(summary = "有状态-计算接口")
+    @PostMapping("/state-calculate")
+    public <R> Result<DeriveMetricCalculateResult<R>> stateCalculateThread(
+            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input,
+            @RequestParam Integer modelId, @RequestParam Integer deriveId) {
+        //List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateCalculateThread(input);
+        //return Result.ok(resultList);
+        return null;
+    }
+
 }

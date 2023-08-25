@@ -15,11 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * 派生指标
- */
 @RestController
-@Tag(name = "派生指标")
+@Tag(name = "派生指标管理")
 @RequestMapping("/derive")
 public class DeriveController {
 
@@ -36,58 +33,36 @@ public class DeriveController {
         return Result.ok();
     }
 
-    /**
-     * 根据主键删除派生指标。
-     *
-     * @param id 主键
-     * @return {@code true} 删除成功，{@code false} 删除失败
-     */
-    @DeleteMapping("remove/{id}")
-    public boolean remove(@PathVariable Serializable id) {
-        return deriveService.removeById(id);
+    @DeleteMapping("/remove/{id}")
+    @Operation(summary = "删除派生指标")
+    public Result<Void> remove(@PathVariable Serializable id) {
+        deriveService.removeById(id);
+        return Result.ok();
     }
 
-    /**
-     * 根据主键更新派生指标。
-     *
-     * @param derive 派生指标
-     * @return {@code true} 更新成功，{@code false} 更新失败
-     */
-    @PutMapping("update")
-    public boolean update(@RequestBody Derive derive) {
-        return deriveService.updateById(derive);
+    @PutMapping("/update")
+    @Operation(summary = "修改派生指标")
+    public Result<Void> update(@RequestBody Derive derive) {
+        deriveService.updateById(derive);
+        return Result.ok();
     }
 
-    /**
-     * 查询所有派生指标。
-     *
-     * @return 所有数据
-     */
-    @GetMapping("list")
-    public List<Derive> list() {
-        return deriveService.list();
+    @GetMapping("/list")
+    @Operation(summary = "派生指标列表")
+    public Result<List<Derive>> list() {
+        return Result.ok(deriveService.list());
     }
 
-    /**
-     * 根据派生指标主键获取详细信息。
-     *
-     * @param id 派生指标主键
-     * @return 派生指标详情
-     */
-    @GetMapping("getInfo/{id}")
-    public DeriveDto getInfo(@PathVariable Integer id) {
-        return deriveService.queryById(id);
+    @GetMapping("/getInfo/{id}")
+    @Operation(summary = "派生指标详情")
+    public Result<DeriveDto> getInfo(@PathVariable Integer id) {
+        return Result.ok(deriveService.queryById(id));
     }
 
-    /**
-     * 分页查询派生指标。
-     *
-     * @param page 分页对象
-     * @return 分页对象
-     */
-    @GetMapping("page")
-    public Page<Derive> page(Page<Derive> page) {
-        return deriveService.page(page);
+    @GetMapping("/page")
+    @Operation(summary = "派生指标分页")
+    public Result<Page<Derive>> page(Page<Derive> page) {
+        return Result.ok(deriveService.page(page));
     }
 
     @GetMapping("/test/{deriveId}")
