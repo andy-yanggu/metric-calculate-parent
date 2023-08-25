@@ -1,12 +1,13 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
+import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 窗口相关参数 实体类。
@@ -23,5 +24,57 @@ public class WindowParam extends BaseEntity implements Serializable {
      */
     @Id(keyType = KeyType.Auto)
     private Integer id;
+
+    /**
+     * 窗口类型
+     */
+    private WindowTypeEnum windowType;
+
+    /**
+     * 宽表时间字段id
+     */
+    private Integer modelTimeColumnId;
+
+    /**
+     * 时间字段
+     */
+    @RelationManyToOne(selfField = "modelTimeColumnId", targetField = "id")
+    private ModelTimeColumn modelTimeColumn;
+
+    /**
+     * 时间周期
+     */
+    private Integer duration;
+
+    /**
+     * 时间单位
+     */
+    private TimeUnitEnum timeUnit;
+
+    /**
+     * 滑动计数窗口大小
+     */
+    private Integer slidingCount;
+
+    /**
+     * 状态窗口表达式列表
+     */
+    @RelationOneToMany(
+            joinTable = "window_param_status_express_param_list_relation",
+            selfField = "id", joinSelfColumn = "window_param_id",
+            targetField = "id", joinTargetColumn = "aviator_express_param_id"
+    )
+    private List<AviatorExpressParam> statusExpressParamList;
+
+    /**
+     * 事件模式数据
+     */
+    @RelationOneToMany(selfField = "id", targetField = "windowParamId", orderBy = "sort")
+    private List<NodePattern> nodePatternList;
+
+    /**
+     * 会话窗口间隔（时间单位毫秒值）
+     */
+    private Long gapTimeMillis;
 
 }

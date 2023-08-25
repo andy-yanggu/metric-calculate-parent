@@ -10,7 +10,7 @@ public class NodePattern implements Comparable<NodePattern>, Serializable {
 
     private static final long serialVersionUID = 2449075043333799390L;
 
-    private Integer index;
+    private Integer sort;
 
     private String name;
 
@@ -23,7 +23,7 @@ public class NodePattern implements Comparable<NodePattern>, Serializable {
 
     @Override
     public int compareTo(NodePattern that) {
-        return this.index.compareTo(that.index);
+        return this.sort.compareTo(that.sort);
     }
 
 }

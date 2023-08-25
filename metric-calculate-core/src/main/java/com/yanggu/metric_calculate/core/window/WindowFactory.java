@@ -121,7 +121,7 @@ public class WindowFactory<IN, ACC, OUT> {
     }
 
     private void setSlidingCountWindow(SlidingCountWindow<IN, ACC, OUT> slidingCountWindowTable) {
-        slidingCountWindowTable.setLimit(windowParam.getLimit());
+        slidingCountWindowTable.setLimit(windowParam.getSlidingCount());
         slidingCountWindowTable.setAggregateFieldProcessor(aggregateFieldProcessor);
     }
 

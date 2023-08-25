@@ -40,7 +40,7 @@ public class WindowParam implements Serializable {
     /**
      * 滑动计数窗口大小
      */
-    private Integer limit;
+    private Integer slidingCount;
 
     /**
      * 状态窗口表达式列表

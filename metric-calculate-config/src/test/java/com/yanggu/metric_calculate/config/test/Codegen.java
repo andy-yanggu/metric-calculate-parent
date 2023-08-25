@@ -10,6 +10,7 @@ import com.zaxxer.hikari.HikariDataSource;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Codegen {
 
@@ -38,11 +39,14 @@ public class Codegen {
         //设置包名
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
         //设置生成的表名
-        globalConfig.setGenerateTable("aviator_express_param_mix_udaf_param_item_relation");
+        globalConfig.setGenerateTable("node_pattern", "node_pattern_aviator_express_param_relation");
         //设置生成的mapper的xml路径
         globalConfig.setMapperXmlPath("D://test2/mapper");
         //设置entity的模板路径
         globalConfig.setEntityTemplatePath("entity.tpl");
+        //设置entity包名
+        globalConfig.setEntityPackageComment("com.yanggu.metric_calculate.config.pojo.entity");
+        globalConfig.getStrategyConfig().setTableConfigMap(new HashMap<>());
 
         //设置生成entity
         globalConfig.enableEntity()
