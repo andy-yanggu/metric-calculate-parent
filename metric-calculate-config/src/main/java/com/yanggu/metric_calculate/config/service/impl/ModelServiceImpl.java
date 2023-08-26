@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_COLUMN_NAME_ERROR;
-import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_EXIST;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
 
 /**
@@ -72,8 +71,11 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         List<ModelTimeColumn> modelTimeColumnList = model.getModelTimeColumnList();
         modelTimeColumnList.forEach(modelTimeColumn -> {
             modelTimeColumn.setModelId(modelId);
-            modelTimeColumn.setUserId(model.getUserId());
-            Integer modelColumnId = modelColumnNameIdMap.get(modelTimeColumn.getModelColumnName());
+            ModelColumn modelColumn = modelTimeColumn.getModelColumn();
+            if (modelColumn == null) {
+                throw new BusinessException(MODEL_COLUMN_NULL);
+            }
+            Integer modelColumnId = modelColumnNameIdMap.get(modelColumn.getName());
             if (modelColumnId == null) {
                 throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
             }
@@ -85,8 +87,11 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         List<ModelDimensionColumn> modelDimensionColumnList = model.getModelDimensionColumnList();
         modelDimensionColumnList.forEach(modelDimensionColumn -> {
             modelDimensionColumn.setModelId(modelId);
-            modelDimensionColumn.setUserId(model.getUserId());
-            Integer modelColumnId = modelColumnNameIdMap.get(modelDimensionColumn.getModelColumnName());
+            ModelColumn modelColumn = modelDimensionColumn.getModelColumn();
+            if (modelColumn == null) {
+                throw new BusinessException(MODEL_COLUMN_NULL);
+            }
+            Integer modelColumnId = modelColumnNameIdMap.get(modelColumn.getName());
             if (modelColumnId == null) {
                 throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
             }

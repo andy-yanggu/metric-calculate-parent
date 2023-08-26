@@ -66,7 +66,6 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                         AviatorExpressParamModelColumnRelation relation = new AviatorExpressParamModelColumnRelation();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                         relation.setModelColumnId(modelColumn.getId());
-                        relation.setUserId(aviatorExpressParam.getUserId());
                         return relation;
                     })
                     .collect(Collectors.toList());
@@ -94,7 +93,6 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                         AviatorExpressParamMixUdafParamItemRelation relation = new AviatorExpressParamMixUdafParamItemRelation();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                         relation.setMixUdafParamItemId(mixUdafParamItem.getId());
-                        relation.setUserId(aviatorExpressParam.getUserId());
                         return relation;
                     })
                     .collect(Collectors.toList());
@@ -145,7 +143,6 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                     AviatorExpressParamAviatorFunctionInstanceRelation relation = new AviatorExpressParamAviatorFunctionInstanceRelation();
                     relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                     relation.setAviatorFunctionInstanceId(aviatorFunctionInstance.getId());
-                    relation.setUserId(aviatorExpressParam.getUserId());
                     return relation;
                 })
                 .collect(Collectors.toList());

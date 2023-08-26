@@ -68,7 +68,6 @@ public class ModelColumnServiceImpl extends ServiceImpl<ModelColumnMapper, Model
             ModelColumnAviatorExpressParamRelation relation = new ModelColumnAviatorExpressParamRelation();
             relation.setModelColumnId(modelColumn.getId());
             relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-            relation.setUserId(modelColumn.getUserId());
             modelColumnAviatorExpressRelationService.save(relation);
         }
     }

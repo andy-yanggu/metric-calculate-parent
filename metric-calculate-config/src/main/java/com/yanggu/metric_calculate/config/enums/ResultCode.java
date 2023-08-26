@@ -20,6 +20,7 @@ public enum ResultCode {
     AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR("10007", "Aviator表达式依赖宽表字段错误"),
     MODEL_ID_ERROR("10008", "宽表id: {}有误"),
     DERIVE_ID_ERROR("10009", "派生指标id: {}有误"),
+    MODEL_COLUMN_NULL("10010", "宽表字段为空"),
     ;
 
     private final String code;

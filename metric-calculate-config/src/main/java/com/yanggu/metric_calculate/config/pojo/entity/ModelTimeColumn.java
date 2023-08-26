@@ -33,12 +33,6 @@ public class ModelTimeColumn extends BaseEntity implements Serializable {
     private Integer modelColumnId;
 
     /**
-     * 宽表字段名
-     */
-    @Column(ignore = true)
-    private String modelColumnName;
-
-    /**
      * 宽表字段
      */
     @RelationOneToOne(selfField = "modelColumnId", targetField = "id")

@@ -49,7 +49,7 @@ public class ModelController {
     }
 
     @GetMapping("/getInfo/{id}")
-    @Operation(summary = "根据主键查询数据")
+    @Operation(summary = "数据明细宽表详情")
     public Result<ModelDto> getInfo(@PathVariable Integer id) {
         return Result.ok(modelService.queryById(id));
     }

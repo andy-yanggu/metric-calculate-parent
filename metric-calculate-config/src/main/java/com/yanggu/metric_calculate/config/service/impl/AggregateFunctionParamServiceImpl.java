@@ -42,34 +42,28 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
         //基本配置类型
         BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
         if (baseUdafParam != null) {
-            baseUdafParam.setUserId(aggregateFunctionParam.getUserId());
             baseUdafParamService.saveData(baseUdafParam);
             AggregateFunctionParamBaseUdafParamRelation relation = new AggregateFunctionParamBaseUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
-            relation.setUserId(aggregateFunctionParam.getUserId());
             relation.setBaseUdafParamId(baseUdafParam.getId());
             aggregateFunctionParamBaseUdafParamRelationService.save(relation);
         }
         //映射类型
         MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
         if (mapUdafParam != null) {
-            mapUdafParam.setUserId(aggregateFunctionParam.getUserId());
             mapUdafParamService.saveData(mapUdafParam);
             AggregateFunctionParamMapUdafParamRelation relation = new AggregateFunctionParamMapUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
-            relation.setUserId(aggregateFunctionParam.getUserId());
             relation.setMapUdafParamId(mapUdafParam.getId());
             aggregateFunctionParamMapUdafParamRelationService.save(relation);
         }
         //混合类型
         MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
         if (mixUdafParam != null) {
-            mixUdafParam.setUserId(aggregateFunctionParam.getUserId());
             mixUdafParamService.saveData(mixUdafParam);
             AggregateFunctionParamMixUdafParamRelation relation = new AggregateFunctionParamMixUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMixUdafParamId(mixUdafParam.getId());
-            relation.setUserId(aggregateFunctionParam.getUserId());
             aggregateFunctionParamMixUdafParamRelationService.save(relation);
         }
     }

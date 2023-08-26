@@ -46,7 +46,6 @@ public class MixUdafParamServiceImpl extends ServiceImpl<MixUdafParamMapper, Mix
         MixUdafParamMetricExpressRelation relation = new MixUdafParamMetricExpressRelation();
         relation.setMixUdafParamId(mixUdafParam.getId());
         relation.setAviatorExpressParamId(metricExpressParam.getId());
-        relation.setUserId(mixUdafParam.getUserId());
         mixUdafParamMetricExpressRelationService.save(relation);
     }
 

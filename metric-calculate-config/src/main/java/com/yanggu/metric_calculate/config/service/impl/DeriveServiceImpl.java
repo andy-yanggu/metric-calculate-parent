@@ -74,7 +74,6 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                     DeriveModelDimensionColumnRelation relation = new DeriveModelDimensionColumnRelation();
                     relation.setDeriveId(derive.getId());
                     relation.setModelDimensionColumnId(dimensionColumn.getId());
-                    relation.setUserId(derive.getUserId());
                     relation.setSort(index.incrementAndGet());
                     return relation;
                 })
@@ -86,42 +85,35 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         DeriveModelTimeColumnRelation deriveModelTimeColumnRelation = new DeriveModelTimeColumnRelation();
         deriveModelTimeColumnRelation.setDeriveId(derive.getId());
         deriveModelTimeColumnRelation.setModelTimeColumnId(modelTimeColumn.getId());
-        deriveModelTimeColumnRelation.setUserId(derive.getUserId());
         deriveModelTimeColumnRelationService.save(deriveModelTimeColumnRelation);
 
         //保存前置过滤条件
         AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
         if (filterExpressParam != null) {
-            filterExpressParam.setUserId(derive.getUserId());
             aviatorExpressParamService.saveDataByModelColumn(filterExpressParam);
             //保存派生指标和前置过滤条件中间表数据
             DeriveFilterExpressRelation deriveFilterExpressRelation = new DeriveFilterExpressRelation();
             deriveFilterExpressRelation.setDeriveId(derive.getId());
             deriveFilterExpressRelation.setAviatorExpressParamId(filterExpressParam.getId());
-            deriveFilterExpressRelation.setUserId(derive.getUserId());
             deriveFilterExpressRelationService.save(deriveFilterExpressRelation);
         }
 
         //保存聚合函数参数
         AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        aggregateFunctionParam.setUserId(derive.getUserId());
         aggregateFunctionParamService.saveData(aggregateFunctionParam);
         //保存派生指标和聚合函数参数中间表数据
         DeriveAggregateFunctionParamRelation deriveAggregateFunctionParamRelation = new DeriveAggregateFunctionParamRelation();
         deriveAggregateFunctionParamRelation.setDeriveId(derive.getId());
         deriveAggregateFunctionParamRelation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
-        deriveAggregateFunctionParamRelation.setUserId(derive.getUserId());
         deriveAggregateFunctionParamRelationService.save(deriveAggregateFunctionParamRelation);
 
         //保存窗口数据
         WindowParam windowParam = derive.getWindowParam();
-        windowParam.setUserId(derive.getUserId());
         windowParamService.saveData(windowParam);
         //保存派生指标和窗口数据中间表
         DeriveWindowParamRelation deriveWindowParamRelation = new DeriveWindowParamRelation();
         deriveWindowParamRelation.setDeriveId(derive.getId());
         deriveWindowParamRelation.setWindowParamId(windowParam.getId());
-        deriveWindowParamRelation.setUserId(derive.getUserId());
         deriveWindowParamRelationService.save(deriveWindowParamRelation);
     }
 

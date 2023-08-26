@@ -47,12 +47,10 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
         super.save(baseUdafParam);
         AviatorExpressParam metricExpressParam = baseUdafParam.getMetricExpressParam();
         if (metricExpressParam != null) {
-            metricExpressParam.setUserId(baseUdafParam.getUserId());
             aviatorExpressParamService.saveDataByModelColumn(metricExpressParam);
             BaseUdafParamMetricExpressRelation relation = new BaseUdafParamMetricExpressRelation();
             relation.setBaseUdafParamId(baseUdafParam.getId());
             relation.setAviatorExpressParamId(metricExpressParam.getId());
-            relation.setUserId(baseUdafParam.getUserId());
             metricExpressRelationService.save(relation);
         }
         List<AviatorExpressParam> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
@@ -62,7 +60,6 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
                 BaseUdafParamMetricExpressListRelation relation = new BaseUdafParamMetricExpressListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-                relation.setUserId(baseUdafParam.getUserId());
                 metricExpressListRelationService.save(relation);
             }
         }
@@ -72,7 +69,6 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
             BaseUdafParamRetainExpressRelation relation = new BaseUdafParamRetainExpressRelation();
             relation.setBaseUdafParamId(baseUdafParam.getId());
             relation.setAviatorExpressParamId(retainExpressParam.getId());
-            relation.setUserId(baseUdafParam.getUserId());
             retainExpressRelationService.save(relation);
         }
         List<AviatorExpressParam> objectiveCompareFieldParamList = baseUdafParam.getObjectiveCompareFieldParamList();
@@ -82,7 +78,6 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
                 BaseUdafParamObjectiveCompareFieldExpressListRelation relation = new BaseUdafParamObjectiveCompareFieldExpressListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-                relation.setUserId(baseUdafParam.getUserId());
                 objectiveCompareFieldExpressListRelationService.save(relation);
             }
         }
@@ -93,7 +88,6 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
                 BaseUdafParamCollectiveSortFieldListRelation relation = new BaseUdafParamCollectiveSortFieldListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setFieldOrderParamId(fieldOrderParam.getId());
-                relation.setUserId(baseUdafParam.getUserId());
                 collectiveSortFieldListRelationService.save(relation);
             }
         }
@@ -104,7 +98,6 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
                 BaseUdafParamDistinctFieldListRelation relation = new BaseUdafParamDistinctFieldListRelation();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-                relation.setUserId(baseUdafParam.getUserId());
                 distinctFieldListRelationService.save(relation);
             }
         }

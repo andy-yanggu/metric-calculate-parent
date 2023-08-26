@@ -39,7 +39,6 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
             MapUdafParamDistinctFieldListRelation relation = new MapUdafParamDistinctFieldListRelation();
             relation.setMapUdafParamId(mapUdafParam.getId());
             relation.setAviatorExpressParamId(aviatorExpressParam.getId());
-            relation.setUserId(mapUdafParam.getUserId());
             mapUdafParamDistinctFieldListRelationService.save(relation);
         }
 
@@ -48,7 +47,6 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
         MapUdafParamValueAggRelation relation = new MapUdafParamValueAggRelation();
         relation.setMapUdafParamId(mapUdafParam.getId());
         relation.setBaseUdafParamId(valueAggParam.getId());
-        relation.setUserId(mapUdafParam.getUserId());
         mapUdafParamValueAggRelationService.save(relation);
     }
 
