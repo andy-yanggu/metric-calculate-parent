@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstance;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
@@ -23,8 +24,8 @@ public class AviatorFunctionInstanceController {
 
     @PostMapping("/save")
     @Operation(summary = "新增Aviator函数实例")
-    public Result<Void> save(@RequestBody AviatorFunctionInstance aviatorFunctionInstance) {
-        aviatorFunctionInstanceService.save(aviatorFunctionInstance);
+    public Result<Void> save(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstance) {
+        aviatorFunctionInstanceService.saveData(aviatorFunctionInstance);
         return Result.ok();
     }
 

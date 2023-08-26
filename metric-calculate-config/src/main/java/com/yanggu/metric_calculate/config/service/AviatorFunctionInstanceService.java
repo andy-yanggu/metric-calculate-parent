@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstance;
 
 /**
@@ -10,5 +11,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstance;
  * @since 2023-07-10
  */
 public interface AviatorFunctionInstanceService extends IService<AviatorFunctionInstance> {
+
+    void saveData(AviatorFunctionInstanceDto aviatorFunctionInstanceDto);
 
 }
