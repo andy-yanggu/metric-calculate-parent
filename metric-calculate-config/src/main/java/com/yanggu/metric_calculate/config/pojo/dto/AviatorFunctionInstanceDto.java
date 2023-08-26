@@ -1,7 +1,5 @@
-package com.yanggu.metric_calculate.config.pojo.entity;
+package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.mybatisflex.annotation.*;
-import com.mybatisflex.core.handler.JacksonTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,16 +12,14 @@ import java.util.Map;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "aviator_function_instance")
-public class AviatorFunctionInstance extends BaseEntity implements Serializable {
+public class AviatorFunctionInstanceDto extends BaseDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -566558748751401811L;
+    private static final long serialVersionUID = 522796813713273071L;
 
     /**
      * 主键自增
      */
-    @Id(keyType = KeyType.Auto)
     private Integer id;
 
     /**
@@ -44,13 +40,11 @@ public class AviatorFunctionInstance extends BaseEntity implements Serializable 
     /**
      * Aviator函数参数的JSON数据
      */
-    @Column(typeHandler = JacksonTypeHandler.class)
     private Map<String, Object> param;
 
     /**
      * 对应的AggregateFunction
      */
-    @RelationManyToOne(selfField = "aviatorFunctionId", targetField = "id")
-    private AviatorFunction aviatorFunction;
+    private AviatorFunctionDto aviatorFunction;
 
 }

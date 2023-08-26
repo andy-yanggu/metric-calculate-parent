@@ -1,9 +1,5 @@
-package com.yanggu.metric_calculate.config.pojo.entity;
+package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.RelationOneToMany;
-import com.mybatisflex.annotation.Table;
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,16 +13,14 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Table(value = "aggregate_function")
-public class AggregateFunction extends BaseEntity implements Serializable {
+public class AggregateFunctionDto extends BaseDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -2251996364508407313L;
+    private static final long serialVersionUID = 6425099649633730377L;
 
     /**
      * 主键自增
      */
-    @Id(keyType = KeyType.Auto)
     private Integer id;
 
     /**
@@ -67,7 +61,6 @@ public class AggregateFunction extends BaseEntity implements Serializable {
     /**
      * 聚合函数成员变量
      */
-    @RelationOneToMany(selfField = "id", targetField = "aggregateFunctionId")
-    private List<AggregateFunctionField> aggregateFunctionFieldList;
+    private List<AggregateFunctionFieldDto> aggregateFunctionFieldList;
 
 }

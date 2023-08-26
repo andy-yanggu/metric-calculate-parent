@@ -5,21 +5,25 @@ import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.List;
 
 /**
- * 维度表 实体类。
+ * Aviator函数 实体类。
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DimensionDto extends BaseDto implements Serializable {
+public class AviatorFunctionDto extends BaseDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -2963633798023385948L;
+    private static final long serialVersionUID = -3108156531262807116L;
 
+    /**
+     * 主键自增
+     */
     private Integer id;
 
     /**
-     * 维度名称
+     * 唯一标识
      */
     private String name;
 
@@ -29,8 +33,13 @@ public class DimensionDto extends BaseDto implements Serializable {
     private String displayName;
 
     /**
-     * 备注
+     * 描述
      */
     private String description;
+
+    /**
+     * Aviator函数成员变量列表
+     */
+    private List<AviatorFunctionFieldDto> aviatorFunctionFieldList;
 
 }

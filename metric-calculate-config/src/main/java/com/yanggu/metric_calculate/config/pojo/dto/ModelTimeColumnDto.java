@@ -1,23 +1,19 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
-import java.util.Date;
 
 /**
- * 时间字段 实体类。
+ * 宽表时间字段 实体类。
  */
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ModelTimeColumnDto implements Serializable {
+@EqualsAndHashCode(callSuper = true)
+public class ModelTimeColumnDto extends BaseDto implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7617995233100366213L;
 
     /**
@@ -36,14 +32,9 @@ public class ModelTimeColumnDto implements Serializable {
     private Integer modelColumnId;
 
     /**
-     * 宽表字段名称
-     */
-    private String modelColumnName;
-
-    /**
      * 宽表字段
      */
-    private ModelColumn modelColumn;
+    private ModelColumnDto modelColumn;
 
     /**
      * 中文名称
@@ -54,25 +45,5 @@ public class ModelTimeColumnDto implements Serializable {
      * 索引
      */
     private Integer sort;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
 }

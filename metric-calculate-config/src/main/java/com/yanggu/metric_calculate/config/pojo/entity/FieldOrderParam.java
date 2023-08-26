@@ -7,6 +7,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @Table(value = "field_order_param")
 public class FieldOrderParam extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1261890367844204905L;
 
     /**

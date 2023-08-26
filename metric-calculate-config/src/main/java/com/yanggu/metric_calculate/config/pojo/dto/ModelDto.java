@@ -1,15 +1,21 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.util.Date;
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 宽表
  */
 @Data
-public class ModelDto {
+@EqualsAndHashCode(callSuper = true)
+public class ModelDto extends BaseDto implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 3720677788471627295L;
 
     /**
      * 主键自增
@@ -35,26 +41,6 @@ public class ModelDto {
      * 目录id
      */
     private Integer directoryId;
-
-    /**
-     * 用户id
-     */
-    private Integer userId;
-
-    /**
-     * 是否删除(缺省为0,即未删除)
-     */
-    private Integer isDeleted;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
 
     /**
      * 宽表字段列表

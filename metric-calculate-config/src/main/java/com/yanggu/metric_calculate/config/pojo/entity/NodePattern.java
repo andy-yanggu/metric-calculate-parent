@@ -7,6 +7,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class NodePattern extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -2248230353147672225L;
 
     /**

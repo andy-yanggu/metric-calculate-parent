@@ -7,19 +7,22 @@ import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 维度表 实体类。
+ * Aviator函数字段模板 实体类。
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class DimensionDto extends BaseDto implements Serializable {
+public class AviatorFunctionFieldDto extends BaseDto implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = -2963633798023385948L;
+    private static final long serialVersionUID = 1248441229349580401L;
 
+    /**
+     * 主键自增
+     */
     private Integer id;
 
     /**
-     * 维度名称
+     * 字段名
      */
     private String name;
 
@@ -29,8 +32,13 @@ public class DimensionDto extends BaseDto implements Serializable {
     private String displayName;
 
     /**
-     * 备注
+     * 描述
      */
     private String description;
+
+    /**
+     * Aviator函数id
+     */
+    private Integer aviatorFunctionId;
 
 }

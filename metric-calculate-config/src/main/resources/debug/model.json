@@ -1,0 +1,103 @@
+{
+  "name": "trade_detail",
+  "displayName": "交易流水表",
+  "description": "交易流水明细数据",
+  "directoryId": 0,
+  "userId": 1,
+  "modelColumnList": [
+    {
+      "name": "trans_no",
+      "displayName": "交易流水号",
+      "dataType": "STRING",
+      "fieldType": "REAL",
+      "userId": 1,
+      "sort": 1
+    },
+    {
+      "name": "account_no_out",
+      "displayName": "转出账号",
+      "dataType": "STRING",
+      "fieldType": "REAL",
+      "userId": 1,
+      "sort": 2
+    },
+    {
+      "name": "account_no_in",
+      "displayName": "转入账号",
+      "dataType": "STRING",
+      "fieldType": "REAL",
+      "userId": 1,
+      "sort": 3
+    },
+    {
+      "name": "amount",
+      "displayName": "交易金额",
+      "dataType": "DOUBLE",
+      "description": "",
+      "fieldType": "REAL",
+      "userId": 1,
+      "sort": 4
+    },
+    {
+      "name": "trans_timestamp",
+      "displayName": "交易时间戳",
+      "dataType": "LONG",
+      "description": "",
+      "fieldType": "REAL",
+      "userId": 1,
+      "sort": 5
+    },
+    {
+      "name": "trans_date",
+      "displayName": "交易日期",
+      "dataType": "STRING",
+      "description": "",
+      "fieldType": "VIRTUAL",
+      "aviatorExpressParam": {
+        "express": "string_to_date(new java.util.Date(trans_timestamp), 'yyyy-MM-dd')",
+        "modelColumnList": [
+          {
+            "name": "trans_timestamp"
+          }
+        ]
+      },
+      "userId": 1,
+      "sort": 6
+    },
+    {
+      "name": "trans_hour",
+      "displayName": "交易小时",
+      "dataType": "LONG",
+      "description": "",
+      "fieldType": "VIRTUAL",
+      "aviatorExpressParam": {
+        "express": "string_to_date(new java.util.Date(trans_timestamp), 'HH')",
+        "modelColumnList": [
+          {
+            "name": "trans_timestamp"
+          }
+        ]
+      },
+      "userId": 1,
+      "sort": 7
+    }
+  ],
+  "modelTimeColumnList": [
+    {
+      "modelColumn": {
+        "name": "trans_timestamp"
+      },
+      "timeFormat": "TIMESTAMP",
+      "sort": 1
+    }
+  ],
+  "modelDimensionColumnList": [
+    {
+      "dimensionId": 212,
+      "modelColumn": {
+        "name": "account_no_out"
+      },
+      "sort": 1
+    }
+  ]
+}

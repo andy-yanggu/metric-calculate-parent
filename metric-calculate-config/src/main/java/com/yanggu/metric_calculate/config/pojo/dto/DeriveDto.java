@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -14,6 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class DeriveDto extends BaseDto implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2005906604838021242L;
 
     private Integer id;
@@ -62,7 +63,7 @@ public class DeriveDto extends BaseDto implements Serializable {
     /**
      * 窗口相关参数
      */
-    private WindowParam windowParam;
+    private WindowParamDto windowParam;
 
     /**
      * 计量单位
