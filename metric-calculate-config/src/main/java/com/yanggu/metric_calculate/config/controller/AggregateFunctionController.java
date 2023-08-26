@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
@@ -22,8 +23,8 @@ public class AggregateFunctionController {
 
     @PostMapping("/save")
     @Operation(summary = "新增聚合函数")
-    public Result<Void> save(@RequestBody AggregateFunction aggregateFunction) {
-        aggregateFunctionService.save(aggregateFunction);
+    public Result<Void> save(@RequestBody AggregateFunctionDto aggregateFunction) throws Exception {
+        aggregateFunctionService.saveData(aggregateFunction);
         return Result.ok();
     }
 
@@ -43,14 +44,14 @@ public class AggregateFunctionController {
 
     @GetMapping("/list")
     @Operation(summary = "聚合函数列表")
-    public Result<List<AggregateFunction>> list() {
-        return Result.ok(aggregateFunctionService.list());
+    public Result<List<AggregateFunctionDto>> list() {
+        return Result.ok(aggregateFunctionService.listData());
     }
 
     @GetMapping("/getInfo/{id}")
     @Operation(summary = "聚合函数详情")
-    public Result<AggregateFunction> getInfo(@PathVariable Serializable id) {
-        return Result.ok(aggregateFunctionService.getById(id));
+    public Result<AggregateFunctionDto> getInfo(@PathVariable Integer id) {
+        return Result.ok(aggregateFunctionService.queryById(id));
     }
 
     @GetMapping("/page")

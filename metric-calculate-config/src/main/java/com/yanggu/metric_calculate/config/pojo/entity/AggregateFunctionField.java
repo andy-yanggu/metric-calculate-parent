@@ -6,6 +6,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Table(value = "aggregate_function_field")
 public class AggregateFunctionField extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -1255374352282442715L;
 
     /**
@@ -25,8 +27,29 @@ public class AggregateFunctionField extends BaseEntity implements Serializable {
     private Integer id;
 
     /**
+     * 字段名称
+     */
+    private String name;
+
+    /**
+     * 中文名
+     */
+    private String displayName;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+
+    /**
      * 聚合函数id
      */
     private Integer aggregateFunctionId;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
 }

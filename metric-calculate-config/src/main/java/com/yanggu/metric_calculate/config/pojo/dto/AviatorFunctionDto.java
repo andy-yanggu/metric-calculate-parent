@@ -38,6 +38,11 @@ public class AviatorFunctionDto extends BaseDto implements Serializable {
     private String description;
 
     /**
+     * 是否内置: 0否, 1是
+     */
+    private Boolean isBuiltIn;
+
+    /**
      * Aviator函数成员变量列表
      */
     private List<AviatorFunctionFieldDto> aviatorFunctionFieldList;

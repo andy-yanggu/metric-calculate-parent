@@ -22,8 +22,29 @@ public class AggregateFunctionFieldDto extends BaseDto implements Serializable {
     private Integer id;
 
     /**
+     * 字段名称
+     */
+    private String name;
+
+    /**
+     * 中文名
+     */
+    private String displayName;
+
+    /**
+     * 描述
+     */
+    private String description;
+
+
+    /**
      * 聚合函数id
      */
     private Integer aggregateFunctionId;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
 }

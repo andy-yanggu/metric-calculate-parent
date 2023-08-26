@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : localhost
+ Source Server         : local-mysql8.0
  Source Server Type    : MySQL
- Source Server Version : 80028
+ Source Server Version : 80024
  Source Host           : localhost:3306
  Source Schema         : metric_calculate_config
 
  Target Server Type    : MySQL
- Target Server Version : 80028
+ Target Server Version : 80024
  File Encoding         : 65001
 
- Date: 25/08/2023 18:35:48
+ Date: 26/08/2023 16:07:35
 */
 
 SET NAMES utf8mb4;
@@ -30,6 +30,7 @@ CREATE TABLE `aggregate_function`  (
   `key_strategy` tinyint(0) NULL DEFAULT 0 COMMENT '集合型和对象型主键策略（0没有主键、1去重字段、2排序字段、3比较字段）',
   `retain_strategy` tinyint(0) NULL DEFAULT 0 COMMENT '集合型和对象型保留字段策略（0不保留任何数据、1保留指定字段、2保留原始数据）',
   `multi_number` tinyint(0) NULL DEFAULT 0 COMMENT '数值型是否需要多个参数（0否，1是需要多个例如协方差）',
+  `is_built_in` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否内置：0否，1是',
   `user_id` int(0) NOT NULL COMMENT '用户id',
   `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -43,7 +44,11 @@ CREATE TABLE `aggregate_function`  (
 DROP TABLE IF EXISTS `aggregate_function_field`;
 CREATE TABLE `aggregate_function_field`  (
   `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '唯一标识',
+  `display_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中文名称',
+  `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描述',
   `aggregate_function_id` int(0) NOT NULL COMMENT '聚合函数id',
+  `sort` int(0) NOT NULL COMMENT '索引',
   `user_id` int(0) NOT NULL COMMENT '用户id',
   `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -179,6 +184,7 @@ CREATE TABLE `aviator_function`  (
   `display_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中文名称',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描述',
   `jar_store_id` int(0) NOT NULL COMMENT 'jar配置id',
+  `is_built_in` tinyint(1) NOT NULL DEFAULT 1 COMMENT '是否内置：0否，1是',
   `user_id` int(0) NOT NULL COMMENT '用户id',
   `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
@@ -364,6 +370,22 @@ CREATE TABLE `derive_aggregate_function_param_relation`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 17 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标聚合函数参数中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for derive_dimension_column_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `derive_dimension_column_relation`;
+CREATE TABLE `derive_dimension_column_relation`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `derive_id` int(0) NOT NULL COMMENT '派生指标id',
+  `dimension_column_id` int(0) NOT NULL COMMENT '维度字段id',
+  `sort` int(0) NOT NULL DEFAULT 1 COMMENT '序号',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标维度字段中间表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for derive_filter_express_relation
 -- ----------------------------
 DROP TABLE IF EXISTS `derive_filter_express_relation`;
@@ -410,6 +432,21 @@ CREATE TABLE `derive_model_time_column_relation`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 27 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标和时间字段中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for derive_time_column_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `derive_time_column_relation`;
+CREATE TABLE `derive_time_column_relation`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `derive_id` int(0) NOT NULL COMMENT '派生指标id',
+  `time_column_id` int(0) NOT NULL COMMENT '时间字段id',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '派生指标和时间字段中间表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for derive_window_param_relation
 -- ----------------------------
 DROP TABLE IF EXISTS `derive_window_param_relation`;
@@ -439,6 +476,39 @@ CREATE TABLE `dimension`  (
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 212 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '维度表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for dimension_column
+-- ----------------------------
+DROP TABLE IF EXISTS `dimension_column`;
+CREATE TABLE `dimension_column`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `model_id` int(0) NULL DEFAULT NULL COMMENT '宽表id',
+  `model_column_id` int(0) NOT NULL COMMENT '宽表字段id',
+  `dimension_id` int(0) NOT NULL COMMENT '维度id',
+  `sort` int(0) NOT NULL COMMENT '索引',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '维度字段' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for dimension_column_item
+-- ----------------------------
+DROP TABLE IF EXISTS `dimension_column_item`;
+CREATE TABLE `dimension_column_item`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `sort` int(0) NOT NULL DEFAULT 1 COMMENT '序号',
+  `derive_id` int(0) NOT NULL COMMENT '派生指标id',
+  `dimension_column_id` int(0) NOT NULL COMMENT '维度字段id',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '维度字段选项' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for field_order_param
@@ -562,6 +632,22 @@ CREATE TABLE `mix_udaf_param_metric_express_relation`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '混合聚合参数，多个聚合值的计算表达式中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for mix_udaf_param_mix_agg_map_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `mix_udaf_param_mix_agg_map_relation`;
+CREATE TABLE `mix_udaf_param_mix_agg_map_relation`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `mix_udaf_param_id` int(0) NOT NULL COMMENT '混合聚合函数参数id',
+  `key_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT 'map的key名称',
+  `base_udaf_param_id` int(0) NOT NULL COMMENT '基本聚合函数参数id',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for model
 -- ----------------------------
 DROP TABLE IF EXISTS `model`;
@@ -612,6 +698,21 @@ CREATE TABLE `model_column_aviator_express_param_relation`  (
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '宽表字段表达式关系表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for model_column_aviator_express_relation
+-- ----------------------------
+DROP TABLE IF EXISTS `model_column_aviator_express_relation`;
+CREATE TABLE `model_column_aviator_express_relation`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT,
+  `model_column_id` int(0) NOT NULL COMMENT '宽表字段id',
+  `aviator_express_param_id` int(0) NOT NULL COMMENT 'Aviator表达式id',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '宽表字段表达式关系表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for model_dimension_column
@@ -678,6 +779,38 @@ CREATE TABLE `node_pattern_aviator_express_param_relation`  (
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 36 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = 'CEP匹配配置数据表达式关系表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for time_cloumn
+-- ----------------------------
+DROP TABLE IF EXISTS `time_cloumn`;
+CREATE TABLE `time_cloumn`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `model_id` int(0) NOT NULL COMMENT '宽表id',
+  `time_format` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中文名称',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `created_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '时间字段' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for time_column
+-- ----------------------------
+DROP TABLE IF EXISTS `time_column`;
+CREATE TABLE `time_column`  (
+  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
+  `model_id` int(0) NULL DEFAULT NULL COMMENT '宽表id',
+  `model_column_id` int(0) NOT NULL COMMENT '宽表字段id',
+  `time_format` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中文名称',
+  `sort` int(0) NOT NULL COMMENT '索引',
+  `user_id` int(0) NOT NULL COMMENT '用户id',
+  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
+  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '时间字段' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for window_param

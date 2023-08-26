@@ -65,6 +65,11 @@ public class AggregateFunction extends BaseEntity implements Serializable {
     private Boolean multiNumber;
 
     /**
+     * 是否内置: 0否, 1是
+     */
+    private Boolean isBuiltIn;
+
+    /**
      * 聚合函数成员变量
      */
     @RelationOneToMany(selfField = "id", targetField = "aggregateFunctionId")
