@@ -10,7 +10,7 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
  *
  * @param <T>
  */
-@MergeType("MAXOBJECT")
+@MergeType(value = "MAXOBJECT", displayName = "最大对象")
 @Objective(keyStrategy = 3, retainStrategy = 2)
 public class MaxObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, MutableObj<T>, T> {
 

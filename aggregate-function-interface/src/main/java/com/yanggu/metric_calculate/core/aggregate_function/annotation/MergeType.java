@@ -15,11 +15,18 @@ import java.lang.annotation.Target;
 public @interface MergeType {
 
     /**
-     * 名称, 唯一标识
+     * 英文名, 唯一标识
      *
      * @return
      */
     String value();
+
+    /**
+     * 中文名, 唯一性
+     *
+     * @return
+     */
+    String displayName();
 
     /**
      * 描述信息

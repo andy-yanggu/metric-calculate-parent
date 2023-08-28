@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @Data
 @MapType
-@MergeType("BASEMAP")
+@MergeType(value = "BASEMAP", displayName = "基础映射")
 @EqualsAndHashCode(callSuper=false)
 public class BaseMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {

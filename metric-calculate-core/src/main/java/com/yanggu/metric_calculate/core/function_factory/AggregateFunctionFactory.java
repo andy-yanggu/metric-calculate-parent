@@ -31,7 +31,7 @@ public class AggregateFunctionFactory {
     /**
      * 扫描有MergeType注解并且是AggregateFunction子类
      */
-    private static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(MergeType.class)
+    public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(MergeType.class)
             && AggregateFunction.class.isAssignableFrom(clazz);
 
     /**

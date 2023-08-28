@@ -6,12 +6,12 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 
 /**
- * 最大值
+ * 最大数值
  *
  * @param <T>
  */
 @Numerical
-@MergeType("MAX")
+@MergeType(value = "MAX", displayName = "最大数值")
 public class MaxAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override

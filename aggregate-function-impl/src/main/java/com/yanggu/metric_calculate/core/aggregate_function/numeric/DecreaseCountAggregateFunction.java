@@ -12,7 +12,7 @@ import com.yanggu.metric_calculate.core.pojo.agg_bean.Boundary;
  * @param <T>
  */
 @Numerical
-@MergeType("DECREASECOUNT")
+@MergeType(value = "DECREASECOUNT", displayName = "递减次数")
 public class DecreaseCountAggregateFunction<T extends Number & Comparable<T>> implements AggregateFunction<T, Boundary<T>, Integer> {
 
     @Override

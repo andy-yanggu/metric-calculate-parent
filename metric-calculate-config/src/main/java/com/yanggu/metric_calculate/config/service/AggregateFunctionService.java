@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.config.service;
 import com.mybatisflex.core.service.IService;
 import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,5 +17,7 @@ public interface AggregateFunctionService extends IService<AggregateFunction> {
     AggregateFunctionDto queryById(Integer id);
 
     List<AggregateFunctionDto> listData();
+
+    void jarSave(MultipartFile file) throws Exception;
 
 }

@@ -12,6 +12,16 @@ public class UdafCustomParamData {
     private String name;
 
     /**
+     * 中文名
+     */
+    private String displayName;
+
+    /**
+     * 描述信息
+     */
+    private String description;
+
+    /**
      * 数据类型
      */
     private String dataType;
@@ -30,10 +40,5 @@ public class UdafCustomParamData {
      * 是否必填
      */
     private Boolean notNull;
-
-    /**
-     * 描述信息
-     */
-    private String description;
 
 }

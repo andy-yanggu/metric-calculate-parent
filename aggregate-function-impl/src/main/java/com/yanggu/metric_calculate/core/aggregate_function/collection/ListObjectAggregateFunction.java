@@ -16,7 +16,7 @@ import java.util.List;
  * @param <T>
  */
 @Data
-@MergeType("LISTOBJECT")
+@MergeType(value = "LISTOBJECT", displayName = "对象列表")
 @Collective(keyStrategy = 0, retainStrategy = 2)
 public class ListObjectAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 

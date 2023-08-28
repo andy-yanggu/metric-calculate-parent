@@ -14,7 +14,7 @@ import java.util.Set;
  *
  * @param <T>
  */
-@MergeType("DISTINCTLISTOBJECT")
+@MergeType(value = "DISTINCTLISTOBJECT", displayName = "去重对象列表")
 @Collective(keyStrategy = 1, retainStrategy = 2)
 public class DistinctListObjectAggregateFunction<T> extends AbstractCollectionFunction<T, Set<T>, List<T>> {
 

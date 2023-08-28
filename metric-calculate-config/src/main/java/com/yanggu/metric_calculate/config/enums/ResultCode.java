@@ -24,6 +24,8 @@ public enum ResultCode {
     AGGREGATE_FUNCTION_EXIST("10011", "聚合函数已经存在"),
     MODEL_DIMENSION_COLUMN_NULL("10012", "宽表维度字段名为空"),
     MIX_UDAF_PARAM_NAME_ERROR("10013", "混合聚合参数名称异常"),
+    AGGREGATE_FUNCTION_CLASS_NOT_HAVE_MERGE_TYPE("10014", "{}不包含MERGE_TYPE注解"),
+    AGGREGATE_FUNCTION_CLASS_TYPE_ERROR("10015", "{}不包含任何类型注解"),
     ;
 
     private final String code;

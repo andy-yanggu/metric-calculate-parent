@@ -5,12 +5,12 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 
 /**
- * 最小值
+ * 最小数值
  *
  * @param <T>
  */
 @Numerical
-@MergeType("MIN")
+@MergeType(value = "MIN", displayName = "最小数值")
 public class MinAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override

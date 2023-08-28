@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 协方差
  */
-@MergeType("COV")
+@MergeType(value = "COV", displayName = "协方差")
 @Numerical(multiNumber = true)
 public class CovAggregateFunction implements AggregateFunction<List<? extends Number>, Object, Double> {
 

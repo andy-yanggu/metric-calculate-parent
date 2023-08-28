@@ -8,10 +8,10 @@ import lombok.Data;
 import java.util.LinkedList;
 
 /**
- * 当前行的第前N条数据
+ * 当前行的第前N条对象
  */
 @Data
-@MergeType("LAGOBJECT")
+@MergeType(value = "LAGOBJECT", displayName = "当前行的第前N条对象")
 @Objective(keyStrategy = 0, retainStrategy = 2)
 public class LagObjectAggregateFunction<IN> implements AggregateFunction<IN, LinkedList<IN>, IN> {
 

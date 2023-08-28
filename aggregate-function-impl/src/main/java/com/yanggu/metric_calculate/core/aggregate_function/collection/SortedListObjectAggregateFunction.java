@@ -14,7 +14,7 @@ import java.util.List;
  * @param <T>
  */
 @Data
-@MergeType("SORTEDLIMITLISTOBJECT")
+@MergeType(value = "SORTEDLIMITLISTOBJECT", displayName = "有序对象列表")
 @EqualsAndHashCode(callSuper=false)
 @Collective(keyStrategy = 2, retainStrategy = 2)
 public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {

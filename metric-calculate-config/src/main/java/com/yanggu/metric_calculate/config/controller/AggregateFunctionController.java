@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
@@ -25,6 +26,13 @@ public class AggregateFunctionController {
     @Operation(summary = "新增聚合函数")
     public Result<Void> save(@RequestBody AggregateFunctionDto aggregateFunction) throws Exception {
         aggregateFunctionService.saveData(aggregateFunction);
+        return Result.ok();
+    }
+
+    @PostMapping("/jarSave")
+    @Operation(summary = "通过jar文件保存")
+    public Result<Void> jarSave(@RequestParam("file") MultipartFile file) throws Exception {
+        aggregateFunctionService.jarSave(file);
         return Result.ok();
     }
 

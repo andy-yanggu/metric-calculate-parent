@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Mix
 @Data
-@MergeType("BASEMIX")
+@MergeType(value = "BASEMIX", displayName = "基本混合型")
 @EqualsAndHashCode(callSuper=false)
 public class BaseMixAggregateFunction<OUT> extends AbstractMixAggregateFunction<OUT> {
 }

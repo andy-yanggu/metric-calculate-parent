@@ -11,7 +11,7 @@
  Target Server Version : 80028
  File Encoding         : 65001
 
- Date: 28/08/2023 14:07:18
+ Date: 28/08/2023 15:30:52
 */
 
 SET NAMES utf8mb4;
@@ -341,12 +341,12 @@ CREATE TABLE `derive`  (
   `display_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '中文名称',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '描述',
   `model_id` int(0) NOT NULL COMMENT '宽表id',
+  `include_current` int(0) NOT NULL DEFAULT 1 COMMENT '是否包含当前笔，0不包含，1包含',
   `unit_measure` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '计量单位',
-  `round_accuracy` int(0) NULL DEFAULT NULL COMMENT '精度',
-  `round_accuracy_type` int(0) NULL DEFAULT NULL COMMENT '精度类型(0不处理 1四舍五入 2向上保留)',
+  `round_accuracy_type` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'NOT_HANDLE' COMMENT '精度类型(NOT_HANDLE（不处理）、ROUNDING（四舍五入）、KEEP_UP（向上保留）)',
+  `round_accuracy_length` int(0) NOT NULL DEFAULT 0 COMMENT '精度长度',
   `data_type` int(0) NOT NULL DEFAULT 0 COMMENT '数据类型',
   `directory_code` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '目录编码',
-  `include_current` int(0) NOT NULL DEFAULT 0 COMMENT '是否包含当前笔',
   `user_id` int(0) NOT NULL COMMENT '用户id',
   `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
   `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

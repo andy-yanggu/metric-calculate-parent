@@ -17,7 +17,7 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-@MergeType("SLIDINGCOUNTWINDOW")
+@MergeType(value = "SLIDINGCOUNTWINDOW", displayName = "滑动计数窗口函数")
 @Collective(keyStrategy = 0, retainStrategy = 1)
 public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<IN, List<IN>, OUT> {
 

@@ -12,7 +12,7 @@ import java.util.Set;
  *
  * @param <T>
  */
-@MergeType("DISTINCTCOUNT")
+@MergeType(value = "DISTINCTCOUNT", displayName = "去重计数")
 @Collective(keyStrategy = 1, retainStrategy = 0)
 public class DistinctCountAggregateFunction<T> extends AbstractCollectionFunction<T, Set<T>, Integer> {
 

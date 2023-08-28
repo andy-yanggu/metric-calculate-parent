@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
  *
  * @param <T>
  */
-@MergeType("LASTFIELD")
+@MergeType(value = "LASTFIELD", displayName = "最后写入的非NULL值")
 @Objective(keyStrategy = 0, retainStrategy = 1)
 public class LastFieldAggregateFunction<T> extends LastObjectAggregateFunction<T> {
 }

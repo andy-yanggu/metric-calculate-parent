@@ -10,7 +10,7 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
  *
  * @param <T>
  */
-@MergeType("MINOBJECT")
+@MergeType(value = "MINOBJECT", displayName = "最小对象")
 @Objective(keyStrategy = 3, retainStrategy = 2)
 public class MinObjectAggregateFunction<T extends Comparable<T>> implements AggregateFunction<T, MutableObj<T>, T> {
 

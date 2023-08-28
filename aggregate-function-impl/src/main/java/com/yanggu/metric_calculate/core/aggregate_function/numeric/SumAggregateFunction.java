@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
  * @param <T>
  */
 @Numerical
-@MergeType("SUM")
+@MergeType(value = "SUM", displayName = "求和")
 public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override

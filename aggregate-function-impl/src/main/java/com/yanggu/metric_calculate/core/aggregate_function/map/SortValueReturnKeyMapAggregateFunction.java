@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Data
 @MapType
 @EqualsAndHashCode(callSuper=false)
-@MergeType("SORTVALUERETURNKEYMAP")
+@MergeType(value = "SORTVALUERETURNKEYMAP", displayName = "TOPN主键")
 public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, List<K>> {
 

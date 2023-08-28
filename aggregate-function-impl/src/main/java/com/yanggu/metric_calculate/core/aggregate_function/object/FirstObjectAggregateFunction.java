@@ -6,11 +6,11 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 
 /**
- * 最先写入的非NULL值
+ * 最先写入的非NULL对象
  *
  * @param <T>
  */
-@MergeType("FIRSTOBJECT")
+@MergeType(value = "FIRSTOBJECT", displayName = "最先写入的非NULL对象")
 @Objective(keyStrategy = 0, retainStrategy = 2)
 public class FirstObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 

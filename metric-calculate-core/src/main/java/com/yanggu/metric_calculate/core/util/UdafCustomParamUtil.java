@@ -25,8 +25,7 @@ public class UdafCustomParamUtil {
         }
         for (Field field : declaredFields) {
             Class<?> fieldClazz = field.getType();
-            //如果是基本数据类型
-            //判断是否包含该注解
+            //如果不是基本数据类型或者不包含该注解就continue
             if (!ClassUtil.isBasicType(fieldClazz) || !field.isAnnotationPresent(UdafCustomParam.class)) {
                 continue;
             }

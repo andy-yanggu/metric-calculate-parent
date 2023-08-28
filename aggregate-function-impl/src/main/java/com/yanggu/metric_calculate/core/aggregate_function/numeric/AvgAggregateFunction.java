@@ -9,7 +9,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
  * 平均值
  */
 @Numerical
-@MergeType("AVG")
+@MergeType(value = "AVG", displayName = "平均值")
 public class AvgAggregateFunction<T extends Number> implements AggregateFunction<T, MutableEntry<Double, Long>, Double> {
     
     @Override

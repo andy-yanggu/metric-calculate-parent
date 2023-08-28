@@ -6,11 +6,11 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 
 /**
- * 最后写入的非NULL值
+ * 最后写入的非NULL对象
  *
  * @param <T>
  */
-@MergeType("LASTOBJECT")
+@MergeType(value = "LASTOBJECT", displayName = "最后写入的非NULL对象")
 @Objective(keyStrategy = 0, retainStrategy = 2)
 public class LastObjectAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
 
