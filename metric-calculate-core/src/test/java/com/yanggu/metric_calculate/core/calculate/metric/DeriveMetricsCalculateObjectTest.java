@@ -27,7 +27,7 @@ class DeriveMetricsCalculateObjectTest extends DeriveMetricsCalculateBase {
         JSONObject input1 = new JSONObject();
         input1.set("account_no_in", "000000000012");
         input1.set("trans_timestamp", "1654768045000");
-        input1.set("debit_amt_out", 800);
+        input1.set("amount", 800);
 
         query = deriveMetricCalculate.stateExec(input1);
         assertEquals("1654768045000", query.getResult().getValue());
@@ -35,21 +35,21 @@ class DeriveMetricsCalculateObjectTest extends DeriveMetricsCalculateBase {
         JSONObject input2 = new JSONObject();
         input2.set("account_no_in", "000000000012");
         input2.set("trans_timestamp", "1654768046000");
-        input2.set("debit_amt_out", 900);
+        input2.set("amount", 900);
         query = deriveMetricCalculate.stateExec(input2);
         assertEquals("1654768046000", query.getResult().getValue());
 
         JSONObject input3 = new JSONObject();
         input3.set("account_no_in", "000000000012");
         input3.set("trans_timestamp", "1654768045000");
-        input3.set("debit_amt_out", 800);
+        input3.set("amount", 800);
         query = deriveMetricCalculate.stateExec(input3);
         assertEquals("1654768046000", query.getResult().getValue());
 
         JSONObject input4 = new JSONObject();
         input4.set("account_no_in", "000000000012");
         input4.set("trans_timestamp", "1354768045000");
-        input4.set("debit_amt_out", 1100);
+        input4.set("amount", 1100);
         query = deriveMetricCalculate.stateExec(input4);
         assertEquals("1354768045000", query.getResult().getValue());
     }

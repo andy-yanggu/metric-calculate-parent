@@ -20,7 +20,7 @@ class DeriveMetricsCalculatePatternTest extends DeriveMetricsCalculateBase {
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
         input.set("credit_amt_in", 100);
-        input.set("debit_amt_out", 800);
+        input.set("amount", 800);
         input.set("trans_date", "20220609");
         DeriveMetricCalculateResult<Double> deriveMetricCalculateResults = deriveMetricCalculate.stateExec(input);
         System.out.println(deriveMetricCalculateResults);

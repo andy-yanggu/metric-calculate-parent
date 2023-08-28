@@ -34,7 +34,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input1.set("trans_timestamp", "1654768045000");
         input1.set("credit_amt_in", "100");
         input1.set("trans_date", "20220609");
-        input1.set("debit_amt_out", 800);
+        input1.set("amount", 800);
 
         DeriveMetricCalculateResult<Map<MultiFieldDistinctKey, Double>> query =
                 deriveMetricCalculate.stateExec(input1);
@@ -49,7 +49,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input2.set("trans_timestamp", "1654768045000");
         input2.set("credit_amt_in", "100");
         input2.set("trans_date", "20220609");
-        input2.set("debit_amt_out", 900);
+        input2.set("amount", 900);
         query = deriveMetricCalculate.stateExec(input2);
         map.put(key, 1700.0D);
         assertEquals(map, query.getResult());
@@ -60,7 +60,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input3.set("trans_timestamp", "1654768045000");
         input3.set("credit_amt_in", "100");
         input3.set("trans_date", "20220609");
-        input3.set("debit_amt_out", 1000);
+        input3.set("amount", 1000);
         query = deriveMetricCalculate.stateExec(input3);
         map.put(key, 2700.0D);
         assertEquals(map, query.getResult());
@@ -71,7 +71,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input4.set("trans_timestamp", "1654768045000");
         input4.set("credit_amt_in", "100");
         input4.set("trans_date", "20220609");
-        input4.set("debit_amt_out", 80);
+        input4.set("amount", 80);
         query = deriveMetricCalculate.stateExec(input4);
 
         MultiFieldDistinctKey key2 = new MultiFieldDistinctKey(Collections.singletonList("000000000013"));
@@ -84,7 +84,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input5.set("trans_timestamp", "1654768045000");
         input5.set("credit_amt_in", "100");
         input5.set("trans_date", "20220609");
-        input5.set("debit_amt_out", 100);
+        input5.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input5);
         map.put(key2, 180.0D);
         assertEquals(map, query.getResult());
@@ -95,7 +95,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input6.set("trans_timestamp", "1654768045000");
         input6.set("credit_amt_in", "100");
         input6.set("trans_date", "20220609");
-        input6.set("debit_amt_out", 120);
+        input6.set("amount", 120);
         query = deriveMetricCalculate.stateExec(input6);
         map.put(key, 2820.0D);
         assertEquals(map, query.getResult());
@@ -106,7 +106,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input7.set("trans_timestamp", "1654768045000");
         input7.set("credit_amt_in", "100");
         input7.set("trans_date", "20220609");
-        input7.set("debit_amt_out", 100);
+        input7.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input7);
         map.put(new MultiFieldDistinctKey(Collections.singletonList("000000000016")), 100.0D);
         assertEquals(map, query.getResult());

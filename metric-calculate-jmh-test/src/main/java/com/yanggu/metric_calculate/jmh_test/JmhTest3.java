@@ -31,7 +31,7 @@ public class JmhTest3 {
         tempInput.set("account_no_in", "000000000012");
         tempInput.set("trans_timestamp", "1654768045000");
         tempInput.set("credit_amt_in", "100");
-        tempInput.set("debit_amt_out", "800");
+        tempInput.set("amount", "800");
         tempInput.set("trans_timestamp", "1679887968782");
 
         tempInput = metricCalculate.getParam(tempInput);

@@ -24,7 +24,7 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -62,7 +62,7 @@
         "baseUdafParam": {
           "aggregateType": "MIN",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -100,12 +100,12 @@
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTFIELD",
           "retainExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           },
           "collectiveSortFieldList": [
             {
               "aviatorExpressParam": {
-                "express": "debit_amt_out"
+                "express": "amount"
               },
               "is_asc": false
             }
@@ -152,7 +152,7 @@
           },
           "objectiveCompareFieldParamList": [
             {
-              "express": "debit_amt_out"
+              "express": "amount"
             }
           ]
         }
@@ -191,7 +191,7 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -268,7 +268,7 @@
           "collectiveSortFieldList": [
             {
               "aviatorExpressParam" : {
-                "express": "debit_amt_out"
+                "express": "amount"
               },
               "is_asc": true
             }
@@ -319,7 +319,7 @@
           "valueAggParam": {
             "aggregateType": "SUM",
             "metricExpressParam" : {
-              "express": "debit_amt_out"
+              "express": "amount"
             }
           }
         }
@@ -363,7 +363,7 @@
               "baseUdafParam": {
                 "aggregateType": "SUM",
                 "metricExpressParam" : {
-                  "express": "account_no_in == '张三' ? debit_amt_out : 0"
+                  "express": "account_no_in == '张三' ? amount : 0"
                 }
               },
               "sort": 1
@@ -373,7 +373,7 @@
               "baseUdafParam": {
                 "aggregateType": "SUM",
                 "metricExpressParam" : {
-                  "express": "debit_amt_out"
+                  "express": "amount"
                 }
               },
               "sort": 2
@@ -418,7 +418,7 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -431,7 +431,7 @@
             "sort": 0,
             "name": "start",
             "matchExpressParam" : {
-              "express": "debit_amt_out > 100"
+              "express": "amount > 100"
             },
             "interval": 0
           },
@@ -439,7 +439,7 @@
             "sort": 1,
             "name": "mid",
             "matchExpressParam" : {
-              "express": "debit_amt_out > 200"
+              "express": "amount > 200"
             },
             "interval": 10
           },
@@ -447,7 +447,7 @@
             "sort": 2,
             "name": "end",
             "matchExpressParam" : {
-              "express": "debit_amt_out > 300"
+              "express": "amount > 300"
             },
             "interval": 10
           }
@@ -481,7 +481,7 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -553,7 +553,7 @@
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -584,14 +584,14 @@
         "timeFormat": "TIMESTAMP"
       },
       "filterExpressParam": {
-        "express": "debit_amt_out > 100"
+        "express": "amount > 100"
       },
       "aggregateFunctionParam": {
         "aggregateType": "SUM",
         "baseUdafParam": {
           "aggregateType": "SUM",
           "metricExpressParam" : {
-            "express": "debit_amt_out"
+            "express": "amount"
           }
         }
       },
@@ -614,11 +614,6 @@
       "fieldType": "REAL"
     },
     {
-      "name": "trans_jnls_no",
-      "dataType": "STRING",
-      "fieldType": "REAL"
-    },
-    {
       "name": "account_no_out",
       "dataType": "STRING",
       "fieldType": "REAL"
@@ -629,33 +624,8 @@
       "fieldType": "REAL"
     },
     {
-      "name": "credit_amt_out",
+      "name": "amount",
       "dataType": "DOUBLE",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "credit_amt_in",
-      "dataType": "DOUBLE",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "debit_amt_out",
-      "dataType": "DOUBLE",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "debit_amt_in",
-      "dataType": "DOUBLE",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "d_c_flag_out",
-      "dataType": "STRING",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "d_c_flag_in",
-      "dataType": "STRING",
       "fieldType": "REAL"
     },
     {

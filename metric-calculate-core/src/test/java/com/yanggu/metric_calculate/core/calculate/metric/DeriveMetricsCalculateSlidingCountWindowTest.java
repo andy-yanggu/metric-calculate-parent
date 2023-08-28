@@ -26,38 +26,38 @@ class DeriveMetricsCalculateSlidingCountWindowTest extends DeriveMetricsCalculat
         input1.set("trans_timestamp", "1654768045000");
         input1.set("credit_amt_in", "100");
         input1.set("trans_date", "20220609");
-        input1.set("debit_amt_out", 800);
+        input1.set("amount", 800);
 
         DeriveMetricCalculateResult<Double> query = deriveMetricCalculate.stateExec(input1);
         assertEquals(800.0D, query.getResult(), 0.0D);
 
         JSONObject input2 = input1.clone();
-        input2.set("debit_amt_out", 900);
+        input2.set("amount", 900);
         query = deriveMetricCalculate.stateExec(input2);
         assertEquals(1700.0D, query.getResult(), 0.0D);
 
         JSONObject input3 = input1.clone();
-        input3.set("debit_amt_out", 1000);
+        input3.set("amount", 1000);
         query = deriveMetricCalculate.stateExec(input3);
         assertEquals(2700.0D, query.getResult(), 0.0D);
 
         JSONObject input4 = input1.clone();
-        input4.set("debit_amt_out", 1100);
+        input4.set("amount", 1100);
         query = deriveMetricCalculate.stateExec(input4);
         assertEquals(3800.0D, query.getResult(), 0.0D);
 
         JSONObject input5 = input1.clone();
-        input5.set("debit_amt_out", 100);
+        input5.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input5);
         assertEquals(3900.0D, query.getResult(), 0.0D);
 
         JSONObject input6 = input1.clone();
-        input6.set("debit_amt_out", 100);
+        input6.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input6);
         assertEquals(3200.0D, query.getResult(), 0.0D);
 
         JSONObject input7 = input1.clone();
-        input7.set("debit_amt_out", 100);
+        input7.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input7);
         assertEquals(2400.0D, query.getResult(), 0.0D);
     }

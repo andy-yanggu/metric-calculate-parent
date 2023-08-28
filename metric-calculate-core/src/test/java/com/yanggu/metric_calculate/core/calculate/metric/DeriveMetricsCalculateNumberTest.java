@@ -26,7 +26,7 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
         input.set("credit_amt_in", 100);
-        input.set("debit_amt_out", 800);
+        input.set("amount", 800);
         input.set("trans_date", "20220609");
 
         DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
@@ -35,7 +35,7 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(1600.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 400);
+        input.set("amount", 400);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(2000.0D, doubles.getResult(), 0.0D);
     }
@@ -52,21 +52,21 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         input.set("account_no_out", "000000000011");
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
-        input.set("debit_amt_out", 800.0D);
+        input.set("amount", 800.0D);
         input.set("trans_date", "20220609");
 
         DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(800.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 900.0D);
+        input.set("amount", 900.0D);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(800.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 400);
+        input.set("amount", 400);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(400.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 500);
+        input.set("amount", 500);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(400.0D, doubles.getResult(), 0.0D);
     }
@@ -83,25 +83,25 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         input.set("account_no_out", "000000000011");
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
-        input.set("debit_amt_out", 20.0D);
+        input.set("amount", 20.0D);
         input.set("trans_date", "20220609");
 
         DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
         assertNull(doubles);
 
-        input.set("debit_amt_out", 800.0D);
+        input.set("amount", 800.0D);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(800.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 60.0D);
+        input.set("amount", 60.0D);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(800.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 400.0D);
+        input.set("amount", 400.0D);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(1200.0D, doubles.getResult(), 0.0D);
 
-        input.set("debit_amt_out", 20.0D);
+        input.set("amount", 20.0D);
         doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(1200.0D, doubles.getResult(), 0.0D);
     }
