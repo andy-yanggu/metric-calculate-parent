@@ -38,6 +38,9 @@ public class AviatorExpressParam extends BaseEntity implements Serializable {
     )
     private List<ModelColumn> modelColumnList;
 
+    /**
+     * 依赖的混合型实例
+     */
     @RelationOneToMany(
             joinTable = "aviator_express_param_mix_udaf_param_item_relation",
             selfField = "id", joinSelfColumn = "aviator_express_param_id",

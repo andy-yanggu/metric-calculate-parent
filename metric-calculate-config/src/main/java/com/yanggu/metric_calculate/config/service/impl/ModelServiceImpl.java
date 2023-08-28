@@ -14,6 +14,7 @@ import com.yanggu.metric_calculate.config.service.ModelColumnService;
 import com.yanggu.metric_calculate.config.service.ModelDimensionColumnService;
 import com.yanggu.metric_calculate.config.service.ModelService;
 import com.yanggu.metric_calculate.config.service.ModelTimeColumnService;
+import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,9 +74,13 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
             modelTimeColumn.setModelId(modelId);
             ModelColumn modelColumn = modelTimeColumn.getModelColumn();
             if (modelColumn == null) {
-                throw new BusinessException(MODEL_COLUMN_NULL);
+                throw new BusinessException(MODEL_TIME_COLUMN_NULL);
             }
-            Integer modelColumnId = modelColumnNameIdMap.get(modelColumn.getName());
+            String name = modelColumn.getName();
+            if (StrUtil.isEmpty(name)) {
+                throw new BusinessException(MODEL_TIME_COLUMN_NULL);
+            }
+            Integer modelColumnId = modelColumnNameIdMap.get(name);
             if (modelColumnId == null) {
                 throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
             }
@@ -89,11 +94,15 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
             modelDimensionColumn.setModelId(modelId);
             ModelColumn modelColumn = modelDimensionColumn.getModelColumn();
             if (modelColumn == null) {
-                throw new BusinessException(MODEL_COLUMN_NULL);
+                throw new BusinessException(MODEL_DIMENSION_COLUMN_NULL);
             }
-            Integer modelColumnId = modelColumnNameIdMap.get(modelColumn.getName());
+            String name = modelColumn.getName();
+            if (StrUtil.isEmpty(name)) {
+                throw new BusinessException(MODEL_DIMENSION_COLUMN_NULL);
+            }
+            Integer modelColumnId = modelColumnNameIdMap.get(name);
             if (modelColumnId == null) {
-                throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
+                throw new BusinessException(MODEL_DIMENSION_COLUMN_NULL);
             }
             modelDimensionColumn.setModelColumnId(modelColumnId);
         });

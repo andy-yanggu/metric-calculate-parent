@@ -20,8 +20,10 @@ public enum ResultCode {
     AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR("10007", "Aviator表达式依赖宽表字段错误"),
     MODEL_ID_ERROR("10008", "宽表id: {}有误"),
     DERIVE_ID_ERROR("10009", "派生指标id: {}有误"),
-    MODEL_COLUMN_NULL("10010", "宽表字段为空"),
+    MODEL_TIME_COLUMN_NULL("10010", "宽表时间字段名为空"),
     AGGREGATE_FUNCTION_EXIST("10011", "聚合函数已经存在"),
+    MODEL_DIMENSION_COLUMN_NULL("10012", "宽表维度字段名为空"),
+    MIX_UDAF_PARAM_NAME_ERROR("10013", "混合聚合参数名称异常"),
     ;
 
     private final String code;

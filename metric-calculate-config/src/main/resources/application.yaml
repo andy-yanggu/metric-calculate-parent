@@ -15,6 +15,7 @@ spring:
       matching-strategy: ANT_PATH_MATCHER
   login-interceptor:
     exclude-path-list:
+      - '/error'
       - '/doc.html/**'
       - '/webjars/**'
       - '/favicon.ico'
@@ -38,7 +39,7 @@ spring:
   #jackson配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-    default-property-inclusion: NON_NULL
+    default-property-inclusion: NON_EMPTY
     time-zone: GMT+8
 
 mybatis-flex:
