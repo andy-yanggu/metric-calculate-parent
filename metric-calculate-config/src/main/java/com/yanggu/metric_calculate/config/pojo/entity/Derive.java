@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.enums.AccuracyEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Derive extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 2470923557083328784L;
 
     @Id(keyType = KeyType.Auto)
@@ -91,19 +94,24 @@ public class Derive extends BaseEntity implements Serializable {
     private WindowParam windowParam;
 
     /**
+     * 是否包含当前笔
+     */
+    private Boolean includeCurrent;
+
+    /**
      * 计量单位
      */
     private String unitMeasure;
 
     /**
-     * 精度
-     */
-    //private Integer roundAccuracy;
-
-    /**
      * 精度类型(0不处理 1四舍五入 2向上保留)
      */
-    //private Integer roundAccuracyType;
+    private AccuracyEnum roundAccuracyType;
+
+    /**
+     * 精度长度
+     */
+    private Integer roundAccuracyLength;
 
     /**
      * 数据类型
@@ -114,10 +122,5 @@ public class Derive extends BaseEntity implements Serializable {
      * 目录编码
      */
     private String directoryCode;
-
-    /**
-     * 是否包含当前笔
-     */
-    private Boolean includeCurrent;
 
 }

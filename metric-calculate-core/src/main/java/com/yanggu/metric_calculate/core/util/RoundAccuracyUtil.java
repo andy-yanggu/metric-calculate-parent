@@ -9,6 +9,8 @@ import org.dromara.hutool.core.math.NumberUtil;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
+import static com.yanggu.metric_calculate.core.enums.AccuracyEnum.NOT_HANDLE;
+
 /**
  * 精度处理工具类
  */
@@ -22,7 +24,7 @@ public class RoundAccuracyUtil {
         Object returnData = result;
         //如果结果为数值并且需要精度处理
         if (result instanceof Number && roundAccuracy != null
-                && Boolean.TRUE.equals(roundAccuracy.getUseAccuracy())
+                && !roundAccuracy.getType().equals(NOT_HANDLE)
                 && roundAccuracy.getLength() != null && roundAccuracy.getLength() >= 0) {
             AccuracyEnum type = roundAccuracy.getType();
             int length = roundAccuracy.getLength();
