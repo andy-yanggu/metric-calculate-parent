@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.function_factory;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.test.TestJarUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

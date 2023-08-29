@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
@@ -20,6 +21,9 @@ public class ModelController {
 
     @Autowired
     private ModelService modelService;
+
+    @Autowired
+    private ModelMapstruct modelMapstruct;
 
     @PostMapping("/save")
     @Operation(summary = "新增数据明细宽表")
@@ -58,6 +62,12 @@ public class ModelController {
     @Operation(summary = "数据明细宽表分页")
     public Result<Page<Model>> page(Page<Model> page) {
         return Result.ok(modelService.page(page));
+    }
+
+    @GetMapping("/test/{modelId}")
+    public Result<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getCoreModel(@PathVariable Integer modelId) {
+        Model model = modelService.getMapper().selectOneWithRelationsById(modelId);
+        return Result.ok(modelMapstruct.toCoreModel(model));
     }
 
 }

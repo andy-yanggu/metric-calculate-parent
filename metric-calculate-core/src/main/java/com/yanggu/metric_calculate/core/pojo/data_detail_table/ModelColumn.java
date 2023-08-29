@@ -45,6 +45,6 @@ public class ModelColumn {
     /**
      * Aviator表达式参数
      */
-    private AviatorExpressParam expressParam;
+    private AviatorExpressParam aviatorExpressParam;
 
 }

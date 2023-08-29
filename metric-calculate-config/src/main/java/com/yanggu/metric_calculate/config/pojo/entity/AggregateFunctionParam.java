@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Table(value = "aggregate_function_param")
 public class AggregateFunctionParam extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -8675494863416206181L;
 
     /**

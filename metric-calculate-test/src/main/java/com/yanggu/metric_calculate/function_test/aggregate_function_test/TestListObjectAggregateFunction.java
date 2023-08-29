@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.aggregate_function.collection;
+package com.yanggu.metric_calculate.function_test.aggregate_function_test;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
@@ -11,14 +11,14 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * 对象列表
+ * 测试对象列表
  *
  * @param <T>
  */
 @Data
-@MergeType(value = "LISTOBJECT", displayName = "对象列表")
+@MergeType(value = "TEST_LISTOBJECT", displayName = "测试对象列表")
 @Collective(keyStrategy = 0, retainStrategy = 2)
-public class ListObjectAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
+public class TestListObjectAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
     @UdafCustomParam(displayName = "长度限制")
     private Integer limit = 10;

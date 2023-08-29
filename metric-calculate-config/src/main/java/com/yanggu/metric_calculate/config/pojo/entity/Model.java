@@ -7,6 +7,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Model extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 193942509865715855L;
 
     @Id(keyType = KeyType.Auto)
@@ -60,5 +62,11 @@ public class Model extends BaseEntity implements Serializable {
      */
     @RelationOneToMany(selfField = "id", targetField = "modelId", orderBy = "sort")
     private List<ModelDimensionColumn> modelDimensionColumnList;
+
+    /**
+     * 派生指标列表
+     */
+    @RelationOneToMany(selfField = "id", targetField = "modelId")
+    private List<Derive> deriveList;
 
 }

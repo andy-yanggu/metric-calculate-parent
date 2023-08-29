@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +25,13 @@ public class AviatorFunctionController {
     @Operation(summary = "新增Aviator函数")
     public Result<Void> save(@RequestBody AviatorFunction aviatorFunction) {
         aviatorFunctionService.save(aviatorFunction);
+        return Result.ok();
+    }
+
+    @PostMapping("/jarSave")
+    @Operation(summary = "通过jar文件保存")
+    public Result<Void> jarSave(@RequestParam("file") MultipartFile file) throws Exception {
+        aviatorFunctionService.jarSave(file);
         return Result.ok();
     }
 

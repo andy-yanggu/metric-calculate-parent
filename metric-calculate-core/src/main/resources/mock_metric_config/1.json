@@ -593,7 +593,7 @@
       }
     }
   ],
-  "fieldList": [
+  "modelColumnList": [
     {
       "name": "trans_no",
       "dataType": "STRING",

@@ -33,6 +33,10 @@ public class UdafCustomParamUtil {
             UdafCustomParamData udafCustomParamData = new UdafCustomParamData();
             //设置名称
             udafCustomParamData.setName(field.getName());
+            //设置中文名
+            udafCustomParamData.setDisplayName(udafParam.displayName());
+            //设置描述
+            udafCustomParamData.setDescription(udafParam.description());
             //设置数据类型
             udafCustomParamData.setDataType(field.getType().getSimpleName());
             //设置默认值
@@ -42,8 +46,6 @@ public class UdafCustomParamUtil {
             udafCustomParamData.setUpdate(udafParam.update());
             //设置能够为空
             udafCustomParamData.setNotNull(udafParam.notNull());
-            //设置描述
-            udafCustomParamData.setDescription(udafParam.description());
             udafCustomParamDataList.add(udafCustomParamData);
         }
         return udafCustomParamDataList;

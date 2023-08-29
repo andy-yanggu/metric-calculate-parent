@@ -101,7 +101,7 @@ public class MetricUtil {
         if (aviatorFunctionFactory == null) {
             return;
         }
-        List<ModelColumn> modelColumnList = metricCalculate.getFieldList();
+        List<ModelColumn> modelColumnList = metricCalculate.getModelColumnList();
         if (CollUtil.isEmpty(modelColumnList)) {
             return;
         }
@@ -119,7 +119,7 @@ public class MetricUtil {
             } else if (VIRTUAL.equals(fieldType)) {
                 VirtualFieldCalculate<Object> virtualFieldCalculate = new VirtualFieldCalculate<>();
                 virtualFieldCalculate.setColumnName(modelColumn.getName());
-                virtualFieldCalculate.setAviatorExpressParam(modelColumn.getExpressParam());
+                virtualFieldCalculate.setAviatorExpressParam(modelColumn.getAviatorExpressParam());
                 virtualFieldCalculate.setFieldMap(metricCalculate.getFieldMap());
                 virtualFieldCalculate.setAviatorFunctionFactory(aviatorFunctionFactory);
                 virtualFieldCalculate.init();
@@ -288,7 +288,7 @@ public class MetricUtil {
         if (metricCalculate == null) {
             throw new RuntimeException("传入的明细宽表为空");
         }
-        List<ModelColumn> fields = metricCalculate.getFieldList();
+        List<ModelColumn> fields = metricCalculate.getModelColumnList();
         if (CollUtil.isEmpty(fields)) {
             throw new RuntimeException("宽表字段为空, 宽表数据: " + JSONUtil.toJsonStr(metricCalculate));
         }

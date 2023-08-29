@@ -17,7 +17,12 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UdafCustomParam {
 
-    String displayName() default "";
+    /**
+     * 中文名
+     *
+     * @return
+     */
+    String displayName();
 
     /**
      * 描述信息

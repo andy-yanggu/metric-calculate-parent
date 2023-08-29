@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
+import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -62,6 +63,16 @@ public class AggregateFunctionDto extends BaseDto implements Serializable {
      * 是否内置: 0否, 1是
      */
     private Boolean isBuiltIn;
+
+    /**
+     * jar存储id
+     */
+    private Integer jarStoreId;
+
+    /**
+     * 不是内置的聚合函数为外置jar
+     */
+    private JarStore jarStore;
 
     /**
      * 聚合函数成员变量

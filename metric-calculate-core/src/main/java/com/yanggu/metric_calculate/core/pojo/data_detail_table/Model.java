@@ -37,7 +37,7 @@ public class Model {
     /**
      * 宽表字段
      */
-    private List<ModelColumn> fieldList;
+    private List<ModelColumn> modelColumnList;
 
     /**
      * 派生指标

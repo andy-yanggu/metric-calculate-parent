@@ -59,7 +59,7 @@
       }
     }
   ],
-  "fieldList": [
+  "modelColumnList": [
     {
       "name": "device_id",
       "dataType": "STRING",

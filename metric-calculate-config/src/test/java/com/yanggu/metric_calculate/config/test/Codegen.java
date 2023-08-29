@@ -39,7 +39,7 @@ public class Codegen {
         //设置包名
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
         //设置生成的表名
-        globalConfig.setGenerateTable("node_pattern", "node_pattern_aviator_express_param_relation");
+        globalConfig.setGenerateTable("jar_store");
         //设置生成的mapper的xml路径
         globalConfig.setMapperXmlPath("D://test2/mapper");
         //设置entity的模板路径

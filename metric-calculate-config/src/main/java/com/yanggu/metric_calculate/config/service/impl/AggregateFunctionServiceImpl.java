@@ -8,8 +8,10 @@ import com.yanggu.metric_calculate.config.mapstruct.AggregateFunctionMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionField;
+import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionFieldService;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
+import com.yanggu.metric_calculate.config.service.JarStoreService;
 import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
@@ -49,6 +51,9 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
 
     @Autowired
     private AggregateFunctionFieldService aggregateFunctionFieldService;
+
+    @Autowired
+    private JarStoreService jarStoreService;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -91,7 +96,12 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         if (CollUtil.isEmpty(aggregateFunctionList)) {
             return;
         }
+        JarStore jarStore = new JarStore();
+        //TODO 这里可以根据需要将jar文件保存到远程文件服务器中
+        jarStore.setJarUrl(dest.toURI().toURL().getPath());
+        jarStoreService.save(jarStore);
         for (AggregateFunction aggregateFunction : aggregateFunctionList) {
+            aggregateFunction.setJarStoreId(jarStore.getId());
             AggregateFunctionDto dto = aggregateFunctionMapstruct.toDTO(aggregateFunction);
             saveData(dto);
         }
