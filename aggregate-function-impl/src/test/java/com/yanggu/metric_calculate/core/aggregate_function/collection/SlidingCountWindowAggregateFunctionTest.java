@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,8 @@ class SlidingCountWindowAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = SlidingCountWindowAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("SLIDINGCOUNTWINDOW", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = SlidingCountWindowAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("SLIDINGCOUNTWINDOW", aggregateFunctionAnnotation.name());
     }
 
     @Test

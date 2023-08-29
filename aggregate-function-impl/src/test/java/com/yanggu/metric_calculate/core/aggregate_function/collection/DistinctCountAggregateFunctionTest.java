@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -17,8 +17,8 @@ class DistinctCountAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = DistinctCountAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("DISTINCTCOUNT", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = DistinctCountAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("DISTINCTCOUNT", aggregateFunctionAnnotation.name());
     }
 
     @Test

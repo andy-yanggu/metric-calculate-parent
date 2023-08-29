@@ -1,12 +1,10 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.RelationOneToMany;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -18,6 +16,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class AviatorFunction extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -990784661474142084L;
 
     /**
@@ -45,6 +44,17 @@ public class AviatorFunction extends BaseEntity implements Serializable {
      * 是否内置: 0否, 1是
      */
     private Boolean isBuiltIn;
+
+    /**
+     * jar存储id
+     */
+    private Integer jarStoreId;
+
+    /**
+     * 不是内置的聚合函数为外置jar
+     */
+    @RelationManyToOne(selfField = "jarStoreId", targetField = "id")
+    private JarStore jarStore;
 
     /**
      * Aviator函数成员变量列表

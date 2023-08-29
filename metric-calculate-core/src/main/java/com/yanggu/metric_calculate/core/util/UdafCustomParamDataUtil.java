@@ -1,23 +1,26 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.UdafCustomParam;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.reflect.ReflectUtil;
+import org.dromara.hutool.json.JSONUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class UdafCustomParamUtil {
+public class UdafCustomParamDataUtil {
 
-    private UdafCustomParamUtil() {
+    private UdafCustomParamDataUtil() {
     }
 
     @SneakyThrows
-    public static List<UdafCustomParamData> getUdafCustomParamList(Class<?> clazz) {
+    public static <T extends Annotation> List<UdafCustomParamData> getUdafCustomParamList(Class<?> clazz, Class<T> annotationClass) {
         Field[] declaredFields = clazz.getDeclaredFields();
         List<UdafCustomParamData> udafCustomParamDataList = new ArrayList<>();
         if (ArrayUtil.isEmpty(declaredFields)) {
@@ -26,26 +29,19 @@ public class UdafCustomParamUtil {
         for (Field field : declaredFields) {
             Class<?> fieldClazz = field.getType();
             //如果不是基本数据类型或者不包含该注解就continue
-            if (!ClassUtil.isBasicType(fieldClazz) || !field.isAnnotationPresent(UdafCustomParam.class)) {
+            if (!ClassUtil.isBasicType(fieldClazz) || !field.isAnnotationPresent(annotationClass)) {
                 continue;
             }
-            UdafCustomParam udafParam = field.getAnnotation(UdafCustomParam.class);
-            UdafCustomParamData udafCustomParamData = new UdafCustomParamData();
+            //获取注解数据
+            Map<String, Object> annotationValueMap = AnnotationUtil.getAnnotationValueMap(field, annotationClass);
+            UdafCustomParamData udafCustomParamData = JSONUtil.toBean(annotationValueMap, UdafCustomParamData.class);
             //设置名称
             udafCustomParamData.setName(field.getName());
-            //设置中文名
-            udafCustomParamData.setDisplayName(udafParam.displayName());
-            //设置描述
-            udafCustomParamData.setDescription(udafParam.description());
             //设置数据类型
             udafCustomParamData.setDataType(field.getType().getSimpleName());
             //设置默认值
             ReflectUtil.setAccessible(field);
             udafCustomParamData.setDefaultValue(field.get(clazz.getConstructor().newInstance()));
-            //设置能否被更新
-            udafCustomParamData.setUpdate(udafParam.update());
-            //设置能够为空
-            udafCustomParamData.setNotNull(udafParam.notNull());
             udafCustomParamDataList.add(udafCustomParamData);
         }
         return udafCustomParamDataList;

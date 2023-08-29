@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,8 +18,8 @@ class DistinctListObjectAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = DistinctListObjectAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("DISTINCTLISTOBJECT", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = DistinctListObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("DISTINCTLISTOBJECT", aggregateFunctionAnnotation.name());
     }
 
     @Test

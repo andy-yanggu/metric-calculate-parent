@@ -4,15 +4,17 @@ import com.googlecode.aviator.runtime.type.AviatorNil;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.googlecode.aviator.runtime.type.AviatorRuntimeJavaType;
 
+import java.io.Serial;
 import java.util.Map;
 
 /**
  * 自定义Aviator函数
  * <p>返回第一个不为null的值, 如果都为null, 则返回nil</p>
  */
-@AviatorFunctionName("coalesce")
+@AviatorFunctionAnnotation(name = "coalesce", displayName = "返回第一个非空函数")
 public class CoalesceFunction extends AbstractUdfAviatorFunction {
 
+    @Serial
     private static final long serialVersionUID = -8698263751319322038L;
 
     /**

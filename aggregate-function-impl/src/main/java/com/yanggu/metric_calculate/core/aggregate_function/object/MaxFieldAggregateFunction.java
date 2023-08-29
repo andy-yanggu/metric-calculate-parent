@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 
 /**
@@ -8,7 +8,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
  *
  * @param <T>
  */
-@MergeType(value = "MAXFIELD", displayName = "最大字段")
 @Objective(keyStrategy = 3, retainStrategy = 1)
+@AggregateFunctionAnnotation(name = "MAXFIELD", displayName = "最大字段")
 public class MaxFieldAggregateFunction<T extends Comparable<T>> extends MaxObjectAggregateFunction<T> {
 }

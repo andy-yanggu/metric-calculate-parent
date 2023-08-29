@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -17,8 +17,8 @@ import java.util.Map;
  */
 @Data
 @MapType
-@MergeType(value = "BASEMAP", displayName = "基础映射")
 @EqualsAndHashCode(callSuper=false)
+@AggregateFunctionAnnotation(name = "BASEMAP", displayName = "基础映射")
 public class BaseMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {
 }

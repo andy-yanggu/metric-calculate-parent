@@ -10,13 +10,27 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface AviatorFunctionName {
+public @interface AviatorFunctionAnnotation {
 
     /**
-     * 名称, 唯一标识
+     * 英文名, 唯一标识
      *
      * @return
      */
-    String value();
+    String name();
+
+    /**
+     * 中文名, 唯一性
+     *
+     * @return
+     */
+    String displayName();
+
+    /**
+     * 描述信息
+     *
+     * @return
+     */
+    String description() default "";
 
 }

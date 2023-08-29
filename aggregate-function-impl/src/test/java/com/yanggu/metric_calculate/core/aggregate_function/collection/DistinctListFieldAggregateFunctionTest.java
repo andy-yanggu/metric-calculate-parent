@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -12,8 +12,8 @@ class DistinctListFieldAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = DistinctListFieldAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("DISTINCTLISTFIELD", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = DistinctListFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("DISTINCTLISTFIELD", aggregateFunctionAnnotation.name());
     }
 
     @Test

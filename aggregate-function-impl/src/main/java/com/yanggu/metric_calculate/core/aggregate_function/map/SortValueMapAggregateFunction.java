@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
  */
 @Data
 @MapType
-@MergeType(value = "SORTVALUEMAP", displayName = "TOPN映射")
 @EqualsAndHashCode(callSuper=false)
+@AggregateFunctionAnnotation(name = "SORTVALUEMAP", displayName = "TOPN映射")
 public class SortValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {
 

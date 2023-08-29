@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.function_factory;
 
 
 import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunction;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionName;
+import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionAnnotation;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
@@ -34,7 +34,7 @@ public class AviatorFunctionFactory {
     /**
      * 扫描有AviatorFunctionName注解且是AbstractUdfAviatorFunction子类的类
      */
-    private static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AviatorFunctionName.class)
+    public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AviatorFunctionAnnotation.class)
             && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
 
     private final Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();
@@ -102,11 +102,11 @@ public class AviatorFunctionFactory {
 
     private static void addClassToMap(Class<?> tempClazz,
                                       Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap) {
-        AviatorFunctionName annotation = tempClazz.getAnnotation(AviatorFunctionName.class);
+        AviatorFunctionAnnotation annotation = tempClazz.getAnnotation(AviatorFunctionAnnotation.class);
         if (annotation == null) {
             return;
         }
-        String value = annotation.value();
+        String value = annotation.name();
         Class<? extends AbstractUdfAviatorFunction> put = functionMap.put(value, (Class<? extends AbstractUdfAviatorFunction>) tempClazz);
         if (put != null) {
             throw new RuntimeException(ERROR_MESSAGE + put.getName());

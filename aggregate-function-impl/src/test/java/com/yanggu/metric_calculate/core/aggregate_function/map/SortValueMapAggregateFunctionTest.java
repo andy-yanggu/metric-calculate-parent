@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.junit.jupiter.api.Test;
 
@@ -18,8 +18,8 @@ class SortValueMapAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = SortValueMapAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("SORTVALUEMAP", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortValueMapAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("SORTVALUEMAP", aggregateFunctionAnnotation.name());
     }
 
     @Test

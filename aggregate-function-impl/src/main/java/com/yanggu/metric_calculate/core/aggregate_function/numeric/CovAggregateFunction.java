@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 
 import java.util.List;
@@ -9,8 +9,8 @@ import java.util.List;
 /**
  * 协方差
  */
-@MergeType(value = "COV", displayName = "协方差")
 @Numerical(multiNumber = true)
+@AggregateFunctionAnnotation(name = "COV", displayName = "协方差")
 public class CovAggregateFunction implements AggregateFunction<List<? extends Number>, Object, Double> {
 
     @Override

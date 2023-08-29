@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,8 @@ class LastObjectAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = LastObjectAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("LASTOBJECT", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = LastObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("LASTOBJECT", aggregateFunctionAnnotation.name());
     }
 
     @Test

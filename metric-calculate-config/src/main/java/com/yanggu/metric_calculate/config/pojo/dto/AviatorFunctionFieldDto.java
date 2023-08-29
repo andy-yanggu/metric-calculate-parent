@@ -41,4 +41,9 @@ public class AviatorFunctionFieldDto extends BaseDto implements Serializable {
      */
     private Integer aviatorFunctionId;
 
+    /**
+     * 索引
+     */
+    private Integer sort;
+
 }

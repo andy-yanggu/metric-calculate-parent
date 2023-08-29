@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,8 +12,8 @@ import java.util.Set;
  *
  * @param <T>
  */
-@MergeType(value = "DISTINCTCOUNT", displayName = "去重计数")
 @Collective(keyStrategy = 1, retainStrategy = 0)
+@AggregateFunctionAnnotation(name = "DISTINCTCOUNT", displayName = "去重计数")
 public class DistinctCountAggregateFunction<T> extends AbstractCollectionFunction<T, Set<T>, Integer> {
 
     @Override

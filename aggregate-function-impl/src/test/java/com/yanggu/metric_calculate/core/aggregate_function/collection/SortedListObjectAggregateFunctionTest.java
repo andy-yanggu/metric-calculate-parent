@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.core.reflect.FieldUtil;
@@ -18,8 +18,8 @@ class SortedListObjectAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = SortedListObjectAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("SORTEDLIMITLISTOBJECT", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortedListObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("SORTEDLIMITLISTOBJECT", aggregateFunctionAnnotation.name());
     }
 
     @Test

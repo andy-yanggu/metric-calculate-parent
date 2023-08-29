@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import org.junit.jupiter.api.Test;
 
@@ -10,8 +10,8 @@ class SumAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = SumAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("SUM", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = SumAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("SUM", aggregateFunctionAnnotation.name());
     }
 
     @Test

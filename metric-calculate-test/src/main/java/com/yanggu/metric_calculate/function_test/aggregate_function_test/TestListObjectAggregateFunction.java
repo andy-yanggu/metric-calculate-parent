@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.function_test.aggregate_function_test;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.UdafCustomParam;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -16,11 +16,11 @@ import java.util.List;
  * @param <T>
  */
 @Data
-@MergeType(value = "TEST_LISTOBJECT", displayName = "测试对象列表")
+@AggregateFunctionAnnotation(name = "TEST_LISTOBJECT", displayName = "测试对象列表")
 @Collective(keyStrategy = 0, retainStrategy = 2)
 public class TestListObjectAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
 
-    @UdafCustomParam(displayName = "长度限制")
+    @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
 
     @Override

@@ -1,14 +1,14 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 
 /**
  * 字段列表
  *
  * @param <T>
  */
-@MergeType(value = "LISTFIELD", displayName = "字段列表")
 @Collective(keyStrategy = 0, retainStrategy = 1)
+@AggregateFunctionAnnotation(name = "LISTFIELD", displayName = "字段列表")
 public class ListFieldAggregateFunction<T> extends ListObjectAggregateFunction<T> {
 }

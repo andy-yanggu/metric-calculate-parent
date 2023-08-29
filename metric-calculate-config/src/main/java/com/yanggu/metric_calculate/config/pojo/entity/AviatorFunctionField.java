@@ -6,6 +6,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Table(value = "aviator_function_field")
 public class AviatorFunctionField extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5711687238733531339L;
 
     /**
@@ -43,5 +45,10 @@ public class AviatorFunctionField extends BaseEntity implements Serializable {
      * Aviator函数id
      */
     private Integer aviatorFunctionId;
+
+    /**
+     * 索引
+     */
+    private Integer sort;
 
 }

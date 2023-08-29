@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 
@@ -9,7 +9,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
  * 平均值
  */
 @Numerical
-@MergeType(value = "AVG", displayName = "平均值")
+@AggregateFunctionAnnotation(name = "AVG", displayName = "平均值")
 public class AvgAggregateFunction<T extends Number> implements AggregateFunction<T, MutableEntry<Double, Long>, Double> {
     
     @Override

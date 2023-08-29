@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.mix;
 
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Mix;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
  */
 @Mix
 @Data
-@MergeType(value = "BASEMIX", displayName = "基本混合型")
 @EqualsAndHashCode(callSuper=false)
+@AggregateFunctionAnnotation(name = "BASEMIX", displayName = "基本混合型")
 public class BaseMixAggregateFunction<OUT> extends AbstractMixAggregateFunction<OUT> {
 }

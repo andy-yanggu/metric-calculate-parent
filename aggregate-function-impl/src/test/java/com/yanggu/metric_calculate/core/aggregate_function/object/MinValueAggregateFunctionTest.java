@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.Test;
@@ -14,8 +14,8 @@ class MinValueAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = MinValueAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("MINVALUE", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = MinValueAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("MINVALUE", aggregateFunctionAnnotation.name());
     }
 
     @Test

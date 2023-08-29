@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface UdafCustomParam {
+public @interface AggregateFunctionFieldAnnotation {
 
     /**
      * 中文名

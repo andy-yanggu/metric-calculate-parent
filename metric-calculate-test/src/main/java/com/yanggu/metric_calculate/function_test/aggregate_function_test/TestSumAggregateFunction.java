@@ -2,12 +2,12 @@ package com.yanggu.metric_calculate.function_test.aggregate_function_test;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 
 
 @Numerical
-@MergeType(value = "TEST_SUM", displayName = "测试sum")
+@AggregateFunctionAnnotation(name = "TEST_SUM", displayName = "测试sum")
 public class TestSumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
 
     @Override

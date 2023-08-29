@@ -16,7 +16,7 @@ public abstract class AbstractUdfAviatorFunction extends AbstractVariadicFunctio
      * <p>给成员变量反射赋值之后, 会调用init方法</p>
      */
     public void init() {
-        AviatorFunctionName annotation = this.getClass().getAnnotation(AviatorFunctionName.class);
+        AviatorFunctionAnnotation annotation = this.getClass().getAnnotation(AviatorFunctionAnnotation.class);
         if (annotation == null) {
             throw new RuntimeException("自定义函数必须有AviatorFunctionName注解");
         }
@@ -29,11 +29,11 @@ public abstract class AbstractUdfAviatorFunction extends AbstractVariadicFunctio
      */
     @Override
     public String getName() {
-        AviatorFunctionName annotation = this.getClass().getAnnotation(AviatorFunctionName.class);
+        AviatorFunctionAnnotation annotation = this.getClass().getAnnotation(AviatorFunctionAnnotation.class);
         if (annotation == null) {
             throw new RuntimeException("自定义函数必须有AviatorFunctionName注解");
         }
-        return annotation.value();
+        return annotation.name();
     }
 
 }

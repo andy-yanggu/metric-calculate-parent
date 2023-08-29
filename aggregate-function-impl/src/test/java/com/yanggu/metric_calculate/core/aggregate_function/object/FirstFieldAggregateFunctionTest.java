@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +14,8 @@ class FirstFieldAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = FirstFieldAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("FIRSTFIELD", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = FirstFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("FIRSTFIELD", aggregateFunctionAnnotation.name());
     }
 
     @Test

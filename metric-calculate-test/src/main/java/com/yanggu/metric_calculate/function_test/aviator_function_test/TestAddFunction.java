@@ -5,17 +5,27 @@ import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorDecimal;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunction;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionName;
+import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFieldAnnotation;
+import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionAnnotation;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.math.BigDecimal;
 import java.util.Map;
 
 import static java.math.RoundingMode.UP;
 
-@AviatorFunctionName("test_add")
+@Data
+@AviatorFunctionAnnotation(name = "test_add", displayName = "测试add")
+@EqualsAndHashCode(callSuper = true)
 public class TestAddFunction extends AbstractUdfAviatorFunction {
 
-    private Integer length;
+    @Serial
+    private static final long serialVersionUID = -4770027284173452385L;
+
+    @AviatorFunctionFieldAnnotation(displayName = "长度")
+    private Integer length = 10;
 
     @Override
     public AviatorObject variadicCall(Map<String, Object> env, AviatorObject... args) {

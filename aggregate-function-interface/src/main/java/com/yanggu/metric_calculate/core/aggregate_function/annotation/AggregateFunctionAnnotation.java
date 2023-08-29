@@ -12,14 +12,14 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface MergeType {
+public @interface AggregateFunctionAnnotation {
 
     /**
      * 英文名, 唯一标识
      *
      * @return
      */
-    String value();
+    String name();
 
     /**
      * 中文名, 唯一性

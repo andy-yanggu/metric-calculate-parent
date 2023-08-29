@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.function_factory;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -31,7 +31,7 @@ public class AggregateFunctionFactory {
     /**
      * 扫描有MergeType注解并且是AggregateFunction子类
      */
-    public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(MergeType.class)
+    public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AggregateFunctionAnnotation.class)
             && AggregateFunction.class.isAssignableFrom(clazz);
 
     /**
@@ -116,11 +116,11 @@ public class AggregateFunctionFactory {
     }
 
     private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AggregateFunction>> functionMap) {
-        MergeType annotation = tempClazz.getAnnotation(MergeType.class);
+        AggregateFunctionAnnotation annotation = tempClazz.getAnnotation(AggregateFunctionAnnotation.class);
         if (annotation == null) {
             return;
         }
-        String value = annotation.value();
+        String value = annotation.name();
         Class<? extends AggregateFunction> put = functionMap.put(value, (Class<? extends AggregateFunction>) tempClazz);
         if (put != null) {
             throw new RuntimeException(ERROR_MESSAGE + put.getName());

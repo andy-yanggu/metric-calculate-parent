@@ -16,7 +16,7 @@ import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.util.UdafCustomParamData;
-import com.yanggu.metric_calculate.core.util.UdafCustomParamUtil;
+import com.yanggu.metric_calculate.core.util.UdafCustomParamDataUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.data.id.IdUtil;
 import org.dromara.hutool.core.util.SystemUtil;
@@ -108,17 +108,17 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     }
 
     private static AggregateFunction buildAggregateFunction(Class<?> clazz) {
-        MergeType mergeType = clazz.getAnnotation(MergeType.class);
-        if (mergeType == null) {
-            throw new BusinessException(AGGREGATE_FUNCTION_CLASS_NOT_HAVE_MERGE_TYPE, clazz.getName());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = clazz.getAnnotation(AggregateFunctionAnnotation.class);
+        if (aggregateFunctionAnnotation == null) {
+            throw new BusinessException(AGGREGATE_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
         }
         AggregateFunction aggregateFunction = new AggregateFunction();
         //设置名字
-        aggregateFunction.setName(mergeType.value());
+        aggregateFunction.setName(aggregateFunctionAnnotation.name());
         //设置中文名
-        aggregateFunction.setDisplayName(mergeType.displayName());
+        aggregateFunction.setDisplayName(aggregateFunctionAnnotation.displayName());
         //设置描述信息
-        aggregateFunction.setDescription(mergeType.description());
+        aggregateFunction.setDescription(aggregateFunctionAnnotation.description());
         //数值型
         if (clazz.isAnnotationPresent(Numerical.class)) {
             Numerical numerical = clazz.getAnnotation(Numerical.class);
@@ -147,7 +147,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         }
         aggregateFunction.setIsBuiltIn(false);
         //设置聚合函数字段
-        List<UdafCustomParamData> udafCustomParamList = UdafCustomParamUtil.getUdafCustomParamList(clazz);
+        List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AggregateFunctionFieldAnnotation.class);
         if (CollUtil.isNotEmpty(udafCustomParamList)) {
             AtomicInteger index = new AtomicInteger(0);
             List<AggregateFunctionField> list = udafCustomParamList.stream()

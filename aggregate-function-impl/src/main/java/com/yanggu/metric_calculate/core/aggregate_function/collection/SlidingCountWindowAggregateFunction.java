@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,8 +17,8 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-@MergeType(value = "SLIDINGCOUNTWINDOW", displayName = "滑动计数窗口函数")
 @Collective(keyStrategy = 0, retainStrategy = 1)
+@AggregateFunctionAnnotation(name = "SLIDINGCOUNTWINDOW", displayName = "滑动计数窗口函数")
 public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<IN, List<IN>, OUT> {
 
     private Integer limit = 10;

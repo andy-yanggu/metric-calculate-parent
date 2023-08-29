@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,8 +28,8 @@ class BaseMapAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = BaseMapAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("BASEMAP", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = BaseMapAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("BASEMAP", aggregateFunctionAnnotation.name());
     }
 
     @Test

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core.pojo.agg_bean.Boundary;
 
@@ -12,7 +12,7 @@ import com.yanggu.metric_calculate.core.pojo.agg_bean.Boundary;
  * @param <T>
  */
 @Numerical
-@MergeType(value = "DECREASECOUNT", displayName = "递减次数")
+@AggregateFunctionAnnotation(name = "DECREASECOUNT", displayName = "递减次数")
 public class DecreaseCountAggregateFunction<T extends Number & Comparable<T>> implements AggregateFunction<T, Boundary<T>, Integer> {
 
     @Override

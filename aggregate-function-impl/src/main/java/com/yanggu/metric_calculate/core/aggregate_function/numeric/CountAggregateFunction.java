@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 
 /**
@@ -9,7 +9,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
  * <p>非空的情况下进行+1</p>
  */
 @Numerical
-@MergeType(value = "COUNT", displayName = "计数")
+@AggregateFunctionAnnotation(name = "COUNT", displayName = "计数")
 public class CountAggregateFunction<T> implements AggregateFunction<T, Long, Long> {
 
     @Override

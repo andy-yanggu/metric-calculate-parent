@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -10,8 +10,8 @@ class SortedListFieldAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = SortedListFieldAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("SORTEDLIMITLISTFIELD", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortedListFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("SORTEDLIMITLISTFIELD", aggregateFunctionAnnotation.name());
     }
 
     @Test

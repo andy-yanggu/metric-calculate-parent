@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
@@ -13,8 +13,8 @@ class LagFieldAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = LagFieldAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("LAGFIELD", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = LagFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("LAGFIELD", aggregateFunctionAnnotation.name());
     }
 
     @Test

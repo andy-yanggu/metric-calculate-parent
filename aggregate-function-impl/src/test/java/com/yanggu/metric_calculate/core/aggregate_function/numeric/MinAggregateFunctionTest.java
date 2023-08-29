@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MergeType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import org.junit.jupiter.api.Test;
 
@@ -10,8 +10,8 @@ class MinAggregateFunctionTest {
 
     @Test
     void testMergeType() {
-        MergeType mergeType = MinAggregateFunction.class.getAnnotation(MergeType.class);
-        assertEquals("MIN", mergeType.value());
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = MinAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
+        assertEquals("MIN", aggregateFunctionAnnotation.name());
     }
 
     @Test
