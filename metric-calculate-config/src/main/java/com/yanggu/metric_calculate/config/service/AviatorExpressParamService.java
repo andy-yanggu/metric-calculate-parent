@@ -26,4 +26,6 @@ public interface AviatorExpressParamService extends IService<AviatorExpressParam
      */
     void saveDataByMixUdafParamItem(AviatorExpressParam aviatorExpressParam) throws Exception;
 
+    void deleteData(AviatorExpressParam aviatorExpressParam);
+
 }

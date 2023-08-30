@@ -10,4 +10,6 @@ public interface MixUdafParamService extends IService<MixUdafParam> {
 
     void saveData(MixUdafParam mixUdafParam) throws Exception;
 
+    void deleteData(MixUdafParam mixUdafParam);
+
 }

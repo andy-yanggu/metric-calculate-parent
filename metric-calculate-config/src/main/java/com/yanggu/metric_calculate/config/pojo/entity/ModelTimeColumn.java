@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class ModelTimeColumn extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 518994644896526018L;
 
     /**

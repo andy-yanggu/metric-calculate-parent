@@ -10,4 +10,6 @@ public interface BaseUdafParamService extends IService<BaseUdafParam> {
 
     void saveData(BaseUdafParam baseUdafParam) throws Exception;
 
+    void deleteData(BaseUdafParam baseUdafParam);
+
 }

@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.googlecode.aviator.Expression;
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorExpressParamMapper;
@@ -23,6 +24,9 @@ import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRESS_CHECK_ERROR;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamAviatorFunctionInstanceRelationTableDef.AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamMixUdafParamItemRelationTableDef.AVIATOR_EXPRESS_PARAM_MIX_UDAF_PARAM_ITEM_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamModelColumnRelationTableDef.AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION;
 
 /**
  * Aviator表达式配置 服务层实现。
@@ -68,7 +72,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                         relation.setModelColumnId(modelColumn.getId());
                         return relation;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
             aviatorExpressParamModelColumnRelationService.saveBatch(relationList);
         }
 
@@ -101,6 +105,45 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
         //保存Aviator表达式依赖的Aviator函数实例
         saveAviatorFunctionInstanceRelation(aviatorExpressParam);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteData(AviatorExpressParam aviatorExpressParam) {
+        Integer aviatorExpressParamId = aviatorExpressParam.getId();
+        super.removeById(aviatorExpressParamId);
+        List<ModelColumn> modelColumnList = aviatorExpressParam.getModelColumnList();
+        //删除和ModelColumn的关联关系
+        if (CollUtil.isNotEmpty(modelColumnList)) {
+            List<Integer> list = modelColumnList.stream()
+                    .map(ModelColumn::getId)
+                    .toList();
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(aviatorExpressParamId))
+                    .and(AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION.MODEL_COLUMN_ID.in(list));
+            aviatorExpressParamModelColumnRelationService.remove(queryWrapper);
+        }
+        //删除和MixUdafParamItem之间的关联关系
+        List<MixUdafParamItem> mixUdafParamItemList = aviatorExpressParam.getMixUdafParamItemList();
+        if (CollUtil.isNotEmpty(mixUdafParamItemList)) {
+            List<Integer> list = mixUdafParamItemList.stream()
+                    .map(MixUdafParamItem::getId)
+                    .toList();
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(AVIATOR_EXPRESS_PARAM_MIX_UDAF_PARAM_ITEM_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(aviatorExpressParamId))
+                    .and(AVIATOR_EXPRESS_PARAM_MIX_UDAF_PARAM_ITEM_RELATION.MIX_UDAF_PARAM_ITEM_ID.in(list));
+            aviatorExpressParamMixUdafParamItemRelationService.remove(queryWrapper);
+        }
+        //删除和AviatorFunctionInstance的关联关系
+        List<AviatorFunctionInstance> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
+        if (CollUtil.isNotEmpty(aviatorFunctionInstanceList)) {
+            List<Integer> list = aviatorFunctionInstanceList.stream()
+                    .map(AviatorFunctionInstance::getId)
+                    .toList();
+            QueryWrapper queryWrapper = QueryWrapper.create().where(AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(aviatorExpressParamId))
+                    .and(AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION.AVIATOR_FUNCTION_INSTANCE_ID.in(list));
+            aviatorExpressParamAviatorFunctionInstanceRelationService.remove(queryWrapper);
+        }
     }
 
     private void checkAviatorExpress(AviatorExpressParam aviatorExpressParam,

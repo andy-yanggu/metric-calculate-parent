@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionParamMapper;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
@@ -7,6 +8,10 @@ import com.yanggu.metric_calculate.config.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamBaseUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamMapUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamMixUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MIX_UDAF_PARAM_RELATION;
 
 /**
  * 聚合函数参数配置类 服务层实现。
@@ -65,6 +70,38 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMixUdafParamId(mixUdafParam.getId());
             aggregateFunctionParamMixUdafParamRelationService.save(relation);
+        }
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteData(AggregateFunctionParam aggregateFunctionParam) {
+        Integer aggregateFunctionParamId = aggregateFunctionParam.getId();
+        super.removeById(aggregateFunctionParamId);
+
+        BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
+        if (baseUdafParam != null) {
+            baseUdafParamService.deleteData(baseUdafParam);
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParamId))
+                    .and(AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION.BASE_UDAF_PARAM_ID.eq(baseUdafParam.getId()));
+            aggregateFunctionParamBaseUdafParamRelationService.remove(queryWrapper);
+        }
+        MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
+        if (mapUdafParam != null) {
+            mapUdafParamService.deleteData(mapUdafParam);
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParamId))
+                    .and(AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION.MAP_UDAF_PARAM_ID.eq(mapUdafParam.getId()));
+            aggregateFunctionParamMapUdafParamRelationService.remove(queryWrapper);
+        }
+        MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
+        if (mixUdafParam != null) {
+            mixUdafParamService.deleteData(mixUdafParam);
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(AGGREGATE_FUNCTION_PARAM_MIX_UDAF_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParamId))
+                    .and(AGGREGATE_FUNCTION_PARAM_MIX_UDAF_PARAM_RELATION.MIX_UDAF_PARAM_ID.eq(mixUdafParam.getId()));
+            aggregateFunctionParamMixUdafParamRelationService.remove(queryWrapper);
         }
     }
 

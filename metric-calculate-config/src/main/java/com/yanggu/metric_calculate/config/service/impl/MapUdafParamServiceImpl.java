@@ -4,6 +4,7 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.MapUdafParamMapper;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.service.*;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,6 +49,21 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
         relation.setMapUdafParamId(mapUdafParam.getId());
         relation.setBaseUdafParamId(valueAggParam.getId());
         mapUdafParamValueAggRelationService.save(relation);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteData(MapUdafParam mapUdafParam) {
+        Integer mapUdafParamId = mapUdafParam.getId();
+        super.removeById(mapUdafParamId);
+        List<AviatorExpressParam> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
+        if (CollUtil.isNotEmpty(distinctFieldParamList)) {
+            for (AviatorExpressParam aviatorExpressParam : distinctFieldParamList) {
+                aviatorExpressParamService.deleteData(aviatorExpressParam);
+            }
+        }
+        BaseUdafParam valueAggParam = mapUdafParam.getValueAggParam();
+        baseUdafParamService.deleteData(valueAggParam);
     }
 
 }

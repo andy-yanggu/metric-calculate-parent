@@ -31,4 +31,11 @@ public class FieldOrderParamServiceImpl extends ServiceImpl<FieldOrderParamMappe
         super.save(fieldOrderParam);
     }
 
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteData(FieldOrderParam fieldOrderParam) {
+        super.removeById(fieldOrderParam.getId());
+        aviatorExpressParamService.deleteData(fieldOrderParam.getAviatorExpressParam());
+    }
+
 }

@@ -28,4 +28,13 @@ public class MixUdafParamItemServiceImpl extends ServiceImpl<MixUdafParamItemMap
         super.save(mixUdafParamItem);
     }
 
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteData(MixUdafParamItem mixUdafParamItem) {
+        Integer id = mixUdafParamItem.getId();
+        super.removeById(id);
+        BaseUdafParam baseUdafParam = mixUdafParamItem.getBaseUdafParam();
+        baseUdafParamService.deleteData(baseUdafParam);
+    }
+
 }

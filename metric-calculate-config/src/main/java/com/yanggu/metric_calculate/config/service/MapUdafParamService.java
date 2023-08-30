@@ -10,4 +10,6 @@ public interface MapUdafParamService extends IService<MapUdafParam> {
 
     void saveData(MapUdafParam mapUdafParam) throws Exception;
 
+    void deleteData(MapUdafParam mapUdafParam);
+
 }

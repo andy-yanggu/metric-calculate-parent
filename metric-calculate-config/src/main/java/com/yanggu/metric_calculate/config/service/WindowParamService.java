@@ -10,4 +10,6 @@ public interface WindowParamService extends IService<WindowParam> {
 
     void saveData(WindowParam windowParam) throws Exception;
 
+    void deleteData(WindowParam windowParam);
+
 }

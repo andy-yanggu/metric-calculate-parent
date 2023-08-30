@@ -7,6 +7,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @Table(value = "mix_udaf_param_item")
 public class MixUdafParamItem extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -9143234002581892763L;
 
     @Id(keyType = KeyType.Auto)

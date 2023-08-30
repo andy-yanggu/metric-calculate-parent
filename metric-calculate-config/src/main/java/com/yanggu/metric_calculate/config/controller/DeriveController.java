@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -35,8 +34,8 @@ public class DeriveController {
 
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除派生指标")
-    public Result<Void> remove(@PathVariable Serializable id) {
-        deriveService.removeById(id);
+    public Result<Void> remove(@PathVariable Integer id) {
+        deriveService.deleteById(id);
         return Result.ok();
     }
 

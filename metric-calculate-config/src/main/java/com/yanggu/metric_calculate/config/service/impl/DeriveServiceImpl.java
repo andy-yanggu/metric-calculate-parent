@@ -2,22 +2,28 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.service.*;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_EXIST;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_ID_ERROR;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveAggregateFunctionParamRelationTableDef.DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveFilterExpressRelationTableDef.DERIVE_FILTER_EXPRESS_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelDimensionColumnRelationTableDef.DERIVE_MODEL_DIMENSION_COLUMN_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelTimeColumnRelationTableDef.DERIVE_MODEL_TIME_COLUMN_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveTableDef.DERIVE;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveWindowParamRelationTableDef.DERIVE_WINDOW_PARAM_RELATION;
 
 /**
  * 派生指标 服务层实现。
@@ -77,7 +83,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                     relation.setSort(index.incrementAndGet());
                     return relation;
                 })
-                .collect(Collectors.toList());
+                .toList();
         deriveModelDimensionColumnRelationService.saveBatch(collect);
 
         //保存时间字段
@@ -118,6 +124,63 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteById(Integer id) {
+        Derive derive = deriveMapper.selectOneWithRelationsById(id);
+        if (derive == null) {
+            throw new BusinessException(DERIVE_ID_ERROR, id);
+        }
+        //删除派生指标
+        super.removeById(id);
+        //删除前置过滤条件
+        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
+        if (filterExpressParam != null) {
+            aviatorExpressParamService.deleteData(filterExpressParam);
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(DERIVE_FILTER_EXPRESS_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_FILTER_EXPRESS_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(filterExpressParam.getId()));
+            deriveFilterExpressRelationService.remove(queryWrapper);
+        }
+        //删除时间字段
+        ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
+        if (modelTimeColumn != null) {
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID.eq(modelTimeColumn.getId()));
+            deriveModelTimeColumnRelationService.remove(queryWrapper);
+        }
+        //删除维度字段
+        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
+        if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
+            List<Integer> modelDimensionIdList = modelDimensionColumnList.stream()
+                    .map(ModelDimensionColumn::getId)
+                    .toList();
+            QueryWrapper dimensionQueryWrapper = QueryWrapper.create()
+                    .where(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID.in(modelDimensionIdList));
+            deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
+        }
+        //删除聚合函数参数
+        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
+        if (aggregateFunctionParam != null) {
+            aggregateFunctionParamService.deleteData(aggregateFunctionParam);
+            QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
+                    .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
+            deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
+        }
+        //删除窗口参数
+        WindowParam windowParam = derive.getWindowParam();
+        if (windowParam != null) {
+            windowParamService.deleteData(derive.getWindowParam());
+            QueryWrapper windowParamQueryWrapper = QueryWrapper.create()
+                    .where(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_WINDOW_PARAM_RELATION.WINDOW_PARAM_ID.eq(windowParam.getId()));
+            deriveWindowParamRelationService.remove(windowParamQueryWrapper);
+        }
+    }
+
+    @Override
     public DeriveDto queryById(Integer id) {
         Derive derive = deriveMapper.selectOneWithRelationsById(id);
         return deriveMapstruct.toDTO(derive);
@@ -125,6 +188,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     /**
      * 检查name、displayName是否重复
+     *
      * @param derive
      */
     private void checkExist(Derive derive) {

@@ -10,4 +10,6 @@ public interface AggregateFunctionParamService extends IService<AggregateFunctio
 
     void saveData(AggregateFunctionParam aggregateFunctionParam) throws Exception;
 
+    void deleteData(AggregateFunctionParam aggregateFunctionParam);
+
 }

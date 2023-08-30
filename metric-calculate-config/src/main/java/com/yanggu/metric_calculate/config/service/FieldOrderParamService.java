@@ -5,12 +5,11 @@ import com.yanggu.metric_calculate.config.pojo.entity.FieldOrderParam;
 
 /**
  * 字段排序配置类 服务层。
- *
- * @author MondayLi
- * @since 2023-07-10
  */
 public interface FieldOrderParamService extends IService<FieldOrderParam> {
 
     void saveData(FieldOrderParam fieldOrderParam) throws Exception;
+
+    void deleteData(FieldOrderParam fieldOrderParam);
 
 }

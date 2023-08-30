@@ -16,6 +16,13 @@ public interface DeriveService extends IService<Derive> {
      */
     void create(DeriveDto deriveDto) throws Exception;
 
+    /**
+     * 根据id删除
+     *
+     * @param id
+     */
+    void deleteById(Integer id);
+
     DeriveDto queryById(Integer id);
 
 }

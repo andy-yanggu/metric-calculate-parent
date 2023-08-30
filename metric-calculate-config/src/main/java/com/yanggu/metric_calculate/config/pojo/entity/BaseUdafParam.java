@@ -5,6 +5,7 @@ import com.mybatisflex.core.handler.JacksonTypeHandler;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -17,6 +18,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = true)
 public class BaseUdafParam extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 6528404355516826249L;
 
     @Id(keyType = KeyType.Auto)

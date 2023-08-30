@@ -10,4 +10,6 @@ public interface NodePatternService extends IService<NodePattern> {
 
     void saveData(NodePattern nodePattern) throws Exception;
 
+    void deleteData(NodePattern nodePattern);
+
 }
