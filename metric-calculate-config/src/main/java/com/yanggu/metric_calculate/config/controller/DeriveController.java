@@ -28,15 +28,15 @@ public class DeriveController {
 
     @PostMapping("/save")
     @Operation(summary = "新增派生指标")
-    public Result<Void> save(@RequestBody DeriveDto derive) throws Exception {
-        deriveService.create(derive);
+    public Result<Void> save(@RequestBody DeriveDto deriveDto) throws Exception {
+        deriveService.createData(deriveDto);
         return Result.ok();
     }
 
     @PutMapping("/update")
     @Operation(summary = "修改派生指标")
-    public Result<Void> update(@RequestBody Derive derive) {
-        deriveService.updateById(derive);
+    public Result<Void> update(@RequestBody DeriveDto deriveDto) {
+        deriveService.updateData(deriveDto);
         return Result.ok();
     }
 

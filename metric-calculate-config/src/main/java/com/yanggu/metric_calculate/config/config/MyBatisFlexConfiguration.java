@@ -2,10 +2,13 @@ package com.yanggu.metric_calculate.config.config;
 
 import com.mybatisflex.core.FlexGlobalConfig;
 import com.mybatisflex.core.audit.AuditManager;
+import com.mybatisflex.core.tenant.TenantFactory;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
 import com.yanggu.metric_calculate.config.pojo.entity.BaseEntity;
+import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
@@ -29,6 +32,16 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
 
         //注册Insert监听器, 父类注册, 子类也相当于注册
         flexGlobalConfig.registerInsertListener(userIdInsertListener, BaseEntity.class);
+    }
+
+    /**
+     * 返回租户id
+     *
+     * @return
+     */
+    @Bean
+    public TenantFactory tenantFactory() {
+        return () -> new Object[]{ThreadLocalUtil.getUserId()};
     }
 
 }

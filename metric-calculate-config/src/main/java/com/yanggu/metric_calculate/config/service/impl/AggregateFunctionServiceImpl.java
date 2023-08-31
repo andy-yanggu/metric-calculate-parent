@@ -12,7 +12,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionFieldService;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
 import com.yanggu.metric_calculate.config.service.JarStoreService;
-import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.util.UdafCustomParamData;
@@ -78,8 +77,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
 
     @Override
     public List<AggregateFunctionDto> listData() {
-        QueryWrapper where = QueryWrapper.create()
-                .where(AGGREGATE_FUNCTION.USER_ID.eq(ThreadLocalUtil.getUserId()));
+        QueryWrapper where = QueryWrapper.create();
         List<AggregateFunction> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
         return aggregateFunctionMapstruct.toDTO(aggregateFunctionList);
     }
@@ -174,8 +172,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
                 .where(AGGREGATE_FUNCTION.ID.ne(aggregateFunction.getId()).when(aggregateFunction.getId() != null))
-                .and(AGGREGATE_FUNCTION.NAME.eq(aggregateFunction.getName()).or(AGGREGATE_FUNCTION.DISPLAY_NAME.eq(aggregateFunction.getDisplayName())))
-                .and(AGGREGATE_FUNCTION.USER_ID.eq(ThreadLocalUtil.getUserId()));
+                .and(AGGREGATE_FUNCTION.NAME.eq(aggregateFunction.getName()).or(AGGREGATE_FUNCTION.DISPLAY_NAME.eq(aggregateFunction.getDisplayName())));
         long count = aggregateFunctionMapper.selectCountByQuery(queryWrapper);
         if (count > 0) {
             throw new BusinessException(AGGREGATE_FUNCTION_EXIST);

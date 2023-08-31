@@ -15,6 +15,7 @@ public class BaseEntity {
     /**
      * 用户id
      */
+    @Column(value = "user_id", tenantId = true)
     private Integer userId;
 
     /**

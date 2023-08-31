@@ -10,7 +10,6 @@ import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.service.*;
-import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,7 +73,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(DeriveDto deriveDto) throws Exception {
+    public void createData(DeriveDto deriveDto) throws Exception {
         Derive derive = deriveMapstruct.toEntity(deriveDto);
 
         //检查name、displayName是否重复
@@ -137,10 +136,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void deleteById(Integer id) {
-        Derive derive = deriveMapper.selectOneWithRelationsById(id);
-        if (derive == null) {
-            throw new BusinessException(DERIVE_ID_ERROR, id);
-        }
+        Derive derive = getDeriveById(id);
         //删除派生指标
         super.removeById(id);
         //删除前置过滤条件
@@ -193,7 +189,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     public DeriveDto queryById(Integer id) {
-        Derive derive = deriveMapper.selectOneWithRelationsById(id);
+        Derive derive = getDeriveById(id);
         return deriveMapstruct.toDTO(derive);
     }
 
@@ -210,6 +206,27 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
         List<Derive> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
         return deriveMapstruct.toDTO(derives);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateData(DeriveDto deriveDto) {
+        Derive formaDerive = deriveMapstruct.toEntity(deriveDto);
+        //检查name和displayName是否重复
+        checkExist(formaDerive);
+
+        Integer deriveId = formaDerive.getId();
+        //查询一下数据库中的派生指标
+        Derive dbDerive = getDeriveById(deriveId);
+
+    }
+
+    private Derive getDeriveById(Integer id) {
+        Derive derive = deriveMapper.selectOneWithRelationsById(id);
+        if (derive == null) {
+            throw new BusinessException(DERIVE_ID_ERROR, id);
+        }
+        return derive;
     }
 
     /**
@@ -241,9 +258,8 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                 //窗口参数
                 .innerJoin(DERIVE_WINDOW_PARAM_RELATION).on(DERIVE.ID.eq(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID))
                 .innerJoin(WINDOW_PARAM).on(DERIVE_WINDOW_PARAM_RELATION.WINDOW_PARAM_ID.eq(WINDOW_PARAM.ID))
-                .where(DERIVE.USER_ID.eq(ThreadLocalUtil.getUserId()))
                 //过滤派生指标名
-                .and(DERIVE.NAME.like(deriveQuery.getDeriveName()))
+                .where(DERIVE.NAME.like(deriveQuery.getDeriveName()))
                 //过滤中文名
                 .and(DERIVE.DISPLAY_NAME.like(deriveQuery.getDeriveDisplayName()))
                 //过滤数据明细宽表名

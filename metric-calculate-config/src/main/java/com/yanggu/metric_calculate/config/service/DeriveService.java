@@ -18,7 +18,7 @@ public interface DeriveService extends IService<Derive> {
      *
      * @param deriveDto
      */
-    void create(DeriveDto deriveDto) throws Exception;
+    void createData(DeriveDto deriveDto) throws Exception;
 
     /**
      * 根据id删除
@@ -32,5 +32,7 @@ public interface DeriveService extends IService<Derive> {
     Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery);
 
     List<DeriveDto> listData(DeriveQueryReq deriveQuery);
+
+    void updateData(DeriveDto deriveDto);
 
 }
