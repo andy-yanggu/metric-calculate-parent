@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
@@ -7,7 +8,9 @@ import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.service.*;
+import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,12 +21,20 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_EXIST;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_ID_ERROR;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamTableDef.AGGREGATE_FUNCTION_PARAM;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveAggregateFunctionParamRelationTableDef.DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveFilterExpressRelationTableDef.DERIVE_FILTER_EXPRESS_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelDimensionColumnRelationTableDef.DERIVE_MODEL_DIMENSION_COLUMN_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelTimeColumnRelationTableDef.DERIVE_MODEL_TIME_COLUMN_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveTableDef.DERIVE;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveWindowParamRelationTableDef.DERIVE_WINDOW_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.DimensionTableDef.DIMENSION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelColumnTableDef.MODEL_COLUMN;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelDimensionColumnTableDef.MODEL_DIMENSION_COLUMN;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTimeColumnTableDef.MODEL_TIME_COLUMN;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.WindowParamTableDef.WINDOW_PARAM;
 
 /**
  * 派生指标 服务层实现。
@@ -184,6 +195,78 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     public DeriveDto queryById(Integer id) {
         Derive derive = deriveMapper.selectOneWithRelationsById(id);
         return deriveMapstruct.toDTO(derive);
+    }
+
+    @Override
+    public Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery) {
+        QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
+        Page<Derive> derivePage = deriveMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
+        List<DeriveDto> list = deriveMapstruct.toDTO(derivePage.getRecords());
+        return new Page<>(list, pageNumber, pageSize, derivePage.getTotalRow());
+    }
+
+    @Override
+    public List<DeriveDto> listData(DeriveQueryReq deriveQuery) {
+        QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
+        List<Derive> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
+        return deriveMapstruct.toDTO(derives);
+    }
+
+    /**
+     * 构建派生指标查询sql
+     *
+     * @param deriveQuery 查询参数
+     * @return
+     */
+    private QueryWrapper buildDeriveQueryWrapper(DeriveQueryReq deriveQuery) {
+        return QueryWrapper.create()
+                .select(DERIVE.DEFAULT_COLUMNS)
+                .from(DERIVE)
+                //数据明细宽表
+                .innerJoin(MODEL).on(MODEL.ID.eq(DERIVE.MODEL_ID))
+                //时间字段
+                .innerJoin(DERIVE_MODEL_TIME_COLUMN_RELATION).on(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
+                .innerJoin(MODEL_TIME_COLUMN).on(MODEL_TIME_COLUMN.ID.eq(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID))
+                .innerJoin(MODEL_COLUMN).as("time_column").on(MODEL_COLUMN.ID.eq(MODEL_TIME_COLUMN.MODEL_COLUMN_ID))
+                //维度字段
+                .innerJoin(DERIVE_MODEL_DIMENSION_COLUMN_RELATION).on(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
+                .innerJoin(MODEL_DIMENSION_COLUMN).on(MODEL_DIMENSION_COLUMN.ID.eq(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID))
+                .innerJoin(MODEL_COLUMN).as("dimension_column").on(MODEL_COLUMN.ID.eq(MODEL_DIMENSION_COLUMN.MODEL_COLUMN_ID))
+                //维度数据
+                .innerJoin(DIMENSION).on(DIMENSION.ID.eq(MODEL_DIMENSION_COLUMN.DIMENSION_ID))
+                //聚合函数
+                .innerJoin(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION).on(DERIVE.ID.eq(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID))
+                .innerJoin(AGGREGATE_FUNCTION_PARAM).on(AGGREGATE_FUNCTION_PARAM.ID.eq(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID))
+                .innerJoin(AGGREGATE_FUNCTION).on(AGGREGATE_FUNCTION.ID.eq(AGGREGATE_FUNCTION_PARAM.AGGREGATE_FUNCTION_ID))
+                //窗口参数
+                .innerJoin(DERIVE_WINDOW_PARAM_RELATION).on(DERIVE.ID.eq(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID))
+                .innerJoin(WINDOW_PARAM).on(DERIVE_WINDOW_PARAM_RELATION.WINDOW_PARAM_ID.eq(WINDOW_PARAM.ID))
+                .where(DERIVE.USER_ID.eq(ThreadLocalUtil.getUserId()))
+                //过滤派生指标名
+                .and(DERIVE.NAME.like(deriveQuery.getDeriveName()))
+                //过滤中文名
+                .and(DERIVE.DISPLAY_NAME.like(deriveQuery.getDeriveDisplayName()))
+                //过滤数据明细宽表名
+                .and(MODEL.NAME.like(deriveQuery.getModelName()))
+                //过滤数据明细宽表中文名
+                .and(MODEL.DISPLAY_NAME.like(deriveQuery.getModelDisplayName()))
+                //过滤聚合函数名字
+                .and(AGGREGATE_FUNCTION.DISPLAY_NAME.like(deriveQuery.getAggregateFunctionName()))
+                //过滤时间字段格式
+                .and(MODEL_TIME_COLUMN.TIME_FORMAT.like(deriveQuery.getTimeFormat()))
+                //过滤时间字段名
+                .and(MODEL_COLUMN.NAME.as("time_column." + MODEL_COLUMN.NAME.getName()).like(deriveQuery.getTimeColumnName()))
+                //过滤时间字段中文名
+                .and(MODEL_COLUMN.DISPLAY_NAME.as("time_column." + MODEL_COLUMN.DISPLAY_NAME.getName()).like(deriveQuery.getTimeColumnDisplayName()))
+                //过滤维度字段名
+                //.and(MODEL_COLUMN.NAME.as("dimension_column." + MODEL_COLUMN.NAME.getName()).like(deriveQuery.getDimensionColumnName()))
+                //.and(MODEL_COLUMN.DISPLAY_NAME.as("dimension_column." + MODEL_COLUMN.DISPLAY_NAME.getName()).like(deriveQuery.getDimensionColumnDisplayName()))
+                //过滤维度名称
+                .and(DIMENSION.NAME.like(deriveQuery.getDimensionName()))
+                .and(DIMENSION.DISPLAY_NAME.like(deriveQuery.getDimensionDisplayName()))
+                //过滤窗口类型
+                .and(WINDOW_PARAM.WINDOW_TYPE.eq(deriveQuery.getWindowType()))
+                .groupBy(DERIVE.ID);
     }
 
     /**

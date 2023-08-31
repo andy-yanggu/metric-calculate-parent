@@ -4,6 +4,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
+import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DeriveService;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
@@ -32,13 +33,6 @@ public class DeriveController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
-    @Operation(summary = "删除派生指标")
-    public Result<Void> remove(@PathVariable Integer id) {
-        deriveService.deleteById(id);
-        return Result.ok();
-    }
-
     @PutMapping("/update")
     @Operation(summary = "修改派生指标")
     public Result<Void> update(@RequestBody Derive derive) {
@@ -46,10 +40,17 @@ public class DeriveController {
         return Result.ok();
     }
 
-    @GetMapping("/list")
+    @DeleteMapping("/remove/{id}")
+    @Operation(summary = "删除派生指标")
+    public Result<Void> remove(@PathVariable Integer id) {
+        deriveService.deleteById(id);
+        return Result.ok();
+    }
+
+    @GetMapping("/listData")
     @Operation(summary = "派生指标列表")
-    public Result<List<Derive>> list() {
-        return Result.ok(deriveService.list());
+    public Result<List<DeriveDto>> listData(DeriveQueryReq deriveQuery) {
+        return Result.ok(deriveService.listData(deriveQuery));
     }
 
     @GetMapping("/getInfo/{id}")
@@ -58,10 +59,10 @@ public class DeriveController {
         return Result.ok(deriveService.queryById(id));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/pageQuery")
     @Operation(summary = "派生指标分页")
-    public Result<Page<Derive>> page(Page<Derive> page) {
-        return Result.ok(deriveService.page(page));
+    public Result<Page<DeriveDto>> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery) {
+        return Result.ok(deriveService.pageQuery(pageNumber, pageSize, deriveQuery));
     }
 
     @GetMapping("/test/{deriveId}")

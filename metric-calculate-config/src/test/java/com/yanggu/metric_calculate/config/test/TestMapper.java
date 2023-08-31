@@ -29,9 +29,6 @@ class TestMapper {
     @Autowired
     private AggregateFunctionMapper aggregateFunctionMapper;
 
-    @Autowired
-    private DeriveMapper deriveMapper;
-
     //@Test
     void test1() {
         AggregateFunction aggregateFunction = new AggregateFunction();
