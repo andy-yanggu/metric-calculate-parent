@@ -14,6 +14,7 @@ import org.apache.flink.util.OutputTag;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 
+import java.io.Serial;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +25,7 @@ import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE_CONFIG;
  */
 public class DataTableProcessFunction extends ProcessFunction<Model, Void> {
 
+    @Serial
     private static final long serialVersionUID = -4721794115378342971L;
 
     @Override
@@ -42,7 +44,6 @@ public class DataTableProcessFunction extends ProcessFunction<Model, Void> {
         if (CollUtil.isNotEmpty(deriveMetricsList)) {
             deriveMetricsList.forEach(tempDerive -> {
                 DeriveConfigData deriveConfigData = new DeriveConfigData<>();
-                deriveConfigData.setTableId(tableId);
                 deriveConfigData.setFieldMap(fieldMap);
                 deriveConfigData.setDeriveMetrics(tempDerive);
                 deriveConfigData.setAviatorFunctionJarPathList(aviatorFunctionJarPathList);

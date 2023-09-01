@@ -23,6 +23,7 @@ import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE;
 public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastProcessFunction<String, Model, Void>
         implements CheckpointedFunction, Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7881762197491832138L;
 
     private final MapStateDescriptor<Long, MetricCalculate> mapStateDescriptor =

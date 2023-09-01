@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.tenant.TenantManager;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
@@ -32,17 +33,17 @@ public class ModelController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
-    @Operation(summary = "删除数据明细宽表")
-    public Result<Void> remove(@PathVariable Integer id) {
-        modelService.removeById(id);
-        return Result.ok();
-    }
-
     @PutMapping("/update")
     @Operation(summary = "修改数据明细宽表")
     public Result<Void> update(@RequestBody ModelDto model) {
         modelService.updateById(model);
+        return Result.ok();
+    }
+
+    @DeleteMapping("/remove/{id}")
+    @Operation(summary = "删除数据明细宽表")
+    public Result<Void> remove(@PathVariable Integer id) {
+        modelService.removeById(id);
         return Result.ok();
     }
 
@@ -64,10 +65,18 @@ public class ModelController {
         return Result.ok(modelService.page(page));
     }
 
-    @GetMapping("/test/{modelId}")
+    @GetMapping("/toCoreModel/{modelId}")
+    @Operation(summary = "转换成核心宽表", description = "转换成core包中的Model")
     public Result<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getCoreModel(@PathVariable Integer modelId) {
-        Model model = modelService.getMapper().selectOneWithRelationsById(modelId);
+        Model model = TenantManager.withoutTenantCondition(() -> modelService.getMapper().selectOneWithRelationsById(modelId));
         return Result.ok(modelMapstruct.toCoreModel(model));
+    }
+
+    @GetMapping("/allCoreModel")
+    @Operation(summary = "转换所有核心宽表", description = "转换成core包中的Model")
+    public Result<List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model>> getAllCoreModel() {
+        List<Model> modelList = TenantManager.withoutTenantCondition(() -> modelService.getMapper().selectAllWithRelations());
+        return Result.ok(modelMapstruct.toCoreModel(modelList));
     }
 
 }

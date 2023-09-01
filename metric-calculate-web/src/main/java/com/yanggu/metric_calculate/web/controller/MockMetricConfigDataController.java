@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.web.controller;
 
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
-import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.web.pojo.dto.DeriveData;
 import io.swagger.v3.oas.annotations.Operation;
@@ -73,17 +72,17 @@ public class MockMetricConfigDataController {
                 .flatMap(tempTable -> {
                     MetricCalculate metricCalculate = BeanUtil.copyProperties(tempTable, MetricCalculate.class);
                     MetricUtil.setFieldMap(metricCalculate);
-                    List<DeriveMetrics> deriveMetricsList = metricCalculate.getDeriveMetricsList();
-                    return deriveMetricsList.stream()
+                    return metricCalculate.getDeriveMetricsList().stream()
                             .map(tempDerive -> {
                                 DeriveData deriveData = new DeriveData();
-                                deriveData.setTableId(metricCalculate.getId());
                                 deriveData.setFieldMap(metricCalculate.getFieldMap());
                                 deriveData.setDeriveMetrics(tempDerive);
+                                deriveData.setUdafJarPathList(metricCalculate.getUdafJarPathList());
+                                deriveData.setAviatorFunctionJarPathList(metricCalculate.getAviatorFunctionJarPathList());
                                 return deriveData;
                             });
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

@@ -46,9 +46,9 @@ spring:
 
 # 端点控制配置
 management:
-  server:
-    # 启用独立运维端口
-    port: 50000
+#  server:
+#    # 启用独立运维端口
+#    port: 50000
   endpoint:
     # 开启shutdown
     shutdown:

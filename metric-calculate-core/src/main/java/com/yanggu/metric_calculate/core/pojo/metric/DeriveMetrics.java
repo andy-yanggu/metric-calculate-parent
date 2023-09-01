@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.pojo.metric;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -13,12 +14,18 @@ import java.util.List;
 @Data
 public class DeriveMetrics implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7997617771105250097L;
 
     /**
      * 派生指标id
      */
     private Long id;
+
+    /**
+     * 宽表id
+     */
+    private Long modelId;
 
     /**
      * 派生指标名称

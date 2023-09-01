@@ -15,6 +15,7 @@ import org.apache.flink.streaming.api.checkpoint.CheckpointedFunction;
 import org.apache.flink.streaming.api.functions.co.BroadcastProcessFunction;
 import org.apache.flink.util.Collector;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.deriveMapStateDescriptor;
@@ -23,6 +24,7 @@ import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.d
 public class DeriveBroadcastProcessFunction extends BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>
                 implements CheckpointedFunction, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -1838715009731159197L;
 
     private String url = "http://localhost:8888/mock-model/all-derive-data";

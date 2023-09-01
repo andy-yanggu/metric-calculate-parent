@@ -107,6 +107,7 @@ public class MetricCalculateFlinkJob {
 
         SingleOutputStreamOperator<Void> dataStream = env
                 //.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka-Source")
+                //宽表数据流
                 .socketTextStream("localhost", 6666)
                 .connect(tableSourceBroadcast)
                 //分流出派生指标数据流和全局指标数据流
@@ -137,7 +138,7 @@ public class MetricCalculateFlinkJob {
                 //计算派生指标
                 .process(new KeyedDeriveBroadcastProcessFunction())
                 //攒批写组件
-                .transform("DeriveMetrics Batch Update Operator", TypeInformation.of(new TypeHint<List<MetricCube>>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
+                .transform("DeriveMetrics Batch Update Operator", TypeInformation.of(new TypeHint<>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
                 //批写
                 .process(new BatchWriteProcessFunction())
                 //连接派生指标配置流

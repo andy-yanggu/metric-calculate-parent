@@ -49,15 +49,14 @@ public class SimulateMetricCalculateServiceImpl implements SimulateMetricCalcula
         if (modelDto == null) {
             throw new BusinessException(MODEL_ID_ERROR, modelId);
         }
-        List<ModelColumnDto> modelColumnList = modelDto.getModelColumnList();
-        List<ModelColumn> collect = modelColumnList.stream()
+        List<ModelColumn> collect = modelDto.getModelColumnList().stream()
                 .map(tempModelColumn -> {
                     ModelColumn modelColumn = new ModelColumn();
                     modelColumn.setName(tempModelColumn.getName());
                     modelColumn.setDataType(BasicType.valueOf(tempModelColumn.getDataType().name()));
                     return modelColumn;
                 })
-                .collect(Collectors.toList());
+                .toList();
         Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(collect);
         DeriveDto deriveDto = deriveService.queryById(deriveId);
         if (deriveDto == null) {
@@ -68,7 +67,7 @@ public class SimulateMetricCalculateServiceImpl implements SimulateMetricCalcula
         aviatorFunctionFactory.init();
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
         aggregateFunctionFactory.init();
-        DeriveMetricCalculate<?, ?, R> deriveMetricCalculate = MetricUtil.initDerive(deriveMetrics, Long.valueOf(modelId), fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+        DeriveMetricCalculate<?, ?, R> deriveMetricCalculate = MetricUtil.initDeriveMetrics(deriveMetrics, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
         return deriveMetricCalculate.noStateExec(input);
     }

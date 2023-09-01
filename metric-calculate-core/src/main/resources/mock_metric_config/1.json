@@ -4,6 +4,7 @@
   "deriveMetricsList": [
     {
       "id": 1,
+      "modelId": 1,
       "name": "today_debit_asset",
       "displayName": "当天借方金额总和",
       "description": null,
@@ -40,6 +41,7 @@
     },
     {
       "id": 2,
+      "modelId": 1,
       "name": "today_debit_asset_min",
       "displayName": "当天借方金额最小值",
       "description": null,
@@ -77,6 +79,7 @@
     },
     {
       "id": 3,
+      "modelId": 1,
       "name": "top4_debit_amt_out_desc",
       "displayName": "交易金额降序列表, 最多4个",
       "description": null,
@@ -125,6 +128,7 @@
     },
     {
       "id": 4,
+      "modelId": 1,
       "name": "max_amount_timestamp",
       "displayName": "最大交易的金额的交易时间戳",
       "description": null,
@@ -166,6 +170,7 @@
     },
     {
       "id": 5,
+      "modelId": 1,
       "name": "credit_sum_5",
       "displayName": "近5笔交易贷方金额总和",
       "description": null,
@@ -202,6 +207,7 @@
     },
     {
       "id": 6,
+      "modelId": 1,
       "name": "test_list_object",
       "displayName": "测试list_object",
       "description": null,
@@ -239,6 +245,7 @@
     },
     {
       "id": 7,
+      "modelId": 1,
       "name": "test_sort_list_object",
       "displayName": "测试sort_list_object",
       "description": null,
@@ -284,6 +291,7 @@
     },
     {
       "id": 8,
+      "modelId": 1,
       "name": "test_base_map_unit_sum",
       "displayName": "所有交易账号的累计交易金额",
       "description": "账号为key, value是对金额求和",
@@ -329,6 +337,7 @@
     },
     {
       "id": 9,
+      "modelId": 1,
       "name": "张三_transfer_amount_proportion",
       "displayName": "给张三转账的金额占给所有交易对象转账金额的比例",
       "description": "",
@@ -388,6 +397,7 @@
     },
     {
       "id": 10,
+      "modelId": 1,
       "name": "pattern_test",
       "displayName": "cep类型的指标测试",
       "description": "",
@@ -451,6 +461,7 @@
     },
     {
       "id": 11,
+      "modelId": 1,
       "name": "limit_5_sum_debit_asset",
       "displayName": "最近5笔借方金额总和",
       "description": null,
@@ -486,6 +497,7 @@
     },
     {
       "id": 12,
+      "modelId": 1,
       "name": "first_trade_timestamp",
       "displayName": "首次交易时间戳",
       "description": null,
@@ -521,6 +533,7 @@
     },
     {
       "id": 13,
+      "modelId": 1,
       "name": "status_sum_debit_asset",
       "displayName": "借方金额总和",
       "description": null,
@@ -556,6 +569,7 @@
     },
     {
       "id": 14,
+      "modelId": 1,
       "name": "today_debit_asset_amount_gt_100",
       "displayName": "当天借方金额总和大于100",
       "description": null,

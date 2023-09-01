@@ -55,14 +55,13 @@ public class DeriveMetricCalculateUtil {
             log.error("传入的deriveData为null");
             return;
         }
-        Long tableId = deriveConfigData.getTableId();
         Map<String, Class<?>> fieldMap = deriveConfigData.getFieldMap();
         DeriveMetrics deriveMetrics = deriveConfigData.getDeriveMetrics();
         AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory(deriveConfigData.getAviatorFunctionJarPathList());
         aviatorFunctionFactory.init();
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(deriveConfigData.getUdafJarPathList());
         aggregateFunctionFactory.init();
-        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDerive(deriveMetrics, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+        DeriveMetricCalculate deriveMetricCalculate = MetricUtil.initDeriveMetrics(deriveMetrics, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
         deriveConfigData.setDeriveMetricCalculate(deriveMetricCalculate);
     }
 

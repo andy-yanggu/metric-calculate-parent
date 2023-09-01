@@ -1,16 +1,21 @@
-package com.yanggu.metric_calculate.web.pojo.dto;
+package com.yanggu.metric_calculate.config.pojo.vo;
 
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import lombok.Data;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public class DeriveData {
+public class DeriveMetricsConfigData implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 9188722054597361589L;
 
     /**
-     * 派生指标配置数据
+     * 派生指标配置类
      */
     private DeriveMetrics deriveMetrics;
 

@@ -2,6 +2,8 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.relation.RelationManager;
+import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
@@ -9,17 +11,21 @@ import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.service.*;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_EXIST;
-import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_ID_ERROR;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamTableDef.AGGREGATE_FUNCTION_PARAM;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveAggregateFunctionParamRelationTableDef.DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION;
@@ -46,6 +52,9 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Autowired
     private DeriveMapper deriveMapper;
+
+    @Autowired
+    private ModelService modelService;
 
     @Autowired
     private DeriveModelDimensionColumnRelationService deriveModelDimensionColumnRelationService;
@@ -135,56 +144,33 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
+    public void updateData(DeriveDto deriveDto) throws Exception {
+        //查询一下数据库中的派生指标
+        Derive dbDerive = getDeriveById(deriveDto.getId());
+
+        //删除关联数据
+        deleteRelation(dbDerive);
+
+        //新增关联数据
+        createData(deriveDto);
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void deleteById(Integer id) {
         Derive derive = getDeriveById(id);
         //删除派生指标
         super.removeById(id);
-        //删除前置过滤条件
-        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
-        if (filterExpressParam != null) {
-            aviatorExpressParamService.deleteData(filterExpressParam);
-            QueryWrapper queryWrapper = QueryWrapper.create()
-                    .where(DERIVE_FILTER_EXPRESS_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_FILTER_EXPRESS_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(filterExpressParam.getId()));
-            deriveFilterExpressRelationService.remove(queryWrapper);
-        }
-        //删除时间字段
-        ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
-        if (modelTimeColumn != null) {
-            QueryWrapper queryWrapper = QueryWrapper.create()
-                    .where(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID.eq(modelTimeColumn.getId()));
-            deriveModelTimeColumnRelationService.remove(queryWrapper);
-        }
-        //删除维度字段
-        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
-        if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
-            List<Integer> modelDimensionIdList = modelDimensionColumnList.stream()
-                    .map(ModelDimensionColumn::getId)
-                    .toList();
-            QueryWrapper dimensionQueryWrapper = QueryWrapper.create()
-                    .where(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID.in(modelDimensionIdList));
-            deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
-        }
-        //删除聚合函数参数
-        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        if (aggregateFunctionParam != null) {
-            aggregateFunctionParamService.deleteData(aggregateFunctionParam);
-            QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
-                    .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
-            deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
-        }
-        //删除窗口参数
-        WindowParam windowParam = derive.getWindowParam();
-        if (windowParam != null) {
-            windowParamService.deleteData(derive.getWindowParam());
-            QueryWrapper windowParamQueryWrapper = QueryWrapper.create()
-                    .where(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_WINDOW_PARAM_RELATION.WINDOW_PARAM_ID.eq(windowParam.getId()));
-            deriveWindowParamRelationService.remove(windowParamQueryWrapper);
-        }
+
+        //删除关联数据
+        deleteRelation(derive);
+    }
+
+    @Override
+    public List<DeriveDto> listData(DeriveQueryReq deriveQuery) {
+        QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
+        List<Derive> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
+        return deriveMapstruct.toDTO(derives);
     }
 
     @Override
@@ -202,23 +188,36 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     }
 
     @Override
-    public List<DeriveDto> listData(DeriveQueryReq deriveQuery) {
-        QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
-        List<Derive> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
-        return deriveMapstruct.toDTO(derives);
-    }
+    public List<DeriveMetricsConfigData> getAllCoreDeriveMetrics() {
+        return TenantManager.withoutTenantCondition(() -> {
+            List<Derive> deriveList = deriveMapper.selectAllWithRelations();
+            if (CollUtil.isEmpty(deriveList)) {
+                return Collections.emptyList();
+            }
+            RelationManager.addQueryRelations(Model::getModelColumnList);
+            List<Integer> modelIdList = deriveList.stream()
+                    .map(Derive::getModelId)
+                    .distinct()
+                    .toList();
+            QueryWrapper queryWrapper = QueryWrapper.create().where(MODEL.ID.in(modelIdList));
+            Map<Integer, Model> modelMap = modelService.getMapper()
+                    .selectListWithRelationsByQuery(queryWrapper).stream()
+                    .collect(Collectors.toMap(Model::getId, Function.identity()));
 
-    @Override
-    @Transactional(rollbackFor = RuntimeException.class)
-    public void updateData(DeriveDto deriveDto) {
-        Derive formaDerive = deriveMapstruct.toEntity(deriveDto);
-        //检查name和displayName是否重复
-        checkExist(formaDerive);
+            if (CollUtil.isEmpty(modelMap)) {
+                return Collections.emptyList();
+            }
 
-        Integer deriveId = formaDerive.getId();
-        //查询一下数据库中的派生指标
-        Derive dbDerive = getDeriveById(deriveId);
-
+            return deriveList.stream()
+                    .map(derive -> {
+                        Model model = modelMap.get(derive.getModelId());
+                        if (model == null) {
+                            throw new BusinessException(MODEL_ID_ERROR, derive.getModelId());
+                        }
+                        return deriveMapstruct.toDeriveMetricsConfigData(derive, model);
+                    })
+                    .toList();
+        });
     }
 
     private Derive getDeriveById(Integer id) {
@@ -283,6 +282,56 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                 //过滤窗口类型
                 .and(WINDOW_PARAM.WINDOW_TYPE.eq(deriveQuery.getWindowType()))
                 .groupBy(DERIVE.ID);
+    }
+
+    private void deleteRelation(Derive derive) {
+        Integer id = derive.getId();
+        //删除前置过滤条件
+        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
+        if (filterExpressParam != null) {
+            aviatorExpressParamService.deleteData(filterExpressParam);
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(DERIVE_FILTER_EXPRESS_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_FILTER_EXPRESS_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(filterExpressParam.getId()));
+            deriveFilterExpressRelationService.remove(queryWrapper);
+        }
+        //删除时间字段
+        ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
+        if (modelTimeColumn != null) {
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .where(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID.eq(modelTimeColumn.getId()));
+            deriveModelTimeColumnRelationService.remove(queryWrapper);
+        }
+        //删除维度字段
+        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
+        if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
+            List<Integer> modelDimensionIdList = modelDimensionColumnList.stream()
+                    .map(ModelDimensionColumn::getId)
+                    .toList();
+            QueryWrapper dimensionQueryWrapper = QueryWrapper.create()
+                    .where(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID.in(modelDimensionIdList));
+            deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
+        }
+        //删除聚合函数参数
+        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
+        if (aggregateFunctionParam != null) {
+            aggregateFunctionParamService.deleteData(aggregateFunctionParam);
+            QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
+                    .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
+            deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
+        }
+        //删除窗口参数
+        WindowParam windowParam = derive.getWindowParam();
+        if (windowParam != null) {
+            windowParamService.deleteData(derive.getWindowParam());
+            QueryWrapper windowParamQueryWrapper = QueryWrapper.create()
+                    .where(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID.eq(id))
+                    .and(DERIVE_WINDOW_PARAM_RELATION.WINDOW_PARAM_ID.eq(windowParam.getId()));
+            deriveWindowParamRelationService.remove(windowParamQueryWrapper);
+        }
     }
 
     /**

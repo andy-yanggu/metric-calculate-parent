@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DeriveService;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
@@ -35,7 +36,7 @@ public class DeriveController {
 
     @PutMapping("/update")
     @Operation(summary = "修改派生指标")
-    public Result<Void> update(@RequestBody DeriveDto deriveDto) {
+    public Result<Void> update(@RequestBody DeriveDto deriveDto) throws Exception {
         deriveService.updateData(deriveDto);
         return Result.ok();
     }
@@ -65,11 +66,19 @@ public class DeriveController {
         return Result.ok(deriveService.pageQuery(pageNumber, pageSize, deriveQuery));
     }
 
-    @GetMapping("/test/{deriveId}")
+    @GetMapping("/toCoreDeriveMetrics/{deriveId}")
+    @Operation(summary = "转换成核心派生指标")
     public Result<DeriveMetrics> getDeriveMetrics(@PathVariable Integer deriveId) {
         Derive derive = deriveService.getMapper().selectOneWithRelationsById(deriveId);
         DeriveMetrics deriveMetrics = deriveMapstruct.toDeriveMetrics(derive);
         return Result.ok(deriveMetrics);
+    }
+
+    @GetMapping("/allCoreDeriveMetrics")
+    @Operation(summary = "转换成所有核心派生指标")
+    public Result<List<DeriveMetricsConfigData>> getAllCoreDeriveMetrics() {
+        List<DeriveMetricsConfigData> list = deriveService.getAllCoreDeriveMetrics();
+        return Result.ok(list);
     }
 
 }

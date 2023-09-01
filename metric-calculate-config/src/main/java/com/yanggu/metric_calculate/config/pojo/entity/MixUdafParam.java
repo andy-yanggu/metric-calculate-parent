@@ -45,7 +45,7 @@ public class MixUdafParam extends BaseEntity implements Serializable {
     @RelationOneToOne(
             joinTable = "mix_udaf_param_metric_express_relation",
             selfField = "id", joinSelfColumn = "mix_udaf_param_id",
-            targetField = "id", joinTargetColumn = "base_udaf_param_id"
+            targetField = "id", joinTargetColumn = "aviator_express_param_id"
     )
     private AviatorExpressParam metricExpressParam;
 

@@ -5,6 +5,7 @@ import com.mybatisflex.core.service.IService;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 
 import java.util.List;
 
@@ -21,6 +22,14 @@ public interface DeriveService extends IService<Derive> {
     void createData(DeriveDto deriveDto) throws Exception;
 
     /**
+     * 修改派生指标
+     *
+     * @param deriveDto
+     * @throws Exception
+     */
+    void updateData(DeriveDto deriveDto) throws Exception;
+
+    /**
      * 根据id删除
      *
      * @param id
@@ -33,6 +42,6 @@ public interface DeriveService extends IService<Derive> {
 
     List<DeriveDto> listData(DeriveQueryReq deriveQuery);
 
-    void updateData(DeriveDto deriveDto);
+    List<DeriveMetricsConfigData> getAllCoreDeriveMetrics();
 
 }

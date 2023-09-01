@@ -157,18 +157,17 @@ public class MetricUtil {
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(udafJarPathList);
         aggregateFunctionFactory.init();
 
-        Long tableId = metricCalculate.getId();
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<DeriveMetricCalculate> collect = deriveMetricsList.stream()
                 .map(tempDerive -> {
                     metricTypeMap.put(tempDerive.getName(), DERIVE);
                     //初始化派生指标计算类
                     DeriveMetricCalculate deriveMetricCalculate =
-                            MetricUtil.initDerive(tempDerive, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+                            MetricUtil.initDeriveMetrics(tempDerive, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
                     deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
                     return deriveMetricCalculate;
                 })
-                .collect(Collectors.toList());
+                .toList();
 
         metricCalculate.setDeriveMetricCalculateList(collect);
     }
@@ -216,9 +215,8 @@ public class MetricUtil {
      * @return
      */
     @SneakyThrows
-    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDerive(
+    public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDeriveMetrics(
                                                                    DeriveMetrics deriveMetrics,
-                                                                   Long tableId,
                                                                    Map<String, Class<?>> fieldMap,
                                                                    AviatorFunctionFactory aviatorFunctionFactory,
                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
@@ -230,7 +228,7 @@ public class MetricUtil {
         deriveMetricCalculate.setId(id);
 
         //设置key
-        String key = tableId + "_" + id;
+        String key = deriveMetrics.getModelId() + "_" + id;
         deriveMetricCalculate.setKey(key);
 
         //设置name
@@ -280,7 +278,7 @@ public class MetricUtil {
                                                                     Map<String, Class<?>> fieldMap,
                                                                     AviatorFunctionFactory aviatorFunctionFactory,
                                                                     AggregateFunctionFactory aggregateFunctionFactory) {
-        DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = initDerive(global, tableId, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+        DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = initDeriveMetrics(global, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
         return BeanUtil.copyProperties(deriveMetricCalculate, GlobalMetricCalculate.class);
     }
 

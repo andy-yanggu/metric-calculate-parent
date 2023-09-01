@@ -1,8 +1,14 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
+import com.yanggu.metric_calculate.config.pojo.entity.Derive;
+import com.yanggu.metric_calculate.config.pojo.entity.Model;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.core.enums.BasicType;
+import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -11,9 +17,17 @@ import java.util.*;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
+@Named("ModelMapstruct")
 @Mapper(uses = {ModelColumnMapstruct.class, DeriveMapstruct.class}, componentModel = SPRING)
 public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
 
+    /**
+     * 转换成core中的宽表
+     *
+     * @param model
+     * @return
+     */
+    @Named("toCoreModel")
     //宽表字段
     @Mapping(source = "modelColumnList", target = "modelColumnList", qualifiedByName = {"ModelColumnMapstruct", "toCoreModelColumn"})
     //派生指标
@@ -23,6 +37,23 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
     //自定义aviator函数jar包路径
     @Mapping(source = "model", target = "aviatorFunctionJarPathList", qualifiedByName = "getAviatorFunctionJarPathList")
     com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Model model);
+
+    @IterableMapping(qualifiedByName = "toCoreModel")
+    List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> toCoreModel(List<Model> modelList);
+
+    @Named("getFieldMap")
+    default Map<String, Class<?>> getFieldMap(List<ModelColumn> modelColumnList) {
+        List<com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn> collect =
+                modelColumnList.stream()
+                        .map(tempModelColumn -> {
+                            com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn modelColumn = new com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn();
+                            modelColumn.setName(tempModelColumn.getName());
+                            modelColumn.setDataType(BasicType.valueOf(tempModelColumn.getDataType().name()));
+                            return modelColumn;
+                        })
+                        .toList();
+        return MetricUtil.getFieldMap(collect);
+    }
 
     /**
      * 获取自定义聚合函数jar包路径
@@ -35,14 +66,14 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
         if (CollUtil.isEmpty(deriveList)) {
             return Collections.emptyList();
         }
-        return deriveList.stream()
-                .map(Derive::getAggregateFunctionParam)
-                .map(AggregateFunctionParam::getAggregateFunction)
-                .map(AggregateFunction::getJarStore)
-                .filter(Objects::nonNull)
-                .map(JarStore::getJarUrl)
-                .distinct()
-                .toList();
+        Set<String> pathSet = new HashSet<>();
+        for (Derive derive : deriveList) {
+            List<String> udafJarPathList = DeriveMapstruct.getUdafJarPathList(derive);
+            if (CollUtil.isNotEmpty(udafJarPathList)) {
+                pathSet.addAll(udafJarPathList);
+            }
+        }
+        return new ArrayList<>(pathSet);
     }
 
     /**
@@ -69,92 +100,13 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
         if (CollUtil.isNotEmpty(deriveList)) {
             //尝试从派生指标中获取
             for (Derive derive : deriveList) {
-                //从前置过滤条件中尝试获取
-                AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
-                if (filterExpressParam != null) {
-                    aviatorExpressParamList.add(filterExpressParam);
-                }
-                //从聚合函数参数尝试获取
-                AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-                //基本聚合类型参数
-                BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
-                addAviatorExpressParamFromBaseUdafParam(baseUdafParam, aviatorExpressParamList);
-
-                //映射类型参数
-                MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
-                if (mapUdafParam != null) {
-                    aviatorExpressParamList.addAll(mapUdafParam.getDistinctFieldParamList());
-                    addAviatorExpressParamFromBaseUdafParam(mapUdafParam.getValueAggParam(), aviatorExpressParamList);
-                }
-
-                //混合类型参数
-                MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
-                if (mixUdafParam != null) {
-                    mixUdafParam.getMixUdafParamItemList().stream()
-                            .map(MixUdafParamItem::getBaseUdafParam)
-                            .forEach(temp -> addAviatorExpressParamFromBaseUdafParam(temp, aviatorExpressParamList));
-                    aviatorExpressParamList.add(mixUdafParam.getMetricExpressParam());
-                }
-
-                //从窗口参数尝试获取
-                WindowParam windowParam = derive.getWindowParam();
-                List<NodePattern> nodePatternList = windowParam.getNodePatternList();
-                if (CollUtil.isNotEmpty(nodePatternList)) {
-                    List<AviatorExpressParam> list = nodePatternList.stream()
-                            .map(NodePattern::getMatchExpressParam)
-                            .toList();
-                    aviatorExpressParamList.addAll(list);
-                }
-                List<AviatorExpressParam> statusExpressParamList = windowParam.getStatusExpressParamList();
-                if (CollUtil.isNotEmpty(statusExpressParamList)) {
-                    aviatorExpressParamList.addAll(statusExpressParamList);
+                List<AviatorExpressParam> tempList = DeriveMapstruct.getAviatorExpressParamFromDerive(derive);
+                if (CollUtil.isNotEmpty(tempList)) {
+                    aviatorExpressParamList.addAll(tempList);
                 }
             }
         }
-        return aviatorExpressParamList.stream()
-                .map(AviatorExpressParam::getAviatorFunctionInstanceList)
-                .filter(CollUtil::isNotEmpty)
-                .flatMap(Collection::stream)
-                .map(AviatorFunctionInstance::getAviatorFunction)
-                .map(AviatorFunction::getJarStore)
-                .filter(Objects::nonNull)
-                .map(JarStore::getJarUrl)
-                .distinct()
-                .toList();
-    }
-
-    private void addAviatorExpressParamFromBaseUdafParam(BaseUdafParam baseUdafParam,
-                                                         List<AviatorExpressParam> aviatorExpressParamList) {
-        if (baseUdafParam == null) {
-            return;
-        }
-        AviatorExpressParam metricExpressParam = baseUdafParam.getMetricExpressParam();
-        if (metricExpressParam != null) {
-            aviatorExpressParamList.add(metricExpressParam);
-        }
-        List<AviatorExpressParam> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
-        if (CollUtil.isNotEmpty(metricExpressParamList)) {
-            aviatorExpressParamList.addAll(metricExpressParamList);
-        }
-        AviatorExpressParam retainExpressParam = baseUdafParam.getRetainExpressParam();
-        if (retainExpressParam != null) {
-            aviatorExpressParamList.add(retainExpressParam);
-        }
-        List<AviatorExpressParam> objectiveCompareFieldParamList = baseUdafParam.getObjectiveCompareFieldParamList();
-        if (CollUtil.isNotEmpty(objectiveCompareFieldParamList)) {
-            aviatorExpressParamList.addAll(objectiveCompareFieldParamList);
-        }
-        List<FieldOrderParam> collectiveSortFieldList = baseUdafParam.getCollectiveSortFieldList();
-        if (CollUtil.isNotEmpty(collectiveSortFieldList)) {
-            List<AviatorExpressParam> list = collectiveSortFieldList.stream()
-                    .map(FieldOrderParam::getAviatorExpressParam)
-                    .toList();
-            aviatorExpressParamList.addAll(list);
-        }
-        List<AviatorExpressParam> distinctFieldListParamList = baseUdafParam.getDistinctFieldListParamList();
-        if (CollUtil.isNotEmpty(distinctFieldListParamList)) {
-            aviatorExpressParamList.addAll(distinctFieldListParamList);
-        }
+        return DeriveMapstruct.getAviatorFunctionJarPathList(aviatorExpressParamList);
     }
 
 }
