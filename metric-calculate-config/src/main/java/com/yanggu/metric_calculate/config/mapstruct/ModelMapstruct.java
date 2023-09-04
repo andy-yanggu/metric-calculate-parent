@@ -14,6 +14,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -66,14 +67,13 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
         if (CollUtil.isEmpty(deriveList)) {
             return Collections.emptyList();
         }
-        Set<String> pathSet = new HashSet<>();
-        for (Derive derive : deriveList) {
-            List<String> udafJarPathList = DeriveMapstruct.getUdafJarPathList(derive);
-            if (CollUtil.isNotEmpty(udafJarPathList)) {
-                pathSet.addAll(udafJarPathList);
-            }
-        }
-        return new ArrayList<>(pathSet);
+        return deriveList.stream()
+                .map(Derive::getAggregateFunctionParam)
+                .map(AggregateFunctionParamMapstruct::getUdafJarPathList)
+                .filter(CollUtil::isNotEmpty)
+                .flatMap(Collection::stream)
+                .distinct()
+                .toList();
     }
 
     /**

@@ -36,5 +36,15 @@ public enum AggregateFunctionTypeEnums {
     MIX,
     ;
 
+    /**
+     * 数值型、集合型和对象型为基本聚合类型
+     *
+     * @param enums
+     * @return
+     */
+    public static boolean isBasicType(AggregateFunctionTypeEnums enums) {
+        return NUMERICAL.equals(enums) || COLLECTIVE.equals(enums) || OBJECTIVE.equals(enums);
+    }
+
 
 }

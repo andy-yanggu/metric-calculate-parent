@@ -69,7 +69,7 @@ public class MetricConfigDataService implements ApplicationRunner {
                         readLock.unlock();
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -248,7 +248,7 @@ public class MetricConfigDataService implements ApplicationRunner {
             }
             return deriveMetricsList.stream()
                     .map(DeriveMetrics::getId)
-                    .collect(Collectors.toList());
+                    .toList();
         } finally {
             readLock.unlock();
         }

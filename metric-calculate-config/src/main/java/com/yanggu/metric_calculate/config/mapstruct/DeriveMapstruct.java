@@ -55,33 +55,8 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     @Mapping(source = "derive", target = "deriveMetrics", qualifiedByName = "toDeriveMetrics")
     @Mapping(source = "model.modelColumnList", target = "fieldMap", qualifiedByName = {"ModelMapstruct", "getFieldMap"})
     @Mapping(source = "derive", target = "aviatorFunctionJarPathList", qualifiedByName = "getFromDerive")
-    @Mapping(source = "derive", target = "udafJarPathList", qualifiedByName = "getUdafJarPathList")
+    @Mapping(source = "derive.aggregateFunctionParam", target = "udafJarPathList", qualifiedByName = {"AggregateFunctionParamMapstruct", "getUdafJarPathList"})
     DeriveMetricsConfigData toDeriveMetricsConfigData(Derive derive, Model model);
-
-    @Named("getUdafJarPathList")
-    static List<String> getUdafJarPathList(Derive derive) {
-        List<AggregateFunction> aggregateFunctionList = new ArrayList<>();
-        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        aggregateFunctionList.add(aggregateFunctionParam.getAggregateFunction());
-        MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
-        if (mapUdafParam != null) {
-            aggregateFunctionList.add(mapUdafParam.getValueAggParam().getAggregateFunction());
-        }
-        MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
-        if (mixUdafParam != null) {
-            List<AggregateFunction> list = mixUdafParam.getMixUdafParamItemList().stream()
-                    .map(MixUdafParamItem::getBaseUdafParam)
-                    .map(BaseUdafParam::getAggregateFunction)
-                    .toList();
-            aggregateFunctionList.addAll(list);
-        }
-        return aggregateFunctionList.stream()
-                .map(AggregateFunction::getJarStore)
-                .filter(Objects::nonNull)
-                .map(JarStore::getJarUrl)
-                .distinct()
-                .toList();
-    }
 
     /**
      * 尝试从派生指标中获取

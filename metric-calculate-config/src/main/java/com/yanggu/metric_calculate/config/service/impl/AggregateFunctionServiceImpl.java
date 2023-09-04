@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
+import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
@@ -9,15 +10,17 @@ import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionField;
 import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
-import com.yanggu.metric_calculate.config.service.AggregateFunctionFieldService;
-import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
-import com.yanggu.metric_calculate.config.service.JarStoreService;
+import com.yanggu.metric_calculate.config.pojo.req.AggregateFunctionQueryReq;
+import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
+import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.util.UdafCustomParamData;
 import com.yanggu.metric_calculate.core.util.UdafCustomParamDataUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.data.id.IdUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,11 +37,15 @@ import java.util.function.Consumer;
 import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.*;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.BaseUdafParamTableDef.BASE_UDAF_PARAM;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.MapUdafParamTableDef.MAP_UDAF_PARAM;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.MixUdafParamTableDef.MIX_UDAF_PARAM;
 import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory.CLASS_FILTER;
 
 /**
  * 聚合函数 服务层实现。
  */
+@Slf4j
 @Service
 public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionMapper, AggregateFunction> implements AggregateFunctionService {
 
@@ -54,10 +61,36 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     @Autowired
     private JarStoreService jarStoreService;
 
+    @Autowired
+    private BaseUdafParamService baseUdafParamService;
+
+    @Autowired
+    private MapUdafParamService mapUdafParamService;
+
+    @Autowired
+    private MixUdafParamService mixUdafParamService;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AggregateFunctionDto aggregateFunctionDto) throws Exception {
-        AggregateFunction aggregateFunction = aggregateFunctionMapstruct.toEntity(aggregateFunctionDto);
+        Boolean isBuiltIn = aggregateFunctionDto.getIsBuiltIn();
+        AggregateFunction aggregateFunction;
+        //如果是内置的, 检查是否存在
+        if (Boolean.TRUE.equals(isBuiltIn)) {
+            AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
+            aggregateFunctionFactory.init();
+            Class<? extends com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction> aggregateFunctionClass = aggregateFunctionFactory.getAggregateFunctionClass(aggregateFunctionDto.getName());
+            if (aggregateFunctionClass == null) {
+                throw new BusinessException(BUILT_IN_AGGREGATE_FUNCTION_NOT_HAVE);
+            }
+            aggregateFunction = buildAggregateFunction(aggregateFunctionClass);
+        } else {
+            //如果不是内置的, 检查jarStoreId是否为空
+            if (aggregateFunctionDto.getJarStoreId() == null) {
+                throw new BusinessException(JAR_STORE_ID_NULL);
+            }
+            aggregateFunction = aggregateFunctionMapstruct.toEntity(aggregateFunctionDto);
+        }
         //检查name、displayName字段是否重复
         checkExist(aggregateFunction);
         super.save(aggregateFunction);
@@ -70,39 +103,114 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     }
 
     @Override
-    public AggregateFunctionDto queryById(Integer id) {
-        AggregateFunction aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
-        return aggregateFunctionMapstruct.toDTO(aggregateFunction);
-    }
-
-    @Override
-    public List<AggregateFunctionDto> listData() {
-        QueryWrapper where = QueryWrapper.create();
-        List<AggregateFunction> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
-        return aggregateFunctionMapstruct.toDTO(aggregateFunctionList);
-    }
-
-    @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void jarSave(MultipartFile file) throws Exception {
+        //文件保存到本地
         File dest = new File(SystemUtil.getTmpDirPath() + File.separatorChar + IdUtil.fastSimpleUUID());
         file.transferTo(dest);
         List<String> udafJarPathList = Collections.singletonList(dest.getAbsolutePath());
         List<AggregateFunction> aggregateFunctionList = new ArrayList<>();
         Consumer<Class<?>> consumer = clazz -> aggregateFunctionList.add(buildAggregateFunction(clazz));
+        //加载class到list中
         FunctionFactory.loadClassFromJar(udafJarPathList, CLASS_FILTER, consumer);
         if (CollUtil.isEmpty(aggregateFunctionList)) {
-            return;
+            throw new BusinessException(JAR_NOT_HAVE_CLASS);
         }
         JarStore jarStore = new JarStore();
         //TODO 这里可以根据需要将jar文件保存到远程文件服务器中
         jarStore.setJarUrl(dest.toURI().toURL().getPath());
         jarStoreService.save(jarStore);
         for (AggregateFunction aggregateFunction : aggregateFunctionList) {
+            aggregateFunction.setIsBuiltIn(false);
             aggregateFunction.setJarStoreId(jarStore.getId());
             AggregateFunctionDto dto = aggregateFunctionMapstruct.toDTO(aggregateFunction);
             saveData(dto);
         }
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void updateData(AggregateFunctionDto aggregateFunctionDto) {
+        AggregateFunction aggregateFunction = aggregateFunctionMapstruct.toEntity(aggregateFunctionDto);
+        Integer id = aggregateFunction.getId();
+        AggregateFunction dbAggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
+        //name字段不允许修改
+        if (!StrUtil.equals(aggregateFunction.getName(), dbAggregateFunction.getName())) {
+            throw new BusinessException(AGGREGATE_FUNCTION_NAME_NOT_UPDATE);
+        }
+        //检查name和displayName是否存在
+        checkExist(aggregateFunction);
+        updateById(aggregateFunction);
+        //todo 修改相应的字段
+        QueryWrapper select = QueryWrapper.create().select(AGGREGATE_FUNCTION.NAME);
+        //检查聚合函数参数中param是否修改
+        baseUdafParamService.queryChain()
+                .select(BASE_UDAF_PARAM.PARAM)
+                .where(BASE_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
+                .and(BASE_UDAF_PARAM.PARAM.isNotNull());
+
+    }
+
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteById(Integer id) {
+        //检查基本聚合类型是否引用
+        //这里包含了映射类型的value和混合类型的item
+        long count = baseUdafParamService.queryChain()
+                .where(BASE_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
+                .count();
+        if (count > 0) {
+            throw new BusinessException(BASE_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION);
+        }
+
+        //检查映射聚合类型是否引用
+        count = mapUdafParamService.queryChain()
+                .where(MAP_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
+                .count();
+        if (count > 0) {
+            throw new BusinessException(MAP_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION);
+        }
+
+        //检查混合聚合类型是否引用
+        count = mixUdafParamService.queryChain()
+                .where(MIX_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
+                .count();
+        if (count > 0) {
+            throw new BusinessException(MIX_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION);
+        }
+
+        //根据id删除
+        super.removeById(id);
+    }
+
+    @Override
+    public AggregateFunctionDto queryById(Integer id) {
+        AggregateFunction aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
+        return aggregateFunctionMapstruct.toDTO(aggregateFunction);
+    }
+
+    @Override
+    public List<AggregateFunctionDto> listData(AggregateFunctionQueryReq queryReq) {
+        QueryWrapper where = buildAggregateFunctionQueryWrapper(queryReq);
+        List<AggregateFunction> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
+        return aggregateFunctionMapstruct.toDTO(aggregateFunctionList);
+    }
+
+    @Override
+    public Page<AggregateFunctionDto> pageQuery(Integer pageNumber,
+                                                Integer pageSize,
+                                                AggregateFunctionQueryReq queryReq) {
+        QueryWrapper queryWrapper = buildAggregateFunctionQueryWrapper(queryReq);
+        Page<AggregateFunction> aggregateFunctionPage = aggregateFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
+        List<AggregateFunctionDto> list = aggregateFunctionMapstruct.toDTO(aggregateFunctionPage.getRecords());
+        return new Page<>(list, pageNumber, pageSize, aggregateFunctionPage.getTotalRow());
+    }
+
+    private QueryWrapper buildAggregateFunctionQueryWrapper(AggregateFunctionQueryReq queryReq) {
+        return QueryWrapper.create()
+                .where(AGGREGATE_FUNCTION.NAME.like(queryReq.getAggregateFunctionName()))
+                .and(AGGREGATE_FUNCTION.DISPLAY_NAME.like(queryReq.getAggregateFunctionDisplayName()))
+                .orderBy(queryReq.getOrderByColumnName(), queryReq.getAsc());
     }
 
     private static AggregateFunction buildAggregateFunction(Class<?> clazz) {
@@ -143,7 +251,6 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         } else {
             throw new BusinessException(AGGREGATE_FUNCTION_CLASS_TYPE_ERROR, clazz.getName());
         }
-        aggregateFunction.setIsBuiltIn(false);
         //设置聚合函数字段
         List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AggregateFunctionFieldAnnotation.class);
         if (CollUtil.isNotEmpty(udafCustomParamList)) {
@@ -171,7 +278,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     private void checkExist(AggregateFunction aggregateFunction) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
-                .where(AGGREGATE_FUNCTION.ID.ne(aggregateFunction.getId()).when(aggregateFunction.getId() != null))
+                .where(AGGREGATE_FUNCTION.ID.ne(aggregateFunction.getId()))
                 .and(AGGREGATE_FUNCTION.NAME.eq(aggregateFunction.getName()).or(AGGREGATE_FUNCTION.DISPLAY_NAME.eq(aggregateFunction.getDisplayName())));
         long count = aggregateFunctionMapper.selectCountByQuery(queryWrapper);
         if (count > 0) {

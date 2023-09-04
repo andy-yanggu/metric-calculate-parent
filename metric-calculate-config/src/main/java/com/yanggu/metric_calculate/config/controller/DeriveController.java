@@ -34,9 +34,9 @@ public class DeriveController {
         return Result.ok();
     }
 
-    @PutMapping("/update")
+    @PutMapping("/updateData")
     @Operation(summary = "修改派生指标")
-    public Result<Void> update(@RequestBody DeriveDto deriveDto) throws Exception {
+    public Result<Void> updateData(@RequestBody DeriveDto deriveDto) throws Exception {
         deriveService.updateData(deriveDto);
         return Result.ok();
     }

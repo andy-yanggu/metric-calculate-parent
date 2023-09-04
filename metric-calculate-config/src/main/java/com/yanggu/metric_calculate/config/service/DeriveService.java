@@ -38,9 +38,9 @@ public interface DeriveService extends IService<Derive> {
 
     DeriveDto queryById(Integer id);
 
-    Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery);
-
     List<DeriveDto> listData(DeriveQueryReq deriveQuery);
+
+    Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery);
 
     List<DeriveMetricsConfigData> getAllCoreDeriveMetrics();
 

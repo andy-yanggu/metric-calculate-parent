@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
+import com.yanggu.metric_calculate.config.pojo.req.AggregateFunctionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -24,8 +23,8 @@ public class AggregateFunctionController {
 
     @PostMapping("/save")
     @Operation(summary = "新增聚合函数")
-    public Result<Void> save(@RequestBody AggregateFunctionDto aggregateFunction) throws Exception {
-        aggregateFunctionService.saveData(aggregateFunction);
+    public Result<Void> save(@RequestBody AggregateFunctionDto aggregateFunctionDto) throws Exception {
+        aggregateFunctionService.saveData(aggregateFunctionDto);
         return Result.ok();
     }
 
@@ -36,24 +35,24 @@ public class AggregateFunctionController {
         return Result.ok();
     }
 
+    @PutMapping("/updateData")
+    @Operation(summary = "修改聚合函数")
+    public Result<Void> updateData(@RequestBody AggregateFunctionDto aggregateFunctionDto) {
+        aggregateFunctionService.updateData(aggregateFunctionDto);
+        return Result.ok();
+    }
+
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除聚合函数")
-    public Result<Void> remove(@PathVariable Serializable id) {
-        aggregateFunctionService.removeById(id);
+    public Result<Void> deleteById(@PathVariable Integer id) {
+        aggregateFunctionService.deleteById(id);
         return Result.ok();
     }
 
-    @PutMapping("/update")
-    @Operation(summary = "修改聚合函数")
-    public Result<Void> update(@RequestBody AggregateFunction aggregateFunction) {
-        aggregateFunctionService.updateById(aggregateFunction);
-        return Result.ok();
-    }
-
-    @GetMapping("/list")
+    @GetMapping("/listData")
     @Operation(summary = "聚合函数列表")
-    public Result<List<AggregateFunctionDto>> list() {
-        return Result.ok(aggregateFunctionService.listData());
+    public Result<List<AggregateFunctionDto>> listData(AggregateFunctionQueryReq queryReq) {
+        return Result.ok(aggregateFunctionService.listData(queryReq));
     }
 
     @GetMapping("/getInfo/{id}")
@@ -62,10 +61,12 @@ public class AggregateFunctionController {
         return Result.ok(aggregateFunctionService.queryById(id));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/pageQuery")
     @Operation(summary = "聚合函数分页")
-    public Result<Page<AggregateFunction>> page(Page<AggregateFunction> page) {
-        return Result.ok(aggregateFunctionService.page(page));
+    public Result<Page<AggregateFunctionDto>> pageQuery(Integer pageNumber,
+                                                        Integer pageSize,
+                                                        AggregateFunctionQueryReq queryReq) {
+        return Result.ok(aggregateFunctionService.pageQuery(pageNumber, pageSize, queryReq));
     }
 
 }

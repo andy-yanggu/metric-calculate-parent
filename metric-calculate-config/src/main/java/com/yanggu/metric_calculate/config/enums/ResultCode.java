@@ -27,6 +27,16 @@ public enum ResultCode {
     AGGREGATE_FUNCTION_CLASS_NOT_HAVE_ANNOTATION("10014", "{}不包含AggregateFunctionAnnotation注解"),
     AGGREGATE_FUNCTION_CLASS_TYPE_ERROR("10015", "{}不包含任何类型注解"),
     AVIATOR_FUNCTION_CLASS_NOT_HAVE_ANNOTATION("10016", "{}不包含AviatorFunctionAnnotation注解"),
+    AVIATOR_FUNCTION_HAS_INSTANCE("10017", "Aviator函数下有实例, 不能删除"),
+    JAR_STORE_ID_NULL("10018", "jar存储id不能为null"),
+    BUILT_IN_AGGREGATE_FUNCTION_NOT_HAVE("10019", "内置的聚合函数不包含: {}"),
+    JAR_NOT_HAVE_CLASS("10020", "jar包中不存在符合条件的类"),
+    AGGREGATE_FUNCTION_NAME_NOT_UPDATE("10021", "聚合函数名称不允许修改"),
+    AGGREGATE_FUNCTION_TYPE_ERROR("10022", "聚合函数类型错误"),
+    AGGREGATE_FUNCTION_ID_ERROR("10023", "派生指标id错误: {}"),
+    BASE_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10024", "基本聚合参数引用聚合函数, 不能删除"),
+    MAP_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10025", "映射聚合参数引用聚合函数, 不能删除"),
+    MIX_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10026", "混合聚合参数引用聚合函数, 不能删除"),
     ;
 
     private final String code;

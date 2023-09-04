@@ -10,8 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface AviatorFunctionService extends IService<AviatorFunction> {
 
+    void saveData(AviatorFunctionDto aviatorFunctionDto);
+
     void jarSave(MultipartFile file) throws Exception;
 
-    void saveData(AviatorFunctionDto aviatorFunctionDto);
+    void deleteById(Integer id);
 
 }

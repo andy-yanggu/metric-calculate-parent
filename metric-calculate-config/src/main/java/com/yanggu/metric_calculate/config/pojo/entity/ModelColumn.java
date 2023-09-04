@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.config.enums.ModelColumnFieldType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -19,6 +20,7 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = true)
 public class ModelColumn extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1424390731821599400L;
 
     @Id(keyType = KeyType.Auto)

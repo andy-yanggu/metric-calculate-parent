@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunction;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
@@ -23,8 +24,8 @@ public class AviatorFunctionController {
 
     @PostMapping("/save")
     @Operation(summary = "新增Aviator函数")
-    public Result<Void> save(@RequestBody AviatorFunction aviatorFunction) {
-        aviatorFunctionService.save(aviatorFunction);
+    public Result<Void> save(@RequestBody AviatorFunctionDto aviatorFunctionDto) {
+        aviatorFunctionService.saveData(aviatorFunctionDto);
         return Result.ok();
     }
 
@@ -37,8 +38,8 @@ public class AviatorFunctionController {
 
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除Aviator函数")
-    public Result<Void> remove(@PathVariable Serializable id) {
-        aviatorFunctionService.removeById(id);
+    public Result<Void> remove(@PathVariable Integer id) {
+        aviatorFunctionService.deleteById(id);
         return Result.ok();
     }
 

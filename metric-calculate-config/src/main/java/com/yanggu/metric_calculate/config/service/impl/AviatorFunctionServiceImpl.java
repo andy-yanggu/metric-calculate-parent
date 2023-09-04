@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
+import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorFunctionMapper;
@@ -9,6 +10,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunction;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionField;
 import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionFieldService;
+import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
 import com.yanggu.metric_calculate.config.service.JarStoreService;
 import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionAnnotation;
@@ -31,7 +33,10 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_FUNCTION_CLASS_NOT_HAVE_ANNOTATION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorFunctionFieldTableDef.AVIATOR_FUNCTION_FIELD;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorFunctionInstanceTableDef.AVIATOR_FUNCTION_INSTANCE;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorFunctionTableDef.AVIATOR_FUNCTION;
 import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory.CLASS_FILTER;
 
 /**
@@ -39,6 +44,9 @@ import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionF
  */
 @Service
 public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMapper, AviatorFunction> implements AviatorFunctionService {
+    
+    @Autowired
+    private AviatorFunctionMapper aviatorFunctionMapper;
 
     @Autowired
     private JarStoreService jarStoreService;
@@ -49,10 +57,14 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
     @Autowired
     private AviatorFunctionFieldService aviatorFunctionFieldService;
 
+    @Autowired
+    private AviatorFunctionInstanceService aviatorFunctionInstanceService;
+
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AviatorFunctionDto aviatorFunctionDto) {
         AviatorFunction aviatorFunction = aviatorFunctionMapstruct.toEntity(aviatorFunctionDto);
+        checkExist(aviatorFunction);
         super.save(aviatorFunction);
         List<AviatorFunctionField> aviatorFunctionFieldList = aviatorFunction.getAviatorFunctionFieldList();
         if (CollUtil.isNotEmpty(aviatorFunctionFieldList)) {
@@ -84,6 +96,22 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
         }
     }
 
+    @Override
+    @Transactional(rollbackFor = RuntimeException.class)
+    public void deleteById(Integer id) {
+        //检查是否该函数下是否有实例
+        long count = aviatorFunctionInstanceService.queryChain()
+                .where(AVIATOR_FUNCTION_INSTANCE.AVIATOR_FUNCTION_ID.eq(id)).count();
+        if (count > 0) {
+            throw new BusinessException(AVIATOR_FUNCTION_HAS_INSTANCE);
+        }
+        //删除Aviator函数和Aviator函数字段
+        removeById(id);
+        QueryWrapper idQueryWrapper = QueryWrapper.create()
+                .where(AVIATOR_FUNCTION_FIELD.AVIATOR_FUNCTION_ID.eq(id));
+        aviatorFunctionFieldService.remove(idQueryWrapper);
+    }
+
     private static AviatorFunction buildAviatorFunction(Class<?> clazz) {
         AviatorFunctionAnnotation annotation = clazz.getAnnotation(AviatorFunctionAnnotation.class);
         if (annotation == null) {
@@ -112,6 +140,22 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
             aviatorFunction.setAviatorFunctionFieldList(list);
         }
         return aviatorFunction;
+    }
+
+    /**
+     * 检查name、displayName是否重复
+     *
+     * @param aviatorFunction
+     */
+    private void checkExist(AviatorFunction aviatorFunction) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                //当id存在时为更新
+                .where(AVIATOR_FUNCTION.ID.ne(aviatorFunction.getId()).when(aviatorFunction.getId() != null))
+                .and(AVIATOR_FUNCTION.NAME.eq(aviatorFunction.getName()).or(AVIATOR_FUNCTION.DISPLAY_NAME.eq(aviatorFunction.getDisplayName())));
+        long count = aviatorFunctionMapper.selectCountByQuery(queryWrapper);
+        if (count > 0) {
+            throw new BusinessException(AGGREGATE_FUNCTION_EXIST);
+        }
     }
 
 }
