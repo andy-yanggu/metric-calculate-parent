@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface AggregateFunctionService extends IService<AggregateFunction> {
 
-    void saveData(AggregateFunctionDto aggregateFunction) throws Exception;
+    void saveData(AggregateFunctionDto aggregateFunctionDto) throws Exception;
 
     void jarSave(MultipartFile file) throws Exception;
 

@@ -21,9 +21,9 @@ public class AggregateFunctionController {
     @Autowired
     private AggregateFunctionService aggregateFunctionService;
 
-    @PostMapping("/save")
+    @PostMapping("/saveData")
     @Operation(summary = "新增聚合函数")
-    public Result<Void> save(@RequestBody AggregateFunctionDto aggregateFunctionDto) throws Exception {
+    public Result<Void> saveData(@RequestBody AggregateFunctionDto aggregateFunctionDto) throws Exception {
         aggregateFunctionService.saveData(aggregateFunctionDto);
         return Result.ok();
     }

@@ -19,7 +19,7 @@ public interface DeriveService extends IService<Derive> {
      *
      * @param deriveDto
      */
-    void createData(DeriveDto deriveDto) throws Exception;
+    void saveData(DeriveDto deriveDto) throws Exception;
 
     /**
      * 修改派生指标

@@ -82,7 +82,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void createData(DeriveDto deriveDto) throws Exception {
+    public void saveData(DeriveDto deriveDto) throws Exception {
         Derive derive = deriveMapstruct.toEntity(deriveDto);
 
         //检查name、displayName是否重复
@@ -152,7 +152,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         deleteRelation(dbDerive);
 
         //新增关联数据
-        createData(deriveDto);
+        saveData(deriveDto);
     }
 
     @Override

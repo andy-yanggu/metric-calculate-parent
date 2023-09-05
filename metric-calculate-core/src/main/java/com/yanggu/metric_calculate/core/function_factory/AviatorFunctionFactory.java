@@ -86,6 +86,15 @@ public class AviatorFunctionFactory {
      */
     @SneakyThrows
     public AbstractUdfAviatorFunction getAviatorFunction(String aviatorFunctionName, Map<String, Object> params) {
+        Class<? extends AbstractUdfAviatorFunction> clazz = getClazz(aviatorFunctionName);
+        AbstractUdfAviatorFunction abstractUdfAviatorFunction = clazz.getDeclaredConstructor().newInstance();
+        //通过反射给聚合函数设置参数
+        FunctionFactory.setParam(abstractUdfAviatorFunction, params);
+        abstractUdfAviatorFunction.init();
+        return abstractUdfAviatorFunction;
+    }
+
+    public Class<? extends AbstractUdfAviatorFunction> getClazz(String aviatorFunctionName) {
         if (StrUtil.isBlank(aviatorFunctionName)) {
             throw new RuntimeException("传入的Aviator函数名为空");
         }
@@ -93,11 +102,7 @@ public class AviatorFunctionFactory {
         if (clazz == null) {
             throw new RuntimeException("传入的" + aviatorFunctionName + "有误");
         }
-        AbstractUdfAviatorFunction abstractUdfAviatorFunction = clazz.getDeclaredConstructor().newInstance();
-        //通过反射给聚合函数设置参数
-        FunctionFactory.setParam(abstractUdfAviatorFunction, params);
-        abstractUdfAviatorFunction.init();
-        return abstractUdfAviatorFunction;
+        return clazz;
     }
 
     private static void addClassToMap(Class<?> tempClazz,

@@ -22,30 +22,30 @@ public class AviatorFunctionInstanceController {
     @Autowired
     private AviatorFunctionInstanceService aviatorFunctionInstanceService;
 
-    @PostMapping("/save")
+    @PostMapping("/saveData")
     @Operation(summary = "新增Aviator函数实例")
-    public Result<Void> save(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstance) {
+    public Result<Void> saveData(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstance) {
         aviatorFunctionInstanceService.saveData(aviatorFunctionInstance);
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @PutMapping("/updateData")
     @Operation(summary = "修改Aviator函数实例")
-    public Result<Void> remove(@PathVariable Serializable id) {
-        aviatorFunctionInstanceService.removeById(id);
-        return Result.ok();
-    }
-
-    @PutMapping("/update")
-    @Operation(summary = "删除Aviator函数实例")
-    public Result<Void> update(@RequestBody AviatorFunctionInstance aviatorFunctionInstance) {
+    public Result<Void> updateData(@RequestBody AviatorFunctionInstance aviatorFunctionInstance) {
         aviatorFunctionInstanceService.updateById(aviatorFunctionInstance);
         return Result.ok();
     }
 
-    @GetMapping("/list")
+    @DeleteMapping("/remove/{id}")
+    @Operation(summary = "删除Aviator函数实例")
+    public Result<Void> remove(@PathVariable Integer id) {
+        aviatorFunctionInstanceService.removeById(id);
+        return Result.ok();
+    }
+
+    @GetMapping("/listData")
     @Operation(summary = "Aviator函数实例列表")
-    public Result<List<AviatorFunctionInstance>> list() {
+    public Result<List<AviatorFunctionInstance>> listData() {
         return Result.ok(aviatorFunctionInstanceService.list());
     }
 
@@ -55,9 +55,9 @@ public class AviatorFunctionInstanceController {
         return Result.ok(aviatorFunctionInstanceService.getById(id));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/pageData")
     @Operation(summary = "Aviator函数实例分页")
-    public Result<Page<AviatorFunctionInstance>> page(Page<AviatorFunctionInstance> page) {
+    public Result<Page<AviatorFunctionInstance>> pageData(Page<AviatorFunctionInstance> page) {
         return Result.ok(aviatorFunctionInstanceService.page(page));
     }
 

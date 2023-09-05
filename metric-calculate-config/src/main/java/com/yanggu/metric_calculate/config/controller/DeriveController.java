@@ -27,10 +27,10 @@ public class DeriveController {
     @Autowired
     private DeriveMapstruct deriveMapstruct;
 
-    @PostMapping("/save")
+    @PostMapping("/saveData")
     @Operation(summary = "新增派生指标")
-    public Result<Void> save(@RequestBody DeriveDto deriveDto) throws Exception {
-        deriveService.createData(deriveDto);
+    public Result<Void> saveData(@RequestBody DeriveDto deriveDto) throws Exception {
+        deriveService.saveData(deriveDto);
         return Result.ok();
     }
 

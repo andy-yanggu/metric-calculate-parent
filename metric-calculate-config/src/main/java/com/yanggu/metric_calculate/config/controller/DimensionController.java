@@ -29,7 +29,7 @@ public class DimensionController {
 
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除维度")
-    public Result<Void> remove(@PathVariable Serializable id) {
+    public Result<Void> remove(@PathVariable Integer id) {
         dimensionService.removeById(id);
         return Result.ok();
     }
@@ -41,9 +41,9 @@ public class DimensionController {
         return Result.ok();
     }
 
-    @GetMapping("/list")
+    @GetMapping("/listData")
     @Operation(summary = "维度列表")
-    public Result<List<Dimension>> list() {
+    public Result<List<Dimension>> listData() {
         return Result.ok(dimensionService.list());
     }
 
@@ -53,9 +53,9 @@ public class DimensionController {
         return Result.ok(dimensionService.getById(id));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/pageData")
     @Operation(summary = "维度分页")
-    public Result<Page<Dimension>> page(Page<Dimension> page) {
+    public Result<Page<Dimension>> pageData(Page<Dimension> page) {
         return Result.ok(dimensionService.page(page));
     }
 

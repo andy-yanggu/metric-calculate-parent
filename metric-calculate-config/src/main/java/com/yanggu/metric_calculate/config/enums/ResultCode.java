@@ -37,6 +37,7 @@ public enum ResultCode {
     BASE_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10024", "基本聚合参数引用聚合函数, 不能删除"),
     MAP_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10025", "映射聚合参数引用聚合函数, 不能删除"),
     MIX_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10026", "混合聚合参数引用聚合函数, 不能删除"),
+    AVIATOR_FUNCTION_EXIST("10011", "Aviator函数已经存在"),
     ;
 
     private final String code;

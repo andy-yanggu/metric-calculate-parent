@@ -2,6 +2,8 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.tenant.TenantManager;
+import com.mybatisflex.core.util.UpdateEntity;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
@@ -20,7 +22,6 @@ import com.yanggu.metric_calculate.core.util.UdafCustomParamDataUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.data.id.IdUtil;
-import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.core.util.SystemUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.function.Consumer;
 
 import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.*;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionFieldTableDef.AGGREGATE_FUNCTION_FIELD;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.BaseUdafParamTableDef.BASE_UDAF_PARAM;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.MapUdafParamTableDef.MAP_UDAF_PARAM;
@@ -84,6 +86,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
                 throw new BusinessException(BUILT_IN_AGGREGATE_FUNCTION_NOT_HAVE);
             }
             aggregateFunction = buildAggregateFunction(aggregateFunctionClass);
+            aggregateFunction.setIsBuiltIn(true);
         } else {
             //如果不是内置的, 检查jarStoreId是否为空
             if (aggregateFunctionDto.getJarStoreId() == null) {
@@ -131,24 +134,10 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(AggregateFunctionDto aggregateFunctionDto) {
-        AggregateFunction aggregateFunction = aggregateFunctionMapstruct.toEntity(aggregateFunctionDto);
-        Integer id = aggregateFunction.getId();
-        AggregateFunction dbAggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
-        //name字段不允许修改
-        if (!StrUtil.equals(aggregateFunction.getName(), dbAggregateFunction.getName())) {
-            throw new BusinessException(AGGREGATE_FUNCTION_NAME_NOT_UPDATE);
-        }
-        //检查name和displayName是否存在
-        checkExist(aggregateFunction);
-        updateById(aggregateFunction);
-        //todo 修改相应的字段
-        QueryWrapper select = QueryWrapper.create().select(AGGREGATE_FUNCTION.NAME);
-        //检查聚合函数参数中param是否修改
-        baseUdafParamService.queryChain()
-                .select(BASE_UDAF_PARAM.PARAM)
-                .where(BASE_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
-                .and(BASE_UDAF_PARAM.PARAM.isNotNull());
-
+        AggregateFunction aggregateFunction = UpdateEntity.of(AggregateFunction.class, aggregateFunctionDto.getId());
+        //允许修改和description
+        aggregateFunction.setDescription(aggregateFunctionDto.getDescription());
+        aggregateFunctionMapper.update(aggregateFunction);
     }
 
     @Override
@@ -181,6 +170,10 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
 
         //根据id删除
         super.removeById(id);
+        //删除聚合函数字段
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                .where(AGGREGATE_FUNCTION_FIELD.AGGREGATE_FUNCTION_ID.eq(id));
+        aggregateFunctionFieldService.remove(queryWrapper);
     }
 
     @Override
@@ -280,7 +273,13 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
                 //当id存在时为更新
                 .where(AGGREGATE_FUNCTION.ID.ne(aggregateFunction.getId()))
                 .and(AGGREGATE_FUNCTION.NAME.eq(aggregateFunction.getName()).or(AGGREGATE_FUNCTION.DISPLAY_NAME.eq(aggregateFunction.getDisplayName())));
-        long count = aggregateFunctionMapper.selectCountByQuery(queryWrapper);
+        long count;
+        //如果是内置的不需要用户id
+        if (Boolean.TRUE.equals(aggregateFunction.getIsBuiltIn())) {
+            count = TenantManager.withoutTenantCondition(() -> aggregateFunctionMapper.selectCountByQuery(queryWrapper));
+        } else {
+            count = aggregateFunctionMapper.selectCountByQuery(queryWrapper);
+        }
         if (count > 0) {
             throw new BusinessException(AGGREGATE_FUNCTION_EXIST);
         }
