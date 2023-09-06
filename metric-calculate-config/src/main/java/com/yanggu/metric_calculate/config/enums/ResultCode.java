@@ -38,6 +38,8 @@ public enum ResultCode {
     MAP_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10025", "映射聚合参数引用聚合函数, 不能删除"),
     MIX_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION("10026", "混合聚合参数引用聚合函数, 不能删除"),
     AVIATOR_FUNCTION_EXIST("10011", "Aviator函数已经存在"),
+    DIMENSION_EXIST("10012", "维度名称或者中文名已经存在"),
+    DIMENSION_BINDING_MODEL_COLUMN_NOT_DELETE("10013", "维度字段绑定了宽表字段, 不能删除"),
     ;
 
     private final String code;

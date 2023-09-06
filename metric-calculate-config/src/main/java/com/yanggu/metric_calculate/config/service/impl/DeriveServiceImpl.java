@@ -343,8 +343,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
                 .where(DERIVE.ID.ne(derive.getId()).when(derive.getId() != null))
-                .and(DERIVE.NAME.eq(derive.getName()).or(DERIVE.DISPLAY_NAME.eq(derive.getDisplayName())))
-                .and(DERIVE.USER_ID.eq(derive.getUserId()));
+                .and(DERIVE.NAME.eq(derive.getName()).or(DERIVE.DISPLAY_NAME.eq(derive.getDisplayName())));
         long count = deriveMapper.selectCountByQuery(queryWrapper);
         if (count > 0) {
             throw new BusinessException(DERIVE_EXIST);

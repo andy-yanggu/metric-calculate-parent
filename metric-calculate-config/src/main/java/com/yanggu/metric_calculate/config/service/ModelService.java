@@ -13,7 +13,7 @@ public interface ModelService extends IService<Model> {
      * 新增宽表
      * @param modelDto
      */
-    void create(ModelDto modelDto) throws Exception;
+    void saveData(ModelDto modelDto) throws Exception;
 
     /**
      * 根据主键查询
@@ -28,6 +28,6 @@ public interface ModelService extends IService<Model> {
      *
      * @param modelDto
      */
-    void updateById(ModelDto modelDto);
+    void updateData(ModelDto modelDto);
 
 }

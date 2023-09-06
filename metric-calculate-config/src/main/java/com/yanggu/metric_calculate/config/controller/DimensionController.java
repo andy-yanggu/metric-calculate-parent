@@ -1,7 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.entity.Dimension;
+import com.yanggu.metric_calculate.config.pojo.dto.DimensionDto;
+import com.yanggu.metric_calculate.config.pojo.req.DimensionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DimensionService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -9,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.List;
 
 @RestController
@@ -20,43 +20,43 @@ public class DimensionController {
     @Autowired
     private DimensionService dimensionService;
 
-    @PostMapping("/save")
+    @PostMapping("/saveData")
     @Operation(summary = "新增维度")
-    public Result<Void> save(@RequestBody Dimension dimension) {
-        dimensionService.save(dimension);
+    public Result<Void> saveData(@RequestBody DimensionDto dimensionDto) {
+        dimensionService.saveData(dimensionDto);
+        return Result.ok();
+    }
+
+    @PutMapping("/updateData")
+    @Operation(summary = "修改维度")
+    public Result<Void> updateData(@RequestBody DimensionDto dimensionDto) {
+        dimensionService.updateData(dimensionDto);
         return Result.ok();
     }
 
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除维度")
     public Result<Void> remove(@PathVariable Integer id) {
-        dimensionService.removeById(id);
-        return Result.ok();
-    }
-
-    @PutMapping("/update")
-    @Operation(summary = "修改维度")
-    public Result<Void> update(@RequestBody Dimension dimension) {
-        dimensionService.updateById(dimension);
+        dimensionService.deleteById(id);
         return Result.ok();
     }
 
     @GetMapping("/listData")
     @Operation(summary = "维度列表")
-    public Result<List<Dimension>> listData() {
-        return Result.ok(dimensionService.list());
+    public Result<List<DimensionDto>> listData(DimensionQueryReq req) {
+        return Result.ok(dimensionService.listData(req));
     }
 
     @GetMapping("/getInfo/{id}")
     @Operation(summary = "维度详情")
-    public Result<Dimension> getInfo(@PathVariable Integer id) {
-        return Result.ok(dimensionService.getById(id));
+    public Result<DimensionDto> getInfo(@PathVariable Integer id) {
+        return Result.ok(dimensionService.queryById(id));
     }
 
     @GetMapping("/pageData")
     @Operation(summary = "维度分页")
-    public Result<Page<Dimension>> pageData(Page<Dimension> page) {
-        return Result.ok(dimensionService.page(page));
+    public Result<Page<DimensionDto>> pageData(Integer pageNumber, Integer pageSize, DimensionQueryReq req) {
+        return Result.ok(dimensionService.pageData(pageNumber, pageSize, req));
     }
 
 }

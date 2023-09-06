@@ -26,17 +26,17 @@ public class ModelController {
     @Autowired
     private ModelMapstruct modelMapstruct;
 
-    @PostMapping("/save")
+    @PostMapping("/saveData")
     @Operation(summary = "新增数据明细宽表")
-    public Result<Void> save(@RequestBody ModelDto model) throws Exception {
-        modelService.create(model);
+    public Result<Void> saveData(@RequestBody ModelDto modelDto) throws Exception {
+        modelService.saveData(modelDto);
         return Result.ok();
     }
 
-    @PutMapping("/update")
+    @PutMapping("/updateData")
     @Operation(summary = "修改数据明细宽表")
-    public Result<Void> update(@RequestBody ModelDto model) {
-        modelService.updateById(model);
+    public Result<Void> updateData(@RequestBody ModelDto modelDto) {
+        modelService.updateData(modelDto);
         return Result.ok();
     }
 
@@ -47,9 +47,9 @@ public class ModelController {
         return Result.ok();
     }
 
-    @GetMapping("/list")
+    @GetMapping("/listData")
     @Operation(summary = "数据明细宽表列表")
-    public Result<List<Model>> list() {
+    public Result<List<Model>> listData() {
         return Result.ok(modelService.list());
     }
 
@@ -59,9 +59,9 @@ public class ModelController {
         return Result.ok(modelService.queryById(id));
     }
 
-    @GetMapping("/page")
+    @GetMapping("/pageData")
     @Operation(summary = "数据明细宽表分页")
-    public Result<Page<Model>> page(Page<Model> page) {
+    public Result<Page<Model>> pageData(Page<Model> page) {
         return Result.ok(modelService.page(page));
     }
 

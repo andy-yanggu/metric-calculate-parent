@@ -49,7 +49,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void create(ModelDto modelDto) throws Exception {
+    public void saveData(ModelDto modelDto) throws Exception {
         Model model = modelMapstruct.toEntity(modelDto);
 
         //检查name、displayName是否重复
@@ -118,7 +118,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateById(ModelDto modelDto) {
+    public void updateData(ModelDto modelDto) {
         Model model = modelMapstruct.toEntity(modelDto);
         //检查name、displayName是否重复
         checkExist(model);
