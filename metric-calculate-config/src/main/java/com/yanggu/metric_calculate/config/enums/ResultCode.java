@@ -40,6 +40,7 @@ public enum ResultCode {
     AVIATOR_FUNCTION_EXIST("10011", "Aviator函数已经存在"),
     DIMENSION_EXIST("10012", "维度名称或者中文名已经存在"),
     DIMENSION_BINDING_MODEL_COLUMN_NOT_DELETE("10013", "维度字段绑定了宽表字段, 不能删除"),
+    MODEL_HAS_DERIVE_NOT_DELETE("10014", "宽表下有派生指标不能删除"),
     ;
 
     private final String code;

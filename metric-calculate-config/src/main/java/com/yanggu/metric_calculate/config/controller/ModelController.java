@@ -5,6 +5,7 @@ import com.mybatisflex.core.tenant.TenantManager;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
+import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.ModelService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,14 +44,14 @@ public class ModelController {
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除数据明细宽表")
     public Result<Void> remove(@PathVariable Integer id) {
-        modelService.removeById(id);
+        modelService.deleteById(id);
         return Result.ok();
     }
 
     @GetMapping("/listData")
     @Operation(summary = "数据明细宽表列表")
-    public Result<List<Model>> listData() {
-        return Result.ok(modelService.list());
+    public Result<List<ModelDto>> listData(ModelQueryReq req) {
+        return Result.ok(modelService.listData(req));
     }
 
     @GetMapping("/getInfo/{id}")
@@ -61,8 +62,8 @@ public class ModelController {
 
     @GetMapping("/pageData")
     @Operation(summary = "数据明细宽表分页")
-    public Result<Page<Model>> pageData(Page<Model> page) {
-        return Result.ok(modelService.page(page));
+    public Result<Page<ModelDto>> pageData(Integer pageNumber, Integer pageSize, ModelQueryReq req) {
+        return Result.ok(modelService.pageData(pageNumber, pageSize, req));
     }
 
     @GetMapping("/toCoreModel/{modelId}")
