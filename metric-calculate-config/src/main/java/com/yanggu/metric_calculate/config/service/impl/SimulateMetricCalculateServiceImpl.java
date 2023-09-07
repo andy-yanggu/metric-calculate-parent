@@ -1,32 +1,18 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelColumnDto;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.service.DeriveService;
 import com.yanggu.metric_calculate.config.service.ModelService;
 import com.yanggu.metric_calculate.config.service.SimulateMetricCalculateService;
+import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core.enums.BasicType;
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
-import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_ID_ERROR;
-import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_ID_ERROR;
+import java.util.function.BiFunction;
 
 @Service
 public class SimulateMetricCalculateServiceImpl implements SimulateMetricCalculateService {
@@ -35,41 +21,36 @@ public class SimulateMetricCalculateServiceImpl implements SimulateMetricCalcula
     private ModelService modelService;
 
     @Autowired
-    private DeriveService deriveService;
-
-    @Autowired
-    private DeriveMapstruct deriveMapstruct;
-
-    @Autowired
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Override
-    public <R> DeriveMetricCalculateResult<R> noStateCalculate(JSONObject input, Integer modelId, Integer deriveId) throws Exception {
-        ModelDto modelDto = modelService.queryById(modelId);
-        if (modelDto == null) {
-            throw new BusinessException(MODEL_ID_ERROR, modelId);
-        }
-        List<ModelColumn> collect = modelDto.getModelColumnList().stream()
-                .map(tempModelColumn -> {
-                    ModelColumn modelColumn = new ModelColumn();
-                    modelColumn.setName(tempModelColumn.getName());
-                    modelColumn.setDataType(BasicType.valueOf(tempModelColumn.getDataType().name()));
-                    return modelColumn;
-                })
-                .toList();
-        Map<String, Class<?>> fieldMap = MetricUtil.getFieldMap(collect);
-        DeriveDto deriveDto = deriveService.queryById(deriveId);
-        if (deriveDto == null) {
-            throw new BusinessException(DERIVE_ID_ERROR, deriveId);
-        }
-        DeriveMetrics deriveMetrics = null;
-        AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
-        aviatorFunctionFactory.init();
-        AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
-        aggregateFunctionFactory.init();
-        DeriveMetricCalculate<?, ?, R> deriveMetricCalculate = MetricUtil.initDeriveMetrics(deriveMetrics, fieldMap, aviatorFunctionFactory, aggregateFunctionFactory);
+    public <R> DeriveMetricCalculateResult<R> noStateCalculate(JSONObject input, Integer modelId, Integer deriveId) {
+        //进行无状态计算
+        BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function = DeriveMetricCalculate::noStateExec;
+        return deriveMetricCalculate(input, modelId, deriveId, function);
+    }
+
+    @Override
+    public <R> DeriveMetricCalculateResult<R> stateCalculate(JSONObject input, Integer modelId, Integer deriveId) {
+        //进行有状态计算
+        BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function = DeriveMetricCalculate::stateExec;
+        return deriveMetricCalculate(input, modelId, deriveId, function);
+    }
+
+    private <R> DeriveMetricCalculateResult<R> deriveMetricCalculate(JSONObject input, Integer modelId, Integer deriveId,
+                                                                     BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function) {
+        //获取核心宽表类
+        Model coreModel = modelService.toCoreModel(modelId);
+        //初始化指标计算类
+        MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(coreModel);
+        //获取指标计算类
+        DeriveMetricCalculate<Object, Object, R> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(deriveId.longValue());
+        //设置外部存储
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
-        return deriveMetricCalculate.noStateExec(input);
+        //进行字段计算
+        JSONObject param = metricCalculate.getParam(input);
+        //进行派生指标计算
+        return function.apply(deriveMetricCalculate, param);
     }
 
 }

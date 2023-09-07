@@ -11,9 +11,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -116,20 +114,7 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     @Named("getFromDerive")
     static List<String> getFromDerive(Derive derive) {
         List<AviatorExpressParam> aviatorExpressParamList = getAviatorExpressParamFromDerive(derive);
-        return getAviatorFunctionJarPathList(aviatorExpressParamList);
-    }
-
-    static List<String> getAviatorFunctionJarPathList(List<AviatorExpressParam> aviatorExpressParamList) {
-        return aviatorExpressParamList.stream()
-                .map(AviatorExpressParam::getAviatorFunctionInstanceList)
-                .filter(CollUtil::isNotEmpty)
-                .flatMap(Collection::stream)
-                .map(AviatorFunctionInstance::getAviatorFunction)
-                .map(AviatorFunction::getJarStore)
-                .filter(Objects::nonNull)
-                .map(JarStore::getJarUrl)
-                .distinct()
-                .toList();
+        return AviatorExpressParamMapstruct.getAviatorFunctionJarPathList(aviatorExpressParamList);
     }
 
     /**

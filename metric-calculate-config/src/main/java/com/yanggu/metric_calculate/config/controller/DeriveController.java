@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
@@ -23,9 +21,6 @@ public class DeriveController {
 
     @Autowired
     private DeriveService deriveService;
-
-    @Autowired
-    private DeriveMapstruct deriveMapstruct;
 
     @PostMapping("/saveData")
     @Operation(summary = "新增派生指标")
@@ -68,9 +63,8 @@ public class DeriveController {
 
     @GetMapping("/toCoreDeriveMetrics/{deriveId}")
     @Operation(summary = "转换成核心派生指标")
-    public Result<DeriveMetrics> getDeriveMetrics(@PathVariable Integer deriveId) {
-        Derive derive = deriveService.getMapper().selectOneWithRelationsById(deriveId);
-        DeriveMetrics deriveMetrics = deriveMapstruct.toDeriveMetrics(derive);
+    public Result<DeriveMetrics> toCoreDeriveMetrics(@PathVariable Integer deriveId) {
+        DeriveMetrics deriveMetrics = deriveService.toCoreDeriveMetrics(deriveId);
         return Result.ok(deriveMetrics);
     }
 

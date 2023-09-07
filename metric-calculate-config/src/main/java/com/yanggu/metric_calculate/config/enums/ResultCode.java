@@ -3,6 +3,8 @@ package com.yanggu.metric_calculate.config.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamAviatorFunctionInstanceRelationTableDef.AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION;
+
 @Getter
 @AllArgsConstructor
 public enum ResultCode {
@@ -41,6 +43,7 @@ public enum ResultCode {
     DIMENSION_EXIST("10012", "维度名称或者中文名已经存在"),
     DIMENSION_BINDING_MODEL_COLUMN_NOT_DELETE("10013", "维度字段绑定了宽表字段, 不能删除"),
     MODEL_HAS_DERIVE_NOT_DELETE("10014", "宽表下有派生指标不能删除"),
+    AVIATOR_EXPRESS_PARAM_USE_AVIATOR_FUNCTION_INSTANCE_NOT_DELETE("10015", "Aviator表达式使用该实例不能删除"),
     ;
 
     private final String code;

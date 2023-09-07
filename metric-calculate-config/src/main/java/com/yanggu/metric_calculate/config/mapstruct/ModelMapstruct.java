@@ -14,7 +14,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
@@ -106,7 +105,7 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
                 }
             }
         }
-        return DeriveMapstruct.getAviatorFunctionJarPathList(aviatorExpressParamList);
+        return AviatorExpressParamMapstruct.getAviatorFunctionJarPathList(aviatorExpressParamList);
     }
 
 }

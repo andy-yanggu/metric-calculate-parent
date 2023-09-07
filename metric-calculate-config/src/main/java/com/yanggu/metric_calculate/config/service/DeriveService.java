@@ -6,6 +6,7 @@ import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Derive;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 
 import java.util.List;
 
@@ -41,6 +42,8 @@ public interface DeriveService extends IService<Derive> {
     List<DeriveDto> listData(DeriveQueryReq deriveQuery);
 
     Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery);
+
+    DeriveMetrics toCoreDeriveMetrics(Integer deriveId);
 
     List<DeriveMetricsConfigData> getAllCoreDeriveMetrics();
 

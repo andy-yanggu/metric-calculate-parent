@@ -39,9 +39,8 @@ public class SimulateMetricCalculateController {
     public <R> Result<DeriveMetricCalculateResult<R>> stateCalculateThread(
             @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input,
             @RequestParam Integer modelId, @RequestParam Integer deriveId) {
-        //List<DeriveMetricCalculateResult<Object>> resultList = metricCalculateService.stateCalculateThread(input);
-        //return Result.ok(resultList);
-        return null;
+        DeriveMetricCalculateResult<R> result = simulateMetricCalculateService.stateCalculate(input, modelId, deriveId);
+        return Result.ok(result);
     }
 
 }

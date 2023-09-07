@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDto;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstance;
+import com.yanggu.metric_calculate.config.pojo.req.AviatorFunctionInstanceQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.Serializable;
 import java.util.List;
 
 
@@ -24,41 +23,43 @@ public class AviatorFunctionInstanceController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增Aviator函数实例")
-    public Result<Void> saveData(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstance) {
-        aviatorFunctionInstanceService.saveData(aviatorFunctionInstance);
+    public Result<Void> saveData(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstanceDto) {
+        aviatorFunctionInstanceService.saveData(aviatorFunctionInstanceDto);
         return Result.ok();
     }
 
     @PutMapping("/updateData")
     @Operation(summary = "修改Aviator函数实例")
-    public Result<Void> updateData(@RequestBody AviatorFunctionInstance aviatorFunctionInstance) {
-        aviatorFunctionInstanceService.updateById(aviatorFunctionInstance);
+    public Result<Void> updateData(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstanceDto) {
+        aviatorFunctionInstanceService.updateData(aviatorFunctionInstanceDto);
         return Result.ok();
     }
 
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除Aviator函数实例")
-    public Result<Void> remove(@PathVariable Integer id) {
-        aviatorFunctionInstanceService.removeById(id);
+    public Result<Void> deleteById(@PathVariable Integer id) {
+        aviatorFunctionInstanceService.deleteById(id);
         return Result.ok();
     }
 
     @GetMapping("/listData")
     @Operation(summary = "Aviator函数实例列表")
-    public Result<List<AviatorFunctionInstance>> listData() {
-        return Result.ok(aviatorFunctionInstanceService.list());
+    public Result<List<AviatorFunctionInstanceDto>> listData(AviatorFunctionInstanceQueryReq req) {
+        return Result.ok(aviatorFunctionInstanceService.listData(req));
     }
 
     @GetMapping("/getInfo/{id}")
     @Operation(summary = "Aviator函数实例详情")
-    public Result<AviatorFunctionInstance> getInfo(@PathVariable Serializable id) {
-        return Result.ok(aviatorFunctionInstanceService.getById(id));
+    public Result<AviatorFunctionInstanceDto> getInfo(@PathVariable Integer id) {
+        return Result.ok(aviatorFunctionInstanceService.queryById(id));
     }
 
     @GetMapping("/pageData")
     @Operation(summary = "Aviator函数实例分页")
-    public Result<Page<AviatorFunctionInstance>> pageData(Page<AviatorFunctionInstance> page) {
-        return Result.ok(aviatorFunctionInstanceService.page(page));
+    public Result<Page<AviatorFunctionInstanceDto>> pageData(Integer pageNumber,
+                                                             Integer pageSize,
+                                                             AviatorFunctionInstanceQueryReq req) {
+        return Result.ok(aviatorFunctionInstanceService.pageData(pageNumber, pageSize, req));
     }
 
 }

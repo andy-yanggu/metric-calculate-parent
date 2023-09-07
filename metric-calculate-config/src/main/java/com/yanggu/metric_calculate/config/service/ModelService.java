@@ -40,4 +40,6 @@ public interface ModelService extends IService<Model> {
 
     Page<ModelDto> pageData(Integer pageNumber, Integer pageSize, ModelQueryReq req);
 
+    com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId);
+
 }

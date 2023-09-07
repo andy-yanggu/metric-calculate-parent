@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.service.*;
+import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -185,6 +186,12 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         Page<Derive> derivePage = deriveMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
         List<DeriveDto> list = deriveMapstruct.toDTO(derivePage.getRecords());
         return new Page<>(list, pageNumber, pageSize, derivePage.getTotalRow());
+    }
+
+    @Override
+    public DeriveMetrics toCoreDeriveMetrics(Integer deriveId) {
+        Derive derive = deriveMapper.selectOneWithRelationsById(deriveId);
+        return deriveMapstruct.toDeriveMetrics(derive);
     }
 
     @Override

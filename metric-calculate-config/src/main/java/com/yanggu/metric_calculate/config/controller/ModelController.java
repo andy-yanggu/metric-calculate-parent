@@ -69,8 +69,7 @@ public class ModelController {
     @GetMapping("/toCoreModel/{modelId}")
     @Operation(summary = "转换成核心宽表", description = "转换成core包中的Model")
     public Result<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getCoreModel(@PathVariable Integer modelId) {
-        Model model = TenantManager.withoutTenantCondition(() -> modelService.getMapper().selectOneWithRelationsById(modelId));
-        return Result.ok(modelMapstruct.toCoreModel(model));
+        return Result.ok(modelService.toCoreModel(modelId));
     }
 
     @GetMapping("/allCoreModel")

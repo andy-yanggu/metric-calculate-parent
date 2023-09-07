@@ -2,15 +2,13 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
+import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Model;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelDimensionColumn;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelTimeColumn;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
 import com.yanggu.metric_calculate.config.service.*;
 import org.dromara.hutool.core.text.StrUtil;
@@ -18,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -118,17 +117,39 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(ModelDto modelDto) {
-        Model model = modelMapstruct.toEntity(modelDto);
-        //检查name、displayName是否重复
-        checkExist(model);
-        //更新宽表数据
-        updateById(model, false);
-        //处理宽表字段
-        modelColumnService.updateModelColumnList(model);
+        //TODO 待完成修改接口
+        Model updateModel = modelMapstruct.toEntity(modelDto);
+        //查询之前的宽表和下面的派生指标
+        Model dbModel = getModel(modelDto.getId());
+        List<Derive> deriveList = dbModel.getDeriveList();
+        //之前的时间字段
+        List<Integer> list = deriveList.stream()
+                .map(Derive::getModelTimeColumn)
+                .map(ModelTimeColumn::getModelColumnId)
+                .distinct()
+                .toList();
+
+        //之前的维度字段
+        List<Integer> list2 = deriveList.stream()
+                .map(Derive::getModelDimensionColumnList)
+                .flatMap(Collection::stream)
+                .map(ModelDimensionColumn::getModelColumnId)
+                .distinct()
+                .toList();
+
+        //所有使用的宽表字段
+
+
         //处理时间字段
-        List<ModelTimeColumn> modelTimeColumnList = model.getModelTimeColumnList();
+        List<ModelTimeColumn> modelTimeColumnList = updateModel.getModelTimeColumnList();
+
         //处理维度字段
-        List<ModelDimensionColumn> modelDimensionColumnList = model.getModelDimensionColumnList();
+        List<ModelDimensionColumn> modelDimensionColumnList = updateModel.getModelDimensionColumnList();
+
+        //检查name、displayName是否重复
+        checkExist(updateModel);
+        //更新宽表数据
+        updateById(updateModel, false);
     }
 
     @Override
@@ -166,9 +187,17 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     public ModelDto queryById(Integer id) {
+        Model model = getModel(id);
+        return modelMapstruct.toDTO(model);
+    }
+
+    private Model getModel(Integer id) {
         //根据主键查询, 同时关联查询其他表数据
         Model model = modelMapper.selectOneWithRelationsById(id);
-        return modelMapstruct.toDTO(model);
+        if (model == null) {
+            throw new BusinessException(MODEL_ID_ERROR);
+        }
+        return model;
     }
 
     @Override
@@ -177,6 +206,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         Page<Model> page = modelMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
         List<ModelDto> list = modelMapstruct.toDTO(page.getRecords());
         return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
+    }
+
+    @Override
+    public com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId) {
+        Model model = TenantManager.withoutTenantCondition(() -> modelMapper.selectOneWithRelationsById(modelId));
+        return modelMapstruct.toCoreModel(model);
     }
 
     /**

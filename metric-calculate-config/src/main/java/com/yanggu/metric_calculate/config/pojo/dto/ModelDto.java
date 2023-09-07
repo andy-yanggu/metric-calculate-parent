@@ -57,4 +57,9 @@ public class ModelDto extends BaseDto implements Serializable {
      */
     private List<ModelDimensionColumnDto> modelDimensionColumnList;
 
+    /**
+     * 派生指标列表
+     */
+    private List<DeriveDto> deriveList;
+
 }
