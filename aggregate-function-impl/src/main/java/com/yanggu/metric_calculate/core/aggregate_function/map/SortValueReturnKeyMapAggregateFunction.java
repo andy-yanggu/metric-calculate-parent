@@ -35,7 +35,7 @@ public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValueOUT ext
     public List<K> getResult(Map<K, ValueACC> accumulator) {
         return getCompareLimitStream(accumulator, asc, limit)
                 .map(AbstractMap.SimpleImmutableEntry::getKey)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

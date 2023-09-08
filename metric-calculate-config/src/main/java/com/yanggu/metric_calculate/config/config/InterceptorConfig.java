@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.config;
 
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -19,15 +19,13 @@ public class InterceptorConfig implements WebMvcConfigurer {
 
     private List<String> excludePathList;
 
-    @Bean
-    public LoginInterceptor loginInterceptor() {
-        return new LoginInterceptor();
-    }
+    @Autowired
+    private LoginInterceptor loginInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         //registry添加拦截器
-        registry.addInterceptor(this.loginInterceptor())
+        registry.addInterceptor(loginInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns(excludePathList)
                 .order(1);

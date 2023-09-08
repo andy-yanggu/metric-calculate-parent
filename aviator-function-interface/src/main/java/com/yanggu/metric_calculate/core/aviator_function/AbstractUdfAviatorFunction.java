@@ -3,11 +3,14 @@ package com.yanggu.metric_calculate.core.aviator_function;
 
 import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
 
+import java.io.Serial;
+
 /**
  * 用户自定义AviatorFunction需要继承该抽象类
  */
 public abstract class AbstractUdfAviatorFunction extends AbstractVariadicFunction {
 
+    @Serial
     private static final long serialVersionUID = 2042192208322795369L;
 
     /**

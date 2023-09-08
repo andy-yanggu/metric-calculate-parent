@@ -51,9 +51,9 @@ mybatis-flex:
 
 # 端点控制配置
 management:
-  server:
-    # 启用独立运维端口
-    port: 50001
+#  server:
+#    # 启用独立运维端口
+#    port: 50001
   endpoint:
     # 开启shutdown
     shutdown:

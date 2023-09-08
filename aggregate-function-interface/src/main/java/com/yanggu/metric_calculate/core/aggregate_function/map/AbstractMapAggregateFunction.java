@@ -75,6 +75,7 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
                                                                             Map<K, ValueACC> accumulator,
                                                                             Boolean asc,
                                                                             Integer limit) {
+        //根据value进行排序
         Comparator<AbstractMap.SimpleImmutableEntry<K, ValueOUT>> pairComparator = (o1, o2) -> {
             Comparable value1 = (Comparable) o1.getValue();
             Comparable value2 = (Comparable) o2.getValue();
@@ -86,9 +87,13 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
             }
         };
         return accumulator.entrySet().stream()
+                //映射成SimpleImmutableEntry
                 .map(tempEntry -> new AbstractMap.SimpleImmutableEntry<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
+                //过滤掉value为null的值
                 .filter(tempEntry -> tempEntry.getValue() != null)
+                //按照value排序
                 .sorted(pairComparator)
+                //进行截取
                 .limit(limit);
     }
 

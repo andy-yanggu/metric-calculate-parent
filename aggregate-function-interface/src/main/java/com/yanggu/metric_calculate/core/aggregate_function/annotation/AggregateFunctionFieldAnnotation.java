@@ -7,8 +7,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * udaf函数参数注解
- * <p>当该注解修饰某个字段, 标识该字段为udaf参数</p>
+ * 聚合函数参数注解
+ * <p>当该注解修饰聚合函数某个字段, 标识该字段为udaf参数</p>
  * <p>参数名为定义的代码定义的字段名</p>
  * <p>默认值为代码赋值的默认值</p>
  * <p>数据类型为代码定义的数据类型</p>
@@ -33,7 +33,7 @@ public @interface AggregateFunctionFieldAnnotation {
 
     /**
      * 能够修改
-     * true能够修改, false不能修改
+     * <p>true能够修改, false不能修改</p>
      *
      * @return
      */

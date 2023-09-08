@@ -15,7 +15,7 @@ public interface AggregateFunction<IN, ACC, OUT> {
 
     /**
      * 初始化方法, 默认空代码, 实现类可以重写该方法
-     * <p>给反射生成聚合函数，且给聚合函数的参数赋值完成后，会调用init方法</p>
+     * <p>调用无参构造方法反射生成聚合函数对象后，且反射给聚合函数的参数赋值完成后，会调用init方法</p>
      */
     default void init() {
     }

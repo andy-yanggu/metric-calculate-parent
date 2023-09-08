@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.dromara.hutool.core.text.StrUtil;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.NO_LOGIN;
@@ -13,6 +14,7 @@ import static com.yanggu.metric_calculate.config.util.Constant.USER_ID;
 /**
  * 登录拦截器
  */
+@Component
 public class LoginInterceptor implements HandlerInterceptor {
 
     @Override

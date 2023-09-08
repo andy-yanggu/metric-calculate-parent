@@ -8,7 +8,7 @@ import java.lang.annotation.Target;
 
 
 /**
- * 聚合函数元数据
+ * 聚合函数元数据注解
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
