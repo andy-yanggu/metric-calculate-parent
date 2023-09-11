@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.pojo.data_detail_table;
 
 import com.yanggu.metric_calculate.core.pojo.metric.Composite;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
-import com.yanggu.metric_calculate.core.pojo.metric.Global;
 import lombok.Data;
 
 import java.util.List;
@@ -48,11 +47,6 @@ public class Model {
      * 复合指标
      */
     private List<Composite> compositeList;
-
-    /**
-     * 全局指标
-     */
-    private List<Global> globalList;
 
     /**
      * 自定义udf-jar的路径

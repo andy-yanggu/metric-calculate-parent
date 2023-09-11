@@ -4,7 +4,6 @@ package com.yanggu.metric_calculate.flink.process_function;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
-import com.yanggu.metric_calculate.core.pojo.metric.Global;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
@@ -50,10 +49,6 @@ public class DataTableProcessFunction extends ProcessFunction<Model, Void> {
                 deriveConfigData.setUdafJarPathList(udafJarPathList);
                 ctx.output(new OutputTag<>(DERIVE_CONFIG, TypeInformation.of(DeriveConfigData.class)), deriveConfigData);
             });
-        }
-        List<Global> globalList = model.getGlobalList();
-        if (CollUtil.isNotEmpty(globalList)) {
-            //TODO 全局指标
         }
     }
 

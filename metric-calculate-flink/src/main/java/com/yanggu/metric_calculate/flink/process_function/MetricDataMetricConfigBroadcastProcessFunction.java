@@ -82,16 +82,6 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
                 readOnlyContext.output(new OutputTag<>(DERIVE, TypeInformation.of(DeriveCalculateData.class)), deriveCalculateData);
             }
         }
-
-        //全局指标
-        //List<Global> globalList = metricCalculate.getGlobal();
-        //if (CollUtil.isNotEmpty(globalList)) {
-        //    for (Global global : globalList) {
-        //        JSONObject clone = input.clone();
-        //        clone.set("globalId", global.getId());
-        //        readOnlyContext.output(new OutputTag<>("global"), clone);
-        //    }
-        //}
     }
 
     @Override

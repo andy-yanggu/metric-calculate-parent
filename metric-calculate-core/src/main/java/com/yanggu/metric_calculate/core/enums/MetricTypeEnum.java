@@ -26,10 +26,7 @@ public enum MetricTypeEnum {
      */
     COMPOSITE("复合指标"),
 
-    /**
-     * 全局指标
-     */
-    GLOBAL("全局指标");
+    ;
 
     /**
      * 指标类型名称

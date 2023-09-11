@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.calculate;
 
 import com.yanggu.metric_calculate.core.calculate.field.FieldCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
-import com.yanggu.metric_calculate.core.calculate.metric.GlobalMetricCalculate;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import lombok.Data;
@@ -36,11 +35,6 @@ public class MetricCalculate extends Model implements Serializable {
      * 派生指标计算类
      */
     private transient List<DeriveMetricCalculate> deriveMetricCalculateList;
-
-    /**
-     * 全局指标计算类
-     */
-    private transient List<GlobalMetricCalculate> globalMetricCalculateList;
 
     /**
      * 指标名称和指标类型映射
