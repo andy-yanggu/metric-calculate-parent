@@ -44,6 +44,7 @@ public enum ResultCode {
     DIMENSION_BINDING_MODEL_COLUMN_NOT_DELETE("10013", "维度字段绑定了宽表字段, 不能删除"),
     MODEL_HAS_DERIVE_NOT_DELETE("10014", "宽表下有派生指标不能删除"),
     AVIATOR_EXPRESS_PARAM_USE_AVIATOR_FUNCTION_INSTANCE_NOT_DELETE("10015", "Aviator表达式使用该实例不能删除"),
+    MODEL_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED("10016", "当宽表字段被派生指标使用时不允许修改或者删除"),
     ;
 
     private final String code;

@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,11 +27,13 @@ public class ModelDto extends BaseDto implements Serializable {
     /**
      * 宽表名称
      */
+    @NotBlank(message = "宽表名称不能为空")
     private String name;
 
     /**
      * 中文名称
      */
+    @NotBlank(message = "宽表中文名称不能为空")
     private String displayName;
 
     /**
@@ -45,16 +49,19 @@ public class ModelDto extends BaseDto implements Serializable {
     /**
      * 宽表字段列表
      */
+    @NotEmpty(message = "宽表字段列表不能为空")
     private List<ModelColumnDto> modelColumnList;
 
     /**
      * 时间字段列表
      */
+    @NotEmpty(message = "宽表时间字段列表不能为空")
     private List<ModelTimeColumnDto> modelTimeColumnList;
 
     /**
      * 维度字段列表
      */
+    @NotEmpty(message = "宽表维度字段列表不能为空")
     private List<ModelDimensionColumnDto> modelDimensionColumnList;
 
     /**

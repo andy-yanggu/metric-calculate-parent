@@ -6,19 +6,19 @@ import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
+import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
 import com.yanggu.metric_calculate.config.service.*;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
@@ -117,37 +117,87 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(ModelDto modelDto) {
-        //TODO 待完成修改接口
+
         Model updateModel = modelMapstruct.toEntity(modelDto);
-        //查询之前的宽表和下面的派生指标
-        Model dbModel = getModel(modelDto.getId());
-        List<Derive> deriveList = dbModel.getDeriveList();
-        //之前的时间字段
-        List<Integer> list = deriveList.stream()
-                .map(Derive::getModelTimeColumn)
-                .map(ModelTimeColumn::getModelColumnId)
-                .distinct()
-                .toList();
-
-        //之前的维度字段
-        List<Integer> list2 = deriveList.stream()
-                .map(Derive::getModelDimensionColumnList)
-                .flatMap(Collection::stream)
-                .map(ModelDimensionColumn::getModelColumnId)
-                .distinct()
-                .toList();
-
-        //所有使用的宽表字段
-
-
-        //处理时间字段
-        List<ModelTimeColumn> modelTimeColumnList = updateModel.getModelTimeColumnList();
-
-        //处理维度字段
-        List<ModelDimensionColumn> modelDimensionColumnList = updateModel.getModelDimensionColumnList();
-
         //检查name、displayName是否重复
         checkExist(updateModel);
+
+        //查询之前的宽表和下面的派生指标
+        Model dbModel = getModel(modelDto.getId());
+
+        //获取所有的派生指标
+        List<Derive> deriveList = dbModel.getDeriveList();
+        //如果宽表下没有派生指标, 直接修改即可
+        if (CollUtil.isEmpty(deriveList)) {
+            //更新宽表数据
+            updateById(updateModel, false);
+            //更新宽表字段
+            //modelColumnService
+            return;
+        }
+        //派生指标使用的宽表字段
+        Set<ModelColumn> usedModelColumnSet = deriveList.stream()
+                .map(DeriveMapstruct::getAviatorExpressParamFromDerive)
+                .filter(CollUtil::isNotEmpty)
+                .flatMap(Collection::stream)
+                .map(AviatorExpressParam::getModelColumnList)
+                .filter(CollUtil::isNotEmpty)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toSet());
+
+        //派生指标使用的时间字段
+        Set<ModelTimeColumn> useModelTimeColumnSet = new HashSet<>();
+        for (Derive derive : deriveList) {
+            ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
+            useModelTimeColumnSet.add(modelTimeColumn);
+            //添加时间字段对应的宽表字段
+            usedModelColumnSet.add(modelTimeColumn.getModelColumn());
+        }
+
+        //派生指标使用的维度字段
+        Set<ModelDimensionColumn> useModelDimensionColumnSet = new HashSet<>();
+        for (Derive derive : deriveList) {
+            List<ModelDimensionColumn> dimensionColumnList = derive.getModelDimensionColumnList();
+            for (ModelDimensionColumn modelDimensionColumn : dimensionColumnList) {
+                useModelDimensionColumnSet.add(modelDimensionColumn);
+                //添加维度字段对应的宽表字段
+                usedModelColumnSet.add(modelDimensionColumn.getModelColumn());
+            }
+        }
+
+        //处理宽表字段
+        List<ModelColumn> newModelColumnList = updateModel.getModelColumnList();
+        //处理时间字段
+        List<ModelTimeColumn> newModelTimeColumnList = updateModel.getModelTimeColumnList();
+        //处理维度字段
+        List<ModelDimensionColumn> newModelDimensionColumnList = updateModel.getModelDimensionColumnList();
+
+        //遍历新的宽表字段
+        for (ModelColumn newModelColumn : newModelColumnList) {
+            //如果派生指标使用的宽表字段被修改了, 直接报错
+            if (!usedModelColumnSet.contains(newModelColumn)) {
+                throw new BusinessException(MODEL_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED);
+            }
+        }
+
+        //遍历新的时间字段
+        for (ModelTimeColumn newModelTimeColumn : newModelTimeColumnList) {
+            //如果派生指标使用的时间字段被修改了, 直接报错
+            if (useModelTimeColumnSet.contains(newModelTimeColumn)) {
+
+            }
+        }
+
+        //遍历新的维度字段
+        for (ModelDimensionColumn newModelDimensionColumn : newModelDimensionColumnList) {
+            //如果派生指标使用的维度字段被修改了, 直接报错
+            if (!useModelDimensionColumnSet.contains(newModelDimensionColumn)) {
+
+            }
+        }
+
+        //修改宽表字段、时间字段、维度字段
+
         //更新宽表数据
         updateById(updateModel, false);
     }
@@ -191,15 +241,6 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         return modelMapstruct.toDTO(model);
     }
 
-    private Model getModel(Integer id) {
-        //根据主键查询, 同时关联查询其他表数据
-        Model model = modelMapper.selectOneWithRelationsById(id);
-        if (model == null) {
-            throw new BusinessException(MODEL_ID_ERROR);
-        }
-        return model;
-    }
-
     @Override
     public Page<ModelDto> pageData(Integer pageNumber, Integer pageSize, ModelQueryReq req) {
         QueryWrapper queryWrapper = buildModelQueryWrapper(req);
@@ -212,6 +253,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     public com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId) {
         Model model = TenantManager.withoutTenantCondition(() -> modelMapper.selectOneWithRelationsById(modelId));
         return modelMapstruct.toCoreModel(model);
+    }
+
+    @Override
+    public List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getAllCoreModel() {
+        List<Model> modelList = TenantManager.withoutTenantCondition(() -> modelMapper.selectAllWithRelations());
+        return modelMapstruct.toCoreModel(modelList);
     }
 
     /**
@@ -228,6 +275,15 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         if (count > 0) {
             throw new BusinessException(MODEL_EXIST);
         }
+    }
+
+    private Model getModel(Integer id) {
+        //根据主键查询, 同时关联查询其他表数据
+        Model model = modelMapper.selectOneWithRelationsById(id);
+        if (model == null) {
+            throw new BusinessException(MODEL_ID_ERROR);
+        }
+        return model;
     }
 
     private QueryWrapper buildModelQueryWrapper(ModelQueryReq req) {

@@ -42,4 +42,6 @@ public interface ModelService extends IService<Model> {
 
     com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId);
 
+    List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getAllCoreModel();
+
 }

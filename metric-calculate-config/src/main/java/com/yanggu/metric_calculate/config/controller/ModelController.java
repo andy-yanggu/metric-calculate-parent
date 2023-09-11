@@ -1,10 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.mybatisflex.core.tenant.TenantManager;
-import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Model;
 import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.ModelService;
@@ -23,9 +20,6 @@ public class ModelController {
 
     @Autowired
     private ModelService modelService;
-
-    @Autowired
-    private ModelMapstruct modelMapstruct;
 
     @PostMapping("/saveData")
     @Operation(summary = "新增数据明细宽表")
@@ -66,7 +60,7 @@ public class ModelController {
         return Result.ok(modelService.pageData(pageNumber, pageSize, req));
     }
 
-    @GetMapping("/toCoreModel/{modelId}")
+    @GetMapping("/getCoreModel/{modelId}")
     @Operation(summary = "转换成核心宽表", description = "转换成core包中的Model")
     public Result<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getCoreModel(@PathVariable Integer modelId) {
         return Result.ok(modelService.toCoreModel(modelId));
@@ -75,8 +69,7 @@ public class ModelController {
     @GetMapping("/allCoreModel")
     @Operation(summary = "转换所有核心宽表", description = "转换成core包中的Model")
     public Result<List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model>> getAllCoreModel() {
-        List<Model> modelList = TenantManager.withoutTenantCondition(() -> modelService.getMapper().selectAllWithRelations());
-        return Result.ok(modelMapstruct.toCoreModel(modelList));
+        return Result.ok(modelService.getAllCoreModel());
     }
 
 }
