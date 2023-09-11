@@ -27,6 +27,11 @@ public class AggregateFunctionParamDto extends BaseDto implements Serializable {
     private Integer aggregateFunctionId;
 
     /**
+     * 聚合函数
+     */
+    private AggregateFunctionDto aggregateFunction;
+
+    /**
      * 基本类型聚合函数参数
      */
     private BaseUdafParamDto baseUdafParam;

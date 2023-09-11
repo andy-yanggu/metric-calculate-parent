@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
+import com.yanggu.metric_calculate.config.pojo.dto.WindowParamDto;
 import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,7 +16,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
                 NodePatternMapstruct.class
         },
         componentModel = SPRING)
-public interface WindowParamMapstruct {
+public interface WindowParamMapstruct extends BaseMapstruct<WindowParamDto, WindowParam> {
 
     @Named("toCoreWindowParam")
     @Mapping(source = "modelTimeColumn", target = "timeColumn", qualifiedByName = {"ModelTimeColumnMapstruct", "toCoreTimeColumn"})

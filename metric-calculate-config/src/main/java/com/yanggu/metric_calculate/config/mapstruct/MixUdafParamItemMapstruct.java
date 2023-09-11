@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
+import com.yanggu.metric_calculate.config.pojo.dto.MixUdafParamItemDto;
 import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParamItem;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,7 +10,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("MixUdafParamItemMapstruct")
 @Mapper(uses = {BaseUdafParamMapstruct.class}, componentModel = SPRING)
-public interface MixUdafParamItemMapstruct {
+public interface MixUdafParamItemMapstruct extends BaseMapstruct<MixUdafParamItemDto, MixUdafParamItem> {
 
     @Named("toCoreMixUdafParamItem")
     @Mapping(source = "name", target = "name")

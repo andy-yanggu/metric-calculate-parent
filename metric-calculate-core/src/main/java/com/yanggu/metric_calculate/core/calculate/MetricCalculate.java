@@ -11,10 +11,10 @@ import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 指标计算类
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @EqualsAndHashCode(callSuper=false)
 public class MetricCalculate extends Model implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 9035602780530630814L;
 
     /**
@@ -100,7 +101,7 @@ public class MetricCalculate extends Model implements Serializable {
         }
         return deriveMetricCalculateList.stream()
                 .filter(tempDerive -> deriveIdList.contains(tempDerive.getId()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

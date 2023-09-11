@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.pojo.data_detail_table;
 
-import com.yanggu.metric_calculate.core.pojo.metric.Composite;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import lombok.Data;
 
@@ -42,11 +41,6 @@ public class Model {
      * 派生指标
      */
     private List<DeriveMetrics> deriveMetricsList;
-
-    /**
-     * 复合指标
-     */
-    private List<Composite> compositeList;
 
     /**
      * 自定义udf-jar的路径

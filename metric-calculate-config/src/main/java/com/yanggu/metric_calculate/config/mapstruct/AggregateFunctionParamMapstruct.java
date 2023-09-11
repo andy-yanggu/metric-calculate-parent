@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionParamDto;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,7 +26,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
                 MixUdafParamMapstruct.class
         },
         componentModel = SPRING)
-public interface AggregateFunctionParamMapstruct {
+public interface AggregateFunctionParamMapstruct extends BaseMapstruct<AggregateFunctionParamDto, AggregateFunctionParam> {
 
     @Named("toCoreAggregateFunctionParam")
     @Mapping(source = "aggregateFunction.name", target = "aggregateType")

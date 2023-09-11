@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
+import com.yanggu.metric_calculate.config.pojo.dto.BaseUdafParamDto;
 import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -9,7 +10,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("BaseUdafParamMapstruct")
 @Mapper(uses = {AviatorExpressParamMapstruct.class, FieldOrderParamMapstruct.class}, componentModel = SPRING)
-public interface BaseUdafParamMapstruct {
+public interface BaseUdafParamMapstruct extends BaseMapstruct<BaseUdafParamDto, BaseUdafParam> {
 
     @Named("toCoreBaseUdafParam")
     @Mapping(source = "aggregateFunction.name", target = "aggregateType")
