@@ -1,19 +1,28 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 /**
  * 去重计数单元测试类
  */
+@ExtendWith(MockitoExtension.class)
 class DistinctCountAggregateFunctionTest {
+
+    @Mock
+    private HashSet<Integer> mock;
 
     @Test
     void testMergeType() {
@@ -66,12 +75,11 @@ class DistinctCountAggregateFunctionTest {
     @Test
     void testGetResult() {
         DistinctCountAggregateFunction<Integer> distinctCount = new DistinctCountAggregateFunction<>();
-        HashSet<Integer> mock = Mockito.mock(HashSet.class);
-        Mockito.when(mock.size()).thenReturn(1);
+        when(mock.size()).thenReturn(1);
         Integer result = distinctCount.getResult(mock);
         assertEquals(Integer.valueOf(1), result);
         //验证依赖方法
-        Mockito.verify(mock, Mockito.times(1)).size();
+        verify(mock, times(1)).size();
     }
 
     @Test

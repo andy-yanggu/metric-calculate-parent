@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.pojo.aviator_express;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 @Data
 public class AviatorFunctionInstance implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 337965557491005190L;
 
     /**

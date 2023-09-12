@@ -6,6 +6,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Table(value = "map_udaf_param_distinct_field_list_relation")
 public class MapUdafParamDistinctFieldListRelation extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -2730189628091826115L;
 
     @Id(keyType = KeyType.Auto)

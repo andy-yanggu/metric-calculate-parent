@@ -6,6 +6,7 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam
 import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 public class WindowParam implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -4029143865929024435L;
 
     /**

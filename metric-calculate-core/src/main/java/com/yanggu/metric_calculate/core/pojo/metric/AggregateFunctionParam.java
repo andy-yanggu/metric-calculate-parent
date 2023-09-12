@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,7 @@ import java.io.Serializable;
 @Data
 public class AggregateFunctionParam implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 474654595932207481L;
 
     /**

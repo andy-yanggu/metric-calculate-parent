@@ -7,6 +7,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
 @Table("aviator_express_param_aviator_function_instance_relation")
 public class AviatorExpressParamAviatorFunctionInstanceRelation extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -1246393150898778928L;
 
     @Id(keyType = KeyType.Auto)

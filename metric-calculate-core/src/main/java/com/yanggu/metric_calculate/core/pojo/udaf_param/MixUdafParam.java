@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.pojo.udaf_param;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import java.util.Map;
 @Data
 public class MixUdafParam implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 6154062766089115154L;
 
     /**

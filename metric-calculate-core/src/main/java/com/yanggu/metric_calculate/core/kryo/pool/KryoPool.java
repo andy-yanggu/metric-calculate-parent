@@ -33,10 +33,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.TreeMap;
 
+/**
+ * Kryo池, 实例化kryo对象时默认注册一些类
+ */
 public class KryoPool extends Pool<Kryo> {
 
-    public KryoPool(boolean threadSafe, boolean softReferences, int maximumCapacity) {
-        super(threadSafe, softReferences, maximumCapacity);
+    public KryoPool(int maximumCapacity) {
+        super(true, true, maximumCapacity);
     }
 
     @Override

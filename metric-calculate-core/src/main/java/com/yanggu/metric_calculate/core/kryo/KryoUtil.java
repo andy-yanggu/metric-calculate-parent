@@ -18,11 +18,11 @@ public class KryoUtil {
     private KryoUtil() {
     }
 
-    private static KryoPool kryoPool = new KryoPool(true, true, 100);
+    private static KryoPool kryoPool = new KryoPool(100);
 
-    private static InputPool inputPool = new InputPool(true, true, 100);
+    private static InputPool inputPool = new InputPool(100);
 
-    private static OutputPool outputPool = new OutputPool(true, true, 100);
+    private static OutputPool outputPool = new OutputPool( 100);
 
     public static void init(KryoPool kryoPool, InputPool inputPool, OutputPool outputPool) {
         KryoUtil.kryoPool = kryoPool;

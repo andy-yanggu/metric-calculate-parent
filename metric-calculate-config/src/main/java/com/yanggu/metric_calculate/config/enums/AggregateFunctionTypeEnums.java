@@ -46,5 +46,4 @@ public enum AggregateFunctionTypeEnums {
         return NUMERICAL.equals(enums) || COLLECTIVE.equals(enums) || OBJECTIVE.equals(enums);
     }
 
-
 }

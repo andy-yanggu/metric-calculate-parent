@@ -3,11 +3,13 @@ package com.yanggu.metric_calculate.config.pojo.vo;
 import com.yanggu.metric_calculate.config.enums.ResultCode;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Data
 public class Result<T> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -6826494148838485626L;
 
     private boolean success;

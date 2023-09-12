@@ -45,6 +45,12 @@ public enum ResultCode {
     MODEL_HAS_DERIVE_NOT_DELETE("10014", "宽表下有派生指标不能删除"),
     AVIATOR_EXPRESS_PARAM_USE_AVIATOR_FUNCTION_INSTANCE_NOT_DELETE("10015", "Aviator表达式使用该实例不能删除"),
     MODEL_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED("10016", "当宽表字段被派生指标使用时不允许修改或者删除"),
+    MODEL_TIME_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED("10017", "当宽表时间字段被派生指标使用时不允许修改或者删除"),
+    MODEL_DIMENSION_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED("10018", "当宽表维度字段被派生指标使用时不允许修改或者删除"),
+    MODEL_COLUMN_NOT_DELETE_WHEN_DERIVE_USED("10019", "当宽表字段被派生指标使用时不允许删除"),
+    MODEL_COLUMN_NAME_NOT_UPDATE_WHEN_DERIVE_USED("10020", "当宽表字段被派生指标使用时字段名不允许修改"),
+    MODEL_COLUMN_DATA_TYPE_NOT_UPDATE_WHEN_DERIVE_USED("10021", "当宽表字段被派生指标使用时数据类型不允许修改"),
+    MODEL_COLUMN_FIELD_TYPE_NOT_UPDATE_WHEN_DERIVE_USED("10022", "当宽表字段被派生指标使用时类型不允许修改"),
     ;
 
     private final String code;

@@ -5,9 +5,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.io.Serial;
+
 @Data
 @EqualsAndHashCode(callSuper=false)
 public class BusinessException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = -3860832415337462879L;
 
     private final String code;
 

@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.mybatisflex.annotation.RelationOneToMany;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.enums.TimeUnitEnum;
 import lombok.Data;
@@ -63,7 +62,6 @@ public class WindowParamDto extends BaseDto implements Serializable {
     /**
      * 事件模式数据
      */
-    @RelationOneToMany(selfField = "id", targetField = "windowParamId", orderBy = "sort")
     private List<NodePatternDto> nodePatternList;
 
     /**

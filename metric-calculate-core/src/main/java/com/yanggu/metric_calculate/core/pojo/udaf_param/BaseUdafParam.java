@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrd
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
 @Data
 public class BaseUdafParam implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 8183085404842634515L;
 
     /**

@@ -41,7 +41,6 @@ public class AggregateFunctionField extends BaseEntity implements Serializable {
      */
     private String description;
 
-
     /**
      * 聚合函数id
      */

@@ -6,6 +6,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Table(value = "derive_window_param_relation")
 public class DeriveWindowParamRelation extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -3316886628350039521L;
 
     @Id(keyType = KeyType.Auto)

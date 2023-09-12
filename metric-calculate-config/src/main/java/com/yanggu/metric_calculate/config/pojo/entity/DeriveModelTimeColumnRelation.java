@@ -6,6 +6,7 @@ import com.mybatisflex.annotation.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Table(value = "derive_model_time_column_relation")
 public class DeriveModelTimeColumnRelation extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7410286289383498072L;
 
     @Id(keyType = KeyType.Auto)

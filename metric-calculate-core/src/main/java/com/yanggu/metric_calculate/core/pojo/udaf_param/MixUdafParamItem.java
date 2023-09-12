@@ -2,11 +2,13 @@ package com.yanggu.metric_calculate.core.pojo.udaf_param;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Data
 public class MixUdafParamItem implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -9143234002581892763L;
 
     /**

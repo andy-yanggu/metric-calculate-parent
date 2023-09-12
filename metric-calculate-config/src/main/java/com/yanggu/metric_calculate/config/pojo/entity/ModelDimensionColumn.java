@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,6 +15,7 @@ import java.io.Serializable;
 @Table(value = "model_dimension_column")
 public class ModelDimensionColumn extends BaseEntity implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 5538736519253522391L;
 
     /**

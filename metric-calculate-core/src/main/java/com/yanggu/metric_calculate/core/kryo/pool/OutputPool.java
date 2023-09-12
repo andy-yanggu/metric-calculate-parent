@@ -6,8 +6,8 @@ import com.esotericsoftware.kryo.util.Pool;
 
 public class OutputPool extends Pool<Output> {
 
-    public OutputPool(boolean threadSafe, boolean softReferences, int maximumCapacity) {
-        super(threadSafe, softReferences, maximumCapacity);
+    public OutputPool(int maximumCapacity) {
+        super(true, true, maximumCapacity);
     }
 
     @Override
