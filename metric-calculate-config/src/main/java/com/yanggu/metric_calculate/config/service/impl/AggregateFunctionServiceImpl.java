@@ -82,9 +82,6 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
             AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
             aggregateFunctionFactory.init();
             Class<? extends com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction> aggregateFunctionClass = aggregateFunctionFactory.getAggregateFunctionClass(aggregateFunctionDto.getName());
-            if (aggregateFunctionClass == null) {
-                throw new BusinessException(BUILT_IN_AGGREGATE_FUNCTION_NOT_HAVE);
-            }
             aggregateFunction = buildAggregateFunction(aggregateFunctionClass);
             aggregateFunction.setIsBuiltIn(true);
         } else {
@@ -111,11 +108,10 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         //文件保存到本地
         File dest = new File(SystemUtil.getTmpDirPath() + File.separatorChar + IdUtil.fastSimpleUUID());
         file.transferTo(dest);
-        List<String> udafJarPathList = Collections.singletonList(dest.getAbsolutePath());
         List<AggregateFunction> aggregateFunctionList = new ArrayList<>();
         Consumer<Class<?>> consumer = clazz -> aggregateFunctionList.add(buildAggregateFunction(clazz));
         //加载class到list中
-        FunctionFactory.loadClassFromJar(udafJarPathList, CLASS_FILTER, consumer);
+        FunctionFactory.loadClassFromJar(Collections.singletonList(dest.getAbsolutePath()), CLASS_FILTER, consumer);
         if (CollUtil.isEmpty(aggregateFunctionList)) {
             throw new BusinessException(JAR_NOT_HAVE_CLASS);
         }
@@ -135,7 +131,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(AggregateFunctionDto aggregateFunctionDto) {
         AggregateFunction aggregateFunction = UpdateEntity.of(AggregateFunction.class, aggregateFunctionDto.getId());
-        //允许修改和description
+        //只允许修改description
         aggregateFunction.setDescription(aggregateFunctionDto.getDescription());
         aggregateFunctionMapper.update(aggregateFunction);
     }
@@ -177,16 +173,16 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     }
 
     @Override
-    public AggregateFunctionDto queryById(Integer id) {
-        AggregateFunction aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
-        return aggregateFunctionMapstruct.toDTO(aggregateFunction);
-    }
-
-    @Override
     public List<AggregateFunctionDto> listData(AggregateFunctionQueryReq queryReq) {
         QueryWrapper where = buildAggregateFunctionQueryWrapper(queryReq);
         List<AggregateFunction> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
         return aggregateFunctionMapstruct.toDTO(aggregateFunctionList);
+    }
+
+    @Override
+    public AggregateFunctionDto queryById(Integer id) {
+        AggregateFunction aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
+        return aggregateFunctionMapstruct.toDTO(aggregateFunction);
     }
 
     @Override

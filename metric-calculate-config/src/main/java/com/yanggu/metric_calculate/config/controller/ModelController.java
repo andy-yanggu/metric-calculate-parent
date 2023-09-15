@@ -35,6 +35,13 @@ public class ModelController {
         return Result.ok();
     }
 
+    @PutMapping("/updateOtherData")
+    @Operation(summary = "修改其他数据", description = "修改宽表字段、维度字段、时间字段")
+    public Result<Void> updateOtherData(@RequestBody ModelDto modelDto) {
+        modelService.updateOtherData(modelDto);
+        return Result.ok();
+    }
+
     @DeleteMapping("/remove/{id}")
     @Operation(summary = "删除数据明细宽表")
     public Result<Void> remove(@PathVariable Integer id) {

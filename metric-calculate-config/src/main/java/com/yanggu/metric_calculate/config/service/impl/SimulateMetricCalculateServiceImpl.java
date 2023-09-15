@@ -37,7 +37,9 @@ public class SimulateMetricCalculateServiceImpl implements SimulateMetricCalcula
         return deriveMetricCalculate(input, modelId, deriveId, function);
     }
 
-    private <R> DeriveMetricCalculateResult<R> deriveMetricCalculate(JSONObject input, Integer modelId, Integer deriveId,
+    private <R> DeriveMetricCalculateResult<R> deriveMetricCalculate(JSONObject input,
+                                                                     Integer modelId,
+                                                                     Integer deriveId,
                                                                      BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function) {
         //获取核心宽表类
         Model coreModel = modelService.toCoreModel(modelId);

@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.pojo.dto.ModelColumnDto;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
 import com.yanggu.metric_calculate.config.pojo.entity.Model;
 import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
@@ -25,6 +26,11 @@ public interface ModelService extends IService<Model> {
      * @param modelDto
      */
     void updateData(ModelDto modelDto);
+
+    /**
+     * 修改其他数据
+     */
+    void updateOtherData(ModelDto modelDto);
 
     void deleteById(Integer id);
 

@@ -19,8 +19,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static com.yanggu.metric_calculate.config.enums.ModelColumnFieldType.VIRTUAL;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveTableDef.DERIVE;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelColumnTableDef.MODEL_COLUMN;
@@ -117,22 +119,26 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(ModelDto modelDto) {
-
         Model updateModel = modelMapstruct.toEntity(modelDto);
+
         //检查name、displayName是否重复
         checkExist(updateModel);
 
+        //更新宽表数据
+        updateById(updateModel, false);
+    }
+
+    //TODO 待完成修改宽表接口
+    @Override
+    public void updateOtherData(ModelDto modelDto) {
+        Model updateModel = modelMapstruct.toEntity(modelDto);
         //查询之前的宽表和下面的派生指标
         Model dbModel = getModel(modelDto.getId());
 
         //获取所有的派生指标
         List<Derive> deriveList = dbModel.getDeriveList();
-        //如果宽表下没有派生指标, 直接修改即可
+        //如果宽表下没有派生指标, 直接修改
         if (CollUtil.isEmpty(deriveList)) {
-            //更新宽表数据
-            updateById(updateModel, false);
-            //更新宽表字段
-            //modelColumnService
             return;
         }
         //派生指标使用的宽表字段
@@ -147,16 +153,13 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
         //派生指标使用的时间字段
         Set<ModelTimeColumn> useModelTimeColumnSet = new HashSet<>();
+        //派生指标使用的维度字段
+        Set<ModelDimensionColumn> useModelDimensionColumnSet = new HashSet<>();
         for (Derive derive : deriveList) {
             ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
             useModelTimeColumnSet.add(modelTimeColumn);
             //添加时间字段对应的宽表字段
             usedModelColumnSet.add(modelTimeColumn.getModelColumn());
-        }
-
-        //派生指标使用的维度字段
-        Set<ModelDimensionColumn> useModelDimensionColumnSet = new HashSet<>();
-        for (Derive derive : deriveList) {
             List<ModelDimensionColumn> dimensionColumnList = derive.getModelDimensionColumnList();
             for (ModelDimensionColumn modelDimensionColumn : dimensionColumnList) {
                 useModelDimensionColumnSet.add(modelDimensionColumn);
@@ -172,11 +175,36 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         //处理维度字段
         List<ModelDimensionColumn> newModelDimensionColumnList = updateModel.getModelDimensionColumnList();
 
-        //遍历新的宽表字段
-        for (ModelColumn newModelColumn : newModelColumnList) {
-            //如果派生指标使用的宽表字段被修改了, 直接报错
-            if (!usedModelColumnSet.contains(newModelColumn)) {
-                throw new BusinessException(MODEL_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED);
+        Map<Integer, ModelColumn> collect = newModelColumnList.stream()
+                .filter(temp -> temp.getId() != null)
+                .collect(Collectors.toUnmodifiableMap(ModelColumn::getId, Function.identity()));
+        List<ModelColumn> updateModelColumnList = new ArrayList<>();
+        for (ModelColumn usedModelColumn : usedModelColumnSet) {
+            //如果派生指标使用的宽表字段被删除了直接报错
+            ModelColumn updateModelColumn = collect.get(usedModelColumn.getId());
+            if (updateModelColumn == null) {
+                throw new BusinessException(MODEL_COLUMN_NOT_DELETE_WHEN_DERIVE_USED);
+            }
+            //如果宽表字段没有被修改过, 直接跳过
+            if (updateModelColumn.equals(usedModelColumn)) {
+                continue;
+            }
+            //宽表字段名不允许修改
+            if (!StrUtil.equals(updateModelColumn.getName(), usedModelColumn.getName())) {
+                throw new BusinessException(MODEL_COLUMN_NAME_NOT_UPDATE_WHEN_DERIVE_USED);
+            }
+            //宽表字段数据类型不允许修改
+            if (!updateModelColumn.getDataType().equals(usedModelColumn.getDataType())) {
+                throw new BusinessException(MODEL_COLUMN_DATA_TYPE_NOT_UPDATE_WHEN_DERIVE_USED);
+            }
+            //宽表字段类型不允许修改
+            if (!updateModelColumn.getFieldType().equals(usedModelColumn.getFieldType())) {
+                throw new BusinessException(MODEL_COLUMN_FIELD_TYPE_NOT_UPDATE_WHEN_DERIVE_USED);
+            }
+            //如果之前和现在宽表字段都是虚拟字段, 那么表达式不允许修改
+            if (VIRTUAL.equals(updateModelColumn.getDataType())
+                    && !usedModelColumn.getAviatorExpressParam().equals(updateModelColumn.getAviatorExpressParam())) {
+
             }
         }
 
@@ -184,7 +212,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         for (ModelTimeColumn newModelTimeColumn : newModelTimeColumnList) {
             //如果派生指标使用的时间字段被修改了, 直接报错
             if (useModelTimeColumnSet.contains(newModelTimeColumn)) {
-
+                throw new BusinessException(MODEL_TIME_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED);
             }
         }
 
@@ -192,14 +220,11 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         for (ModelDimensionColumn newModelDimensionColumn : newModelDimensionColumnList) {
             //如果派生指标使用的维度字段被修改了, 直接报错
             if (!useModelDimensionColumnSet.contains(newModelDimensionColumn)) {
-
+                throw new BusinessException(MODEL_DIMENSION_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED);
             }
         }
 
         //修改宽表字段、时间字段、维度字段
-
-        //更新宽表数据
-        updateById(updateModel, false);
     }
 
     @Override

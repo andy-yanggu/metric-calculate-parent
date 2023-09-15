@@ -96,10 +96,9 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
     public void jarSave(MultipartFile file) throws Exception {
         File dest = new File(SystemUtil.getTmpDirPath() + File.separatorChar + IdUtil.fastSimpleUUID());
         file.transferTo(dest);
-        List<String> jarPathList = Collections.singletonList(dest.getAbsolutePath());
         List<AviatorFunction> aviatorFunctionList = new ArrayList<>();
         Consumer<Class<?>> consumer = clazz -> aviatorFunctionList.add(buildAviatorFunction(clazz));
-        FunctionFactory.loadClassFromJar(jarPathList, CLASS_FILTER, consumer);
+        FunctionFactory.loadClassFromJar(Collections.singletonList(dest.getAbsolutePath()), CLASS_FILTER, consumer);
         if (CollUtil.isEmpty(aviatorFunctionList)) {
             return;
         }
@@ -203,7 +202,7 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
     private void checkExist(AviatorFunction aviatorFunction) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
-                .where(AVIATOR_FUNCTION.ID.ne(aviatorFunction.getId()).when(aviatorFunction.getId() != null))
+                .where(AVIATOR_FUNCTION.ID.ne(aviatorFunction.getId()))
                 .and(AVIATOR_FUNCTION.NAME.eq(aviatorFunction.getName()).or(AVIATOR_FUNCTION.DISPLAY_NAME.eq(aviatorFunction.getDisplayName())));
         long count;
         //内置的Aviator函数不需要where userId

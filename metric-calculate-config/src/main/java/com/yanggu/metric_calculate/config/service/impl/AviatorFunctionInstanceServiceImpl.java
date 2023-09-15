@@ -40,6 +40,8 @@ public class AviatorFunctionInstanceServiceImpl extends ServiceImpl<AviatorFunct
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AviatorFunctionInstanceDto aviatorFunctionInstanceDto) {
         AviatorFunctionInstance aviatorFunctionInstance = aviatorFunctionInstanceMapstruct.toEntity(aviatorFunctionInstanceDto);
+        //检查aviatorFunctionId是否存在
+        //检查param参数是否和字段定义匹配
         super.save(aviatorFunctionInstance);
     }
 
@@ -77,7 +79,9 @@ public class AviatorFunctionInstanceServiceImpl extends ServiceImpl<AviatorFunct
     }
 
     @Override
-    public Page<AviatorFunctionInstanceDto> pageData(Integer pageNumber, Integer pageSize, AviatorFunctionInstanceQueryReq req) {
+    public Page<AviatorFunctionInstanceDto> pageData(Integer pageNumber,
+                                                     Integer pageSize,
+                                                     AviatorFunctionInstanceQueryReq req) {
         QueryWrapper queryWrapper = buildQueryWrapper(req);
         Page<AviatorFunctionInstance> page = aviatorFunctionInstanceMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
         List<AviatorFunctionInstanceDto> list = aviatorFunctionInstanceMapstruct.toDTO(page.getRecords());
