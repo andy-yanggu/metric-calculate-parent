@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_order;
 
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.core.comparator.ComparatorChain;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,8 +19,7 @@ class MultiFieldOrderCompareKeyTest {
         multiFieldOrderCompareKey2.setDataList(ListUtil.of(1, 30));
 
         List<Boolean> booleanList = ListUtil.of(true, false);
-        ComparatorChain<List<Object>> comparatorChain = MultiFieldOrderCompareKey.getComparatorChain(booleanList);
-        multiFieldOrderCompareKey1.setComparatorChain(comparatorChain);
+        multiFieldOrderCompareKey1.setBooleanList(booleanList);
         int i = multiFieldOrderCompareKey1.compareTo(multiFieldOrderCompareKey2);
         //assertEquals(1, i);
     }

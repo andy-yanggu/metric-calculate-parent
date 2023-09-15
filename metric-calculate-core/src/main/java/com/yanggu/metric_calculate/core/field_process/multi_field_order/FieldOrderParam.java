@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class FieldOrderParam implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7805565551770455038L;
 
     private AviatorExpressParam aviatorExpressParam;

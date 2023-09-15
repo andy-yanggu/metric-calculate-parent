@@ -54,4 +54,11 @@ public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         return globalWindow;
     }
 
+    @Override
+    public String toString() {
+        return "GlobalWindow{" +
+                "accumulator=" + accumulator +
+                '}';
+    }
+
 }

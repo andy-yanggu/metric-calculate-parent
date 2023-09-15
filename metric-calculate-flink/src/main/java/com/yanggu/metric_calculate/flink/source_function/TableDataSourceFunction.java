@@ -8,6 +8,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpUtil;
 import org.dromara.hutool.json.JSONUtil;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 @Data
 public class TableDataSourceFunction extends RichSourceFunction<Model> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 6954978801103140496L;
 
     private volatile boolean flag = true;

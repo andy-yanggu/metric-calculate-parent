@@ -8,6 +8,8 @@ import org.dromara.hutool.core.comparator.FuncComparator;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 /**
@@ -19,7 +21,9 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
 
     private List<Object> dataList;
 
-    private ComparatorChain<List<Object>> comparatorChain;
+    private List<Boolean> booleanList;
+
+    private static final Map<List<Boolean>, ComparatorChain<List<Object>>> CACHE_COMPARATOR_CHAIN = new ConcurrentHashMap<>();
 
     public MultiFieldOrderCompareKey(List<Object> dataList) {
         this.dataList = dataList;
@@ -27,10 +31,8 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
 
     @Override
     public int compareTo(@NonNull MultiFieldOrderCompareKey that) {
-        if (this.comparatorChain == null) {
-            this.comparatorChain = that.comparatorChain;
-        }
-        return this.comparatorChain.compare(this.dataList, that.dataList);
+        ComparatorChain<List<Object>> comparatorChain = getComparatorChain(booleanList);
+        return comparatorChain.compare(this.dataList, that.dataList);
     }
 
     @Override
@@ -53,7 +55,11 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
     }
 
     public static ComparatorChain<List<Object>> getComparatorChain(List<Boolean> booleanList) {
-        ComparatorChain<List<Object>> comparatorChain = new ComparatorChain<>();
+        ComparatorChain<List<Object>> comparatorChain = CACHE_COMPARATOR_CHAIN.get(booleanList);
+        if (comparatorChain != null) {
+            return comparatorChain;
+        }
+        comparatorChain = new ComparatorChain<>();
         for (int i = 0; i < booleanList.size(); i++) {
             Boolean result = booleanList.get(i);
             int finalIndex = i;
@@ -69,6 +75,7 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
             }
             comparatorChain.addComparator(tempComparator);
         }
+        CACHE_COMPARATOR_CHAIN.put(booleanList, comparatorChain);
         return comparatorChain;
     }
 

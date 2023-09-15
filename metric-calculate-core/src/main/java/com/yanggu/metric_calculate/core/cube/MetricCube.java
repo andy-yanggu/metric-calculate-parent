@@ -113,4 +113,9 @@ public class MetricCube<IN, ACC, OUT> {
         deriveMetricCalculateResult.setDimensionMap(dimensionSet.getDimensionMap());
     }
 
+    @Override
+    public String toString() {
+        return "MetricCube{DimensionSet: " + dimensionSet.getRealKey() + ", window: " + window.toString() + "}";
+    }
+
 }

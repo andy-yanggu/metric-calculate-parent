@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoCollectionSerializer;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.List;
  */
 public class MultiFieldOrderCompareKeySerializer extends Serializer<MultiFieldOrderCompareKey> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5875701121165212922L;
 
     private KryoCollectionSerializer<List> listCollectionSerializer = new KryoCollectionSerializer<>();
@@ -23,12 +25,14 @@ public class MultiFieldOrderCompareKeySerializer extends Serializer<MultiFieldOr
     @Override
     public void write(Kryo kryo, Output output, MultiFieldOrderCompareKey multiFieldOrderCompareKey) {
         listCollectionSerializer.write(kryo, output, multiFieldOrderCompareKey.getDataList());
+        listCollectionSerializer.write(kryo, output, multiFieldOrderCompareKey.getBooleanList());
     }
 
     @Override
     public MultiFieldOrderCompareKey read(Kryo kryo, Input input, Class<? extends MultiFieldOrderCompareKey> type) {
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
         multiFieldOrderCompareKey.setDataList(listCollectionSerializer.read(kryo, input, ArrayList.class));
+        multiFieldOrderCompareKey.setBooleanList(listCollectionSerializer.read(kryo, input, ArrayList.class));
         return multiFieldOrderCompareKey;
     }
 

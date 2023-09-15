@@ -15,13 +15,12 @@ import com.yanggu.metric_calculate.core.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.util.KeyValue;
 import com.yanggu.metric_calculate.core.window.*;
-import com.yanggu.metric_calculate.flink.operator.NoKeyProcessTimeMiniBatchOperator;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
 import com.yanggu.metric_calculate.flink.pojo.DeriveConfigData;
-import com.yanggu.metric_calculate.flink.process_function.*;
-import com.yanggu.metric_calculate.flink.source_function.TableDataSourceFunction;
+import com.yanggu.metric_calculate.flink.process_function.DataTableProcessFunction;
+import com.yanggu.metric_calculate.flink.process_function.KeyedBatchDeriveBroadcastProcessFunction;
+import com.yanggu.metric_calculate.flink.process_function.MetricDataMetricConfigBroadcastProcessFunction;
 import org.apache.flink.api.common.state.MapStateDescriptor;
-import org.apache.flink.api.common.typeinfo.TypeHint;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.configuration.RestOptions;
@@ -31,33 +30,42 @@ import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.OutputTag;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
+import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Tuple;
+import org.dromara.hutool.json.JSONUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TreeMap;
 
 import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE;
 import static com.yanggu.metric_calculate.flink.util.Constant.DERIVE_CONFIG;
 import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.deriveMapStateDescriptor;
+import static org.apache.flink.api.common.RuntimeExecutionMode.BATCH;
 
 /**
- * 指标计算flink程序
+ * 指标批计算flink程序
+ * <p>需要重新编写源和处理函数</p>
+ * <p>如果一个作业有多个源, 只要有一个源是无界的, 那么该作业是流作业</p>
+ * <p>否则是批作业</p>
  */
-public class MetricCalculateFlinkJob {
+public class MetricCalculateFlinkBatchJob {
 
     public static void main(String[] args) throws Exception {
         //启动一个webUI，指定本地WEB-UI端口号
         Configuration configuration = new Configuration();
         configuration.setInteger(RestOptions.PORT, 8081);
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment(configuration);
+        //批处理模式
+        env.setRuntimeMode(BATCH);
         env.setParallelism(1);
 
         //强制使用kryo
         env.getConfig().enableForceKryo();
-        
+
         //添加Table序列化和反序列化器
         env.registerTypeWithKryoSerializer(TumblingTimeWindow.class, new TumblingTimeWindowSerializer<>());
         env.registerTypeWithKryoSerializer(GlobalWindow.class, new GlobalWindowSerializer<>());
@@ -84,7 +92,8 @@ public class MetricCalculateFlinkJob {
         env.registerTypeWithKryoSerializer(MetricCube.class, new MetricCubeSerializer<>());
 
         //数据明细宽表配置流
-        DataStreamSource<Model> tableSourceDataStream = env.addSource(new TableDataSourceFunction(), "Table-Source");
+        String jsonString = FileUtil.readUtf8String("mock_metric_config/1.json");
+        DataStreamSource<Model> tableSourceDataStream = env.fromElements(JSONUtil.toBean(jsonString, Model.class));
 
         //分流出派生指标配置流和全局指标配置流
         SingleOutputStreamOperator<Void> tableConfigDataStream = tableSourceDataStream.process(new DataTableProcessFunction());
@@ -98,55 +107,23 @@ public class MetricCalculateFlinkJob {
         BroadcastStream<Model> tableSourceBroadcast = tableSourceDataStream
                 .broadcast(new MapStateDescriptor<>("Model", Long.class, Model.class));
 
-        //KafkaSource<String> kafkaSource = KafkaSource.<String>builder()
-        //        .setBootstrapServers("172.20.7.143:9092")
-        //        .setGroupId("metric-calculate")
-        //        .setTopics("metric-calculate")
-        //        .build();
+        List<String> jsonList = FileUtil.readUtf8Lines("data.txt");
 
-        SingleOutputStreamOperator<Void> dataStream = env
-                //.fromSource(kafkaSource, WatermarkStrategy.noWatermarks(), "Kafka-Source")
+        env
                 //宽表数据流
-                .socketTextStream("localhost", 6666)
+                .fromCollection(jsonList)
                 .connect(tableSourceBroadcast)
                 //分流出派生指标数据流和全局指标数据流
-                .process(new MetricDataMetricConfigBroadcastProcessFunction());
-
-        //攒批读组件
-        TypeInformation<DeriveCalculateData> deriveCalculateDataTypeInformation = TypeInformation.of(DeriveCalculateData.class);
-        NoKeyProcessTimeMiniBatchOperator<DeriveCalculateData> deriveNoKeyProcessTimeMiniBatchOperator = new NoKeyProcessTimeMiniBatchOperator<>();
-        deriveNoKeyProcessTimeMiniBatchOperator.setElementTypeInfo(deriveCalculateDataTypeInformation);
-        BatchReadProcessFunction batchReadProcessFunction = new BatchReadProcessFunction();
-
-        //攒批写组件
-        NoKeyProcessTimeMiniBatchOperator<MetricCube> deriveNoKeyProcessTimeMiniBatchOperator2 = new NoKeyProcessTimeMiniBatchOperator<>();
-        deriveNoKeyProcessTimeMiniBatchOperator2.setElementTypeInfo(TypeInformation.of(MetricCube.class));
-
-        //派生指标数据流
-        dataStream
-                //分流出派生指标数据
-                .getSideOutput(new OutputTag<>(DERIVE, deriveCalculateDataTypeInformation))
-                //攒批读组件
-                .transform("DeriveMetrics Batch Read Operator", TypeInformation.of(new TypeHint<>() {}), deriveNoKeyProcessTimeMiniBatchOperator)
-                //批读
-                .process(batchReadProcessFunction)
-                //根据维度进行keyBy
+                .process(new MetricDataMetricConfigBroadcastProcessFunction())
+                .getSideOutput(new OutputTag<>(DERIVE, TypeInformation.of(DeriveCalculateData.class)))
+                //根据DimensionSet进行keyBy
                 .keyBy(DeriveCalculateData::getDimensionSet)
                 //连接派生指标配置流
                 .connect(deriveBroadcastStream)
-                //计算派生指标
-                .process(new KeyedDeriveBroadcastProcessFunction())
-                //攒批写组件
-                .transform("DeriveMetrics Batch Update Operator", TypeInformation.of(new TypeHint<>() {}), deriveNoKeyProcessTimeMiniBatchOperator2)
-                //批写
-                .process(new BatchWriteProcessFunction())
-                //连接派生指标配置流
-                .connect(deriveBroadcastStream)
-                //返回计算后的数据
-                .process(new DeriveBroadcastProcessFunction())
-                .print("derive-result>>>");
+                .process(new KeyedBatchDeriveBroadcastProcessFunction())
+                .print("print>>>>");
 
-        env.execute("指标计算服务");
+        env.execute("批指标计算服务");
     }
 
 }

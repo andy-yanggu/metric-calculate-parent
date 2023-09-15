@@ -44,6 +44,11 @@
             <artifactId>flink-test-utils</artifactId>
             <scope>test</scope>
         </dependency>
+        <!-- 目前hutool的HttpUtil工具类有bug, 使用apache的组件替换默认的jdk-http -->
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

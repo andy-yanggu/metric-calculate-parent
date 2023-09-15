@@ -7,13 +7,11 @@ import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.comparator.ComparatorChain;
 import org.dromara.hutool.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 多字段排序字段处理器
@@ -30,7 +28,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
-    private ComparatorChain<List<Object>> comparatorChain;
+    private List<Boolean> booleanList;
 
     public MultiFieldOrderFieldProcessor(Map<String, Class<?>> fieldMap,
                                          List<FieldOrderParam> fieldOrderParamList,
@@ -56,14 +54,11 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
 
         this.metricFieldProcessorList = fieldOrderParamList.stream()
                 .map(tempFieldOrderParam -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempFieldOrderParam.getAviatorExpressParam(), aviatorFunctionFactory))
-                .collect(Collectors.toList());
+                .toList();
 
-        List<Boolean> collect = fieldOrderParamList.stream()
+        this.booleanList = fieldOrderParamList.stream()
                 .map(FieldOrderParam::getIsAsc)
-                .collect(Collectors.toList());
-
-        //合并多个比较器
-        this.comparatorChain = MultiFieldOrderCompareKey.getComparatorChain(collect);
+                .toList();
     }
 
     @Override
@@ -77,7 +72,7 @@ public class MultiFieldOrderFieldProcessor implements FieldProcessor<JSONObject,
         }
         MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
         multiFieldOrderCompareKey.setDataList(dataList);
-        multiFieldOrderCompareKey.setComparatorChain(comparatorChain);
+        multiFieldOrderCompareKey.setBooleanList(booleanList);
         return multiFieldOrderCompareKey;
     }
 

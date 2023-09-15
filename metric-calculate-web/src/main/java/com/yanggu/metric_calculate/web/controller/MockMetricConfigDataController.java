@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.FileFilter;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @Tag(name = "模拟指标配置数据")
@@ -28,7 +27,7 @@ public class MockMetricConfigDataController {
 
     private static final String SUFFIX = ".json";
 
-    private final FileFilter fileFilter = pathname -> pathname.getName().endsWith(SUFFIX);
+    private static final FileFilter FILE_FILTER = pathname -> pathname.getName().endsWith(SUFFIX);
 
     /**
      * 返回mock_metric_config目录下的json配置文件
@@ -46,19 +45,19 @@ public class MockMetricConfigDataController {
     @Operation(summary = "获取所有宽表id")
     @GetMapping("/all-id")
     public List<Long> getAllTableId() {
-        return FileUtil.loopFiles("mock_metric_config", fileFilter)
+        return FileUtil.loopFiles("mock_metric_config", FILE_FILTER)
                 .stream()
                 .map(file -> Long.parseLong(file.getName().split("\\.")[0]))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Operation(summary = "所有宽表数据")
     @GetMapping("/all-data")
     public List<Model> allTableData() {
-        return FileUtil.loopFiles("mock_metric_config", fileFilter)
+        return FileUtil.loopFiles("mock_metric_config", FILE_FILTER)
                 .stream()
                 .map(file -> JSONUtil.toBean(FileUtil.readUtf8String(file), Model.class))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Operation(summary = "所有派生指标数据")

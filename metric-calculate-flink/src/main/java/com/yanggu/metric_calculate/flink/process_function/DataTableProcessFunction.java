@@ -35,7 +35,6 @@ public class DataTableProcessFunction extends ProcessFunction<Model, Void> {
         MetricCalculate metricCalculate = BeanUtil.copyProperties(model, MetricCalculate.class);
         MetricUtil.setFieldMap(metricCalculate);
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
-        Long tableId = metricCalculate.getId();
         List<String> aviatorFunctionJarPathList = metricCalculate.getAviatorFunctionJarPathList();
         List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
 
