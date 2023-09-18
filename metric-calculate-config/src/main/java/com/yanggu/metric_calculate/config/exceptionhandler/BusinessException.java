@@ -8,7 +8,7 @@ import org.dromara.hutool.core.text.StrUtil;
 import java.io.Serial;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class BusinessException extends RuntimeException {
 
     @Serial
@@ -17,12 +17,6 @@ public class BusinessException extends RuntimeException {
     private final String code;
 
     private final String message;
-
-    public BusinessException(String code, String message, Object... params) {
-        super(StrUtil.format(message, params));
-        this.code = code;
-        this.message = StrUtil.format(message, params);
-    }
 
     public BusinessException(ResultCode resultCode, Object... params) {
         super(StrUtil.format(resultCode.getMessage(), params));

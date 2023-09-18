@@ -12,6 +12,12 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(uses = {BaseUdafParamMapstruct.class}, componentModel = SPRING)
 public interface MixUdafParamItemMapstruct extends BaseMapstruct<MixUdafParamItemDto, MixUdafParamItem> {
 
+    /**
+     * 转换成core中的MixUdafParamItem
+     *
+     * @param mixUdafParamItem
+     * @return
+     */
     @Named("toCoreMixUdafParamItem")
     @Mapping(source = "name", target = "name")
     @Mapping(source = "sort", target = "sort")

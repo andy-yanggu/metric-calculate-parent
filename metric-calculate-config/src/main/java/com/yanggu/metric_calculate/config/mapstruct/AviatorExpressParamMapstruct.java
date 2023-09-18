@@ -20,11 +20,23 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(uses = {AviatorFunctionInstanceMapstruct.class}, componentModel = SPRING)
 public interface AviatorExpressParamMapstruct extends BaseMapstruct<AviatorExpressParamDto, AviatorExpressParam> {
 
+    /**
+     * 转换成core中的AviatorExpressParam
+     *
+     * @param param
+     * @return
+     */
     @Named("toCoreAviatorExpressParam")
     @Mapping(source = "express", target = "express")
     @Mapping(source = "aviatorFunctionInstanceList", target = "aviatorFunctionInstanceList", qualifiedByName = {"AviatorFunctionInstanceMapstruct", "toCoreInstance"})
     com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam toCoreAviatorExpressParam(AviatorExpressParam param);
 
+    /**
+     * 从AviatorExpressParam表达式中获取自定义的aviator函数jar包路径
+     *
+     * @param aviatorExpressParamList
+     * @return
+     */
     static List<String> getAviatorFunctionJarPathList(List<AviatorExpressParam> aviatorExpressParamList) {
         return aviatorExpressParamList.stream()
                 .map(AviatorExpressParam::getAviatorFunctionInstanceList)

@@ -12,6 +12,12 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(uses = {AviatorExpressParamMapstruct.class, MixUdafParamItemMapstruct.class}, componentModel = SPRING)
 public interface MixUdafParamMapstruct extends BaseMapstruct<MixUdafParamDto, MixUdafParam> {
 
+    /**
+     * 转换成core中的MixUdafParam
+     *
+     * @param mixUdafParam
+     * @return
+     */
     @Named("toCoreMixUdafParam")
     @Mapping(source = "aggregateFunction.name", target = "aggregateType")
     @Mapping(source = "mixUdafParamItemList", target = "mixUdafParamItemList", qualifiedByName = {"MixUdafParamItemMapstruct", "toCoreMixUdafParamItem"})

@@ -91,6 +91,11 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         //保存派生指标
         deriveMapper.insertSelective(derive);
 
+        //保存关联数据
+        saveRelation(derive);
+    }
+
+    private void saveRelation(Derive derive) throws Exception {
         //保存维度
         List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
         AtomicInteger index = new AtomicInteger(0);
@@ -146,14 +151,21 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(DeriveDto deriveDto) throws Exception {
+        Derive updateDerive = deriveMapstruct.toEntity(deriveDto);
+
+        //检查name和displayName是否重复
+        checkExist(updateDerive);
+
+        //更新派生指标基本数据
+        deriveMapper.update(updateDerive, false);
+
         //查询一下数据库中的派生指标
         Derive dbDerive = getDeriveById(deriveDto.getId());
-
         //删除关联数据
         deleteRelation(dbDerive);
 
         //新增关联数据
-        saveData(deriveDto);
+        saveRelation(updateDerive);
     }
 
     @Override

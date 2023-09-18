@@ -12,6 +12,12 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(uses = {AviatorExpressParamMapstruct.class, FieldOrderParamMapstruct.class}, componentModel = SPRING)
 public interface BaseUdafParamMapstruct extends BaseMapstruct<BaseUdafParamDto, BaseUdafParam> {
 
+    /**
+     * 转换成core中的BaseUdafParam
+     *
+     * @param baseUdafParam
+     * @return
+     */
     @Named("toCoreBaseUdafParam")
     @Mapping(source = "aggregateFunction.name", target = "aggregateType")
     @Mapping(source = "metricExpressParam", target = "metricExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})

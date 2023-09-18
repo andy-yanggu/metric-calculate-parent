@@ -6,11 +6,11 @@ import org.dromara.hutool.json.JSONObject;
 
 public interface SimulateMetricCalculateService {
 
-    <R> DeriveMetricCalculateResult<R> noStateCalculate(JSONObject input,
-                                                        Integer modelId,
-                                                        Integer deriveId) throws Exception;
+    <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> noStateCalculate(JSONObject input,
+                                                                     Integer modelId,
+                                                                     Integer deriveId);
 
-    <R> DeriveMetricCalculateResult<R> stateCalculate(JSONObject input,
-                                                      Integer modelId,
-                                                      Integer deriveId);
+    <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> stateCalculate(JSONObject input,
+                                                                   Integer modelId,
+                                                                   Integer deriveId);
 }

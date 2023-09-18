@@ -54,10 +54,12 @@ public interface Window<OUT> {
     ///**
     // * 合并表操作
     // *
-    // * @param thatTable
+    // * @param thatWindow
     // * @return
     // */
-    //T merge(T thatTable);
+    //W merge(W thatWindow);
+
+    //W createWindow();
 
     /**
      * 窗口是否为空

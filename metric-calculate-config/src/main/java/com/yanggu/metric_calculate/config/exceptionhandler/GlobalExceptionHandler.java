@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.FAIL;
 
+/**
+ * 通用异常处理器
+ */
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {

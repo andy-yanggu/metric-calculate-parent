@@ -12,9 +12,7 @@ import org.dromara.hutool.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * 仿真指标计算
- */
+
 @RestController
 @Tag(name = "仿真指标计算")
 @RequestMapping("/simulate-metric-calculate")
@@ -26,20 +24,20 @@ public class SimulateMetricCalculateController {
     @ApiOperationSupport(order = 1)
     @Operation(summary = "无状态-计算接口")
     @PostMapping("/no-state-calculate")
-    public <R> Result<DeriveMetricCalculateResult<R>> noStateCalculateThread(
+    public <IN, ACC, OUT> Result<DeriveMetricCalculateResult<OUT>> noStateCalculate(
             @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input,
-            @RequestParam Integer modelId, @RequestParam Integer deriveId) throws Exception {
-        DeriveMetricCalculateResult<R> result = simulateMetricCalculateService.noStateCalculate(input, modelId, deriveId);
+            @RequestParam Integer modelId, @RequestParam Integer deriveId) {
+        DeriveMetricCalculateResult<OUT> result = simulateMetricCalculateService.<IN, ACC, OUT>noStateCalculate(input, modelId, deriveId);
         return Result.ok(result);
     }
 
     @ApiOperationSupport(order = 2)
     @Operation(summary = "有状态-计算接口")
     @PostMapping("/state-calculate")
-    public <R> Result<DeriveMetricCalculateResult<R>> stateCalculateThread(
+    public <IN, ACC, OUT> Result<DeriveMetricCalculateResult<OUT>> stateCalculate(
             @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input,
             @RequestParam Integer modelId, @RequestParam Integer deriveId) {
-        DeriveMetricCalculateResult<R> result = simulateMetricCalculateService.stateCalculate(input, modelId, deriveId);
+        DeriveMetricCalculateResult<OUT> result = simulateMetricCalculateService.<IN, ACC, OUT>stateCalculate(input, modelId, deriveId);
         return Result.ok(result);
     }
 

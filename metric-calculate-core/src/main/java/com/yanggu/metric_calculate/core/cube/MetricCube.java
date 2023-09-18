@@ -26,6 +26,11 @@ public class MetricCube<IN, ACC, OUT> {
      */
     private AbstractWindow<IN, ACC, OUT> window;
 
+    /**
+     * 获取唯一标识
+     *
+     * @return
+     */
     public String getRealKey() {
         return dimensionSet.getRealKey();
     }

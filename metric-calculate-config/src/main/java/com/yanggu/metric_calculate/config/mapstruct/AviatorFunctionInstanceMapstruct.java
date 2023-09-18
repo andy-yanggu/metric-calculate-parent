@@ -13,6 +13,12 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(componentModel = SPRING)
 public interface AviatorFunctionInstanceMapstruct extends BaseMapstruct<AviatorFunctionInstanceDto, AviatorFunctionInstance> {
 
+    /**
+     * 转成成core中的AviatorFunctionInstance
+     *
+     * @param instance
+     * @return
+     */
     @Named("toCoreInstance")
     @Mapping(source = "aviatorFunction.name", target = "name")
     @Mapping(source = "param", target = "param")

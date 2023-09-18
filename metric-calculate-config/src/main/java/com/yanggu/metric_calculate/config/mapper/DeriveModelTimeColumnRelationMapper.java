@@ -5,10 +5,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.DeriveModelTimeColumnRelat
 
 /**
  * 派生指标和时间字段中间表 映射层。
- *
- * @author MondayLi
- * @since 2023-07-10
  */
 public interface DeriveModelTimeColumnRelationMapper extends BaseMapper<DeriveModelTimeColumnRelation> {
-
 }

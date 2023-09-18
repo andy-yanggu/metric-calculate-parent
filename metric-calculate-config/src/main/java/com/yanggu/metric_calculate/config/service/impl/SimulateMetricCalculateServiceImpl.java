@@ -24,29 +24,32 @@ public class SimulateMetricCalculateServiceImpl implements SimulateMetricCalcula
     private DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Override
-    public <R> DeriveMetricCalculateResult<R> noStateCalculate(JSONObject input, Integer modelId, Integer deriveId) {
+    public <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> noStateCalculate(JSONObject input,
+                                                                            Integer modelId,
+                                                                            Integer deriveId) {
         //进行无状态计算
-        BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function = DeriveMetricCalculate::noStateExec;
+        BiFunction<DeriveMetricCalculate<IN, ACC, OUT>, JSONObject, DeriveMetricCalculateResult<OUT>> function = DeriveMetricCalculate::noStateExec;
         return deriveMetricCalculate(input, modelId, deriveId, function);
     }
 
     @Override
-    public <R> DeriveMetricCalculateResult<R> stateCalculate(JSONObject input, Integer modelId, Integer deriveId) {
+    public <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> stateCalculate(JSONObject input, Integer modelId, Integer deriveId) {
         //进行有状态计算
-        BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function = DeriveMetricCalculate::stateExec;
+        BiFunction<DeriveMetricCalculate<IN, ACC, OUT>, JSONObject, DeriveMetricCalculateResult<OUT>> function = DeriveMetricCalculate::stateExec;
         return deriveMetricCalculate(input, modelId, deriveId, function);
     }
 
-    private <R> DeriveMetricCalculateResult<R> deriveMetricCalculate(JSONObject input,
+    private <IN, ACC, OUT> DeriveMetricCalculateResult<OUT> deriveMetricCalculate(
+                                                                     JSONObject input,
                                                                      Integer modelId,
                                                                      Integer deriveId,
-                                                                     BiFunction<DeriveMetricCalculate<Object, Object, R>, JSONObject, DeriveMetricCalculateResult<R>> function) {
+                                                                     BiFunction<DeriveMetricCalculate<IN, ACC, OUT>, JSONObject, DeriveMetricCalculateResult<OUT>> function) {
         //获取核心宽表类
         Model coreModel = modelService.toCoreModel(modelId);
         //初始化指标计算类
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(coreModel);
         //获取指标计算类
-        DeriveMetricCalculate<Object, Object, R> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(deriveId.longValue());
+        DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(deriveId.longValue());
         //设置外部存储
         deriveMetricCalculate.setDeriveMetricMiddleStore(deriveMetricMiddleStore);
         //进行字段计算

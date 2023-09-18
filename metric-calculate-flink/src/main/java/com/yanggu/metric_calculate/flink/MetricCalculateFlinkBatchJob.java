@@ -113,7 +113,7 @@ public class MetricCalculateFlinkBatchJob {
                 //宽表数据流
                 .fromCollection(jsonList)
                 .connect(tableSourceBroadcast)
-                //分流出派生指标数据流和全局指标数据流
+                //分流出派生指标数据流
                 .process(new MetricDataMetricConfigBroadcastProcessFunction())
                 .getSideOutput(new OutputTag<>(DERIVE, TypeInformation.of(DeriveCalculateData.class)))
                 //根据DimensionSet进行keyBy

@@ -12,6 +12,12 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 @Mapper(uses = {AviatorExpressParamMapstruct.class}, componentModel = SPRING)
 public interface FieldOrderParamMapstruct extends BaseMapstruct<FieldOrderParamDto, FieldOrderParam> {
 
+    /**
+     * 转换成core中的FieldOrderParam
+     *
+     * @param fieldOrderParam
+     * @return
+     */
     @Named("toCoreFieldOrderParam")
     @Mapping(source = "aviatorExpressParam", target = "aviatorExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
     @Mapping(source = "isAsc", target = "isAsc")

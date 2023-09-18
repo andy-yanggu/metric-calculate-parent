@@ -50,6 +50,13 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     @Mapping(source = "roundAccuracyLength", target = "roundAccuracy.length")
     DeriveMetrics toDeriveMetrics(Derive derive);
 
+    /**
+     * 转换成流计算和批计算中的派生指标配置类
+     *
+     * @param derive
+     * @param model
+     * @return
+     */
     @Mapping(source = "derive", target = "deriveMetrics", qualifiedByName = "toDeriveMetrics")
     @Mapping(source = "model.modelColumnList", target = "fieldMap", qualifiedByName = {"ModelMapstruct", "getFieldMap"})
     @Mapping(source = "derive", target = "aviatorFunctionJarPathList", qualifiedByName = "getFromDerive")
@@ -57,7 +64,7 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     DeriveMetricsConfigData toDeriveMetricsConfigData(Derive derive, Model model);
 
     /**
-     * 尝试从派生指标中获取
+     * 尝试从派生指标中获取使用的表达式
      *
      * @param derive
      */
@@ -107,7 +114,7 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     }
 
     /**
-     * 尝试从派生指标中获取
+     * 尝试从派生指标中获取使用的自定义函数以的jar包路径
      *
      * @param derive
      */

@@ -29,7 +29,7 @@ public class ModelController {
     }
 
     @PutMapping("/updateData")
-    @Operation(summary = "修改数据明细宽表")
+    @Operation(summary = "修改数据明细宽表", description = "修改中文名、描述信息等")
     public Result<Void> updateData(@RequestBody ModelDto modelDto) {
         modelService.updateData(modelDto);
         return Result.ok();

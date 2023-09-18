@@ -29,7 +29,7 @@ public class DeriveMetricCalculateResult<OUT> {
 
     /**
      * 结束时间
-     * <p>yyyy-MM-dd HH:mm:ss格式, 不包含开始时间</p>
+     * <p>yyyy-MM-dd HH:mm:ss格式, 不包含结束时间</p>
      */
     private String endTime;
 
