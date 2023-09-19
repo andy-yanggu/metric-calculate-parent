@@ -12,7 +12,9 @@ import java.util.stream.Stream;
 
 /**
  * 映射类型的基类
- * <p>子类可以根据需要重写{@link AggregateFunction#getResult(Object)}方法</p>
+ * <p>会对{@link AbstractMapAggregateFunction#valueAggregateFunction}进行赋值</p>
+ * <p>子类可以根据需要重写{@link AbstractMapAggregateFunction#getResult(Map)}}方法</p>
+ * <p>IN的输入类型是定死的{@link AbstractMap.SimpleImmutableEntry}</p>
  *
  * @param <K>        map的key
  * @param <V>        map的value输入值
@@ -34,7 +36,6 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     @Override
     public Map<K, ValueACC> add(AbstractMap.SimpleImmutableEntry<K, V> input, Map<K, ValueACC> accumulator) {
         K key = input.getKey();
-
         ValueACC oldAcc = accumulator.getOrDefault(key, valueAggregateFunction.createAccumulator());
         ValueACC newAcc = valueAggregateFunction.add(input.getValue(), oldAcc);
         accumulator.put(key, newAcc);

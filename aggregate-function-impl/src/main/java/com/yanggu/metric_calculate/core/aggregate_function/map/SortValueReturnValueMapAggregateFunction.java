@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Data
 @MapType
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "SORTVALUERETURNVALUEMAP", displayName = "TOPN值")
 public class SortValueReturnValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, List<ValueOUT>> {

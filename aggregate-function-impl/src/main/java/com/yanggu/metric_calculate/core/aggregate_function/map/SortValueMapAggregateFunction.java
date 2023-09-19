@@ -15,14 +15,14 @@ import java.util.stream.Collectors;
  * 对ValeOUT进行排序的map, 并进行limit
  * <p>输出的仍然是{@code Map<K, ValueOut>}, 只是根据value进行排序，取TopN</p>
  *
- * @param <K> map的k类型
- * @param <V> map的v类型
+ * @param <K>        map的k类型
+ * @param <V>        map的v类型
  * @param <ValueACC>
  * @param <ValueOUT>
  */
 @Data
 @MapType
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "SORTVALUEMAP", displayName = "TOPN映射")
 public class SortValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {

@@ -10,14 +10,14 @@ import java.util.Map;
 /**
  * 基础映射，不对key和value进行任何处理
  *
- * @param <K> map的key类型
- * @param <V> map的value类型
+ * @param <K>        map的key类型
+ * @param <V>        map的value类型
  * @param <ValueACC> value的累加器类型
  * @param <ValueOUT> value的输出类型
  */
 @Data
 @MapType
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "BASEMAP", displayName = "基础映射")
 public class BaseMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {

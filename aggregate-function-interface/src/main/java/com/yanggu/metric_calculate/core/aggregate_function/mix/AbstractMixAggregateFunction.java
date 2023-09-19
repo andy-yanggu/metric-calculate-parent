@@ -9,9 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 混合型聚合函数
+ * 混合型聚合函数抽象类
+ * <p>子类可以根据需求重写响应方法</p>
+ * <p>mixAggregateFunctionMap和expression都会进行赋值</p>
  *
- * @param <OUT>
+ * @param <OUT> 输出的数据类型
  */
 @Data
 public abstract class AbstractMixAggregateFunction<OUT>

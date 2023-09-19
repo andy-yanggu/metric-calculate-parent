@@ -11,7 +11,7 @@ import org.dromara.hutool.core.lang.mutable.MutableEntry;
 @Numerical
 @AggregateFunctionAnnotation(name = "AVG", displayName = "平均值")
 public class AvgAggregateFunction<T extends Number> implements AggregateFunction<T, MutableEntry<Double, Long>, Double> {
-    
+
     @Override
     public MutableEntry<Double, Long> createAccumulator() {
         return new MutableEntry<>(0.0D, 0L);

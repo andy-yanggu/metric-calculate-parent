@@ -1,14 +1,13 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @MapType
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "SORTVALUERETURNKEYMAP", displayName = "TOPN主键")
 public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, List<K>> {

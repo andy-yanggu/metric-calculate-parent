@@ -14,7 +14,7 @@ import java.util.List;
  * @param <T>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Collective(keyStrategy = 2, retainStrategy = 2)
 @AggregateFunctionAnnotation(name = "SORTEDLIMITLISTOBJECT", displayName = "有序对象列表")
 public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {

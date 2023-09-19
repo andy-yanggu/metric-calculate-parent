@@ -7,7 +7,7 @@ package com.yanggu.metric_calculate.core.aggregate_function;
  * <p>需要空参构造方法，用于反射生成</p>
  * <p>聚合函数的相关参数，会在反射调用空参构造方法生成聚合函数对象后，反射给聚合函数的参数赋值</p>
  *
- * @param <IN> 输入的数据
+ * @param <IN>  输入的数据
  * @param <ACC> 中间累加数据 需要有空参构造方法，可以进行序列化和反序列化
  * @param <OUT> 输出的数据
  */
@@ -39,7 +39,7 @@ public interface AggregateFunction<IN, ACC, OUT> {
      *
      * <p>For efficiency, the input accumulator may be modified and returned.
      *
-     * @param input The input to add
+     * @param input       The input to add
      * @param accumulator The accumulator to add the input to
      * @return The accumulator with the updated state
      */

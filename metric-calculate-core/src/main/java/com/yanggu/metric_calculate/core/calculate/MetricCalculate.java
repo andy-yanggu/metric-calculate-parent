@@ -18,10 +18,10 @@ import java.util.Map;
 
 /**
  * 指标计算类
- * <p>包含了衍生指标、复合指标、全局指标</p>
+ * <p>包含了字段计算、派生指标计算</p>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class MetricCalculate extends Model implements Serializable {
 
     @Serial
@@ -74,7 +74,7 @@ public class MetricCalculate extends Model implements Serializable {
     }
 
     /**
-     * 根据派生指标id查询派生指标
+     * 根据派生指标id查询派生指标计算类
      *
      * @param deriveId
      * @param <IN>
@@ -92,6 +92,12 @@ public class MetricCalculate extends Model implements Serializable {
                 .orElseThrow(() -> new RuntimeException("传入的deriveId错误"));
     }
 
+    /**
+     * 根据派生指标id列表获取派生指标计算类列表
+     *
+     * @param deriveIdList
+     * @return
+     */
     public List<DeriveMetricCalculate> getDeriveMetricCalculateListById(List<Long> deriveIdList) {
         if (CollUtil.isEmpty(deriveIdList)) {
             throw new RuntimeException("传入的派生指标列表为空");

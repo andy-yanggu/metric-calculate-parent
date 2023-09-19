@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.flink.operator;
 
 
 import org.apache.flink.api.common.functions.AggregateFunction;
-import org.apache.flink.api.common.time.Time;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 import org.apache.flink.api.common.typeinfo.Types;
 import org.apache.flink.api.java.functions.KeySelector;
