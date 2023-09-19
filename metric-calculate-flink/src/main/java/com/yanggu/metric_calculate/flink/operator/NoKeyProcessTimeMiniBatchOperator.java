@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.flink.operator;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.apache.flink.api.common.operators.ProcessingTimeService;
 import org.apache.flink.api.common.state.ListState;
@@ -14,6 +15,7 @@ import org.apache.flink.streaming.api.operators.OneInputStreamOperator;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
 import org.dromara.hutool.core.collection.CollUtil;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +28,11 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Data
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class NoKeyProcessTimeMiniBatchOperator<T> extends AbstractStreamOperator<List<T>>
         implements OneInputStreamOperator<T, List<T>>, ProcessingTimeService.ProcessingTimeCallback, Serializable {
 
+    @Serial
     private static final long serialVersionUID = -3891085332645805210L;
 
     /**
