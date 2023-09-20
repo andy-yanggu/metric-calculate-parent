@@ -74,10 +74,6 @@
             <artifactId>caffeine</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
@@ -90,10 +86,6 @@
             <artifactId>guava</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.dromara.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.github.xiaoymin</groupId>
             <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
         </dependency>
@@ -104,10 +96,6 @@
                 <exclusion>
                     <artifactId>slf4j-simple</artifactId>
                     <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>freemarker</artifactId>
-                    <groupId>org.freemarker</groupId>
                 </exclusion>
             </exclusions>
         </dependency>

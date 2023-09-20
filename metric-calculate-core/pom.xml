@@ -21,29 +21,16 @@
             <artifactId>aviator-function-impl</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.dromara.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
         <dependency>
             <groupId>com.esotericsoftware</groupId>
             <artifactId>kryo</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.googlecode.aviator</groupId>
-            <artifactId>aviator</artifactId>
-        </dependency>
-        <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -61,21 +48,10 @@
             <groupId>com.yomahub</groupId>
             <artifactId>tlog-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.furyio</groupId>
-            <artifactId>fury-core</artifactId>
-            <scope>test</scope>
-        </dependency>
         <!-- JUnit 5 引导器 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <!-- JUnit 5 参数化测试支持 -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-params</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -83,30 +59,10 @@
             <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.janino</groupId>
-            <artifactId>janino</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven-compiler-plugin.version}</version>
-                <configuration>
-                    <compilerArgs>
-                        --enable-preview
-                    </compilerArgs>
-                </configuration>
-            </plugin>
             <!--生成源码jar包-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.function_factory;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunction;
-import com.yanggu.metric_calculate.core.test.TestJarUtil;
+import com.yanggu.metric_calculate.core.util.TestJarUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.java_new_feature;
+package com.yanggu.metric_calculate.java_new_feature;
 
 /**
  * JAVA9 新增私有接口方法（private interface method）

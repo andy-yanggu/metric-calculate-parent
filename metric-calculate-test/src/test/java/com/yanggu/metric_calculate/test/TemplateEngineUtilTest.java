@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.test;
+package com.yanggu.metric_calculate.test;
 
 import org.dromara.hutool.core.map.Dict;
 import org.dromara.hutool.extra.template.Template;

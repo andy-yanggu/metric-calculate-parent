@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.code_gen.number;
+package com.yanggu.metric_calculate.code_gen.number;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;

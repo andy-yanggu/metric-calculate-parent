@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.test;
+package com.yanggu.metric_calculate.test;
 
 
 import org.codehaus.commons.compiler.util.ResourceFinderClassLoader;

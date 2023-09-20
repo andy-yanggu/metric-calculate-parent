@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.test;
+package com.yanggu.metric_calculate.core.util;
 
 
 import lombok.SneakyThrows;
@@ -27,10 +27,6 @@ public class TestJarUtil {
             return Collections.emptyList();
         }
         //System.out.println(pathname);
-    }
-
-    public static void main(String[] args) {
-
     }
 
 }
