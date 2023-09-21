@@ -22,32 +22,30 @@ public class MetricConfigDataController {
     @Autowired
     private MetricConfigDataService metricConfigDataService;
 
-    @Operation(summary = "所有指标配置数据")
     @GetMapping("/all")
+    @Operation(summary = "所有指标配置数据")
     public Result<List<Model>> allMetricConfigData() {
         return Result.ok(metricConfigDataService.allMetricConfigData());
     }
 
-    @Operation(summary = "获取某个宽表的指标配置数据")
     @GetMapping("/{tableId}")
+    @Operation(summary = "获取某个宽表的指标配置数据")
     public Result<Model> metricConfigDataById(
-            @NotNull(message = "宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true)
-            @PathVariable("tableId") Long tableId) {
+            @NotNull(message = "宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @PathVariable("tableId") Long tableId) {
         return Result.ok(metricConfigDataService.metricConfigDataById(tableId));
     }
 
-    @Operation(summary = "全量更新指标配置")
     @GetMapping("/refresh")
+    @Operation(summary = "全量更新指标配置")
     public Result<Void> refreshMetricConfig() {
         metricConfigDataService.buildAllMetric();
         return Result.ok();
     }
 
-    @Operation(summary = "增量更新指标配置（更新某个宽表下的所有指标）")
     @PutMapping("/refresh/{tableId}")
+    @Operation(summary = "增量更新指标配置（更新某个宽表下的所有指标）")
     public Result<Void> updateMetricConfig(
-            @NotNull(message = "宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true)
-            @PathVariable("tableId") Long tableId) {
+            @NotNull(message = "宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @PathVariable("tableId") Long tableId) {
         metricConfigDataService.updateTable(tableId);
         return Result.ok();
     }

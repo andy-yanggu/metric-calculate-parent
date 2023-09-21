@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.web.util;
 import com.yomahub.tlog.core.thread.TLogInheritableTask;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
+import java.io.Serial;
 import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadFactory;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.ThreadFactory;
  */
 public class TLogThreadPoolTaskExecutor extends ThreadPoolTaskExecutor {
 
+    @Serial
     private static final long serialVersionUID = 5397432096046779481L;
 
     public TLogThreadPoolTaskExecutor(int corePoolSize,

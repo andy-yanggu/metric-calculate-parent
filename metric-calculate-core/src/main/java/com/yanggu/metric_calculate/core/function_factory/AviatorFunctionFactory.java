@@ -85,7 +85,7 @@ public class AviatorFunctionFactory {
      * @return
      */
     @SneakyThrows
-    public AbstractUdfAviatorFunction getAviatorFunction(String aviatorFunctionName, Map<String, Object> params) {
+    public AbstractUdfAviatorFunction initAviatorFunction(String aviatorFunctionName, Map<String, Object> params) {
         Class<? extends AbstractUdfAviatorFunction> clazz = getClazz(aviatorFunctionName);
         AbstractUdfAviatorFunction abstractUdfAviatorFunction = clazz.getDeclaredConstructor().newInstance();
         //通过反射给聚合函数设置参数

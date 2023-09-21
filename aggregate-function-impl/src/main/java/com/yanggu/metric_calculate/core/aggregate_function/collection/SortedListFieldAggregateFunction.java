@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 
 /**
  * 有序字段列表

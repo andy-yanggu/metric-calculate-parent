@@ -3,8 +3,6 @@ package com.yanggu.metric_calculate.core.util;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core.aggregate_function.collection.ListObjectAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.map.BaseMapAggregateFunction;
@@ -19,9 +17,11 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
@@ -38,9 +38,9 @@ import org.mockito.Mockito;
 
 import java.util.*;
 
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.*;
 import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FieldProcessorUtilTest {

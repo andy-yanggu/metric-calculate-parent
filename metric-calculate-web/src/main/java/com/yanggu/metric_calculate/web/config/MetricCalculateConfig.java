@@ -65,10 +65,10 @@ public class MetricCalculateConfig {
                     .map(QueryRequest::getDimensionSet)
                     //去一下重
                     .distinct()
-                    .collect(Collectors.toList());
+                    .toList();
 
             //批量查询
-            Map<DimensionSet, MetricCube> map = null;
+            Map<DimensionSet, MetricCube> map;
             try {
                 map = deriveMetricMiddleStore.batchGet(collect);
             } catch (Exception e) {

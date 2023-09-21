@@ -90,14 +90,14 @@ public class MetricUtil {
     private static void initFieldCalculate(MetricCalculate metricCalculate,
                                            AviatorFunctionFactory aviatorFunctionFactory) {
         if (metricCalculate == null) {
-            return;
+            throw new RuntimeException("传入的计算类为空");
         }
         if (aviatorFunctionFactory == null) {
-            return;
+            throw new RuntimeException("传入的AviatorFunctionFactory为空");
         }
         List<ModelColumn> modelColumnList = metricCalculate.getModelColumnList();
         if (CollUtil.isEmpty(modelColumnList)) {
-            return;
+            throw new RuntimeException("宽表字段为空");
         }
         List<FieldCalculate<JSONObject, Object>> fieldCalculateList = new ArrayList<>();
         for (ModelColumn modelColumn : modelColumnList) {
@@ -135,7 +135,7 @@ public class MetricUtil {
     private static void initAllDerive(MetricCalculate metricCalculate,
                                       AviatorFunctionFactory aviatorFunctionFactory) {
         if (metricCalculate == null) {
-            return;
+            throw new RuntimeException("传入的计算类为空");
         }
         List<DeriveMetrics> deriveMetricsList = metricCalculate.getDeriveMetricsList();
         if (CollUtil.isEmpty(deriveMetricsList)) {

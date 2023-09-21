@@ -3,11 +3,9 @@ package com.yanggu.metric_calculate.core.field_process;
 
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.aggregate_function.map.AbstractMapAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.mix.AbstractMixAggregateFunction;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
@@ -17,6 +15,8 @@ import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.Multi
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
@@ -25,12 +25,11 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
-import com.yanggu.metric_calculate.core.util.ExpressionUtil;
+import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.SneakyThrows;
 import org.dromara.hutool.json.JSONObject;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 字段处理器工具类
@@ -348,7 +347,6 @@ public class FieldProcessorUtil {
 
             List<MixUdafParamItem> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
 
-
             //设置mixAggregateFunctionMap
             Set<String> keySet = new HashSet<>();
             Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
@@ -365,8 +363,8 @@ public class FieldProcessorUtil {
             abstractMixAggregateFunction.setMixAggregateFunctionMap(mixAggregateFunctionMap);
 
             //设置表达式
-            Expression expression = ExpressionUtil.compileExpress(mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
-            ExpressionUtil.checkVariable(expression, keySet);
+            Expression expression = AviatorExpressUtil.compileExpress(mixUdafParam.getMetricExpressParam(), aviatorFunctionFactory);
+            AviatorExpressUtil.checkVariable(expression, keySet);
             abstractMixAggregateFunction.setExpression(expression);
 
             return new AggregateFieldProcessor<>(mixFieldProcessor, aggregateFunction);

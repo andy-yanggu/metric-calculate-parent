@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;

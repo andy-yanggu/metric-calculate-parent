@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.function_factory;
 
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 
 import java.io.File;
@@ -23,14 +24,20 @@ public class FunctionFactory {
     private FunctionFactory() {
     }
 
+    /**
+     * 反射给对象赋值
+     *
+     * @param function
+     * @param params
+     */
     public static void setParam(Object function,
                                 Map<String, Object> params) {
-        if (function == null) {
+        if (function == null || MapUtil.isEmpty(params)) {
             return;
         }
         Field[] declaredFields = function.getClass().getDeclaredFields();
         //通过反射给聚合函数的参数赋值
-        if (CollUtil.isNotEmpty(params) && ArrayUtil.isNotEmpty(declaredFields)) {
+        if (ArrayUtil.isNotEmpty(declaredFields)) {
             for (Field field : declaredFields) {
                 Object fieldData = params.get(field.getName());
                 if (fieldData != null) {
@@ -41,6 +48,14 @@ public class FunctionFactory {
         }
     }
 
+    /**
+     * 从jar包中过滤出对应的class, 并执行相应的消费逻辑
+     *
+     * @param jarPathList
+     * @param classFilter
+     * @param consumer
+     * @throws Exception
+     */
     public static void loadClassFromJar(List<String> jarPathList,
                                         Predicate<Class<?>> classFilter,
                                         Consumer<Class<?>> consumer) throws Exception {
@@ -70,10 +85,11 @@ public class FunctionFactory {
                 if (entry.isDirectory() || !entry.getName().endsWith(".class") || entry.getName().contains("$")) {
                     continue;
                 }
-                String entryName = entry.getName()
+                String className = entry.getName()
                         .substring(0, entry.getName().indexOf(".class"))
                         .replace("/", ".");
-                Class<?> loadClass = urlClassLoader.loadClass(entryName);
+                Class<?> loadClass = urlClassLoader.loadClass(className);
+                //判断是否应该进行消费
                 if (classFilter.test(loadClass)) {
                     //消费class数据
                     consumer.accept(loadClass);

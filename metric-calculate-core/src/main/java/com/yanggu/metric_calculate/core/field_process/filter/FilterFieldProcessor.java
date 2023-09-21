@@ -4,7 +4,7 @@ import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.util.ExpressionUtil;
+import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -69,13 +69,13 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
         }
 
         //编译表达式
-        Expression tempFilterExpression = ExpressionUtil.compileExpress(filterExpressParam, aviatorFunctionFactory);
+        Expression tempFilterExpression = AviatorExpressUtil.compileExpress(filterExpressParam, aviatorFunctionFactory);
         List<String> variableNames = tempFilterExpression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
             throw new RuntimeException("过滤条件为常量表达式, 没有意义: " + filterExpressParam.getExpress());
         }
         //验证数据明细宽表中是否包含该字段
-        ExpressionUtil.checkVariable(tempFilterExpression, fieldMap.keySet());
+        AviatorExpressUtil.checkVariable(tempFilterExpression, fieldMap.keySet());
         this.filterExpression = tempFilterExpression;
     }
 

@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import lombok.EqualsAndHashCode;

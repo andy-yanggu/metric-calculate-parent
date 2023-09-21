@@ -5,8 +5,8 @@ import com.googlecode.aviator.runtime.function.FunctionUtils;
 import com.googlecode.aviator.runtime.type.AviatorDecimal;
 import com.googlecode.aviator.runtime.type.AviatorObject;
 import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunction;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFieldAnnotation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

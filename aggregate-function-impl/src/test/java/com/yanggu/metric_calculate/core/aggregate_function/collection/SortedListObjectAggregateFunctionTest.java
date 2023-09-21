@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.core.reflect.FieldUtil;

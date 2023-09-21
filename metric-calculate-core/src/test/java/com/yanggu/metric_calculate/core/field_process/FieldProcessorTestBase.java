@@ -1,8 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process;
 
 
-import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
-import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.aggregate.MapFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.aggregate.MixFieldProcessor;
@@ -12,6 +10,8 @@ import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFiel
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
+import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;

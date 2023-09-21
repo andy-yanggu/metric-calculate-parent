@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.function_test.aggregate_function_test;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import lombok.Data;
 
 import java.util.ArrayList;

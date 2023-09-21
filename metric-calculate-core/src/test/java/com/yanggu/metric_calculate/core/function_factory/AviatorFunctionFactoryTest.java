@@ -35,7 +35,7 @@ public class AviatorFunctionFactoryTest {
 
     @Test
     void test1() {
-        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("coalesce", null);
+        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.initAviatorFunction("coalesce", null);
         AviatorEvaluator.addFunction(aviatorFunction);
         Expression expression = AviatorEvaluator.compile("coalesce(a, b, 1)");
         Map<String, Object> env = new HashMap<>();
@@ -48,7 +48,7 @@ public class AviatorFunctionFactoryTest {
     void test2() {
         Map<String, Object> params = new HashMap<>();
         params.put("length", 2);
-        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction("test_add", params);
+        AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.initAviatorFunction("test_add", params);
         AviatorEvaluator.addFunction(aviatorFunction);
         Expression expression = AviatorEvaluator.compile("test_add(1, 2)");
         Object execute = expression.execute();

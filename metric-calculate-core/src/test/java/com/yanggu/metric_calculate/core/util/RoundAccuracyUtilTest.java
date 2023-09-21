@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import static com.yanggu.metric_calculate.core.enums.AccuracyEnum.NOT_HANDLE;
 import static com.yanggu.metric_calculate.core.enums.AccuracyEnum.ROUNDING;
 import static com.yanggu.metric_calculate.core.util.RoundAccuracyUtil.handlerRoundAccuracy;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class RoundAccuracyUtilTest {
 

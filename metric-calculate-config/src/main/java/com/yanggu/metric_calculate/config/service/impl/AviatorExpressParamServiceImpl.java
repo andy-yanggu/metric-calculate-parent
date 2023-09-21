@@ -12,14 +12,16 @@ import com.yanggu.metric_calculate.config.service.AviatorExpressParamMixUdafPara
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamModelColumnRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.util.ExpressionUtil;
+import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRESS_CHECK_ERROR;
@@ -161,8 +163,8 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
         AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
         aviatorFunctionFactory.init();
-        Expression expression = ExpressionUtil.compileExpress(expressParam, aviatorFunctionFactory);
-        ExpressionUtil.checkVariable(expression, fieldSet);
+        Expression expression = AviatorExpressUtil.compileExpress(expressParam, aviatorFunctionFactory);
+        AviatorExpressUtil.checkVariable(expression, fieldSet);
         List<String> variableNames = expression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
             return;

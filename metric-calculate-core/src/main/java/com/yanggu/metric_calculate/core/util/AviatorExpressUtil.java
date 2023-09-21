@@ -20,9 +20,9 @@ import static com.googlecode.aviator.Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY;
 /**
  * Aviator表达式工具类
  */
-public class ExpressionUtil {
+public class AviatorExpressUtil {
 
-    private ExpressionUtil() {
+    private AviatorExpressUtil() {
     }
 
     /**
@@ -45,14 +45,16 @@ public class ExpressionUtil {
             for (AviatorFunctionInstance aviatorFunctionInstance : aviatorExpressParam.getAviatorFunctionInstanceList()) {
                 String name = aviatorFunctionInstance.getName();
                 Map<String, Object> param = aviatorFunctionInstance.getParam();
-                AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.getAviatorFunction(name, param);
+                AbstractUdfAviatorFunction aviatorFunction = aviatorFunctionFactory.initAviatorFunction(name, param);
                 aviatorEvaluatorInstance.addFunction(name, aviatorFunction);
             }
         }
         //设置Java反射调用
         aviatorEvaluatorInstance.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
+        //设置不使用客户传入的env
         aviatorEvaluatorInstance.setOption(USE_USER_ENV_AS_TOP_ENV_DIRECTLY, false);
         try {
+            //编译表达式
             return aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
         } catch (Exception e) {
             throw new RuntimeException("Aviator表达式编译失败, 请检查表达式编写是否正确或者传参是否正确");
@@ -63,16 +65,16 @@ public class ExpressionUtil {
      * 验证依赖参数是否正确
      *
      * @param expression
-     * @param fieldSet
+     * @param paramSet
      */
-    public static void checkVariable(Expression expression, Set<String> fieldSet) {
+    public static void checkVariable(Expression expression, Set<String> paramSet) {
         List<String> variableNames = expression.getVariableNames();
         if (CollUtil.isEmpty(variableNames)) {
             return;
         }
         //验证数据明细宽表中是否包含该字段
         variableNames.forEach(tempName -> {
-            if (!fieldSet.contains(tempName)) {
+            if (!paramSet.contains(tempName)) {
                 throw new RuntimeException("数据明细宽表中没有该字段: " + tempName);
             }
         });

@@ -4,7 +4,7 @@ import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.util.ExpressionUtil;
+import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
@@ -63,9 +63,9 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
             throw new RuntimeException("Aviator函数工厂类为空");
         }
         //编译表达式
-        Expression tempMetricExpression = ExpressionUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory);
+        Expression tempMetricExpression = AviatorExpressUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory);
         //验证数据明细宽表中是否包含该字段
-        ExpressionUtil.checkVariable(tempMetricExpression, fieldMap.keySet());
+        AviatorExpressUtil.checkVariable(tempMetricExpression, fieldMap.keySet());
 
         this.metricExpression = tempMetricExpression;
     }

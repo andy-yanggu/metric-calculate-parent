@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
-import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.web.enums.ResultCode.*;
 
@@ -149,8 +148,6 @@ public class MetricConfigDataService implements ApplicationRunner {
      */
     public synchronized void buildAllMetric() {
         log.info("初始化所有指标计算类");
-        //获取所有宽表id
-        List<Long> allTableId = mockMetricConfigClient.getAllTableId();
         //删除原有的数据
         Iterator<Map.Entry<Long, MetricCalculate>> iterator = metricMap.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -163,6 +160,8 @@ public class MetricConfigDataService implements ApplicationRunner {
                 writeLock.unlock();
             }
         }
+        //获取所有宽表id
+        List<Long> allTableId = mockMetricConfigClient.getAllTableId();
         if (CollUtil.isEmpty(allTableId)) {
             return;
         }
