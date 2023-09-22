@@ -1,12 +1,16 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.pojo.dto.DimensionDto;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
+import com.yanggu.metric_calculate.config.pojo.req.DimensionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.ModelService;
+import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,6 +81,13 @@ public class ModelController {
     @Operation(summary = "转换所有核心宽表", description = "转换成core包中的Model")
     public Result<List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model>> getAllCoreModel() {
         return Result.ok(modelService.getAllCoreModel());
+    }
+
+    @GetMapping("/excelExport")
+    @Operation(summary = "excel导出")
+    public void excelExport(HttpServletResponse response, ModelQueryReq req) {
+        List<ModelDto> modelDtos = modelService.listData(req);
+        ExcelUtil.exportFormList(response, modelDtos, "");
     }
 
 }

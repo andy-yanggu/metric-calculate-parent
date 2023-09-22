@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -51,7 +50,7 @@ public class AviatorFunctionDto extends BaseDto implements Serializable {
     /**
      * 不是内置的聚合函数为外置jar
      */
-    private JarStore jarStore;
+    private JarStoreDto jarStore;
 
     /**
      * Aviator函数成员变量列表

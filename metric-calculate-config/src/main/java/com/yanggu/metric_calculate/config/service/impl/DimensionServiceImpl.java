@@ -101,6 +101,7 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
         return QueryWrapper.create()
                 .where(DIMENSION.NAME.like(req.getDimensionName()))
                 .and(DIMENSION.DISPLAY_NAME.like(req.getDimensionDisplayName()))
+                .and(DIMENSION.ID.in(req.getIdList()))
                 .orderBy(req.getOrderByColumnName(), req.getAsc());
     }
 

@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
-import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParamItem;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,6 +26,7 @@ public class AviatorExpressParamDto extends BaseDto implements Serializable {
     /**
      * 表达式
      */
+    @ExcelExport(name = "表达式")
     private String express;
 
     /**
@@ -36,7 +37,7 @@ public class AviatorExpressParamDto extends BaseDto implements Serializable {
     /**
      * 依赖的混合型实例
      */
-    private List<MixUdafParamItem> mixUdafParamItemList;
+    private List<MixUdafParamItemDto> mixUdafParamItemList;
 
     /**
      * 使用的Aviator函数实例列表

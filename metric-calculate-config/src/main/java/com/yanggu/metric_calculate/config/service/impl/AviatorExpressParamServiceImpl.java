@@ -7,10 +7,7 @@ import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorExpressParamMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AviatorExpressParamMapstruct;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.service.AviatorExpressParamAviatorFunctionInstanceRelationService;
-import com.yanggu.metric_calculate.config.service.AviatorExpressParamMixUdafParamItemRelationService;
-import com.yanggu.metric_calculate.config.service.AviatorExpressParamModelColumnRelationService;
-import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
+import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -21,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -29,6 +27,7 @@ import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRES
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamAviatorFunctionInstanceRelationTableDef.AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamMixUdafParamItemRelationTableDef.AVIATOR_EXPRESS_PARAM_MIX_UDAF_PARAM_ITEM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamModelColumnRelationTableDef.AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorFunctionTableDef.AVIATOR_FUNCTION;
 
 /**
  * Aviator表达式配置 服务层实现。
@@ -47,6 +46,9 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
     @Autowired
     private AviatorExpressParamMixUdafParamItemRelationService aviatorExpressParamMixUdafParamItemRelationService;
+
+    @Autowired
+    private AviatorFunctionService aviatorFunctionService;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -101,7 +103,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                         relation.setMixUdafParamItemId(mixUdafParamItem.getId());
                         return relation;
                     })
-                    .collect(Collectors.toList());
+                    .toList();
             aviatorExpressParamMixUdafParamItemRelationService.saveBatch(relationList);
         }
 
@@ -162,6 +164,24 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                                             aviatorExpressParamMapstruct.toCoreAviatorExpressParam(aviatorExpressParam);
 
         AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
+        //如果使用了自定义Aviator函数, 添加jar包路径
+        if (CollUtil.isNotEmpty(aviatorExpressParam.getAviatorFunctionInstanceList())) {
+            List<Integer> list = aviatorExpressParam.getAviatorFunctionInstanceList().stream()
+                    .map(AviatorFunctionInstance::getAviatorFunctionId)
+                    .distinct()
+                    .toList();
+            List<String> jarList = aviatorFunctionService.queryChain()
+                    .where(AVIATOR_FUNCTION.ID.in(list))
+                    .withRelations()
+                    .list()
+                    .stream()
+                    .map(AviatorFunction::getJarStore)
+                    .filter(Objects::nonNull)
+                    .map(JarStore::getJarUrl)
+                    .distinct()
+                    .toList();
+            aviatorFunctionFactory.setUdfJarPathList(jarList);
+        }
         aviatorFunctionFactory.init();
         Expression expression = AviatorExpressUtil.compileExpress(expressParam, aviatorFunctionFactory);
         AviatorExpressUtil.checkVariable(expression, fieldSet);
@@ -190,7 +210,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                     relation.setAviatorFunctionInstanceId(aviatorFunctionInstance.getId());
                     return relation;
                 })
-                .collect(Collectors.toList());
+                .toList();
         aviatorExpressParamAviatorFunctionInstanceRelationService.saveBatch(relationList);
     }
 

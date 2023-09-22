@@ -23,5 +23,4 @@ public interface FieldOrderParamMapstruct extends BaseMapstruct<FieldOrderParamD
     @Mapping(source = "isAsc", target = "isAsc")
     com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam toCoreFieldOrderParam(FieldOrderParam fieldOrderParam);
 
-
 }

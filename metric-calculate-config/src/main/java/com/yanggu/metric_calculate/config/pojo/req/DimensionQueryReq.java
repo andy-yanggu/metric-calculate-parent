@@ -2,6 +2,8 @@ package com.yanggu.metric_calculate.config.pojo.req;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class DimensionQueryReq {
 
@@ -14,6 +16,11 @@ public class DimensionQueryReq {
      * 维度中文名
      */
     private String dimensionDisplayName;
+
+    /**
+     * 查询的id列表
+     */
+    private List<Integer> idList;
 
     /**
      * 排序字段名

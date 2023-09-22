@@ -1,5 +1,8 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelImport;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,6 +37,7 @@ public class ModelDimensionColumnDto extends BaseDto implements Serializable {
     /**
      * 宽表字段
      */
+    @ExcelObject(name = "宽表字段", nameList = {"name"})
     private ModelColumnDto modelColumn;
 
     /**
@@ -44,11 +48,14 @@ public class ModelDimensionColumnDto extends BaseDto implements Serializable {
     /**
      * 维度
      */
+    @ExcelObject(name = "维度", nameList = {"name"})
     private DimensionDto dimension;
 
     /**
      * 索引
      */
+    @ExcelExport(name = "序号", sort = 1)
+    @ExcelImport(name = "序号")
     private Integer sort;
 
 }

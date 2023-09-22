@@ -5,8 +5,10 @@ import com.yanggu.metric_calculate.config.pojo.dto.DimensionDto;
 import com.yanggu.metric_calculate.config.pojo.req.DimensionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DimensionService;
+import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -57,6 +59,13 @@ public class DimensionController {
     @Operation(summary = "维度分页")
     public Result<Page<DimensionDto>> pageData(Integer pageNumber, Integer pageSize, DimensionQueryReq req) {
         return Result.ok(dimensionService.pageData(pageNumber, pageSize, req));
+    }
+
+    @GetMapping("/excelExport")
+    @Operation(summary = "excel导出")
+    public void excelExport(HttpServletResponse response, DimensionQueryReq req) {
+        List<DimensionDto> dimensionDtos = dimensionService.listData(req);
+        ExcelUtil.exportFormList(response, dimensionDtos, "");
     }
 
 }

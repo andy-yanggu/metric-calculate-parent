@@ -98,30 +98,19 @@
             <artifactId>metric-calculate-core</artifactId>
             <exclusions>
                 <exclusion>
-                    <artifactId>fury-core</artifactId>
-                    <groupId>org.furyio</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>tlog-core</artifactId>
-                    <groupId>com.yomahub</groupId>
-                </exclusion>
-                <exclusion>
                     <artifactId>slf4j-simple</artifactId>
                     <groupId>org.slf4j</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>janino</artifactId>
-                    <groupId>org.codehaus.janino</groupId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>freemarker</artifactId>
-                    <groupId>org.freemarker</groupId>
                 </exclusion>
             </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>4.1.2</version>
         </dependency>
     </dependencies>
 

@@ -1,5 +1,8 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelImport;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,16 +37,21 @@ public class ModelTimeColumnDto extends BaseDto implements Serializable {
     /**
      * 宽表字段
      */
+    @ExcelObject(name = "宽表字段", nameList = {"name"})
     private ModelColumnDto modelColumn;
 
     /**
-     * 中文名称
+     * 时间格式
      */
+    @ExcelExport(name = "时间格式", sort = 2)
+    @ExcelImport(name = "时间格式")
     private String timeFormat;
 
     /**
      * 索引
      */
+    @ExcelExport(name = "序号", sort = 1)
+    @ExcelImport(name = "序号")
     private Integer sort;
 
 }
