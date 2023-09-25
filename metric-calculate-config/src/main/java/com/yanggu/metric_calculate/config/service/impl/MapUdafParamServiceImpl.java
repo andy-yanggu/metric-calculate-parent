@@ -31,11 +31,12 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(MapUdafParam mapUdafParam) throws Exception {
+    public void saveData(MapUdafParam mapUdafParam, List<ModelColumn> modelColumnList) throws Exception {
         super.save(mapUdafParam);
 
         List<AviatorExpressParam> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
         for (AviatorExpressParam aviatorExpressParam : distinctFieldParamList) {
+            aviatorExpressParam.setModelColumnList(modelColumnList);
             aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
             MapUdafParamDistinctFieldListRelation relation = new MapUdafParamDistinctFieldListRelation();
             relation.setMapUdafParamId(mapUdafParam.getId());
@@ -44,7 +45,7 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
         }
 
         BaseUdafParam valueAggParam = mapUdafParam.getValueAggParam();
-        baseUdafParamService.saveData(valueAggParam);
+        baseUdafParamService.saveData(valueAggParam, modelColumnList);
         MapUdafParamValueAggRelation relation = new MapUdafParamValueAggRelation();
         relation.setMapUdafParamId(mapUdafParam.getId());
         relation.setBaseUdafParamId(valueAggParam.getId());

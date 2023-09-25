@@ -58,6 +58,9 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     private ModelService modelService;
 
     @Autowired
+    private ModelColumnService modelColumnService;
+
+    @Autowired
     private DeriveModelDimensionColumnRelationService deriveModelDimensionColumnRelationService;
 
     @Autowired
@@ -118,9 +121,15 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         deriveModelTimeColumnRelation.setModelTimeColumnId(modelTimeColumn.getId());
         deriveModelTimeColumnRelationService.save(deriveModelTimeColumnRelation);
 
+        //根据宽表id查询对应的宽表字段
+        List<ModelColumn> modelColumnList = modelColumnService.queryChain()
+                .where(MODEL_COLUMN.MODEL_ID.eq(derive.getModelId()))
+                .list();
+
         //保存前置过滤条件
         AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
         if (filterExpressParam != null) {
+            filterExpressParam.setModelColumnList(modelColumnList);
             aviatorExpressParamService.saveDataByModelColumn(filterExpressParam);
             //保存派生指标和前置过滤条件中间表数据
             DeriveFilterExpressRelation deriveFilterExpressRelation = new DeriveFilterExpressRelation();
@@ -131,7 +140,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
         //保存聚合函数参数
         AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        aggregateFunctionParamService.saveData(aggregateFunctionParam);
+        aggregateFunctionParamService.saveData(aggregateFunctionParam, modelColumnList);
         //保存派生指标和聚合函数参数中间表数据
         DeriveAggregateFunctionParamRelation deriveAggregateFunctionParamRelation = new DeriveAggregateFunctionParamRelation();
         deriveAggregateFunctionParamRelation.setDeriveId(derive.getId());
@@ -140,7 +149,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
         //保存窗口数据
         WindowParam windowParam = derive.getWindowParam();
-        windowParamService.saveData(windowParam);
+        windowParamService.saveData(windowParam, modelColumnList);
         //保存派生指标和窗口数据中间表
         DeriveWindowParamRelation deriveWindowParamRelation = new DeriveWindowParamRelation();
         deriveWindowParamRelation.setDeriveId(derive.getId());

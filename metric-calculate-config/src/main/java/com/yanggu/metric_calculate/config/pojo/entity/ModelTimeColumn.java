@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.RelationOneToOne;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -38,10 +35,11 @@ public class ModelTimeColumn extends BaseEntity implements Serializable {
     private Integer modelColumnId;
 
     /**
-     * 宽表字段
+     * 宽表字段名称
      */
-    @RelationOneToOne(selfField = "modelColumnId", targetField = "id")
-    private ModelColumn modelColumn;
+    @Column(ignore = true)
+    @RelationOneToOne(selfField = "modelColumnId", targetField = "id", valueField = "name", targetTable = "model_column")
+    private String modelColumnName;
 
     /**
      * 时间格式

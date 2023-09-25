@@ -3,14 +3,12 @@
   "displayName": "交易流水表",
   "description": "交易流水明细数据",
   "directoryId": 0,
-  "userId": 1,
   "modelColumnList": [
     {
       "name": "trans_no",
       "displayName": "交易流水号",
       "dataType": "STRING",
       "fieldType": "REAL",
-      "userId": 1,
       "sort": 1
     },
     {
@@ -18,7 +16,6 @@
       "displayName": "转出账号",
       "dataType": "STRING",
       "fieldType": "REAL",
-      "userId": 1,
       "sort": 2
     },
     {
@@ -26,42 +23,33 @@
       "displayName": "转入账号",
       "dataType": "STRING",
       "fieldType": "REAL",
-      "userId": 1,
       "sort": 3
     },
     {
       "name": "amount",
       "displayName": "交易金额",
       "dataType": "DOUBLE",
-      "description": "",
+      "description": "单位：元",
       "fieldType": "REAL",
-      "userId": 1,
       "sort": 4
     },
     {
       "name": "trans_timestamp",
       "displayName": "交易时间戳",
       "dataType": "LONG",
-      "description": "",
+      "description": "毫秒值",
       "fieldType": "REAL",
-      "userId": 1,
       "sort": 5
     },
     {
       "name": "trans_date",
       "displayName": "交易日期",
       "dataType": "STRING",
-      "description": "",
+      "description": "yyyy-MM-dd日期格式",
       "fieldType": "VIRTUAL",
       "aviatorExpressParam": {
-        "express": "string_to_date(new java.util.Date(trans_timestamp), 'yyyy-MM-dd')",
-        "modelColumnList": [
-          {
-            "name": "trans_timestamp"
-          }
-        ]
+        "express": "string_to_date(new java.util.Date(trans_timestamp), 'yyyy-MM-dd')"
       },
-      "userId": 1,
       "sort": 6
     },
     {
@@ -71,22 +59,14 @@
       "description": "",
       "fieldType": "VIRTUAL",
       "aviatorExpressParam": {
-        "express": "string_to_date(new java.util.Date(trans_timestamp), 'HH')",
-        "modelColumnList": [
-          {
-            "name": "trans_timestamp"
-          }
-        ]
+        "express": "string_to_date(new java.util.Date(trans_timestamp), 'HH')"
       },
-      "userId": 1,
       "sort": 7
     }
   ],
   "modelTimeColumnList": [
     {
-      "modelColumn": {
-        "name": "trans_timestamp"
-      },
+      "modelColumnName": "trans_timestamp",
       "timeFormat": "TIMESTAMP",
       "sort": 1
     }
@@ -94,9 +74,7 @@
   "modelDimensionColumnList": [
     {
       "dimensionId": 212,
-      "modelColumn": {
-        "name": "account_no_out"
-      },
+      "modelColumnName": "account_no_out",
       "sort": 1
     }
   ]

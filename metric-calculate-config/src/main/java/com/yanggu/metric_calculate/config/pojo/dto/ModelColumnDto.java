@@ -21,6 +21,9 @@ public class ModelColumnDto extends BaseDto implements Serializable {
     @Serial
     private static final long serialVersionUID = -5841191173175360292L;
 
+    /**
+     * 主键自增
+     */
     private Integer id;
 
     /**

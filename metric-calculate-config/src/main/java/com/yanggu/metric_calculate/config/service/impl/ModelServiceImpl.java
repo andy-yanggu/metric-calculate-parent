@@ -78,16 +78,9 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         //3. 保存时间字段
         List<ModelTimeColumn> modelTimeColumnList = model.getModelTimeColumnList();
         modelTimeColumnList.forEach(modelTimeColumn -> {
+            //设置时间字段对应的宽表id和宽表字段id
             modelTimeColumn.setModelId(modelId);
-            ModelColumn modelColumn = modelTimeColumn.getModelColumn();
-            if (modelColumn == null) {
-                throw new BusinessException(MODEL_TIME_COLUMN_NULL);
-            }
-            String name = modelColumn.getName();
-            if (StrUtil.isEmpty(name)) {
-                throw new BusinessException(MODEL_TIME_COLUMN_NULL);
-            }
-            Integer modelColumnId = modelColumnNameIdMap.get(name);
+            Integer modelColumnId = modelColumnNameIdMap.get(modelTimeColumn.getModelColumnName());
             if (modelColumnId == null) {
                 throw new BusinessException(MODEL_COLUMN_NAME_ERROR);
             }
@@ -98,16 +91,9 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         //4. 保存维度字段
         List<ModelDimensionColumn> modelDimensionColumnList = model.getModelDimensionColumnList();
         modelDimensionColumnList.forEach(modelDimensionColumn -> {
+            //设置维度字段对应的宽表id和宽表字段id
             modelDimensionColumn.setModelId(modelId);
-            ModelColumn modelColumn = modelDimensionColumn.getModelColumn();
-            if (modelColumn == null) {
-                throw new BusinessException(MODEL_DIMENSION_COLUMN_NULL);
-            }
-            String name = modelColumn.getName();
-            if (StrUtil.isEmpty(name)) {
-                throw new BusinessException(MODEL_DIMENSION_COLUMN_NULL);
-            }
-            Integer modelColumnId = modelColumnNameIdMap.get(name);
+            Integer modelColumnId = modelColumnNameIdMap.get(modelDimensionColumn.getModelColumnName());
             if (modelColumnId == null) {
                 throw new BusinessException(MODEL_DIMENSION_COLUMN_NULL);
             }
@@ -159,12 +145,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
             ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
             useModelTimeColumnSet.add(modelTimeColumn);
             //添加时间字段对应的宽表字段
-            usedModelColumnSet.add(modelTimeColumn.getModelColumn());
+            //usedModelColumnSet.add(modelTimeColumn.getModelColumn());
             List<ModelDimensionColumn> dimensionColumnList = derive.getModelDimensionColumnList();
             for (ModelDimensionColumn modelDimensionColumn : dimensionColumnList) {
                 useModelDimensionColumnSet.add(modelDimensionColumn);
                 //添加维度字段对应的宽表字段
-                usedModelColumnSet.add(modelDimensionColumn.getModelColumn());
+                //usedModelColumnSet.add(modelDimensionColumn.getModelColumn());
             }
         }
 

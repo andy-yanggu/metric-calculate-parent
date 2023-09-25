@@ -4,6 +4,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.NodePatternMapper;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import com.yanggu.metric_calculate.config.pojo.entity.NodePattern;
 import com.yanggu.metric_calculate.config.pojo.entity.NodePatternAviatorExpressParamRelation;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
@@ -12,6 +13,8 @@ import com.yanggu.metric_calculate.config.service.NodePatternService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.yanggu.metric_calculate.config.pojo.entity.table.NodePatternAviatorExpressParamRelationTableDef.NODE_PATTERN_AVIATOR_EXPRESS_PARAM_RELATION;
 
@@ -29,10 +32,11 @@ public class NodePatternServiceImpl extends ServiceImpl<NodePatternMapper, NodeP
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(NodePattern nodePattern) throws Exception {
+    public void saveData(NodePattern nodePattern, List<ModelColumn> modelColumnList) throws Exception {
         super.save(nodePattern);
 
         AviatorExpressParam matchExpressParam = nodePattern.getMatchExpressParam();
+        matchExpressParam.setModelColumnList(modelColumnList);
         aviatorExpressParamService.saveDataByModelColumn(matchExpressParam);
         NodePatternAviatorExpressParamRelation relation = new NodePatternAviatorExpressParamRelation();
         relation.setNodePatternId(nodePattern.getId());

@@ -14,10 +14,7 @@ import org.dromara.hutool.core.util.RandomUtil;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -125,6 +122,14 @@ class AviatorTest {
         Map<String, Object> env = new HashMap<>();
         Object execute = expression.execute(env);
         System.out.println(execute);
+    }
+
+    @Test
+    void test7() {
+        String express = "1 + 2";
+        Expression expression = AviatorEvaluator.getInstance().compile(express);
+        List<String> variableNames = expression.getVariableNames();
+        assertEquals(Collections.emptyList(), variableNames);
     }
 
     public static class Add extends AbstractFunction {

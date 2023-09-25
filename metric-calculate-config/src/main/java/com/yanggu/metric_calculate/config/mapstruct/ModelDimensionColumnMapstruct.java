@@ -14,8 +14,8 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface ModelDimensionColumnMapstruct extends BaseMapstruct<ModelDimensionColumnDto, ModelDimensionColumn> {
 
     @Named("toCoreDimension")
-    @Mapping(source = "modelColumn.name", target = "columnName")
-    @Mapping(source = "dimension.name", target = "dimensionName")
+    @Mapping(source = "modelColumnName", target = "columnName")
+    @Mapping(source = "dimensionName", target = "dimensionName")
     @Mapping(source = "sort", target = "columnIndex")
     Dimension toCoreDimension(ModelDimensionColumn modelDimensionColumn);
 

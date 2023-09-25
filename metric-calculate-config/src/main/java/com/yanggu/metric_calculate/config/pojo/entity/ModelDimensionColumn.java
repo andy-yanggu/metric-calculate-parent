@@ -35,10 +35,11 @@ public class ModelDimensionColumn extends BaseEntity implements Serializable {
     private Integer modelColumnId;
 
     /**
-     * 宽表字段
+     * 宽表字段名称
      */
-    @RelationOneToOne(selfField = "modelColumnId", targetField = "id")
-    private ModelColumn modelColumn;
+    @Column(ignore = true)
+    @RelationOneToOne(selfField = "modelColumnId", targetField = "id", valueField = "name", targetTable = "model_column")
+    private String modelColumnName;
 
     /**
      * 维度id
@@ -46,10 +47,11 @@ public class ModelDimensionColumn extends BaseEntity implements Serializable {
     private Integer dimensionId;
 
     /**
-     * 维度
+     * 维度名称
      */
-    @RelationManyToOne(selfField = "dimensionId", targetField = "id")
-    private Dimension dimension;
+    @Column(ignore = true)
+    @RelationManyToOne(selfField = "dimensionId", targetField = "id", valueField = "name", targetTable = "dimension")
+    private String dimensionName;
 
     /**
      * 索引

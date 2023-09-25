@@ -34,7 +34,7 @@ public class Dimension extends BaseEntity implements Serializable {
     private String displayName;
 
     /**
-     * 备注
+     * 描述
      */
     private String description;
 

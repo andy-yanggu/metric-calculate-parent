@@ -3,10 +3,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.WindowParamMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePattern;
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParam;
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParamStatusExpressParamListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.NodePatternService;
 import com.yanggu.metric_calculate.config.service.WindowParamService;
@@ -37,13 +34,14 @@ public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, Windo
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(WindowParam windowParam) throws Exception {
+    public void saveData(WindowParam windowParam, List<ModelColumn> modelColumnList) throws Exception {
         super.save(windowParam);
 
         //保存状态窗口表达式列表
         List<AviatorExpressParam> statusExpressParamList = windowParam.getStatusExpressParamList();
         if (CollUtil.isNotEmpty(statusExpressParamList)) {
             for (AviatorExpressParam aviatorExpressParam : statusExpressParamList) {
+                aviatorExpressParam.setModelColumnList(modelColumnList);
                 aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
                 WindowParamStatusExpressParamListRelation relation = new WindowParamStatusExpressParamListRelation();
                 relation.setWindowParamId(windowParam.getId());
@@ -56,7 +54,7 @@ public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, Windo
         if (CollUtil.isNotEmpty(nodePatternList)) {
             for (NodePattern nodePattern : nodePatternList) {
                 nodePattern.setWindowParamId(windowParam.getId());
-                nodePatternService.saveData(nodePattern);
+                nodePatternService.saveData(nodePattern, modelColumnList);
             }
         }
     }

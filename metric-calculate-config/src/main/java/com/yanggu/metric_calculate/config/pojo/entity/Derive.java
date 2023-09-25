@@ -44,6 +44,13 @@ public class Derive extends BaseEntity implements Serializable {
     private Integer modelId;
 
     /**
+     * 宽表名称
+     */
+    @Column(ignore = true)
+    @RelationManyToOne(selfField = "modelId", targetField = "id", targetTable = "model", valueField = "name")
+    private String modelName;
+
+    /**
      * 维度字段
      */
     @RelationManyToMany(

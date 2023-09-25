@@ -1,0 +1,43 @@
+{
+  "name": "test_cov3",
+  "displayName": "测试协方差3",
+  "modelId": 25,
+  "description": "测试协方差",
+  "modelDimensionColumnList": [
+    {
+      "id": 7,
+      "sort": 1
+    }
+  ],
+  "modelTimeColumn": {
+    "id": 21
+  },
+  "filterExpressParam": {
+    "express": "amount > 100"
+  },
+  "aggregateFunctionParam": {
+    "aggregateFunctionId": 12,
+    "baseUdafParam": {
+      "aggregateFunctionId": 12,
+      "metricExpressParamList": [
+        {
+          "express": "amount + 100"
+        },
+        {
+          "express": "amount + 200"
+        }
+      ]
+    }
+  },
+  "windowParam": {
+    "windowType": "TUMBLING_TIME_WINDOW",
+    "modelTimeColumnId": 21,
+    "duration": 10,
+    "timeUnit": "HOUR"
+  },
+  "includeCurrent": false,
+  "roundAccuracyType": "NOT_HANDLE",
+  "roundAccuracyLength": 0,
+  "dataType": 0,
+  "directoryCode": 1
+}

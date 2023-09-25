@@ -1,7 +1,3 @@
-/*
- * Copyright 2020, Zetyun DEP All rights reserved.
- */
-
 package com.yanggu.metric_calculate.config.util.excel;
 
 import cn.hutool.core.convert.Convert;
@@ -66,17 +62,21 @@ public class ExcelUtil {
         response.setContentType("application/vnd.openxmlformats-o`fficedocument.spreadsheetml.sheet");
         Class<?> clazz = list.get(0).getClass();
         Field[] fields = clazz.getDeclaredFields();
+        //标量表单字段
         List<Field> formFields = Arrays.stream(fields)
                 .filter(e -> e.isAnnotationPresent(ExcelExport.class))
+                //根据ExcelExport中的sort进行升序排序
+                .sorted(Comparator.comparingInt(tempField -> tempField.getAnnotation(ExcelExport.class).sort()))
                 .toList();
-        List<Field> listFields = Arrays.stream(fields)
-                .filter(e -> e.isAnnotationPresent(ExcelListColumn.class))
-                .toList();
+        //对象字段
         List<Field> objectFields = Arrays.stream(fields)
                 .filter(e -> e.isAnnotationPresent(ExcelObject.class))
                 .toList();
-        try (OutputStream outputStream = response.getOutputStream();
-             XSSFWorkbook wb = new XSSFWorkbook()) {
+        //列表字段
+        List<Field> listFields = Arrays.stream(fields)
+                .filter(e -> e.isAnnotationPresent(ExcelListColumn.class))
+                .toList();
+        try (OutputStream outputStream = response.getOutputStream(); XSSFWorkbook wb = new XSSFWorkbook()) {
             for (int i = 0; i < list.size(); i++) {
                 //form
                 Object baseEntity = list.get(i);
@@ -114,6 +114,8 @@ public class ExcelUtil {
                     Class clazz1 = baseEntityList.get(0).getClass();
                     List<Field> fields1 = Arrays.stream(clazz1.getDeclaredFields())
                             .filter(e -> e.isAnnotationPresent(ExcelExport.class))
+                            //根据ExcelExport中的sort进行升序排序
+                            .sorted(Comparator.comparingInt(tempField -> tempField.getAnnotation(ExcelExport.class).sort()))
                             .toList();
                     for (Field field1 : fields1) {
                         listTitle.add(field1.getAnnotation(ExcelExport.class).name());
@@ -677,9 +679,9 @@ public class ExcelUtil {
                                 for (BaseValid baseValid : valid) {
                                     if (baseValid.validClass().isEnum() && cell != null) {
                                         //if (EnumsUtils.isNotInclude((Class<? extends Enum<?>>) baseValid.validClass(), cellValue, baseValid.methodName())) {
-                                            importResult.setSuccess(false);
-                                            sheetSuccess = false;
-                                            cellComment.append(baseValid.message());
+                                        importResult.setSuccess(false);
+                                        sheetSuccess = false;
+                                        cellComment.append(baseValid.message());
                                         //}
                                     }
                                     String validMethodName = baseValid.validClass().getName();
@@ -831,9 +833,9 @@ public class ExcelUtil {
                                 for (BaseValid baseValid : valid) {
                                     if (baseValid.validClass().isEnum() && cell != null) {
                                         //if (EnumUtil.contains(baseValid.validClass(), cellValue, baseValid.methodName())) {
-                                            importResult.setSuccess(false);
-                                            sheetSuccess = false;
-                                            cellComment.append(baseValid.message());
+                                        importResult.setSuccess(false);
+                                        sheetSuccess = false;
+                                        cellComment.append(baseValid.message());
                                         //}
                                     }
                                     String validMethodName = baseValid.validClass().getName();
@@ -940,7 +942,8 @@ public class ExcelUtil {
                 wb.write(byteArrayOutputStream);
                 importResult.setFile(byteArrayOutputStream.toByteArray());
             }
-        } catch (IOException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+        } catch (IOException | InstantiationException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             logger.error("导入失败：", e);
             throw new RuntimeException("导入失败！");
         }

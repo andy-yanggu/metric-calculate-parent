@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamBaseUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamMapUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamMixUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MIX_UDAF_PARAM_RELATION;
@@ -42,12 +44,13 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(AggregateFunctionParam aggregateFunctionParam) throws Exception {
+    public void saveData(AggregateFunctionParam aggregateFunctionParam,
+                         List<ModelColumn> modelColumnList) throws Exception {
         super.save(aggregateFunctionParam);
         //基本配置类型
         BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
         if (baseUdafParam != null) {
-            baseUdafParamService.saveData(baseUdafParam);
+            baseUdafParamService.saveData(baseUdafParam, modelColumnList);
             AggregateFunctionParamBaseUdafParamRelation relation = new AggregateFunctionParamBaseUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setBaseUdafParamId(baseUdafParam.getId());
@@ -56,7 +59,7 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
         //映射类型
         MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
         if (mapUdafParam != null) {
-            mapUdafParamService.saveData(mapUdafParam);
+            mapUdafParamService.saveData(mapUdafParam, modelColumnList);
             AggregateFunctionParamMapUdafParamRelation relation = new AggregateFunctionParamMapUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMapUdafParamId(mapUdafParam.getId());
@@ -65,7 +68,7 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
         //混合类型
         MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
         if (mixUdafParam != null) {
-            mixUdafParamService.saveData(mixUdafParam);
+            mixUdafParamService.saveData(mixUdafParam, modelColumnList);
             AggregateFunctionParamMixUdafParamRelation relation = new AggregateFunctionParamMixUdafParamRelation();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMixUdafParamId(mixUdafParam.getId());

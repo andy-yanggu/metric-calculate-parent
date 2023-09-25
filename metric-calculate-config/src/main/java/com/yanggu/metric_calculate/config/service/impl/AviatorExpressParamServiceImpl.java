@@ -63,13 +63,15 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                     .map(ModelColumn::getName)
                     .collect(Collectors.toSet());
         }
-        checkAviatorExpress(aviatorExpressParam, fieldSet);
+        List<String> paramList = checkAviatorExpress(aviatorExpressParam, fieldSet);
         //保存Aviator表达式
         super.save(aviatorExpressParam);
 
         //保存Aviator表达式依赖的宽表字段
         if (CollUtil.isNotEmpty(modelColumnList)) {
             List<AviatorExpressParamModelColumnRelation> relationList = modelColumnList.stream()
+                    //过滤出依赖的宽表字段
+                    .filter(modelColumn -> paramList.contains(modelColumn.getName()))
                     .map(modelColumn -> {
                         AviatorExpressParamModelColumnRelation relation = new AviatorExpressParamModelColumnRelation();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
@@ -77,7 +79,9 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                         return relation;
                     })
                     .toList();
-            aviatorExpressParamModelColumnRelationService.saveBatch(relationList);
+            if (CollUtil.isNotEmpty(relationList)) {
+                aviatorExpressParamModelColumnRelationService.saveBatch(relationList);
+            }
         }
 
         //保存Aviator表达式依赖的Aviator函数实例
@@ -89,14 +93,17 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
     public void saveDataByMixUdafParamItem(AviatorExpressParam aviatorExpressParam) throws Exception {
         //校验Aviator表达式
         List<MixUdafParamItem> mixUdafParamItemList = aviatorExpressParam.getMixUdafParamItemList();
-        Set<String> fieldSet = mixUdafParamItemList.stream().map(MixUdafParamItem::getName).collect(Collectors.toSet());
-        checkAviatorExpress(aviatorExpressParam, fieldSet);
+        Set<String> fieldSet = mixUdafParamItemList.stream()
+                .map(MixUdafParamItem::getName)
+                .collect(Collectors.toSet());
+        List<String> paramList = checkAviatorExpress(aviatorExpressParam, fieldSet);
         //保存Aviator表达式
         super.save(aviatorExpressParam);
 
         //保存Aviator表达式依赖的混合参数字段
         if (CollUtil.isNotEmpty(mixUdafParamItemList)) {
             List<AviatorExpressParamMixUdafParamItemRelation> relationList = mixUdafParamItemList.stream()
+                    .filter(mixUdafParamItem -> paramList.contains(mixUdafParamItem.getName()))
                     .map(mixUdafParamItem -> {
                         AviatorExpressParamMixUdafParamItemRelation relation = new AviatorExpressParamMixUdafParamItemRelation();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
@@ -104,7 +111,9 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                         return relation;
                     })
                     .toList();
-            aviatorExpressParamMixUdafParamItemRelationService.saveBatch(relationList);
+            if (CollUtil.isNotEmpty(relationList)) {
+                aviatorExpressParamMixUdafParamItemRelationService.saveBatch(relationList);
+            }
         }
 
         //保存Aviator表达式依赖的Aviator函数实例
@@ -150,7 +159,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
         }
     }
 
-    private void checkAviatorExpress(AviatorExpressParam aviatorExpressParam,
+    private List<String> checkAviatorExpress(AviatorExpressParam aviatorExpressParam,
                                      Set<String> fieldSet) throws Exception {
         if (aviatorExpressParam == null) {
             throw new BusinessException(AVIATOR_EXPRESS_CHECK_ERROR);
@@ -185,13 +194,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
         aviatorFunctionFactory.init();
         Expression expression = AviatorExpressUtil.compileExpress(expressParam, aviatorFunctionFactory);
         AviatorExpressUtil.checkVariable(expression, fieldSet);
-        List<String> variableNames = expression.getVariableNames();
-        if (CollUtil.isEmpty(variableNames)) {
-            return;
-        }
-        if (fieldSet.size() != variableNames.size()) {
-            throw new BusinessException(AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR);
-        }
+        return expression.getVariableNames();
     }
 
     private void saveAviatorFunctionInstanceRelation(AviatorExpressParam aviatorExpressParam) {

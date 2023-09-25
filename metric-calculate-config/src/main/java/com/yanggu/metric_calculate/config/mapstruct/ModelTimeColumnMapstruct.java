@@ -14,7 +14,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface ModelTimeColumnMapstruct extends BaseMapstruct<ModelTimeColumnDto, ModelTimeColumn> {
 
     @Named("toCoreTimeColumn")
-    @Mapping(source = "modelColumn.name", target = "columnName")
+    @Mapping(source = "modelColumnName", target = "columnName")
     @Mapping(source = "timeFormat", target = "timeFormat")
     TimeColumn toCoreTimeColumn(ModelTimeColumn modelTimeColumn);
 
