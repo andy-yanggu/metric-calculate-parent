@@ -57,8 +57,7 @@ public class ExcelUtil {
      * @param response .
      * @param list     .
      */
-    public static <T> void exportFormList(HttpServletResponse response, List<T> list, String mediaType) {
-        mediaType = mediaType.toUpperCase();
+    public static <T> void exportFormList(HttpServletResponse response, List<T> list) {
         response.setContentType("application/vnd.openxmlformats-o`fficedocument.spreadsheetml.sheet");
         Class<?> clazz = list.get(0).getClass();
         Field[] fields = clazz.getDeclaredFields();
@@ -84,15 +83,13 @@ public class ExcelUtil {
                 List<Object> formData = new ArrayList<>();
                 for (Field field : formFields) {
                     field.setAccessible(true);
-                    if (!Arrays.asList(field.getAnnotation(ExcelExport.class).excludes()).contains(mediaType)) {
-                        formTitle.add(field.getAnnotation(ExcelExport.class).name());
-                        ExcelExport annotation = field.getAnnotation(ExcelExport.class);
-                        if (StringUtils.isNotEmpty(annotation.readConverterExp())) {
-                            String value = reverseByExp(Convert.toStr(field.get(baseEntity)), annotation.readConverterExp(), annotation.separator());
-                            formData.add(value);
-                        } else {
-                            formData.add(field.get(baseEntity));
-                        }
+                    formTitle.add(field.getAnnotation(ExcelExport.class).name());
+                    ExcelExport annotation = field.getAnnotation(ExcelExport.class);
+                    if (StringUtils.isNotEmpty(annotation.readConverterExp())) {
+                        String value = reverseByExp(Convert.toStr(field.get(baseEntity)), annotation.readConverterExp(), annotation.separator());
+                        formData.add(value);
+                    } else {
+                        formData.add(field.get(baseEntity));
                     }
                 }
                 FormExcelModel formExcelModel = new FormExcelModel();

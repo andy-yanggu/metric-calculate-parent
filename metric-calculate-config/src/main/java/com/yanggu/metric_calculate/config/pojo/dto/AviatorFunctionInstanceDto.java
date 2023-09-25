@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -25,11 +26,13 @@ public class AviatorFunctionInstanceDto extends BaseDto implements Serializable 
     /**
      * 中文名称
      */
+    @ExcelExport(name = "中文名称")
     private String displayName;
 
     /**
      * 描述
      */
+    @ExcelExport(name = "描述信息")
     private String description;
 
     /**

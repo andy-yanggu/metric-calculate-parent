@@ -5,8 +5,10 @@ import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.req.AviatorFunctionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
+import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,6 +69,13 @@ public class AviatorFunctionController {
                                                      Integer pageSize,
                                                      AviatorFunctionQueryReq req) {
         return Result.ok(aviatorFunctionService.pageData(pageNumber, pageSize, req));
+    }
+
+    @GetMapping("/excelExport")
+    @Operation(summary = "excel导出")
+    public void excelExport(HttpServletResponse response, AviatorFunctionQueryReq req) {
+        List<AviatorFunctionDto> list = aviatorFunctionService.listData(req);
+        ExcelUtil.exportFormList(response, list);
     }
 
 }

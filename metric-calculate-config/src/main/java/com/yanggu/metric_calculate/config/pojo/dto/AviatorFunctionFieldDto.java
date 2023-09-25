@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelImport;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,18 +24,24 @@ public class AviatorFunctionFieldDto extends BaseDto implements Serializable {
     private Integer id;
 
     /**
-     * 字段名
+     * 字段名称
      */
+    @ExcelExport(name = "Aviator函数字段名称", sort = 2)
+    @ExcelImport(name = "Aviator函数字段名称")
     private String name;
 
     /**
      * 中文名称
      */
+    @ExcelExport(name = "中文名称", sort = 3)
+    @ExcelImport(name = "中文名称")
     private String displayName;
 
     /**
      * 描述
      */
+    @ExcelExport(name = "描述", sort = 4)
+    @ExcelImport(name = "描述")
     private String description;
 
     /**
@@ -44,6 +52,8 @@ public class AviatorFunctionFieldDto extends BaseDto implements Serializable {
     /**
      * 索引
      */
+    @ExcelExport(name = "索引", sort = 1)
+    @ExcelImport(name = "索引")
     private Integer sort;
 
 }

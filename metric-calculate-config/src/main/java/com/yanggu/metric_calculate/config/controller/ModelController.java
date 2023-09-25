@@ -86,8 +86,8 @@ public class ModelController {
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
     public void excelExport(HttpServletResponse response, ModelQueryReq req) {
-        List<ModelDto> modelDtos = modelService.listData(req);
-        ExcelUtil.exportFormList(response, modelDtos, "");
+        List<ModelDto> list = modelService.listData(req);
+        ExcelUtil.exportFormList(response, list);
     }
 
 }

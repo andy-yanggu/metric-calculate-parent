@@ -6,9 +6,11 @@ import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DeriveService;
+import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +75,13 @@ public class DeriveController {
     public Result<List<DeriveMetricsConfigData>> getAllCoreDeriveMetrics() {
         List<DeriveMetricsConfigData> list = deriveService.getAllCoreDeriveMetrics();
         return Result.ok(list);
+    }
+
+    @GetMapping("/excelExport")
+    @Operation(summary = "excel导出")
+    public void excelExport(HttpServletResponse response, DeriveQueryReq req) {
+        List<DeriveDto> list = deriveService.listData(req);
+        ExcelUtil.exportFormList(response, list);
     }
 
 }

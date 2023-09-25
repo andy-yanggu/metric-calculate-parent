@@ -5,8 +5,10 @@ import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
 import com.yanggu.metric_calculate.config.pojo.req.AggregateFunctionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
+import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,6 +69,13 @@ public class AggregateFunctionController {
                                                         Integer pageSize,
                                                         AggregateFunctionQueryReq queryReq) {
         return Result.ok(aggregateFunctionService.pageQuery(pageNumber, pageSize, queryReq));
+    }
+
+    @GetMapping("/excelExport")
+    @Operation(summary = "excel导出")
+    public void excelExport(HttpServletResponse response, AggregateFunctionQueryReq req) {
+        List<AggregateFunctionDto> list = aggregateFunctionService.listData(req);
+        ExcelUtil.exportFormList(response, list);
     }
 
 }

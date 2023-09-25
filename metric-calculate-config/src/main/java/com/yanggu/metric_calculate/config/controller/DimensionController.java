@@ -65,7 +65,7 @@ public class DimensionController {
     @Operation(summary = "excel导出")
     public void excelExport(HttpServletResponse response, DimensionQueryReq req) {
         List<DimensionDto> dimensionDtos = dimensionService.listData(req);
-        ExcelUtil.exportFormList(response, dimensionDtos, "");
+        ExcelUtil.exportFormList(response, dimensionDtos);
     }
 
 }
