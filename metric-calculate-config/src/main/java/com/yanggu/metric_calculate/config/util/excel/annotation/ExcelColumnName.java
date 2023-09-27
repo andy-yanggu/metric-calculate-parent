@@ -7,20 +7,16 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface ExcelObject {
+public @interface ExcelColumnName {
 
     /**
-     * 名称
-     * @return
+     * 导出到Excel中的名字.
      */
-    String name();
+    String name() default "";
 
     /**
-     * 不需要导出的字段
-     * <p>默认为空, 全部导出</p>
-     *
-     * @return
+     * 导出时在excel中排序.
      */
-    String[] excludeNameArray() default {};
+    int sort() default Integer.MAX_VALUE;
 
 }

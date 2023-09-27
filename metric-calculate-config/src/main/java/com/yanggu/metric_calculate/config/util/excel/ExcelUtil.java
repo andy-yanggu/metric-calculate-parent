@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
+import org.dromara.hutool.core.collection.CollUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -76,9 +77,10 @@ public class ExcelUtil {
                 .filter(e -> e.isAnnotationPresent(ExcelListColumn.class))
                 .toList();
         try (OutputStream outputStream = response.getOutputStream(); XSSFWorkbook wb = new XSSFWorkbook()) {
-            for (int i = 0; i < list.size(); i++) {
-                //form
-                Object baseEntity = list.get(i);
+            for (T t : list) {
+                //写入的行号索引
+                int rowIndex = 0;
+                //标量表单字段
                 List<String> formTitle = new ArrayList<>();
                 List<Object> formData = new ArrayList<>();
                 for (Field field : formFields) {
@@ -86,25 +88,66 @@ public class ExcelUtil {
                     formTitle.add(field.getAnnotation(ExcelExport.class).name());
                     ExcelExport annotation = field.getAnnotation(ExcelExport.class);
                     if (StringUtils.isNotEmpty(annotation.readConverterExp())) {
-                        String value = reverseByExp(Convert.toStr(field.get(baseEntity)), annotation.readConverterExp(), annotation.separator());
+                        String value = reverseByExp(Convert.toStr(field.get(t)), annotation.readConverterExp(), annotation.separator());
                         formData.add(value);
                     } else {
-                        formData.add(field.get(baseEntity));
+                        formData.add(field.get(t));
                     }
                 }
+                String sheetName = formData.get(0).toString();
                 FormExcelModel formExcelModel = new FormExcelModel();
-                formExcelModel.setSheetName("sheet" + i);
+                formExcelModel.setSheetName(sheetName);
                 formExcelModel.setTitle(formTitle);
                 formExcelModel.setData(formData);
                 ExcelUtil.exportFormExcel(formExcelModel, wb, 0);
 
-                int listAreaIndex = formTitle.size();
+                rowIndex = rowIndex + formTitle.size();
+
+                //对象字段
+                for (Field objectField : objectFields) {
+                    ExcelObject annotation = objectField.getAnnotation(ExcelObject.class);
+                    List<String> excludeNameArray = Arrays.stream(annotation.excludeNameArray()).toList();
+                    objectField.setAccessible(true);
+                    Object objectFormData = objectField.get(t);
+                    if (objectFormData == null) {
+                        continue;
+                    }
+                    List<Field> objectFormFieldList = Arrays.stream(objectField.getType().getDeclaredFields())
+                            .filter(e -> !excludeNameArray.contains(e.getName()))
+                            .filter(e -> e.isAnnotationPresent(ExcelExport.class))
+                            //根据ExcelExport中的sort进行升序排序
+                            .sorted(Comparator.comparingInt(tempField -> tempField.getAnnotation(ExcelExport.class).sort()))
+                            .toList();
+
+                    if (CollUtil.isEmpty(objectFormFieldList)) {
+                        continue;
+                    }
+
+                    FormExcelModel tempFormExcelModel = new FormExcelModel();
+                    List<String> objectFormTitle = new ArrayList<>();
+                    List<Object> objectFormDataList = new ArrayList<>();
+                    tempFormExcelModel.setSheetName(sheetName);
+                    tempFormExcelModel.setTitle(objectFormTitle);
+                    tempFormExcelModel.setData(objectFormDataList);
+                    for (Field objectFormField : objectFormFieldList) {
+                        objectFormField.setAccessible(true);
+                        //添加标题
+                        objectFormTitle.add(objectFormField.getAnnotation(ExcelExport.class).name());
+                        //添加数据
+                        objectFormDataList.add(objectFormField.get(objectFormData));
+                    }
+                    String name = annotation.name();
+                    ExcelUtil.exportObjectFormExcel(tempFormExcelModel, wb, rowIndex, name);
+                    rowIndex = rowIndex + objectFormFieldList.size() + 1;
+                }
+
+                //列表字段
                 for (Field field : listFields) {
                     field.setAccessible(true);
                     List<String> listTitle = new ArrayList<>();
                     List<List<Object>> listData = new ArrayList<>();
                     //list
-                    List<Object> baseEntityList = (List<Object>) field.get(baseEntity);
+                    List<Object> baseEntityList = (List<Object>) field.get(t);
                     if (CollectionUtils.isEmpty(baseEntityList)) {
                         continue;
                     }
@@ -116,20 +159,6 @@ public class ExcelUtil {
                             .toList();
                     for (Field field1 : fields1) {
                         listTitle.add(field1.getAnnotation(ExcelExport.class).name());
-                    }
-                    List<Field> fields2 = Arrays.stream(clazz1.getDeclaredFields())
-                            .filter(e -> e.isAnnotationPresent(ExcelObject.class))
-                            .toList();
-                    for (Field tempField : fields2) {
-                        ExcelObject excelObject = tempField.getAnnotation(ExcelObject.class);
-                        String tempName = excelObject.name();
-                        String[] nameArray = excelObject.nameList();
-                        Class<?> fieldClazz = tempField.getType();
-                        for (String s : nameArray) {
-                            Field declaredField = fieldClazz.getDeclaredField(s);
-                            String name = declaredField.getAnnotation(ExcelExport.class).name();
-                            listTitle.add(tempName + "/" + name);
-                        }
                     }
                     for (Object baseEntity1 : baseEntityList) {
                         List<Object> data = new ArrayList<>();
@@ -145,30 +174,14 @@ public class ExcelUtil {
                                 }
                             }
                         }
-                        for (Field tempField : fields2) {
-                            tempField.setAccessible(true);
-                            Object tempObject = tempField.get(baseEntity1);
-                            if (tempObject == null) {
-                                continue;
-                            }
-                            ExcelObject excelObject = tempField.getAnnotation(ExcelObject.class);
-                            String[] nameArray = excelObject.nameList();
-                            Class<?> fieldClazz = tempField.getType();
-                            for (String s : nameArray) {
-                                Field declaredField = fieldClazz.getDeclaredField(s);
-                                declaredField.setAccessible(true);
-                                Object o = declaredField.get(tempObject);
-                                data.add(o);
-                            }
-                        }
                         listData.add(data);
                     }
                     ListExcelModel listExcelModel = new ListExcelModel();
-                    listExcelModel.setSheetName("sheet" + i);
+                    listExcelModel.setSheetName(sheetName);
                     listExcelModel.setTitle(listTitle);
                     listExcelModel.setData(listData);
-                    ExcelUtil.exportListExcel(listExcelModel, wb, listAreaIndex, field.getAnnotation(ExcelListColumn.class).name());
-                    listAreaIndex = listAreaIndex + listData.size() + 2;
+                    ExcelUtil.exportListExcel(listExcelModel, wb, rowIndex, field.getAnnotation(ExcelListColumn.class).name());
+                    rowIndex = rowIndex + listData.size() + 2;
                 }
             }
             wb.write(outputStream);
@@ -584,7 +597,7 @@ public class ExcelUtil {
             if (titleRow != null) {
                 short lastTitleCellIndex = titleRow.getLastCellNum();
                 for (int j = fieldList.size() + 1; j <= lastRowNum; j++) {
-                    Object baseEntity1 = (Object) listColumnClazz.newInstance();
+                    Object baseEntity1 = listColumnClazz.newInstance();
                     //list数据行，每行是一条数据库记录
                     Row dataRow = sheet.getRow(j);
                     //循环标题行的cell，数据行对应索引的cell就是对象的字段值
@@ -1075,11 +1088,27 @@ public class ExcelUtil {
             sheet = workbook.createSheet(sheetName);
         }
         //写入校验头
-        writeCheckTitlesToExcel(workbook, sheet, checkTitle, rowIndex);
+        writeCheckTitlesToExcel(sheet, checkTitle, rowIndex);
         //标题写入第rowIndex行
         writeTitlesToExcel(workbook, sheet, listExcelModel.getTitle(), rowIndex + 1);
         //数据从第rowIndex+1行开始写
         writeRowsToExcel(workbook, sheet, listExcelModel.getData(), rowIndex + 2);
+    }
+
+    private static void exportObjectFormExcel(FormExcelModel formExcelModel, XSSFWorkbook workbook,
+                                              int rowIndex, String checkTitle) {
+        String sheetName = formExcelModel.getSheetName();
+        if (sheetName == null) {
+            sheetName = DEFAULT_SHEET_NAME;
+        }
+        XSSFSheet sheet = workbook.getSheet(sheetName);
+        if (sheet == null) {
+            sheet = workbook.createSheet(sheetName);
+        }
+        //写入校验头
+        writeCheckTitlesToExcel(sheet, checkTitle, rowIndex);
+        //数据从第rowIndex+1行开始写
+        writeFormExcel(workbook, sheet, formExcelModel, rowIndex + 1);
     }
 
     /**
@@ -1209,7 +1238,7 @@ public class ExcelUtil {
         }
     }
 
-    private static void writeCheckTitlesToExcel(XSSFWorkbook wb, Sheet sheet, String checkTitle, int rowIndex) {
+    private static void writeCheckTitlesToExcel(Sheet sheet, String checkTitle, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
         Cell checkCell0 = row.createCell(0);
         Drawing<?> drawing = sheet.createDrawingPatriarch();
@@ -1225,7 +1254,6 @@ public class ExcelUtil {
         comment1.setString(new XSSFRichTextString("校验数据使用，请勿修改此单元格内容！"));
         checkCell1.setCellComment(comment1);
         checkCell1.setCellValue(checkTitle);
-        rowIndex++;
     }
 
     /**
@@ -1440,8 +1468,8 @@ public class ExcelUtil {
         for (int i = 0; i < rowsCount; i++) {
             XSSFRow row = sheet.createRow(rowIndex++);
             createRowCell(sheet, row, DEFAULT_ROW_HEIGHT, DEFAULT_CELL_WIDTH, 0, formExcelModel.getTitle().get(i));
-            createRowCell(sheet, row, DEFAULT_ROW_HEIGHT, DEFAULT_CELL_WIDTH, 1,
-                    formExcelModel.getData() != null ? formExcelModel.getData().get(i) : null);
+            Object cellValue = formExcelModel.getData() != null ? formExcelModel.getData().get(i) : null;
+            createRowCell(sheet, row, DEFAULT_ROW_HEIGHT, DEFAULT_CELL_WIDTH, 1, cellValue);
         }
     }
 

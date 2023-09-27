@@ -4,6 +4,7 @@ import com.yanggu.metric_calculate.config.enums.AccuracyEnum;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelImport;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelListColumn;
+import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelObject;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -68,23 +69,26 @@ public class DeriveDto extends BaseDto implements Serializable {
     /**
      * 时间字段
      */
-    //@ExcelObject(name = "时间字段", nameList = {""})
+    @ExcelObject(name = "时间字段", excludeNameArray = {"sort"})
     private ModelTimeColumnDto modelTimeColumn;
 
     /**
      * 前置过滤条件
      * <p>Aviator表达式参数</p>
      */
+    @ExcelObject(name = "前置过滤条件")
     private AviatorExpressParamDto filterExpressParam;
 
     /**
      * 聚合函数参数
      */
+    @ExcelObject(name = "聚合函数参数")
     private AggregateFunctionParamDto aggregateFunctionParam;
 
     /**
-     * 窗口相关参数
+     * 窗口参数
      */
+    @ExcelObject(name = "窗口参数")
     private WindowParamDto windowParam;
 
     /**

@@ -27,6 +27,11 @@ public class AviatorFunctionInstance extends BaseEntity implements Serializable 
     private Integer id;
 
     /**
+     * 名称
+     */
+    private String name;
+
+    /**
      * 中文名称
      */
     private String displayName;

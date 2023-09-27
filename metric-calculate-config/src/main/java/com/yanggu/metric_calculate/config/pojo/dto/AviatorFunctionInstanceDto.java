@@ -24,6 +24,11 @@ public class AviatorFunctionInstanceDto extends BaseDto implements Serializable 
     private Integer id;
 
     /**
+     * 名称
+     */
+    private String name;
+
+    /**
      * 中文名称
      */
     @ExcelExport(name = "中文名称")

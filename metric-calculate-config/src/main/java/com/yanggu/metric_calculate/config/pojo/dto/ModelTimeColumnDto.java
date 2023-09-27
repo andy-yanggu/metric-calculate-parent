@@ -36,14 +36,14 @@ public class ModelTimeColumnDto extends BaseDto implements Serializable {
     /**
      * 宽表字段名称
      */
-    @ExcelExport(name = "宽表字段名称", sort = 3)
+    @ExcelExport(name = "宽表字段名称", sort = 2)
     @ExcelImport(name = "宽表字段名称")
     private String modelColumnName;
 
     /**
      * 时间格式
      */
-    @ExcelExport(name = "时间格式", sort = 2)
+    @ExcelExport(name = "时间格式", sort = 3)
     @ExcelImport(name = "时间格式")
     private String timeFormat;
 

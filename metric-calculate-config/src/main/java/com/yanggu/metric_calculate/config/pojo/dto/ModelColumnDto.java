@@ -64,7 +64,7 @@ public class ModelColumnDto extends BaseDto implements Serializable {
     /**
      * 如果是虚拟字段，增加Aviator表达式
      */
-    @ExcelObject(name = "Aviator表达式", nameList = {"express"})
+    @ExcelObject(name = "Aviator表达式")
     private AviatorExpressParamDto aviatorExpressParam;
 
     /**
