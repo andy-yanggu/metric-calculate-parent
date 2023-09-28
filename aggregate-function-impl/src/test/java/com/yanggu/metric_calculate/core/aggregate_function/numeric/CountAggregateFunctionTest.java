@@ -1,10 +1,9 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Unit test for CountAggregateFunction.
@@ -12,21 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class CountAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = CountAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("COUNT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(CountAggregateFunction.class, "COUNT");
     }
 
     @Test
     void testNumerical() {
-        Numerical numerical = CountAggregateFunction.class.getAnnotation(Numerical.class);
-        assertFalse(numerical.multiNumber());
+        AggregateFunctionTestBase.testNumerical(CountAggregateFunction.class, false);
     }
 
     @Test
-    void testConstructor() {
-        CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
-        assertNotNull(countAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(CountAggregateFunction.class);
     }
     
     @Test

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.function_factory;
 
 
 import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunction;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunctionAnnotation;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;

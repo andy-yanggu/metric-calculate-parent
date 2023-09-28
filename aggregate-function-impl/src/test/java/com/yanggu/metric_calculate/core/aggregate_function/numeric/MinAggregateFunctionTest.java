@@ -1,29 +1,25 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MinAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = MinAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("MIN", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(MinAggregateFunction.class, "MIN");
     }
 
     @Test
     void testNumerical() {
-        Numerical numerical = MinAggregateFunction.class.getAnnotation(Numerical.class);
-        assertFalse(numerical.multiNumber());
+        AggregateFunctionTestBase.testNumerical(MinAggregateFunction.class, false);
     }
 
     @Test
-    void testConstructor() {
-        MinAggregateFunction<Integer> minAggregateFunction = new MinAggregateFunction<>();
-        assertNotNull(minAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(MinAggregateFunction.class);
     }
 
     @Test

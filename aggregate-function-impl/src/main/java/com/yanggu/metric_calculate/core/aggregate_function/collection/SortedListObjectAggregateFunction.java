@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,6 +20,7 @@ import java.util.List;
 @AggregateFunctionAnnotation(name = "SORTEDLIMITLISTOBJECT", displayName = "有序对象列表")
 public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
 
+    @AggregateFunctionFieldAnnotation(displayName = "长度", notNull = true)
     private Integer limit = 10;
 
     @Override

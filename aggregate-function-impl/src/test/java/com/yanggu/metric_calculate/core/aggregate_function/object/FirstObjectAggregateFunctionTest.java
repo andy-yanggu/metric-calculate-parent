@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.Test;
 
@@ -13,22 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class FirstObjectAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = FirstObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("FIRSTOBJECT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(FirstObjectAggregateFunction.class, "FIRSTOBJECT");
     }
 
     @Test
     void testObjective() {
-        Objective objective = FirstObjectAggregateFunction.class.getAnnotation(Objective.class);
-        assertEquals(2, objective.retainStrategy());
-        assertEquals(0, objective.keyStrategy());
+        AggregateFunctionTestBase.testObjective(FirstObjectAggregateFunction.class, 0, 2);
     }
 
     @Test
-    void testConstructor() {
-        FirstObjectAggregateFunction<String> firstObjectAggregateFunction = new FirstObjectAggregateFunction<>();
-        assertNotNull(firstObjectAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(FirstObjectAggregateFunction.class);
     }
 
     @Test

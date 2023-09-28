@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
@@ -10,29 +9,23 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SortValueReturnKeyMapAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortValueReturnKeyMapAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("SORTVALUERETURNKEYMAP", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(SortValueReturnKeyMapAggregateFunction.class, "SORTVALUERETURNKEYMAP");
     }
 
     @Test
     void testMapType() {
-        MapType mapType = SortValueReturnKeyMapAggregateFunction.class.getAnnotation(MapType.class);
-        assertNotNull(mapType);
+        AggregateFunctionTestBase.testMapType(SortValueReturnKeyMapAggregateFunction.class);
     }
 
     @Test
-    void testConstructor() {
-        SortValueReturnKeyMapAggregateFunction<String, Double, Double, Double> aggregateFunction = new SortValueReturnKeyMapAggregateFunction<>();
-        assertNotNull(aggregateFunction);
-        assertNull(aggregateFunction.getValueAggregateFunction());
-        assertTrue(aggregateFunction.getAsc());
-        assertEquals(Integer.valueOf(10), aggregateFunction.getLimit());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(SortValueReturnKeyMapAggregateFunction.class);
     }
 
     @Test

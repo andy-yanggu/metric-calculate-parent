@@ -1,29 +1,25 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SumAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = SumAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("SUM", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(SumAggregateFunction.class, "SUM");
     }
 
     @Test
     void testNumerical() {
-        Numerical numerical = SumAggregateFunction.class.getAnnotation(Numerical.class);
-        assertFalse(numerical.multiNumber());
+        AggregateFunctionTestBase.testNumerical(SumAggregateFunction.class, false);
     }
 
     @Test
-    void testConstructor() {
-        SumAggregateFunction<Integer> sumAggregateFunction = new SumAggregateFunction<>();
-        assertNotNull(sumAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(SumAggregateFunction.class);
     }
 
     @Test

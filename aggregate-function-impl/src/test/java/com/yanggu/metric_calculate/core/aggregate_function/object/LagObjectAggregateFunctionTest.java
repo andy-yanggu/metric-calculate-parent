@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
 
@@ -12,23 +11,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class LagObjectAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = LagObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("LAGOBJECT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(LagObjectAggregateFunction.class, "LAGOBJECT");
     }
 
     @Test
     void testObjective() {
-        Objective objective = LagObjectAggregateFunction.class.getAnnotation(Objective.class);
-        assertEquals(2, objective.retainStrategy());
-        assertEquals(0, objective.keyStrategy());
+        AggregateFunctionTestBase.testObjective(LagObjectAggregateFunction.class, 0, 2);
     }
 
     @Test
-    void testConstructor() {
-        LagObjectAggregateFunction<String> lagObjectAggregateFunction = new LagObjectAggregateFunction<>();
-        assertEquals(1, lagObjectAggregateFunction.getOffset());
-        assertNull(lagObjectAggregateFunction.getDefaultValue());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(LagObjectAggregateFunction.class);
     }
 
     @Test

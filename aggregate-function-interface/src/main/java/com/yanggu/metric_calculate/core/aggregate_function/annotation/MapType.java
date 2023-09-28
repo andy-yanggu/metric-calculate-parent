@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 映射类型
+ * 映射类
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

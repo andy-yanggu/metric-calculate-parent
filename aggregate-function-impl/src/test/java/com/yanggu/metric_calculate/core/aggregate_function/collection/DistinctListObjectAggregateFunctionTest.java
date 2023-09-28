@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,22 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class DistinctListObjectAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = DistinctListObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("DISTINCTLISTOBJECT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(DistinctListObjectAggregateFunction.class, "DISTINCTLISTOBJECT");
     }
 
     @Test
     void testCollective() {
-        Collective collective = DistinctListObjectAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(2, collective.retainStrategy());
-        assertEquals(1, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(DistinctListObjectAggregateFunction.class, 1, 2);
     }
 
     @Test
-    void testConstructor() {
-        DistinctListObjectAggregateFunction<Object> distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction<>();
-        assertNotNull(distinctListObjectAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(DistinctListObjectAggregateFunction.class);
     }
     
     /**

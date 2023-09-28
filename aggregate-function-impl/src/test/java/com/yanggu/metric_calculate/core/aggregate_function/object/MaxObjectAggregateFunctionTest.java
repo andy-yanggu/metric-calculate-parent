@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.Test;
 
@@ -13,22 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class MaxObjectAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = MaxObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("MAXOBJECT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(MaxObjectAggregateFunction.class, "MAXOBJECT");
     }
 
     @Test
     void testObjective() {
-        Objective objective = MaxObjectAggregateFunction.class.getAnnotation(Objective.class);
-        assertEquals(2, objective.retainStrategy());
-        assertEquals(3, objective.keyStrategy());
+        AggregateFunctionTestBase.testObjective(MaxObjectAggregateFunction.class, 3, 2);
     }
 
     @Test
-    void testConstructor() {
-        MaxObjectAggregateFunction<Integer> maxObjectAggregateFunction = new MaxObjectAggregateFunction<>();
-        assertNotNull(maxObjectAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(MaxObjectAggregateFunction.class);
     }
 
     @Test

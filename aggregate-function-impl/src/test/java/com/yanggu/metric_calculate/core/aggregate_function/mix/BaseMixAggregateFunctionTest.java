@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.mix;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,21 @@ class BaseMixAggregateFunctionTest {
                 "return test1 + test2;";
         Expression expression = AviatorEvaluator.compile(express, true);
         baseMixAggregateFunction.setExpression(expression);
+    }
+
+    @Test
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(BaseMixAggregateFunction.class, "BASEMIX");
+    }
+
+    @Test
+    void testMapType() {
+        AggregateFunctionTestBase.testMix(BaseMixAggregateFunction.class);
+    }
+
+    @Test
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(BaseMixAggregateFunction.class);
     }
 
     @Test

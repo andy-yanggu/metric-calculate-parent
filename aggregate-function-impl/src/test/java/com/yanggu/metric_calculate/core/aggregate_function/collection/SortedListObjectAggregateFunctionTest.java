@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.core.reflect.FieldUtil;
@@ -17,22 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class SortedListObjectAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortedListObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("SORTEDLIMITLISTOBJECT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(SortedListObjectAggregateFunction.class, "SORTEDLIMITLISTOBJECT");
     }
 
     @Test
     void testCollective() {
-        Collective collective = SortedListObjectAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(2, collective.retainStrategy());
-        assertEquals(2, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(SortedListObjectAggregateFunction.class, 2, 2);
     }
 
     @Test
-    void testConstructor() {
-        SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
-        assertEquals(Integer.valueOf(10), sortedListObjectAggregateFunction.getLimit());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(SortedListObjectAggregateFunction.class);
     }
 
     @Test

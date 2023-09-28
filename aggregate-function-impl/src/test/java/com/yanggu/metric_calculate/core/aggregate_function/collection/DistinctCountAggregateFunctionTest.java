@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -25,22 +24,18 @@ class DistinctCountAggregateFunctionTest {
     private HashSet<Integer> mock;
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = DistinctCountAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("DISTINCTCOUNT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(DistinctCountAggregateFunction.class, "DISTINCTCOUNT");
     }
 
     @Test
     void testCollective() {
-        Collective collective = DistinctCountAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(0, collective.retainStrategy());
-        assertEquals(1, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(DistinctCountAggregateFunction.class, 1, 0);
     }
 
     @Test
-    void testConstructor() {
-        DistinctCountAggregateFunction<Object> distinctCountAggregateFunction = new DistinctCountAggregateFunction<>();
-        assertNotNull(distinctCountAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(DistinctCountAggregateFunction.class);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
@@ -13,23 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class SlidingCountWindowAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = SlidingCountWindowAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("SLIDINGCOUNTWINDOW", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(SlidingCountWindowAggregateFunction.class, "SLIDINGCOUNTWINDOW");
     }
 
     @Test
     void testCollective() {
-        Collective collective = SlidingCountWindowAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(1, collective.retainStrategy());
-        assertEquals(0, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(SlidingCountWindowAggregateFunction.class, 0, 1);
     }
 
     @Test
-    void testConstructor() {
-        SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
-        assertEquals(Integer.valueOf(10), slidingCountWindowAggregateFunction.getLimit());
-        assertNull(slidingCountWindowAggregateFunction.getAggregateFunction());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(SlidingCountWindowAggregateFunction.class);
     }
 
     @Test

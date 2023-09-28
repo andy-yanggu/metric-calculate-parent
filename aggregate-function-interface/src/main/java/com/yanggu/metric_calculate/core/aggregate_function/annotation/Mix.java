@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 混合型注解
+ * 混合型
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

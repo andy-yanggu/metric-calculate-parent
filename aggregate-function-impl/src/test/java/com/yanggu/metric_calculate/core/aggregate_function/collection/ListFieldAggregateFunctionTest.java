@@ -1,32 +1,25 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 class ListFieldAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = ListFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("LISTFIELD", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(ListFieldAggregateFunction.class, "LISTFIELD");
     }
 
     @Test
     void testCollective() {
-        Collective collective = ListFieldAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(1, collective.retainStrategy());
-        assertEquals(0, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(ListFieldAggregateFunction.class, 0, 1);
     }
 
     @Test
-    void testConstructor() {
-        ListFieldAggregateFunction<Integer> listFieldAggregateFunction = new ListFieldAggregateFunction<>();
-        assertEquals(Integer.valueOf(10), listFieldAggregateFunction.getLimit());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(ListFieldAggregateFunction.class);
     }
 
 }

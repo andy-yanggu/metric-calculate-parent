@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.aviator_function;
+package com.yanggu.metric_calculate.core.aviator_function.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

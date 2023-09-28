@@ -1,8 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,22 +17,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class ListObjectAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = ListObjectAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("LISTOBJECT", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(ListObjectAggregateFunction.class, "LISTOBJECT");
     }
 
     @Test
     void testCollective() {
-        Collective collective = ListObjectAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(2, collective.retainStrategy());
-        assertEquals(0, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(ListObjectAggregateFunction.class, 0, 2);
     }
 
     @Test
-    void testConstructor() {
-        ListObjectAggregateFunction<Integer> listObjectAggregateFunction = new ListObjectAggregateFunction<>();
-        assertEquals(Integer.valueOf(10), listObjectAggregateFunction.getLimit());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(ListObjectAggregateFunction.class);
     }
 
     @Test

@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.Test;
 
@@ -13,22 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class MinFieldAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = MinFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("MINFIELD", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(MinFieldAggregateFunction.class, "MINFIELD");
     }
 
     @Test
     void testObjective() {
-        Objective objective = MinFieldAggregateFunction.class.getAnnotation(Objective.class);
-        assertEquals(1, objective.retainStrategy());
-        assertEquals(3, objective.keyStrategy());
+        AggregateFunctionTestBase.testObjective(MinFieldAggregateFunction.class, 3, 1);
     }
 
     @Test
-    void testConstructor() {
-        MinFieldAggregateFunction<Integer> minFieldAggregateFunction = new MinFieldAggregateFunction<>();
-        assertNotNull(minFieldAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(MinFieldAggregateFunction.class);
     }
 
     @Test

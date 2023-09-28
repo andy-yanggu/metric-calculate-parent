@@ -1,30 +1,23 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SortedListFieldAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortedListFieldAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("SORTEDLIMITLISTFIELD", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(SortedListFieldAggregateFunction.class, "SORTEDLIMITLISTFIELD");
     }
 
     @Test
     void testCollective() {
-        Collective collective = SortedListFieldAggregateFunction.class.getAnnotation(Collective.class);
-        assertEquals(1, collective.retainStrategy());
-        assertEquals(2, collective.keyStrategy());
+        AggregateFunctionTestBase.testCollective(SortedListFieldAggregateFunction.class, 2, 1);
     }
 
     @Test
-    void testConstructor() {
-        SortedListFieldAggregateFunction<Integer> sortedListFieldAggregateFunction = new SortedListFieldAggregateFunction<>();
-        assertEquals(Integer.valueOf(10), sortedListFieldAggregateFunction.getLimit());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(SortedListFieldAggregateFunction.class);
     }
 
 }

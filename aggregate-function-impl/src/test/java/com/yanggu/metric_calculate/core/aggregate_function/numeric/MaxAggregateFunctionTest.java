@@ -1,29 +1,25 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MaxAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = MaxAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("MAX", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(MaxAggregateFunction.class, "MAX");
     }
 
     @Test
     void testNumerical() {
-        Numerical numerical = MaxAggregateFunction.class.getAnnotation(Numerical.class);
-        assertFalse(numerical.multiNumber());
+        AggregateFunctionTestBase.testNumerical(MaxAggregateFunction.class, false);
     }
 
     @Test
-    void testConstructor() {
-        MaxAggregateFunction<Integer> maxAggregateFunction = new MaxAggregateFunction<>();
-        assertNotNull(maxAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(MaxAggregateFunction.class);
     }
 
     // Test case for createAccumulator method

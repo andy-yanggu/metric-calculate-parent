@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * SortValueMapAggregateFunction单元测试类
@@ -17,22 +16,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class SortValueMapAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = SortValueMapAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("SORTVALUEMAP", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(SortValueMapAggregateFunction.class, "SORTVALUEMAP");
     }
 
     @Test
     void testMapType() {
-        MapType mapType = SortValueMapAggregateFunction.class.getAnnotation(MapType.class);
-        assertNotNull(mapType);
+        AggregateFunctionTestBase.testMapType(SortValueMapAggregateFunction.class);
     }
 
     @Test
-    void testConstructor() {
-        SortValueMapAggregateFunction<String, Double, Double, Double> aggregateFunction = new SortValueMapAggregateFunction<>();
-        assertNotNull(aggregateFunction);
-        assertNull(aggregateFunction.getValueAggregateFunction());
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(SortValueMapAggregateFunction.class);
     }
 
     /**

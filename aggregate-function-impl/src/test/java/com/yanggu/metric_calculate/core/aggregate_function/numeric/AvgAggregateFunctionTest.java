@@ -1,11 +1,10 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * AvgAggregateFunction单元测试类
@@ -13,21 +12,18 @@ import static org.junit.jupiter.api.Assertions.*;
 class AvgAggregateFunctionTest {
 
     @Test
-    void testMergeType() {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = AvgAggregateFunction.class.getAnnotation(AggregateFunctionAnnotation.class);
-        assertEquals("AVG", aggregateFunctionAnnotation.name());
+    void testAggregateFunctionName() {
+        AggregateFunctionTestBase.testAggregateFunctionName(AvgAggregateFunction.class, "AVG");
     }
 
     @Test
     void testNumerical() {
-        Numerical numerical = AvgAggregateFunction.class.getAnnotation(Numerical.class);
-        assertFalse(numerical.multiNumber());
+        AggregateFunctionTestBase.testNumerical(AvgAggregateFunction.class, false);
     }
 
     @Test
-    void testConstructor() {
-        AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
-        assertNotNull(avgAggregateFunction);
+    void testNoArgsConstructor() {
+        AggregateFunctionTestBase.testNoArgsConstructor(AvgAggregateFunction.class);
     }
 
     @Test

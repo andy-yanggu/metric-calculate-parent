@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aviator_function;
 
 
 import com.googlecode.aviator.runtime.function.AbstractVariadicFunction;
+import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunctionAnnotation;
 
 import java.io.Serial;
 
