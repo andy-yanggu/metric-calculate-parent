@@ -76,7 +76,8 @@ class DeriveExcelTest {
         List<ModelDimensionColumnDto> modelDimensionColumnList = new ArrayList<>();
         deriveDto.setModelDimensionColumnList(modelDimensionColumnList);
         int filterIndex = 0;
-        ll: for (int i = 18; i < sheet.getPhysicalNumberOfRows(); i++) {
+        ll:
+        for (int i = 18; i < sheet.getPhysicalNumberOfRows(); i++) {
             Cell cell1 = sheet.getRow(i).getCell(0);
             Cell cell2 = sheet.getRow(i).getCell(1);
             List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
@@ -97,30 +98,48 @@ class DeriveExcelTest {
         AviatorExpressParamDto aviatorExpressParamDto = null;
         //表达式
         String filterExpress = sheet.getRow(filterIndex + 2).getCell(1).getStringCellValue();
-        //Aviator函数
-        Cell cell = sheet.getRow(filterIndex + 3).getCell(0);
-        List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
-        //判断是否为合并单元格
-        for (CellRangeAddress mergedRegion : mergedRegions) {
-            if (mergedRegion.isInRange(cell)) {
+        if (StrUtil.isNotBlank(filterExpress)) {
+            aviatorExpressParamDto = new AviatorExpressParamDto();
+            aviatorExpressParamDto.setExpress(filterExpress);
+            List<AviatorFunctionInstanceDto> aviatorFunctionInstanceList = new ArrayList<>();
+            aviatorExpressParamDto.setAviatorFunctionInstanceList(aviatorFunctionInstanceList);
+            //Aviator函数
+            Cell cell = sheet.getRow(filterIndex + 3).getCell(0);
+            List<CellRangeAddress> mergedRegions = sheet.getMergedRegions();
+            //判断是否为合并单元格
+            boolean mergedCell = false;
+            CellRangeAddress mergedRegion = null;
+            for (CellRangeAddress tempMergedRegion : mergedRegions) {
+                if (tempMergedRegion.isInRange(cell)) {
+                    mergedCell = true;
+                    mergedRegion = tempMergedRegion;
+                    break;
+                }
+            }
+            //如果是合并单元格
+            if (mergedCell) {
                 int firstRow = mergedRegion.getFirstRow();
                 int lastRow = mergedRegion.getLastRow();
                 for (int i = firstRow + 1; i < lastRow + 1; i++) {
                     Cell cell1 = sheet.getRow(i).getCell(1);
-                    if (cell1 == null) {
-                        break;
+                    if (cell1 == null || StrUtil.isBlank(cell1.getStringCellValue())) {
+                        continue;
                     }
                     AviatorFunctionInstanceDto aviatorFunctionInstanceDto = new AviatorFunctionInstanceDto();
-                    //aviatorFunctionInstanceDto.setParam();
+                    aviatorFunctionInstanceDto.setName(cell1.getStringCellValue());
+                }
+            } else {
+                Cell cell1 = sheet.getRow(filterIndex + 3).getCell(1);
+                if (cell1 != null && StrUtil.isNotBlank(cell1.getStringCellValue())) {
+                    AviatorFunctionInstanceDto aviatorFunctionInstanceDto = new AviatorFunctionInstanceDto();
+                    aviatorFunctionInstanceDto.setName(cell1.getStringCellValue());
+                    aviatorFunctionInstanceList.add(aviatorFunctionInstanceDto);
                 }
             }
-        }
-        if (StrUtil.isNotBlank(filterExpress)) {
-            aviatorExpressParamDto = new AviatorExpressParamDto();
-            aviatorExpressParamDto.setExpress(filterExpress);
-        }
-        if (aviatorExpressParamDto != null) {
             deriveDto.setFilterExpressParam(aviatorExpressParamDto);
+        } else {
+            //如果表达式为null, 说明没有前置过滤条件
+            //直接跳到窗口参数
         }
 
 

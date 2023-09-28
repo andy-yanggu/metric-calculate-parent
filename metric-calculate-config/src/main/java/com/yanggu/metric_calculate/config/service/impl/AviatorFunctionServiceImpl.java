@@ -18,8 +18,8 @@ import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
 import com.yanggu.metric_calculate.config.service.JarStoreService;
 import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunction;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aviator_function.AviatorFunctionFieldAnnotation;
+import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.util.UdafCustomParamData;
