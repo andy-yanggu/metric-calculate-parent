@@ -8,7 +8,6 @@ import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -18,7 +17,6 @@ import java.util.Map;
 /**
  * 度量值字段处理器, 从输入的明细数据中，提取出度量值
  */
-@Slf4j
 @Getter
 @EqualsAndHashCode
 public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {

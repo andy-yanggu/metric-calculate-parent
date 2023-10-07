@@ -35,9 +35,9 @@ class ComparatorChainTest {
             Function<JSONObject, Comparable<?>> function =
                     tempJson -> (Comparable<?>) tempJson.get(fieldOrderParam.getStr("name"));
             if (asc) {
-                tempComparator = new FuncComparator<>(false, function);
+                tempComparator = new FuncComparator<>(false, false, function);
             } else {
-                tempComparator = new FuncComparator<>(true, function).reversed();
+                tempComparator = new FuncComparator<>(true, false, function).reversed();
             }
             comparatorChain.addComparator(tempComparator);
         }

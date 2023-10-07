@@ -67,7 +67,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
             }
             List<FieldOrderParam> collect = udafParam.getObjectiveCompareFieldParamList().stream()
                     .map(tempCompareField -> new FieldOrderParam(tempCompareField, true))
-                    .collect(Collectors.toList());
+                    .toList();
             this.multiFieldOrderFieldProcessor =
                     FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, collect, aviatorFunctionFactory);
         }

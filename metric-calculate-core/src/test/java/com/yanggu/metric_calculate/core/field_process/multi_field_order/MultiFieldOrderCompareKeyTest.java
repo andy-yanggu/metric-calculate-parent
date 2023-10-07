@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
  * 多字段排序单元测试类
  */
@@ -21,7 +23,7 @@ class MultiFieldOrderCompareKeyTest {
         List<Boolean> booleanList = ListUtil.of(true, false);
         multiFieldOrderCompareKey1.setBooleanList(booleanList);
         int i = multiFieldOrderCompareKey1.compareTo(multiFieldOrderCompareKey2);
-        //assertEquals(1, i);
+        assertEquals(1, i);
     }
 
 }

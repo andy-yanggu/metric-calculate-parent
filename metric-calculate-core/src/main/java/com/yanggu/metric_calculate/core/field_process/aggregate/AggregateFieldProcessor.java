@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
-import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -17,25 +16,11 @@ import java.util.List;
  * @param <IN>
  * @param <ACC>
  * @param <OUT>
+ * @param fieldProcessor    从输入的明细数据中提取出度量值
+ * @param aggregateFunction 聚合函数
  */
-@Getter
-public class AggregateFieldProcessor<IN, ACC, OUT> {
-
-    /**
-     * 从输入的明细数据中提取出度量值
-     */
-    private final FieldProcessor<JSONObject, IN> fieldProcessor;
-
-    /**
-     * 聚合函数
-     */
-    private final AggregateFunction<IN, ACC, OUT> aggregateFunction;
-
-    public AggregateFieldProcessor(FieldProcessor<JSONObject, IN> fieldProcessor,
-                                   AggregateFunction<IN, ACC, OUT> aggregateFunction) {
-        this.fieldProcessor = fieldProcessor;
-        this.aggregateFunction = aggregateFunction;
-    }
+public record AggregateFieldProcessor<IN, ACC, OUT>(FieldProcessor<JSONObject, IN> fieldProcessor,
+                                                    AggregateFunction<IN, ACC, OUT> aggregateFunction) {
 
     /**
      * 从明细数据中提取出度量值

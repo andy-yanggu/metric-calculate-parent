@@ -14,7 +14,6 @@ import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 多表达式字段处理器
@@ -56,7 +55,7 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
 
         this.metricFieldProcessorList = metricExpressParamList.stream()
                 .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @SneakyThrows
@@ -64,7 +63,7 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
     public List<Object> process(JSONObject input) {
         return this.metricFieldProcessorList.stream()
                 .map(tempFieldProcessor -> tempFieldProcessor.process(input))
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

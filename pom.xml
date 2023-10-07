@@ -36,7 +36,7 @@
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aviator.version>5.3.3</aviator.version>
-        <hutool.version>6.0.0-M5</hutool.version>
+        <hutool.version>6.0.0-M6</hutool.version>
         <knife4j-openapi3-jakarta.version>4.3.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>
         <mockito-core.version>5.5.0</mockito-core.version>
@@ -57,7 +57,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!--Spring Boot 依赖 -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -65,7 +64,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--Spring Cloud 相关依赖-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -73,7 +71,6 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--Spring Cloud & Alibaba 相关依赖-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>

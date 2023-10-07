@@ -257,8 +257,8 @@ class FieldProcessorUtilTest {
         AggregateFieldProcessor<Integer, Double, Double> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         FieldProcessor<JSONObject, Integer> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
-        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
-        assertEquals(SumAggregateFunction.class, aggregateFieldProcessor.getAggregateFunction().getClass());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
+        assertEquals(SumAggregateFunction.class, aggregateFieldProcessor.aggregateFunction().getClass());
     }
 
     /**
@@ -278,8 +278,8 @@ class FieldProcessorUtilTest {
         AggregateFieldProcessor<JSONObject, MutableObj<JSONObject>, JSONObject> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
-        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
-        assertEquals(FirstObjectAggregateFunction.class, aggregateFieldProcessor.getAggregateFunction().getClass());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
+        assertEquals(FirstObjectAggregateFunction.class, aggregateFieldProcessor.aggregateFunction().getClass());
     }
 
     /**
@@ -299,8 +299,8 @@ class FieldProcessorUtilTest {
         AggregateFieldProcessor<JSONObject, List<JSONObject>, List<JSONObject>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
-        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
-        assertEquals(new ListObjectAggregateFunction<JSONObject>(), aggregateFieldProcessor.getAggregateFunction());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
+        assertEquals(new ListObjectAggregateFunction<JSONObject>(), aggregateFieldProcessor.aggregateFunction());
     }
 
     /**
@@ -333,11 +333,11 @@ class FieldProcessorUtilTest {
         AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<MultiFieldDistinctKey, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         FieldProcessor<JSONObject, AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
-        assertEquals(baseFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+        assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
 
         BaseMapAggregateFunction<MultiFieldDistinctKey, Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();
         baseMapAggregateFunction.setValueAggregateFunction(new SumAggregateFunction<>());
-        assertEquals(baseMapAggregateFunction, aggregateFieldProcessor.getAggregateFunction());
+        assertEquals(baseMapAggregateFunction, aggregateFieldProcessor.aggregateFunction());
     }
 
     /**
@@ -372,14 +372,14 @@ class FieldProcessorUtilTest {
         AggregateFieldProcessor<Map<String, Object>, Map<String, Object>, Double> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         MixFieldProcessor<Map<String, Object>> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUdafParam);
-        assertEquals(mixFieldProcessor, aggregateFieldProcessor.getFieldProcessor());
+        assertEquals(mixFieldProcessor, aggregateFieldProcessor.fieldProcessor());
 
         BaseMixAggregateFunction<Double> baseMixAggregateFunction = new BaseMixAggregateFunction<>();
         Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
         mixAggregateFunctionMap.put("amount", new SumAggregateFunction<Integer>());
         baseMixAggregateFunction.setMixAggregateFunctionMap(mixAggregateFunctionMap);
         baseMixAggregateFunction.setExpression(AviatorEvaluator.compile("amount", true));
-        assertEquals(baseMixAggregateFunction, aggregateFieldProcessor.getAggregateFunction());
+        assertEquals(baseMixAggregateFunction, aggregateFieldProcessor.aggregateFunction());
     }
 
     @Test

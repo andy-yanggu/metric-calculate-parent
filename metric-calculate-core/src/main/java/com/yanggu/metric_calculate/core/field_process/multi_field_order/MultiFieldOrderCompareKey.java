@@ -68,10 +68,10 @@ public class MultiFieldOrderCompareKey implements Comparable<MultiFieldOrderComp
             Comparator tempComparator;
             if (Boolean.FALSE.equals(result)) {
                 //降序时, null放在最后面
-                tempComparator = new FuncComparator<>(true, function).reversed();
+                tempComparator = new FuncComparator<>(true, false, function).reversed();
             } else {
                 //升序排序, null放在最前面
-                tempComparator = new FuncComparator<>(false, function);
+                tempComparator = new FuncComparator<>(false, false, function);
             }
             comparatorChain.addComparator(tempComparator);
         }

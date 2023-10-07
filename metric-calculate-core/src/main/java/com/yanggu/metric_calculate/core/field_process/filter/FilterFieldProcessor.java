@@ -7,7 +7,6 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam
 import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -18,7 +17,6 @@ import java.util.Map;
 /**
  * 前置过滤表达式处理器, 输入明细数据, 执行表达式, 返回Boolean
  */
-@Slf4j
 @Getter
 @EqualsAndHashCode
 public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean> {

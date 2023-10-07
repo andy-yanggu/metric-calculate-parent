@@ -12,7 +12,6 @@ import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * 多字段去重字段处理器
@@ -53,14 +52,14 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
 
         this.metricFieldProcessorList = distinctFieldListParamList.stream()
                 .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     public MultiFieldDistinctKey process(JSONObject input) throws Exception {
         List<Object> collect = metricFieldProcessorList.stream()
                 .map(tempMetricExpress -> tempMetricExpress.process(input))
-                .collect(Collectors.toList());
+                .toList();
         MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey();
         multiFieldDistinctKey.setFieldList(collect);
         return multiFieldDistinctKey;
