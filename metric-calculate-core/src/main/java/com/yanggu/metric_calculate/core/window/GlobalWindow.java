@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -19,14 +18,10 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.GLOBAL_WINDO
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
+@WindowAnnotation(type = GLOBAL_WINDOW, canMerge = true)
 public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private ACC accumulator;
-
-    @Override
-    public WindowTypeEnum type() {
-        return GLOBAL_WINDOW;
-    }
 
     @Override
     public void put(JSONObject input) {

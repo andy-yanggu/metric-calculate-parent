@@ -10,8 +10,8 @@ import org.dromara.hutool.json.JSONObject;
  * <p>窗口是从Streaming到Batch的一个桥梁</p>
  * <p>各实现类定义了如何将数据进行切分</p>
  * <p>从明细中提取出度量值, 并添加到状态中</p>
- * <p>定义了如何查询数据</p>
- * <p>定义了如何删除过期数据</p>
+ * <p>定义了如何查询窗口中的数据</p>
+ * <p>定义了如何删除窗口中的过期数据</p>
  *
  * @param <IN>
  * @param <ACC>
@@ -50,6 +50,7 @@ public abstract class AbstractWindow<IN, ACC, OUT> implements Window<OUT> {
 
     /**
      * 默认调用query方法, 对于时间类型的窗口, 需要重写该方法
+     *
      * @param input
      * @return
      */

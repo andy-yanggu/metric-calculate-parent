@@ -187,8 +187,8 @@ public class LocalKeyByAccumulateBatchOperator<KEY, IN, ACC, OUT> extends Abstra
         }
         //for循环向下游输出Tuple2<KEY, ACC>
         for (Map.Entry<KEY, ACC> entry : localMap.entrySet()) {
-            StreamRecord<Tuple2<KEY, ACC>> tuple2StreamRecord = new StreamRecord<>(Tuple2.of(entry.getKey(), entry.getValue()));
-            output.collect(tuple2StreamRecord);
+            StreamRecord<Tuple2<KEY, ACC>> streamRecord = new StreamRecord<>(Tuple2.of(entry.getKey(), entry.getValue()));
+            output.collect(streamRecord);
         }
         //清空本地缓存
         localMap.clear();

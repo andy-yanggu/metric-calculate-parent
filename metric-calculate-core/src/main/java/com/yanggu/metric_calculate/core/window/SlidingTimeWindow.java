@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.TimeWindowData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,15 +23,11 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SLIDING_TIME
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
+@WindowAnnotation(type = SLIDING_TIME_WINDOW, canMerge = true)
 public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     private Map<Pair<Long, Long>, ACC> map = new HashMap<>();
-
-    @Override
-    public WindowTypeEnum type() {
-        return SLIDING_TIME_WINDOW;
-    }
 
     @Override
     public void put(Long timestamp, IN in) {

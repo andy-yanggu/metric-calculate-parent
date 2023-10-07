@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.window;
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.util.DateUtils;
@@ -23,6 +22,7 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SESSION_WIND
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@WindowAnnotation(type = SESSION_WINDOW, canMerge = false)
 public class SessionWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     /**
@@ -49,11 +49,6 @@ public class SessionWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
      * 累计数据
      */
     private List<IN> inList = new ArrayList<>();
-
-    @Override
-    public WindowTypeEnum type() {
-        return SESSION_WINDOW;
-    }
 
     @Override
     public void put(JSONObject input) {

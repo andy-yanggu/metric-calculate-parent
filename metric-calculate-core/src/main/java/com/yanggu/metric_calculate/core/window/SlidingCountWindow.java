@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.window;
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,17 +19,13 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SLIDING_COUN
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
+@WindowAnnotation(type = SLIDING_COUNT_WINDOW, canMerge = false)
 public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Integer limit;
 
     private List<IN> inList = new ArrayList<>();
-
-    @Override
-    public WindowTypeEnum type() {
-        return SLIDING_COUNT_WINDOW;
-    }
 
     @Override
     public void put(JSONObject input) {

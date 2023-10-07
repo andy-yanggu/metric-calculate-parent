@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.window;
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
@@ -26,7 +25,8 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.EVENT_WINDOW
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
+@WindowAnnotation(type = EVENT_WINDOW, canMerge = true)
 public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
@@ -56,11 +56,6 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
             tempFilterFieldProcessorMap.put(node, filterFieldProcessor);
         }
         this.filterFieldProcessorMap = tempFilterFieldProcessorMap;
-    }
-
-    @Override
-    public WindowTypeEnum type() {
-        return EVENT_WINDOW;
     }
 
     @Override

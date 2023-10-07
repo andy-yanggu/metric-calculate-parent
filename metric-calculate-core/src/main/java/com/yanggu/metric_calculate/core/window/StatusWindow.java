@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
@@ -26,7 +25,8 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.STATUS_WINDO
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
+@WindowAnnotation(type = STATUS_WINDOW, canMerge = false)
 public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Map<String, Class<?>> fieldMap;
@@ -46,11 +46,6 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     @Override
     public void init() {
         this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, statusExpressParamList, aviatorFunctionFactory);
-    }
-
-    @Override
-    public WindowTypeEnum type() {
-        return STATUS_WINDOW;
     }
 
     @Override

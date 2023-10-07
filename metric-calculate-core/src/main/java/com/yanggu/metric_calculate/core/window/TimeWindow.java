@@ -21,7 +21,7 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     protected TimeFieldProcessor timeFieldProcessor;

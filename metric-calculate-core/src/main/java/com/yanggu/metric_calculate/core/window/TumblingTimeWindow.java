@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -19,15 +18,11 @@ import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.TUMBLING_TIM
  * @param <OUT>
  */
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
+@WindowAnnotation(type = TUMBLING_TIME_WINDOW, canMerge = true)
 public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     private TreeMap<Long, ACC> treeMap = new TreeMap<>();
-
-    @Override
-    public WindowTypeEnum type() {
-        return TUMBLING_TIME_WINDOW;
-    }
 
     @Override
     public void put(Long timestamp, IN in) {

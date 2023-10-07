@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import org.dromara.hutool.json.JSONObject;
 
@@ -13,13 +12,6 @@ import org.dromara.hutool.json.JSONObject;
  * @param <OUT>
  */
 public interface Window<OUT> {
-
-    /**
-     * 窗口类型
-     *
-     * @return
-     */
-    WindowTypeEnum type();
 
     /**
      * 放入明细数据进行累加
