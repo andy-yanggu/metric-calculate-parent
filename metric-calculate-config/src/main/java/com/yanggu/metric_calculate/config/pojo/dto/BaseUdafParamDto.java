@@ -49,7 +49,7 @@ public class BaseUdafParamDto extends BaseDto implements Serializable {
 
     /**
      * 排序字段列表（sortFieldList）：类似SQL中的ORDER BY id ASC, user_name DESC，多字段排序。
-     * <p>对象型（最大对象、最小对象）、集合型（排序列表）</p>
+     * <p>集合型（排序列表）</p>
      */
     private List<FieldOrderParamDto> collectiveSortFieldList;
 
