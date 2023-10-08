@@ -30,7 +30,7 @@ public class SortValueReturnValueMapAggregateFunction<K, V, ValueACC, ValueOUT e
     @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
 
-    @AggregateFunctionFieldAnnotation(displayName = "true升序，false降序")
+    @AggregateFunctionFieldAnnotation(displayName = "升降序", description = "true升序，false降序")
     private Boolean asc = true;
 
     @Override

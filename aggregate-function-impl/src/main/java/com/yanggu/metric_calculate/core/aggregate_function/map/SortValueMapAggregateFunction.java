@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -27,8 +28,10 @@ import java.util.stream.Collectors;
 public class SortValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
         extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {
 
+    @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
 
+    @AggregateFunctionFieldAnnotation(displayName = "升降序", description = "true升序，false降序")
     private Boolean asc = true;
 
     @Override

@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * 映射类型的基类
  * <p>会对{@link AbstractMapAggregateFunction#valueAggregateFunction}进行赋值</p>
- * <p>子类可以根据需要重写{@link AbstractMapAggregateFunction#getResult(Map)}}方法</p>
+ * <p>子类可以根据需要重写{@link AbstractMapAggregateFunction#getResult(Map)}方法</p>
  * <p>IN的输入类型是定死的{@link AbstractMap.SimpleImmutableEntry}</p>
  *
  * @param <K>        map的key

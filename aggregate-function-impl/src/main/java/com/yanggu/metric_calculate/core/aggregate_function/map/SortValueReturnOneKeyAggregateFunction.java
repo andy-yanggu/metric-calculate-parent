@@ -7,13 +7,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.AbstractMap;
-import java.util.List;
 import java.util.Map;
 
 
 /**
- * 对ValeOUT进行排序的map, 并进行limit
- * <p>输出的是{@code List<K>}, 只是根据value进行排序，取对应K的TopN</p>
+ * 对ValeOUT进行排序, 并且只取第一个K
+ * <p>输出的是{@code K}, 只是根据ValeOUT进行排序，取第一个K</p>
  *
  * @param <K>
  * @param <V>
@@ -23,21 +22,19 @@ import java.util.Map;
 @Data
 @MapType
 @EqualsAndHashCode(callSuper = false)
-@AggregateFunctionAnnotation(name = "SORTVALUERETURNKEYMAP", displayName = "TOPN主键")
-public class SortValueReturnKeyMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
-        extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, List<K>> {
-
-    @AggregateFunctionFieldAnnotation(displayName = "长度限制")
-    private Integer limit = 10;
+@AggregateFunctionAnnotation(name = "SORTVALUERETURNONEKY", displayName = "TOP1主键")
+public class SortValueReturnOneKeyAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
+        extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, K> {
 
     @AggregateFunctionFieldAnnotation(displayName = "升降序", description = "true升序，false降序")
     private Boolean asc = true;
 
     @Override
-    public List<K> getResult(Map<K, ValueACC> accumulator) {
-        return getCompareLimitStream(accumulator, asc, limit)
+    public K getResult(Map<K, ValueACC> accumulator) {
+        return getCompareLimitStream(accumulator, asc, 1)
                 .map(AbstractMap.SimpleImmutableEntry::getKey)
-                .toList();
+                .findFirst()
+                .orElseThrow();
     }
 
 }
