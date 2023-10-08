@@ -35,7 +35,7 @@
         <spring-boot.version>3.1.3</spring-boot.version>
         <spring-cloud.version>2022.0.4</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
-        <aviator.version>5.3.3</aviator.version>
+        <aviator.version>5.4.1</aviator.version>
         <hutool.version>6.0.0-M6</hutool.version>
         <knife4j-openapi3-jakarta.version>4.3.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>

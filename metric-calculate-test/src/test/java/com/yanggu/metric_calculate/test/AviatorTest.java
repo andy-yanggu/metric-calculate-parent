@@ -34,7 +34,8 @@ class AviatorTest {
                         for tempSet in values {
                           seq.add_all(set, tempSet);
                         }
-                        return set;""";
+                        return set;
+                        """;
         Expression compile = AviatorEvaluator.compile(express);
         Object execute = compile.execute();
         assertEquals(SetUtil.of("test1", "test2", "test3"), execute);
@@ -50,7 +51,7 @@ class AviatorTest {
         dayCount.put("2023-05-15", 20);
         dayCount.put("2023-05-12", 5);
 
-        String express = "return count(filter(dayCount, lambda (entry) -> getValue(entry) >= 10 end));";
+        String express = "return count(filter(dayCount, lambda (entry) -> entry.value >= 10 end));";
         AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
         Expression compile = AviatorEvaluator.compile(express);
         Map<String, Object> env = new HashMap<>();
