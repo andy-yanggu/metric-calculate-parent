@@ -31,6 +31,11 @@ public class SessionWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     private TimeFieldProcessor timeFieldProcessor;
 
     /**
+     * 会话间隔时间
+     */
+    private Long gapTimeMillis;
+
+    /**
      * 开始时间戳
      */
     private Long startTimestamp = Long.MIN_VALUE;
@@ -39,11 +44,6 @@ public class SessionWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
      * 结束时间戳
      */
     private Long endTimestamp = Long.MIN_VALUE + 1;
-
-    /**
-     * 会话间隔时间
-     */
-    private Long gapTimeMillis;
 
     /**
      * 累计数据

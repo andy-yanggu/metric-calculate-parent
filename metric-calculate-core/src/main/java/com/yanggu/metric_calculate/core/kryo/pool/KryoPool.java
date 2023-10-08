@@ -60,6 +60,7 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(SlidingCountWindow.class, new SlidingCountWindowSerializer<>(), 4);
         kryo.register(StatusWindow.class, new StatusWindowSerializer<>(), 5);
         kryo.register(PatternWindow.class, new PatternWindowSerializer<>(), 6);
+        kryo.register(SessionWindow.class, new SessionWindowSerializer<>(), 7);
 
         //ACC序列化器和反序列化器
         kryo.register(Tuple.class, new TupleSerializer(), 21);

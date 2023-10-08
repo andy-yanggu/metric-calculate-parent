@@ -8,12 +8,14 @@ import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoLongSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoTreeMapSerializer;
 import com.yanggu.metric_calculate.core.window.PatternWindow;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.TreeMap;
 
 
 public class PatternWindowSerializer<IN, ACC, OUT> extends Serializer<PatternWindow<IN, ACC, OUT>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7195228733772121102L;
 
     private final KryoLongSerializer longSerializer = new KryoLongSerializer();

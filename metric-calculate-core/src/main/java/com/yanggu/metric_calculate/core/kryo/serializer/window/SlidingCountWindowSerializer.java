@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoCollectionSerializer;
 import com.yanggu.metric_calculate.core.window.SlidingCountWindow;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class SlidingCountWindowSerializer<IN, ACC, OUT> extends Serializer<SlidingCountWindow<IN, ACC, OUT>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 6433262404195009833L;
 
     private final KryoCollectionSerializer<List> inListSerializer = new KryoCollectionSerializer<>();

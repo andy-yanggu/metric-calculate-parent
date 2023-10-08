@@ -73,6 +73,12 @@ public class WindowFactory<IN, ACC, OUT> {
             setPatternWindow(patternTable);
             patternTable.init();
             return patternTable;
+            //会话窗口
+        } else if (windowType == SESSION_WINDOW) {
+            SessionWindow<IN, ACC, OUT> sessionWindow = new SessionWindow<>();
+            setSessionWindow(sessionWindow);
+            sessionWindow.init();
+            return sessionWindow;
         } else {
             throw new RuntimeException("窗口类型异常");
         }
@@ -111,6 +117,11 @@ public class WindowFactory<IN, ACC, OUT> {
             PatternWindow<IN, ACC, OUT> patternTable = ((PatternWindow<IN, ACC, OUT>) window);
             setPatternWindow(patternTable);
             patternTable.init();
+            //会话窗口
+        } else if (windowType == SESSION_WINDOW) {
+            SessionWindow<IN, ACC, OUT> sessionWindow = (SessionWindow<IN, ACC, OUT>) window;
+            setSessionWindow(sessionWindow);
+            sessionWindow.init();
         } else {
             throw new RuntimeException("窗口类型异常");
         }
@@ -151,6 +162,11 @@ public class WindowFactory<IN, ACC, OUT> {
         slidingTimeTable.setAggregateFieldProcessor(aggregateFieldProcessor);
         slidingTimeTable.setTimeFieldProcessor(timeFieldProcessor);
         slidingTimeTable.setTimeBaselineDimension(createTimeBaselineDimension());
+    }
+
+    private void setSessionWindow(SessionWindow<IN, ACC, OUT> sessionWindow) {
+        sessionWindow.setTimeFieldProcessor(timeFieldProcessor);
+        sessionWindow.setGapTimeMillis(windowParam.getGapTimeMillis());
     }
 
     private TimeBaselineDimension createTimeBaselineDimension() {
