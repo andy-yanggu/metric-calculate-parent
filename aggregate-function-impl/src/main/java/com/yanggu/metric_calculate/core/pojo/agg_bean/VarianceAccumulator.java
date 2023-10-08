@@ -8,17 +8,17 @@ public class VarianceAccumulator {
     /**
      * 计数器，用于统计元素数量
      */
-    private long count;
+    private Long count;
 
     /**
      * 元素的和
      */
-    private double sum;
+    private Double sum;
 
     /**
      * 元素平方的和
      */
-    private double sumOfSquares;
+    private Double sumOfSquares;
 
     public VarianceAccumulator() {
         this.count = 0L;
@@ -26,7 +26,7 @@ public class VarianceAccumulator {
         this.sumOfSquares = 0.0D;
     }
 
-    public void addValue(double value) {
+    public void addValue(Double value) {
         count++;
         sum += value;
         sumOfSquares += value * value;
@@ -38,9 +38,9 @@ public class VarianceAccumulator {
         sumOfSquares += other.sumOfSquares;
     }
 
-    public double calculateVariance() {
+    public Double calculateVariance() {
         if (count > 0L) {
-            double mean = sum / count;
+            Double mean = sum / count;
             return (sumOfSquares / count) - (mean * mean);
         } else {
             //若没有元素，则方差为0

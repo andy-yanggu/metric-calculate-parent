@@ -6,7 +6,6 @@ import com.googlecode.aviator.Expression;
 import com.googlecode.aviator.runtime.JavaMethodReflectionFunctionMissing;
 import com.googlecode.aviator.runtime.function.AbstractFunction;
 import com.googlecode.aviator.runtime.type.AviatorObject;
-import com.googlecode.aviator.runtime.type.seq.MapSequence;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.date.DateUtil;
@@ -55,7 +54,7 @@ class AviatorTest {
         AviatorEvaluator.setFunctionMissing(JavaMethodReflectionFunctionMissing.getInstance());
         Expression compile = AviatorEvaluator.compile(express);
         Map<String, Object> env = new HashMap<>();
-        env.put("dayCount", new MapSequence(dayCount));
+        env.put("dayCount", dayCount);
 
         Object execute = compile.execute(env);
         assertEquals(1L, execute);
@@ -101,7 +100,7 @@ class AviatorTest {
                 }
             }
             if (j != 0 && j % 10000000 == 0) {
-                System.out.print("当前时间: "+ DateUtil.formatDateTime(new Date()) +"执行了: " + j + "次, ");
+                System.out.print("当前时间: " + DateUtil.formatDateTime(new Date()) + "执行了: " + j + "次, ");
                 System.out.println("命中次数: " + count * 1.0 / j);
             }
         }

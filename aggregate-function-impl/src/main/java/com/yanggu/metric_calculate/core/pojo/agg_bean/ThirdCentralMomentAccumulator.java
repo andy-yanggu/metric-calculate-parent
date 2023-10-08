@@ -8,22 +8,22 @@ public class ThirdCentralMomentAccumulator {
     /**
      * 计数器，用于统计元素数量
      */
-    private long count;
+    private Long count;
 
     /**
      * 元素的和
      */
-    private double sum;
+    private Double sum;
 
     /**
      * 元素平方的和
      */
-    private double sumOfSquares;
+    private Double sumOfSquares;
 
     /**
      * 元素立方的和
      */
-    private double sumOfCubes;
+    private Double sumOfCubes;
 
     public ThirdCentralMomentAccumulator() {
         this.count = 0L;
@@ -32,7 +32,7 @@ public class ThirdCentralMomentAccumulator {
         this.sumOfCubes = 0.0D;
     }
 
-    public void addValue(double value) {
+    public void addValue(Double value) {
         count++;
         sum += value;
         sumOfSquares += value * value;
@@ -46,9 +46,9 @@ public class ThirdCentralMomentAccumulator {
         sumOfCubes += other.sumOfCubes;
     }
 
-    public double calculateThirdCentralMoment() {
+    public Double calculateThirdCentralMoment() {
         if (count > 0L) {
-            double mean = sum / count;
+            Double mean = sum / count;
             return (sumOfCubes / count) - (3 * mean * sumOfSquares / count) + (2 * mean * mean * mean);
         } else {
             //若没有元素，则三阶中心矩为0

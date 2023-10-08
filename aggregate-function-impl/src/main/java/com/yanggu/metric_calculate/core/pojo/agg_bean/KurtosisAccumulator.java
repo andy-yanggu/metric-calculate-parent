@@ -8,27 +8,27 @@ public class KurtosisAccumulator {
     /**
      * 计数器，用于统计元素数量
      */
-    private long count;
+    private Long count;
 
     /**
      * 元素的和
      */
-    private double sum;
+    private Double sum;
 
     /**
      * 元素平方的和
      */
-    private double sumOfSquares;
+    private Double sumOfSquares;
 
     /**
      * 元素立方的和
      */
-    private double sumOfCubes;
+    private Double sumOfCubes;
 
     /**
      * 元素四次方的和
      */
-    private double sumOfQuartics;
+    private Double sumOfQuartics;
 
     public KurtosisAccumulator() {
         this.count = 0L;
@@ -38,7 +38,7 @@ public class KurtosisAccumulator {
         this.sumOfQuartics = 0.0D;
     }
 
-    public void addValue(double value) {
+    public void addValue(Double value) {
         count++;
         sum += value;
         sumOfSquares += value * value;
@@ -54,11 +54,11 @@ public class KurtosisAccumulator {
         sumOfQuartics += other.sumOfQuartics;
     }
 
-    public double calculateKurtosis() {
+    public Double calculateKurtosis() {
         if (count > 0L) {
-            double mean = sum / count;
-            double variance = (sumOfSquares / count) - (mean * mean);
-            double fourthMoment = (sumOfQuartics / count) - (4 * mean * sumOfCubes / count) + (6 * mean * mean * sumOfSquares / count) - (3 * mean * mean * mean * mean);
+            Double mean = sum / count;
+            Double variance = (sumOfSquares / count) - (mean * mean);
+            Double fourthMoment = (sumOfQuartics / count) - (4 * mean * sumOfCubes / count) + (6 * mean * mean * sumOfSquares / count) - (3 * mean * mean * mean * mean);
             return fourthMoment / (variance * variance);
         } else {
             //若没有元素，则四阶中心矩为0

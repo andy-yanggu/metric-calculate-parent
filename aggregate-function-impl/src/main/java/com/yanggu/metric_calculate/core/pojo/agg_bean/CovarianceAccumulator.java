@@ -8,22 +8,22 @@ public class CovarianceAccumulator {
     /**
      * 计数器，用于统计元素数量
      */
-    private long count;
+    private Long count;
 
     /**
      * X 元素的和
      */
-    private double sumX;
+    private Double sumX;
 
     /**
      * Y 元素的和
      */
-    private double sumY;
+    private Double sumY;
 
     /**
      * X 和 Y 元素的乘积的和
      */
-    private double sumXY;
+    private Double sumXY;
 
     public CovarianceAccumulator() {
         this.count = 0L;
@@ -32,7 +32,7 @@ public class CovarianceAccumulator {
         this.sumXY = 0.0D;
     }
 
-    public void addValue(double x, double y) {
+    public void addValue(Double x, Double y) {
         count++;
         sumX += x;
         sumY += y;
@@ -46,10 +46,10 @@ public class CovarianceAccumulator {
         sumXY += other.sumXY;
     }
 
-    public double calculateCovariance() {
+    public Double calculateCovariance() {
         if (count > 0L) {
-            double meanX = sumX / count;
-            double meanY = sumY / count;
+            Double meanX = sumX / count;
+            Double meanY = sumY / count;
             return (sumXY / count) - (meanX * meanY);
         } else {
             //若没有元素，则协方差为0

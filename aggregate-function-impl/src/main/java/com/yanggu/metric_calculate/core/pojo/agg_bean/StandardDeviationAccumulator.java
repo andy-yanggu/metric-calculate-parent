@@ -8,17 +8,17 @@ public class StandardDeviationAccumulator {
     /**
      * 计数器，用于统计元素数量
      */
-    private long count;
+    private Long count;
 
     /**
      * 元素的和
      */
-    private double sum;
+    private Double sum;
 
     /**
      * 元素平方的和
      */
-    private double sumOfSquares;
+    private Double sumOfSquares;
 
     public StandardDeviationAccumulator() {
         this.count = 0L;
@@ -26,7 +26,7 @@ public class StandardDeviationAccumulator {
         this.sumOfSquares = 0.0D;
     }
 
-    public void addValue(double value) {
+    public void addValue(Double value) {
         count++;
         sum += value;
         sumOfSquares += value * value;
@@ -38,10 +38,10 @@ public class StandardDeviationAccumulator {
         sumOfSquares += other.sumOfSquares;
     }
 
-    public double calculateStandardDeviation() {
+    public Double calculateStandardDeviation() {
         if (count > 0L) {
-            double mean = sum / count;
-            double variance = (sumOfSquares / count) - (mean * mean);
+            Double mean = sum / count;
+            Double variance = (sumOfSquares / count) - (mean * mean);
             return Math.sqrt(variance);
         } else {
             //若没有元素，则标准差为0
