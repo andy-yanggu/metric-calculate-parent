@@ -16,8 +16,7 @@ import com.yanggu.metric_calculate.core.kryo.serializer.acc.*;
 import com.yanggu.metric_calculate.core.kryo.serializer.cube.DimensionSetSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.cube.MetricCubeSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.window.*;
-import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance;
+import com.yanggu.metric_calculate.core.pojo.agg_bean.*;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core.util.KeyValue;
 import com.yanggu.metric_calculate.core.window.*;
@@ -77,8 +76,13 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 32);
         kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 33);
         kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 34);
-        kryo.register(AviatorExpressParam.class, new BeanSerializer<>(kryo, AviatorExpressParam.class), 35);
-        kryo.register(AviatorFunctionInstance.class, new BeanSerializer<>(kryo, AviatorFunctionInstance.class), 36);
+        kryo.register(Boundary.class, new BeanSerializer<>(kryo, Boundary.class), 35);
+        kryo.register(CovarianceAccumulator.class, new BeanSerializer<>(kryo, CovarianceAccumulator.class), 36);
+        kryo.register(FourthCentralMomentAccumulator.class, new BeanSerializer<>(kryo, FourthCentralMomentAccumulator.class), 37);
+        kryo.register(KurtosisAccumulator.class, new BeanSerializer<>(kryo, KurtosisAccumulator.class), 38);
+        kryo.register(StandardDeviationAccumulator.class, new BeanSerializer<>(kryo, StandardDeviationAccumulator.class), 39);
+        kryo.register(ThirdCentralMomentAccumulator.class, new BeanSerializer<>(kryo, ThirdCentralMomentAccumulator.class), 40);
+        kryo.register(VarianceAccumulator.class, new BeanSerializer<>(kryo, VarianceAccumulator.class), 41);
 
         //MetricCube序列化器和反序列化器
         kryo.register(DimensionSet.class, new DimensionSetSerializer(), 60);
