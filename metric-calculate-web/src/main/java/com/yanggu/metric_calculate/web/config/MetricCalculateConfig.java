@@ -7,7 +7,7 @@ import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.web.pojo.PutRequest;
 import com.yanggu.metric_calculate.web.pojo.QueryRequest;
-import com.yanggu.metric_calculate.web.util.TLogThreadPoolTaskExecutor;
+import com.yanggu.metric_calculate.web.util.MetricCalculateThreadPoolTaskExecutor;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.extern.slf4j.Slf4j;
@@ -123,13 +123,13 @@ public class MetricCalculateConfig {
      * 配置TLog线程池
      */
     @Bean
-    public TLogThreadPoolTaskExecutor tLogThreadPoolExecutor(@Value("${metric-calculate.t-log-thread-pool.core-size}") Integer coreSize,
-                                                             @Value("${metric-calculate.t-log-thread-pool.max-size}") Integer maxSize,
-                                                             @Value("${metric-calculate.t-log-thread-pool.keep-alive-second}") Integer keepAliveSeconds,
-                                                             @Value("${metric-calculate.t-log-thread-pool.queue-length}") Integer queueLength,
-                                                             @Value("${metric-calculate.t-log-thread-pool.thread-name-prefix}") String threadNamePrefix) {
+    public MetricCalculateThreadPoolTaskExecutor tLogThreadPoolExecutor(@Value("${metric-calculate.t-log-thread-pool.core-size}") Integer coreSize,
+                                                                        @Value("${metric-calculate.t-log-thread-pool.max-size}") Integer maxSize,
+                                                                        @Value("${metric-calculate.t-log-thread-pool.keep-alive-second}") Integer keepAliveSeconds,
+                                                                        @Value("${metric-calculate.t-log-thread-pool.queue-length}") Integer queueLength,
+                                                                        @Value("${metric-calculate.t-log-thread-pool.thread-name-prefix}") String threadNamePrefix) {
         log.info("指标计算TLog线程池初始化完成: 核心大小: {}, 最大大小: {}, 存活时间: {}秒, 队列大小: {}, 线程名前缀: {}", coreSize, maxSize, keepAliveSeconds, queueLength, threadNamePrefix);
-        return new TLogThreadPoolTaskExecutor(coreSize, maxSize, keepAliveSeconds, queueLength, new NamedThreadFactory(threadNamePrefix, false), new ThreadPoolExecutor.CallerRunsPolicy());
+        return new MetricCalculateThreadPoolTaskExecutor(coreSize, maxSize, keepAliveSeconds, queueLength, new NamedThreadFactory(threadNamePrefix, false), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
 }

@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.util;
 
 
-import com.yomahub.tlog.core.thread.TLogInheritableTask;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.thread.NamedThreadFactory;
@@ -125,7 +124,7 @@ public class AccumulateBatchComponent<T> {
             this.queue = new MpscArrayQueue<>(2 * limit);
             this.lastFlushTime = System.currentTimeMillis();
             int processorCount = RuntimeUtil.getProcessorCount();
-            this.threadPoolExecutor = new TLogThreadPoolExecutor(processorCount, processorCount,
+            this.threadPoolExecutor = new ThreadPoolExecutor(processorCount, processorCount,
                     200L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(100),
                     new NamedThreadFactory(name + "-消费者线程", false),
                     new ThreadPoolExecutor.CallerRunsPolicy());
@@ -184,12 +183,7 @@ public class AccumulateBatchComponent<T> {
                         DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN)
                 );
                 Work<T> work = this;
-                threadPoolExecutor.submit(new TLogInheritableTask() {
-                    @Override
-                    public void runTask() {
-                        work.consumerListData();
-                    }
-                });
+                threadPoolExecutor.submit(work::consumerListData);
                 wakeup = true;
             }
         }

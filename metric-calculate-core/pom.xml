@@ -44,10 +44,6 @@
             <groupId>org.jctools</groupId>
             <artifactId>jctools-core</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-core</artifactId>
-        </dependency>
         <!-- JUnit 5 引导器 -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

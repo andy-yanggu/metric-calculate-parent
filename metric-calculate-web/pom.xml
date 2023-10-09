@@ -22,10 +22,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>com.yomahub</groupId>
-            <artifactId>tlog-all-spring-boot-starter</artifactId>
-        </dependency>
         <!-- 引入log4j2依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

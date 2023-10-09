@@ -43,7 +43,6 @@
         <guava.version>32.1.2-jre</guava.version>
         <jmh.version>1.37</jmh.version>
         <joda-time.version>2.12.5</joda-time.version>
-        <tlog.version>1.5.0</tlog.version>
         <jctools-core.version>4.0.1</jctools-core.version>
         <flink.version>1.17.1</flink.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
@@ -142,16 +141,6 @@
                 <groupId>org.openjdk.jmh</groupId>
                 <artifactId>jmh-generator-annprocess</artifactId>
                 <version>${jmh.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.yomahub</groupId>
-                <artifactId>tlog-all-spring-boot-starter</artifactId>
-                <version>${tlog.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.yomahub</groupId>
-                <artifactId>tlog-core</artifactId>
-                <version>${tlog.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jctools</groupId>

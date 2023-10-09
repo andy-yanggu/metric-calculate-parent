@@ -10,7 +10,7 @@ import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
 import com.yanggu.metric_calculate.web.pojo.PutRequest;
 import com.yanggu.metric_calculate.web.pojo.QueryRequest;
 import com.yanggu.metric_calculate.web.pojo.vo.Result;
-import com.yanggu.metric_calculate.web.util.TLogThreadPoolTaskExecutor;
+import com.yanggu.metric_calculate.web.util.MetricCalculateThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
@@ -52,7 +52,7 @@ public class MetricCalculateService {
 
     @Autowired
     @Qualifier("tLogThreadPoolExecutor")
-    private TLogThreadPoolTaskExecutor threadPoolExecutor;
+    private MetricCalculateThreadPoolTaskExecutor threadPoolExecutor;
 
     /**
      * 无状态(多线程)
