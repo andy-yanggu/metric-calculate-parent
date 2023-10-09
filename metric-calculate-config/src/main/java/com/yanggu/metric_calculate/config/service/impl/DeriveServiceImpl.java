@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.paginate.Page;
+import com.mybatisflex.core.query.QueryColumn;
+import com.mybatisflex.core.query.QueryTable;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.relation.RelationManager;
 import com.mybatisflex.core.tenant.TenantManager;
@@ -263,6 +265,11 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
      * @return
      */
     private QueryWrapper buildDeriveQueryWrapper(DeriveQueryReq deriveQuery) {
+        String timeColumn = "time_column";
+        QueryTable timeColumnAlias = MODEL_COLUMN.as(timeColumn);
+
+        String dimensionColumn = "dimension_column";
+        QueryTable dimensionColumnAlias = MODEL_COLUMN.as(dimensionColumn);
         return QueryWrapper.create()
                 .select(DERIVE.DEFAULT_COLUMNS)
                 .from(DERIVE)
@@ -271,11 +278,11 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                 //时间字段
                 .innerJoin(DERIVE_MODEL_TIME_COLUMN_RELATION).on(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
                 .innerJoin(MODEL_TIME_COLUMN).on(MODEL_TIME_COLUMN.ID.eq(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID))
-                .innerJoin(MODEL_COLUMN).as("time_column").on(MODEL_COLUMN.ID.eq(MODEL_TIME_COLUMN.MODEL_COLUMN_ID))
+                .innerJoin(MODEL_COLUMN).as(timeColumn).on(MODEL_COLUMN.ID.eq(MODEL_TIME_COLUMN.MODEL_COLUMN_ID))
                 //维度字段
                 .innerJoin(DERIVE_MODEL_DIMENSION_COLUMN_RELATION).on(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
                 .innerJoin(MODEL_DIMENSION_COLUMN).on(MODEL_DIMENSION_COLUMN.ID.eq(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID))
-                .innerJoin(MODEL_COLUMN).as("dimension_column").on(MODEL_COLUMN.ID.eq(MODEL_DIMENSION_COLUMN.MODEL_COLUMN_ID))
+                .innerJoin(MODEL_COLUMN).as(dimensionColumn).on(MODEL_COLUMN.ID.eq(MODEL_DIMENSION_COLUMN.MODEL_COLUMN_ID))
                 //维度数据
                 .innerJoin(DIMENSION).on(DIMENSION.ID.eq(MODEL_DIMENSION_COLUMN.DIMENSION_ID))
                 //聚合函数
@@ -298,12 +305,13 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                 //过滤时间字段格式
                 .and(MODEL_TIME_COLUMN.TIME_FORMAT.like(deriveQuery.getTimeFormat()))
                 //过滤时间字段名
-                .and(MODEL_COLUMN.NAME.as("time_column." + MODEL_COLUMN.NAME.getName()).like(deriveQuery.getTimeColumnName()))
+                .and(new QueryColumn(timeColumnAlias, MODEL_COLUMN.NAME.getName()).like(deriveQuery.getTimeColumnName()))
                 //过滤时间字段中文名
-                .and(MODEL_COLUMN.DISPLAY_NAME.as("time_column." + MODEL_COLUMN.DISPLAY_NAME.getName()).like(deriveQuery.getTimeColumnDisplayName()))
+                .and(new QueryColumn(timeColumnAlias, MODEL_COLUMN.DISPLAY_NAME.getName()).like(deriveQuery.getTimeColumnDisplayName()))
                 //过滤维度字段名
-                //.and(MODEL_COLUMN.NAME.as("dimension_column." + MODEL_COLUMN.NAME.getName()).like(deriveQuery.getDimensionColumnName()))
-                //.and(MODEL_COLUMN.DISPLAY_NAME.as("dimension_column." + MODEL_COLUMN.DISPLAY_NAME.getName()).like(deriveQuery.getDimensionColumnDisplayName()))
+                .and(new QueryColumn(dimensionColumnAlias, MODEL_COLUMN.NAME.getName()).like(deriveQuery.getDimensionColumnName()))
+                //过滤维度字段中文名
+                .and(new QueryColumn(dimensionColumnAlias, MODEL_COLUMN.DISPLAY_NAME.getName()).like(deriveQuery.getDimensionColumnDisplayName()))
                 //过滤维度名称
                 .and(DIMENSION.NAME.like(deriveQuery.getDimensionName()))
                 .and(DIMENSION.DISPLAY_NAME.like(deriveQuery.getDimensionDisplayName()))
