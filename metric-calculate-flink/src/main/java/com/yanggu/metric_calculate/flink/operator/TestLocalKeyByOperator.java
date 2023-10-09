@@ -41,8 +41,8 @@ public class TestLocalKeyByOperator {
                 }).returns(Types.STRING)
                 .transform("localKeyByOperator", elementTypeInfo, operator)
                 .keyBy(tuple2 -> tuple2.f0)
-                .reduce((tuple1, tuple2) -> Tuple2.of(tuple1.f0, tuple1.f1 + tuple2.f1))
-                .map(tuple -> tuple.f0 + "->" + tuple.f1)
+                .reduce((tuple1, tuple2) -> Tuple2.of(tuple1.f0, sumAggregateFunction.merge(tuple1.f1, tuple2.f1)))
+                .map(tuple -> tuple.f0 + " -> " + sumAggregateFunction.getResult(tuple.f1))
                 .print("test>>>>>");
 
         env.execute();
