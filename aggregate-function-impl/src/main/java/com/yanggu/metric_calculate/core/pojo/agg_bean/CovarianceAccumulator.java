@@ -2,6 +2,9 @@ package com.yanggu.metric_calculate.core.pojo.agg_bean;
 
 import lombok.Data;
 
+/**
+ * 协方差累加器
+ */
 @Data
 public class CovarianceAccumulator {
 
@@ -55,7 +58,6 @@ public class CovarianceAccumulator {
             //若没有元素，则协方差为0
             return 0.0D;
         }
-
     }
 
 }

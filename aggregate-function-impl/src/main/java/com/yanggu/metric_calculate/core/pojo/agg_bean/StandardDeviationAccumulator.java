@@ -2,6 +2,9 @@ package com.yanggu.metric_calculate.core.pojo.agg_bean;
 
 import lombok.Data;
 
+/**
+ * 标准差累加器
+ */
 @Data
 public class StandardDeviationAccumulator {
 
@@ -41,7 +44,7 @@ public class StandardDeviationAccumulator {
     public Double calculateStandardDeviation() {
         if (count > 0L) {
             Double mean = sum / count;
-            Double variance = (sumOfSquares / count) - (mean * mean);
+            double variance = (sumOfSquares / count) - (mean * mean);
             return Math.sqrt(variance);
         } else {
             //若没有元素，则标准差为0

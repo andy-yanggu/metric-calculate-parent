@@ -3,6 +3,11 @@ package com.yanggu.metric_calculate.core.pojo.agg_bean;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 连续类递增、递减类累加器
+ *
+ * @param <T>
+ */
 @Data
 @NoArgsConstructor
 public class Boundary<T extends Number> {

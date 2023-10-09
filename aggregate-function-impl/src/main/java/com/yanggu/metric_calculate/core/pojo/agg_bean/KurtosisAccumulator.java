@@ -2,6 +2,9 @@ package com.yanggu.metric_calculate.core.pojo.agg_bean;
 
 import lombok.Data;
 
+/**
+ * 峰度系数累加器
+ */
 @Data
 public class KurtosisAccumulator {
 
@@ -58,7 +61,7 @@ public class KurtosisAccumulator {
         if (count > 0L) {
             Double mean = sum / count;
             Double variance = (sumOfSquares / count) - (mean * mean);
-            Double fourthMoment = (sumOfQuartics / count) - (4 * mean * sumOfCubes / count) + (6 * mean * mean * sumOfSquares / count) - (3 * mean * mean * mean * mean);
+            double fourthMoment = (sumOfQuartics / count) - (4 * mean * sumOfCubes / count) + (6 * mean * mean * sumOfSquares / count) - (3 * mean * mean * mean * mean);
             return fourthMoment / (variance * variance);
         } else {
             //若没有元素，则四阶中心矩为0

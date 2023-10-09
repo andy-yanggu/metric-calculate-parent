@@ -2,6 +2,9 @@ package com.yanggu.metric_calculate.core.pojo.agg_bean;
 
 import lombok.Data;
 
+/**
+ * 四阶中心距累加器
+ */
 @Data
 public class FourthCentralMomentAccumulator {
 
