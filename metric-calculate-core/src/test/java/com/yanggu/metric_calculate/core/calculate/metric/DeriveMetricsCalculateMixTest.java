@@ -29,8 +29,6 @@ class DeriveMetricsCalculateMixTest extends DeriveMetricsCalculateBase {
         input1.set("account_no_out", "000000000011");
         input1.set("account_no_in", "000000000012");
         input1.set("trans_timestamp", "1654768045000");
-        input1.set("credit_amt_in", "100");
-        input1.set("trans_date", "20220609");
         input1.set("amount", 800);
 
         query = deriveMetricCalculate.stateExec(input1);

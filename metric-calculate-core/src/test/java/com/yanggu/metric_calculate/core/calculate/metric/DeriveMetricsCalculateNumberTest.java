@@ -25,9 +25,7 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         input.set("account_no_out", "000000000011");
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
-        input.set("credit_amt_in", 100);
         input.set("amount", 800);
-        input.set("trans_date", "20220609");
 
         DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(800.0D, doubles.getResult(), 0.0D);
@@ -53,7 +51,6 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
         input.set("amount", 800.0D);
-        input.set("trans_date", "20220609");
 
         DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
         assertEquals(800.0D, doubles.getResult(), 0.0D);
@@ -84,7 +81,6 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         input.set("account_no_in", "000000000012");
         input.set("trans_timestamp", "1654768045000");
         input.set("amount", 20.0D);
-        input.set("trans_date", "20220609");
 
         DeriveMetricCalculateResult<Double> doubles = deriveMetricCalculate.stateExec(input);
         assertNull(doubles);

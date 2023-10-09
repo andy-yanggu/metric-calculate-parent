@@ -32,8 +32,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input1.set("account_no_out", "000000000011");
         input1.set("account_no_in", "000000000012");
         input1.set("trans_timestamp", "1654768045000");
-        input1.set("credit_amt_in", "100");
-        input1.set("trans_date", "20220609");
         input1.set("amount", "800");
 
         DeriveMetricCalculateResult<List<JSONObject>> query = deriveMetricCalculate.stateExec(input1);
@@ -43,8 +41,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input2.set("account_no_out", "000000000011");
         input2.set("account_no_in", "000000000012");
         input2.set("trans_timestamp", "1654768045000");
-        input2.set("credit_amt_in", "100");
-        input2.set("trans_date", "20220609");
         input2.set("amount", 900);
         query = deriveMetricCalculate.stateExec(input2);
         assertEquals(Arrays.asList(input1, input2), query.getResult());
@@ -53,8 +49,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input3.set("account_no_out", "000000000011");
         input3.set("account_no_in", "000000000012");
         input3.set("trans_timestamp", "1654768045000");
-        input3.set("credit_amt_in", "100");
-        input3.set("trans_date", "20220609");
         input3.set("amount", 1000);
         query = deriveMetricCalculate.stateExec(input3);
         assertEquals(Arrays.asList(input1, input2, input3), query.getResult());
@@ -63,8 +57,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input4.set("account_no_out", "000000000011");
         input4.set("account_no_in", "000000000012");
         input4.set("trans_timestamp", "1654768045000");
-        input4.set("credit_amt_in", "100");
-        input4.set("trans_date", "20220609");
         input4.set("amount", 1100);
         query = deriveMetricCalculate.stateExec(input4);
         assertEquals(Arrays.asList(input1, input2, input3, input4), query.getResult());
@@ -73,8 +65,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input5.set("account_no_out", "000000000011");
         input5.set("account_no_in", "000000000012");
         input5.set("trans_timestamp", "1654768045000");
-        input5.set("credit_amt_in", "100");
-        input5.set("trans_date", "20220609");
         input5.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input5);
         assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
@@ -83,8 +73,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input6.set("account_no_out", "000000000011");
         input6.set("account_no_in", "000000000012");
         input6.set("trans_timestamp", "1654768045000");
-        input6.set("credit_amt_in", "100");
-        input6.set("trans_date", "20220609");
         input6.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input6);
         assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
@@ -93,8 +81,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input7.set("account_no_out", "000000000011");
         input7.set("account_no_in", "000000000012");
         input7.set("trans_timestamp", "1654768045000");
-        input7.set("credit_amt_in", "100");
-        input7.set("trans_date", "20220609");
         input7.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input7);
         assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
@@ -112,8 +98,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input1.set("account_no_out", "000000000011");
         input1.set("account_no_in", "000000000012");
         input1.set("trans_timestamp", "1654768045000");
-        input1.set("credit_amt_in", "100");
-        input1.set("trans_date", "20220609");
         input1.set("amount", 800);
 
         List<KeyValue<MultiFieldOrderCompareKey, JSONObject>> stateExec = deriveMetricCalculate.stateExec(input1).getResult();
