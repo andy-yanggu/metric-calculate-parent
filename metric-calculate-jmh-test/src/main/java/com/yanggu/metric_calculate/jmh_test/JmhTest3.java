@@ -5,12 +5,10 @@ import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
-import org.dromara.hutool.core.io.IoUtil;
+import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
-
-import java.io.InputStream;
 
 /**
  * 火焰图测试代码
@@ -19,9 +17,8 @@ import java.io.InputStream;
 public class JmhTest3 {
 
     public static void main(String[] args) {
-        InputStream resourceAsStream = JmhTest3.class.getClassLoader().getResourceAsStream("mock_metric_config/1.json");
-        String jsonString = IoUtil.read(resourceAsStream).toString();
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<MetricCalculate>() {});
+        String jsonString = ResourceUtil.readUtf8Str("mock_metric_config/1.json");
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<>() {});
 
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);

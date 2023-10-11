@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 /**
  * 消费事后成功数据
  */
-@Component
+//@Component
 public class KafkaConsumer {
 
     @Autowired

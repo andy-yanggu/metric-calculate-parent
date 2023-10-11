@@ -14,6 +14,12 @@ spring:
       # 配置策略
       matching-strategy: ANT_PATH_MATCHER
 
+  #jackson配置
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    default-property-inclusion: NON_EMPTY
+    time-zone: GMT+8
+
   output:
     #日志彩色打印
     ansi:
