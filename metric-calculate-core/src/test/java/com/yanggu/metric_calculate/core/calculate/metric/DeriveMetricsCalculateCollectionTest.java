@@ -1,10 +1,9 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
+import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core.util.KeyValue;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -92,7 +91,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
      */
     @Test
     void testSort_list_object() throws Exception {
-        DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, JSONObject>, BoundedPriorityQueue<KeyValue<MultiFieldOrderCompareKey, JSONObject>>, List<KeyValue<MultiFieldOrderCompareKey, JSONObject>>> deriveMetricCalculate =
+        DeriveMetricCalculate<KeyValue<MultiFieldOrderCompareKey, JSONObject>, BoundedPriorityQueue<KeyValue<MultiFieldOrderCompareKey, JSONObject>>, List<JSONObject>> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(7L);
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");
@@ -100,20 +99,17 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input1.set("trans_timestamp", "1654768045000");
         input1.set("amount", 800);
 
-        List<KeyValue<MultiFieldOrderCompareKey, JSONObject>> stateExec = deriveMetricCalculate.stateExec(input1).getResult();
+        List<JSONObject> stateExec = deriveMetricCalculate.stateExec(input1).getResult();
         assertEquals(1, stateExec.size());
-        MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(ListUtil.of(800));
-        KeyValue<MultiFieldOrderCompareKey, JSONObject> expected = new KeyValue<>(multiFieldOrderCompareKey, input1);
-        KeyValue<MultiFieldOrderCompareKey, JSONObject> actual = stateExec.get(0);
-        assertEquals(expected, actual);
+        JSONObject actual = stateExec.get(0);
+        assertEquals(input1, actual);
 
         JSONObject input2 = input1.clone();
         input2.set("amount", 900);
         stateExec = deriveMetricCalculate.stateExec(input2).getResult();
         assertEquals(2, stateExec.size());
-        assertEquals(new KeyValue<>(new MultiFieldOrderCompareKey(ListUtil.of(800)), input2), stateExec.get(0));
-        assertEquals(new KeyValue<>(new MultiFieldOrderCompareKey(ListUtil.of(900)), input1), stateExec.get(1));
+        assertEquals(input1, stateExec.get(0));
+        assertEquals(input2, stateExec.get(1));
     }
 
 }

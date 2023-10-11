@@ -1,13 +1,12 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
-
-import java.util.List;
+import org.dromara.hutool.json.JSONObject;
 
 /**
  * 有序对象列表
@@ -18,19 +17,12 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @Collective(keyStrategy = 2, retainStrategy = 2)
 @AggregateFunctionAnnotation(name = "SORTEDLIMITLISTOBJECT", displayName = "有序对象列表")
-public class SortedListObjectAggregateFunction<T extends Comparable<T>> extends AbstractCollectionFunction<T, BoundedPriorityQueue<T>, List<T>> {
-
-    @AggregateFunctionFieldAnnotation(displayName = "长度", notNull = true)
-    private Integer limit = 10;
+public class SortedListObjectAggregateFunction extends
+        AbstractSortedListAggregateFunction<KeyValue<MultiFieldOrderCompareKey, JSONObject>, JSONObject> {
 
     @Override
-    public BoundedPriorityQueue<T> createAccumulator() {
-        return new BoundedPriorityQueue<>(limit);
-    }
-
-    @Override
-    public List<T> getResult(BoundedPriorityQueue<T> accumulator) {
-        return accumulator.toList();
+    public JSONObject inToOut(KeyValue<MultiFieldOrderCompareKey, JSONObject> input) {
+        return input.getValue();
     }
 
 }

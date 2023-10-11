@@ -1,12 +1,12 @@
-package com.yanggu.metric_calculate.core.pojo.agg_bean;
+package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.Data;
 
 /**
- * 四阶中心距累加器
+ * 峰度系数累加器
  */
 @Data
-public class FourthCentralMomentAccumulator {
+public class KurtosisAccumulator {
 
     /**
      * 计数器，用于统计元素数量
@@ -33,7 +33,7 @@ public class FourthCentralMomentAccumulator {
      */
     private Double sumOfQuartics;
 
-    public FourthCentralMomentAccumulator() {
+    public KurtosisAccumulator() {
         this.count = 0L;
         this.sum = 0.0D;
         this.sumOfSquares = 0.0D;
@@ -49,7 +49,7 @@ public class FourthCentralMomentAccumulator {
         sumOfQuartics += value * value * value * value;
     }
 
-    public void merge(FourthCentralMomentAccumulator other) {
+    public void merge(KurtosisAccumulator other) {
         count += other.count;
         sum += other.sum;
         sumOfSquares += other.sumOfSquares;
@@ -57,10 +57,12 @@ public class FourthCentralMomentAccumulator {
         sumOfQuartics += other.sumOfQuartics;
     }
 
-    public Double calculateFourthCentralMoment() {
+    public Double calculateKurtosis() {
         if (count > 0L) {
             Double mean = sum / count;
-            return (sumOfQuartics / count) - (4 * mean * sumOfCubes / count) + (6 * mean * mean * sumOfSquares / count) - (3 * mean * mean * mean * mean);
+            Double variance = (sumOfSquares / count) - (mean * mean);
+            double fourthMoment = (sumOfQuartics / count) - (4 * mean * sumOfCubes / count) + (6 * mean * mean * sumOfSquares / count) - (3 * mean * mean * mean * mean);
+            return fourthMoment / (variance * variance);
         } else {
             //若没有元素，则四阶中心矩为0
             return 0.0D;

@@ -4,7 +4,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
-import com.yanggu.metric_calculate.core.pojo.agg_bean.ThirdCentralMomentAccumulator;
+import com.yanggu.metric_calculate.core.pojo.acc.ThirdCentralMomentAccumulator;
 
 /**
  * 三阶中心炬

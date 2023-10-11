@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.util;
+package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

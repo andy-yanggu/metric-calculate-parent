@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo.agg_bean;
+package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.Data;
 

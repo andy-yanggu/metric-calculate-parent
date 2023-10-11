@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderCompareKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoCollectionSerializer;
 
 import java.io.Serial;

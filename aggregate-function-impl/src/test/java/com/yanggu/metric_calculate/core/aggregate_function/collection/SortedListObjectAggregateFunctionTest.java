@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import org.dromara.hutool.core.collection.ListUtil;
+import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.core.reflect.FieldUtil;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -32,8 +34,8 @@ class SortedListObjectAggregateFunctionTest {
 
     @Test
     void createAccumulator() {
-        SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
-        BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
+        SortedListObjectAggregateFunction sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction();
+        BoundedPriorityQueue<KeyValue<MultiFieldOrderCompareKey, JSONObject>> accumulator = sortedListObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
         assertEquals(10, FieldUtil.getFieldValue(accumulator, "capacity"));
@@ -41,64 +43,83 @@ class SortedListObjectAggregateFunctionTest {
 
     @Test
     void testAdd1() {
-        SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
+        SortedListObjectAggregateFunction sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction();
         //设置为3个
         sortedListObjectAggregateFunction.setLimit(3);
-        BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
+        BoundedPriorityQueue<KeyValue<MultiFieldOrderCompareKey, JSONObject>> accumulator = sortedListObjectAggregateFunction.createAccumulator();
 
-        sortedListObjectAggregateFunction.add(1, accumulator);
-        List<Integer> integers = accumulator.toList();
-        assertEquals(ListUtil.of(1), integers);
+        var keyValue1 = createKeyValue(1);
+        sortedListObjectAggregateFunction.add(keyValue1, accumulator);
+        var integers = accumulator.toList();
+        assertEquals(List.of(keyValue1), integers);
 
-        sortedListObjectAggregateFunction.add(3, accumulator);
+        var keyValue3 = createKeyValue(3);
+        sortedListObjectAggregateFunction.add(keyValue3, accumulator);
         integers = accumulator.toList();
-        assertEquals(ListUtil.of(1, 3), integers);
+        assertEquals(List.of(keyValue1, keyValue3), integers);
 
-        sortedListObjectAggregateFunction.add(2, accumulator);
+        var keyValue2 = createKeyValue(2);
+        sortedListObjectAggregateFunction.add(keyValue2, accumulator);
         integers = accumulator.toList();
-        assertEquals(ListUtil.of(1, 2, 3), integers);
+        assertEquals(List.of(keyValue1, keyValue2, keyValue3), integers);
 
-        sortedListObjectAggregateFunction.add(4, accumulator);
+        var keyValue4 = createKeyValue(4);
+        sortedListObjectAggregateFunction.add(keyValue4, accumulator);
         integers = accumulator.toList();
-        assertEquals(ListUtil.of(1, 2, 3), integers);
+        assertEquals(List.of(keyValue1, keyValue2, keyValue3), integers);
 
-        sortedListObjectAggregateFunction.add(1, accumulator);
+        sortedListObjectAggregateFunction.add(keyValue1, accumulator);
         integers = accumulator.toList();
-        assertEquals(ListUtil.of(1, 1, 2), integers);
+        assertEquals(List.of(keyValue1, keyValue1, keyValue2), integers);
     }
 
     @Test
     void getResult() {
-        SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
-        BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
+        SortedListObjectAggregateFunction sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction();
+        var accumulator = sortedListObjectAggregateFunction.createAccumulator();
 
-        sortedListObjectAggregateFunction.add(1, accumulator);
+        var keyValue1 = createKeyValue(1);
+        sortedListObjectAggregateFunction.add(keyValue1, accumulator);
 
-        List<Integer> result = sortedListObjectAggregateFunction.getResult(accumulator);
-        assertEquals(ListUtil.of(1), result);
+        var result = sortedListObjectAggregateFunction.getResult(accumulator);
+        assertEquals(List.of(keyValue1.getValue()), result);
     }
 
     @Test
     void merge() {
-        SortedListObjectAggregateFunction<Integer> sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction<>();
+        var sortedListObjectAggregateFunction = new SortedListObjectAggregateFunction();
         sortedListObjectAggregateFunction.setLimit(3);
+        var test1 = new SortedListObjectAggregateFunction();
 
-        BoundedPriorityQueue<Integer> accumulator1 = sortedListObjectAggregateFunction.createAccumulator();
-        BoundedPriorityQueue<Integer> accumulator2 = sortedListObjectAggregateFunction.createAccumulator();
+        var accumulator1 = sortedListObjectAggregateFunction.createAccumulator();
+        var accumulator2 = sortedListObjectAggregateFunction.createAccumulator();
 
-        sortedListObjectAggregateFunction.add(1, accumulator1);
-        sortedListObjectAggregateFunction.add(3, accumulator1);
-        sortedListObjectAggregateFunction.add(2, accumulator1);
-        sortedListObjectAggregateFunction.add(4, accumulator1);
+        var keyValue1 = createKeyValue(1);
+        sortedListObjectAggregateFunction.add(keyValue1, accumulator1);
 
-        sortedListObjectAggregateFunction.add(-1, accumulator2);
-        sortedListObjectAggregateFunction.add(0, accumulator2);
-        sortedListObjectAggregateFunction.add(1, accumulator2);
-        sortedListObjectAggregateFunction.add(2, accumulator2);
+        sortedListObjectAggregateFunction.add(createKeyValue(3), accumulator1);
 
-        List<Integer> result = sortedListObjectAggregateFunction.getResult(sortedListObjectAggregateFunction.merge(accumulator1, accumulator2));
+        KeyValue<MultiFieldOrderCompareKey, JSONObject> keyValue2 = createKeyValue(2);
+        sortedListObjectAggregateFunction.add(keyValue2, accumulator1);
+        sortedListObjectAggregateFunction.add(createKeyValue(6), accumulator1);
+        sortedListObjectAggregateFunction.add(createKeyValue(5), accumulator1);
 
-        assertEquals(ListUtil.of(-1, 0, 1), result);
+        var keyValue3 = createKeyValue(-1);
+        sortedListObjectAggregateFunction.add(keyValue3, accumulator2);
+        sortedListObjectAggregateFunction.add(createKeyValue(2), accumulator2);
+        sortedListObjectAggregateFunction.add(createKeyValue(3), accumulator2);
+
+        var result = sortedListObjectAggregateFunction.getResult(sortedListObjectAggregateFunction.merge(accumulator1, accumulator2));
+
+        assertEquals(List.of(keyValue3.getValue(), keyValue1.getValue(), keyValue2.getValue()), result);
+    }
+
+    private KeyValue<MultiFieldOrderCompareKey, JSONObject> createKeyValue(int data) {
+        MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
+        multiFieldOrderCompareKey.setDataList(List.of(data));
+        multiFieldOrderCompareKey.setBooleanList(List.of(true));
+        JSONObject jsonObject = new JSONObject();
+        return new KeyValue<>(multiFieldOrderCompareKey, jsonObject);
     }
 
 }

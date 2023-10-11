@@ -4,7 +4,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
-import com.yanggu.metric_calculate.core.pojo.agg_bean.KurtosisAccumulator;
+import com.yanggu.metric_calculate.core.pojo.acc.KurtosisAccumulator;
 
 /**
  * 峰度系数

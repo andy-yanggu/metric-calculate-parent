@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import com.yanggu.metric_calculate.core.pojo.agg_bean.CovarianceAccumulator;
+import com.yanggu.metric_calculate.core.pojo.acc.CovarianceAccumulator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
