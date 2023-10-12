@@ -5,6 +5,7 @@ import lombok.SneakyThrows;
 import org.dromara.hutool.core.annotation.AnnotationUtil;
 import org.dromara.hutool.core.array.ArrayUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.FieldUtil;
 import org.dromara.hutool.core.reflect.ReflectUtil;
 import org.dromara.hutool.json.JSONUtil;
 
@@ -22,7 +23,7 @@ public class UdafCustomParamDataUtil {
     @SneakyThrows
     public static <T extends Annotation> List<UdafCustomParamData> getUdafCustomParamList(Class<?> clazz,
                                                                                           Class<T> annotationClass) {
-        Field[] declaredFields = clazz.getDeclaredFields();
+        Field[] declaredFields = FieldUtil.getFields(clazz);
         List<UdafCustomParamData> udafCustomParamDataList = new ArrayList<>();
         if (ArrayUtil.isEmpty(declaredFields)) {
             return udafCustomParamDataList;

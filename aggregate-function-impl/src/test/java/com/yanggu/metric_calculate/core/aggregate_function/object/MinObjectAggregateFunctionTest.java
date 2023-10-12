@@ -1,10 +1,13 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
+import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * 最小对象单元测试类
@@ -27,48 +30,14 @@ class MinObjectAggregateFunctionTest {
     }
 
     @Test
-    void createAccumulator() {
-        MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
-        MutableObj<Integer> accumulator = minObjectAggregateFunction.createAccumulator();
-        assertNotNull(accumulator);
-        assertNull(accumulator.get());
-    }
-
-    @Test
-    void add() {
-        MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
-        MutableObj<Integer> accumulator = minObjectAggregateFunction.createAccumulator();
-
-        minObjectAggregateFunction.add(1, accumulator);
-        assertEquals(Integer.valueOf(1), accumulator.get());
-
-        minObjectAggregateFunction.add(2, accumulator);
-        assertEquals(Integer.valueOf(1), accumulator.get());
-
-    }
-
-    @Test
     void getResult() {
-        MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
-        MutableObj<Integer> accumulator = minObjectAggregateFunction.createAccumulator();
+        MinObjectAggregateFunction minObjectAggregateFunction = new MinObjectAggregateFunction();
 
-        minObjectAggregateFunction.add(1, accumulator);
-        Integer result = minObjectAggregateFunction.getResult(accumulator);
-
-        assertEquals(Integer.valueOf(1), result);
-    }
-
-    @Test
-    void merge() {
-        MinObjectAggregateFunction<Integer> minObjectAggregateFunction = new MinObjectAggregateFunction<>();
-        MutableObj<Integer> accumulator1 = minObjectAggregateFunction.createAccumulator();
-        MutableObj<Integer> accumulator2 = minObjectAggregateFunction.createAccumulator();
-
-        minObjectAggregateFunction.add(1, accumulator1);
-        minObjectAggregateFunction.add(2, accumulator2);
-
-        MutableObj<Integer> merge = minObjectAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(Integer.valueOf(1), merge.get());
+        MutableObj<KeyValue<MultiFieldOrderCompareKey, JSONObject>> accumulator = new MutableObj<>();
+        JSONObject data = new JSONObject();
+        accumulator.set(new KeyValue<>(null, data));
+        JSONObject result = minObjectAggregateFunction.getResult(accumulator);
+        assertEquals(data, result);
     }
 
 }

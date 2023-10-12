@@ -10,5 +10,5 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
  */
 @Objective(keyStrategy = 0, retainStrategy = 1)
 @AggregateFunctionAnnotation(name = "FIRSTFIELD", displayName = "最先写入的非NULL字段")
-public class FirstFieldAggregateFunction<T> extends FirstObjectAggregateFunction<T> {
+public class FirstFieldAggregateFunction<T> extends AbstractFirstAggregateFunction<T> {
 }

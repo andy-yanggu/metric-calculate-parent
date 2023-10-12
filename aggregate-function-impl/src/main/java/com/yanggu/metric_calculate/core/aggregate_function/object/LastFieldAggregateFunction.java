@@ -10,5 +10,5 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
  */
 @Objective(keyStrategy = 0, retainStrategy = 1)
 @AggregateFunctionAnnotation(name = "LASTFIELD", displayName = "最后写入的非NULL值")
-public class LastFieldAggregateFunction<T> extends LastObjectAggregateFunction<T> {
+public class LastFieldAggregateFunction<T> extends AbstractLastAggregateFunction<T> {
 }

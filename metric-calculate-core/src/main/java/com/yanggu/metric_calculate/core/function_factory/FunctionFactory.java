@@ -35,7 +35,7 @@ public class FunctionFactory {
         if (function == null || MapUtil.isEmpty(params)) {
             return;
         }
-        Field[] declaredFields = function.getClass().getDeclaredFields();
+        Field[] declaredFields = FieldUtil.getFields(function.getClass());
         //通过反射给聚合函数的参数赋值
         if (ArrayUtil.isNotEmpty(declaredFields)) {
             for (Field field : declaredFields) {

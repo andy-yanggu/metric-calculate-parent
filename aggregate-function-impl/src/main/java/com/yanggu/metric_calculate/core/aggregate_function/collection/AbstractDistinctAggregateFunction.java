@@ -7,8 +7,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 去重类的抽象函数基类
- * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p></p>
+ * 去重聚合函数抽象类
+ * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
  * @param <T>   输入数据类型
  * @param <OUT> 输出类型

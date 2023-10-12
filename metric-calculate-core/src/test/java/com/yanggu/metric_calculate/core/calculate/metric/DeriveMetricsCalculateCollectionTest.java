@@ -8,7 +8,6 @@ import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +41,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input2.set("trans_timestamp", "1654768045000");
         input2.set("amount", 900);
         query = deriveMetricCalculate.stateExec(input2);
-        assertEquals(Arrays.asList(input1, input2), query.getResult());
+        assertEquals(List.of(input1, input2), query.getResult());
 
         JSONObject input3 = new JSONObject();
         input3.set("account_no_out", "000000000011");
@@ -50,7 +49,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input3.set("trans_timestamp", "1654768045000");
         input3.set("amount", 1000);
         query = deriveMetricCalculate.stateExec(input3);
-        assertEquals(Arrays.asList(input1, input2, input3), query.getResult());
+        assertEquals(List.of(input1, input2, input3), query.getResult());
 
         JSONObject input4 = new JSONObject();
         input4.set("account_no_out", "000000000011");
@@ -58,7 +57,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input4.set("trans_timestamp", "1654768045000");
         input4.set("amount", 1100);
         query = deriveMetricCalculate.stateExec(input4);
-        assertEquals(Arrays.asList(input1, input2, input3, input4), query.getResult());
+        assertEquals(List.of(input1, input2, input3, input4), query.getResult());
 
         JSONObject input5 = new JSONObject();
         input5.set("account_no_out", "000000000011");
@@ -66,7 +65,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input5.set("trans_timestamp", "1654768045000");
         input5.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input5);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
+        assertEquals(List.of(input1, input2, input3, input4, input5), query.getResult());
 
         JSONObject input6 = new JSONObject();
         input6.set("account_no_out", "000000000011");
@@ -74,7 +73,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input6.set("trans_timestamp", "1654768045000");
         input6.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input6);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
+        assertEquals(List.of(input1, input2, input3, input4, input5), query.getResult());
 
         JSONObject input7 = new JSONObject();
         input7.set("account_no_out", "000000000011");
@@ -82,11 +81,11 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         input7.set("trans_timestamp", "1654768045000");
         input7.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input7);
-        assertEquals(Arrays.asList(input1, input2, input3, input4, input5), query.getResult());
+        assertEquals(List.of(input1, input2, input3, input4, input5), query.getResult());
     }
 
     /**
-     * 测试有序列表对象, 按照debit_amt_out升序排序, 取5个
+     * 测试有序列表对象, 按照amount升序排序, 取5个
      * <p>SORTEDLIMITLISTOBJECT</p>
      */
     @Test
