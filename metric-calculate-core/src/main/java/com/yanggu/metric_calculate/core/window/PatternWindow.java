@@ -43,7 +43,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private Long timestamp;
 
-    private TreeMap<NodePattern, TreeMap<Long, IN>> dataMap = new TreeMap<>();
+    private TreeMap<Integer, TreeMap<Long, IN>> dataMap = new TreeMap<>();
 
     @Override
     public void init() {
@@ -64,7 +64,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
             Boolean process = filterProcessor.process(input);
             if (Boolean.TRUE.equals(process)) {
-                TreeMap<Long, IN> treeMap = dataMap.computeIfAbsent(nodePattern, key -> new TreeMap<>());
+                TreeMap<Long, IN> treeMap = dataMap.computeIfAbsent(nodePattern.getSort(), key -> new TreeMap<>());
                 treeMap.put(tempTimestamp, aggregateFieldProcessor.process(input));
             }
         });
@@ -139,7 +139,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
         while (iterator.hasNext()) {
             nextNode = iterator.next();
             Long size = nextNode.getInterval();
-            TreeMap<Long, IN> nextNodeTable = dataMap.get(nextNode);
+            TreeMap<Long, IN> nextNodeTable = dataMap.get(nextNode.getSort());
             if (nextNodeTable == null) {
                 break;
             }

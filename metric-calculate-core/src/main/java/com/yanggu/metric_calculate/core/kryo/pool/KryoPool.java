@@ -80,10 +80,13 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(StandardDeviationAccumulator.class, new BeanSerializer<>(kryo, StandardDeviationAccumulator.class), 39);
         kryo.register(ThirdCentralMomentAccumulator.class, new BeanSerializer<>(kryo, ThirdCentralMomentAccumulator.class), 40);
         kryo.register(VarianceAccumulator.class, new BeanSerializer<>(kryo, VarianceAccumulator.class), 41);
+        kryo.register(Long.class, new DefaultSerializers.LongSerializer(), 42);
+        kryo.register(Integer.class, new DefaultSerializers.IntSerializer(), 43);
+        kryo.register(Boolean.class, new DefaultSerializers.BooleanSerializer(), 44);
 
         //MetricCube序列化器和反序列化器
-        kryo.register(DimensionSet.class, new DimensionSetSerializer(), 60);
-        kryo.register(MetricCube.class, new MetricCubeSerializer<>(), 61);
+        kryo.register(DimensionSet.class, new DimensionSetSerializer(), 100);
+        kryo.register(MetricCube.class, new MetricCubeSerializer<>(), 101);
         return kryo;
     }
 
