@@ -6,7 +6,6 @@ import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.StringResource;
-import org.codehaus.janino.Compiler;
 import org.codehaus.janino.Scanner;
 import org.codehaus.janino.*;
 import org.junit.jupiter.api.DisplayName;

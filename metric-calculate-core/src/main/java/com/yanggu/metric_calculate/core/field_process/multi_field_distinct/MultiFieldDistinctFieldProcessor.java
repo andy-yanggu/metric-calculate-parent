@@ -4,6 +4,7 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

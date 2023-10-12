@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.io.file.FileUtil;

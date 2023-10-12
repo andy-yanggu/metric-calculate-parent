@@ -1,9 +1,7 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.dto.DimensionDto;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.req.DimensionQueryReq;
 import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.ModelService;

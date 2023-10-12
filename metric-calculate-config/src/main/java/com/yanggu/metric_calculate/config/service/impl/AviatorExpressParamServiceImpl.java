@@ -23,7 +23,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRESS_CHECK_ERROR;
-import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_ERROR;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamAviatorFunctionInstanceRelationTableDef.AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamMixUdafParamItemRelationTableDef.AVIATOR_EXPRESS_PARAM_MIX_UDAF_PARAM_ITEM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorExpressParamModelColumnRelationTableDef.AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION;

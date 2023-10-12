@@ -10,5 +10,5 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective
  */
 @Collective(keyStrategy = 0, retainStrategy = 1)
 @AggregateFunctionAnnotation(name = "LISTFIELD", displayName = "字段列表")
-public class ListFieldAggregateFunction<T> extends ListObjectAggregateFunction<T> {
+public class ListFieldAggregateFunction<T> extends AbstractListAggregateFunction<T> {
 }

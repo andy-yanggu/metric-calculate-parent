@@ -20,7 +20,8 @@ public class UdafCustomParamDataUtil {
     }
 
     @SneakyThrows
-    public static <T extends Annotation> List<UdafCustomParamData> getUdafCustomParamList(Class<?> clazz, Class<T> annotationClass) {
+    public static <T extends Annotation> List<UdafCustomParamData> getUdafCustomParamList(Class<?> clazz,
+                                                                                          Class<T> annotationClass) {
         Field[] declaredFields = clazz.getDeclaredFields();
         List<UdafCustomParamData> udafCustomParamDataList = new ArrayList<>();
         if (ArrayUtil.isEmpty(declaredFields)) {

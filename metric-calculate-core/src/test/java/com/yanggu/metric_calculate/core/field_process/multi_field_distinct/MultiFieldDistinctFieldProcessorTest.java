@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.multi_field_distinct;
 
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;

@@ -3,29 +3,25 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import org.dromara.hutool.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * 去重对象列表
- *
- * @param <T>
  */
 @Collective(keyStrategy = 1, retainStrategy = 2)
 @AggregateFunctionAnnotation(name = "DISTINCTLISTOBJECT", displayName = "去重对象列表")
-public class DistinctListObjectAggregateFunction<T> extends AbstractCollectionFunction<T, Set<T>, List<T>> {
+public class DistinctListObjectAggregateFunction extends AbstractDistinctAggregateFunction<KeyValue<MultiFieldDistinctKey, JSONObject>, List<JSONObject>> {
 
     @Override
-    public Set<T> createAccumulator() {
-        return new HashSet<>();
-    }
-
-    @Override
-    public List<T> getResult(Set<T> accumulator) {
-        return new ArrayList<>(accumulator);
+    public List<JSONObject> getResult(Set<KeyValue<MultiFieldDistinctKey, JSONObject>> acc) {
+        return acc.stream()
+                .map(KeyValue::getValue)
+                .toList();
     }
 
 }

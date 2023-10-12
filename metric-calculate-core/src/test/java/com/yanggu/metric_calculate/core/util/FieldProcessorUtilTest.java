@@ -17,11 +17,11 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
@@ -300,7 +300,7 @@ class FieldProcessorUtilTest {
 
         FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
-        assertEquals(new ListObjectAggregateFunction<JSONObject>(), aggregateFieldProcessor.aggregateFunction());
+        assertEquals(new ListObjectAggregateFunction(), aggregateFieldProcessor.aggregateFunction());
     }
 
     /**

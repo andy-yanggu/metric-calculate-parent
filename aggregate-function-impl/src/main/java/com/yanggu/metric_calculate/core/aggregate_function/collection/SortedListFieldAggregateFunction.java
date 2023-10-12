@@ -15,8 +15,8 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 public class SortedListFieldAggregateFunction<T> extends AbstractSortedListAggregateFunction<KeyValue<MultiFieldOrderCompareKey, T>, T> {
 
     @Override
-    public T inToOut(KeyValue<MultiFieldOrderCompareKey, T> multiFieldOrderCompareKeyTKeyValue) {
-        return multiFieldOrderCompareKeyTKeyValue.getValue();
+    public T inToOut(KeyValue<MultiFieldOrderCompareKey, T> keyValue) {
+        return keyValue.getValue();
     }
 
 }

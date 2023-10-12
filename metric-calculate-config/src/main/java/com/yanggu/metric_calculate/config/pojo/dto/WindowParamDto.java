@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
+import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelImport;
-import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

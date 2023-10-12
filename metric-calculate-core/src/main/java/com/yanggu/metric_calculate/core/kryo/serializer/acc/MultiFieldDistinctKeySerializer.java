@@ -5,8 +5,8 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoCollectionSerializer;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 
 import java.io.Serializable;
 import java.util.ArrayList;

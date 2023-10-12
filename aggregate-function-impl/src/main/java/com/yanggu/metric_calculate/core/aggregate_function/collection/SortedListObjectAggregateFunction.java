@@ -10,8 +10,6 @@ import org.dromara.hutool.json.JSONObject;
 
 /**
  * 有序对象列表
- *
- * @param <T>
  */
 @Data
 @EqualsAndHashCode(callSuper = false)

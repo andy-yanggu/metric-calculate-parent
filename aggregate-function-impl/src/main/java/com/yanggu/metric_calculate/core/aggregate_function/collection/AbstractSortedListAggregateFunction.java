@@ -8,17 +8,22 @@ import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 import java.util.List;
 
 /**
- * 有序对象列表
- *
- * @param <T>
+ * 有序列表抽象类
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractSortedListAggregateFunction<IN, OUT> extends
-        AbstractCollectionFunction<IN, BoundedPriorityQueue<IN>, List<OUT>> {
+public abstract class AbstractSortedListAggregateFunction<IN extends Comparable<IN>, OUT> extends AbstractCollectionFunction<IN, BoundedPriorityQueue<IN>, List<OUT>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度", notNull = true)
     private Integer limit = 10;
+
+    /**
+     * IN变成OUT
+     *
+     * @param in
+     * @return
+     */
+    public abstract OUT inToOut(IN in);
 
     @Override
     public BoundedPriorityQueue<IN> createAccumulator() {
@@ -31,7 +36,5 @@ public abstract class AbstractSortedListAggregateFunction<IN, OUT> extends
                 .map(this::inToOut)
                 .toList();
     }
-
-    public abstract OUT inToOut(IN in);
 
 }
