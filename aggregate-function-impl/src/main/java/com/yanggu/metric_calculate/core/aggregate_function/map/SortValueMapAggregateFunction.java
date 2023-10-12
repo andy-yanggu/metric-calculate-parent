@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
  * 对ValeOUT进行排序的map, 并进行limit
  * <p>输出的仍然是{@code Map<K, ValueOut>}, 只是根据value进行排序，取TopN</p>
  *
- * @param <K>        map的k类型
  * @param <V>        map的v类型
  * @param <ValueACC>
  * @param <ValueOUT>
@@ -25,8 +25,8 @@ import java.util.stream.Collectors;
 @MapType
 @EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "SORTVALUEMAP", displayName = "TOPN映射")
-public class SortValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
-        extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {
+public class SortValueMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
+        extends BaseAbstractMapAggregateFunction<V, ValueACC, ValueOUT, Map<MultiFieldDistinctKey, ValueOUT>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
@@ -35,7 +35,7 @@ public class SortValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comp
     private Boolean asc = true;
 
     @Override
-    public Map<K, ValueOUT> getResult(Map<K, ValueACC> accumulator) {
+    public Map<MultiFieldDistinctKey, ValueOUT> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
         return getCompareLimitStream(accumulator, asc, limit)
                 .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue, (k1, k2) -> k1, LinkedHashMap::new));
     }

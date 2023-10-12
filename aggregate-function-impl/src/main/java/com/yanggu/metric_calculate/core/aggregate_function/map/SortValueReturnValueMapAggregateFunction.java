@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -24,8 +25,8 @@ import java.util.Map;
 @MapType
 @EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "SORTVALUERETURNVALUEMAP", displayName = "TOPN值")
-public class SortValueReturnValueMapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
-        extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, List<ValueOUT>> {
+public class SortValueReturnValueMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
+        extends BaseAbstractMapAggregateFunction<V, ValueACC, ValueOUT, List<ValueOUT>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
@@ -34,7 +35,7 @@ public class SortValueReturnValueMapAggregateFunction<K, V, ValueACC, ValueOUT e
     private Boolean asc = true;
 
     @Override
-    public List<ValueOUT> getResult(Map<K, ValueACC> accumulator) {
+    public List<ValueOUT> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
         return getCompareLimitStream(accumulator, asc, limit)
                 .map(AbstractMap.SimpleImmutableEntry::getValue)
                 .toList();
