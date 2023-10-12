@@ -629,19 +629,25 @@
       "fieldType": "REAL"
     },
     {
+      "name": "trans_timestamp",
+      "dataType": "LONG",
+      "fieldType": "REAL"
+    },
+    {
       "name": "trans_date",
       "dataType": "STRING",
-      "fieldType": "REAL"
+      "fieldType": "VIRTUAL",
+      "aviatorExpressParam": {
+        "express": "date_to_string(new java.util.Date(trans_timestamp), 'yyyy-MM-dd')"
+      }
     },
     {
-      "name": "trans_time",
-      "dataType": "STRING",
-      "fieldType": "REAL"
-    },
-    {
-      "name": "trans_timestamp",
-      "dataType": "STRING",
-      "fieldType": "REAL"
+      "name": "trans_hour",
+      "dataType": "LONG",
+      "fieldType": "VIRTUAL",
+      "aviatorExpressParam": {
+        "express": "long(date_to_string(new java.util.Date(trans_timestamp), 'HH'))"
+      }
     }
   ]
 }
