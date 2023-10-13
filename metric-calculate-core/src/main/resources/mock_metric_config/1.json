@@ -103,6 +103,11 @@
           "retainExpressParam" : {
             "express": "amount"
           },
+          "sortFieldParamList": [
+            {
+              "express": "amount"
+            }
+          ],
           "collectiveSortFieldList": [
             {
               "aviatorExpressParam": {
@@ -112,7 +117,10 @@
             }
           ],
           "param": {
-            "limit": 4
+            "limit": 4,
+            "booleanList": [
+              true
+            ]
           }
         }
       },
@@ -266,6 +274,11 @@
         "aggregateType": "SORTEDLIMITLISTOBJECT",
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTOBJECT",
+          "sortFieldParamList": [
+            {
+              "express": "amount"
+            }
+          ],
           "collectiveSortFieldList": [
             {
               "aviatorExpressParam" : {
@@ -275,7 +288,10 @@
             }
           ],
           "param": {
-            "limit": 5
+            "limit": 5,
+            "booleanList": [
+              true
+            ]
           }
         }
       },

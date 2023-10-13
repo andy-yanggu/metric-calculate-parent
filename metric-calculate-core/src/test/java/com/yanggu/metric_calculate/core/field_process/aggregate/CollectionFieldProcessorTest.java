@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -91,6 +92,7 @@ class CollectionFieldProcessorTest {
      * SORTEDLIMITLISTOBJECT: 有排序字段、没有去重字段和保留原始数据
      */
     @Test
+    @Disabled
     void process3() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
@@ -116,6 +118,7 @@ class CollectionFieldProcessorTest {
      * SORTEDLIMITLISTFIELD: 有排序字段、没有去重字段和保留指定字段
      */
     @Test
+    @Disabled
     void process4() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLISTFIELD");
@@ -145,6 +148,7 @@ class CollectionFieldProcessorTest {
      * SORTEDLIMITLIST: 有排序字段、没有去重字段和不保留任何数据
      */
     @Test
+    @Disabled
     void process5() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLIST");

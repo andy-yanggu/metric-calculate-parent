@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
+import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
 
 import java.util.List;
 

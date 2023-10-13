@@ -56,6 +56,11 @@ public class BaseUdafParam implements Serializable {
     private List<AviatorExpressParam> distinctFieldListParamList;
 
     /**
+     * 排序字段列表（sortFieldList）：类似SQL中的ORDER BY id ASC, user_name DESC，多字段排序。
+     */
+    private List<AviatorExpressParam> sortFieldParamList;
+
+    /**
      * udaf函数中的参数（param）：例如排序列表，指定limit参数，限制条数。key和Java字段名称一致
      */
     private Map<String, Object> param;

@@ -43,7 +43,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldDistinctFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
@@ -73,7 +73,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
             //设置了排序字段
         } else if (keyStrategy == 2) {
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, udafParam.getCollectiveSortFieldList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getSortFieldParamList(), aviatorFunctionFactory);
         }
 
         //设置了保留字段
@@ -108,16 +108,16 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
             }
             //使用了排序字段
         } else if (keyStrategy == 2) {
-            MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
-            if (multiFieldOrderCompareKey == null) {
+            MultiFieldDistinctKey multiFieldDistinctKey = multiFieldOrderFieldProcessor.process(input);
+            if (multiFieldDistinctKey == null) {
                 return null;
             }
             if (retainStrategy == 0) {
-                result = multiFieldOrderCompareKey;
+                result = new KeyValue<>(multiFieldDistinctKey, null);
             } else if (retainStrategy == 1) {
-                result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValueFieldProcessor.process(input));
+                result = new KeyValue<>(multiFieldDistinctKey, retainFieldValueFieldProcessor.process(input));
             } else if (retainStrategy == 2) {
-                result = new KeyValue<>(multiFieldOrderCompareKey, input);
+                result = new KeyValue<>(multiFieldDistinctKey, input);
             }
         } else {
             if (retainStrategy == 0) {
