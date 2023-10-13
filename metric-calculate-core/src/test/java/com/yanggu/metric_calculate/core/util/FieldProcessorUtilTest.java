@@ -330,12 +330,12 @@ class FieldProcessorUtilTest {
         fieldMap.put("name", String.class);
         fieldMap.put("amount", Integer.class);
 
-        AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<MultiFieldDistinctKey, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
+        AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<List<Object>, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         FieldProcessor<JSONObject, AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
 
-        BaseMapAggregateFunction<MultiFieldDistinctKey, Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();
+        BaseMapAggregateFunction<Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();
         baseMapAggregateFunction.setValueAggregateFunction(new SumAggregateFunction<>());
         assertEquals(baseMapAggregateFunction, aggregateFieldProcessor.aggregateFunction());
     }

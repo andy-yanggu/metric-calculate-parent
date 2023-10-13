@@ -13,7 +13,7 @@ import java.util.Map;
 
 /**
  * 对ValeOUT进行排序的map, 取首个
- * <p>输出的是{@code List<ValueACC>}, 只是根据value进行排序，取首个</p>
+ * <p>输出的是{@code ValueOUT}, 只是根据ValueOUT进行排序，取首个ValueOUT</p>
  *
  * @param <V>
  * @param <ValueACC>
@@ -24,7 +24,7 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "SORTVALUERETURNONEVALUEMAP", displayName = "TOP1值")
 public class SortValueReturnOneValueMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
-        extends BaseAbstractMapAggregateFunction<V, ValueACC, ValueOUT, ValueOUT> {
+        extends AbstractMultiFieldDistinctKeyValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT, ValueOUT> {
 
     @AggregateFunctionFieldAnnotation(displayName = "升降序", description = "true升序，false降序")
     private Boolean asc = true;

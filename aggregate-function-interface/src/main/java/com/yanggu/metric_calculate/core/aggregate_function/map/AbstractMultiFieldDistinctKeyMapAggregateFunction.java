@@ -10,6 +10,7 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
  * @param <ValueOUT> value的输出类型
  * @param <OUT>      输出数据类型
  */
-public abstract class BaseAbstractMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>, OUT>
+public abstract class AbstractMultiFieldDistinctKeyMapAggregateFunction<V, ValueACC, ValueOUT, OUT>
         extends AbstractMapAggregateFunction<MultiFieldDistinctKey, V, ValueACC, ValueOUT, OUT> {
+
 }

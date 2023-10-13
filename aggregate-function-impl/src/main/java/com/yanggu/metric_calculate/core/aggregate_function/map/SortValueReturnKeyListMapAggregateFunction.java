@@ -14,9 +14,8 @@ import java.util.Map;
 
 /**
  * 对ValeOUT进行排序的map, 并进行limit
- * <p>输出的是{@code List<ValueACC>}, 只是根据value进行排序，取TopN</p>
+ * <p>输出的是{@code List<List<Object>>}, 只是根据value进行排序，取对应的TopN</p>
  *
- * @param <K>
  * @param <V>
  * @param <ValueACC>
  * @param <ValueOUT>
@@ -24,9 +23,9 @@ import java.util.Map;
 @Data
 @MapType
 @EqualsAndHashCode(callSuper = false)
-@AggregateFunctionAnnotation(name = "SORTVALUERETURNVALUEMAP", displayName = "TOPN值")
-public class SortValueReturnValueMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
-        extends BaseAbstractMapAggregateFunction<V, ValueACC, ValueOUT, List<ValueOUT>> {
+@AggregateFunctionAnnotation(name = "SORTVALUERETURNKEYMAP", displayName = "TOPN主键")
+public class SortValueReturnKeyListMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
+        extends AbstractMultiFieldDistinctKeyValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT, List<List<Object>>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
@@ -35,9 +34,10 @@ public class SortValueReturnValueMapAggregateFunction<V, ValueACC, ValueOUT exte
     private Boolean asc = true;
 
     @Override
-    public List<ValueOUT> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
+    public List<List<Object>> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
         return getCompareLimitStream(accumulator, asc, limit)
-                .map(AbstractMap.SimpleImmutableEntry::getValue)
+                .map(AbstractMap.SimpleImmutableEntry::getKey)
+                .map(MultiFieldDistinctKey::getFieldList)
                 .toList();
     }
 

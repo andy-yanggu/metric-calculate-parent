@@ -8,25 +8,25 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.util.AbstractMap;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 /**
  * 对ValeOUT进行排序的map, 并进行limit
- * <p>输出的仍然是{@code Map<K, ValueOut>}, 只是根据value进行排序，取TopN</p>
+ * <p>输出的是{@code List<ValueOUT>}, 只是根据ValueOUT进行排序，取TopN</p>
  *
- * @param <V>        map的v类型
+ * @param <K>
+ * @param <V>
  * @param <ValueACC>
  * @param <ValueOUT>
  */
 @Data
 @MapType
 @EqualsAndHashCode(callSuper = false)
-@AggregateFunctionAnnotation(name = "SORTVALUEMAP", displayName = "TOPN映射")
-public class SortValueMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
-        extends BaseAbstractMapAggregateFunction<V, ValueACC, ValueOUT, Map<MultiFieldDistinctKey, ValueOUT>> {
+@AggregateFunctionAnnotation(name = "SORTVALUERETURNVALUEMAP", displayName = "TOPN值")
+public class SortValueReturnValueListMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>>
+        extends AbstractMultiFieldDistinctKeyValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT, List<ValueOUT>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
@@ -35,9 +35,10 @@ public class SortValueMapAggregateFunction<V, ValueACC, ValueOUT extends Compara
     private Boolean asc = true;
 
     @Override
-    public Map<MultiFieldDistinctKey, ValueOUT> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
+    public List<ValueOUT> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
         return getCompareLimitStream(accumulator, asc, limit)
-                .collect(Collectors.toMap(AbstractMap.SimpleImmutableEntry::getKey, AbstractMap.SimpleImmutableEntry::getValue, (k1, k2) -> k1, LinkedHashMap::new));
+                .map(AbstractMap.SimpleImmutableEntry::getValue)
+                .toList();
     }
 
 }

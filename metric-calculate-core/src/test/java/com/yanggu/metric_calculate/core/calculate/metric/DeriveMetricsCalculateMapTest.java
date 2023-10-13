@@ -7,8 +7,8 @@ import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.AbstractMap;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -25,7 +25,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
     @Test
     void testBaseMap() {
         DeriveMetricCalculate<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
-                        Map<MultiFieldDistinctKey, Double>> deriveMetricCalculate
+                        Map<List<Object>, Double>> deriveMetricCalculate
                 = metricCalculate.getDeriveMetricCalculateById(8L);
 
         JSONObject input1 = new JSONObject();
@@ -34,11 +34,11 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input1.set("trans_timestamp", "1654768045000");
         input1.set("amount", 800);
 
-        DeriveMetricCalculateResult<Map<MultiFieldDistinctKey, Double>> query =
+        DeriveMetricCalculateResult<Map<List<Object>, Double>> query =
                 deriveMetricCalculate.stateExec(input1);
-        Map<MultiFieldDistinctKey, Double> map = new HashMap<>();
-        MultiFieldDistinctKey key = new MultiFieldDistinctKey(Collections.singletonList("000000000012"));
-        map.put(key, 800.0D);
+        Map<List<Object>, Double> map = new HashMap<>();
+        List<Object> key = List.of("000000000012");
+        map.put(List.of("000000000012"), 800.0D);
         assertEquals(map, query.getResult());
 
         JSONObject input2 = new JSONObject();
@@ -66,7 +66,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input4.set("amount", 80);
         query = deriveMetricCalculate.stateExec(input4);
 
-        MultiFieldDistinctKey key2 = new MultiFieldDistinctKey(Collections.singletonList("000000000013"));
+        List<Object> key2 = List.of("000000000013");
         map.put(key2, 80.0D);
         assertEquals(map, query.getResult());
 
@@ -94,7 +94,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         input7.set("trans_timestamp", "1654768045000");
         input7.set("amount", 100);
         query = deriveMetricCalculate.stateExec(input7);
-        map.put(new MultiFieldDistinctKey(Collections.singletonList("000000000016")), 100.0D);
+        map.put(List.of("000000000016"), 100.0D);
         assertEquals(map, query.getResult());
     }
 

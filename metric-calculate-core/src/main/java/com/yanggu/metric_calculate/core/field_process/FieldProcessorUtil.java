@@ -5,7 +5,6 @@ import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.aggregate_function.map.AbstractMapAggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.map.BaseAbstractMapAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.mix.AbstractMixAggregateFunction;
 import com.yanggu.metric_calculate.core.field_process.aggregate.*;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
