@@ -29,7 +29,7 @@ import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.datastream.SingleOutputStreamOperator;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.OutputTag;
-import org.dromara.hutool.core.collection.queue.BoundedPriorityQueue;
+import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.lang.tuple.Pair;

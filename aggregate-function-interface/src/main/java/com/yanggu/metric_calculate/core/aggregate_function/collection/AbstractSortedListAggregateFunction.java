@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractSortedListAggregateFunction<IN extends Comparable<IN>, OUT> extends AbstractCollectionFunction<IN, BoundedPriorityQueue<IN>, List<OUT>> {
+public abstract class AbstractSortedListAggregateFunction<IN, OUT> extends AbstractCollectionFunction<IN, BoundedPriorityQueue<IN>, List<OUT>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度", notNull = true)
     private Integer limit = 10;

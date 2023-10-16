@@ -68,6 +68,11 @@ public abstract class AbstractMultiFieldSortedListAggregateFunction<IN, OUT> ext
         }
 
         @Override
+        public int hashCode() {
+            return booleanList != null ? booleanList.hashCode() : 0;
+        }
+
+        @Override
         public boolean equals(Object o) {
             if (this == o) {
                 return true;

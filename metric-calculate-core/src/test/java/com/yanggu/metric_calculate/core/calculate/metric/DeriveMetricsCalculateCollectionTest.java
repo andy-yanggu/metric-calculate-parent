@@ -1,10 +1,6 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import com.esotericsoftware.kryo.Kryo;
-import com.esotericsoftware.kryo.io.Input;
-import com.esotericsoftware.kryo.io.Output;
-import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoPriorityQueueSerializer;
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
@@ -14,7 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -114,23 +109,6 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
         assertEquals(2, stateExec.size());
         assertEquals(input1, stateExec.get(0));
         assertEquals(input2, stateExec.get(1));
-    }
-
-    @Test
-    void test3() {
-        Kryo kryo = new Kryo();
-        Output output = new Output(1024, -1);
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>();
-        priorityQueue.add(1);
-        priorityQueue.add(2);
-        priorityQueue.add(3);
-        KryoPriorityQueueSerializer serializer = new KryoPriorityQueueSerializer();
-        kryo.writeObject(output, priorityQueue, serializer);
-
-        Input input = new Input();
-        input.setBuffer(output.toBytes());
-        PriorityQueue priorityQueue1 = kryo.readObject(input, PriorityQueue.class, serializer);
-        System.out.println("priorityQueue1 = " + priorityQueue1);
     }
 
 }

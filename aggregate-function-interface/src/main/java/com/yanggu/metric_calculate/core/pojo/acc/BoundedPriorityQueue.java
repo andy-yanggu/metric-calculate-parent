@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -24,6 +23,8 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E> implements Seriali
      */
     private Integer capacity;
 
+    private Comparator<? super E> comparator;
+
     public BoundedPriorityQueue(final int capacity) {
         this(capacity, null);
     }
@@ -37,6 +38,7 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E> implements Seriali
     public BoundedPriorityQueue(final int capacity, final Comparator<? super E> comparator) {
         super(capacity, comparator == null ? (Comparator<? super E>) Comparator.naturalOrder().reversed() : comparator.reversed());
         this.capacity = capacity;
+        this.comparator = comparator;
     }
 
     /**
@@ -63,13 +65,21 @@ public class BoundedPriorityQueue<E> extends PriorityQueue<E> implements Seriali
      */
     public List<E> toList() {
         final ArrayList<E> list = new ArrayList<>(this);
-        list.sort(comparator());
+        list.sort(comparator);
         return list;
     }
 
     @Override
     public Iterator<E> iterator() {
         return toList().iterator();
+    }
+
+    @Override
+    public String toString() {
+        return "BoundedPriorityQueue{" +
+                "capacity=" + capacity +
+                ", comparator=" + comparator +
+                ", data=" + toList() + "}";
     }
 
 }
