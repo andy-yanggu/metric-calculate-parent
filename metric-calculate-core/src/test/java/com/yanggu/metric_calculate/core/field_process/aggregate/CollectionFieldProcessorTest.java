@@ -1,19 +1,17 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
@@ -92,25 +90,22 @@ class CollectionFieldProcessorTest {
      * SORTEDLIMITLISTOBJECT: 有排序字段、没有去重字段和保留原始数据
      */
     @Test
-    @Disabled
     void process3() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setCollectiveSortFieldList(ListUtil.of(new FieldOrderParam(aviatorExpressParam, false)));
+        baseUdafParam.setSortFieldParamList(List.of(aviatorExpressParam));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldOrderCompareKey, JSONObject> process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(ListUtil.of(100));
-        assertEquals(multiFieldOrderCompareKey, process.getKey());
+        KeyValue<MultiFieldDistinctKey, JSONObject> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
         assertEquals(input, process.getValue());
     }
 
@@ -118,29 +113,26 @@ class CollectionFieldProcessorTest {
      * SORTEDLIMITLISTFIELD: 有排序字段、没有去重字段和保留指定字段
      */
     @Test
-    @Disabled
     void process4() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLISTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setCollectiveSortFieldList(ListUtil.of(new FieldOrderParam(aviatorExpressParam, false)));
+        baseUdafParam.setSortFieldParamList(List.of(aviatorExpressParam));
 
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("name");
         baseUdafParam.setRetainExpressParam(aviatorExpressParam1);
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldOrderCompareKey, String> process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(ListUtil.of(100));
-        assertEquals(multiFieldOrderCompareKey, process.getKey());
+        KeyValue<MultiFieldDistinctKey, String> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
         assertEquals("张三", process.getValue());
     }
 
@@ -148,25 +140,22 @@ class CollectionFieldProcessorTest {
      * SORTEDLIMITLIST: 有排序字段、没有去重字段和不保留任何数据
      */
     @Test
-    @Disabled
     void process5() throws Exception {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         baseUdafParam.setAggregateType("SORTEDLIMITLIST");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setCollectiveSortFieldList(ListUtil.of(new FieldOrderParam(aviatorExpressParam, false)));
+        baseUdafParam.setSortFieldParamList(List.of(aviatorExpressParam));
 
-        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        MultiFieldOrderCompareKey process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey multiFieldOrderCompareKey = new MultiFieldOrderCompareKey();
-        multiFieldOrderCompareKey.setDataList(ListUtil.of(100));
-        assertEquals(multiFieldOrderCompareKey, process);
+        KeyValue<MultiFieldDistinctKey, Void> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
     }
 
     /**
