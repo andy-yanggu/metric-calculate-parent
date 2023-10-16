@@ -8,8 +8,6 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
@@ -62,11 +60,6 @@ public class FieldProcessorTestBase {
                                                                 Map<String, Class<?>> fieldMap,
                                                                 List<AviatorExpressParam> distinctFieldListParamList) {
         return FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, distinctFieldListParamList, AVIATOR_FUNCTION_FACTORY);
-    }
-
-    public static MultiFieldOrderFieldProcessor getFieldOrderFieldProcessor(Map<String, Class<?>> fieldMap,
-                                                                            List<FieldOrderParam> fieldOrderParamList) {
-        return FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, fieldOrderParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
     public static <T> FieldProcessor<JSONObject, T> getBaseAggregateFieldProcessor(Map<String, Class<?>> fieldMap,

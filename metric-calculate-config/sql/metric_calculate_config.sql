@@ -245,36 +245,6 @@ CREATE TABLE `base_udaf_param`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 38 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '数值型、集合型、对象型聚合函数相关参数' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for base_udaf_param_collective_sort_field_list_relation
--- ----------------------------
-DROP TABLE IF EXISTS `base_udaf_param_collective_sort_field_list_relation`;
-CREATE TABLE `base_udaf_param_collective_sort_field_list_relation`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `base_udaf_param_id` int(0) NOT NULL COMMENT '基本聚合函数参数id',
-  `field_order_param_id` int(0) NOT NULL COMMENT '字段排序配置id',
-  `user_id` int(0) NOT NULL COMMENT '用户id',
-  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '基本聚合参数，排序字段列表（sortFieldList）中间表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for base_udaf_param_distinct_field_list_relation
--- ----------------------------
-DROP TABLE IF EXISTS `base_udaf_param_distinct_field_list_relation`;
-CREATE TABLE `base_udaf_param_distinct_field_list_relation`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `base_udaf_param_id` int(0) NOT NULL COMMENT '基本聚合函数参数id',
-  `aviator_express_param_id` int(0) NOT NULL COMMENT 'Aviator函数参数id',
-  `user_id` int(0) NOT NULL COMMENT '用户id',
-  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '基本聚合参数，去重字段列表中间表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
 -- Table structure for base_udaf_param_metric_express_list_relation
 -- ----------------------------
 DROP TABLE IF EXISTS `base_udaf_param_metric_express_list_relation`;
@@ -303,36 +273,6 @@ CREATE TABLE `base_udaf_param_metric_express_relation`  (
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '基本聚合参数，度量字段表达式中间表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for base_udaf_param_objective_compare_field_express_list_relation
--- ----------------------------
-DROP TABLE IF EXISTS `base_udaf_param_objective_compare_field_express_list_relation`;
-CREATE TABLE `base_udaf_param_objective_compare_field_express_list_relation`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `base_udaf_param_id` int(0) NOT NULL COMMENT '基本聚合函数参数id',
-  `aviator_express_param_id` int(0) NOT NULL COMMENT 'Aviator函数参数id',
-  `user_id` int(0) NOT NULL COMMENT '用户id',
-  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '基本聚合参数，对象型比较字段列表中间表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for base_udaf_param_retain_express_relation
--- ----------------------------
-DROP TABLE IF EXISTS `base_udaf_param_retain_express_relation`;
-CREATE TABLE `base_udaf_param_retain_express_relation`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT,
-  `base_udaf_param_id` int(0) NOT NULL COMMENT '基本聚合函数参数id',
-  `aviator_express_param_id` int(0) NOT NULL COMMENT 'Aviator函数参数id',
-  `user_id` int(0) NOT NULL COMMENT '用户id',
-  `is_deleted` int(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '基本聚合参数，保留字段表达式中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for derive
@@ -448,21 +388,6 @@ CREATE TABLE `dimension`  (
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 212 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '维度表' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for field_order_param
--- ----------------------------
-DROP TABLE IF EXISTS `field_order_param`;
-CREATE TABLE `field_order_param`  (
-  `id` int(0) NOT NULL AUTO_INCREMENT COMMENT '主键自增',
-  `aviator_express_param_id` int(0) NOT NULL COMMENT '表达式id',
-  `is_asc` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否升序, true升序, false降序',
-  `user_id` int(0) NOT NULL COMMENT '用户id',
-  `is_deleted` tinyint(0) NOT NULL DEFAULT 0 COMMENT '是否删除(缺省为0,即未删除)',
-  `create_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字段排序配置类' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for jar_store

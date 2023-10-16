@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.core.pojo.udaf_param;
 
-
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
 
@@ -10,13 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 数值型、集合型、对象型聚合函数相关参数
+ * 数值型、集合型、对象型、映射型聚合函数相关参数
  */
 @Data
-public class BaseUdafParam implements Serializable {
+public class BaseUdafParam2 implements Serializable {
 
     @Serial
-    private static final long serialVersionUID = 8183085404842634515L;
+    private static final long serialVersionUID = -4563914919213961988L;
 
     /**
      * 聚合类型
@@ -32,7 +31,6 @@ public class BaseUdafParam implements Serializable {
      * 多字段度量字段表达式：数值型多字段、集合型去重列表、集合型排序列表、对象型比较字段列表
      */
     private List<AviatorExpressParam> metricExpressParamList;
-
     /**
      * udaf函数中的参数（param）：例如排序列表，指定limit参数，限制条数。key和Java字段名称一致
      */

@@ -234,13 +234,13 @@ class DeriveExcelTest {
             //如果需要比较字段
             if (Integer.valueOf(3).equals(keyStrategy)) {
                 List<AviatorExpressParamDto> objectiveCompareFieldParamList = new ArrayList<>();
-                baseUdafParamDto.setObjectiveCompareFieldParamList(objectiveCompareFieldParamList);
+                //baseUdafParamDto.setObjectiveCompareFieldParamList(objectiveCompareFieldParamList);
             }
             //如果需要保留字段
             Integer retainStrategy = aggregateFunction.getRetainStrategy();
             if (Integer.valueOf(1).equals(retainStrategy)) {
                 AviatorExpressParamDto expressParamDto = createAviatorExpressParamDto();
-                baseUdafParamDto.setRetainExpressParam(expressParamDto);
+                baseUdafParamDto.setMetricExpressParam(expressParamDto);
             }
             //映射型
         } else if (MAP_TYPE.equals(aggregateFunctionType)) {

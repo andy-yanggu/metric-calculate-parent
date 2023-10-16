@@ -45,7 +45,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
-        baseUdafParam.setRetainExpressParam(aviatorExpressParam);
+        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
         baseUdafParam.setAggregateType("LISTFIELD");
 
         FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -95,7 +95,7 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setSortFieldParamList(List.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
@@ -118,11 +118,11 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLIMITLISTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setSortFieldParamList(List.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
 
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("name");
-        baseUdafParam.setRetainExpressParam(aviatorExpressParam1);
+        baseUdafParam.setMetricExpressParam(aviatorExpressParam1);
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
@@ -145,7 +145,7 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setAggregateType("SORTEDLIMITLIST");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setSortFieldParamList(List.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
@@ -166,7 +166,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLISTOBJECT");
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -189,10 +189,10 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
         AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
         aviatorExpressParam2.setExpress("name");
-        baseUdafParam.setRetainExpressParam(aviatorExpressParam2);
+        baseUdafParam.setMetricExpressParam(aviatorExpressParam2);
         baseUdafParam.setAggregateType("DISTINCTLISTFIELD");
 
         FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -215,7 +215,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLIST");
 
         FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -237,7 +237,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setDistinctFieldListParamList(ListUtil.of(aviatorExpressParam));
+        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTCOUNT");
 
         FieldProcessor<JSONObject, MultiFieldDistinctKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
@@ -259,7 +259,7 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setRetainExpressParam(aviatorExpressParam);
+        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
         baseUdafParam.setAggregateType("SLIDINGCOUNTWINDOW");
 
         FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);

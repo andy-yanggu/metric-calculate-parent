@@ -67,11 +67,11 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         //设置了去重字段
         if (keyStrategy == 1) {
             this.multiFieldDistinctFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getDistinctFieldListParamList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
             //设置了排序字段
         } else if (keyStrategy == 2) {
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getSortFieldParamList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
         }
 
         //设置了保留字段
@@ -81,7 +81,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         }
         if (retainStrategy == 1) {
             this.retainFieldValueFieldProcessor =
-                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpressParam(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getMetricExpressParam(), aviatorFunctionFactory);
         }
     }
 

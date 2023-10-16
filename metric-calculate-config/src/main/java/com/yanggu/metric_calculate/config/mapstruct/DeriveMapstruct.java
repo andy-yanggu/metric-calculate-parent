@@ -143,25 +143,6 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
         if (CollUtil.isNotEmpty(metricExpressParamList)) {
             aviatorExpressParamList.addAll(metricExpressParamList);
         }
-        AviatorExpressParam retainExpressParam = baseUdafParam.getRetainExpressParam();
-        if (retainExpressParam != null) {
-            aviatorExpressParamList.add(retainExpressParam);
-        }
-        List<AviatorExpressParam> objectiveCompareFieldParamList = baseUdafParam.getObjectiveCompareFieldParamList();
-        if (CollUtil.isNotEmpty(objectiveCompareFieldParamList)) {
-            aviatorExpressParamList.addAll(objectiveCompareFieldParamList);
-        }
-        List<FieldOrderParam> collectiveSortFieldList = baseUdafParam.getCollectiveSortFieldList();
-        if (CollUtil.isNotEmpty(collectiveSortFieldList)) {
-            List<AviatorExpressParam> list = collectiveSortFieldList.stream()
-                    .map(FieldOrderParam::getAviatorExpressParam)
-                    .toList();
-            aviatorExpressParamList.addAll(list);
-        }
-        List<AviatorExpressParam> distinctFieldListParamList = baseUdafParam.getDistinctFieldListParamList();
-        if (CollUtil.isNotEmpty(distinctFieldListParamList)) {
-            aviatorExpressParamList.addAll(distinctFieldListParamList);
-        }
     }
 
 }

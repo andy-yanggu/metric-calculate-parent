@@ -17,8 +17,6 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
@@ -145,34 +143,6 @@ class FieldProcessorUtilTest {
         assertEquals(expression1, processor.getMetricFieldProcessorList().get(0).getMetricExpression());
         Expression expression2 = AviatorEvaluator.compile("field2", true);
         assertEquals(expression2, processor.getMetricFieldProcessorList().get(1).getMetricExpression());
-    }
-
-    @Test
-    void testGetOrderFieldProcessor() {
-        // Positive Test Case
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("field1", String.class);
-        fieldMap.put("field2", Integer.class);
-
-        List<FieldOrderParam> fieldOrderParamList = new ArrayList<>();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("field1");
-        FieldOrderParam field1 = new FieldOrderParam(aviatorExpressParam, true);
-        AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
-        aviatorExpressParam1.setExpress("field2");
-        FieldOrderParam field2 = new FieldOrderParam(aviatorExpressParam1, true);
-        fieldOrderParamList.add(field1);
-        fieldOrderParamList.add(field2);
-
-        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, fieldOrderParamList, getAviatorFunctionFactory());
-
-        assertNotNull(tempMultiFieldOrderFieldProcessor);
-        assertEquals(fieldMap, tempMultiFieldOrderFieldProcessor.getFieldMap());
-        assertEquals(fieldOrderParamList, tempMultiFieldOrderFieldProcessor.getFieldOrderParamList());
-        Expression expression1 = AviatorEvaluator.compile("field1", true);
-        Expression expression2 = AviatorEvaluator.compile("field2", true);
-        assertEquals(expression1, tempMultiFieldOrderFieldProcessor.getMetricFieldProcessorList().get(0).getMetricExpression());
-        assertEquals(expression2, tempMultiFieldOrderFieldProcessor.getMetricFieldProcessorList().get(1).getMetricExpression());
     }
 
     @Test
@@ -422,7 +392,7 @@ class FieldProcessorUtilTest {
         baseUdafParam.setAggregateType("FIRSTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("field1");
-        baseUdafParam.setRetainExpressParam(aviatorExpressParam);
+        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("field1", String.class);
         fieldMap.put("field2", Integer.class);

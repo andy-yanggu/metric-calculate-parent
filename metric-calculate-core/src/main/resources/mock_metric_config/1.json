@@ -100,20 +100,12 @@
         "aggregateType": "SORTEDLIMITLISTFIELD",
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTFIELD",
-          "retainExpressParam" : {
+          "metricExpressParam" : {
             "express": "amount"
           },
-          "sortFieldParamList": [
+          "metricExpressParamList": [
             {
               "express": "amount"
-            }
-          ],
-          "collectiveSortFieldList": [
-            {
-              "aviatorExpressParam": {
-                "express": "amount"
-              },
-              "is_asc": false
             }
           ],
           "param": {
@@ -156,10 +148,10 @@
         "aggregateType": "MAXFIELD",
         "baseUdafParam": {
           "aggregateType": "MAXFIELD",
-          "retainExpressParam" : {
+          "metricExpressParam" : {
             "express": "trans_timestamp"
           },
-          "sortFieldParamList": [
+          "metricExpressParamList": [
             {
               "express": "amount"
             }
@@ -274,17 +266,9 @@
         "aggregateType": "SORTEDLIMITLISTOBJECT",
         "baseUdafParam": {
           "aggregateType": "SORTEDLIMITLISTOBJECT",
-          "sortFieldParamList": [
+          "metricExpressParamList": [
             {
               "express": "amount"
-            }
-          ],
-          "collectiveSortFieldList": [
-            {
-              "aviatorExpressParam" : {
-                "express": "amount"
-              },
-              "is_asc": true
             }
           ],
           "param": {
@@ -534,7 +518,7 @@
         "aggregateType": "FIRSTFIELD",
         "baseUdafParam": {
           "aggregateType": "FIRSTFIELD",
-          "retainExpressParam" : {
+          "metricExpressParam" : {
             "express": "trans_timestamp"
           }
         }

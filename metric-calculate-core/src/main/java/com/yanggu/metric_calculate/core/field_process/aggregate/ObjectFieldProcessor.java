@@ -61,18 +61,18 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         int keyStrategy = objective.keyStrategy();
         //如果是设置了比较字段
         if (keyStrategy == 3) {
-            if (CollUtil.isEmpty(udafParam.getSortFieldParamList())) {
+            if (CollUtil.isEmpty(udafParam.getMetricExpressParamList())) {
                 throw new RuntimeException("对象型比较字段列表为空");
             }
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getSortFieldParamList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
             Map<String, Object> param = udafParam.getParam();
             if (MapUtil.isEmpty(param)) {
                 param = new HashMap<>();
                 udafParam.setParam(param);
             }
             //放入比较对象的
-            param.put("compareParamLength", udafParam.getSortFieldParamList().size());
+            param.put("compareParamLength", udafParam.getMetricExpressParamList().size());
         }
 
         int retainStrategy = objective.retainStrategy();
@@ -82,7 +82,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         //如果设置了保留字段
         if (retainStrategy == 1) {
             this.retainFieldValueFieldProcessor =
-                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getRetainExpressParam(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getMetricFieldProcessor(fieldMap, udafParam.getMetricExpressParam(), aviatorFunctionFactory);
         }
     }
 

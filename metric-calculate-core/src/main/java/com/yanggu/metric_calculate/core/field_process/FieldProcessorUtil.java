@@ -12,8 +12,6 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
@@ -132,23 +130,6 @@ public class FieldProcessorUtil {
         MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor(fieldMap, distinctFieldListParamList, aviatorFunctionFactory);
         tempMultiFieldDistinctFieldProcessor.init();
         return tempMultiFieldDistinctFieldProcessor;
-    }
-
-    /**
-     * 生成多字段排序字段处理器
-     *
-     * @param fieldMap            宽表字段
-     * @param fieldOrderParamList 多字段排序列表
-     * @return 多字段排序字段处理器
-     */
-    @SneakyThrows
-    public static MultiFieldOrderFieldProcessor getFieldOrderFieldProcessor(
-                                                                        Map<String, Class<?>> fieldMap,
-                                                                        List<FieldOrderParam> fieldOrderParamList,
-                                                                        AviatorFunctionFactory aviatorFunctionFactory) {
-        MultiFieldOrderFieldProcessor tempMultiFieldOrderFieldProcessor = new MultiFieldOrderFieldProcessor(fieldMap, fieldOrderParamList, aviatorFunctionFactory);
-        tempMultiFieldOrderFieldProcessor.init();
-        return tempMultiFieldOrderFieldProcessor;
     }
 
     /**
