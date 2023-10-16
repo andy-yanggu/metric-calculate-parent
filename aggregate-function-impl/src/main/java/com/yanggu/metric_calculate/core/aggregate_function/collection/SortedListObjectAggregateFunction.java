@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateF
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.json.JSONObject;

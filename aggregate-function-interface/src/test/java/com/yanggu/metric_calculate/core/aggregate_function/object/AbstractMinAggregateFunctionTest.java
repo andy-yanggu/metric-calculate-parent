@@ -2,7 +2,10 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,9 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractMinAggregateFunctionTest {
 
+    private ObjectMinAggregateFunction<Integer> minValueAggregateFunction;
+
+    @BeforeEach
+    void before() {
+        minValueAggregateFunction = new ObjectMinAggregateFunction<>();
+        minValueAggregateFunction.init();
+    }
+
     @Test
     void createAccumulator() {
-        ObjectMinAggregateFunction<Integer> minValueAggregateFunction = new ObjectMinAggregateFunction<>();
         MutableObj<Integer> accumulator = minValueAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
@@ -21,7 +31,6 @@ class AbstractMinAggregateFunctionTest {
 
     @Test
     void add() {
-        ObjectMinAggregateFunction<Integer> minValueAggregateFunction = new ObjectMinAggregateFunction<>();
         MutableObj<Integer> accumulator = minValueAggregateFunction.createAccumulator();
 
         minValueAggregateFunction.add(1, accumulator);
@@ -33,7 +42,6 @@ class AbstractMinAggregateFunctionTest {
 
     @Test
     void getResult() {
-        ObjectMinAggregateFunction<Integer> minValueAggregateFunction = new ObjectMinAggregateFunction<>();
         MutableObj<Integer> accumulator = minValueAggregateFunction.createAccumulator();
 
         minValueAggregateFunction.add(1, accumulator);
@@ -44,7 +52,6 @@ class AbstractMinAggregateFunctionTest {
 
     @Test
     void merge() {
-        ObjectMinAggregateFunction<Integer> minValueAggregateFunction = new ObjectMinAggregateFunction<>();
         MutableObj<Integer> accumulator1 = minValueAggregateFunction.createAccumulator();
         MutableObj<Integer> accumulator2 = minValueAggregateFunction.createAccumulator();
 
@@ -58,6 +65,11 @@ class AbstractMinAggregateFunctionTest {
 }
 
 class ObjectMinAggregateFunction<T extends Comparable<T>> extends AbstractMinAggregateFunction<T, T> {
+
+    @Override
+    public void init() {
+        setComparator(Comparator.naturalOrder());
+    }
 
     @Override
     public T getResult(MutableObj<T> accumulator) {

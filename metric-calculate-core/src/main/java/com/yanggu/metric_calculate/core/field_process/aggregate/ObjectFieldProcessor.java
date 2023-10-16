@@ -4,19 +4,19 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.FieldOrderParam;
-import com.yanggu.metric_calculate.core.field_process.multi_field_order.MultiFieldOrderFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.JSONObject;
 
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -39,7 +39,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldOrderFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldDistinctFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
@@ -61,14 +61,18 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         int keyStrategy = objective.keyStrategy();
         //如果是设置了比较字段
         if (keyStrategy == 3) {
-            if (CollUtil.isEmpty(udafParam.getObjectiveCompareFieldParamList())) {
+            if (CollUtil.isEmpty(udafParam.getSortFieldParamList())) {
                 throw new RuntimeException("对象型比较字段列表为空");
             }
-            List<FieldOrderParam> collect = udafParam.getObjectiveCompareFieldParamList().stream()
-                    .map(tempCompareField -> new FieldOrderParam(tempCompareField, true))
-                    .toList();
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getFieldOrderFieldProcessor(fieldMap, collect, aviatorFunctionFactory);
+                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getSortFieldParamList(), aviatorFunctionFactory);
+            Map<String, Object> param = udafParam.getParam();
+            if (MapUtil.isEmpty(param)) {
+                param = new HashMap<>();
+                udafParam.setParam(param);
+            }
+            //放入比较对象的
+            param.put("compareParamLength", udafParam.getSortFieldParamList().size());
         }
 
         int retainStrategy = objective.retainStrategy();
@@ -90,12 +94,12 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         int retainStrategy = objective.retainStrategy();
         //如果使用比较字段
         if (objective.keyStrategy() == 3) {
-            MultiFieldOrderCompareKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
+            MultiFieldDistinctKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
                 return null;
             }
             if (retainStrategy == 0) {
-                result = multiFieldOrderCompareKey;
+                result = new KeyValue<>(multiFieldOrderCompareKey, null);
             } else if (retainStrategy == 1) {
                 result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValueFieldProcessor.process(input));
             } else {

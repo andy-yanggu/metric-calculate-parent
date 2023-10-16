@@ -314,15 +314,17 @@ public class FieldProcessorUtil {
                 || aggregateFunctionClass.isAnnotationPresent(Collective.class)
                 || aggregateFunctionClass.isAnnotationPresent(Objective.class)) {
             BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
-            AggregateFunctionFactory.initAggregateFunction(aggregateFunction, baseUdafParam.getParam());
             FieldProcessor<JSONObject, IN> baseFieldProcessor =
                     getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
+            AggregateFunctionFactory.initAggregateFunction(aggregateFunction, baseUdafParam.getParam());
             return new AggregateFieldProcessor<>(baseFieldProcessor, aggregateFunction);
         }
 
         //如果是映射类型
         if (aggregateFunctionClass.isAnnotationPresent(MapType.class)) {
             MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
+
+            MapFieldProcessor<IN> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
             AggregateFunctionFactory.initAggregateFunction(aggregateFunction, mapUdafParam.getParam());
 
             BaseUdafParam valueUdafParam = mapUdafParam.getValueAggParam();
@@ -330,8 +332,6 @@ public class FieldProcessorUtil {
                     = aggregateFunctionFactory.getAggregateFunction(valueUdafParam.getAggregateType());
             AggregateFunctionFactory.initAggregateFunction(valueAggregateFunction, valueUdafParam.getParam());
             ((AbstractMapAggregateFunction<?, Object, Object, Object, OUT>) aggregateFunction).setValueAggregateFunction(valueAggregateFunction);
-
-            MapFieldProcessor<IN> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
             return new AggregateFieldProcessor<>(mapFieldProcessor, aggregateFunction);
         }
 

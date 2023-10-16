@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
 import lombok.Data;
 
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ public abstract class AbstractLagAggregateFunction<IN> implements AggregateFunct
     /**
      * 偏移量
      */
+    @AggregateFunctionFieldAnnotation(displayName = "偏移量")
     private int offset = 1;
 
     /**

@@ -159,7 +159,7 @@
           "retainExpressParam" : {
             "express": "trans_timestamp"
           },
-          "objectiveCompareFieldParamList": [
+          "sortFieldParamList": [
             {
               "express": "amount"
             }

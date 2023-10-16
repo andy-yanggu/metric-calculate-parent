@@ -2,7 +2,10 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Comparator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -11,9 +14,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractMaxAggregateFunctionTest {
 
+    private MaxAggregateFunction<Integer> maxObjectAggregateFunction;
+
+    @BeforeEach
+    void before() {
+        maxObjectAggregateFunction = new MaxAggregateFunction<>();
+        maxObjectAggregateFunction.init();
+    }
+
     @Test
     void createAccumulator() {
-        MaxAggregateFunction<Integer> maxObjectAggregateFunction = new MaxAggregateFunction<>();
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
@@ -21,7 +31,6 @@ class AbstractMaxAggregateFunctionTest {
 
     @Test
     void add() {
-        MaxAggregateFunction<Integer> maxObjectAggregateFunction = new MaxAggregateFunction<>();
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
 
         maxObjectAggregateFunction.add(1, accumulator);
@@ -33,7 +42,6 @@ class AbstractMaxAggregateFunctionTest {
 
     @Test
     void getResult() {
-        MaxAggregateFunction<Integer> maxObjectAggregateFunction = new MaxAggregateFunction<>();
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
 
         maxObjectAggregateFunction.add(1, accumulator);
@@ -44,7 +52,6 @@ class AbstractMaxAggregateFunctionTest {
 
     @Test
     void merge() {
-        MaxAggregateFunction<Integer> maxObjectAggregateFunction = new MaxAggregateFunction<>();
         MutableObj<Integer> accumulator1 = maxObjectAggregateFunction.createAccumulator();
         MutableObj<Integer> accumulator2 = maxObjectAggregateFunction.createAccumulator();
 
@@ -58,6 +65,11 @@ class AbstractMaxAggregateFunctionTest {
 }
 
 class MaxAggregateFunction<T extends Comparable<T>> extends AbstractMaxAggregateFunction<T, T> {
+
+    @Override
+    public void init() {
+        setComparator(Comparator.naturalOrder());
+    }
 
     @Override
     public T getResult(MutableObj<T> accumulator) {

@@ -26,11 +26,6 @@ public abstract class AbstractSortedListAggregateFunction<IN, OUT> extends Abstr
     public abstract OUT inToOut(IN in);
 
     @Override
-    public BoundedPriorityQueue<IN> createAccumulator() {
-        return new BoundedPriorityQueue<>(limit);
-    }
-
-    @Override
     public List<OUT> getResult(BoundedPriorityQueue<IN> accumulator) {
         return accumulator.toList().stream()
                 .map(this::inToOut)

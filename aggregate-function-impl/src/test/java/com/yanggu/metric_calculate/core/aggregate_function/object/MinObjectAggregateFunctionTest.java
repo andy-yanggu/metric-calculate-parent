@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class MinObjectAggregateFunctionTest {
     void getResult() {
         MinObjectAggregateFunction minObjectAggregateFunction = new MinObjectAggregateFunction();
 
-        MutableObj<KeyValue<MultiFieldOrderCompareKey, JSONObject>> accumulator = new MutableObj<>();
+        MutableObj<KeyValue<MultiFieldDistinctKey, JSONObject>> accumulator = new MutableObj<>();
         JSONObject data = new JSONObject();
         accumulator.set(new KeyValue<>(null, data));
         JSONObject result = minObjectAggregateFunction.getResult(accumulator);

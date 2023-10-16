@@ -2,16 +2,15 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
@@ -42,10 +41,10 @@ class ObjectFieldProcessorTest {
     void process1() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("FIRSTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         udafParam.setRetainExpressParam(aviatorExpressParam);
-        udafParam.setAggregateType("FIRSTFIELD");
 
         FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
@@ -53,7 +52,6 @@ class ObjectFieldProcessorTest {
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         String process = baseFieldProcessor.process(input);
         assertEquals("张三", process);
 
@@ -79,7 +77,6 @@ class ObjectFieldProcessorTest {
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         JSONObject process = baseFieldProcessor.process(input);
         assertEquals(input, process);
 
@@ -97,10 +94,10 @@ class ObjectFieldProcessorTest {
     void process3() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("LAGFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         udafParam.setRetainExpressParam(aviatorExpressParam);
-        udafParam.setAggregateType("LAGFIELD");
 
         FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
@@ -108,7 +105,6 @@ class ObjectFieldProcessorTest {
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         String process = baseFieldProcessor.process(input);
         assertEquals("张三", process);
 
@@ -134,7 +130,6 @@ class ObjectFieldProcessorTest {
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         JSONObject process = baseFieldProcessor.process(input);
         assertEquals(input, process);
 
@@ -152,10 +147,10 @@ class ObjectFieldProcessorTest {
     void process5() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("LASTFIELD");
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         udafParam.setRetainExpressParam(aviatorExpressParam);
-        udafParam.setAggregateType("LASTFIELD");
 
         FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
@@ -163,7 +158,6 @@ class ObjectFieldProcessorTest {
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         String process = baseFieldProcessor.process(input);
         assertEquals("张三", process);
 
@@ -189,7 +183,6 @@ class ObjectFieldProcessorTest {
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         JSONObject process = baseFieldProcessor.process(input);
         assertEquals(input, process);
 
@@ -207,34 +200,32 @@ class ObjectFieldProcessorTest {
     void process7() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("MAXFIELD");
+        //name作为保留字段
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         udafParam.setRetainExpressParam(aviatorExpressParam);
-        udafParam.setAggregateType("MAXFIELD");
         //金额作为比较字段
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("amount");
-        udafParam.setObjectiveCompareFieldParamList(Collections.singletonList(aviatorExpressParam1));
+        udafParam.setSortFieldParamList(List.of(aviatorExpressParam1));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldOrderCompareKey, String> process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey compareKey = new MultiFieldOrderCompareKey();
-        compareKey.setDataList(ListUtil.of(100));
+        KeyValue<MultiFieldDistinctKey, String> process = baseFieldProcessor.process(input);
         assertEquals("张三", process.getValue());
-        assertEquals(compareKey, process.getKey());
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process = baseFieldProcessor.process(input);
-        compareKey.setDataList(ListUtil.of(200));
         assertEquals("张三2", process.getValue());
-        assertEquals(compareKey, process.getKey());
+        assertEquals(new MultiFieldDistinctKey(List.of(200)), process.getKey());
     }
 
     /**
@@ -244,29 +235,25 @@ class ObjectFieldProcessorTest {
     void process8() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("MAXOBJECT");
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("amount");
-        udafParam.setObjectiveCompareFieldParamList(Collections.singletonList(aviatorExpressParam1));
-        udafParam.setAggregateType("MAXOBJECT");
+        udafParam.setSortFieldParamList(List.of(aviatorExpressParam1));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
-        KeyValue<MultiFieldOrderCompareKey, JSONObject> process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey compareKey = new MultiFieldOrderCompareKey();
-        compareKey.setDataList(ListUtil.of(100));
-        assertEquals(compareKey, process.getKey());
+        KeyValue<MultiFieldDistinctKey, JSONObject> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
         assertEquals(input, process.getValue());
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process = baseFieldProcessor.process(input);
-        compareKey.setDataList(ListUtil.of(200));
-        assertEquals(compareKey, process.getKey());
+        assertEquals(new MultiFieldDistinctKey(List.of(200)), process.getKey());
         assertEquals(input, process.getValue());
     }
 
@@ -281,25 +268,22 @@ class ObjectFieldProcessorTest {
         //金额作为比较字段
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("amount");
-        udafParam.setObjectiveCompareFieldParamList(Collections.singletonList(aviatorExpressParam1));
+        udafParam.setSortFieldParamList(List.of(aviatorExpressParam1));
 
-        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        MultiFieldOrderCompareKey process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey compareKey = new MultiFieldOrderCompareKey();
-        compareKey.setDataList(ListUtil.of(100));
-        assertEquals(compareKey, process);
+        KeyValue<MultiFieldDistinctKey, Void> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process = baseFieldProcessor.process(input);
-        compareKey.setDataList(ListUtil.of(200));
-        assertEquals(compareKey, process);
+        assertEquals(new MultiFieldDistinctKey(List.of(200)), process.getKey());
     }
 
     /**
@@ -309,34 +293,32 @@ class ObjectFieldProcessorTest {
     void process10() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("MINFIELD");
+        //name作为保留字段
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         udafParam.setRetainExpressParam(aviatorExpressParam);
-        udafParam.setAggregateType("MINFIELD");
         //金额作为比较字段
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("amount");
-        udafParam.setObjectiveCompareFieldParamList(Collections.singletonList(aviatorExpressParam1));
+        udafParam.setSortFieldParamList(List.of(aviatorExpressParam1));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldOrderCompareKey, String> process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey compareKey = new MultiFieldOrderCompareKey();
-        compareKey.setDataList(ListUtil.of(100));
+        KeyValue<MultiFieldDistinctKey, String> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
         assertEquals("张三", process.getValue());
-        assertEquals(compareKey, process.getKey());
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process = baseFieldProcessor.process(input);
-        compareKey.setDataList(ListUtil.of(200));
+        assertEquals(new MultiFieldDistinctKey(List.of(200)), process.getKey());
         assertEquals("张三2", process.getValue());
-        assertEquals(compareKey, process.getKey());
     }
 
     /**
@@ -346,29 +328,25 @@ class ObjectFieldProcessorTest {
     void process11() throws Exception {
 
         BaseUdafParam udafParam = new BaseUdafParam();
+        udafParam.setAggregateType("MINOBJECT");
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("amount");
-        udafParam.setObjectiveCompareFieldParamList(Collections.singletonList(aviatorExpressParam1));
-        udafParam.setAggregateType("MINOBJECT");
+        udafParam.setSortFieldParamList(List.of(aviatorExpressParam1));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldOrderCompareKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
-        KeyValue<MultiFieldOrderCompareKey, JSONObject> process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey compareKey = new MultiFieldOrderCompareKey();
-        compareKey.setDataList(ListUtil.of(100));
-        assertEquals(compareKey, process.getKey());
+        KeyValue<MultiFieldDistinctKey, JSONObject> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
         assertEquals(input, process.getValue());
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process = baseFieldProcessor.process(input);
-        compareKey.setDataList(ListUtil.of(200));
-        assertEquals(compareKey, process.getKey());
+        assertEquals(new MultiFieldDistinctKey(List.of(200)), process.getKey());
         assertEquals(input, process.getValue());
     }
 
@@ -383,25 +361,21 @@ class ObjectFieldProcessorTest {
         //金额作为比较字段
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("amount");
-        udafParam.setObjectiveCompareFieldParamList(Collections.singletonList(aviatorExpressParam1));
+        udafParam.setSortFieldParamList(List.of(aviatorExpressParam1));
 
-        FieldProcessor<JSONObject, MultiFieldOrderCompareKey> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<JSONObject, KeyValue<MultiFieldDistinctKey, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
-        MultiFieldOrderCompareKey process = baseFieldProcessor.process(input);
-        MultiFieldOrderCompareKey compareKey = new MultiFieldOrderCompareKey();
-        compareKey.setDataList(ListUtil.of(100));
-        assertEquals(compareKey, process);
+        KeyValue<MultiFieldDistinctKey, Void> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldDistinctKey(List.of(100)), process.getKey());
 
         input.set("amount", 200);
         input.set("name", "张三2");
         process = baseFieldProcessor.process(input);
-        compareKey.setDataList(ListUtil.of(200));
-        assertEquals(compareKey, process);
+        assertEquals(new MultiFieldDistinctKey(List.of(200)), process.getKey());
     }
 
 }
