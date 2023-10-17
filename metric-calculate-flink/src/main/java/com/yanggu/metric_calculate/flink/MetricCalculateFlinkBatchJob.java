@@ -13,7 +13,6 @@ import com.yanggu.metric_calculate.core.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldOrderCompareKey;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.window.*;
 import com.yanggu.metric_calculate.flink.pojo.DeriveCalculateData;
@@ -81,7 +80,6 @@ public class MetricCalculateFlinkBatchJob {
         env.registerTypeWithKryoSerializer(MutableObj.class, new MutableObjectSerializer<>());
         env.registerTypeWithKryoSerializer(Pair.class, new PairSerializer<>());
         env.registerTypeWithKryoSerializer(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer());
-        env.registerTypeWithKryoSerializer(MultiFieldOrderCompareKey.class, new MultiFieldOrderCompareKeySerializer());
         env.registerTypeWithKryoSerializer(KeyValue.class, new KeyValueSerializer<>());
         env.registerTypeWithKryoSerializer(ArrayList.class, new KryoCollectionSerializer<ArrayList<Object>>());
         env.registerTypeWithKryoSerializer(TreeMap.class, new KryoTreeMapSerializer());
