@@ -28,12 +28,9 @@ public class MixUdafParamItemDto extends BaseDto implements Serializable {
      */
     private Integer mixUdafParamId;
 
-    /**
-     * 基本聚合函数参数id
-     */
-    private Integer baseUdafParamId;
-
     private BaseUdafParamDto baseUdafParam;
+
+    private MapUdafParamDto mapUdafParam;
 
     /**
      * 索引

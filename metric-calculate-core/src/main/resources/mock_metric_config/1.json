@@ -636,7 +636,7 @@
                 "aggregateType": "BASEMAP",
                 "distinctFieldParamList": [
                   {
-                    "express": "account_no_out"
+                    "express": "trans_date"
                   }
                 ],
                 "valueAggParam": {
@@ -660,7 +660,7 @@
             }
           ],
           "metricExpressParam" : {
-            "express": "seq.remove(date_amount_map, today_date); ## 删除当天\nlet result = 0.0;\nfor tempSum in seq.vals(date_amount_map) {\n    result = result + tempSum;\n}\nreturn result;"
+            "express": "seq.remove(date_amount_map, seq.list(today_date)); ## 删除当天\nlet result = 0.0;\nfor tempSum in seq.vals(date_amount_map) {\n    result = result + tempSum;\n}\nreturn result;"
           }
         }
       },

@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.RelationManyToOne;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -34,13 +31,18 @@ public class MixUdafParamItem extends BaseEntity implements Serializable {
      */
     private Integer mixUdafParamId;
 
-    /**
-     * 基本聚合函数参数id
-     */
-    private Integer baseUdafParamId;
-
-    @RelationManyToOne(selfField = "baseUdafParamId", targetField = "id")
+    @RelationOneToOne(
+            joinTable = "mix_udaf_param_item_base_udaf_param_relation",
+            selfField = "id", joinSelfColumn = "mix_udaf_param_item_id",
+            targetField = "id", joinTargetColumn = "base_udaf_param_id"
+    )
     private BaseUdafParam baseUdafParam;
+
+    @RelationOneToOne(
+            joinTable = "mix_udaf_param_item_map_udaf_param_relation",
+            selfField = "id", joinSelfColumn = "mix_udaf_param_item_id",
+            targetField = "id", joinTargetColumn = "map_udaf_param_id")
+    private MapUdafParam mapUdafParam;
 
     /**
      * 索引

@@ -9,7 +9,7 @@ import org.mapstruct.Named;
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("MixUdafParamItemMapstruct")
-@Mapper(uses = {BaseUdafParamMapstruct.class}, componentModel = SPRING)
+@Mapper(uses = {BaseUdafParamMapstruct.class, MapUdafParamMapstruct.class}, componentModel = SPRING)
 public interface MixUdafParamItemMapstruct extends BaseMapstruct<MixUdafParamItemDto, MixUdafParamItem> {
 
     /**
@@ -22,6 +22,7 @@ public interface MixUdafParamItemMapstruct extends BaseMapstruct<MixUdafParamIte
     @Mapping(source = "name", target = "name")
     @Mapping(source = "sort", target = "sort")
     @Mapping(source = "baseUdafParam", target = "baseUdafParam", qualifiedByName = {"BaseUdafParamMapstruct", "toCoreBaseUdafParam"})
+    @Mapping(source = "mapUdafParam", target = "mapUdafParam", qualifiedByName = {"MapUdafParamMapstruct", "toCoreMapUdafParam"})
     com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem toCoreMixUdafParamItem(MixUdafParamItem mixUdafParamItem);
 
 }

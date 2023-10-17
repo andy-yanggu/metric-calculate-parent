@@ -68,8 +68,8 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
         for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
-            BaseUdafParam baseUdafParam = mixUdafParamItem.getBaseUdafParam();
             FieldProcessor<JSONObject, Object> metricFieldProcessor = null;
+            BaseUdafParam baseUdafParam = mixUdafParamItem.getBaseUdafParam();
             if (baseUdafParam != null) {
                 metricFieldProcessor = FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
             }
