@@ -605,6 +605,74 @@
         "length": null,
         "type": "NOT_HANDLE"
       }
+    },
+    {
+      "id": 15,
+      "modelId": 1,
+      "name": "account_no_out_1_month_sum_amount_exclude_today",
+      "displayName": "转出账号过去1个月转出金额（不包含当天）",
+      "description": "",
+      "dimensionList": [
+        {
+          "columnName": "account_no_out",
+          "columnIndex": 2,
+          "dimensionName": "account_no"
+        }
+      ],
+      "timeColumn": {
+        "columnName": "trans_timestamp",
+        "timeFormat": "timestamp",
+        "columnIndex": null
+      },
+      "filterExpressParam": null,
+      "aggregateFunctionParam": {
+        "aggregateType": "BASEMIX",
+        "mixUdafParam": {
+          "aggregateType": "BASEMIX",
+          "mixUdafParamItemList": [
+            {
+              "name": "date_amount_map",
+              "mapUdafParam": {
+                "aggregateType": "BASEMAP",
+                "distinctFieldParamList": [
+                  {
+                    "express": "account_no_out"
+                  }
+                ],
+                "valueAggParam": {
+                  "aggregateType": "SUM",
+                  "metricExpressParam": {
+                    "express": "amount"
+                  }
+                }
+              },
+              "sort": 1
+            },
+            {
+              "name": "today_date",
+              "baseUdafParam": {
+                "aggregateType": "LASTFIELD",
+                "metricExpressParam" : {
+                  "express": "trans_date"
+                }
+              },
+              "sort": 2
+            }
+          ],
+          "metricExpressParam" : {
+            "express": "seq.remove(date_amount_map, today_date); ## 删除当天\nlet result = 0.0;\nfor tempSum in seq.vals(date_amount_map) {\n    result = result + tempSum;\n}\nreturn result;"
+          }
+        }
+      },
+      "windowParam": {
+        "windowType": "TUMBLING_TIME_WINDOW",
+        "duration": 1,
+        "timeUnit": "MONTH"
+      },
+      "roundAccuracy": {
+        "length": null,
+        "type": "NOT_HANDLE"
+      }
     }
   ],
   "modelColumnList": [

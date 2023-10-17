@@ -4,6 +4,8 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import lombok.EqualsAndHashCode;
@@ -66,8 +68,18 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
         for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
-            FieldProcessor<JSONObject, Object> metricFieldProcessor =
-                    FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, mixUdafParamItem.getBaseUdafParam(), aviatorFunctionFactory, aggregateFunctionFactory);
+            BaseUdafParam baseUdafParam = mixUdafParamItem.getBaseUdafParam();
+            FieldProcessor<JSONObject, Object> metricFieldProcessor = null;
+            if (baseUdafParam != null) {
+                metricFieldProcessor = FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
+            }
+            MapUdafParam mapUdafParam = mixUdafParamItem.getMapUdafParam();
+            if (mapUdafParam != null) {
+                metricFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
+            }
+            if (metricFieldProcessor == null) {
+                throw new RuntimeException("MixUdafParamItem中聚合函数参数错误");
+            }
             map.put(mixUdafParamItem.getName(), metricFieldProcessor);
         }
 

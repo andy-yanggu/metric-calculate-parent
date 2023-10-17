@@ -22,6 +22,11 @@ public class MixUdafParamItem implements Serializable {
     private BaseUdafParam baseUdafParam;
 
     /**
+     * 映射聚合函数参数
+     */
+    private MapUdafParam mapUdafParam;
+
+    /**
      * 索引
      */
     private Integer sort;

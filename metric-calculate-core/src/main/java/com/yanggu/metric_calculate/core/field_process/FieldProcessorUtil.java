@@ -332,13 +332,22 @@ public class FieldProcessorUtil {
             Set<String> keySet = new HashSet<>();
             Map<String, AggregateFunction> mixAggregateFunctionMap = new HashMap<>();
             mixUdafParamItemList.forEach(mixUdafParamItem -> {
-                BaseUdafParam tempBaseUdafParam = mixUdafParamItem.getBaseUdafParam();
                 String name = mixUdafParamItem.getName();
                 keySet.add(name);
-                AggregateFunction<Object, Object, Object> tempAggregateFunction =
-                        aggregateFunctionFactory.getAggregateFunction(tempBaseUdafParam.getAggregateType());
-                AggregateFunctionFactory.initAggregateFunction(tempAggregateFunction, tempBaseUdafParam.getParam());
-
+                BaseUdafParam tempBaseUdafParam = mixUdafParamItem.getBaseUdafParam();
+                AggregateFunction<Object, Object, Object> tempAggregateFunction = null;
+                if (tempBaseUdafParam != null) {
+                    tempAggregateFunction = aggregateFunctionFactory.getAggregateFunction(tempBaseUdafParam.getAggregateType());
+                    AggregateFunctionFactory.initAggregateFunction(tempAggregateFunction, tempBaseUdafParam.getParam());
+                }
+                MapUdafParam mapUdafParam = mixUdafParamItem.getMapUdafParam();
+                if (mapUdafParam != null) {
+                    tempAggregateFunction = aggregateFunctionFactory.getAggregateFunction(mapUdafParam.getAggregateType());
+                    AggregateFunctionFactory.initAggregateFunction(tempAggregateFunction, mapUdafParam.getParam());
+                }
+                if (tempAggregateFunction == null) {
+                    throw new RuntimeException("MixUdafParamItem中聚合函数参数错误");
+                }
                 mixAggregateFunctionMap.put(name, tempAggregateFunction);
             });
             abstractMixAggregateFunction.setMixAggregateFunctionMap(mixAggregateFunctionMap);

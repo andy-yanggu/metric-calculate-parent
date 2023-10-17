@@ -52,4 +52,38 @@ class DeriveMetricsCalculateMixTest extends DeriveMetricsCalculateBase {
         assertEquals(new BigDecimal("0.66666").doubleValue(), result, 0.001D);
     }
 
+    @Test
+    void test2() throws Exception {
+        DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
+                metricCalculate.getDeriveMetricCalculateById(15L);
+
+        DeriveMetricCalculateResult<Double> query;
+
+        JSONObject input1 = new JSONObject();
+        input1.set("account_no_out", "000000000011");
+        input1.set("account_no_in", "000000000012");
+        //时间戳为2023-10-01 18:41:11
+        input1.set("trans_timestamp", 1696156871000L);
+        input1.set("amount", 800);
+        input1 = metricCalculate.getParam(input1);
+        query = deriveMetricCalculate.stateExec(input1);
+        Double result = query.getResult();
+        ////0 / 800
+        //assertEquals(0.0D, result, 0.0D);
+        //
+        //JSONObject input2 = input1.clone();
+        //input2.set("account_no_in", "张三");
+        //query = deriveMetricCalculate.stateExec(input2);
+        //result = query.getResult();
+        ////800 / 1600
+        //assertEquals(0.5D, result, 0.0D);
+        //
+        //JSONObject input3 = input1.clone();
+        //input3.set("account_no_in", "张三");
+        //query = deriveMetricCalculate.stateExec(input3);
+        //result = query.getResult();
+        ////1600 / 2400
+        //assertEquals(new BigDecimal("0.66666").doubleValue(), result, 0.001D);
+    }
+
 }
