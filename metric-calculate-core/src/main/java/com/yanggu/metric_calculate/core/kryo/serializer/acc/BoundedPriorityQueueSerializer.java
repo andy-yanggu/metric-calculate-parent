@@ -5,13 +5,15 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
+import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoCollectionSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoIntSerializer;
-import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoPriorityQueueSerializer;
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * 有界优先队列序列化器
@@ -23,23 +25,22 @@ public class BoundedPriorityQueueSerializer<T> extends Serializer<BoundedPriorit
 
     private final KryoIntSerializer intSerializer = new KryoIntSerializer();
 
-    private final KryoPriorityQueueSerializer priorityQueueSerializer = new KryoPriorityQueueSerializer();
+    private final KryoCollectionSerializer<List> listSerializer = new KryoCollectionSerializer<>();
 
     @Override
     public void write(Kryo kryo, Output output, BoundedPriorityQueue<T> boundedPriorityQueue) {
         intSerializer.write(kryo, output, boundedPriorityQueue.getCapacity());
         kryo.writeClassAndObject(output, boundedPriorityQueue.getComparator());
-        priorityQueueSerializer.write(kryo, output, boundedPriorityQueue);
+        listSerializer.write(kryo, output, new ArrayList<>(boundedPriorityQueue));
     }
 
     @Override
     public BoundedPriorityQueue<T> read(Kryo kryo, Input input, Class<? extends BoundedPriorityQueue<T>> type) {
         Integer capacity = intSerializer.read(kryo, input, Integer.class);
         Comparator<? super T> comparator = (Comparator<? super T>) kryo.readClassAndObject(input);
-        BoundedPriorityQueue<T> boundedPriorityQueue =
-                (BoundedPriorityQueue<T>) priorityQueueSerializer.read(kryo, input, BoundedPriorityQueue.class);
-        boundedPriorityQueue.setCapacity(capacity);
-        boundedPriorityQueue.setComparator(comparator);
+        List<T> dataList = listSerializer.read(kryo, input, ArrayList.class);
+        BoundedPriorityQueue<T> boundedPriorityQueue = new BoundedPriorityQueue<>(capacity, comparator);
+        boundedPriorityQueue.addAll(dataList);
         return boundedPriorityQueue;
     }
 

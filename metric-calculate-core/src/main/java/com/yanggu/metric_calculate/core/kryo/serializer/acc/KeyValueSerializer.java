@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
  */
 public class KeyValueSerializer<K extends Comparable<K>, V> extends Serializer<KeyValue<K, V>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -8925969254953524456L;
 
     @Override

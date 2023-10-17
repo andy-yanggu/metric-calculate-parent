@@ -82,6 +82,7 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(Long.class, new DefaultSerializers.LongSerializer(), 42);
         kryo.register(Integer.class, new DefaultSerializers.IntSerializer(), 43);
         kryo.register(Boolean.class, new DefaultSerializers.BooleanSerializer(), 44);
+        kryo.register(ListObjectComparator.class, new ListObjectComparatorSerializer<>(), 45);
 
         //MetricCube序列化器和反序列化器
         kryo.register(DimensionSet.class, new DimensionSetSerializer(), 100);
