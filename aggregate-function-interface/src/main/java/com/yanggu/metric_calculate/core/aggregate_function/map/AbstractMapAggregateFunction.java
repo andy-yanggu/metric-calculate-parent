@@ -3,8 +3,8 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import lombok.Data;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * 映射类型的基类
  * <p>会对{@link AbstractMapAggregateFunction#valueAggregateFunction}进行赋值</p>
  * <p>子类可以根据需要重写{@link AggregateFunction#getResult(Object)}方法</p>
- * <p>IN的输入类型是定死的{@link AbstractMap.SimpleImmutableEntry}</p>
+ * <p>IN的输入类型是定死的{@link Pair}</p>
  *
  * @param <K>        map的key
  * @param <V>        map的value输入值
@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @Data
 public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT>
-        implements AggregateFunction<AbstractMap.SimpleImmutableEntry<K, V>, Map<K, ValueACC>, OUT> {
+        implements AggregateFunction<Pair<K, V>, Map<K, ValueACC>, OUT> {
 
     protected AggregateFunction<V, ValueACC, ValueOUT> valueAggregateFunction;
 
@@ -32,10 +32,10 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     }
 
     @Override
-    public Map<K, ValueACC> add(AbstractMap.SimpleImmutableEntry<K, V> input, Map<K, ValueACC> accumulator) {
-        K key = input.getKey();
+    public Map<K, ValueACC> add(Pair<K, V> input, Map<K, ValueACC> accumulator) {
+        K key = input.getLeft();
         ValueACC oldAcc = accumulator.getOrDefault(key, valueAggregateFunction.createAccumulator());
-        ValueACC newAcc = valueAggregateFunction.add(input.getValue(), oldAcc);
+        ValueACC newAcc = valueAggregateFunction.add(input.getRight(), oldAcc);
         accumulator.put(key, newAcc);
         return accumulator;
     }

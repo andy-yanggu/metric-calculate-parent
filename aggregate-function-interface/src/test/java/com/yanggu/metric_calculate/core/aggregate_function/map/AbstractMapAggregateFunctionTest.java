@@ -2,22 +2,22 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.AbstractMap;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AbstractMapAggregateFunctionTest {
+class AbstractMapAggregateFunctionTest {
 
-    private MapAggregateFunction<String, Double, Double, Double, Map<String, Double>> mapAggregateFunction;
+    private TestMapAggregateFunction<String, Double, Double, Double> mapAggregateFunction;
 
     @BeforeEach
     void init() {
-        this.mapAggregateFunction = new MapAggregateFunction<>();
+        this.mapAggregateFunction = new TestMapAggregateFunction<>();
         TestSumAggregateFunction<Double> sumAggregateFunction = new TestSumAggregateFunction<>();
         this.mapAggregateFunction.setValueAggregateFunction(sumAggregateFunction);
     }
@@ -34,7 +34,7 @@ public class AbstractMapAggregateFunctionTest {
     void add() {
         Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
         String multiFieldDistinctKey = "张三";
-        AbstractMap.SimpleImmutableEntry<String, Double> tuple2 = new AbstractMap.SimpleImmutableEntry<>
+        Pair<String, Double> tuple2 = new Pair<>
                 (multiFieldDistinctKey, 100.0D);
         Map<String, Double> add = mapAggregateFunction.add(tuple2, accumulator);
         assertSame(add, accumulator);
@@ -47,7 +47,7 @@ public class AbstractMapAggregateFunctionTest {
         assertEquals(200.0D, add.get(multiFieldDistinctKey), 0.0D);
 
         String multiFieldDistinctKey2 = "李四";
-        AbstractMap.SimpleImmutableEntry<String, Double> otherTuple2 = new AbstractMap.SimpleImmutableEntry<>
+        Pair<String, Double> otherTuple2 = new Pair<>
                 (multiFieldDistinctKey2, 100.0D);
         mapAggregateFunction.add(otherTuple2, accumulator);
         assertEquals(2, accumulator.size());
@@ -77,11 +77,13 @@ public class AbstractMapAggregateFunctionTest {
 
 }
 
-class MapAggregateFunction<K, V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>, OUT> extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT> {
+class TestMapAggregateFunction<K, V, ValueACC, ValueOUT> extends AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, Map<K, ValueOUT>> {
 
     @Override
-    public OUT getResult(Map<K, ValueACC> accumulator) {
-        return null;
+    public Map<K, ValueOUT> getResult(Map<K, ValueACC> accumulator) {
+        HashMap<K, ValueOUT> map = new HashMap<>();
+        accumulator.forEach((k, acc) -> map.put(k, valueAggregateFunction.getResult(acc)));
+        return map;
     }
 
 }

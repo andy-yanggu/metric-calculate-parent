@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
-import java.util.AbstractMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -26,19 +26,19 @@ public abstract class AbstractMultiFieldDistinctKeyValueOutComparableMapAggregat
      * @param limit
      * @return
      */
-    protected Stream<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, ValueOUT>> getCompareLimitStream(
+    protected Stream<Pair<MultiFieldDistinctKey, ValueOUT>> getCompareLimitStream(
                                                                     Map<MultiFieldDistinctKey, ValueACC> accumulator,
                                                                     Boolean asc,
                                                                     Integer limit) {
         return accumulator.entrySet().stream()
                 //映射成SimpleImmutableEntry
-                .map(tempEntry -> new AbstractMap.SimpleImmutableEntry<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
+                .map(tempEntry -> new Pair<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
                 //过滤掉value为null的值
-                .filter(tempEntry -> tempEntry.getValue() != null)
+                .filter(tempEntry -> tempEntry.getRight() != null)
                 //根据ValueOUT进行排序
                 .sorted((o1, o2) -> {
-                    ValueOUT value1 = o1.getValue();
-                    ValueOUT value2 = o2.getValue();
+                    ValueOUT value1 = o1.getRight();
+                    ValueOUT value2 = o2.getRight();
                     int compareTo = value1.compareTo(value2);
                     if (Boolean.TRUE.equals(asc)) {
                         return compareTo;

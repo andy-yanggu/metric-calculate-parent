@@ -30,6 +30,7 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -196,7 +197,7 @@ class FieldProcessorUtilTest {
         valueAggParam.setAggregateType("SUM");
         mapUdafParam.setValueAggParam(valueAggParam);
 
-        MapFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         assertNotNull(mapFieldProcessor);
         assertEquals(fieldMap, mapFieldProcessor.getFieldMap());

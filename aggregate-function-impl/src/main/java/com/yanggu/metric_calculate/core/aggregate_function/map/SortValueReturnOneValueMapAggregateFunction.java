@@ -6,8 +6,8 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
-import java.util.AbstractMap;
 import java.util.Map;
 
 
@@ -32,7 +32,7 @@ public class SortValueReturnOneValueMapAggregateFunction<V, ValueACC, ValueOUT e
     @Override
     public ValueOUT getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
         return getCompareLimitStream(accumulator, asc, 1)
-                .map(AbstractMap.SimpleImmutableEntry::getValue)
+                .map(Pair::getRight)
                 .findFirst()
                 .orElseThrow();
     }

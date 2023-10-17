@@ -10,9 +10,9 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONObject;
 
-import java.util.AbstractMap;
 import java.util.Map;
 
 /**
@@ -69,7 +69,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     public IN process(JSONObject input) throws Exception {
         MultiFieldDistinctKey key = keyFieldProcessor.process(input);
         Object value = valueAggregateFieldProcessor.process(input);
-        return (IN) new AbstractMap.SimpleImmutableEntry<>(key, value);
+        return (IN) new Pair<>(key, value);
     }
 
     private void check() {

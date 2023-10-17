@@ -3,10 +3,10 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.AbstractMap;
 import java.util.List;
 import java.util.Map;
 
@@ -46,7 +46,7 @@ class BaseMapAggregateFunctionTest {
     void getResult() {
         var accumulator = basemap.createAccumulator();
         MultiFieldDistinctKey mapKey = new MultiFieldDistinctKey(List.of("张三"));
-        basemap.add(new AbstractMap.SimpleImmutableEntry<>(mapKey, 100.0D), accumulator);
+        basemap.add(new Pair<>(mapKey, 100.0D), accumulator);
         Map<List<Object>, Double> result = basemap.getResult(accumulator);
         assertNotNull(result);
         assertEquals(100.0D, result.get(List.of("张三")), 0.0D);
