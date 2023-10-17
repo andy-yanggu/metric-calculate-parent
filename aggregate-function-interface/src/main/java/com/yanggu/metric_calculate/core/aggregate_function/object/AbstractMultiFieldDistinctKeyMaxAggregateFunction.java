@@ -6,9 +6,6 @@ import com.yanggu.metric_calculate.core.pojo.acc.ListObjectComparator;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 import lombok.Data;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * 最大值聚合函数抽象类
  * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
@@ -23,12 +20,7 @@ public abstract class AbstractMultiFieldDistinctKeyMaxAggregateFunction<IN, OUT>
 
     @Override
     public void init() {
-        List<Boolean> booleanList = new ArrayList<>();
-        for (int i = 0; i < compareParamLength; i++) {
-            booleanList.add(Boolean.TRUE);
-        }
-        ListObjectComparator<IN> listObjectComparator = new ListObjectComparator<>();
-        listObjectComparator.setBooleanList(booleanList);
+        ListObjectComparator<IN> listObjectComparator = ListObjectComparator.createInstance(compareParamLength);
         setComparator(listObjectComparator);
     }
 

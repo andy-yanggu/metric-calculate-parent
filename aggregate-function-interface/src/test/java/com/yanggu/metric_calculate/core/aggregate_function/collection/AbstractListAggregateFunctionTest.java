@@ -5,8 +5,6 @@ import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,7 +17,7 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testCreateAccumulator() {
-        AggregateFunction<String, List<String>, List<String>> function = new ListAggregateFunction<>();
+        AggregateFunction<String, List<String>, List<String>> function = new TestListAggregateFunction<>();
         List<String> accumulator = function.createAccumulator();
         assertEquals(0, accumulator.size());
         assertTrue(accumulator instanceof ArrayList<String>);
@@ -27,37 +25,37 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testAdd() {
-        AggregateFunction<String, List<String>, List<String>> function = new ListAggregateFunction<>();
+        AggregateFunction<String, List<String>, List<String>> function = new TestListAggregateFunction<>();
         List<String> accumulator = new ArrayList<>();
 
         accumulator = function.add("a", accumulator);
-        assertEquals(Collections.singletonList("a"), accumulator);
+        assertEquals(List.of("a"), accumulator);
 
         accumulator = function.add("b", accumulator);
-        assertEquals(Arrays.asList("a", "b"), accumulator);
+        assertEquals(List.of("a", "b"), accumulator);
 
         accumulator = function.add("c", accumulator);
-        assertEquals(Arrays.asList("a", "b", "c"), accumulator);
+        assertEquals(List.of("a", "b", "c"), accumulator);
 
         accumulator = function.add("d", accumulator);
         //元素数量未达到上限，可以添加d
-        assertEquals(Arrays.asList("a", "b", "c", "d"), accumulator);
+        assertEquals(List.of("a", "b", "c", "d"), accumulator);
     }
 
     @Test
     void testGetResult() {
-        AggregateFunction<String, List<String>, List<String>> function = new ListAggregateFunction<>();
+        AggregateFunction<String, List<String>, List<String>> function = new TestListAggregateFunction<>();
         List<String> accumulator = new ArrayList<>();
         accumulator = function.add("a", accumulator);
         accumulator = function.add("b", accumulator);
         accumulator = function.add("c", accumulator);
         List<String> result = function.getResult(accumulator);
-        assertEquals(Arrays.asList("a", "b", "c"), result);
+        assertEquals(List.of("a", "b", "c"), result);
     }
 
     @Test
     void testMerge() {
-        ListAggregateFunction<String> function = new ListAggregateFunction<>();
+        TestListAggregateFunction<String> function = new TestListAggregateFunction<>();
 
         List<String> accumulator1 = new ArrayList<>();
         accumulator1 = function.add("a", accumulator1);
@@ -70,7 +68,7 @@ class AbstractListAggregateFunctionTest {
         accumulator2 = function.add("f", accumulator2);
 
         List<String> result = function.merge(accumulator1, accumulator2);
-        assertEquals(Arrays.asList("a", "b", "c", "d", "e", "f"), result);
+        assertEquals(List.of("a", "b", "c", "d", "e", "f"), result);
 
         function.setLimit(4);
         accumulator1.clear();
@@ -83,10 +81,10 @@ class AbstractListAggregateFunctionTest {
         accumulator2 = function.add("e", accumulator2);
         accumulator2 = function.add("f", accumulator2);
         result = function.merge(accumulator1, accumulator2);
-        assertEquals(Arrays.asList("a", "b", "c", "d"), result); // 因为限制了最多4个元素，所以只有后4个元素能够保留
+        assertEquals(List.of("a", "b", "c", "d"), result); // 因为限制了最多4个元素，所以只有后4个元素能够保留
     }
-    
+
 }
 
-class ListAggregateFunction<T> extends AbstractListAggregateFunction<T> {
+class TestListAggregateFunction<T> extends AbstractListAggregateFunction<T> {
 }

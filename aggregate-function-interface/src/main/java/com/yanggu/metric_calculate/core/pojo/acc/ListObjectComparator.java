@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -10,6 +11,16 @@ import java.util.Objects;
 public class ListObjectComparator<IN> implements Comparator<KeyValue<MultiFieldDistinctKey, IN>> {
 
     private List<Boolean> booleanList;
+
+    public static <IN> ListObjectComparator<IN> createInstance(Integer compareParamLength) {
+        List<Boolean> booleanList = new ArrayList<>();
+        for (int i = 0; i < compareParamLength; i++) {
+            booleanList.add(Boolean.TRUE);
+        }
+        ListObjectComparator<IN> listObjectComparator = new ListObjectComparator<>();
+        listObjectComparator.setBooleanList(booleanList);
+        return listObjectComparator;
+    }
 
     @Override
     public int compare(KeyValue<MultiFieldDistinctKey, IN> o1, KeyValue<MultiFieldDistinctKey, IN> o2) {

@@ -13,7 +13,7 @@ class AbstractFirstAggregateFunctionTest {
 
     @Test
     void createAccumulator() {
-        FirstAggregateFunction<String> firstObjectAggregateFunction = new FirstAggregateFunction<>();
+        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
@@ -21,7 +21,7 @@ class AbstractFirstAggregateFunctionTest {
 
     @Test
     void add() {
-        FirstAggregateFunction<String> firstObjectAggregateFunction = new FirstAggregateFunction<>();
+        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
 
         firstObjectAggregateFunction.add("test1", accumulator);
@@ -33,7 +33,7 @@ class AbstractFirstAggregateFunctionTest {
 
     @Test
     void getResult() {
-        FirstAggregateFunction<String> firstObjectAggregateFunction = new FirstAggregateFunction<>();
+        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
 
         firstObjectAggregateFunction.add("test1", accumulator);
@@ -44,7 +44,7 @@ class AbstractFirstAggregateFunctionTest {
 
     @Test
     void merge() {
-        FirstAggregateFunction<String> firstObjectAggregateFunction = new FirstAggregateFunction<>();
+        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
         MutableObj<String> accumulator1 = firstObjectAggregateFunction.createAccumulator();
         MutableObj<String> accumulator2 = firstObjectAggregateFunction.createAccumulator();
 
@@ -57,5 +57,5 @@ class AbstractFirstAggregateFunctionTest {
     
 }
 
-class FirstAggregateFunction<T> extends AbstractFirstAggregateFunction<T> {
+class TestFirstAggregateFunction<T> extends AbstractFirstAggregateFunction<T> {
 }

@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractMaxAggregateFunctionTest {
 
-    private MaxAggregateFunction<Integer> maxObjectAggregateFunction;
+    private TestMaxAggregateFunction<Integer> maxObjectAggregateFunction;
 
     @BeforeEach
     void before() {
-        maxObjectAggregateFunction = new MaxAggregateFunction<>();
+        maxObjectAggregateFunction = new TestMaxAggregateFunction<>();
         maxObjectAggregateFunction.init();
     }
 
@@ -64,7 +64,7 @@ class AbstractMaxAggregateFunctionTest {
     
 }
 
-class MaxAggregateFunction<T extends Comparable<T>> extends AbstractMaxAggregateFunction<T, T> {
+class TestMaxAggregateFunction<T extends Comparable<T>> extends AbstractMaxAggregateFunction<T, T> {
 
     @Override
     public void init() {

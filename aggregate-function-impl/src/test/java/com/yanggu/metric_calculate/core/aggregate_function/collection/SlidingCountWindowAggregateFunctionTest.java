@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -85,7 +84,7 @@ class SlidingCountWindowAggregateFunctionTest {
         accumulator2.add(4);
 
         List<Integer> merge = slidingCountWindowAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(ListUtil.of(3, 4), merge);
+        assertEquals(List.of(3, 4), merge);
     }
 
 }

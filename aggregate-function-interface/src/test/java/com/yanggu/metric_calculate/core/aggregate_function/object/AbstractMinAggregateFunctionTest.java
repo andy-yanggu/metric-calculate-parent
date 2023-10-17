@@ -14,11 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractMinAggregateFunctionTest {
 
-    private ObjectMinAggregateFunction<Integer> minValueAggregateFunction;
+    private TestObjectMinAggregateFunction<Integer> minValueAggregateFunction;
 
     @BeforeEach
     void before() {
-        minValueAggregateFunction = new ObjectMinAggregateFunction<>();
+        minValueAggregateFunction = new TestObjectMinAggregateFunction<>();
         minValueAggregateFunction.init();
     }
 
@@ -64,7 +64,7 @@ class AbstractMinAggregateFunctionTest {
     
 }
 
-class ObjectMinAggregateFunction<T extends Comparable<T>> extends AbstractMinAggregateFunction<T, T> {
+class TestObjectMinAggregateFunction<T extends Comparable<T>> extends AbstractMinAggregateFunction<T, T> {
 
     @Override
     public void init() {

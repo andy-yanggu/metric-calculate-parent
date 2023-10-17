@@ -8,6 +8,7 @@ import java.util.Comparator;
 
 /**
  * 最大值聚合函数抽象类
+ * <p>子类需要设置比较器的逻辑</p>
  * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
  * @param <T> 输入数据类型

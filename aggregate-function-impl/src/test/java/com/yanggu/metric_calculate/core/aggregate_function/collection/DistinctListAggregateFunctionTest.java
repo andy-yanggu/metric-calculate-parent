@@ -31,13 +31,9 @@ class DistinctListAggregateFunctionTest {
     void testGetResult() {
         DistinctListAggregateFunction distinctListAggregateFunction = new DistinctListAggregateFunction();
         Set<MultiFieldDistinctKey> acc = new HashSet<>();
-        acc.add(create(1));
+        acc.add(new MultiFieldDistinctKey(List.of(1)));
         List<List<Object>> lists = distinctListAggregateFunction.getResult(acc);
         Assertions.assertEquals(List.of(List.of(1)), lists);
-    }
-
-    private MultiFieldDistinctKey create(Integer data) {
-        return new MultiFieldDistinctKey(List.of(data));
     }
 
 }

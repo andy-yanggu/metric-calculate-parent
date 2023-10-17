@@ -13,7 +13,7 @@ class AbstractLastAggregateFunctionTest {
 
     @Test
     void createAccumulator() {
-        LastAggregateFunction<String> lastObjectAggregateFunction = new LastAggregateFunction<>();
+        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
@@ -21,7 +21,7 @@ class AbstractLastAggregateFunctionTest {
 
     @Test
     void add() {
-        LastAggregateFunction<String> lastObjectAggregateFunction = new LastAggregateFunction<>();
+        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
 
         lastObjectAggregateFunction.add("test1", accumulator);
@@ -33,7 +33,7 @@ class AbstractLastAggregateFunctionTest {
 
     @Test
     void getResult() {
-        LastAggregateFunction<String> lastObjectAggregateFunction = new LastAggregateFunction<>();
+        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
 
         lastObjectAggregateFunction.add("test1", accumulator);
@@ -44,7 +44,7 @@ class AbstractLastAggregateFunctionTest {
 
     @Test
     void merge() {
-        LastAggregateFunction<String> lastObjectAggregateFunction = new LastAggregateFunction<>();
+        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
         MutableObj<String> accumulator1 = lastObjectAggregateFunction.createAccumulator();
         MutableObj<String> accumulator2 = lastObjectAggregateFunction.createAccumulator();
 
@@ -57,5 +57,5 @@ class AbstractLastAggregateFunctionTest {
 
 }
 
-class LastAggregateFunction<T> extends AbstractLastAggregateFunction<T> {
+class TestLastAggregateFunction<T> extends AbstractLastAggregateFunction<T> {
 }

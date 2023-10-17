@@ -17,7 +17,9 @@ public abstract class AbstractLastAggregateFunction<T> implements AggregateFunct
 
     @Override
     public MutableObj<T> add(T input, MutableObj<T> accumulator) {
-        accumulator.set(input);
+        if (input != null) {
+            accumulator.set(input);
+        }
         return accumulator;
     }
 

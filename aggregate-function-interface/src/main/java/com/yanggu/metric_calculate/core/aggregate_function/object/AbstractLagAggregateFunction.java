@@ -21,6 +21,7 @@ public abstract class AbstractLagAggregateFunction<IN> implements AggregateFunct
     /**
      * 没有值, 返回默认值
      */
+    @AggregateFunctionFieldAnnotation(displayName = "默认值")
     private IN defaultValue;
 
     @Override

@@ -33,45 +33,43 @@ class AbstractMapAggregateFunctionTest {
     @Test
     void add() {
         Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
-        String multiFieldDistinctKey = "张三";
-        Pair<String, Double> tuple2 = new Pair<>
-                (multiFieldDistinctKey, 100.0D);
+        String name1 = "张三";
+        Pair<String, Double> tuple2 = new Pair<>(name1, 100.0D);
         Map<String, Double> add = mapAggregateFunction.add(tuple2, accumulator);
         assertSame(add, accumulator);
         //应该是张三:100
-        assertEquals(100.0D, add.get(multiFieldDistinctKey), 0.0D);
+        assertEquals(100.0D, add.get(name1), 0.0D);
 
         add = mapAggregateFunction.add(tuple2, accumulator);
         assertSame(add, accumulator);
         //累加后变成张三:200
-        assertEquals(200.0D, add.get(multiFieldDistinctKey), 0.0D);
+        assertEquals(200.0D, add.get(name1), 0.0D);
 
-        String multiFieldDistinctKey2 = "李四";
-        Pair<String, Double> otherTuple2 = new Pair<>
-                (multiFieldDistinctKey2, 100.0D);
+        String name2 = "李四";
+        Pair<String, Double> otherTuple2 = new Pair<>(name2, 100.0D);
         mapAggregateFunction.add(otherTuple2, accumulator);
         assertEquals(2, accumulator.size());
         //李四100
-        assertEquals(100.0D, accumulator.get(multiFieldDistinctKey2), 0.0D);
+        assertEquals(100.0D, accumulator.get(name2), 0.0D);
         //张三200
-        assertEquals(200.0D, accumulator.get(multiFieldDistinctKey), 0.0D);
+        assertEquals(200.0D, accumulator.get(name1), 0.0D);
 
         mapAggregateFunction.add(otherTuple2, accumulator);
         //李四200
-        assertEquals(200.0D, accumulator.get(multiFieldDistinctKey2), 0.0D);
+        assertEquals(200.0D, accumulator.get(name2), 0.0D);
         //张三200
-        assertEquals(200.0D, accumulator.get(multiFieldDistinctKey), 0.0D);
+        assertEquals(200.0D, accumulator.get(name1), 0.0D);
     }
 
     @Test
     void merge() {
-        Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
         Map<String, Double> accumulator1 = mapAggregateFunction.createAccumulator();
+        Map<String, Double> accumulator2 = mapAggregateFunction.createAccumulator();
         String key = "张三";
-        accumulator1.put(key, 100.0D);
-        Map<String, Double> merge = mapAggregateFunction.merge(accumulator, accumulator1);
+        accumulator2.put(key, 100.0D);
+        Map<String, Double> merge = mapAggregateFunction.merge(accumulator1, accumulator2);
         assertNotNull(merge);
-        assertSame(accumulator, merge);
+        assertSame(accumulator1, merge);
         assertEquals(100.0D, merge.get(key), 0.0D);
     }
 

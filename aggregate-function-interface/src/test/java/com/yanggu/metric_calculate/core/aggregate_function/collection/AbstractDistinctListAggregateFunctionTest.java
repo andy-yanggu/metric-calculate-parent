@@ -20,10 +20,12 @@ class AbstractDistinctListAggregateFunctionTest {
      */
     @Test
     void testCreateAccumulator() {
-        var distinctAggregateFunction = new DistinctAggregateFunction<Integer>();
+        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
         var accumulator = distinctAggregateFunction.createAccumulator();
-        //确认累加器不为空
+        //确认累加器不为null
         assertNotNull(accumulator);
+        //确定累加器为空
+        assertTrue(accumulator.isEmpty());
         //确认累加器是HashSet类型
         assertTrue(accumulator instanceof HashSet);
     }
@@ -33,11 +35,11 @@ class AbstractDistinctListAggregateFunctionTest {
      */
     @Test
     void testAdd() {
-        var distinctAggregateFunction = new DistinctAggregateFunction<Integer>();
+        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
         var accumulator = distinctAggregateFunction.createAccumulator();
-        accumulator = distinctAggregateFunction.add(1, accumulator);
+        distinctAggregateFunction.add(1, accumulator);
         //添加重复的元素
-        accumulator = distinctAggregateFunction.add(1, accumulator);
+        distinctAggregateFunction.add(1, accumulator);
         //确认元素只被添加了一次
         assertTrue(accumulator.contains(1));
         //确认累加器中只包含一个元素
@@ -49,12 +51,14 @@ class AbstractDistinctListAggregateFunctionTest {
      */
     @Test
     void testGetResult() {
-        DistinctAggregateFunction<Integer> distinctAggregateFunction = new DistinctAggregateFunction<>();
-        Set<Integer> accumulator = distinctAggregateFunction.createAccumulator();
+        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
+        var accumulator = distinctAggregateFunction.createAccumulator();
         accumulator = distinctAggregateFunction.add(1, accumulator);
-        List<Integer> result = distinctAggregateFunction.getResult(accumulator);
+        var result = distinctAggregateFunction.getResult(accumulator);
         //确认结果列表中包含已添加的元素
         assertTrue(result.contains(1));
+        assertEquals(1, result.size());
+        assertEquals(1, result.get(0));
         //确认结果列表是ArrayList类型
         assertTrue(result instanceof ArrayList);
     }
@@ -64,14 +68,14 @@ class AbstractDistinctListAggregateFunctionTest {
      */
     @Test
     void testMerge() {
-        DistinctAggregateFunction<Integer> distinctAggregateFunction = new DistinctAggregateFunction<>();
-        Set<Integer> thisAccumulator = distinctAggregateFunction.createAccumulator();
-        thisAccumulator = distinctAggregateFunction.add(1, thisAccumulator);
-        Set<Integer> thatAccumulator = distinctAggregateFunction.createAccumulator();
-        thatAccumulator = distinctAggregateFunction.add(2, thatAccumulator);
+        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
+        var thisAccumulator = distinctAggregateFunction.createAccumulator();
+        distinctAggregateFunction.add(1, thisAccumulator);
+        var thatAccumulator = distinctAggregateFunction.createAccumulator();
+        distinctAggregateFunction.add(2, thatAccumulator);
         //向第二个累加器添加重复元素
-        thatAccumulator = distinctAggregateFunction.add(1, thatAccumulator);
-        thisAccumulator = distinctAggregateFunction.merge(thisAccumulator, thatAccumulator);
+        distinctAggregateFunction.add(1, thatAccumulator);
+        distinctAggregateFunction.merge(thisAccumulator, thatAccumulator);
         //确认累加器中包含第一个累加器中的元素
         assertTrue(thisAccumulator.contains(1));
         //确认累加器中包含第一个累加器中的元素
@@ -82,7 +86,7 @@ class AbstractDistinctListAggregateFunctionTest {
 
 }
 
-class DistinctAggregateFunction<T> extends AbstractDistinctAggregateFunction<T, List<T>> {
+class TestDistinctAggregateFunction<T> extends AbstractDistinctAggregateFunction<T, List<T>> {
 
     @Override
     public List<T> getResult(Set<T> acc) {

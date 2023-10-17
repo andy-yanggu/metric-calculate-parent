@@ -9,13 +9,13 @@ import java.util.LinkedList;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * 前聚合函数单元测试类
+ * 当前行的第前N条对象聚合函数单元测试类
  */
 class AbstractLagAggregateFunctionTest {
 
     @Test
     void createAccumulator() {
-        LagAggregateFunction<String> lagObjectAggregateFunction = new LagAggregateFunction<>();
+        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
@@ -23,7 +23,7 @@ class AbstractLagAggregateFunctionTest {
 
     @Test
     void add() {
-        LagAggregateFunction<String> lagObjectAggregateFunction = new LagAggregateFunction<>();
+        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
         lagObjectAggregateFunction.add("test1", accumulator);
         assertEquals(1, accumulator.size());
@@ -50,7 +50,7 @@ class AbstractLagAggregateFunctionTest {
 
     @Test
     void getResult() {
-        LagAggregateFunction<String> lagObjectAggregateFunction = new LagAggregateFunction<>();
+        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
         lagObjectAggregateFunction.setDefaultValue("defaultValue");
 
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
@@ -90,7 +90,7 @@ class AbstractLagAggregateFunctionTest {
 
     @Test
     void merge() {
-        LagAggregateFunction<String> lagObjectAggregateFunction = new LagAggregateFunction<>();
+        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
         lagObjectAggregateFunction.setOffset(4);
 
         LinkedList<String> accumulator1 = lagObjectAggregateFunction.createAccumulator();
@@ -109,5 +109,5 @@ class AbstractLagAggregateFunctionTest {
 
 }
 
-class LagAggregateFunction<T> extends AbstractLagAggregateFunction<T> {
+class TestLagAggregateFunction<T> extends AbstractLagAggregateFunction<T> {
 }
