@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.CovarianceAccumulator;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -62,14 +63,14 @@ class CovarianceAggregateFunctionTest {
     void testAdd1() {
         CovarianceAggregateFunction covarianceFunction = new CovarianceAggregateFunction();
         CovarianceAccumulator accumulator = covarianceFunction.createAccumulator();
-        covarianceFunction.add(List.of(2.0D, 3.0D), accumulator);
+        covarianceFunction.add(new MultiFieldData(List.of(2.0D, 3.0D)), accumulator);
         //验证累加器中成员变量的正确性
         assertEquals(1L, accumulator.getCount());
         assertEquals(2.0D, accumulator.getSumX());
         assertEquals(3.0D, accumulator.getSumY());
         assertEquals(2.0D * 3.0D, accumulator.getSumXY());
 
-        covarianceFunction.add(List.of(4.0D, 5.0D), accumulator);
+        covarianceFunction.add(new MultiFieldData(List.of(4.0D, 5.0D)), accumulator);
         assertEquals(2L, accumulator.getCount());
         assertEquals(6.0D, accumulator.getSumX());
         assertEquals(8.0D, accumulator.getSumY());
@@ -78,9 +79,9 @@ class CovarianceAggregateFunctionTest {
 
     @Test
     void testAdd2() {
-        List<Double> list = List.of(2.0D, 3.0D);
+        List<Object> list = List.of(2.0D, 3.0D);
         ArgumentCaptor<Double> argumentCaptor = ArgumentCaptor.forClass(Double.class);
-        CovarianceAccumulator accumulator = mockAggregateFunction.add(list, mockAccumulator);
+        CovarianceAccumulator accumulator = mockAggregateFunction.add(new MultiFieldData(list), mockAccumulator);
         assertEquals(mockAccumulator, accumulator);
         verify(mockAccumulator).addValue(argumentCaptor.capture(), argumentCaptor.capture());
         assertEquals(list, argumentCaptor.getAllValues());
@@ -91,9 +92,9 @@ class CovarianceAggregateFunctionTest {
         CovarianceAggregateFunction covarianceFunction = new CovarianceAggregateFunction();
         CovarianceAccumulator accumulator = covarianceFunction.createAccumulator();
 
-        covarianceFunction.add(List.of(2.0D, 3.0D), accumulator);
-        covarianceFunction.add(List.of(4.0D, 5.0D), accumulator);
-        covarianceFunction.add(List.of(6.0D, 7.0D), accumulator);
+        covarianceFunction.add(new MultiFieldData(List.of(2.0D, 3.0D)), accumulator);
+        covarianceFunction.add(new MultiFieldData(List.of(4.0D, 5.0D)), accumulator);
+        covarianceFunction.add(new MultiFieldData(List.of(6.0D, 7.0D)), accumulator);
 
         Double result = covarianceFunction.getResult(accumulator);
 

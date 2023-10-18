@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldDataFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
@@ -33,7 +33,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     /**
      * key生成字段处理器
      */
-    private MultiFieldFieldProcessor keyFieldProcessor;
+    private MultiFieldDataFieldProcessor keyFieldProcessor;
 
     /**
      * value生成字段处理器
@@ -58,7 +58,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
         //map的key字段处理器
         this.keyFieldProcessor =
-                FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldParamList(), aviatorFunctionFactory);
+                FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldParamList(), aviatorFunctionFactory);
 
         //map的value字段处理器
         this.valueAggregateFieldProcessor =

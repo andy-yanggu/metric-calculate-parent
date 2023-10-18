@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.flink.source_function;
 
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.apache.flink.streaming.api.functions.source.RichSourceFunction;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class TableDataSourceFunction extends RichSourceFunction<Model> implements Serializable {
 
     @Serial

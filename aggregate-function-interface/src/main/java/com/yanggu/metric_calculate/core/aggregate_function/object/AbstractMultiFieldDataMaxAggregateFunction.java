@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.ListObjectComparator;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
 /**
  * 最大值聚合函数抽象类
@@ -14,6 +15,7 @@ import lombok.Data;
  * @param <OUT> 输出数据类型
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractMultiFieldDataMaxAggregateFunction<IN, OUT> extends AbstractMaxAggregateFunction<Pair<MultiFieldData, IN>, OUT> {
 
     private Integer compareParamLength;

@@ -2,12 +2,13 @@ package com.yanggu.metric_calculate.core.window;
 
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldDataFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 
@@ -37,7 +38,7 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     private List<String> statusExpressList;
 
-    private MetricListFieldProcessor metricListFieldProcessor;
+    private MultiFieldDataFieldProcessor multiFieldDataFieldProcessor;
 
     private List<Object> statusList;
 
@@ -45,12 +46,13 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     @Override
     public void init() {
-        this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, statusExpressParamList, aviatorFunctionFactory);
+        this.multiFieldDataFieldProcessor = FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, statusExpressParamList, aviatorFunctionFactory);
     }
 
     @Override
+    @SneakyThrows
     public void put(JSONObject input) {
-        List<Object> newStatusList = metricListFieldProcessor.process(input);
+        List<Object> newStatusList = multiFieldDataFieldProcessor.process(input).getFieldList();
         //如果状态不相同, 清空数据
         if (!newStatusList.equals(statusList)) {
             inList.clear();

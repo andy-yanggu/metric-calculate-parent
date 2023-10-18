@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class MultiFieldFieldProcessor implements FieldProcessor<JSONObject, MultiFieldData> {
+public class MultiFieldDataFieldProcessor implements FieldProcessor<JSONObject, MultiFieldData> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -29,9 +29,9 @@ public class MultiFieldFieldProcessor implements FieldProcessor<JSONObject, Mult
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
-    public MultiFieldFieldProcessor(Map<String, Class<?>> fieldMap,
-                                    List<AviatorExpressParam> aviatorExpressParamList,
-                                    AviatorFunctionFactory aviatorFunctionFactory) {
+    public MultiFieldDataFieldProcessor(Map<String, Class<?>> fieldMap,
+                                        List<AviatorExpressParam> aviatorExpressParamList,
+                                        AviatorFunctionFactory aviatorFunctionFactory) {
         this.fieldMap = fieldMap;
         this.aviatorExpressParamList = aviatorExpressParamList;
         this.aviatorFunctionFactory = aviatorFunctionFactory;

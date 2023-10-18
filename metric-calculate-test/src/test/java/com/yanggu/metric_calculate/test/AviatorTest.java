@@ -10,7 +10,6 @@ import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.collection.set.SetUtil;
 import org.dromara.hutool.core.date.DateUtil;
 import org.dromara.hutool.core.util.RandomUtil;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -85,8 +84,8 @@ class AviatorTest {
         assertFalse((Boolean) execute);
     }
 
-    @Test
-    @Disabled("执行时间较长")
+    //@Test
+    //@Disabled("执行时间较长")
     void test4() {
         int count = 0;
         int total = 1000000000;

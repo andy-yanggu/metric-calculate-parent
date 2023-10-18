@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldDataFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
@@ -36,7 +36,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
     private MetricFieldProcessor<Number> metricFieldProcessor;
 
-    private MetricListFieldProcessor metricListFieldProcessor;
+    private MultiFieldDataFieldProcessor multiFieldDataFieldProcessor;
 
     public NumberFieldProcessor(Map<String, Class<?>> fieldMap,
                                 BaseUdafParam udafParam,
@@ -55,7 +55,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
             if (CollUtil.isEmpty(metricExpressList)) {
                 throw new RuntimeException("度量字段列表为空");
             }
-            this.metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList, aviatorFunctionFactory);
+            this.multiFieldDataFieldProcessor = FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, metricExpressList, aviatorFunctionFactory);
         } else {
             AviatorExpressParam metricExpress = udafParam.getMetricExpressParam();
             if (metricExpress == null || StrUtil.isBlank(metricExpress.getExpress())) {
@@ -66,10 +66,10 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     }
 
     @Override
-    public IN process(JSONObject input) {
+    public IN process(JSONObject input) throws Exception {
         Object process;
         if (numerical.multiNumber()) {
-            process = metricListFieldProcessor.process(input);
+            process = multiFieldDataFieldProcessor.process(input);
         } else {
             process = this.metricFieldProcessor.process(input);
         }

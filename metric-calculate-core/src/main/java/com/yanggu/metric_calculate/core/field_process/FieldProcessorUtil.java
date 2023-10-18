@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProc
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldDataFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
@@ -116,20 +116,21 @@ public class FieldProcessorUtil {
     }
 
     /**
-     * 生成多字段去重字段处理器
+     * 生成多字段数据字段处理器
      *
-     * @param fieldMap                   宽表字段
-     * @param distinctFieldListParamList 维度表达式列表
+     * @param fieldMap                宽表字段
+     * @param aviatorExpressParamList 表达式列表
      * @return 多字段去重字段处理器
      */
     @SneakyThrows
-    public static MultiFieldFieldProcessor getDistinctFieldFieldProcessor(
-                                                              Map<String, Class<?>> fieldMap,
-                                                              List<AviatorExpressParam> distinctFieldListParamList,
-                                                              AviatorFunctionFactory aviatorFunctionFactory) {
-        MultiFieldFieldProcessor tempMultiFieldFieldProcessor = new MultiFieldFieldProcessor(fieldMap, distinctFieldListParamList, aviatorFunctionFactory);
-        tempMultiFieldFieldProcessor.init();
-        return tempMultiFieldFieldProcessor;
+    public static MultiFieldDataFieldProcessor getMultiFieldDataFieldProcessor(
+                                                                    Map<String, Class<?>> fieldMap,
+                                                                    List<AviatorExpressParam> aviatorExpressParamList,
+                                                                    AviatorFunctionFactory aviatorFunctionFactory) {
+        MultiFieldDataFieldProcessor tempMultiFieldDataFieldProcessor =
+                new MultiFieldDataFieldProcessor(fieldMap, aviatorExpressParamList, aviatorFunctionFactory);
+        tempMultiFieldDataFieldProcessor.init();
+        return tempMultiFieldDataFieldProcessor;
     }
 
     /**

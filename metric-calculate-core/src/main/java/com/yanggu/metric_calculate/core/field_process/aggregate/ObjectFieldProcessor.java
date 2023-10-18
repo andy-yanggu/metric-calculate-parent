@@ -4,15 +4,15 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldDataFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.json.JSONObject;
 
@@ -39,7 +39,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldDataFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
@@ -65,7 +65,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
                 throw new RuntimeException("对象型比较字段列表为空");
             }
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
             Map<String, Object> param = udafParam.getParam();
             if (MapUtil.isEmpty(param)) {
                 param = new HashMap<>();

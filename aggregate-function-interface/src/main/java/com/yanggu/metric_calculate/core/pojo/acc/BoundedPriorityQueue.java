@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,6 +14,7 @@ import java.util.*;
  * @param <E> 成员类型
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BoundedPriorityQueue<E> extends PriorityQueue<E> implements Serializable {
 
     @Serial

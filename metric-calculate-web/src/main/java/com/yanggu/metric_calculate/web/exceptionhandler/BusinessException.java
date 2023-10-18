@@ -2,9 +2,11 @@ package com.yanggu.metric_calculate.web.exceptionhandler;
 
 import com.yanggu.metric_calculate.web.enums.ResultCode;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.text.StrUtil;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BusinessException extends RuntimeException {
 
     private final String code;

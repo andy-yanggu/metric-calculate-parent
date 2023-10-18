@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.java_new_feature;
 
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -25,7 +24,6 @@ import java.util.stream.StreamSupport;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("高版本语法特性")
-@Disabled("java语法和api学习, 不需要执行")
 class JavaNewFeatureTest {
 
     @Nested

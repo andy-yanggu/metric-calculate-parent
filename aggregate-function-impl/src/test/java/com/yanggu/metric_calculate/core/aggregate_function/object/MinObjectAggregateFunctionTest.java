@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 

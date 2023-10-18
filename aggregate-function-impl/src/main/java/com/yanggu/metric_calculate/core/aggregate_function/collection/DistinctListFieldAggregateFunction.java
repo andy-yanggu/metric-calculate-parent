@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
 import java.util.List;
 import java.util.Set;

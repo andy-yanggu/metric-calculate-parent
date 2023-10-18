@@ -4,14 +4,14 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldDataFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONObject;
 
 import java.util.Map;
@@ -36,12 +36,12 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     /**
      * 多字段去重字段处理器
      */
-    private MultiFieldFieldProcessor multiFieldFieldProcessor;
+    private MultiFieldDataFieldProcessor multiFieldDataFieldProcessor;
 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldDataFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
@@ -66,12 +66,12 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         }
         //设置了去重字段
         if (keyStrategy == 1) {
-            this.multiFieldFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
+            this.multiFieldDataFieldProcessor =
+                    FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
             //设置了排序字段
         } else if (keyStrategy == 2) {
             this.multiFieldOrderFieldProcessor =
-                    FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
+                    FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
         }
 
         //设置了保留字段
@@ -93,7 +93,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         Object result = null;
         //使用了去重字段
         if (keyStrategy == 1) {
-            MultiFieldData distinctKey = multiFieldFieldProcessor.process(input);
+            MultiFieldData distinctKey = multiFieldDataFieldProcessor.process(input);
             if (distinctKey == null) {
                 return null;
             }

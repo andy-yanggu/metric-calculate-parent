@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.json.JSONObject;
@@ -60,16 +61,16 @@ class NumberFieldProcessorTest {
         fieldMap.put("amount", Long.class);
         fieldMap.put("amount1", Long.class);
 
-        FieldProcessor<JSONObject, List<? extends Number>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject input = new JSONObject();
         input.set("amount", 1L);
         input.set("amount1", 2L);
 
-        List<? extends Number> process = baseFieldProcessor.process(input);
-        assertEquals(2, process.size());
-        assertEquals(1L, process.get(0));
-        assertEquals(2L, process.get(1));
+        MultiFieldData process = baseFieldProcessor.process(input);
+        assertEquals(2, process.getFieldList().size());
+        assertEquals(1L, process.getFieldList().get(0));
+        assertEquals(2L, process.getFieldList().get(1));
     }
 
 }
