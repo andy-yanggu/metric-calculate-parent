@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 
-import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
+import com.yanggu.metric_calculate.core.aggregate_function.numeric.TestSumAggregateFunction;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -82,30 +82,6 @@ class TestMapAggregateFunction<K, V, ValueACC, ValueOUT> extends AbstractMapAggr
         HashMap<K, ValueOUT> map = new HashMap<>();
         accumulator.forEach((k, acc) -> map.put(k, valueAggregateFunction.getResult(acc)));
         return map;
-    }
-
-}
-
-class TestSumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
-
-    @Override
-    public Double createAccumulator() {
-        return 0.0D;
-    }
-
-    @Override
-    public Double add(T input, Double accumulator) {
-        return input.doubleValue() + accumulator;
-    }
-
-    @Override
-    public Double getResult(Double accumulator) {
-        return accumulator;
-    }
-
-    @Override
-    public Double merge(Double thisAccumulator, Double thatAccumulator) {
-        return thisAccumulator + thatAccumulator;
     }
 
 }

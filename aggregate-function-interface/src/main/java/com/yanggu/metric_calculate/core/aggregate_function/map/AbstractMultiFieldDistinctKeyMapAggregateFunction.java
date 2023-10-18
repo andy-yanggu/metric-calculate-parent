@@ -12,5 +12,4 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
  */
 public abstract class AbstractMultiFieldDistinctKeyMapAggregateFunction<V, ValueACC, ValueOUT, OUT>
         extends AbstractMapAggregateFunction<MultiFieldDistinctKey, V, ValueACC, ValueOUT, OUT> {
-
 }

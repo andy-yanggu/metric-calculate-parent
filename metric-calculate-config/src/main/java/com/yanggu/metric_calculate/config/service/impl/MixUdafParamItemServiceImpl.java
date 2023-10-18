@@ -67,6 +67,7 @@ public class MixUdafParamItemServiceImpl extends ServiceImpl<MixUdafParamItemMap
         if (baseUdafParam != null) {
             baseUdafParamService.deleteData(baseUdafParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
+                    .from(MIX_UDAF_PARAM_ITEM_BASE_UDAF_PARAM_RELATION)
                     .where(MIX_UDAF_PARAM_ITEM_BASE_UDAF_PARAM_RELATION.MIX_UDAF_PARAM_ITEM_ID.eq(mixUdafParamItemId))
                     .and(MIX_UDAF_PARAM_ITEM_BASE_UDAF_PARAM_RELATION.BASE_UDAF_PARAM_ID.eq(baseUdafParam.getId()));
             mixUdafParamItemBaseUdafParamRelationService.remove(queryWrapper);
@@ -75,6 +76,7 @@ public class MixUdafParamItemServiceImpl extends ServiceImpl<MixUdafParamItemMap
         if (mapUdafParam != null) {
             mapUdafParamService.deleteData(mapUdafParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
+                    .from(MIX_UDAF_PARAM_ITEM_MAP_UDAF_PARAM_RELATION)
                     .where(MIX_UDAF_PARAM_ITEM_MAP_UDAF_PARAM_RELATION.MIX_UDAF_PARAM_ITEM_ID.eq(mixUdafParamItemId))
                     .and(MIX_UDAF_PARAM_ITEM_MAP_UDAF_PARAM_RELATION.MAP_UDAF_PARAM_ID.eq(mapUdafParam.getId()));
             mixUdafParamItemMapUdafParamRelationService.remove(queryWrapper);

@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 去重类的抽象函数基类单元测试类
  */
-class AbstractDistinctListAggregateFunctionTest {
+class AbstractDistinctAggregateFunctionTest {
 
     /**
      * 测试创建累加器是否正常

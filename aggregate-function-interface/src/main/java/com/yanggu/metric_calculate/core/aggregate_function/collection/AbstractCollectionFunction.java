@@ -10,7 +10,8 @@ import java.util.Collection;
  * <p>主要是定义了ACC类型，为{@link Collection}的子类</p>
  * <p>定义了add方法，直接调用{@link Collection#add(Object)}方法</p>
  * <p>定义了merge方法，直接调用{@link Collection#addAll(Collection)}方法</p>
- * <p>子类需要重写{@link AggregateFunction#createAccumulator()}方法和{@link AggregateFunction#getResult(Object)}</p>
+ * <p>子类需要重写{@link AggregateFunction#createAccumulator()}方法</p>
+ * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
  * @param <IN>
  * @param <ACC>

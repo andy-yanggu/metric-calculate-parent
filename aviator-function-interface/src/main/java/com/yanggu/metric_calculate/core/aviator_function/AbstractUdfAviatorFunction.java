@@ -7,7 +7,9 @@ import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunct
 import java.io.Serial;
 
 /**
- * 用户自定义AviatorFunction需要继承该抽象类
+ * 用户自定义AviatorFunction
+ * <p>需要继承该抽象类重写相应的方法</p>
+ * <p>同时需要{@link AviatorFunctionAnnotation}标注</p>
  */
 public abstract class AbstractUdfAviatorFunction extends AbstractVariadicFunction {
 
