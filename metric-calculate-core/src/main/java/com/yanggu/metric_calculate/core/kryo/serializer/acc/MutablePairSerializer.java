@@ -4,7 +4,7 @@ import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.Serializer;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
-import org.dromara.hutool.core.lang.mutable.MutableEntry;
+import org.dromara.hutool.core.lang.mutable.MutablePair;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,22 +15,22 @@ import java.io.Serializable;
  * @param <K>
  * @param <V>
  */
-public class MutableEntrySerializer<K, V> extends Serializer<MutableEntry<K, V>> implements Serializable {
+public class MutablePairSerializer<K, V> extends Serializer<MutablePair<K, V>> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2839965751894818964L;
 
     @Override
-    public void write(Kryo kryo, Output output, MutableEntry<K, V> mutablePair) {
-        kryo.writeClassAndObject(output, mutablePair.getKey());
-        kryo.writeClassAndObject(output, mutablePair.getValue());
+    public void write(Kryo kryo, Output output, MutablePair<K, V> mutablePair) {
+        kryo.writeClassAndObject(output, mutablePair.getLeft());
+        kryo.writeClassAndObject(output, mutablePair.getRight());
     }
 
     @Override
-    public MutableEntry<K, V> read(Kryo kryo, Input input, Class<? extends MutableEntry<K, V>> clazz) {
+    public MutablePair<K, V> read(Kryo kryo, Input input, Class<? extends MutablePair<K, V>> clazz) {
         K k = (K) kryo.readClassAndObject(input);
         V v = (V) kryo.readClassAndObject(input);
-        return new MutableEntry<>(k, v);
+        return new MutablePair<>(k, v);
     }
 
 }

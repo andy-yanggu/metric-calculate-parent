@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -34,9 +34,9 @@ class DistinctListObjectAggregateFunctionTest {
     @Test
     void testGetResult() {
         var distinctListObjectAggregateFunction = new DistinctListObjectAggregateFunction();
-        var acc = new HashSet<KeyValue<MultiFieldData, JSONObject>>();
+        var acc = new HashSet<Pair<MultiFieldData, JSONObject>>();
         JSONObject data1 = new JSONObject();
-        acc.add(new KeyValue<>(new MultiFieldData(List.of()), data1));
+        acc.add(new Pair<>(new MultiFieldData(List.of()), data1));
         List<JSONObject> result = distinctListObjectAggregateFunction.getResult(acc);
         assertEquals(List.of(data1), result);
     }

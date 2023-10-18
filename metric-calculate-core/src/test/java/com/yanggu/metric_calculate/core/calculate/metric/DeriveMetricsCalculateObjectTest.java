@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
@@ -21,7 +21,7 @@ class DeriveMetricsCalculateObjectTest extends DeriveMetricsCalculateBase {
      */
     @Test
     void testMaxField() {
-        DeriveMetricCalculate<KeyValue<MultiFieldData, String>, MutableObj<KeyValue<MultiFieldData, String>>, String> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(4L);
+        DeriveMetricCalculate<Pair<MultiFieldData, String>, MutableObj<Pair<MultiFieldData, String>>, String> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(4L);
         DeriveMetricCalculateResult<String> query;
 
         JSONObject input1 = new JSONObject();

@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
@@ -97,16 +97,16 @@ class CollectionFieldProcessorTest {
         aviatorExpressParam.setExpress("amount");
         baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getKey());
-        assertEquals(input, process.getValue());
+        Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
+        assertEquals(input, process.getRight());
     }
 
     /**
@@ -124,16 +124,16 @@ class CollectionFieldProcessorTest {
         aviatorExpressParam1.setExpress("name");
         baseUdafParam.setMetricExpressParam(aviatorExpressParam1);
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldData, String> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getKey());
-        assertEquals("张三", process.getValue());
+        Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
+        assertEquals("张三", process.getRight());
     }
 
     /**
@@ -147,15 +147,15 @@ class CollectionFieldProcessorTest {
         aviatorExpressParam.setExpress("amount");
         baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Pair<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldData, Void> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getKey());
+        Pair<MultiFieldData, Void> process = baseFieldProcessor.process(input);
+        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
     }
 
     /**
@@ -169,16 +169,16 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
         baseUdafParam.setAggregateType("DISTINCTLISTOBJECT");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getKey().getFieldList().get(0));
-        assertEquals(input, process.getValue());
+        Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
+        assertEquals(100, process.getLeft().getFieldList().get(0));
+        assertEquals(input, process.getRight());
     }
 
     /**
@@ -195,16 +195,16 @@ class CollectionFieldProcessorTest {
         baseUdafParam.setMetricExpressParam(aviatorExpressParam2);
         baseUdafParam.setAggregateType("DISTINCTLISTFIELD");
 
-        FieldProcessor<JSONObject, KeyValue<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<JSONObject, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
 
-        KeyValue<MultiFieldData, String> process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getKey().getFieldList().get(0));
-        assertEquals("张三", process.getValue());
+        Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
+        assertEquals(100, process.getLeft().getFieldList().get(0));
+        assertEquals("张三", process.getRight());
     }
 
     /**

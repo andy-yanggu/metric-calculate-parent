@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
@@ -99,11 +99,11 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
                 return null;
             }
             if (retainStrategy == 0) {
-                result = new KeyValue<>(multiFieldOrderCompareKey, null);
+                result = new Pair<>(multiFieldOrderCompareKey, null);
             } else if (retainStrategy == 1) {
-                result = new KeyValue<>(multiFieldOrderCompareKey, retainFieldValueFieldProcessor.process(input));
+                result = new Pair<>(multiFieldOrderCompareKey, retainFieldValueFieldProcessor.process(input));
             } else {
-                result = new KeyValue<>(multiFieldOrderCompareKey, input);
+                result = new Pair<>(multiFieldOrderCompareKey, input);
             }
         } else {
             if (retainStrategy == 0) {

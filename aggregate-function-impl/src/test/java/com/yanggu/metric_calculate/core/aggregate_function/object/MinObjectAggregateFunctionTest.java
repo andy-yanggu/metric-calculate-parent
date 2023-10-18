@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.json.JSONObject;
@@ -33,9 +33,9 @@ class MinObjectAggregateFunctionTest {
     void getResult() {
         MinObjectAggregateFunction minObjectAggregateFunction = new MinObjectAggregateFunction();
 
-        MutableObj<KeyValue<MultiFieldData, JSONObject>> accumulator = new MutableObj<>();
+        MutableObj<Pair<MultiFieldData, JSONObject>> accumulator = new MutableObj<>();
         JSONObject data = new JSONObject();
-        accumulator.set(new KeyValue<>(null, data));
+        accumulator.set(new Pair<>(null, data));
         JSONObject result = minObjectAggregateFunction.getResult(accumulator);
         assertEquals(data, result);
     }

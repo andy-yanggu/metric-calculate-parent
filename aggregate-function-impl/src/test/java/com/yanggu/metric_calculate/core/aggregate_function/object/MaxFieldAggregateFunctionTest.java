@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,7 +30,7 @@ class MaxFieldAggregateFunctionTest {
     void getResult() {
         MaxFieldAggregateFunction<Integer> maxFieldAggregateFunction = new MaxFieldAggregateFunction<>();
         var accumulator = maxFieldAggregateFunction.createAccumulator();
-        accumulator.set(new KeyValue<>(null, 1));
+        accumulator.set(new Pair<>(null, 1));
         Integer result = maxFieldAggregateFunction.getResult(accumulator);
         assertEquals(Integer.valueOf(1), result);
     }

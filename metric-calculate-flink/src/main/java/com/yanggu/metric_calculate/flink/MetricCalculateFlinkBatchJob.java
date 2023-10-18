@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoMapSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoTreeMapSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.window.*;
@@ -31,7 +31,6 @@ import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.util.OutputTag;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.json.JSONUtil;
 
@@ -75,12 +74,12 @@ public class MetricCalculateFlinkBatchJob {
 
         //ACC序列化器和反序列化器
         env.registerTypeWithKryoSerializer(Tuple.class, new TupleSerializer());
-        env.registerTypeWithKryoSerializer(MutableEntrySerializer.class, new MutableEntrySerializer<>());
+        env.registerTypeWithKryoSerializer(MutablePairSerializer.class, new MutablePairSerializer<>());
         env.registerTypeWithKryoSerializer(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>());
         env.registerTypeWithKryoSerializer(MutableObj.class, new MutableObjectSerializer<>());
         env.registerTypeWithKryoSerializer(Pair.class, new PairSerializer<>());
         env.registerTypeWithKryoSerializer(MultiFieldData.class, new MultiFieldDataSerializer());
-        env.registerTypeWithKryoSerializer(KeyValue.class, new KeyValueSerializer<>());
+        env.registerTypeWithKryoSerializer(Pair.class, new PairSerializer<>());
         env.registerTypeWithKryoSerializer(ArrayList.class, new KryoCollectionSerializer<ArrayList<Object>>());
         env.registerTypeWithKryoSerializer(TreeMap.class, new KryoTreeMapSerializer());
         env.registerTypeWithKryoSerializer(HashMap.class, new KryoMapSerializer<HashMap<Object, Object>>());

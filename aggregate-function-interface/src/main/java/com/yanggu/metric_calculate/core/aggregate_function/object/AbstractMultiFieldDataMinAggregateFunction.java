@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.ListObjectComparator;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.Data;
  * @param <OUT> 输出数据类型
  */
 @Data
-public abstract class AbstractMultiFieldDataMinAggregateFunction<IN, OUT> extends AbstractMinAggregateFunction<KeyValue<MultiFieldData, IN>, OUT> {
+public abstract class AbstractMultiFieldDataMinAggregateFunction<IN, OUT> extends AbstractMinAggregateFunction<Pair<MultiFieldData, IN>, OUT> {
 
     private Integer compareParamLength;
 

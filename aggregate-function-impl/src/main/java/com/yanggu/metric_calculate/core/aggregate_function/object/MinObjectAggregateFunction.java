@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.json.JSONObject;
@@ -15,8 +15,8 @@ import org.dromara.hutool.json.JSONObject;
 public class MinObjectAggregateFunction extends AbstractMultiFieldDataMinAggregateFunction<JSONObject, JSONObject> {
 
     @Override
-    public JSONObject getResult(MutableObj<KeyValue<MultiFieldData, JSONObject>> accumulator) {
-        return accumulator.get().getValue();
+    public JSONObject getResult(MutableObj<Pair<MultiFieldData, JSONObject>> accumulator) {
+        return accumulator.get().getRight();
     }
 
 }

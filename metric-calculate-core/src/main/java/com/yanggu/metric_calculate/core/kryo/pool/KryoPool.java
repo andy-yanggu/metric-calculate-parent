@@ -17,8 +17,8 @@ import com.yanggu.metric_calculate.core.kryo.serializer.window.*;
 import com.yanggu.metric_calculate.core.pojo.acc.*;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
 import com.yanggu.metric_calculate.core.window.*;
-import org.dromara.hutool.core.lang.mutable.MutableEntry;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.dromara.hutool.core.lang.mutable.MutablePair;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Tuple;
 import org.dromara.hutool.json.JSONObject;
@@ -59,29 +59,28 @@ public class KryoPool extends Pool<Kryo> {
 
         //ACC序列化器和反序列化器
         kryo.register(Tuple.class, new TupleSerializer(), 21);
-        kryo.register(MutableEntry.class, new MutableEntrySerializer<>(), 22);
+        kryo.register(MutablePair.class, new MutablePairSerializer<>(), 22);
         kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 23);
         kryo.register(MutableObj.class, new MutableObjectSerializer<>(), 24);
         kryo.register(Pair.class, new PairSerializer<>(), 25);
         kryo.register(MultiFieldData.class, new MultiFieldDataSerializer(), 26);
         kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 27);
         kryo.register(JSONObject.class, 28);
-        kryo.register(KeyValue.class, new KeyValueSerializer<>(), 29);
-        kryo.register(String.class, new DefaultSerializers.StringSerializer(), 30);
-        kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 31);
-        kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 32);
-        kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 33);
-        kryo.register(Boundary.class, new BeanSerializer<>(kryo, Boundary.class), 34);
-        kryo.register(CovarianceAccumulator.class, new BeanSerializer<>(kryo, CovarianceAccumulator.class), 35);
-        kryo.register(FourthCentralMomentAccumulator.class, new BeanSerializer<>(kryo, FourthCentralMomentAccumulator.class), 36);
-        kryo.register(KurtosisAccumulator.class, new BeanSerializer<>(kryo, KurtosisAccumulator.class), 37);
-        kryo.register(StandardDeviationAccumulator.class, new BeanSerializer<>(kryo, StandardDeviationAccumulator.class), 38);
-        kryo.register(ThirdCentralMomentAccumulator.class, new BeanSerializer<>(kryo, ThirdCentralMomentAccumulator.class), 39);
-        kryo.register(VarianceAccumulator.class, new BeanSerializer<>(kryo, VarianceAccumulator.class), 40);
-        kryo.register(Long.class, new DefaultSerializers.LongSerializer(), 41);
-        kryo.register(Integer.class, new DefaultSerializers.IntSerializer(), 42);
-        kryo.register(Boolean.class, new DefaultSerializers.BooleanSerializer(), 43);
-        kryo.register(ListObjectComparator.class, new ListObjectComparatorSerializer<>(), 44);
+        kryo.register(String.class, new DefaultSerializers.StringSerializer(), 29);
+        kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 30);
+        kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 31);
+        kryo.register(HashMap.class, new MapSerializer<HashMap<Object, Object>>(), 32);
+        kryo.register(Boundary.class, new BeanSerializer<>(kryo, Boundary.class), 33);
+        kryo.register(CovarianceAccumulator.class, new BeanSerializer<>(kryo, CovarianceAccumulator.class), 34);
+        kryo.register(FourthCentralMomentAccumulator.class, new BeanSerializer<>(kryo, FourthCentralMomentAccumulator.class), 35);
+        kryo.register(KurtosisAccumulator.class, new BeanSerializer<>(kryo, KurtosisAccumulator.class), 36);
+        kryo.register(StandardDeviationAccumulator.class, new BeanSerializer<>(kryo, StandardDeviationAccumulator.class), 37);
+        kryo.register(ThirdCentralMomentAccumulator.class, new BeanSerializer<>(kryo, ThirdCentralMomentAccumulator.class), 38);
+        kryo.register(VarianceAccumulator.class, new BeanSerializer<>(kryo, VarianceAccumulator.class), 39);
+        kryo.register(Long.class, new DefaultSerializers.LongSerializer(), 40);
+        kryo.register(Integer.class, new DefaultSerializers.IntSerializer(), 41);
+        kryo.register(Boolean.class, new DefaultSerializers.BooleanSerializer(), 42);
+        kryo.register(ListObjectComparator.class, new ListObjectComparatorSerializer<>(), 43);
 
         //MetricCube序列化器和反序列化器
         kryo.register(DimensionSet.class, new DimensionSetSerializer(), 100);

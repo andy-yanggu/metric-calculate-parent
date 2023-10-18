@@ -6,7 +6,7 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
@@ -100,9 +100,9 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
             if (retainStrategy == 0) {
                 result = distinctKey;
             } else if (retainStrategy == 1) {
-                result = new KeyValue<>(distinctKey, retainFieldValueFieldProcessor.process(input));
+                result = new Pair<>(distinctKey, retainFieldValueFieldProcessor.process(input));
             } else if (retainStrategy == 2) {
-                result = new KeyValue<>(distinctKey, input);
+                result = new Pair<>(distinctKey, input);
             }
             //使用了排序字段
         } else if (keyStrategy == 2) {
@@ -111,11 +111,11 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
                 return null;
             }
             if (retainStrategy == 0) {
-                result = new KeyValue<>(multiFieldData, null);
+                result = new Pair<>(multiFieldData, null);
             } else if (retainStrategy == 1) {
-                result = new KeyValue<>(multiFieldData, retainFieldValueFieldProcessor.process(input));
+                result = new Pair<>(multiFieldData, retainFieldValueFieldProcessor.process(input));
             } else if (retainStrategy == 2) {
-                result = new KeyValue<>(multiFieldData, input);
+                result = new Pair<>(multiFieldData, input);
             }
         } else {
             if (retainStrategy == 0) {

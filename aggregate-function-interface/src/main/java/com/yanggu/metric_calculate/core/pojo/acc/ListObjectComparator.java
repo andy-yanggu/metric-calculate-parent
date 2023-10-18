@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.pojo.acc;
 
 import lombok.Data;
+import org.dromara.hutool.core.lang.tuple.Pair;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-public class ListObjectComparator<IN> implements Comparator<KeyValue<MultiFieldData, IN>> {
+public class ListObjectComparator<IN> implements Comparator<Pair<MultiFieldData, IN>> {
 
     private List<Boolean> booleanList;
 
@@ -23,9 +24,9 @@ public class ListObjectComparator<IN> implements Comparator<KeyValue<MultiFieldD
     }
 
     @Override
-    public int compare(KeyValue<MultiFieldData, IN> o1, KeyValue<MultiFieldData, IN> o2) {
-        List<Object> dataList1 = o1.getKey().getFieldList();
-        List<Object> dataList2 = o2.getKey().getFieldList();
+    public int compare(Pair<MultiFieldData, IN> o1, Pair<MultiFieldData, IN> o2) {
+        List<Object> dataList1 = o1.getLeft().getFieldList();
+        List<Object> dataList2 = o2.getLeft().getFieldList();
 
         for (int i = 0; i < booleanList.size(); i++) {
             Boolean asc = booleanList.get(i);
