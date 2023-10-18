@@ -39,7 +39,7 @@ public class Codegen {
         //设置包名
         globalConfig.setBasePackage("com.yanggu.metric_calculate.config");
         //设置生成的表名
-        globalConfig.setGenerateTable("jar_store");
+        globalConfig.setGenerateTable("mix_udaf_param_item_base_udaf_param_relation", "mix_udaf_param_item_map_udaf_param_relation");
         //设置生成的mapper的xml路径
         globalConfig.setMapperXmlPath("D://test2/mapper");
         //设置entity的模板路径

@@ -312,7 +312,7 @@ public class FieldProcessorUtil {
             AggregateFunction<Object, Object, Object> valueAggregateFunction
                     = aggregateFunctionFactory.getAggregateFunction(valueUdafParam.getAggregateType());
             AggregateFunctionFactory.initAggregateFunction(valueAggregateFunction, valueUdafParam.getParam());
-            ((AbstractMapAggregateFunction<?, Object, Object, Object, OUT>) aggregateFunction).setValueAggregateFunction(valueAggregateFunction);
+            ((AbstractMapAggregateFunction) aggregateFunction).setValueAggregateFunction(valueAggregateFunction);
             return new AggregateFieldProcessor<>(mapFieldProcessor, aggregateFunction);
         }
 
@@ -348,7 +348,7 @@ public class FieldProcessorUtil {
                     AggregateFunction<Object, Object, Object> valueAggregateFunction
                             = aggregateFunctionFactory.getAggregateFunction(valueUdafParam.getAggregateType());
                     AggregateFunctionFactory.initAggregateFunction(valueAggregateFunction, valueUdafParam.getParam());
-                    ((AbstractMapAggregateFunction<Object, Object, Object, Object, Object>) tempAggregateFunction).setValueAggregateFunction(valueAggregateFunction);
+                    ((AbstractMapAggregateFunction) tempAggregateFunction).setValueAggregateFunction(valueAggregateFunction);
                 }
                 if (tempAggregateFunction == null) {
                     throw new RuntimeException("MixUdafParamItem中聚合函数参数错误");
