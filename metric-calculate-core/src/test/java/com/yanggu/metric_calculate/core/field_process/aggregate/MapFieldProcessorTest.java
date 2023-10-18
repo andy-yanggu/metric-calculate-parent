@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
@@ -46,15 +46,15 @@ class MapFieldProcessorTest {
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
 
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
+        MapFieldProcessor<Pair<MultiFieldData, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");
         input1.set("account_no_in", "b");
         input1.set("amount", 1);
 
-        Pair<MultiFieldDistinctKey, Integer> process = mapFieldProcessor.process(input1);
-        assertEquals(new MultiFieldDistinctKey(List.of("b")), process.getLeft());
+        Pair<MultiFieldData, Integer> process = mapFieldProcessor.process(input1);
+        assertEquals(new MultiFieldData(List.of("b")), process.getLeft());
         assertEquals(Integer.valueOf(1), process.getRight());
     }
 

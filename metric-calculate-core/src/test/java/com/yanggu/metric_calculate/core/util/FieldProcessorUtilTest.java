@@ -16,10 +16,10 @@ import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProc
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
@@ -136,10 +136,10 @@ class FieldProcessorUtilTest {
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("field2");
         List<AviatorExpressParam> distinctFieldList = Arrays.asList(aviatorExpressParam, aviatorExpressParam1);
-        MultiFieldDistinctFieldProcessor processor = FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, distinctFieldList, getAviatorFunctionFactory());
+        MultiFieldFieldProcessor processor = FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, distinctFieldList, getAviatorFunctionFactory());
         assertNotNull(processor);
         assertEquals(fieldMap, processor.getFieldMap());
-        assertEquals(distinctFieldList, processor.getDistinctFieldListParamList());
+        assertEquals(distinctFieldList, processor.getAviatorExpressParamList());
         Expression expression1 = AviatorEvaluator.compile("field1", true);
         assertEquals(expression1, processor.getMetricFieldProcessorList().get(0).getMetricExpression());
         Expression expression2 = AviatorEvaluator.compile("field2", true);
@@ -197,7 +197,7 @@ class FieldProcessorUtilTest {
         valueAggParam.setAggregateType("SUM");
         mapUdafParam.setValueAggParam(valueAggParam);
 
-        MapFieldProcessor<Pair<MultiFieldDistinctKey, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MapFieldProcessor<Pair<MultiFieldData, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
 
         assertNotNull(mapFieldProcessor);
         assertEquals(fieldMap, mapFieldProcessor.getFieldMap());
@@ -301,9 +301,9 @@ class FieldProcessorUtilTest {
         fieldMap.put("name", String.class);
         fieldMap.put("amount", Integer.class);
 
-        AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>, Map<List<Object>, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
+        AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldData, Integer>, Map<MultiFieldData, Double>, Map<List<Object>, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
-        FieldProcessor<JSONObject, AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
+        FieldProcessor<JSONObject, AbstractMap.SimpleImmutableEntry<MultiFieldData, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
 
         BaseMapAggregateFunction<Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();

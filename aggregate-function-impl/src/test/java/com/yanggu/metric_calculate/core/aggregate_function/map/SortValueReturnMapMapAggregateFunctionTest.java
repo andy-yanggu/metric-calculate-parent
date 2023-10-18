@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -38,7 +38,7 @@ class SortValueReturnMapMapAggregateFunctionTest {
      */
     @Test
     void testGetResult() {
-        Map<MultiFieldDistinctKey, Double> accumulator = new HashMap<>();
+        Map<MultiFieldData, Double> accumulator = new HashMap<>();
         accumulator.put(create("key1"), 1.0D);
         accumulator.put(create("key2"), 2.0D);
         accumulator.put(create("key3"), 3.0D);
@@ -69,7 +69,7 @@ class SortValueReturnMapMapAggregateFunctionTest {
      */
     @Test
     void testGetResult_Negative() {
-        Map<MultiFieldDistinctKey, Double> accumulator = new HashMap<>();
+        Map<MultiFieldData, Double> accumulator = new HashMap<>();
         accumulator.put(create("key1"), 1.0D);
         accumulator.put(create("key2"), 2.0D);
         accumulator.put(create("key3"), 3.0D);

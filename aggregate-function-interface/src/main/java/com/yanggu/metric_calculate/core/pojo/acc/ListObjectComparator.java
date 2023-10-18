@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Data
-public class ListObjectComparator<IN> implements Comparator<KeyValue<MultiFieldDistinctKey, IN>> {
+public class ListObjectComparator<IN> implements Comparator<KeyValue<MultiFieldData, IN>> {
 
     private List<Boolean> booleanList;
 
@@ -23,7 +23,7 @@ public class ListObjectComparator<IN> implements Comparator<KeyValue<MultiFieldD
     }
 
     @Override
-    public int compare(KeyValue<MultiFieldDistinctKey, IN> o1, KeyValue<MultiFieldDistinctKey, IN> o2) {
+    public int compare(KeyValue<MultiFieldData, IN> o1, KeyValue<MultiFieldData, IN> o2) {
         List<Object> dataList1 = o1.getKey().getFieldList();
         List<Object> dataList2 = o2.getKey().getFieldList();
 

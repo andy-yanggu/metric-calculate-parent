@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -24,7 +24,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
      */
     @Test
     void testBaseMap() {
-        DeriveMetricCalculate<AbstractMap.SimpleImmutableEntry<MultiFieldDistinctKey, Integer>, Map<MultiFieldDistinctKey, Double>,
+        DeriveMetricCalculate<AbstractMap.SimpleImmutableEntry<MultiFieldData, Integer>, Map<MultiFieldData, Double>,
                         Map<List<Object>, Double>> deriveMetricCalculate
                 = metricCalculate.getDeriveMetricCalculateById(8L);
 

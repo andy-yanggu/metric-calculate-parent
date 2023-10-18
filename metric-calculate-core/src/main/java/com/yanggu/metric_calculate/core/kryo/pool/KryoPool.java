@@ -63,7 +63,7 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(BoundedPriorityQueue.class, new BoundedPriorityQueueSerializer<>(), 23);
         kryo.register(MutableObj.class, new MutableObjectSerializer<>(), 24);
         kryo.register(Pair.class, new PairSerializer<>(), 25);
-        kryo.register(MultiFieldDistinctKey.class, new MultiFieldDistinctKeySerializer(), 26);
+        kryo.register(MultiFieldData.class, new MultiFieldDataSerializer(), 26);
         kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 27);
         kryo.register(JSONObject.class, 28);
         kryo.register(KeyValue.class, new KeyValueSerializer<>(), 29);

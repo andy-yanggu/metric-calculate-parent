@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProc
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric_list.MetricListFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
@@ -123,13 +123,13 @@ public class FieldProcessorUtil {
      * @return 多字段去重字段处理器
      */
     @SneakyThrows
-    public static MultiFieldDistinctFieldProcessor getDistinctFieldFieldProcessor(
+    public static MultiFieldFieldProcessor getDistinctFieldFieldProcessor(
                                                               Map<String, Class<?>> fieldMap,
                                                               List<AviatorExpressParam> distinctFieldListParamList,
                                                               AviatorFunctionFactory aviatorFunctionFactory) {
-        MultiFieldDistinctFieldProcessor tempMultiFieldDistinctFieldProcessor = new MultiFieldDistinctFieldProcessor(fieldMap, distinctFieldListParamList, aviatorFunctionFactory);
-        tempMultiFieldDistinctFieldProcessor.init();
-        return tempMultiFieldDistinctFieldProcessor;
+        MultiFieldFieldProcessor tempMultiFieldFieldProcessor = new MultiFieldFieldProcessor(fieldMap, distinctFieldListParamList, aviatorFunctionFactory);
+        tempMultiFieldFieldProcessor.init();
+        return tempMultiFieldFieldProcessor;
     }
 
     /**

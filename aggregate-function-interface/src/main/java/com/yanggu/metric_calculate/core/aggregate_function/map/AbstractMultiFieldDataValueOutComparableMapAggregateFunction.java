@@ -1,13 +1,13 @@
 package com.yanggu.metric_calculate.core.aggregate_function.map;
 
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.core.lang.tuple.Pair;
 
 import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * 只是定义了K的泛型为MultiFieldDistinctKey
+ * 只是定义了K的泛型为MultiFieldData
  * <p>且定义了ValueOUT必须为可比较的</p>
  *
  * @param <V>        map的value类型
@@ -15,8 +15,8 @@ import java.util.stream.Stream;
  * @param <ValueOUT> value的输出类型
  * @param <OUT>      输出数据类型
  */
-public abstract class AbstractMultiFieldDistinctKeyValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>, OUT>
-        extends AbstractMultiFieldDistinctKeyMapAggregateFunction<V, ValueACC, ValueOUT, OUT> {
+public abstract class AbstractMultiFieldDataValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>, OUT>
+        extends AbstractMultiFieldDataMapAggregateFunction<V, ValueACC, ValueOUT, OUT> {
 
     /**
      * 根据value进行排序并进行截取
@@ -26,8 +26,8 @@ public abstract class AbstractMultiFieldDistinctKeyValueOutComparableMapAggregat
      * @param limit
      * @return
      */
-    protected Stream<Pair<MultiFieldDistinctKey, ValueOUT>> getCompareLimitStream(
-                                                                    Map<MultiFieldDistinctKey, ValueACC> accumulator,
+    protected Stream<Pair<MultiFieldData, ValueOUT>> getCompareLimitStream(
+                                                                    Map<MultiFieldData, ValueACC> accumulator,
                                                                     Boolean asc,
                                                                     Integer limit) {
         return accumulator.entrySet().stream()

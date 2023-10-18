@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 
 /**
  * 有序字段列表
@@ -15,7 +15,7 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
 public class SortedListFieldAggregateFunction<T> extends AbstractMultiFieldSortedListAggregateFunction<T, T> {
 
     @Override
-    public T inToOut(KeyValue<MultiFieldDistinctKey, T> keyValue) {
+    public T inToOut(KeyValue<MultiFieldData, T> keyValue) {
         return keyValue.getValue();
     }
 

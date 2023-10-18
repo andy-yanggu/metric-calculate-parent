@@ -4,10 +4,10 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -36,12 +36,12 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
     /**
      * 多字段去重字段处理器
      */
-    private MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor;
+    private MultiFieldFieldProcessor multiFieldFieldProcessor;
 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldDistinctFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
@@ -66,7 +66,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         }
         //设置了去重字段
         if (keyStrategy == 1) {
-            this.multiFieldDistinctFieldProcessor =
+            this.multiFieldFieldProcessor =
                     FieldProcessorUtil.getDistinctFieldFieldProcessor(fieldMap, udafParam.getMetricExpressParamList(), aviatorFunctionFactory);
             //设置了排序字段
         } else if (keyStrategy == 2) {
@@ -93,7 +93,7 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
         Object result = null;
         //使用了去重字段
         if (keyStrategy == 1) {
-            MultiFieldDistinctKey distinctKey = multiFieldDistinctFieldProcessor.process(input);
+            MultiFieldData distinctKey = multiFieldFieldProcessor.process(input);
             if (distinctKey == null) {
                 return null;
             }
@@ -106,16 +106,16 @@ public class CollectionFieldProcessor<IN> implements FieldProcessor<JSONObject, 
             }
             //使用了排序字段
         } else if (keyStrategy == 2) {
-            MultiFieldDistinctKey multiFieldDistinctKey = multiFieldOrderFieldProcessor.process(input);
-            if (multiFieldDistinctKey == null) {
+            MultiFieldData multiFieldData = multiFieldOrderFieldProcessor.process(input);
+            if (multiFieldData == null) {
                 return null;
             }
             if (retainStrategy == 0) {
-                result = new KeyValue<>(multiFieldDistinctKey, null);
+                result = new KeyValue<>(multiFieldData, null);
             } else if (retainStrategy == 1) {
-                result = new KeyValue<>(multiFieldDistinctKey, retainFieldValueFieldProcessor.process(input));
+                result = new KeyValue<>(multiFieldData, retainFieldValueFieldProcessor.process(input));
             } else if (retainStrategy == 2) {
-                result = new KeyValue<>(multiFieldDistinctKey, input);
+                result = new KeyValue<>(multiFieldData, input);
             }
         } else {
             if (retainStrategy == 0) {

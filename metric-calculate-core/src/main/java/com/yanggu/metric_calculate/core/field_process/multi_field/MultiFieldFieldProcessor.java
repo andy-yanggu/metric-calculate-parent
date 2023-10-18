@@ -1,10 +1,10 @@
-package com.yanggu.metric_calculate.core.field_process.multi_field_distinct;
+package com.yanggu.metric_calculate.core.field_process.multi_field;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -15,25 +15,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 多字段去重字段处理器
+ * 多字段字段处理器
  */
 @Getter
 @EqualsAndHashCode
-public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObject, MultiFieldDistinctKey> {
+public class MultiFieldFieldProcessor implements FieldProcessor<JSONObject, MultiFieldData> {
 
     private final Map<String, Class<?>> fieldMap;
 
-    private final List<AviatorExpressParam> distinctFieldListParamList;
+    private final List<AviatorExpressParam> aviatorExpressParamList;
 
     private final AviatorFunctionFactory aviatorFunctionFactory;
 
     private List<MetricFieldProcessor<Object>> metricFieldProcessorList;
 
-    public MultiFieldDistinctFieldProcessor(Map<String, Class<?>> fieldMap,
-                                            List<AviatorExpressParam> distinctFieldListParamList,
-                                            AviatorFunctionFactory aviatorFunctionFactory) {
+    public MultiFieldFieldProcessor(Map<String, Class<?>> fieldMap,
+                                    List<AviatorExpressParam> aviatorExpressParamList,
+                                    AviatorFunctionFactory aviatorFunctionFactory) {
         this.fieldMap = fieldMap;
-        this.distinctFieldListParamList = distinctFieldListParamList;
+        this.aviatorExpressParamList = aviatorExpressParamList;
         this.aviatorFunctionFactory = aviatorFunctionFactory;
     }
 
@@ -43,7 +43,7 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
             throw new RuntimeException("明细宽表字段map为空");
         }
 
-        if (CollUtil.isEmpty(distinctFieldListParamList)) {
+        if (CollUtil.isEmpty(aviatorExpressParamList)) {
             throw new RuntimeException("去重字段表达式列表为空");
         }
 
@@ -51,19 +51,19 @@ public class MultiFieldDistinctFieldProcessor implements FieldProcessor<JSONObje
             throw new RuntimeException("Aviator函数工厂类为空");
         }
 
-        this.metricFieldProcessorList = distinctFieldListParamList.stream()
+        this.metricFieldProcessorList = aviatorExpressParamList.stream()
                 .map(tempExpress -> FieldProcessorUtil.getMetricFieldProcessor(fieldMap, tempExpress, aviatorFunctionFactory))
                 .toList();
     }
 
     @Override
-    public MultiFieldDistinctKey process(JSONObject input) throws Exception {
+    public MultiFieldData process(JSONObject input) throws Exception {
         List<Object> collect = metricFieldProcessorList.stream()
                 .map(tempMetricExpress -> tempMetricExpress.process(input))
                 .toList();
-        MultiFieldDistinctKey multiFieldDistinctKey = new MultiFieldDistinctKey();
-        multiFieldDistinctKey.setFieldList(collect);
-        return multiFieldDistinctKey;
+        MultiFieldData multiFieldData = new MultiFieldData();
+        multiFieldData.setFieldList(collect);
+        return multiFieldData;
     }
 
 }

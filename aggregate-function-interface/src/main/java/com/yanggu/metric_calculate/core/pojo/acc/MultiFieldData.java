@@ -9,15 +9,15 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * 多字段去重列表
+ * 多字段列表
  */
 @Data
 @NoArgsConstructor
-public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey> {
+public class MultiFieldData {
 
     private List<Object> fieldList;
 
-    public MultiFieldDistinctKey(List<Object> fieldList) {
+    public MultiFieldData(List<Object> fieldList) {
         this.fieldList = fieldList;
     }
 
@@ -34,7 +34,7 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey> 
         if (that == null || getClass() != that.getClass()) {
             return false;
         }
-        MultiFieldDistinctKey thatData = (MultiFieldDistinctKey) that;
+        MultiFieldData thatData = (MultiFieldData) that;
         Object[] thisObjects = fieldList.toArray();
         Object[] thatObjects = thatData.fieldList.toArray();
         return Arrays.equals(thisObjects, thatObjects);
@@ -43,11 +43,6 @@ public class MultiFieldDistinctKey implements Comparable<MultiFieldDistinctKey> 
     @Override
     public String toString() {
         return JSONUtil.toJsonStr(fieldList);
-    }
-
-    @Override
-    public int compareTo(MultiFieldDistinctKey that) {
-        return 0;
     }
 
 }

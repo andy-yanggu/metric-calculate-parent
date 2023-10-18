@@ -1,6 +1,6 @@
-package com.yanggu.metric_calculate.core.field_process.multi_field_distinct;
+package com.yanggu.metric_calculate.core.field_process.multi_field;
 
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * 多字段去重字段处理器
  */
-class MultiFieldDistinctFieldProcessorTest {
+class MultiFieldFieldProcessorTest {
 
     @Test
     void init() {
@@ -34,12 +34,12 @@ class MultiFieldDistinctFieldProcessorTest {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
         List<AviatorExpressParam> metricList = Collections.singletonList(aviatorExpressParam);
-        MultiFieldDistinctFieldProcessor multiFieldDistinctFieldProcessor = getDistinctFieldFieldProcessor(fieldMap, metricList);
+        MultiFieldFieldProcessor multiFieldFieldProcessor = getDistinctFieldFieldProcessor(fieldMap, metricList);
 
         JSONObject input = new JSONObject();
         input.set("name", "张三");
         input.set("age", 20);
-        MultiFieldDistinctKey process = multiFieldDistinctFieldProcessor.process(input);
+        MultiFieldData process = multiFieldFieldProcessor.process(input);
         assertNotNull(process);
         assertEquals(Collections.singletonList("张三"), process.getFieldList());
     }

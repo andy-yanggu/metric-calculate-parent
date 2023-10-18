@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 
 import java.util.Set;
 
@@ -12,10 +12,10 @@ import java.util.Set;
  */
 @Collective(keyStrategy = 1, retainStrategy = 0)
 @AggregateFunctionAnnotation(name = "DISTINCTCOUNT", displayName = "去重计数")
-public class DistinctCountAggregateFunction extends AbstractDistinctAggregateFunction<MultiFieldDistinctKey, Integer> {
+public class DistinctCountAggregateFunction extends AbstractDistinctAggregateFunction<MultiFieldData, Integer> {
 
     @Override
-    public Integer getResult(Set<MultiFieldDistinctKey> acc) {
+    public Integer getResult(Set<MultiFieldData> acc) {
         return acc.size();
     }
 

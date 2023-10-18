@@ -16,7 +16,7 @@ import java.io.Serializable;
  * @param <K>
  * @param <V>
  */
-public class KeyValueSerializer<K extends Comparable<K>, V> extends Serializer<KeyValue<K, V>> implements Serializable {
+public class KeyValueSerializer<K, V> extends Serializer<KeyValue<K, V>> implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8925969254953524456L;

@@ -4,7 +4,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateF
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
 import com.yanggu.metric_calculate.core.pojo.acc.ListObjectComparator;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public abstract class AbstractMultiFieldSortedListAggregateFunction<IN, OUT> extends AbstractSortedListAggregateFunction<KeyValue<MultiFieldDistinctKey, IN>, OUT> {
+public abstract class AbstractMultiFieldSortedListAggregateFunction<IN, OUT> extends AbstractSortedListAggregateFunction<KeyValue<MultiFieldData, IN>, OUT> {
 
     @AggregateFunctionFieldAnnotation(displayName = "升序和降序", notNull = true)
     private List<Boolean> booleanList;
@@ -30,11 +30,11 @@ public abstract class AbstractMultiFieldSortedListAggregateFunction<IN, OUT> ext
     }
 
     @Override
-    public BoundedPriorityQueue<KeyValue<MultiFieldDistinctKey, IN>> createAccumulator() {
+    public BoundedPriorityQueue<KeyValue<MultiFieldData, IN>> createAccumulator() {
         return new BoundedPriorityQueue<>(getLimit(), comparator);
     }
 
     @Override
-    public abstract OUT inToOut(KeyValue<MultiFieldDistinctKey, IN> keyValue);
+    public abstract OUT inToOut(KeyValue<MultiFieldData, IN> keyValue);
 
 }

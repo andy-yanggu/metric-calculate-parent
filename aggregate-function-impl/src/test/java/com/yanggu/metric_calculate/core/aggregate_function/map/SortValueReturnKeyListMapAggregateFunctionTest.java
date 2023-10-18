@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -37,7 +37,7 @@ class SortValueReturnKeyListMapAggregateFunctionTest {
         aggregateFunction.setAsc(true);
         aggregateFunction.setLimit(4);
 
-        Map<MultiFieldDistinctKey, Double> accumulator = new HashMap<>();
+        Map<MultiFieldData, Double> accumulator = new HashMap<>();
         accumulator.put(create("test1"), 0.0D);
         accumulator.put(create("test2"), -1.0D);
         accumulator.put(create("test3"), 23.0D);
@@ -49,8 +49,8 @@ class SortValueReturnKeyListMapAggregateFunctionTest {
         assertEquals(List.of("test2", "test1", "test5", "test4"), list);
     }
 
-    public static MultiFieldDistinctKey create(String data) {
-        return new MultiFieldDistinctKey(List.of(data));
+    public static MultiFieldData create(String data) {
+        return new MultiFieldData(List.of(data));
     }
 
 }

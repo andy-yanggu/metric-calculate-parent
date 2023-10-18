@@ -4,41 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.StringJoiner;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class KeyValue<K extends Comparable<K>, V> implements Comparable<KeyValue<K, V>> {
+public class KeyValue<K, V> implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 5095923134278705693L;
 
     private K key;
 
     private V value;
-
-    @Override
-    public int compareTo(KeyValue<K, V> that) {
-        return key.compareTo(that.key);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        KeyValue<?, ?> that = (KeyValue<?, ?>) o;
-
-        return this.key.equals(that.key);
-    }
-
-    @Override
-    public int hashCode() {
-        return key.hashCode();
-    }
 
     @Override
     public String toString() {

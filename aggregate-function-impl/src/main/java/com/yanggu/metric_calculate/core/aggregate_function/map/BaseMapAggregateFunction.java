@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,10 +22,10 @@ import java.util.Map;
 @EqualsAndHashCode(callSuper = false)
 @AggregateFunctionAnnotation(name = "BASEMAP", displayName = "基础映射")
 public class BaseMapAggregateFunction<V, ValueACC, ValueOUT> extends
-        AbstractMultiFieldDistinctKeyMapAggregateFunction<V, ValueACC, ValueOUT, Map<List<Object>, ValueOUT>> {
+        AbstractMultiFieldDataMapAggregateFunction<V, ValueACC, ValueOUT, Map<List<Object>, ValueOUT>> {
 
     @Override
-    public Map<List<Object>, ValueOUT> getResult(Map<MultiFieldDistinctKey, ValueACC> accumulator) {
+    public Map<List<Object>, ValueOUT> getResult(Map<MultiFieldData, ValueACC> accumulator) {
         Map<List<Object>, ValueOUT> map = new HashMap<>();
         accumulator.forEach((tempKey, tempValueAcc) -> {
             ValueOUT result = valueAggregateFunction.getResult(tempValueAcc);

@@ -2,10 +2,10 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,7 +33,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     /**
      * key生成字段处理器
      */
-    private MultiFieldDistinctFieldProcessor keyFieldProcessor;
+    private MultiFieldFieldProcessor keyFieldProcessor;
 
     /**
      * value生成字段处理器
@@ -67,7 +67,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
     @Override
     public IN process(JSONObject input) throws Exception {
-        MultiFieldDistinctKey key = keyFieldProcessor.process(input);
+        MultiFieldData key = keyFieldProcessor.process(input);
         Object value = valueAggregateFieldProcessor.process(input);
         return (IN) new Pair<>(key, value);
     }

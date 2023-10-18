@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -34,7 +34,7 @@ class DistinctListFieldAggregateFunctionTest {
     @Test
     void testGetResult() {
         var distinctListFieldAggregateFunction = new DistinctListFieldAggregateFunction<Integer>();
-        var keyValue = new KeyValue<MultiFieldDistinctKey, Integer>(null, 1);
+        var keyValue = new KeyValue<MultiFieldData, Integer>(null, 1);
         var set = Set.of(keyValue);
         List<Integer> result = distinctListFieldAggregateFunction.getResult(set);
         assertEquals(List.of(1), result);

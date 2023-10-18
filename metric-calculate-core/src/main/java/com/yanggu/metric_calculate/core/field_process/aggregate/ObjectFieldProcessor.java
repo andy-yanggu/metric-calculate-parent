@@ -4,10 +4,10 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
-import com.yanggu.metric_calculate.core.field_process.multi_field_distinct.MultiFieldDistinctFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -39,7 +39,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     /**
      * 多字段排序字段处理器
      */
-    private MultiFieldDistinctFieldProcessor multiFieldOrderFieldProcessor;
+    private MultiFieldFieldProcessor multiFieldOrderFieldProcessor;
 
     /**
      * 保留字段字段处理器
@@ -94,7 +94,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
         int retainStrategy = objective.retainStrategy();
         //如果使用比较字段
         if (objective.keyStrategy() == 3) {
-            MultiFieldDistinctKey multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
+            MultiFieldData multiFieldOrderCompareKey = multiFieldOrderFieldProcessor.process(input);
             if (multiFieldOrderCompareKey == null) {
                 return null;
             }

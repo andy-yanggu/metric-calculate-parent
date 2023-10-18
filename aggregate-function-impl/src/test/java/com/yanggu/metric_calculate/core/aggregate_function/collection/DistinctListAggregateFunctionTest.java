@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +30,8 @@ class DistinctListAggregateFunctionTest {
     @Test
     void testGetResult() {
         DistinctListAggregateFunction distinctListAggregateFunction = new DistinctListAggregateFunction();
-        Set<MultiFieldDistinctKey> acc = new HashSet<>();
-        acc.add(new MultiFieldDistinctKey(List.of(1)));
+        Set<MultiFieldData> acc = new HashSet<>();
+        acc.add(new MultiFieldData(List.of(1)));
         List<List<Object>> lists = distinctListAggregateFunction.getResult(acc);
         Assertions.assertEquals(List.of(List.of(1)), lists);
     }

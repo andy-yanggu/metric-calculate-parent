@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.calculate.metric;
 
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
 import com.yanggu.metric_calculate.core.pojo.acc.KeyValue;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
@@ -90,7 +90,7 @@ class DeriveMetricsCalculateCollectionTest extends DeriveMetricsCalculateBase {
      */
     @Test
     void testSort_list_object() throws Exception {
-        DeriveMetricCalculate<KeyValue<MultiFieldDistinctKey, JSONObject>, BoundedPriorityQueue<KeyValue<MultiFieldDistinctKey, JSONObject>>, List<JSONObject>> deriveMetricCalculate =
+        DeriveMetricCalculate<KeyValue<MultiFieldData, JSONObject>, BoundedPriorityQueue<KeyValue<MultiFieldData, JSONObject>>, List<JSONObject>> deriveMetricCalculate =
                 metricCalculate.getDeriveMetricCalculateById(7L);
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "000000000011");

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
-import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldDistinctKey;
+import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ class SortValueReturnValueListMapAggregateFunctionTest {
     @Test
     void testGetResult_Positive() {
         // 创建一个包含键值对的 HashMap
-        Map<MultiFieldDistinctKey, Double> accumulator = new HashMap<>();
+        Map<MultiFieldData, Double> accumulator = new HashMap<>();
         accumulator.put(create("key1"), 5.0D);
         accumulator.put(create("key2"), 10.0D);
         accumulator.put(create("key3"), 2.0D);
@@ -54,7 +54,7 @@ class SortValueReturnValueListMapAggregateFunctionTest {
     @Test
     void testGetResult_WithSameValues_Positive() {
         // 创建一个包含键值对的 HashMap
-        Map<MultiFieldDistinctKey, Double> accumulator = new HashMap<>();
+        Map<MultiFieldData, Double> accumulator = new HashMap<>();
         accumulator.put(create("key1"), 5.0D);
         accumulator.put(create("key2"), 10.0D);
         accumulator.put(create("key3"), 2.0D);
