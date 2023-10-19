@@ -1,6 +1,8 @@
 package com.yanggu.metric_calculate.core.pojo.metric;
 
 import com.yanggu.metric_calculate.core.enums.TimeUnitEnum;
+import com.yanggu.metric_calculate.core.pojo.window.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
 import com.yanggu.metric_calculate.core.util.DateUtils;
 import org.junit.jupiter.api.Test;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class TimeBaselineDimensionTest {
+class TimeBaselineDimensionTestColumn {
 
     private final long timestamp = DateUtils.parseDateTime("2023-03-30 14:02:23");
 
@@ -29,12 +31,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals(4L, timeWindowData.getWindowStart());
-        assertEquals(6L, timeWindowData.getWindowEnd());
+        assertEquals(4L, timeWindowData.windowStart());
+        assertEquals(6L, timeWindowData.windowEnd());
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals(5L, timeWindowData.getWindowStart());
-        assertEquals(7L, timeWindowData.getWindowEnd());
+        assertEquals(5L, timeWindowData.windowStart());
+        assertEquals(7L, timeWindowData.windowEnd());
     }
 
     /**
@@ -47,12 +49,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2023-03-30 14:02:22", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-30 14:02:24", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 14:02:22", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-30 14:02:24", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-03-30 14:02:23", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-30 14:02:25", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 14:02:23", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-30 14:02:25", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -65,12 +67,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2023-03-30 14:01:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-30 14:03:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 14:01:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-30 14:03:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-03-30 14:02:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-30 14:04:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 14:02:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-30 14:04:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -83,12 +85,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2023-03-30 13:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-30 15:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 13:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-30 15:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-03-30 14:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-30 16:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 14:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-30 16:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -101,12 +103,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2023-03-29 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-03-31 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-29 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-03-31 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-03-30 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-30 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -120,12 +122,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2023-03-20 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-04-03 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-20 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-04-03 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-03-27 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-04-10 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-27 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-04-10 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -138,12 +140,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2023-02-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-02-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-03-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-05-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-03-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-05-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -156,12 +158,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2022-10-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2022-10-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2023-07-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2023-07-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**
@@ -174,12 +176,12 @@ class TimeBaselineDimensionTest {
         assertEquals(2, timeWindowDataList.size());
 
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        assertEquals("2022-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2024-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2022-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2024-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
         timeWindowData = timeWindowDataList.get(1);
-        assertEquals("2023-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        assertEquals("2025-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        assertEquals("2023-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
+        assertEquals("2025-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
     }
 
     /**

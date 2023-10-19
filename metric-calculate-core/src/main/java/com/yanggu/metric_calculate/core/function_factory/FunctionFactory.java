@@ -19,6 +19,9 @@ import java.util.function.Predicate;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+/**
+ * 函数工厂类
+ */
 public class FunctionFactory {
 
     private FunctionFactory() {

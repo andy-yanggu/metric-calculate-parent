@@ -6,6 +6,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.dromara.hutool.core.lang.tuple.Tuple;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 public class TupleSerializer extends Serializer<Tuple> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5150747248969279645L;
 
     @Override

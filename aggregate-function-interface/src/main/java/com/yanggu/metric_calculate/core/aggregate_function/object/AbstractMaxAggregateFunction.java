@@ -11,25 +11,25 @@ import java.util.Comparator;
  * <p>子类需要设置比较器的逻辑</p>
  * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
- * @param <T> 输入数据类型
+ * @param <IN> 输入数据类型
  * @param <OUT> 输出数据类型
  */
 @Data
-public abstract class AbstractMaxAggregateFunction<T, OUT> implements AggregateFunction<T, MutableObj<T>, OUT> {
+public abstract class AbstractMaxAggregateFunction<IN, OUT> implements AggregateFunction<IN, MutableObj<IN>, OUT> {
 
     /**
      * 比较器必须是升序的逻辑
      */
-    private Comparator<T> comparator;
+    private Comparator<IN> comparator;
 
     @Override
-    public MutableObj<T> createAccumulator() {
+    public MutableObj<IN> createAccumulator() {
         return new MutableObj<>();
     }
 
     @Override
-    public MutableObj<T> add(T input, MutableObj<T> accumulator) {
-        T oldValue = accumulator.get();
+    public MutableObj<IN> add(IN input, MutableObj<IN> accumulator) {
+        IN oldValue = accumulator.get();
         //如果old为空
         if (oldValue == null || comparator.compare(input, oldValue) > 0) {
             accumulator.set(input);
@@ -38,9 +38,9 @@ public abstract class AbstractMaxAggregateFunction<T, OUT> implements AggregateF
     }
 
     @Override
-    public MutableObj<T> merge(MutableObj<T> thisAccumulator, MutableObj<T> thatAccumulator) {
-        T thisValue = thisAccumulator.get();
-        T thatValue = thatAccumulator.get();
+    public MutableObj<IN> merge(MutableObj<IN> thisAccumulator, MutableObj<IN> thatAccumulator) {
+        IN thisValue = thisAccumulator.get();
+        IN thatValue = thatAccumulator.get();
         if (thisValue == null && thatValue != null) {
             return thatAccumulator;
         } else if (thisValue == null/* && thatValue == null*/) {

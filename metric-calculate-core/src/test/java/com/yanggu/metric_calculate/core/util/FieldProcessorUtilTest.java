@@ -21,9 +21,9 @@ import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
-import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
@@ -69,23 +69,23 @@ class FieldProcessorUtilTest {
 
     @Test
     void testGetTimeFieldProcessor() {
-        TimeColumn timeColumn = new TimeColumn("time", "HH:mm:ss");
-        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(timeColumn);
+        ModelTimeColumn modelTimeColumn = new ModelTimeColumn("time", "HH:mm:ss");
+        TimeFieldProcessor timeFieldProcessor = FieldProcessorUtil.getTimeFieldProcessor(modelTimeColumn);
         assertNotNull(timeFieldProcessor);
-        assertEquals("time", timeFieldProcessor.getTimeColumnName());
-        assertEquals("HH:mm:ss", timeFieldProcessor.getTimeFormat());
+        assertEquals("time", timeFieldProcessor.timeColumnName());
+        assertEquals("HH:mm:ss", timeFieldProcessor.timeFormat());
     }
 
     @Test
     void testGetDimensionSetProcessor_Positive() {
         String key = "key";
         String metricName = "metricName";
-        List<Dimension> dimensionList = new ArrayList<>();
-        DimensionSetProcessor dimensionSetProcessor = FieldProcessorUtil.getDimensionSetProcessor(key, metricName, dimensionList);
+        List<ModelDimensionColumn> modelDimensionColumnList = new ArrayList<>();
+        DimensionSetProcessor dimensionSetProcessor = FieldProcessorUtil.getDimensionSetProcessor(key, metricName, modelDimensionColumnList);
         assertNotNull(dimensionSetProcessor);
         assertEquals(key, dimensionSetProcessor.getKey());
         assertEquals(metricName, dimensionSetProcessor.getMetricName());
-        assertEquals(dimensionList, dimensionSetProcessor.getDimensionList());
+        assertEquals(modelDimensionColumnList, dimensionSetProcessor.getModelDimensionColumnList());
     }
 
     @Test

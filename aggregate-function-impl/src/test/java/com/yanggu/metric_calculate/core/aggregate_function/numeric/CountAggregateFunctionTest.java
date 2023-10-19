@@ -29,30 +29,30 @@ class CountAggregateFunctionTest {
     void testCreateAccumulator() {
         CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
         Long accumulator = countAggregateFunction.createAccumulator();
-        assertEquals(0L, (long) accumulator);
+        assertEquals(0L, accumulator);
     }
 
     @Test
     void testAdd() {
         CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
         Long accumulator = countAggregateFunction.add(1, 0L);
-        assertEquals(1L, (long) accumulator);
+        assertEquals(1L, accumulator);
         accumulator = countAggregateFunction.add(null, 0L);
-        assertEquals(0L, (long) accumulator);
+        assertEquals(0L, accumulator);
     }
 
     @Test
     void testGetResult() {
         CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
         Long accumulator = countAggregateFunction.getResult(10L);
-        assertEquals(10L, (long) accumulator);
+        assertEquals(10L, accumulator);
     }
 
     @Test
     void testMerge() {
         CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();
         Long accumulator = countAggregateFunction.merge(10L, 20L);
-        assertEquals(30L, (long) accumulator);
+        assertEquals(30L, accumulator);
     }
 
 }

@@ -29,7 +29,7 @@ public class AggregateFunctionFactory {
     private static final String ERROR_MESSAGE = "自定义聚合函数唯一标识重复, 重复的全类名: ";
 
     /**
-     * 扫描有MergeType注解并且是AggregateFunction子类
+     * 扫描有AggregateFunctionAnnotation注解并且是AggregateFunction子类
      */
     public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AggregateFunctionAnnotation.class)
             && AggregateFunction.class.isAssignableFrom(clazz);
@@ -116,11 +116,10 @@ public class AggregateFunctionFactory {
     }
 
     private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AggregateFunction>> functionMap) {
-        AggregateFunctionAnnotation annotation = tempClazz.getAnnotation(AggregateFunctionAnnotation.class);
-        if (annotation == null) {
+        if (!CLASS_FILTER.test(tempClazz)) {
             return;
         }
-        String value = annotation.name();
+        String value = tempClazz.getAnnotation(AggregateFunctionAnnotation.class).name();
         Class<? extends AggregateFunction> put = functionMap.put(value, (Class<? extends AggregateFunction>) tempClazz);
         if (put != null) {
             throw new RuntimeException(ERROR_MESSAGE + put.getName());

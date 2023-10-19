@@ -14,6 +14,6 @@ public interface NodePatternMapstruct extends BaseMapstruct<NodePatternDto,NodeP
 
     @Named("toCoreNodePattern")
     @Mapping(source = "matchExpressParam", target = "matchExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
-    com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern toCoreNodePattern(NodePattern nodePattern);
+    com.yanggu.metric_calculate.core.pojo.window.NodePattern toCoreNodePattern(NodePattern nodePattern);
 
 }

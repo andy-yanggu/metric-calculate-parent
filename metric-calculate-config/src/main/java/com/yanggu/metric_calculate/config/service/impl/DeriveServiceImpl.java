@@ -125,6 +125,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
         //根据宽表id查询对应的宽表字段
         List<ModelColumn> modelColumnList = modelColumnService.queryChain()
+                .from(MODEL_COLUMN)
                 .where(MODEL_COLUMN.MODEL_ID.eq(derive.getModelId()))
                 .list();
 
@@ -229,7 +230,9 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                     .map(Derive::getModelId)
                     .distinct()
                     .toList();
-            QueryWrapper queryWrapper = QueryWrapper.create().where(MODEL.ID.in(modelIdList));
+            QueryWrapper queryWrapper = QueryWrapper.create()
+                    .from(MODEL)
+                    .where(MODEL.ID.in(modelIdList));
             Map<Integer, Model> modelMap = modelService.getMapper()
                     .selectListWithRelationsByQuery(queryWrapper).stream()
                     .collect(Collectors.toMap(Model::getId, Function.identity()));
@@ -327,6 +330,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         if (filterExpressParam != null) {
             aviatorExpressParamService.deleteData(filterExpressParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
+                    .from(DERIVE_FILTER_EXPRESS_RELATION)
                     .where(DERIVE_FILTER_EXPRESS_RELATION.DERIVE_ID.eq(id))
                     .and(DERIVE_FILTER_EXPRESS_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(filterExpressParam.getId()));
             deriveFilterExpressRelationService.remove(queryWrapper);
@@ -335,6 +339,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
         if (modelTimeColumn != null) {
             QueryWrapper queryWrapper = QueryWrapper.create()
+                    .from(DERIVE_MODEL_TIME_COLUMN_RELATION)
                     .where(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(id))
                     .and(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID.eq(modelTimeColumn.getId()));
             deriveModelTimeColumnRelationService.remove(queryWrapper);
@@ -346,6 +351,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                     .map(ModelDimensionColumn::getId)
                     .toList();
             QueryWrapper dimensionQueryWrapper = QueryWrapper.create()
+                    .from(DERIVE_MODEL_DIMENSION_COLUMN_RELATION)
                     .where(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(id))
                     .and(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID.in(modelDimensionIdList));
             deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
@@ -355,6 +361,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         if (aggregateFunctionParam != null) {
             aggregateFunctionParamService.deleteData(aggregateFunctionParam);
             QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
+                    .from(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION)
                     .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
                     .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
             deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
@@ -364,6 +371,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         if (windowParam != null) {
             windowParamService.deleteData(derive.getWindowParam());
             QueryWrapper windowParamQueryWrapper = QueryWrapper.create()
+                    .from(DERIVE_WINDOW_PARAM_RELATION)
                     .where(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID.eq(id))
                     .and(DERIVE_WINDOW_PARAM_RELATION.WINDOW_PARAM_ID.eq(windowParam.getId()));
             deriveWindowParamRelationService.remove(windowParamQueryWrapper);
@@ -377,6 +385,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
      */
     private void checkExist(Derive derive) {
         QueryWrapper queryWrapper = QueryWrapper.create()
+                .from(DERIVE)
                 //当id存在时为更新
                 .where(DERIVE.ID.ne(derive.getId()).when(derive.getId() != null))
                 .and(DERIVE.NAME.eq(derive.getName()).or(DERIVE.DISPLAY_NAME.eq(derive.getDisplayName())));

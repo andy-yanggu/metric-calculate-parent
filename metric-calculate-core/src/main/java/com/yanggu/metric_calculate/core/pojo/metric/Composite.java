@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.core.pojo.metric;
 
-import com.yanggu.metric_calculate.core.pojo.store.StoreInfo;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
 import lombok.Data;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class Composite {
     /**
      * 时间字段
      */
-    private TimeColumn timeColumn;
+    private ModelTimeColumn modelTimeColumn;
 
     /**
      * 多维度计算
@@ -40,10 +40,5 @@ public class Composite {
      * 精度相关
      */
     private RoundAccuracy roundAccuracy;
-
-    /**
-     * 指标存储相关信息
-     */
-    private StoreInfo storeInfo;
 
 }

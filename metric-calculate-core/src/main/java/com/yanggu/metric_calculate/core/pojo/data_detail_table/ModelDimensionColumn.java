@@ -1,15 +1,17 @@
-package com.yanggu.metric_calculate.core.pojo.metric;
+package com.yanggu.metric_calculate.core.pojo.data_detail_table;
 
 import lombok.Data;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
- * 维度信息
+ * 宽表维度字段
  */
 @Data
-public class Dimension implements Serializable {
+public class ModelDimensionColumn implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 4960485684122091771L;
 
     /**

@@ -41,11 +41,18 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     }
 
     @Override
+    public OUT getResult(Map<K, ValueACC> accumulator) {
+        Map<K, ValueOUT> map = new HashMap<>();
+        accumulator.forEach((k, acc) -> map.put(k, valueAggregateFunction.getResult(acc)));
+        return (OUT) map;
+    }
+
+    @Override
     public Map<K, ValueACC> merge(Map<K, ValueACC> thisAccumulator, Map<K, ValueACC> thatAccumulator) {
         thatAccumulator.forEach((tempKey, thatAcc) -> {
             ValueACC thisAcc = thisAccumulator.getOrDefault(tempKey, valueAggregateFunction.createAccumulator());
-            thisAcc = valueAggregateFunction.merge(thisAcc, thatAcc);
-            thisAccumulator.put(tempKey, thisAcc);
+            ValueACC newAcc = valueAggregateFunction.merge(thisAcc, thatAcc);
+            thisAccumulator.put(tempKey, newAcc);
         });
         return thisAccumulator;
     }

@@ -18,13 +18,13 @@ class AbstractMapAggregateFunctionTest {
     @BeforeEach
     void init() {
         this.mapAggregateFunction = new TestMapAggregateFunction<>();
-        TestSumAggregateFunction<Double> sumAggregateFunction = new TestSumAggregateFunction<>();
+        var sumAggregateFunction = new TestSumAggregateFunction<Double>();
         this.mapAggregateFunction.setValueAggregateFunction(sumAggregateFunction);
     }
 
     @Test
     void createAccumulator() {
-        Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
+        var accumulator = mapAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
         assertTrue(accumulator instanceof HashMap);
@@ -32,7 +32,7 @@ class AbstractMapAggregateFunctionTest {
 
     @Test
     void add() {
-        Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
+        var accumulator = mapAggregateFunction.createAccumulator();
         String name1 = "张三";
         Pair<String, Double> tuple2 = new Pair<>(name1, 100.0D);
         Map<String, Double> add = mapAggregateFunction.add(tuple2, accumulator);
@@ -79,7 +79,7 @@ class TestMapAggregateFunction<K, V, ValueACC, ValueOUT> extends AbstractMapAggr
 
     @Override
     public Map<K, ValueOUT> getResult(Map<K, ValueACC> accumulator) {
-        HashMap<K, ValueOUT> map = new HashMap<>();
+        Map<K, ValueOUT> map = new HashMap<>();
         accumulator.forEach((k, acc) -> map.put(k, valueAggregateFunction.getResult(acc)));
         return map;
     }

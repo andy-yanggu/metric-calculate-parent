@@ -9,11 +9,13 @@ import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoLongSerializer;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoTreeMapSerializer;
 import com.yanggu.metric_calculate.core.window.TumblingTimeWindow;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.TreeMap;
 
 public class TumblingTimeWindowSerializer<IN, ACC, OUT> extends Serializer<TumblingTimeWindow<IN, ACC, OUT>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 3500078827166722503L;
 
     private final KryoLongSerializer longSerializer = new KryoLongSerializer();

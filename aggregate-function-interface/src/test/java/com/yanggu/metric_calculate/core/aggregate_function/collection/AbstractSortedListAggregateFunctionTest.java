@@ -87,16 +87,16 @@ class AbstractSortedListAggregateFunctionTest {
 
 }
 
-class TestSortedListAggregateFunction<T extends Comparable<T>> extends AbstractSortedListAggregateFunction<T, T> {
+class TestSortedListAggregateFunction<IN extends Comparable<IN>> extends AbstractSortedListAggregateFunction<IN, IN> {
 
     @Override
-    public BoundedPriorityQueue<T> createAccumulator() {
+    public BoundedPriorityQueue<IN> createAccumulator() {
         return new BoundedPriorityQueue<>(getLimit());
     }
 
     @Override
-    public T inToOut(T t) {
-        return t;
+    public IN inToOut(IN in) {
+        return in;
     }
 
 }

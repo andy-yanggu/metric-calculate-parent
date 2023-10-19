@@ -7,12 +7,14 @@ import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.kryo.serializer.util.KryoMapSerializer;
 import com.yanggu.metric_calculate.core.window.SlidingTimeWindow;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.Map;
 
 
 public class SlidingTimeWindowSerializer<IN, ACC, OUT> extends Serializer<SlidingTimeWindow<IN, ACC, OUT>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -416111087144999336L;
 
     private final KryoMapSerializer<Map> mapSerializer = new KryoMapSerializer<>();

@@ -5,9 +5,9 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeWindowData;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
+import com.yanggu.metric_calculate.core.pojo.window.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
+import com.yanggu.metric_calculate.core.pojo.window.NodePattern;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -109,9 +109,9 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     private DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        long from = timeWindowData.getWindowStart();
+        long from = timeWindowData.windowStart();
         boolean fromInclusive = true;
-        long to = timeWindowData.getWindowEnd();
+        long to = timeWindowData.windowEnd();
         boolean toInclusive = false;
 
         //判断最后一个节点是否有数据

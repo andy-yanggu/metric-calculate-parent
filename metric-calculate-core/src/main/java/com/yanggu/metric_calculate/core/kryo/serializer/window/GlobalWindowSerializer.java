@@ -6,6 +6,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.yanggu.metric_calculate.core.window.GlobalWindow;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
  */
 public class GlobalWindowSerializer<IN, ACC, OUT> extends Serializer<GlobalWindow<IN, ACC, OUT>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 7154340627620305186L;
 
     @Override

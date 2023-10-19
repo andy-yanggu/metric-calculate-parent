@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.core.pojo.metric;
 
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class MultiDimensionCalculate {
     /**
      * 维度字段
      */
-    private List<Dimension> dimension;
+    private List<ModelDimensionColumn> modelDimensionColumn;
 
     /**
      * 计算表达式

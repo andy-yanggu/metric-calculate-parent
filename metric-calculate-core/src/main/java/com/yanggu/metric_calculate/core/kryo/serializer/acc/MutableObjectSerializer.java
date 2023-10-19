@@ -6,6 +6,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -15,6 +16,7 @@ import java.io.Serializable;
  */
 public class MutableObjectSerializer<T> extends Serializer<MutableObj<T>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = -5624609536031018473L;
 
     @Override

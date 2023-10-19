@@ -42,7 +42,7 @@ public interface AggregateFunctionParamMapstruct extends BaseMapstruct<Aggregate
     @Mapping(source = "mapUdafParam", target = "mapUdafParam", qualifiedByName = {"MapUdafParamMapstruct", "toCoreMapUdafParam"})
     //混合型参数
     @Mapping(source = "mixUdafParam", target = "mixUdafParam", qualifiedByName = {"MixUdafParamMapstruct", "toCoreMixUdafParam"})
-    com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParam aggregateFunctionParam);
+    com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParam aggregateFunctionParam);
 
     /**
      * 获取udaf的jar包路径

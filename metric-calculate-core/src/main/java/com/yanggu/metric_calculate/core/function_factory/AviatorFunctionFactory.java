@@ -27,15 +27,15 @@ public class AviatorFunctionFactory {
     private static final String ERROR_MESSAGE = "自定义Aviator函数一标识重复, 重复的全类名: ";
 
     /**
-     * 内置的AbstractUdfAviatorFunction
-     */
-    private static final Map<String, Class<? extends AbstractUdfAviatorFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
-
-    /**
-     * 扫描有AviatorFunctionName注解且是AbstractUdfAviatorFunction子类的类
+     * 扫描有AviatorFunctionAnnotation注解且是AbstractUdfAviatorFunction子类的类
      */
     public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AviatorFunctionAnnotation.class)
             && AbstractUdfAviatorFunction.class.isAssignableFrom(clazz);
+
+    /**
+     * 内置的AbstractUdfAviatorFunction
+     */
+    private static final Map<String, Class<? extends AbstractUdfAviatorFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
 
     private final Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap = new HashMap<>();
 
@@ -107,11 +107,10 @@ public class AviatorFunctionFactory {
 
     private static void addClassToMap(Class<?> tempClazz,
                                       Map<String, Class<? extends AbstractUdfAviatorFunction>> functionMap) {
-        AviatorFunctionAnnotation annotation = tempClazz.getAnnotation(AviatorFunctionAnnotation.class);
-        if (annotation == null) {
+        if (!CLASS_FILTER.test(tempClazz)) {
             return;
         }
-        String value = annotation.name();
+        String value = tempClazz.getAnnotation(AviatorFunctionAnnotation.class).name();
         Class<? extends AbstractUdfAviatorFunction> put = functionMap.put(value, (Class<? extends AbstractUdfAviatorFunction>) tempClazz);
         if (put != null) {
             throw new RuntimeException(ERROR_MESSAGE + put.getName());

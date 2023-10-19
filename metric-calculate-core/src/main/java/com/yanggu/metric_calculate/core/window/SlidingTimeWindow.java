@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.window;
 
 
-import com.yanggu.metric_calculate.core.pojo.metric.TimeWindowData;
+import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -36,8 +36,8 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
             return;
         }
         for (TimeWindowData tempTimeWindowData : timeWindowData) {
-            long windowStart = tempTimeWindowData.getWindowStart();
-            long windowEnd = tempTimeWindowData.getWindowEnd();
+            long windowStart = tempTimeWindowData.windowStart();
+            long windowEnd = tempTimeWindowData.windowEnd();
             Pair<Long, Long> pair = Pair.of(windowStart, windowEnd);
             ACC historyAcc = map.get(pair);
             ACC nowAcc = aggregateFieldProcessor.add(historyAcc, in);

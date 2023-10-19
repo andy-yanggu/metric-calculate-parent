@@ -64,7 +64,7 @@ class AbstractMaxAggregateFunctionTest {
     
 }
 
-class TestMaxAggregateFunction<T extends Comparable<T>> extends AbstractMaxAggregateFunction<T, T> {
+class TestMaxAggregateFunction<IN extends Comparable<IN>> extends AbstractMaxAggregateFunction<IN, IN> {
 
     @Override
     public void init() {
@@ -72,7 +72,7 @@ class TestMaxAggregateFunction<T extends Comparable<T>> extends AbstractMaxAggre
     }
 
     @Override
-    public T getResult(MutableObj<T> accumulator) {
+    public IN getResult(MutableObj<IN> accumulator) {
         return accumulator.get();
     }
 

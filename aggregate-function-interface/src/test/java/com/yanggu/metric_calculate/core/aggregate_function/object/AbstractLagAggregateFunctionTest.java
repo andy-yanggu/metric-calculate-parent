@@ -109,5 +109,5 @@ class AbstractLagAggregateFunctionTest {
 
 }
 
-class TestLagAggregateFunction<T> extends AbstractLagAggregateFunction<T> {
+class TestLagAggregateFunction<IN> extends AbstractLagAggregateFunction<IN> {
 }

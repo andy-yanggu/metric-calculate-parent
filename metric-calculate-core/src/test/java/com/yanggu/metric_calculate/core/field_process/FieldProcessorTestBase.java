@@ -11,7 +11,7 @@ import com.yanggu.metric_calculate.core.field_process.multi_field.MultiFieldData
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;

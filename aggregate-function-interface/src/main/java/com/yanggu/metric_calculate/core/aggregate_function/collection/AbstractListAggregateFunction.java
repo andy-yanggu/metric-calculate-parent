@@ -11,20 +11,22 @@ import java.util.List;
 /**
  * 列表聚合函数抽象类
  * <p>子类添加响应泛型即可</p>
+ *
+ * @param <IN>
  */
 @Data
-public abstract class AbstractListAggregateFunction<T> implements AggregateFunction<T, List<T>, List<T>> {
+public abstract class AbstractListAggregateFunction<IN> implements AggregateFunction<IN, List<IN>, List<IN>> {
 
     @AggregateFunctionFieldAnnotation(displayName = "长度限制")
     private Integer limit = 10;
 
     @Override
-    public List<T> createAccumulator() {
+    public List<IN> createAccumulator() {
         return new ArrayList<>();
     }
 
     @Override
-    public List<T> add(T input, List<T> accumulator) {
+    public List<IN> add(IN input, List<IN> accumulator) {
         if (limit > accumulator.size()) {
             accumulator.add(input);
         }
@@ -32,13 +34,13 @@ public abstract class AbstractListAggregateFunction<T> implements AggregateFunct
     }
 
     @Override
-    public List<T> getResult(List<T> accumulator) {
+    public List<IN> getResult(List<IN> accumulator) {
         return accumulator;
     }
 
     @Override
-    public List<T> merge(List<T> thisAccumulator, List<T> thatAccumulator) {
-        Iterator<T> iterator = thatAccumulator.iterator();
+    public List<IN> merge(List<IN> thisAccumulator, List<IN> thatAccumulator) {
+        Iterator<IN> iterator = thatAccumulator.iterator();
         while (limit > thisAccumulator.size() && iterator.hasNext()) {
             thisAccumulator.add(iterator.next());
         }

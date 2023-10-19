@@ -57,5 +57,5 @@ class AbstractLastAggregateFunctionTest {
 
 }
 
-class TestLastAggregateFunction<T> extends AbstractLastAggregateFunction<T> {
+class TestLastAggregateFunction<IN> extends AbstractLastAggregateFunction<IN> {
 }

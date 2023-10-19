@@ -9,6 +9,9 @@ import java.util.List;
 
 /**
  * 有序列表抽象类
+ *
+ * @param <IN>
+ * @param <OUT>
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

@@ -12,6 +12,9 @@ import java.util.List;
 
 /**
  * 多字段有序列表抽象类
+ *
+ * @param <IN>
+ * @param <OUT>
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

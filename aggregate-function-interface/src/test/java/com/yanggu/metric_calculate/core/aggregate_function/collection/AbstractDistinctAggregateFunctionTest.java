@@ -86,10 +86,10 @@ class AbstractDistinctAggregateFunctionTest {
 
 }
 
-class TestDistinctAggregateFunction<T> extends AbstractDistinctAggregateFunction<T, List<T>> {
+class TestDistinctAggregateFunction<IN> extends AbstractDistinctAggregateFunction<IN, List<IN>> {
 
     @Override
-    public List<T> getResult(Set<T> acc) {
+    public List<IN> getResult(Set<IN> acc) {
         return new ArrayList<>(acc);
     }
     

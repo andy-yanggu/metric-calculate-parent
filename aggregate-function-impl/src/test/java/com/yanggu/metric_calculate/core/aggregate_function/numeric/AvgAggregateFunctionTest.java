@@ -30,7 +30,7 @@ class AvgAggregateFunctionTest {
     void testCreateAccumulator() {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
-        assertEquals(0.0D, accumulator.getLeft(), 0.0);
+        assertEquals(0.0D, accumulator.getLeft(), 0.0D);
         assertEquals(0L, accumulator.getRight().longValue());
     }
 
@@ -39,7 +39,7 @@ class AvgAggregateFunctionTest {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(1, accumulator);
-        assertEquals(1.0D, accumulator.getLeft(), 0.0);
+        assertEquals(1.0D, accumulator.getLeft(), 0.0D);
         assertEquals(1L, accumulator.getRight().longValue());
     }
 
@@ -48,7 +48,7 @@ class AvgAggregateFunctionTest {
         AvgAggregateFunction<Integer> avgAggregateFunction = new AvgAggregateFunction<>();
         MutablePair<Double, Long> accumulator = avgAggregateFunction.createAccumulator();
         accumulator = avgAggregateFunction.add(-1, accumulator);
-        assertEquals(-1.0D, accumulator.getLeft(), 0.0);
+        assertEquals(-1.0D, accumulator.getLeft(), 0.0D);
         assertEquals(1L, accumulator.getRight().longValue());
     }
 
@@ -59,7 +59,7 @@ class AvgAggregateFunctionTest {
         accumulator = avgAggregateFunction.add(1, accumulator);
         accumulator = avgAggregateFunction.add(2, accumulator);
         Double result = avgAggregateFunction.getResult(accumulator);
-        assertEquals(1.5D, result, 0.0);
+        assertEquals(1.5D, result, 0.0D);
     }
 
     @Test
@@ -69,7 +69,7 @@ class AvgAggregateFunctionTest {
         accumulator = avgAggregateFunction.add(-1, accumulator);
         accumulator = avgAggregateFunction.add(-2, accumulator);
         Double result = avgAggregateFunction.getResult(accumulator);
-        assertEquals(-1.5D, result, 0.0);
+        assertEquals(-1.5D, result, 0.0D);
     }
 
     @Test
@@ -80,7 +80,7 @@ class AvgAggregateFunctionTest {
         MutablePair<Double, Long> thatAccumulator = avgAggregateFunction.createAccumulator();
         thatAccumulator = avgAggregateFunction.add(2, thatAccumulator);
         thisAccumulator = avgAggregateFunction.merge(thisAccumulator, thatAccumulator);
-        assertEquals(3.0D, thisAccumulator.getLeft(), 0.0);
+        assertEquals(3.0D, thisAccumulator.getLeft(), 0.0D);
         assertEquals(2L, thisAccumulator.getRight().longValue());
     }
 
@@ -92,7 +92,7 @@ class AvgAggregateFunctionTest {
         MutablePair<Double, Long> thatAccumulator = avgAggregateFunction.createAccumulator();
         thatAccumulator = avgAggregateFunction.add(-2, thatAccumulator);
         thisAccumulator = avgAggregateFunction.merge(thisAccumulator, thatAccumulator);
-        assertEquals(-3.0D, thisAccumulator.getLeft(), 0.0);
+        assertEquals(-3.0D, thisAccumulator.getLeft(), 0.0D);
         assertEquals(2L, thisAccumulator.getRight().longValue());
     }
 

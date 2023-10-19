@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
-import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -17,7 +16,7 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testCreateAccumulator() {
-        AggregateFunction<String, List<String>, List<String>> function = new TestListAggregateFunction<>();
+        var function = new TestListAggregateFunction<String>();
         List<String> accumulator = function.createAccumulator();
         assertEquals(0, accumulator.size());
         assertTrue(accumulator instanceof ArrayList<String>);
@@ -25,7 +24,7 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testAdd() {
-        AggregateFunction<String, List<String>, List<String>> function = new TestListAggregateFunction<>();
+        var function = new TestListAggregateFunction<String>();
         List<String> accumulator = new ArrayList<>();
 
         accumulator = function.add("a", accumulator);
@@ -44,7 +43,7 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testGetResult() {
-        AggregateFunction<String, List<String>, List<String>> function = new TestListAggregateFunction<>();
+        var function = new TestListAggregateFunction<String>();
         List<String> accumulator = new ArrayList<>();
         accumulator = function.add("a", accumulator);
         accumulator = function.add("b", accumulator);
@@ -55,7 +54,7 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testMerge() {
-        TestListAggregateFunction<String> function = new TestListAggregateFunction<>();
+        var function = new TestListAggregateFunction<String>();
 
         List<String> accumulator1 = new ArrayList<>();
         accumulator1 = function.add("a", accumulator1);
@@ -86,5 +85,5 @@ class AbstractListAggregateFunctionTest {
 
 }
 
-class TestListAggregateFunction<T> extends AbstractListAggregateFunction<T> {
+class TestListAggregateFunction<IN> extends AbstractListAggregateFunction<IN> {
 }

@@ -18,7 +18,7 @@ import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapSt
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn;
-import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.core.window.WindowFactory;
 import lombok.SneakyThrows;
@@ -200,6 +200,11 @@ public class MetricUtil {
                 FieldProcessorUtil.getFilterFieldProcessor(fieldMap, deriveMetrics.getFilterExpressParam(), aviatorFunctionFactory);
         deriveMetricCalculate.setFilterFieldProcessor(filterFieldProcessor);
 
+        //维度字段处理器
+        DimensionSetProcessor dimensionSetProcessor =
+                FieldProcessorUtil.getDimensionSetProcessor(key, name, deriveMetrics.getDimensionList());
+        deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
+
         //设置聚合字段处理器
         AggregateFunctionParam aggregateFunctionParam = deriveMetrics.getAggregateFunctionParam();
         AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor =
@@ -216,11 +221,6 @@ public class MetricUtil {
         windowFactory.setFieldMap(fieldMap);
         windowFactory.setAviatorFunctionFactory(aviatorFunctionFactory);
         deriveMetricCalculate.setWindowFactory(windowFactory);
-
-        //维度字段处理器
-        DimensionSetProcessor dimensionSetProcessor =
-                FieldProcessorUtil.getDimensionSetProcessor(key, name, deriveMetrics.getDimensionList());
-        deriveMetricCalculate.setDimensionSetProcessor(dimensionSetProcessor);
 
         //精度数据
         deriveMetricCalculate.setRoundAccuracy(deriveMetrics.getRoundAccuracy());

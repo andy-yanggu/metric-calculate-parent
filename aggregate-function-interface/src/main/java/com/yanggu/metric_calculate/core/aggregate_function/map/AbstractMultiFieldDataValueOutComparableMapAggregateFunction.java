@@ -3,11 +3,12 @@ package com.yanggu.metric_calculate.core.aggregate_function.map;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.core.lang.tuple.Pair;
 
+import java.util.Comparator;
 import java.util.Map;
 import java.util.stream.Stream;
 
 /**
- * 只是定义了K的泛型为MultiFieldData
+ * 定义了K的泛型为MultiFieldData
  * <p>且定义了ValueOUT必须为可比较的</p>
  *
  * @param <V>        map的value类型
@@ -30,22 +31,17 @@ public abstract class AbstractMultiFieldDataValueOutComparableMapAggregateFuncti
                                                                     Map<MultiFieldData, ValueACC> accumulator,
                                                                     Boolean asc,
                                                                     Integer limit) {
+        Comparator<ValueOUT> comparator;
+        if (asc.equals(Boolean.TRUE)) {
+            comparator = Comparator.nullsFirst(Comparator.naturalOrder());
+        } else {
+            comparator = Comparator.nullsLast(Comparator.<ValueOUT>naturalOrder().reversed());
+        }
         return accumulator.entrySet().stream()
-                //映射成SimpleImmutableEntry
+                //映射成Pair<MultiFieldData, ValueOUT>
                 .map(tempEntry -> new Pair<>(tempEntry.getKey(), valueAggregateFunction.getResult(tempEntry.getValue())))
-                //过滤掉value为null的值
-                .filter(tempEntry -> tempEntry.getRight() != null)
                 //根据ValueOUT进行排序
-                .sorted((o1, o2) -> {
-                    ValueOUT value1 = o1.getRight();
-                    ValueOUT value2 = o2.getRight();
-                    int compareTo = value1.compareTo(value2);
-                    if (Boolean.TRUE.equals(asc)) {
-                        return compareTo;
-                    } else {
-                        return -compareTo;
-                    }
-                })
+                .sorted((o1, o2) -> comparator.compare(o1.getRight(), o2.getRight()))
                 //进行截取
                 .limit(limit);
     }

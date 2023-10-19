@@ -7,6 +7,7 @@ import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import org.dromara.hutool.core.lang.tuple.Pair;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -17,6 +18,7 @@ import java.io.Serializable;
  */
 public class PairSerializer<K, V> extends Serializer<Pair<K, V>> implements Serializable {
 
+    @Serial
     private static final long serialVersionUID = 1928262873772992960L;
 
     @Override

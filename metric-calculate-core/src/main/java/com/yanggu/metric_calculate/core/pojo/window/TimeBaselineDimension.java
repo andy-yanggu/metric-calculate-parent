@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo.metric;
+package com.yanggu.metric_calculate.core.pojo.window;
 
 import com.yanggu.metric_calculate.core.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core.util.DateUtils;

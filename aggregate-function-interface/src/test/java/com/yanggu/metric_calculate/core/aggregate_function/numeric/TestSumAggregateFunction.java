@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 
-public class TestSumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
+public class TestSumAggregateFunction<IN extends Number> implements AggregateFunction<IN, Double, Double> {
 
     @Override
     public Double createAccumulator() {
@@ -10,7 +10,7 @@ public class TestSumAggregateFunction<T extends Number> implements AggregateFunc
     }
 
     @Override
-    public Double add(T input, Double accumulator) {
+    public Double add(IN input, Double accumulator) {
         return input.doubleValue() + accumulator;
     }
 

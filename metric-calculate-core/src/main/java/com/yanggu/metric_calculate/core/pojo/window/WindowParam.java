@@ -1,9 +1,9 @@
-package com.yanggu.metric_calculate.core.pojo.metric;
+package com.yanggu.metric_calculate.core.pojo.window;
 
 import com.yanggu.metric_calculate.core.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.NodePattern;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
 import lombok.Data;
 
 import java.io.Serial;
@@ -27,7 +27,7 @@ public class WindowParam implements Serializable {
     /**
      * 时间字段
      */
-    private TimeColumn timeColumn;
+    private ModelTimeColumn timeColumn;
 
     /**
      * 时间周期

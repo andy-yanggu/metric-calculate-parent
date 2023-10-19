@@ -57,5 +57,5 @@ class AbstractFirstAggregateFunctionTest {
     
 }
 
-class TestFirstAggregateFunction<T> extends AbstractFirstAggregateFunction<T> {
+class TestFirstAggregateFunction<IN> extends AbstractFirstAggregateFunction<IN> {
 }

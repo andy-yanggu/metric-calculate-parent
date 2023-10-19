@@ -64,7 +64,7 @@ class AbstractMinAggregateFunctionTest {
     
 }
 
-class TestObjectMinAggregateFunction<T extends Comparable<T>> extends AbstractMinAggregateFunction<T, T> {
+class TestObjectMinAggregateFunction<IN extends Comparable<IN>> extends AbstractMinAggregateFunction<IN, IN> {
 
     @Override
     public void init() {
@@ -72,7 +72,7 @@ class TestObjectMinAggregateFunction<T extends Comparable<T>> extends AbstractMi
     }
 
     @Override
-    public T getResult(MutableObj<T> accumulator) {
+    public IN getResult(MutableObj<IN> accumulator) {
         return accumulator.get();
     }
 

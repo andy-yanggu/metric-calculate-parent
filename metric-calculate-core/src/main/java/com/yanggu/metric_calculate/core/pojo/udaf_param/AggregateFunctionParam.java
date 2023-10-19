@@ -1,8 +1,5 @@
-package com.yanggu.metric_calculate.core.pojo.metric;
+package com.yanggu.metric_calculate.core.pojo.udaf_param;
 
-import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import lombok.Data;
 
 import java.io.Serial;

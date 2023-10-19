@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.pojo.udaf_param;
+package com.yanggu.metric_calculate.core.pojo.window;
 
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;

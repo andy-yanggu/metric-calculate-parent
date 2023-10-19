@@ -34,10 +34,11 @@ public class AviatorExpressUtil {
      */
     public static Expression compileExpress(AviatorExpressParam aviatorExpressParam,
                                             AviatorFunctionFactory aviatorFunctionFactory) {
-        //默认使用全局单例的AviatorEvaluator
-        AviatorEvaluatorInstance aviatorEvaluatorInstance = AviatorEvaluator.getInstance();
-        //是否使用自定义Aviator函数
-        if (CollUtil.isNotEmpty(aviatorExpressParam.getAviatorFunctionInstanceList())) {
+        AviatorEvaluatorInstance aviatorEvaluatorInstance;
+        if (CollUtil.isEmpty(aviatorExpressParam.getAviatorFunctionInstanceList())) {
+            //默认使用全局单例的AviatorEvaluator
+            aviatorEvaluatorInstance = AviatorEvaluator.getInstance();
+        } else {
             //如果有自定义函数, 使用单独的AviatorEvaluator
             //例如多个同名的自定义函数, 但是参数不同, 是无法区分的, 所以使用单独的实例
             aviatorEvaluatorInstance = AviatorEvaluator.newInstance();

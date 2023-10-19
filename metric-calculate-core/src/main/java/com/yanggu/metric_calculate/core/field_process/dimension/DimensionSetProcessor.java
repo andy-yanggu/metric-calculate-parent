@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.field_process.dimension;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
-import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,18 +35,18 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
     /**
      * 维度字段
      */
-    private List<Dimension> dimensionList;
+    private List<ModelDimensionColumn> modelDimensionColumnList;
 
-    public DimensionSetProcessor(List<Dimension> dimensionList) {
-        this.dimensionList = dimensionList;
+    public DimensionSetProcessor(List<ModelDimensionColumn> modelDimensionColumnList) {
+        this.modelDimensionColumnList = modelDimensionColumnList;
     }
 
     @Override
     public void init() {
-        if (CollUtil.isNotEmpty(dimensionList)) {
+        if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
             //按照ColumnIndex进行升序排序
-            this.dimensionList = dimensionList.stream()
-                    .sorted(Comparator.comparingInt(Dimension::getColumnIndex))
+            this.modelDimensionColumnList = modelDimensionColumnList.stream()
+                    .sorted(Comparator.comparingInt(ModelDimensionColumn::getColumnIndex))
                     .collect(Collectors.toList());
         }
     }
@@ -54,14 +54,14 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
     @Override
     public DimensionSet process(JSONObject input) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
-        if (CollUtil.isNotEmpty(dimensionList)) {
-            for (Dimension dimension : dimensionList) {
-                Object result = input.get(dimension.getColumnName());
+        if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
+            for (ModelDimensionColumn modelDimensionColumn : modelDimensionColumnList) {
+                Object result = input.get(modelDimensionColumn.getColumnName());
                 if (result == null) {
                     throw new RuntimeException("没有对应的维度值, 字段名称: "
-                            + dimension.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));
+                            + modelDimensionColumn.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));
                 }
-                map.put(dimension.getDimensionName(), result);
+                map.put(modelDimensionColumn.getDimensionName(), result);
             }
         }
         return new DimensionSet(key, metricName, map);

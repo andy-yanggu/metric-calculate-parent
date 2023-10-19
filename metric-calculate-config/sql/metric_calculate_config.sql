@@ -374,10 +374,10 @@ CREATE TABLE `derive_window_param_relation`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 21 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '派生指标-窗口参数中间表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for dimension
+-- Table structure for modelDimensionColumn
 -- ----------------------------
-DROP TABLE IF EXISTS `dimension`;
-CREATE TABLE `dimension`  (
+DROP TABLE IF EXISTS `modelDimensionColumn`;
+CREATE TABLE `modelDimensionColumn`  (
   `id` int(0) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '维度名称',
   `display_name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '中文名称',

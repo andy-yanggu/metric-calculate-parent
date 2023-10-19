@@ -22,6 +22,12 @@ public class DeriveMetricCalculateResult<OUT> {
     private String name;
 
     /**
+     * 维度kv k是维度名称, value是维度值
+     * <p>维度和页面定义的维度顺序一致</p>
+     */
+    private LinkedHashMap<String, Object> dimensionMap;
+
+    /**
      * 开始时间
      * <p>yyyy-MM-dd HH:mm:ss格式, 包含开始时间</p>
      */
@@ -37,12 +43,6 @@ public class DeriveMetricCalculateResult<OUT> {
      * 窗口状态标识
      */
     private List<Object> statusList;
-
-    /**
-     * 维度kv k是维度名称, value是维度值
-     * <p>维度和页面定义的维度顺序一致</p>
-     */
-    private LinkedHashMap<String, Object> dimensionMap;
 
     /**
      * 派生指标计算结果指标值

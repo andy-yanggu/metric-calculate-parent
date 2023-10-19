@@ -3,8 +3,8 @@ package com.yanggu.metric_calculate.core.window;
 
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeWindowData;
+import com.yanggu.metric_calculate.core.pojo.window.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
 import com.yanggu.metric_calculate.core.util.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -63,14 +63,14 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
     public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         TimeWindowData timeWindowData = timeWindowDataList.get(0);
-        OUT query = query(timeWindowData.getWindowStart(), true, timeWindowData.getWindowEnd(), false);
+        OUT query = query(timeWindowData.windowStart(), true, timeWindowData.windowEnd(), false);
         if (query == null) {
             return null;
         }
         DeriveMetricCalculateResult<OUT> deriveMetricCalculateResult = new DeriveMetricCalculateResult<>();
         deriveMetricCalculateResult.setResult(query);
-        deriveMetricCalculateResult.setStartTime(DateUtils.formatDateTime(timeWindowData.getWindowStart()));
-        deriveMetricCalculateResult.setEndTime(DateUtils.formatDateTime(timeWindowData.getWindowEnd()));
+        deriveMetricCalculateResult.setStartTime(DateUtils.formatDateTime(timeWindowData.windowStart()));
+        deriveMetricCalculateResult.setEndTime(DateUtils.formatDateTime(timeWindowData.windowEnd()));
         return deriveMetricCalculateResult;
     }
 

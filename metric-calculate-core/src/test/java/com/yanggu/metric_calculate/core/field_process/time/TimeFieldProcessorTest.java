@@ -41,8 +41,8 @@ class TimeFieldProcessorTest {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timeFormat", "TimeColumnName");
         timeFieldProcessor.init();
 
-        assertEquals("timeFormat", timeFieldProcessor.getTimeFormat());
-        assertEquals("TimeColumnName", timeFieldProcessor.getTimeColumnName());
+        assertEquals("timeFormat", timeFieldProcessor.timeFormat());
+        assertEquals("TimeColumnName", timeFieldProcessor.timeColumnName());
     }
 
     /**

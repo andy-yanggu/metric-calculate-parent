@@ -16,9 +16,9 @@ import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import com.yanggu.metric_calculate.core.pojo.metric.AggregateFunctionParam;
-import com.yanggu.metric_calculate.core.pojo.metric.Dimension;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeColumn;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
@@ -56,11 +56,11 @@ public class FieldProcessorUtil {
     /**
      * 生成时间字段处理器
      *
-     * @param timeColumn 时间字段(字段字段名和时间格式)
+     * @param modelTimeColumn 时间字段(字段字段名和时间格式)
      * @return 时间字段处理器
      */
-    public static TimeFieldProcessor getTimeFieldProcessor(TimeColumn timeColumn) {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(timeColumn.getTimeFormat(), timeColumn.getColumnName());
+    public static TimeFieldProcessor getTimeFieldProcessor(ModelTimeColumn modelTimeColumn) {
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor(modelTimeColumn.getTimeFormat(), modelTimeColumn.getColumnName());
         timeFieldProcessor.init();
         return timeFieldProcessor;
     }
@@ -70,13 +70,13 @@ public class FieldProcessorUtil {
      *
      * @param key           指标唯一标识
      * @param metricName    指标名称
-     * @param dimensionList 维度列表
+     * @param modelDimensionColumnList 维度列表
      * @return 维度字段处理器
      */
     public static DimensionSetProcessor getDimensionSetProcessor(String key,
                                                                  String metricName,
-                                                                 List<Dimension> dimensionList) {
-        DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(dimensionList);
+                                                                 List<ModelDimensionColumn> modelDimensionColumnList) {
+        DimensionSetProcessor dimensionSetProcessor = new DimensionSetProcessor(modelDimensionColumnList);
         dimensionSetProcessor.setKey(key);
         dimensionSetProcessor.setMetricName(metricName);
         dimensionSetProcessor.init();

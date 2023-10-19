@@ -5,8 +5,8 @@ import com.yanggu.metric_calculate.core.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.pojo.metric.TimeBaselineDimension;
-import com.yanggu.metric_calculate.core.pojo.metric.WindowParam;
+import com.yanggu.metric_calculate.core.pojo.window.TimeBaselineDimension;
+import com.yanggu.metric_calculate.core.pojo.window.WindowParam;
 import lombok.Data;
 
 import java.util.Map;

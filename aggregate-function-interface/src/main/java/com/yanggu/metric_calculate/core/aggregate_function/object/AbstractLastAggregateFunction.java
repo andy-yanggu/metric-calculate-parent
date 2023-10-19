@@ -6,17 +6,17 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
 /**
  * 最后写入的非NULL对象
  *
- * @param <T>
+ * @param <IN>
  */
-public abstract class AbstractLastAggregateFunction<T> implements AggregateFunction<T, MutableObj<T>, T> {
+public abstract class AbstractLastAggregateFunction<IN> implements AggregateFunction<IN, MutableObj<IN>, IN> {
 
     @Override
-    public MutableObj<T> createAccumulator() {
+    public MutableObj<IN> createAccumulator() {
         return new MutableObj<>();
     }
 
     @Override
-    public MutableObj<T> add(T input, MutableObj<T> accumulator) {
+    public MutableObj<IN> add(IN input, MutableObj<IN> accumulator) {
         if (input != null) {
             accumulator.set(input);
         }
@@ -24,12 +24,12 @@ public abstract class AbstractLastAggregateFunction<T> implements AggregateFunct
     }
 
     @Override
-    public T getResult(MutableObj<T> accumulator) {
+    public IN getResult(MutableObj<IN> accumulator) {
         return accumulator.get();
     }
 
     @Override
-    public MutableObj<T> merge(MutableObj<T> thisAccumulator, MutableObj<T> thatAccumulator) {
+    public MutableObj<IN> merge(MutableObj<IN> thisAccumulator, MutableObj<IN> thatAccumulator) {
         if (thatAccumulator.get() != null) {
             return thatAccumulator;
         } else {
