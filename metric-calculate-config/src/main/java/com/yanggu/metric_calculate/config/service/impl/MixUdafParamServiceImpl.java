@@ -43,7 +43,7 @@ public class MixUdafParamServiceImpl extends ServiceImpl<MixUdafParamMapper, Mix
         }
 
         AviatorExpressParam metricExpressParam = mixUdafParam.getMetricExpressParam();
-        metricExpressParam.setMixUdafParamItemList(metricExpressParam.getMixUdafParamItemList());
+        metricExpressParam.setMixUdafParamItemList(mixUdafParamItemList);
         aviatorExpressParamService.saveDataByMixUdafParamItem(metricExpressParam);
         MixUdafParamMetricExpressRelation relation = new MixUdafParamMetricExpressRelation();
         relation.setMixUdafParamId(mixUdafParam.getId());
