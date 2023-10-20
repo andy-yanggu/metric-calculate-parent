@@ -173,9 +173,8 @@ class FilterFieldProcessorTest {
     @Test
     void process3() throws Exception {
         String express = "amount > 500";
-        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-            put("amount", Long.class);
-        }};
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Long.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(express);
@@ -199,9 +198,8 @@ class FilterFieldProcessorTest {
     @Test
     void process4() throws Exception {
         String express = "result";
-        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-            put("result", Boolean.class);
-        }};
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("result", Boolean.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(express);
@@ -225,10 +223,9 @@ class FilterFieldProcessorTest {
     @Test
     void process5() throws Exception {
         String express = "amount > 100.00 && age >= 20";
-        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-            put("amount", BigDecimal.class);
-            put("age", Long.class);
-        }};
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", BigDecimal.class);
+        fieldMap.put("age", Long.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(express);
@@ -253,9 +250,8 @@ class FilterFieldProcessorTest {
     @Test
     void process6() throws Exception {
         String express = "amount > 100.00";
-        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-            put("amount", BigDecimal.class);
-        }};
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", BigDecimal.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(express);
@@ -278,9 +274,8 @@ class FilterFieldProcessorTest {
      */
     @Test
     void process7() throws Exception {
-        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-            put("amount", BigDecimal.class);
-        }};
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", BigDecimal.class);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, null);
 
         Boolean process = filterFieldProcessor.process(null);

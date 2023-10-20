@@ -25,11 +25,10 @@ class MapFieldProcessorTest {
 
     @BeforeEach
     void init() throws Exception {
-        Map<String, Class<?>> fieldMap = new HashMap<>();
+        this.fieldMap = new HashMap<>();
         fieldMap.put("account_no_out", String.class);
         fieldMap.put("account_no_in", String.class);
         fieldMap.put("amount", Integer.class);
-        this.fieldMap = fieldMap;
     }
 
     /**
@@ -41,18 +40,15 @@ class MapFieldProcessorTest {
 
     @Test
     void testProcess() throws Exception {
-
         //out给in转账, 记录out给每个in转账的总金额
         String jsonString = FileUtil.readUtf8String("test_map_unit_udaf_param.json");
         MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
-
         MapFieldProcessor<Pair<MultiFieldData, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("account_no_out", "a");
         input1.set("account_no_in", "b");
         input1.set("amount", 1);
-
         Pair<MultiFieldData, Integer> process = mapFieldProcessor.process(input1);
         assertEquals(new MultiFieldData(List.of("b")), process.getLeft());
         assertEquals(Integer.valueOf(1), process.getRight());

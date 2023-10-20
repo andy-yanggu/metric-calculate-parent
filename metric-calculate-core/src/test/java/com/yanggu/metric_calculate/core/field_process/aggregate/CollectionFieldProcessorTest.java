@@ -1,10 +1,9 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.UdafParamTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
-import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,11 +25,10 @@ class CollectionFieldProcessorTest {
     private Map<String, Class<?>> fieldMap;
 
     @BeforeEach
-    void init() throws Exception {
-        Map<String, Class<?>> fieldMap = new HashMap<>();
+    void init() {
+        this.fieldMap = new HashMap<>();
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
-        this.fieldMap = fieldMap;
     }
 
     @Test
@@ -42,12 +40,7 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process1() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("name");
-        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
-        baseUdafParam.setAggregateType("LISTFIELD");
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("LISTFIELD", "name");
         FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
@@ -66,16 +59,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process2() throws Exception {
-
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("LISTOBJECT");
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("LISTOBJECT", null);
         FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         JSONObject process = baseFieldProcessor.process(input);
         assertEquals(input, process);
 
@@ -91,19 +81,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process3() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("SORTEDLIMITLISTOBJECT");
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SORTEDLIMITLISTOBJECT", null, "amount");
         FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
         assertEquals(input, process.getRight());
@@ -114,23 +98,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process4() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("SORTEDLIMITLISTFIELD");
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
-
-        AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
-        aviatorExpressParam1.setExpress("name");
-        baseUdafParam.setMetricExpressParam(aviatorExpressParam1);
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SORTEDLIMITLISTFIELD", "name", "amount");
         FieldProcessor<JSONObject, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
         assertEquals("张三", process.getRight());
@@ -141,19 +115,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process5() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("SORTEDLIMITLIST");
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SORTEDLIMITLIST", null, "amount");
         FieldProcessor<JSONObject, Pair<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         Pair<MultiFieldData, Void> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
     }
@@ -163,19 +131,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process6() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
-        baseUdafParam.setAggregateType("DISTINCTLISTOBJECT");
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTLISTOBJECT", null, "amount");
         FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
         assertEquals(100, process.getLeft().getFieldList().get(0));
         assertEquals(input, process.getRight());
@@ -186,22 +148,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process7() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
-        AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
-        aviatorExpressParam2.setExpress("name");
-        baseUdafParam.setMetricExpressParam(aviatorExpressParam2);
-        baseUdafParam.setAggregateType("DISTINCTLISTFIELD");
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTLISTFIELD", "name", "amount");
         FieldProcessor<JSONObject, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
         assertEquals(100, process.getLeft().getFieldList().get(0));
         assertEquals("张三", process.getRight());
@@ -212,19 +165,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process8() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(ListUtil.of(aviatorExpressParam));
-        baseUdafParam.setAggregateType("DISTINCTLIST");
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTLIST", null, "amount");
         FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         MultiFieldData process = baseFieldProcessor.process(input);
         assertEquals(100, process.getFieldList().get(0));
     }
@@ -234,19 +181,13 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process9() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParamList(List.of(aviatorExpressParam));
-        baseUdafParam.setAggregateType("DISTINCTCOUNT");
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTCOUNT", null, "amount");
         FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
         JSONObject input = new JSONObject();
         input.set("amount", 100);
         input.set("name", "张三");
-
         MultiFieldData process = baseFieldProcessor.process(input);
         assertEquals(100, process.getFieldList().get(0));
     }
@@ -256,12 +197,7 @@ class CollectionFieldProcessorTest {
      */
     @Test
     void process10() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
-        baseUdafParam.setAggregateType("SLIDINGCOUNTWINDOW");
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SLIDINGCOUNTWINDOW", "amount");
         FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据

@@ -5,7 +5,6 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam
 import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,15 +32,14 @@ class MultiFieldDataFieldProcessorTest {
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
-        List<AviatorExpressParam> metricList = Collections.singletonList(aviatorExpressParam);
-        MultiFieldDataFieldProcessor multiFieldDataFieldProcessor = getDistinctFieldFieldProcessor(fieldMap, metricList);
+        MultiFieldDataFieldProcessor multiFieldDataFieldProcessor = getDistinctFieldFieldProcessor(fieldMap, List.of(aviatorExpressParam));
 
         JSONObject input = new JSONObject();
         input.set("name", "张三");
         input.set("age", 20);
         MultiFieldData process = multiFieldDataFieldProcessor.process(input);
         assertNotNull(process);
-        assertEquals(Collections.singletonList("张三"), process.getFieldList());
+        assertEquals(List.of("张三"), process.getFieldList());
     }
 
 }

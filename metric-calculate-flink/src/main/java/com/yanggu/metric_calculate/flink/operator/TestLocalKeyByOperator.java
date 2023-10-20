@@ -25,10 +25,10 @@ public class TestLocalKeyByOperator {
         env.enableCheckpointing(5000L);
 
         KeySelector<String, String> keySelector = temp -> temp;
-        SumAggregateFunction sumAggregateFunction = new SumAggregateFunction();
+        AggregateFunction<String, Long, Long> aggregateFunction = new CountAggregateFunction<>();
         TypeInformation<Tuple2<String, Long>> elementTypeInfo = Types.TUPLE(Types.STRING, Types.LONG);
         LocalKeyByAccumulateBatchOperator<String, String, Long, Long> operator =
-                new LocalKeyByAccumulateBatchOperator<>(elementTypeInfo, keySelector, sumAggregateFunction);
+                new LocalKeyByAccumulateBatchOperator<>(elementTypeInfo, keySelector, aggregateFunction);
         env.socketTextStream("localhost", 6666)
                 .flatMap((String value, Collector<String> out) -> {
                     if ("test".equals(value)) {
@@ -41,8 +41,8 @@ public class TestLocalKeyByOperator {
                 }).returns(Types.STRING)
                 .transform("localKeyByOperator", elementTypeInfo, operator)
                 .keyBy(tuple2 -> tuple2.f0)
-                .reduce((tuple1, tuple2) -> Tuple2.of(tuple1.f0, sumAggregateFunction.merge(tuple1.f1, tuple2.f1)))
-                .map(tuple -> tuple.f0 + " -> " + sumAggregateFunction.getResult(tuple.f1))
+                .reduce((tuple1, tuple2) -> Tuple2.of(tuple1.f0, aggregateFunction.merge(tuple1.f1, tuple2.f1)))
+                .map(tuple -> tuple.f0 + " -> " + aggregateFunction.getResult(tuple.f1))
                 .print("test>>>>>");
 
         env.execute();
@@ -50,7 +50,7 @@ public class TestLocalKeyByOperator {
 
 }
 
-class SumAggregateFunction implements AggregateFunction<String, Long, Long> {
+class CountAggregateFunction<IN> implements AggregateFunction<IN, Long, Long> {
 
     @Serial
     private static final long serialVersionUID = -7955397394621268793L;
@@ -61,7 +61,7 @@ class SumAggregateFunction implements AggregateFunction<String, Long, Long> {
     }
 
     @Override
-    public Long add(String value, Long accumulator) {
+    public Long add(IN value, Long accumulator) {
         return ++accumulator;
     }
 

@@ -1,15 +1,14 @@
 package com.yanggu.metric_calculate.core.field_process.aggregate;
 
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.UdafParamTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
-import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.json.JSONObject;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
@@ -21,18 +20,18 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class NumberFieldProcessorTest {
 
+    private Map<String, Class<?>> fieldMap;
+
+    @BeforeEach
+    void init() {
+        this.fieldMap = new HashMap<>();
+        fieldMap.put("amount", Double.class);
+        fieldMap.put("amount1", Long.class);
+    }
+
     @Test
     void testProcess1() throws Exception {
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Double.class);
-
-        String aggregateType = "SUM";
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress("amount");
-        baseUdafParam.setMetricExpressParam(aviatorExpressParam);
-        baseUdafParam.setAggregateType(aggregateType);
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SUM", "amount");
         FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject jsonObject = new JSONObject();
@@ -48,25 +47,12 @@ class NumberFieldProcessorTest {
      */
     @Test
     void testProcess_CovUnit() throws Exception {
-        BaseUdafParam baseUdafParam = new BaseUdafParam();
-        baseUdafParam.setAggregateType("COV");
-        AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
-        aviatorExpressParam1.setExpress("amount");
-
-        AviatorExpressParam aviatorExpressParam2 = new AviatorExpressParam();
-        aviatorExpressParam2.setExpress("amount1");
-        baseUdafParam.setMetricExpressParamList(Arrays.asList(aviatorExpressParam1, aviatorExpressParam2));
-
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", Long.class);
-        fieldMap.put("amount1", Long.class);
-
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("COV", null,  "amount", "amount1");
         FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject input = new JSONObject();
         input.set("amount", 1L);
         input.set("amount1", 2L);
-
         MultiFieldData process = baseFieldProcessor.process(input);
         assertEquals(2, process.getFieldList().size());
         assertEquals(1L, process.getFieldList().get(0));

@@ -22,10 +22,9 @@ class MixFieldProcessorTest {
 
     @BeforeEach
     void init() throws Exception {
-        Map<String, Class<?>> fieldMap = new HashMap<>();
+        this.fieldMap = new HashMap<>();
         fieldMap.put("amount", Double.class);
         fieldMap.put("city", String.class);
-        this.fieldMap = fieldMap;
     }
 
     @Test
@@ -77,18 +76,14 @@ class MixFieldProcessorTest {
 
     @Test
     void process() throws Exception {
-
         String jsonString = FileUtil.readUtf8String("test_mix_unit_udaf_param.json");
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
-
         MixFieldProcessor<Map<String, Long>> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUdafParam);
 
         JSONObject input1 = new JSONObject();
         input1.set("amount", 100L);
         input1.set("city", "上海");
-
         Map<String, Long> process = mixFieldProcessor.process(input1);
-
         assertEquals(2, process.size());
         assertEquals(100L, process.get("上海_sum").longValue());
         assertEquals(100L, process.get("全国_sum").longValue());
