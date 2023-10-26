@@ -47,8 +47,8 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(from, to)));
+    public OUT query(Long timeWindowStart, Long timeWindowEnd) {
+        return aggregateFieldProcessor.getOutFromAcc(map.get(Pair.of(timeWindowStart, timeWindowEnd)));
     }
 
     @Override

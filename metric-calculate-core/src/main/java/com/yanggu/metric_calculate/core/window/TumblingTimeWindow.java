@@ -34,12 +34,9 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public OUT query(Long from, boolean fromInclusive, Long to, boolean toInclusive) {
-        Collection<ACC> values = treeMap.subMap(from, fromInclusive, to, toInclusive).values();
-        if (CollUtil.isEmpty(values)) {
-            return null;
-        }
-        return aggregateFieldProcessor.getMergeResult(new ArrayList<>(values));
+    public OUT query(Long timeWindowStart, Long timeWindowEnd) {
+        ACC acc = treeMap.get(timeWindowStart);
+        return aggregateFieldProcessor.getOutFromAcc(acc);
     }
 
     @Override
@@ -55,8 +52,8 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     //@Override
-    public TumblingTimeWindow<IN, ACC, OUT> merge(TumblingTimeWindow<IN, ACC, OUT> thatTable) {
-        TreeMap<Long, ACC> thatTreeMap = thatTable.getTreeMap();
+    public TumblingTimeWindow<IN, ACC, OUT> merge(TumblingTimeWindow<IN, ACC, OUT> tumblingTimeWindow) {
+        TreeMap<Long, ACC> thatTreeMap = tumblingTimeWindow.getTreeMap();
         thatTreeMap.forEach((tempLong, thatAcc) -> {
             ACC thisAcc = treeMap.get(tempLong);
             if (thisAcc == null) {
@@ -67,7 +64,7 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
         });
 
         TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeWindow<>();
-        tumblingTimeTable.setTimestamp(Math.max(super.timestamp, thatTable.getTimestamp()));
+        tumblingTimeTable.setTimestamp(Math.max(super.timestamp, tumblingTimeWindow.getTimestamp()));
         tumblingTimeTable.setTreeMap(new TreeMap<>(treeMap));
         return tumblingTimeTable;
     }
