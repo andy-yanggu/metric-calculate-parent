@@ -7,6 +7,7 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -99,6 +100,24 @@ public class FunctionFactory {
                 }
             }
         }
+    }
+
+    public static URLClassLoader buildURLClassLoader(List<String> jarPathList) throws Exception {
+        //加载jar包
+        URL[] urls = new URL[jarPathList.size()];
+        List<JarEntry> jarEntries = new ArrayList<>();
+        for (int i = 0; i < jarPathList.size(); i++) {
+            String jarPath = jarPathList.get(i);
+            File file = new File(jarPath);
+            urls[i] = file.toURI().toURL();
+
+            JarFile jarFile = new JarFile(jarPath);
+            Enumeration<JarEntry> entries = jarFile.entries();
+            while (entries.hasMoreElements()) {
+                jarEntries.add(entries.nextElement());
+            }
+        }
+        return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
     }
 
 }

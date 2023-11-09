@@ -72,10 +72,10 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     //@Override
-    public StatusWindow<IN, ACC, OUT> merge(StatusWindow<IN, ACC, OUT> thatTable) {
+    public StatusWindow<IN, ACC, OUT> merge(StatusWindow<IN, ACC, OUT> thatWindow) {
 
         StatusWindow<IN, ACC, OUT> statusWindowTable = new StatusWindow<>();
-        //inList.addAll(thatTable.getInList());
+        //inList.addAll(thatWindow.getInList());
         //statusWindowTable.setInList(inList);
         return statusWindowTable;
     }

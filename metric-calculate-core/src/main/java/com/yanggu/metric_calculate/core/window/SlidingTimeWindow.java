@@ -64,20 +64,21 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     }
 
     //@Override
-    public SlidingTimeWindow<IN, ACC, OUT> merge(SlidingTimeWindow<IN, ACC, OUT> thatTable) {
-        Map<Pair<Long, Long>, ACC> thatMap = thatTable.getMap();
+    public SlidingTimeWindow<IN, ACC, OUT> merge(SlidingTimeWindow<IN, ACC, OUT> thatWindow) {
+        Map<Pair<Long, Long>, ACC> thisMap = new HashMap<>(map);
+        Map<Pair<Long, Long>, ACC> thatMap = thatWindow.getMap();
         thatMap.forEach((tempPair, thatAcc) -> {
-            ACC thisAcc = map.get(tempPair);
+            ACC thisAcc = thisMap.get(tempPair);
             if (thisAcc == null) {
-                map.put(tempPair, thatAcc);
+                thisMap.put(tempPair, thatAcc);
             } else {
-                map.put(tempPair, aggregateFieldProcessor.mergeAccList(ListUtil.of(thisAcc, thatAcc)));
+                thisMap.put(tempPair, aggregateFieldProcessor.mergeAccList(List.of(thisAcc, thatAcc)));
             }
         });
 
         SlidingTimeWindow<IN, ACC, OUT> slidingTimeTable = new SlidingTimeWindow<>();
-        slidingTimeTable.setTimestamp(Math.max(super.timestamp, thatTable.getTimestamp()));
-        slidingTimeTable.setMap(new HashMap<>(map));
+        slidingTimeTable.setTimestamp(Math.max(super.timestamp, thatWindow.getTimestamp()));
+        slidingTimeTable.setMap(thisMap);
         return slidingTimeTable;
     }
 

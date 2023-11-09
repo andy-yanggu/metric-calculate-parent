@@ -97,7 +97,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     //@Override
-    public PatternWindow<IN, ACC, OUT> merge(PatternWindow<IN, ACC, OUT> thatTable) {
+    public PatternWindow<IN, ACC, OUT> merge(PatternWindow<IN, ACC, OUT> thatWindow) {
         return null;
     }
 

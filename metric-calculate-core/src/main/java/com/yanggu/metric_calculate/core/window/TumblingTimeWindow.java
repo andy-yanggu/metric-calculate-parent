@@ -54,18 +54,20 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
     //@Override
     public TumblingTimeWindow<IN, ACC, OUT> merge(TumblingTimeWindow<IN, ACC, OUT> tumblingTimeWindow) {
         TreeMap<Long, ACC> thatTreeMap = tumblingTimeWindow.getTreeMap();
+        TreeMap<Long, ACC> thisTreeMap = new TreeMap<>(treeMap);
         thatTreeMap.forEach((tempLong, thatAcc) -> {
-            ACC thisAcc = treeMap.get(tempLong);
+            ACC thisAcc = thisTreeMap.get(tempLong);
             if (thisAcc == null) {
-                treeMap.put(tempLong, thatAcc);
+                thisTreeMap.put(tempLong, thatAcc);
             } else {
-                treeMap.put(tempLong, aggregateFieldProcessor.mergeAccList(ListUtil.of(thatAcc, thisAcc)));
+                thisTreeMap.put(tempLong, aggregateFieldProcessor.mergeAccList(List.of(thatAcc, thisAcc)));
             }
         });
 
         TumblingTimeWindow<IN, ACC, OUT> tumblingTimeTable = new TumblingTimeWindow<>();
         tumblingTimeTable.setTimestamp(Math.max(super.timestamp, tumblingTimeWindow.getTimestamp()));
-        tumblingTimeTable.setTreeMap(new TreeMap<>(treeMap));
+
+        tumblingTimeTable.setTreeMap(thisTreeMap);
         return tumblingTimeTable;
     }
 

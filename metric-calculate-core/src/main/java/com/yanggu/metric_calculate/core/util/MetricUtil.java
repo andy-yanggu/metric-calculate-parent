@@ -14,6 +14,7 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
+import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
@@ -28,6 +29,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -148,6 +150,8 @@ public class MetricUtil {
 
         //初始化聚合函数工厂类
         List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
+        URLClassLoader urlClassLoader = FunctionFactory.buildURLClassLoader(metricCalculate.getUdafJarPathList());
+
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(udafJarPathList);
         aggregateFunctionFactory.init();
 

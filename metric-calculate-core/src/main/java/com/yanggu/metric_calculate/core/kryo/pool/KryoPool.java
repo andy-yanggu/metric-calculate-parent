@@ -33,14 +33,20 @@ import java.util.TreeMap;
  */
 public class KryoPool extends Pool<Kryo> {
 
-    public KryoPool(int maximumCapacity) {
+    private ClassLoader classLoader;
+
+    public KryoPool(int maximumCapacity, ClassLoader classLoader) {
         super(true, true, maximumCapacity);
+        this.classLoader = classLoader;
     }
 
     @Override
     protected Kryo create() {
         Kryo kryo = new Kryo();
 
+        if (classLoader != null) {
+            kryo.setClassLoader(classLoader);
+        }
         //检测循环依赖，默认值为true,避免版本变化显式设置
         kryo.setReferences(true);
         //默认值为true，避免版本变化显式设置

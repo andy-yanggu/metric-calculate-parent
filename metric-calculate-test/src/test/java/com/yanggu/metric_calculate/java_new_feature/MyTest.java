@@ -22,8 +22,7 @@ class MyTest extends TestClass<String> implements TestInterface1<Integer>, TestI
         return null;
     }
 
-    void bb(List<Long> list) {
-
+    public void bb(List<Long> list) {
     }
 
     public static void main(String[] args) throws Exception {
@@ -63,13 +62,10 @@ class MyTest extends TestClass<String> implements TestInterface1<Integer>, TestI
 }
 
 class TestClass<T> {
-
 }
 
 interface TestInterface1<T> {
-
 }
 
 interface TestInterface2<T> {
-
 }

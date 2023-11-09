@@ -9,6 +9,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,8 @@ public class AggregateFunctionFactory {
      * udaf的jar包路径
      */
     private List<String> udafJarPathList;
+
+    //private URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader());
 
     static {
         //扫描系统自带的聚合函数

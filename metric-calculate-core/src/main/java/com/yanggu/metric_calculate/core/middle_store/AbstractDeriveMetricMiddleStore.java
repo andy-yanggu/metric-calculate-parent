@@ -6,8 +6,10 @@ import com.yanggu.metric_calculate.core.kryo.KryoUtil;
 
 public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMiddleStore {
 
+    private KryoUtil kryoUtil;
+
     protected <T> T deserialize(byte[] bytes) {
-        return KryoUtil.deserialize(bytes);
+        return kryoUtil.deserialize(bytes);
     }
 
     /**
@@ -26,7 +28,7 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
         if (updateMetricCube.isEmpty()) {
             throw new RuntimeException("传入的table为空");
         }
-        return KryoUtil.serialize(updateMetricCube);
+        return kryoUtil.serialize(updateMetricCube);
     }
 
 }

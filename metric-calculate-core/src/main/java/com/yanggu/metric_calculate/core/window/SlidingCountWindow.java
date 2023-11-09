@@ -45,7 +45,7 @@ public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OU
     }
 
     //@Override
-    public SlidingCountWindow<IN, ACC, OUT> merge(SlidingCountWindow<IN, ACC, OUT> thatTable) {
+    public SlidingCountWindow<IN, ACC, OUT> merge(SlidingCountWindow<IN, ACC, OUT> thatWindow) {
         return null;
     }
 

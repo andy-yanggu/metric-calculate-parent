@@ -15,19 +15,16 @@ import org.dromara.hutool.core.reflect.FieldUtil;
  */
 public class KryoUtil {
 
-    private KryoUtil() {
-    }
+    private final KryoPool kryoPool;
 
-    private static KryoPool kryoPool = new KryoPool(100);
+    private final InputPool inputPool;
 
-    private static InputPool inputPool = new InputPool(100);
+    private final OutputPool outputPool;
 
-    private static OutputPool outputPool = new OutputPool( 100);
-
-    public static void init(KryoPool kryoPool, InputPool inputPool, OutputPool outputPool) {
-        KryoUtil.kryoPool = kryoPool;
-        KryoUtil.inputPool = inputPool;
-        KryoUtil.outputPool = outputPool;
+    public KryoUtil(KryoPool kryoPool, InputPool inputPool, OutputPool outputPool) {
+        this.kryoPool = kryoPool;
+        this.inputPool = inputPool;
+        this.outputPool = outputPool;
     }
 
     /**
@@ -36,7 +33,7 @@ public class KryoUtil {
      * @param object
      * @return
      */
-    public static byte[] serialize(Object object) {
+    public byte[] serialize(Object object) {
         if (object == null) {
             throw new RuntimeException("传入的对象为空");
         }
@@ -62,7 +59,7 @@ public class KryoUtil {
      * @param <T>
      * @return
      */
-    public static <T> T deserialize(byte[] bytes) {
+    public <T> T deserialize(byte[] bytes) {
         if (ArrayUtil.isEmpty(bytes)) {
             return null;
         }
