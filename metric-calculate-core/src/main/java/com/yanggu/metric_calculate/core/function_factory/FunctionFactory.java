@@ -103,6 +103,9 @@ public class FunctionFactory {
     }
 
     public static URLClassLoader buildURLClassLoader(List<String> jarPathList) throws Exception {
+        if (CollUtil.isEmpty(jarPathList)) {
+            return null;
+        }
         //加载jar包
         URL[] urls = new URL[jarPathList.size()];
         List<JarEntry> jarEntries = new ArrayList<>();

@@ -7,14 +7,13 @@ import com.yanggu.metric_calculate.web.pojo.dto.DeriveData;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.PostConstruct;
 import org.dromara.hutool.core.bean.BeanUtil;
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.IoUtil;
-import org.dromara.hutool.core.io.resource.ResourceUtil;
+import org.dromara.hutool.core.io.resource.MultiResource;
+import org.dromara.hutool.core.io.resource.Resource;
+import org.dromara.hutool.core.io.resource.ResourceFinder;
 import org.dromara.hutool.json.JSONUtil;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,20 +21,26 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static io.swagger.v3.oas.annotations.enums.ParameterIn.PATH;
-import static org.springframework.core.io.support.ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
 
 @RestController
 @Tag(name = "模拟指标配置数据")
 @RequestMapping("/mock-model")
 public class MockMetricConfigDataController {
 
-    private static final String SUFFIX = ".json";
+    private List<Model> modelList;
 
-    private static final String MOCK_DIRECTORY_NAME = "mock_metric_config";
+    @PostConstruct
+    public void init() {
+        MultiResource resources = ResourceFinder.of().find("mock_metric_config" + File.separator + "*.json");
+        List<Model> list = new ArrayList<>();
+        for (Resource resource : resources) {
+            list.add(JSONUtil.toBean(IoUtil.readUtf8(resource.getStream()), Model.class));
+        }
+        this.modelList = list;
+    }
 
     /**
      * 返回mock_metric_config目录下的json配置文件
@@ -47,45 +52,30 @@ public class MockMetricConfigDataController {
     @GetMapping("/{tableId}")
     @Parameter(name = "tableId", description = "明细宽表id", required = true, in = PATH)
     public Model getTableAndMetricByTableId(@PathVariable("tableId") Long tableId) {
-        String jsonString = ResourceUtil.readUtf8Str(MOCK_DIRECTORY_NAME + File.separator + tableId + SUFFIX);
-        return JSONUtil.toBean(jsonString, Model.class);
+        return modelList.stream()
+                .filter(temp -> temp.getId().equals(tableId))
+                .findFirst()
+                .orElseThrow();
     }
 
     @Operation(summary = "获取所有宽表id")
     @GetMapping("/all-id")
-    public List<Long> getAllTableId() throws Exception {
-        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resourcePatternResolver.getResources(CLASSPATH_ALL_URL_PREFIX + MOCK_DIRECTORY_NAME + "/*");
-        List<Long> list = new ArrayList<>();
-        for (Resource resource : resources) {
-            String path = resource.getURL().getPath();
-            path = path.substring(path.lastIndexOf(MOCK_DIRECTORY_NAME));
-            String fileName = path.substring(path.lastIndexOf("/") + 1);
-            list.add(Long.parseLong(fileName.split("\\.")[0]));
-        }
-        return list;
+    public List<Long> getAllTableId() {
+        return modelList.stream()
+                .map(Model::getId)
+                .toList();
     }
 
     @Operation(summary = "所有宽表数据")
     @GetMapping("/all-data")
-    public List<Model> allTableData() throws Exception {
-        ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
-        Resource[] resources = resourcePatternResolver.getResources(CLASSPATH_ALL_URL_PREFIX +MOCK_DIRECTORY_NAME + "/*");
-        List<Model> list = new ArrayList<>();
-        for (Resource resource : resources) {
-            list.add(JSONUtil.toBean(IoUtil.readUtf8(resource.getInputStream()), Model.class));
-        }
-        return list;
+    public List<Model> allTableData() {
+        return modelList;
     }
 
     @Operation(summary = "所有派生指标数据")
     @GetMapping("/all-derive-data")
-    public List<DeriveData> allDeriveData() throws Exception {
-        List<Model> models = allTableData();
-        if (CollUtil.isEmpty(models)) {
-            return Collections.emptyList();
-        }
-        return models.stream()
+    public List<DeriveData> allDeriveData() {
+        return modelList.stream()
                 .flatMap(tempTable -> {
                     MetricCalculate metricCalculate = BeanUtil.copyProperties(tempTable, MetricCalculate.class);
                     MetricUtil.setFieldMap(metricCalculate);

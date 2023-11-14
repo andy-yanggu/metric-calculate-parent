@@ -150,7 +150,9 @@ public class MetricUtil {
 
         //初始化聚合函数工厂类
         List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
-        URLClassLoader urlClassLoader = FunctionFactory.buildURLClassLoader(metricCalculate.getUdafJarPathList());
+        if (CollUtil.isNotEmpty(udafJarPathList)) {
+            URLClassLoader urlClassLoader = FunctionFactory.buildURLClassLoader(metricCalculate.getUdafJarPathList());
+        }
 
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(udafJarPathList);
         aggregateFunctionFactory.init();
