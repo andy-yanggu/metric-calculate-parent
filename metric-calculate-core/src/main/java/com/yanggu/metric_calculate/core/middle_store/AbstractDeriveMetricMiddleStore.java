@@ -3,7 +3,9 @@ package com.yanggu.metric_calculate.core.middle_store;
 
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.kryo.KryoUtil;
+import lombok.Data;
 
+@Data
 public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMiddleStore {
 
     private KryoUtil kryoUtil;

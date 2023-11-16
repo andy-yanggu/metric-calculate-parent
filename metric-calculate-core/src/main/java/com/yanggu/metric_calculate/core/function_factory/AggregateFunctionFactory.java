@@ -5,11 +5,15 @@ import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import org.dromara.hutool.core.classloader.JarClassLoader;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.reflect.ClassUtil;
+import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
-import java.net.URLClassLoader;
+import java.io.File;
+import java.lang.reflect.Method;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,14 +44,14 @@ public class AggregateFunctionFactory {
      */
     private static final Map<String, Class<? extends AggregateFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
 
+    public static final JarClassLoader ACC_CLASS_LOADER = new JarClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
+
     private final Map<String, Class<? extends AggregateFunction>> functionMap = new HashMap<>();
 
     /**
      * udaf的jar包路径
      */
     private List<String> udafJarPathList;
-
-    //private URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader());
 
     static {
         //扫描系统自带的聚合函数
@@ -75,6 +79,8 @@ public class AggregateFunctionFactory {
         if (CollUtil.isEmpty(udafJarPathList)) {
             return;
         }
+
+        udafJarPathList.forEach(tempPath -> ACC_CLASS_LOADER.addURL(new File(tempPath)));
 
         //支持添加自定义的聚合函数
         FunctionFactory.loadClassFromJar(udafJarPathList, CLASS_FILTER, loadClass -> addClassToMap(loadClass, functionMap));
@@ -118,11 +124,18 @@ public class AggregateFunctionFactory {
         return clazz;
     }
 
+    @SneakyThrows
     private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AggregateFunction>> functionMap) {
         if (!CLASS_FILTER.test(tempClazz)) {
             return;
         }
         String value = tempClazz.getAnnotation(AggregateFunctionAnnotation.class).name();
+        //使用JarClassLoader统一加载ACC，便于Kryo的序列化和反序列化
+        Method createAccumulatorMethod = MethodUtil.getMethodByName(tempClazz, "createAccumulator");
+        if (createAccumulatorMethod != null) {
+            Class<?> accumulatorClass = createAccumulatorMethod.getReturnType();
+            ACC_CLASS_LOADER.loadClass(accumulatorClass.getName());
+        }
         Class<? extends AggregateFunction> put = functionMap.put(value, (Class<? extends AggregateFunction>) tempClazz);
         if (put != null) {
             throw new RuntimeException(ERROR_MESSAGE + put.getName());

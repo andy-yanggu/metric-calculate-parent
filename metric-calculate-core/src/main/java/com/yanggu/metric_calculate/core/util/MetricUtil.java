@@ -14,9 +14,12 @@ import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcesso
 import com.yanggu.metric_calculate.core.field_process.time.TimeFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
-import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
+import com.yanggu.metric_calculate.core.kryo.KryoUtil;
+import com.yanggu.metric_calculate.core.kryo.pool.InputPool;
+import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
+import com.yanggu.metric_calculate.core.kryo.pool.OutputPool;
+import com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapStore;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
@@ -29,7 +32,6 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -144,18 +146,23 @@ public class MetricUtil {
             return;
         }
         Map<String, MetricTypeEnum> metricTypeMap = metricCalculate.getMetricTypeMap();
-        //默认是内存的并发HashMap
-        DeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
-        deriveMetricMiddleStore.init();
 
         //初始化聚合函数工厂类
         List<String> udafJarPathList = metricCalculate.getUdafJarPathList();
-        if (CollUtil.isNotEmpty(udafJarPathList)) {
-            URLClassLoader urlClassLoader = FunctionFactory.buildURLClassLoader(metricCalculate.getUdafJarPathList());
-        }
-
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(udafJarPathList);
         aggregateFunctionFactory.init();
+
+        //初始化kryo工具类
+        KryoPool kryoPool = new KryoPool(100, AggregateFunctionFactory.ACC_CLASS_LOADER);
+        InputPool inputPool = new InputPool(100);
+        OutputPool outputPool = new OutputPool(100);
+        KryoUtil kryoUtil = new KryoUtil(kryoPool, inputPool, outputPool);
+        metricCalculate.setKryoUtil(kryoUtil);
+
+        //默认是内存的并发HashMap
+        AbstractDeriveMetricMiddleStore deriveMetricMiddleStore = new DeriveMetricMiddleHashMapStore();
+        deriveMetricMiddleStore.setKryoUtil(kryoUtil);
+        deriveMetricMiddleStore.init();
 
         Map<String, Class<?>> fieldMap = metricCalculate.getFieldMap();
         List<DeriveMetricCalculate> collect = deriveMetricsList.stream()

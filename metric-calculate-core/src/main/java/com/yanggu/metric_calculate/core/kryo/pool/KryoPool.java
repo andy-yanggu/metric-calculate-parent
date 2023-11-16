@@ -33,7 +33,7 @@ import java.util.TreeMap;
  */
 public class KryoPool extends Pool<Kryo> {
 
-    private ClassLoader classLoader;
+    private final ClassLoader classLoader;
 
     public KryoPool(int maximumCapacity, ClassLoader classLoader) {
         super(true, true, maximumCapacity);

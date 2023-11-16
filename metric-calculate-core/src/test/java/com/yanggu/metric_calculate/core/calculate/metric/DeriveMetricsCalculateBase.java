@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.core.calculate.metric;
 
 
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
+import com.yanggu.metric_calculate.core.middle_store.AbstractDeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapKryoStore;
-import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
@@ -25,7 +25,8 @@ class DeriveMetricsCalculateBase {
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
             //设置kryoHashMap存储
-            DeriveMetricMiddleStore store = new DeriveMetricMiddleHashMapKryoStore();
+            AbstractDeriveMetricMiddleStore store = new DeriveMetricMiddleHashMapKryoStore();
+            store.setKryoUtil(metricCalculate.getKryoUtil());
             store.init();
             deriveMetricCalculateList.forEach(temp -> temp.setDeriveMetricMiddleStore(store));
         }

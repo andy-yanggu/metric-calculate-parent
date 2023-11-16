@@ -7,7 +7,6 @@ import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.reflect.FieldUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -53,6 +52,26 @@ public class FunctionFactory {
     }
 
     /**
+     * 创建URLClassLoader
+     *
+     * @param jarPathList
+     * @return
+     * @throws Exception
+     */
+    public static URLClassLoader buildURLClassLoader(List<String> jarPathList) throws Exception {
+        if (CollUtil.isEmpty(jarPathList)) {
+            throw new RuntimeException("jarPathList is empty");
+        }
+        URL[] urls = new URL[jarPathList.size()];
+        for (int i = 0; i < jarPathList.size(); i++) {
+            String jarPath = jarPathList.get(i);
+            File file = new File(jarPath);
+            urls[i] = file.toURI().toURL();
+        }
+        return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+    }
+
+    /**
      * 从jar包中过滤出对应的class, 并执行相应的消费逻辑
      *
      * @param jarPathList
@@ -63,64 +82,54 @@ public class FunctionFactory {
     public static void loadClassFromJar(List<String> jarPathList,
                                         Predicate<Class<?>> classFilter,
                                         Consumer<Class<?>> consumer) throws Exception {
-        if (CollUtil.isEmpty(jarPathList)) {
-            return;
-        }
-        //加载jar包
-        URL[] urls = new URL[jarPathList.size()];
-        List<JarEntry> jarEntries = new ArrayList<>();
-        for (int i = 0; i < jarPathList.size(); i++) {
-            String jarPath = jarPathList.get(i);
-            File file = new File(jarPath);
-            urls[i] = file.toURI().toURL();
+        URLClassLoader urlClassLoader = buildURLClassLoader(jarPathList);
+        loadClassFromJar(urlClassLoader, jarPathList, classFilter, consumer);
+    }
 
-            JarFile jarFile = new JarFile(jarPath);
-            Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                jarEntries.add(entries.nextElement());
-            }
-        }
-
-        //这里父类指定为系统类加载器, 子类加载可以访问父类加载器中加载的类
-        //但是父类不可以访问子类加载器中加载的类, 线程上下文类加载器除外
-        try (URLClassLoader urlClassLoader = URLClassLoader.newInstance(urls, ClassLoader.getSystemClassLoader())) {
-            //过滤出对应的类
-            for (JarEntry entry : jarEntries) {
-                if (entry.isDirectory() || !entry.getName().endsWith(".class") || entry.getName().contains("$")) {
-                    continue;
-                }
-                String className = entry.getName()
-                        .substring(0, entry.getName().indexOf(".class"))
-                        .replace("/", ".");
-                Class<?> loadClass = urlClassLoader.loadClass(className);
-                //判断是否应该进行消费
-                if (classFilter.test(loadClass)) {
-                    //消费class数据
-                    consumer.accept(loadClass);
-                }
+    /**
+     * 从jar包中过滤出对应的class, 并执行相应的消费逻辑
+     * <p>区别在于类加载器自己手动传入</p>
+     *
+     * @param jarPathList
+     * @param classFilter
+     * @param consumer
+     * @throws Exception
+     */
+    public static void loadClassFromJar(ClassLoader classLoader,
+                                        List<String> jarPathList,
+                                        Predicate<Class<?>> classFilter,
+                                        Consumer<Class<?>> consumer) throws Exception {
+        List<String> fullNameList = getClassFullNameListFromJar(jarPathList);
+        for (String classFullName : fullNameList) {
+            Class<?> clazz = classLoader.loadClass(classFullName);
+            if (classFilter.test(clazz)) {
+                consumer.accept(clazz);
             }
         }
     }
 
-    public static URLClassLoader buildURLClassLoader(List<String> jarPathList) throws Exception {
+    private static List<String> getClassFullNameListFromJar(List<String> jarPathList) throws Exception {
+        List<String> classFullNameList = new ArrayList<>();
         if (CollUtil.isEmpty(jarPathList)) {
-            return null;
+            return classFullNameList;
         }
-        //加载jar包
-        URL[] urls = new URL[jarPathList.size()];
-        List<JarEntry> jarEntries = new ArrayList<>();
-        for (int i = 0; i < jarPathList.size(); i++) {
-            String jarPath = jarPathList.get(i);
-            File file = new File(jarPath);
-            urls[i] = file.toURI().toURL();
 
-            JarFile jarFile = new JarFile(jarPath);
-            Enumeration<JarEntry> entries = jarFile.entries();
-            while (entries.hasMoreElements()) {
-                jarEntries.add(entries.nextElement());
+        for (String jarPath : jarPathList) {
+            try (JarFile jarFile = new JarFile(jarPath)) {
+                Enumeration<JarEntry> entries = jarFile.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry entry = entries.nextElement();
+                    if (entry.isDirectory() || !entry.getName().endsWith(".class") || entry.getName().contains("$")) {
+                        continue;
+                    }
+                    String className = entry.getName()
+                            .substring(0, entry.getName().indexOf(".class"))
+                            .replace("/", ".");
+                    classFullNameList.add(className);
+                }
             }
         }
-        return new URLClassLoader(urls, ClassLoader.getSystemClassLoader());
+        return classFullNameList;
     }
 
 }

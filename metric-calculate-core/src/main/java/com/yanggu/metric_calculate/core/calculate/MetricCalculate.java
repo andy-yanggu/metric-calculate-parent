@@ -4,6 +4,7 @@ package com.yanggu.metric_calculate.core.calculate;
 import com.yanggu.metric_calculate.core.calculate.field.FieldCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.enums.MetricTypeEnum;
+import com.yanggu.metric_calculate.core.kryo.KryoUtil;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -48,6 +49,8 @@ public class MetricCalculate extends Model implements Serializable {
      * <p>value class数据类型
      */
     private Map<String, Class<?>> fieldMap;
+
+    private KryoUtil kryoUtil;
 
     /**
      * 从原始数据中提取数据, 进行手动数据类型转换
