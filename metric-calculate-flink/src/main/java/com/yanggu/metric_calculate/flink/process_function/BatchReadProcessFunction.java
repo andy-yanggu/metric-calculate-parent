@@ -30,7 +30,7 @@ public class BatchReadProcessFunction extends ProcessFunction<List<DeriveCalcula
     private transient DeriveMetricMiddleStore deriveMetricMiddleStore;
 
     @Override
-    public void open(Configuration parameters) throws Exception {
+    public void open(Configuration parameters) {
         this.deriveMetricMiddleStore = DERIVE_METRIC_MIDDLE_STORE;
     }
 

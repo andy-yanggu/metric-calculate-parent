@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.field_process.dimension;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Objects;
@@ -14,6 +15,9 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class DimensionSet implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -783616875992902961L;
 
     /**
      * 指标标识(数据明细宽表id-指标id)
