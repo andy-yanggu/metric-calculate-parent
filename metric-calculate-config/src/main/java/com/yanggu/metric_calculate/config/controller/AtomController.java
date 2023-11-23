@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+//@RestController
 @Tag(name = "原子指标管理")
 @RequestMapping("/atom")
 public class AtomController {

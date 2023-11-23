@@ -39,10 +39,9 @@ spring:
     #redis相关配置
     redis:
       client-type: lettuce
-      host: 172.20.7.106
-      port: 16379
-      database: 1
-      password: Redis6379
+      host: 127.0.0.1
+      port: 6379
+      database: 0
 
   cloud:
     #feign相关的配置
