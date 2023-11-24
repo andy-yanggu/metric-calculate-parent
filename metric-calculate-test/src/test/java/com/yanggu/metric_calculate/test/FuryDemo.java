@@ -3,13 +3,13 @@ package com.yanggu.metric_calculate.test;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import io.fury.Fury;
-import io.fury.Language;
+import io.fury.config.Language;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-class FuryTest {
+public class FuryDemo {
 
     public static void main(String[] args) {
         // Fury应该在多个对象序列化之间复用，不要每次创建新的Fury实例
@@ -22,8 +22,10 @@ class FuryTest {
     }
 
     public static class SomeClass1 {
+
         Object f1;
         Map<Byte, Integer> f2;
+
     }
 
     public static class SomeClass2 {
