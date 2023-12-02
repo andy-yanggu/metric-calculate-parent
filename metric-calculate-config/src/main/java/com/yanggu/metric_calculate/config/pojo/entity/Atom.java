@@ -1,8 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionParamDto;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelTimeColumnDto;
-import com.yanggu.metric_calculate.config.pojo.dto.WindowParamDto;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -22,6 +21,7 @@ public class Atom extends BaseEntity implements Serializable {
     /**
      * 主键自增
      */
+    @Id(keyType = KeyType.Auto)
     private Integer id;
 
     /**
@@ -45,8 +45,14 @@ public class Atom extends BaseEntity implements Serializable {
     private Integer modelId;
 
     /**
+     * 宽表时间字段id
+     */
+    private Integer modelTimeColumnId;
+
+    /**
      * 时间字段
      */
+    //@RelationManyToOne()
     private ModelTimeColumn modelTimeColumn;
 
     /**

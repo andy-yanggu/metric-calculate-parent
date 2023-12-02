@@ -1,21 +1,28 @@
-/*
- Navicat Premium Data Transfer
+CREATE TABLE atom (
+                      id int NOT NULL AUTO_INCREMENT,
+                      name varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '名称',
+                      display_name varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '中文名称',
+                      description varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '描述',
+                      model_id int NOT NULL COMMENT '宽表id',
+                      model_time_column_id int NOT NULL COMMENT '宽表时间字段id',
+                      directory_code varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '目录编码',
+                      user_id int NOT NULL COMMENT '用户id',
+                      is_deleted int NOT NULL DEFAULT '0' COMMENT '是否删除(缺省为0,即未删除)',
+                      create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                      update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                      PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='原子指标';
 
- Source Server         : local-mysql8.0
- Source Server Type    : MySQL
- Source Server Version : 80024
- Source Host           : localhost:3306
- Source Schema         : metric_calculate_config
-
- Target Server Type    : MySQL
- Target Server Version : 80024
- File Encoding         : 65001
-
- Date: 17/10/2023 22:06:07
-*/
-
-SET NAMES utf8mb4;
-SET FOREIGN_KEY_CHECKS = 0;
+CREATE TABLE atom_aggregate_function_param_relation (
+                                                        id int NOT NULL AUTO_INCREMENT,
+                                                        atom_id int NOT NULL COMMENT '原子指标id',
+                                                        aggregate_function_param_id int NOT NULL COMMENT '聚合函数参数id',
+                                                        user_id int NOT NULL COMMENT '用户id',
+                                                        is_deleted int NOT NULL DEFAULT '0' COMMENT '是否删除(缺省为0,即未删除)',
+                                                        create_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                                        update_time datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                                        PRIMARY KEY (id) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC COMMENT='原子指标聚合函数参数中间表';
 
 -- ----------------------------
 -- Table structure for aggregate_function
@@ -675,5 +682,3 @@ CREATE TABLE `window_param_status_express_param_list_relation`  (
   `update_time` datetime(0) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP(0) COMMENT '更新时间',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 37 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '窗口参数状态窗口表达式列表关系表' ROW_FORMAT = Dynamic;
-
-SET FOREIGN_KEY_CHECKS = 1;
