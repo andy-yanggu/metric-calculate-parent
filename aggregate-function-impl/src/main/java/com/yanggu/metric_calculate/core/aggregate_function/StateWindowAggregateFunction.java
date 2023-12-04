@@ -21,7 +21,7 @@ public class StateWindowAggregateFunction<K, IN, ACC, OUT> implements AggregateF
 
     @Override
     public MutablePair<K, ACC> add(MutablePair<K, IN> input,
-                                                        MutablePair<K, ACC> accumulator) {
+                                   MutablePair<K, ACC> accumulator) {
         K oldStatus = accumulator.getLeft();
         K newStatus = input.getLeft();
 
@@ -49,7 +49,7 @@ public class StateWindowAggregateFunction<K, IN, ACC, OUT> implements AggregateF
 
     @Override
     public MutablePair<K, ACC> merge(MutablePair<K, ACC> thisAccumulator,
-                                                          MutablePair<K, ACC> thatAccumulator) {
+                                     MutablePair<K, ACC> thatAccumulator) {
         return null;
     }
 

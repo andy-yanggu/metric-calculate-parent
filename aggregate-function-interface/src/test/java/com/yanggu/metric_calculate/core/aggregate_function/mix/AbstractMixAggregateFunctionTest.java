@@ -13,6 +13,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * 混合型聚合函数单元测试类
+ */
 class AbstractMixAggregateFunctionTest {
 
     private TestMixAggregateFunction<Double> baseMixAggregateFunction;
@@ -40,14 +43,15 @@ class AbstractMixAggregateFunctionTest {
     }
 
     @Test
-    void createAccumulator() {
+    void testCreateAccumulator() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
+        assertInstanceOf(HashMap.class, accumulator);
         assertTrue(accumulator.isEmpty());
     }
 
     @Test
-    void add() {
+    void testAdd() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         Map<String, Object> input = new HashMap<>();
 
@@ -71,7 +75,7 @@ class AbstractMixAggregateFunctionTest {
     }
 
     @Test
-    void getResult() {
+    void testGetResult() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         accumulator.put("test1", 1.0D);
         accumulator.put("test2", 2.0D);
@@ -80,7 +84,7 @@ class AbstractMixAggregateFunctionTest {
     }
 
     @Test
-    void merge() {
+    void testMerge() {
         Map<String, Object> accumulator = baseMixAggregateFunction.createAccumulator();
         accumulator.put("test1", 1.0D);
         accumulator.put("test2", 2.0D);

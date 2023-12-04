@@ -17,20 +17,20 @@ class AbstractMaxAggregateFunctionTest {
     private TestMaxAggregateFunction<Integer> maxObjectAggregateFunction;
 
     @BeforeEach
-    void before() {
+    void init() {
         maxObjectAggregateFunction = new TestMaxAggregateFunction<>();
         maxObjectAggregateFunction.init();
     }
 
     @Test
-    void createAccumulator() {
+    void testCreateAccumulator() {
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
     }
 
     @Test
-    void add() {
+    void testAdd() {
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
 
         maxObjectAggregateFunction.add(1, accumulator);
@@ -41,7 +41,7 @@ class AbstractMaxAggregateFunctionTest {
     }
 
     @Test
-    void getResult() {
+    void testGetResult() {
         MutableObj<Integer> accumulator = maxObjectAggregateFunction.createAccumulator();
 
         maxObjectAggregateFunction.add(1, accumulator);
@@ -51,7 +51,7 @@ class AbstractMaxAggregateFunctionTest {
     }
 
     @Test
-    void merge() {
+    void testMerge() {
         MutableObj<Integer> accumulator1 = maxObjectAggregateFunction.createAccumulator();
         MutableObj<Integer> accumulator2 = maxObjectAggregateFunction.createAccumulator();
 

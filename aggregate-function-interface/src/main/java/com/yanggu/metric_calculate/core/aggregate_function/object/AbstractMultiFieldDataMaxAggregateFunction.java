@@ -22,7 +22,7 @@ public abstract class AbstractMultiFieldDataMaxAggregateFunction<IN, OUT> extend
 
     @Override
     public void init() {
-        ListObjectComparator<IN> listObjectComparator = ListObjectComparator.createInstance(compareParamLength);
+        ListObjectComparator<IN> listObjectComparator = ListObjectComparator.createAscInstance(compareParamLength);
         setComparator(listObjectComparator);
     }
 

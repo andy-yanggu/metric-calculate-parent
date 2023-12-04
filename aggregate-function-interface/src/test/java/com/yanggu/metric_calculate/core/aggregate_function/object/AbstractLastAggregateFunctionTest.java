@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,17 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractLastAggregateFunctionTest {
 
+    private TestLastAggregateFunction<String> lastObjectAggregateFunction;
+
+    @BeforeEach
+    void init() {
+        lastObjectAggregateFunction = new TestLastAggregateFunction<>();
+    }
+
     @Test
-    void createAccumulator() {
-        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
+    void testCreateAccumulator() {
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
     }
 
     @Test
-    void add() {
-        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
+    void testAdd() {
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
 
         lastObjectAggregateFunction.add("test1", accumulator);
@@ -32,19 +38,16 @@ class AbstractLastAggregateFunctionTest {
     }
 
     @Test
-    void getResult() {
-        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
+    void testGetResult() {
         MutableObj<String> accumulator = lastObjectAggregateFunction.createAccumulator();
 
         lastObjectAggregateFunction.add("test1", accumulator);
         String result = lastObjectAggregateFunction.getResult(accumulator);
-
         assertEquals("test1", result);
     }
 
     @Test
-    void merge() {
-        TestLastAggregateFunction<String> lastObjectAggregateFunction = new TestLastAggregateFunction<>();
+    void testMerge() {
         MutableObj<String> accumulator1 = lastObjectAggregateFunction.createAccumulator();
         MutableObj<String> accumulator2 = lastObjectAggregateFunction.createAccumulator();
 

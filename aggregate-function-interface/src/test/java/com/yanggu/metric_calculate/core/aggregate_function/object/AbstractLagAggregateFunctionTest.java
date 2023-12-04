@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
 import org.dromara.hutool.core.collection.ListUtil;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -13,18 +14,24 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractLagAggregateFunctionTest {
 
+    private TestLagAggregateFunction<String> lagObjectAggregateFunction;
+
+    @BeforeEach
+    void init() {
+        lagObjectAggregateFunction = new TestLagAggregateFunction<>();
+    }
+
     @Test
-    void createAccumulator() {
-        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
+    void testCreateAccumulator() {
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
     }
 
     @Test
-    void add() {
-        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
+    void testAdd() {
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
+
         lagObjectAggregateFunction.add("test1", accumulator);
         assertEquals(1, accumulator.size());
         assertEquals("test1", accumulator.get(0));
@@ -49,10 +56,8 @@ class AbstractLagAggregateFunctionTest {
     }
 
     @Test
-    void getResult() {
-        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
+    void testGetResult() {
         lagObjectAggregateFunction.setDefaultValue("defaultValue");
-
         LinkedList<String> accumulator = lagObjectAggregateFunction.createAccumulator();
 
         lagObjectAggregateFunction.add("test1", accumulator);
@@ -89,8 +94,7 @@ class AbstractLagAggregateFunctionTest {
     }
 
     @Test
-    void merge() {
-        TestLagAggregateFunction<String> lagObjectAggregateFunction = new TestLagAggregateFunction<>();
+    void testMerge() {
         lagObjectAggregateFunction.setOffset(4);
 
         LinkedList<String> accumulator1 = lagObjectAggregateFunction.createAccumulator();

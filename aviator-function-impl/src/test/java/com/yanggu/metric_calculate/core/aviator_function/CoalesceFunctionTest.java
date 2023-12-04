@@ -12,6 +12,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+/**
+ * coalesce单元测试类
+ */
 class CoalesceFunctionTest {
 
     private CoalesceFunction coalesceFunction;

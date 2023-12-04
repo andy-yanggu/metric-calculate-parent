@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
 import com.yanggu.metric_calculate.core.pojo.acc.BoundedPriorityQueue;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,9 +14,15 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractSortedListAggregateFunctionTest {
 
+    private TestSortedListAggregateFunction<Integer> sortedListObjectAggregateFunction;
+
+    @BeforeEach
+    void init() {
+        sortedListObjectAggregateFunction = new TestSortedListAggregateFunction<>();
+    }
+
     @Test
     void createAccumulator() {
-        var sortedListObjectAggregateFunction = new TestSortedListAggregateFunction<Integer>();
         var accumulator = sortedListObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
@@ -24,7 +31,6 @@ class AbstractSortedListAggregateFunctionTest {
 
     @Test
     void testAdd1() {
-        var sortedListObjectAggregateFunction = new TestSortedListAggregateFunction<Integer>();
         //设置为3个
         sortedListObjectAggregateFunction.setLimit(3);
         var accumulator = sortedListObjectAggregateFunction.createAccumulator();
@@ -52,7 +58,6 @@ class AbstractSortedListAggregateFunctionTest {
 
     @Test
     void getResult() {
-        var sortedListObjectAggregateFunction = new TestSortedListAggregateFunction<Integer>();
         BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
 
         sortedListObjectAggregateFunction.add(1, accumulator);
@@ -62,8 +67,7 @@ class AbstractSortedListAggregateFunctionTest {
     }
 
     @Test
-    void merge() {
-        var sortedListObjectAggregateFunction = new TestSortedListAggregateFunction<Integer>();
+    void testMerge() {
         sortedListObjectAggregateFunction.setLimit(3);
 
         var accumulator1 = sortedListObjectAggregateFunction.createAccumulator();

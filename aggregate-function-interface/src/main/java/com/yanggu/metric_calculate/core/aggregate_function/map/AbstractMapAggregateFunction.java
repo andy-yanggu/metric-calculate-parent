@@ -43,7 +43,12 @@ public abstract class AbstractMapAggregateFunction<K, V, ValueACC, ValueOUT, OUT
     @Override
     public OUT getResult(Map<K, ValueACC> accumulator) {
         Map<K, ValueOUT> map = new HashMap<>();
-        accumulator.forEach((k, acc) -> map.put(k, valueAggregateFunction.getResult(acc)));
+        accumulator.forEach((k, acc) -> {
+            ValueOUT valueOUT = valueAggregateFunction.getResult(acc);
+            if (valueOUT != null) {
+                map.put(k, valueOUT);
+            }
+        });
         return (OUT) map;
     }
 

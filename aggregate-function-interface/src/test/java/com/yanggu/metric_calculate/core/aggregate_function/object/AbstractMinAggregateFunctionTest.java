@@ -17,20 +17,20 @@ class AbstractMinAggregateFunctionTest {
     private TestObjectMinAggregateFunction<Integer> minValueAggregateFunction;
 
     @BeforeEach
-    void before() {
+    void init() {
         minValueAggregateFunction = new TestObjectMinAggregateFunction<>();
         minValueAggregateFunction.init();
     }
 
     @Test
-    void createAccumulator() {
+    void testCreateAccumulator() {
         MutableObj<Integer> accumulator = minValueAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
     }
 
     @Test
-    void add() {
+    void testAdd() {
         MutableObj<Integer> accumulator = minValueAggregateFunction.createAccumulator();
 
         minValueAggregateFunction.add(1, accumulator);
@@ -41,7 +41,7 @@ class AbstractMinAggregateFunctionTest {
     }
 
     @Test
-    void getResult() {
+    void testGetResult() {
         MutableObj<Integer> accumulator = minValueAggregateFunction.createAccumulator();
 
         minValueAggregateFunction.add(1, accumulator);
@@ -51,7 +51,7 @@ class AbstractMinAggregateFunctionTest {
     }
 
     @Test
-    void merge() {
+    void testMerge() {
         MutableObj<Integer> accumulator1 = minValueAggregateFunction.createAccumulator();
         MutableObj<Integer> accumulator2 = minValueAggregateFunction.createAccumulator();
 

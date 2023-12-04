@@ -13,7 +13,14 @@ public class ListObjectComparator<IN> implements Comparator<Pair<MultiFieldData,
 
     private List<Boolean> booleanList;
 
-    public static <IN> ListObjectComparator<IN> createInstance(Integer compareParamLength) {
+    /**
+     * 创建升序的比较器
+     *
+     * @param compareParamLength
+     * @return
+     * @param <IN>
+     */
+    public static <IN> ListObjectComparator<IN> createAscInstance(Integer compareParamLength) {
         List<Boolean> booleanList = new ArrayList<>();
         for (int i = 0; i < compareParamLength; i++) {
             booleanList.add(Boolean.TRUE);

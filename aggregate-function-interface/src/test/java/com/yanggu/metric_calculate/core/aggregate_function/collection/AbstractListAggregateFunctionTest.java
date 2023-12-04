@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,9 +15,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class AbstractListAggregateFunctionTest {
 
+    private TestListAggregateFunction<String> function;
+
+    @BeforeEach
+    void init() {
+        function = new TestListAggregateFunction<>();
+    }
+
     @Test
     void testCreateAccumulator() {
-        var function = new TestListAggregateFunction<String>();
         List<String> accumulator = function.createAccumulator();
         assertEquals(0, accumulator.size());
         assertTrue(accumulator instanceof ArrayList<String>);
@@ -24,7 +31,6 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testAdd() {
-        var function = new TestListAggregateFunction<String>();
         List<String> accumulator = new ArrayList<>();
 
         accumulator = function.add("a", accumulator);
@@ -43,7 +49,6 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testGetResult() {
-        var function = new TestListAggregateFunction<String>();
         List<String> accumulator = new ArrayList<>();
         accumulator = function.add("a", accumulator);
         accumulator = function.add("b", accumulator);
@@ -54,8 +59,6 @@ class AbstractListAggregateFunctionTest {
 
     @Test
     void testMerge() {
-        var function = new TestListAggregateFunction<String>();
-
         List<String> accumulator1 = new ArrayList<>();
         accumulator1 = function.add("a", accumulator1);
         accumulator1 = function.add("b", accumulator1);

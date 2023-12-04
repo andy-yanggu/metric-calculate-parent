@@ -16,8 +16,7 @@ import java.util.Map;
  * @param <OUT> 输出的数据类型
  */
 @Data
-public abstract class AbstractMixAggregateFunction<OUT>
-        implements AggregateFunction<Map<String, Object>, Map<String, Object>, OUT> {
+public abstract class AbstractMixAggregateFunction<OUT> implements AggregateFunction<Map<String, Object>, Map<String, Object>, OUT> {
 
     protected Map<String, AggregateFunction> mixAggregateFunctionMap;
 
@@ -31,9 +30,9 @@ public abstract class AbstractMixAggregateFunction<OUT>
     @Override
     public Map<String, Object> add(Map<String, Object> input, Map<String, Object> accumulator) {
         input.forEach((tempKey, tempValue) -> {
-            AggregateFunction<Object, Object, Object> aggregateFunction = mixAggregateFunctionMap.get(tempKey);
-            Object oldAcc = accumulator.getOrDefault(tempKey, aggregateFunction.createAccumulator());
-            Object newAcc = aggregateFunction.add(tempValue, oldAcc);
+            AggregateFunction<Object, Object, Object> tempAggFunction = mixAggregateFunctionMap.get(tempKey);
+            Object oldAcc = accumulator.getOrDefault(tempKey, tempAggFunction.createAccumulator());
+            Object newAcc = tempAggFunction.add(tempValue, oldAcc);
             accumulator.put(tempKey, newAcc);
         });
         return accumulator;
@@ -56,9 +55,9 @@ public abstract class AbstractMixAggregateFunction<OUT>
     public Map<String, Object> merge(Map<String, Object> thisAccumulator,
                                      Map<String, Object> thatAccumulator) {
         thatAccumulator.forEach((tempKey, thatAcc) -> {
-            AggregateFunction<Object, Object, Object> aggregateFunction = mixAggregateFunctionMap.get(tempKey);
-            Object thisAcc = thisAccumulator.getOrDefault(tempKey, aggregateFunction.createAccumulator());
-            Object merge = aggregateFunction.merge(thisAcc, thatAcc);
+            AggregateFunction<Object, Object, Object> tempAggFunction = mixAggregateFunctionMap.get(tempKey);
+            Object thisAcc = thisAccumulator.getOrDefault(tempKey, tempAggFunction.createAccumulator());
+            Object merge = tempAggFunction.merge(thisAcc, thatAcc);
             thisAccumulator.put(tempKey, merge);
         });
         return thisAccumulator;

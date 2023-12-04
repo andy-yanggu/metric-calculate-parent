@@ -71,7 +71,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
                 param = new HashMap<>();
                 udafParam.setParam(param);
             }
-            //放入比较对象的
+            //放入比较对象的长度
             param.put("compareParamLength", udafParam.getMetricExpressParamList().size());
         }
 

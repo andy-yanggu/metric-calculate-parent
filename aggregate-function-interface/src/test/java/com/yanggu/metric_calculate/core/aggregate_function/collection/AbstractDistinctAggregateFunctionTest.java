@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -15,19 +16,25 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractDistinctAggregateFunctionTest {
 
+    private TestDistinctAggregateFunction<Integer> distinctAggregateFunction;
+
+    @BeforeEach
+    void init() {
+        distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
+    }
+
     /**
      * 测试创建累加器是否正常
      */
     @Test
     void testCreateAccumulator() {
-        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
         var accumulator = distinctAggregateFunction.createAccumulator();
         //确认累加器不为null
         assertNotNull(accumulator);
         //确定累加器为空
         assertTrue(accumulator.isEmpty());
         //确认累加器是HashSet类型
-        assertTrue(accumulator instanceof HashSet);
+        assertInstanceOf(HashSet.class, accumulator);
     }
 
     /**
@@ -35,7 +42,6 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testAdd() {
-        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
         var accumulator = distinctAggregateFunction.createAccumulator();
         distinctAggregateFunction.add(1, accumulator);
         //添加重复的元素
@@ -51,7 +57,6 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testGetResult() {
-        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
         var accumulator = distinctAggregateFunction.createAccumulator();
         accumulator = distinctAggregateFunction.add(1, accumulator);
         var result = distinctAggregateFunction.getResult(accumulator);
@@ -68,7 +73,6 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testMerge() {
-        var distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
         var thisAccumulator = distinctAggregateFunction.createAccumulator();
         distinctAggregateFunction.add(1, thisAccumulator);
         var thatAccumulator = distinctAggregateFunction.createAccumulator();

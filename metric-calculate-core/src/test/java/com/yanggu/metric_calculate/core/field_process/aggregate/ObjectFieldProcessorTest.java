@@ -25,13 +25,13 @@ class ObjectFieldProcessorTest {
     private final Map<String, Class<?>> fieldMap = new HashMap<>();
 
     @BeforeEach
-    void before() {
+    void init() {
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
     }
 
     @Test
-    void init() {
+    void testInit() {
     }
 
     /**

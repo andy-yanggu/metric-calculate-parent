@@ -16,11 +16,11 @@ import java.util.stream.Stream;
  * @param <ValueOUT> value的输出类型
  * @param <OUT>      输出数据类型
  */
-public abstract class AbstractMultiFieldDataValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<? super ValueOUT>, OUT>
+public abstract class AbstractMultiFieldDataValueOutComparableMapAggregateFunction<V, ValueACC, ValueOUT extends Comparable<ValueOUT>, OUT>
         extends AbstractMultiFieldDataMapAggregateFunction<V, ValueACC, ValueOUT, OUT> {
 
     /**
-     * 根据value进行排序并进行截取
+     * 根据ValueOUT进行排序并进行截取
      *
      * @param accumulator
      * @param asc

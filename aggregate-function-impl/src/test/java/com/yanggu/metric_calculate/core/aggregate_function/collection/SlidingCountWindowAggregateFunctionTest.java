@@ -70,7 +70,7 @@ class SlidingCountWindowAggregateFunctionTest {
     }
 
     @Test
-    void merge() {
+    void testMerge() {
         SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         slidingCountWindowAggregateFunction.setLimit(2);
 

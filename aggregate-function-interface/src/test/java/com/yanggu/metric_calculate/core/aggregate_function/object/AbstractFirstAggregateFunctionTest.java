@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
 import org.dromara.hutool.core.lang.mutable.MutableObj;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,17 +12,22 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class AbstractFirstAggregateFunctionTest {
 
+    private TestFirstAggregateFunction<String> firstObjectAggregateFunction;
+
+    @BeforeEach
+    void init() {
+        firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
+    }
+
     @Test
-    void createAccumulator() {
-        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
+    void testCreateAccumulator() {
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertNull(accumulator.get());
     }
 
     @Test
-    void add() {
-        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
+    void testAdd() {
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
 
         firstObjectAggregateFunction.add("test1", accumulator);
@@ -32,19 +38,16 @@ class AbstractFirstAggregateFunctionTest {
     }
 
     @Test
-    void getResult() {
-        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
+    void testGetResult() {
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
 
         firstObjectAggregateFunction.add("test1", accumulator);
         String result = firstObjectAggregateFunction.getResult(accumulator);
-
         assertEquals("test1", result);
     }
 
     @Test
-    void merge() {
-        TestFirstAggregateFunction<String> firstObjectAggregateFunction = new TestFirstAggregateFunction<>();
+    void testMerge() {
         MutableObj<String> accumulator1 = firstObjectAggregateFunction.createAccumulator();
         MutableObj<String> accumulator2 = firstObjectAggregateFunction.createAccumulator();
 
@@ -54,7 +57,7 @@ class AbstractFirstAggregateFunctionTest {
         MutableObj<String> merge = firstObjectAggregateFunction.merge(accumulator1, accumulator2);
         assertEquals("test1", merge.get());
     }
-    
+
 }
 
 class TestFirstAggregateFunction<IN> extends AbstractFirstAggregateFunction<IN> {
