@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Table(value = "atom")
 public class Atom extends BaseEntity implements Serializable {
 
     @Serial
@@ -52,12 +52,16 @@ public class Atom extends BaseEntity implements Serializable {
     /**
      * 时间字段
      */
-    //@RelationManyToOne()
+    @RelationManyToOne(selfField = "modelTimeColumnId", targetField = "id")
     private ModelTimeColumn modelTimeColumn;
 
     /**
      * 聚合函数参数
      */
+    @RelationOneToOne(
+            joinTable = "atom_aggregate_function_param_relation",
+            selfField = "id", joinSelfColumn = "atom_id",
+            targetField = "id", joinTargetColumn = "aggregate_function_param_id")
     private AggregateFunctionParam aggregateFunctionParam;
 
     /**
