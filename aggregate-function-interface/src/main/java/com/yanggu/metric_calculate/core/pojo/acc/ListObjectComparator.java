@@ -3,13 +3,18 @@ package com.yanggu.metric_calculate.core.pojo.acc;
 import lombok.Data;
 import org.dromara.hutool.core.lang.tuple.Pair;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
 @Data
-public class ListObjectComparator<IN> implements Comparator<Pair<MultiFieldData, IN>> {
+public class ListObjectComparator<IN> implements Comparator<Pair<MultiFieldData, IN>>, Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -2673280179941525809L;
 
     private List<Boolean> booleanList;
 
@@ -21,7 +26,7 @@ public class ListObjectComparator<IN> implements Comparator<Pair<MultiFieldData,
      * @param <IN>
      */
     public static <IN> ListObjectComparator<IN> createAscInstance(Integer compareParamLength) {
-        List<Boolean> booleanList = new ArrayList<>();
+        List<Boolean> booleanList = new ArrayList<>(compareParamLength);
         for (int i = 0; i < compareParamLength; i++) {
             booleanList.add(Boolean.TRUE);
         }

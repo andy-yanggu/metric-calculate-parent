@@ -4,6 +4,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.dromara.hutool.json.JSONUtil;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -13,7 +15,10 @@ import java.util.Objects;
  */
 @Data
 @NoArgsConstructor
-public class MultiFieldData {
+public class MultiFieldData implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = -4268931132984774384L;
 
     private List<Object> fieldList;
 
