@@ -73,7 +73,7 @@
   ],
   "modelDimensionColumnList": [
     {
-      "dimensionId": 212,
+      "dimensionId": 1,
       "modelColumnName": "account_no_out",
       "sort": 1
     }
