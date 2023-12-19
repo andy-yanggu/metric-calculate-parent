@@ -1,21 +1,15 @@
-/*
- * Copyright 2020, Zetyun DEP All rights reserved.
- */
-
 package com.yanggu.metric_calculate.config.util.excel;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
-/**
- * DepFile.
- *
- * @author admin
- * @date 2020-12-10
- */
+
 @EqualsAndHashCode
 @Data
+@NoArgsConstructor
 public class DepFile {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -28,10 +22,8 @@ public class DepFile {
      */
     private byte[] file;
 
-    public DepFile() {
-    }
-
     public DepFile(byte[] file) {
         this.file = file;
     }
+
 }

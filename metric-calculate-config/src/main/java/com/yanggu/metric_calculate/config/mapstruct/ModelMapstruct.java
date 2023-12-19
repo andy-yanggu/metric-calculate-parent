@@ -1,10 +1,7 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
-import com.yanggu.metric_calculate.config.pojo.entity.Derive;
-import com.yanggu.metric_calculate.config.pojo.entity.Model;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.core.enums.BasicType;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -33,7 +30,7 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
     //派生指标
     @Mapping(source = "deriveList", target = "deriveMetricsList", qualifiedByName = {"DeriveMapstruct", "toDeriveMetrics"})
     //自定义udaf的jar包路径
-    @Mapping(source = "deriveList", target = "udafJarPathList", qualifiedByName = "getUdafJarPathList")
+    @Mapping(source = "atomList", target = "udafJarPathList", qualifiedByName = "getUdafJarPathList")
     //自定义aviator函数jar包路径
     @Mapping(source = "model", target = "aviatorFunctionJarPathList", qualifiedByName = "getAviatorFunctionJarPathList")
     com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Model model);
@@ -58,16 +55,16 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
     /**
      * 获取自定义聚合函数jar包路径
      *
-     * @param deriveList
+     * @param atomList
      * @return
      */
     @Named("getUdafJarPathList")
-    default List<String> getUdafJarPathList(List<Derive> deriveList) {
-        if (CollUtil.isEmpty(deriveList)) {
+    default List<String> getUdafJarPathList(List<Atom> atomList) {
+        if (CollUtil.isEmpty(atomList)) {
             return Collections.emptyList();
         }
-        return deriveList.stream()
-                .map(Derive::getAggregateFunctionParam)
+        return atomList.stream()
+                .map(Atom::getAggregateFunctionParam)
                 .map(AggregateFunctionParamMapstruct::getUdafJarPathList)
                 .filter(CollUtil::isNotEmpty)
                 .flatMap(Collection::stream)

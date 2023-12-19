@@ -3,11 +3,12 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.mapper.AtomMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AtomMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.AtomDto;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParam;
 import com.yanggu.metric_calculate.config.pojo.entity.Atom;
-import com.yanggu.metric_calculate.config.mapper.AtomMapper;
 import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelation;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
 import com.yanggu.metric_calculate.config.pojo.req.AtomQueryReq;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.yanggu.metric_calculate.config.enums.ResultCode.ATOM_EXIST;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AtomTableDef.ATOM;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelColumnTableDef.MODEL_COLUMN;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
@@ -51,6 +53,7 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AtomDto atomDto) throws Exception {
         Atom atom = atomMapstruct.toEntity(atomDto);
+        checkExist(atom);
         this.save(atom);
         AggregateFunctionParam aggregateFunctionParam = atom.getAggregateFunctionParam();
         //根据宽表id查询对应的宽表字段
@@ -66,11 +69,15 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(AtomDto atomDto) throws Exception {
-
+        Atom atom = atomMapstruct.toEntity(atomDto);
+        checkExist(atom);
+        this.updateById(atom);
     }
 
     @Override
+    @Transactional(rollbackFor = RuntimeException.class)
     public void deleteById(Integer id) {
 
     }
@@ -94,6 +101,17 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
         Page<Atom> page = atomMapper.paginate(pageNumber, pageSize, queryWrapper);
         List<AtomDto> dtoList = atomMapstruct.toDTO(page.getRecords());
         return new Page<>(dtoList, pageNumber, pageSize, page.getTotalRow());
+    }
+
+    private void checkExist(Atom atom) {
+        QueryWrapper queryWrapper = QueryWrapper.create()
+                        .from(ATOM)
+                       .where(ATOM.ID.ne(atom.getId()))
+                       .and(ATOM.NAME.eq(atom.getName()).or(ATOM.DISPLAY_NAME.eq(atom.getDisplayName())));
+        long count = atomMapper.selectCountByQuery(queryWrapper);
+        if (count > 0) {
+            throw new BusinessException(ATOM_EXIST);
+        }
     }
 
     private QueryWrapper buildAtomQueryWrapper(AtomQueryReq atomQueryReq) {

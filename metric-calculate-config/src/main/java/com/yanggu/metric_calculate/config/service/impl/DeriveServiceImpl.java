@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamTableDef.AGGREGATE_FUNCTION_PARAM;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
+import static com.yanggu.metric_calculate.config.pojo.entity.table.AtomTableDef.ATOM;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveAggregateFunctionParamRelationTableDef.DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveFilterExpressRelationTableDef.DERIVE_FILTER_EXPRESS_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelDimensionColumnRelationTableDef.DERIVE_MODEL_DIMENSION_COLUMN_RELATION;
@@ -66,25 +67,19 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     private DeriveModelDimensionColumnRelationService deriveModelDimensionColumnRelationService;
 
     @Autowired
-    private DeriveModelTimeColumnRelationService deriveModelTimeColumnRelationService;
-
-    @Autowired
     private AviatorExpressParamService aviatorExpressParamService;
 
     @Autowired
     private DeriveFilterExpressRelationService deriveFilterExpressRelationService;
 
     @Autowired
-    private AggregateFunctionParamService aggregateFunctionParamService;
-
-    @Autowired
-    private DeriveAggregateFunctionParamRelationService deriveAggregateFunctionParamRelationService;
-
-    @Autowired
     private WindowParamService windowParamService;
 
     @Autowired
     private DeriveWindowParamRelationService deriveWindowParamRelationService;
+
+    @Autowired
+    private AtomService atomService;
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -93,71 +88,16 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
         //检查name、displayName是否重复
         checkExist(derive);
+
+        Integer atomId = derive.getAtomId();
+        Atom atom = atomService.queryChain().eq(ATOM.ID.getName(), atomId).withRelations().one();
+        derive.setAtom(atom);
+
         //保存派生指标
         deriveMapper.insertSelective(derive);
 
         //保存关联数据
         saveRelation(derive);
-    }
-
-    private void saveRelation(Derive derive) throws Exception {
-        //保存维度
-        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
-        AtomicInteger index = new AtomicInteger(0);
-        //转换成派生指标和维度字段中间数据
-        List<DeriveModelDimensionColumnRelation> collect = modelDimensionColumnList.stream()
-                .map(dimensionColumn -> {
-                    DeriveModelDimensionColumnRelation relation = new DeriveModelDimensionColumnRelation();
-                    relation.setDeriveId(derive.getId());
-                    relation.setModelDimensionColumnId(dimensionColumn.getId());
-                    relation.setSort(index.incrementAndGet());
-                    return relation;
-                })
-                .toList();
-        deriveModelDimensionColumnRelationService.saveBatch(collect);
-
-        //保存时间字段
-        ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
-        DeriveModelTimeColumnRelation deriveModelTimeColumnRelation = new DeriveModelTimeColumnRelation();
-        deriveModelTimeColumnRelation.setDeriveId(derive.getId());
-        deriveModelTimeColumnRelation.setModelTimeColumnId(modelTimeColumn.getId());
-        deriveModelTimeColumnRelationService.save(deriveModelTimeColumnRelation);
-
-        //根据宽表id查询对应的宽表字段
-        List<ModelColumn> modelColumnList = modelColumnService.queryChain()
-                .from(MODEL_COLUMN)
-                .where(MODEL_COLUMN.MODEL_ID.eq(derive.getModelId()))
-                .list();
-
-        //保存前置过滤条件
-        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
-        if (filterExpressParam != null) {
-            filterExpressParam.setModelColumnList(modelColumnList);
-            aviatorExpressParamService.saveDataByModelColumn(filterExpressParam);
-            //保存派生指标和前置过滤条件中间表数据
-            DeriveFilterExpressRelation deriveFilterExpressRelation = new DeriveFilterExpressRelation();
-            deriveFilterExpressRelation.setDeriveId(derive.getId());
-            deriveFilterExpressRelation.setAviatorExpressParamId(filterExpressParam.getId());
-            deriveFilterExpressRelationService.save(deriveFilterExpressRelation);
-        }
-
-        //保存聚合函数参数
-        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        aggregateFunctionParamService.saveData(aggregateFunctionParam, modelColumnList);
-        //保存派生指标和聚合函数参数中间表数据
-        DeriveAggregateFunctionParamRelation deriveAggregateFunctionParamRelation = new DeriveAggregateFunctionParamRelation();
-        deriveAggregateFunctionParamRelation.setDeriveId(derive.getId());
-        deriveAggregateFunctionParamRelation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
-        deriveAggregateFunctionParamRelationService.save(deriveAggregateFunctionParamRelation);
-
-        //保存窗口数据
-        WindowParam windowParam = derive.getWindowParam();
-        windowParamService.saveData(windowParam, modelColumnList);
-        //保存派生指标和窗口数据中间表
-        DeriveWindowParamRelation deriveWindowParamRelation = new DeriveWindowParamRelation();
-        deriveWindowParamRelation.setDeriveId(derive.getId());
-        deriveWindowParamRelation.setWindowParamId(windowParam.getId());
-        deriveWindowParamRelationService.save(deriveWindowParamRelation);
     }
 
     @Override
@@ -227,7 +167,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
             }
             RelationManager.addQueryRelations(Model::getModelColumnList);
             List<Integer> modelIdList = deriveList.stream()
-                    .map(Derive::getModelId)
+                    .map(tempDerive -> tempDerive.getAtom().getModelId())
                     .distinct()
                     .toList();
             QueryWrapper queryWrapper = QueryWrapper.create()
@@ -243,14 +183,58 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
             return deriveList.stream()
                     .map(derive -> {
-                        Model model = modelMap.get(derive.getModelId());
+                        Model model = modelMap.get(derive.getAtom().getModelId());
                         if (model == null) {
-                            throw new BusinessException(MODEL_ID_ERROR, derive.getModelId());
+                            throw new BusinessException(MODEL_ID_ERROR, derive.getAtom().getModelId());
                         }
                         return deriveMapstruct.toDeriveMetricsConfigData(derive, model);
                     })
                     .toList();
         });
+    }
+
+    private void saveRelation(Derive derive) throws Exception {
+        //保存维度
+        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
+        AtomicInteger index = new AtomicInteger(0);
+        //转换成派生指标和维度字段中间数据
+        List<DeriveModelDimensionColumnRelation> collect = modelDimensionColumnList.stream()
+                .map(dimensionColumn -> {
+                    DeriveModelDimensionColumnRelation relation = new DeriveModelDimensionColumnRelation();
+                    relation.setDeriveId(derive.getId());
+                    relation.setModelDimensionColumnId(dimensionColumn.getId());
+                    relation.setSort(index.incrementAndGet());
+                    return relation;
+                })
+                .toList();
+        deriveModelDimensionColumnRelationService.saveBatch(collect);
+
+        //根据宽表id查询对应的宽表字段
+        List<ModelColumn> modelColumnList = modelColumnService.queryChain()
+                .from(MODEL_COLUMN)
+                .where(MODEL_COLUMN.MODEL_ID.eq(derive.getAtom().getModelId()))
+                .list();
+
+        //保存前置过滤条件
+        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
+        if (filterExpressParam != null) {
+            filterExpressParam.setModelColumnList(modelColumnList);
+            aviatorExpressParamService.saveDataByModelColumn(filterExpressParam);
+            //保存派生指标和前置过滤条件中间表数据
+            DeriveFilterExpressRelation deriveFilterExpressRelation = new DeriveFilterExpressRelation();
+            deriveFilterExpressRelation.setDeriveId(derive.getId());
+            deriveFilterExpressRelation.setAviatorExpressParamId(filterExpressParam.getId());
+            deriveFilterExpressRelationService.save(deriveFilterExpressRelation);
+        }
+
+        //保存窗口数据
+        WindowParam windowParam = derive.getWindowParam();
+        windowParamService.saveData(windowParam, modelColumnList);
+        //保存派生指标和窗口数据中间表
+        DeriveWindowParamRelation deriveWindowParamRelation = new DeriveWindowParamRelation();
+        deriveWindowParamRelation.setDeriveId(derive.getId());
+        deriveWindowParamRelation.setWindowParamId(windowParam.getId());
+        deriveWindowParamRelationService.save(deriveWindowParamRelation);
     }
 
     private Derive getDeriveById(Integer id) {
@@ -276,8 +260,6 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         return QueryWrapper.create()
                 .select(DERIVE.DEFAULT_COLUMNS)
                 .from(DERIVE)
-                //数据明细宽表
-                .innerJoin(MODEL).on(MODEL.ID.eq(DERIVE.MODEL_ID))
                 //时间字段
                 .innerJoin(DERIVE_MODEL_TIME_COLUMN_RELATION).on(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
                 .innerJoin(MODEL_TIME_COLUMN).on(MODEL_TIME_COLUMN.ID.eq(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID))
@@ -335,15 +317,6 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                     .and(DERIVE_FILTER_EXPRESS_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(filterExpressParam.getId()));
             deriveFilterExpressRelationService.remove(queryWrapper);
         }
-        //删除时间字段
-        ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
-        if (modelTimeColumn != null) {
-            QueryWrapper queryWrapper = QueryWrapper.create()
-                    .from(DERIVE_MODEL_TIME_COLUMN_RELATION)
-                    .where(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID.eq(modelTimeColumn.getId()));
-            deriveModelTimeColumnRelationService.remove(queryWrapper);
-        }
         //删除维度字段
         List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
         if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
@@ -357,15 +330,15 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
             deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
         }
         //删除聚合函数参数
-        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        if (aggregateFunctionParam != null) {
-            aggregateFunctionParamService.deleteData(aggregateFunctionParam);
-            QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
-                    .from(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION)
-                    .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
-                    .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
-            deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
-        }
+        //AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
+        //if (aggregateFunctionParam != null) {
+        //    aggregateFunctionParamService.deleteData(aggregateFunctionParam);
+        //    QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
+        //            .from(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION)
+        //            .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
+        //            .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
+        //    deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
+        //}
         //删除窗口参数
         WindowParam windowParam = derive.getWindowParam();
         if (windowParam != null) {
@@ -387,7 +360,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         QueryWrapper queryWrapper = QueryWrapper.create()
                 .from(DERIVE)
                 //当id存在时为更新
-                .where(DERIVE.ID.ne(derive.getId()).when(derive.getId() != null))
+                .where(DERIVE.ID.ne(derive.getId()))
                 .and(DERIVE.NAME.eq(derive.getName()).or(DERIVE.DISPLAY_NAME.eq(derive.getDisplayName())));
         long count = deriveMapper.selectCountByQuery(queryWrapper);
         if (count > 0) {

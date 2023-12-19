@@ -36,9 +36,9 @@ public class DimensionController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除维度")
-    public Result<Void> remove(@PathVariable Integer id) {
+    public Result<Void> remove(@PathVariable("id") Integer id) {
         dimensionService.deleteById(id);
         return Result.ok();
     }
@@ -49,9 +49,9 @@ public class DimensionController {
         return Result.ok(dimensionService.listData(req));
     }
 
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "维度详情")
-    public Result<DimensionDto> getInfo(@PathVariable Integer id) {
+    public Result<DimensionDto> detail(@PathVariable("id") Integer id) {
         return Result.ok(dimensionService.queryById(id));
     }
 

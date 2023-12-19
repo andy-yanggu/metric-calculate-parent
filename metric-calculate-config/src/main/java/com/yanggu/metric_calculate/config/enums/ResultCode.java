@@ -51,6 +51,7 @@ public enum ResultCode {
     MODEL_COLUMN_FIELD_TYPE_NOT_UPDATE_WHEN_DERIVE_USED("10038", "当宽表字段被派生指标使用时类型不允许修改"),
     AVIATOR_FUNCTION_ID_ERROR("10039", "Aviator函数id错误: {}"),
     AVIATOR_FUNCTION_PARAM_ERROR("10040", "提交的Aviator函数参数存在不存在的参数: {}"),
+    ATOM_EXIST("10041", "原子指标已经存在"),
     ;
 
     private final String code;

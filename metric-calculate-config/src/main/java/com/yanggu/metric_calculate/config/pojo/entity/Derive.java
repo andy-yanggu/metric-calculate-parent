@@ -39,16 +39,15 @@ public class Derive extends BaseEntity implements Serializable {
     private String description;
 
     /**
-     * 宽表id
+     * 原子指标id
      */
-    private Integer modelId;
+    private Integer atomId;
 
     /**
-     * 宽表名称
+     * 原子指标
      */
-    @Column(ignore = true)
-    @RelationManyToOne(selfField = "modelId", targetField = "id", targetTable = "model", valueField = "name")
-    private String modelName;
+    @RelationManyToOne(selfField = "atomId", targetField = "id")
+    private Atom atom;
 
     /**
      * 维度字段
@@ -60,16 +59,6 @@ public class Derive extends BaseEntity implements Serializable {
     private List<ModelDimensionColumn> modelDimensionColumnList;
 
     /**
-     * 时间字段
-     */
-    @RelationManyToOne(
-            joinTable = "derive_model_time_column_relation",
-            selfField = "id", joinSelfColumn = "derive_id",
-            targetField = "id", joinTargetColumn = "model_time_column_id"
-    )
-    private ModelTimeColumn modelTimeColumn;
-
-    /**
      * 前置过滤条件
      * <p>Aviator表达式参数</p>
      */
@@ -79,16 +68,6 @@ public class Derive extends BaseEntity implements Serializable {
             targetField = "id", joinTargetColumn = "aviator_express_param_id"
     )
     private AviatorExpressParam filterExpressParam;
-
-    /**
-     * 聚合函数参数
-     */
-    @RelationOneToOne(
-            joinTable = "derive_aggregate_function_param_relation",
-            selfField = "id", joinSelfColumn = "derive_id",
-            targetField = "id", joinTargetColumn = "aggregate_function_param_id"
-    )
-    private AggregateFunctionParam aggregateFunctionParam;
 
     /**
      * 窗口相关参数

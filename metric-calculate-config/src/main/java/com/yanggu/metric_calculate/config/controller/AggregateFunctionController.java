@@ -44,9 +44,9 @@ public class AggregateFunctionController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除聚合函数")
-    public Result<Void> deleteById(@PathVariable Integer id) {
+    public Result<Void> deleteById(@PathVariable("id") Integer id) {
         aggregateFunctionService.deleteById(id);
         return Result.ok();
     }
@@ -57,9 +57,9 @@ public class AggregateFunctionController {
         return Result.ok(aggregateFunctionService.listData(queryReq));
     }
 
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "聚合函数详情")
-    public Result<AggregateFunctionDto> getInfo(@PathVariable Integer id) {
+    public Result<AggregateFunctionDto> detail(@PathVariable("id") Integer id) {
         return Result.ok(aggregateFunctionService.queryById(id));
     }
 

@@ -1,6 +1,5 @@
-package com.yanggu.metric_calculate.config.pojo.dto;
+package com.yanggu.metric_calculate.config.pojo.vo;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +11,7 @@ import java.io.Serializable;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class AggregateFunctionParamDto extends BaseDto implements Serializable {
+public class AggregateFunctionParamVO extends BaseVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -6999604291880819075L;
@@ -25,27 +24,26 @@ public class AggregateFunctionParamDto extends BaseDto implements Serializable {
     /**
      * 聚合函数id
      */
-    @NotNull(message = "聚合函数id不能为空")
     private Integer aggregateFunctionId;
 
     /**
      * 聚合函数
      */
-    private AggregateFunctionDto aggregateFunction;
+    private AggregateFunctionVO aggregateFunction;
 
     /**
      * 基本类型聚合函数参数
      */
-    private BaseUdafParamDto baseUdafParam;
+    private BaseUdafParamVO baseUdafParam;
 
     /**
      * 映射类型聚合函数参数
      */
-    private MapUdafParamDto mapUdafParam;
+    private MapUdafParamVO mapUdafParam;
 
     /**
      * 混合类型聚合函数参数
      */
-    private MixUdafParamDto mixUdafParam;
+    private MixUdafParamVO mixUdafParam;
 
 }

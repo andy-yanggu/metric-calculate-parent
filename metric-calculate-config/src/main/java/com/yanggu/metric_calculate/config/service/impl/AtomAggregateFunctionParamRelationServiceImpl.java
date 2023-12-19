@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelation;
 import com.yanggu.metric_calculate.config.mapper.AtomAggregateFunctionParamRelationMapper;
+import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelation;
 import com.yanggu.metric_calculate.config.service.AtomAggregateFunctionParamRelationService;
 import org.springframework.stereotype.Service;
 

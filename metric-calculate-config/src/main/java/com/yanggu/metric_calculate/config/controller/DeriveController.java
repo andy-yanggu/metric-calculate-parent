@@ -38,9 +38,9 @@ public class DeriveController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除派生指标")
-    public Result<Void> remove(@PathVariable Integer id) {
+    public Result<Void> remove(@PathVariable("id") Integer id) {
         deriveService.deleteById(id);
         return Result.ok();
     }
@@ -51,9 +51,9 @@ public class DeriveController {
         return Result.ok(deriveService.listData(deriveQuery));
     }
 
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "派生指标详情")
-    public Result<DeriveDto> getInfo(@PathVariable Integer id) {
+    public Result<DeriveDto> detail(@PathVariable("id") Integer id) {
         return Result.ok(deriveService.queryById(id));
     }
 
@@ -65,7 +65,7 @@ public class DeriveController {
 
     @GetMapping("/toCoreDeriveMetrics/{deriveId}")
     @Operation(summary = "转换成核心派生指标")
-    public Result<DeriveMetrics> toCoreDeriveMetrics(@PathVariable Integer deriveId) {
+    public Result<DeriveMetrics> toCoreDeriveMetrics(@PathVariable("deriveId") Integer deriveId) {
         DeriveMetrics deriveMetrics = deriveService.toCoreDeriveMetrics(deriveId);
         return Result.ok(deriveMetrics);
     }

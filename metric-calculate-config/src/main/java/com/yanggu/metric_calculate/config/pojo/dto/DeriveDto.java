@@ -49,16 +49,14 @@ public class DeriveDto extends BaseDto implements Serializable {
     private String description;
 
     /**
-     * 宽表id
+     * 原子指标id
      */
-    private Integer modelId;
+    private Integer atomId;
 
     /**
-     * 宽表名称
+     * 原子指标
      */
-    @ExcelExport(name = "宽表名称", sort = 4)
-    @ExcelImport(name = "宽表名称")
-    private String modelName;
+    private AtomDto atom;
 
     /**
      * 维度字段
@@ -67,23 +65,11 @@ public class DeriveDto extends BaseDto implements Serializable {
     private List<ModelDimensionColumnDto> modelDimensionColumnList;
 
     /**
-     * 时间字段
-     */
-    @ExcelObject(name = "时间字段", excludeNameArray = {"sort"})
-    private ModelTimeColumnDto modelTimeColumn;
-
-    /**
      * 前置过滤条件
      * <p>Aviator表达式参数</p>
      */
     @ExcelObject(name = "前置过滤条件")
     private AviatorExpressParamDto filterExpressParam;
-
-    /**
-     * 聚合函数参数
-     */
-    @ExcelObject(name = "聚合函数参数")
-    private AggregateFunctionParamDto aggregateFunctionParam;
 
     /**
      * 窗口参数

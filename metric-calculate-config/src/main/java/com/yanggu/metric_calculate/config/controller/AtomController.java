@@ -36,9 +36,9 @@ public class AtomController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除原子指标")
-    public Result<Void> remove(@PathVariable Integer id) {
+    public Result<Void> remove(@PathVariable("id") Integer id) {
         atomService.deleteById(id);
         return Result.ok();
     }
@@ -49,9 +49,9 @@ public class AtomController {
         return Result.ok(atomService.listData(atomQueryReq));
     }
 
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "原子指标详情")
-    public Result<AtomDto> getInfo(@PathVariable Integer id) {
+    public Result<AtomDto> detail(@PathVariable("id") Integer id) {
         return Result.ok(atomService.queryById(id));
     }
 

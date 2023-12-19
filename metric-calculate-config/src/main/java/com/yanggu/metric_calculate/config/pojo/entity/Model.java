@@ -1,9 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
-import com.mybatisflex.annotation.Id;
-import com.mybatisflex.annotation.KeyType;
-import com.mybatisflex.annotation.RelationOneToMany;
-import com.mybatisflex.annotation.Table;
+import com.mybatisflex.annotation.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -64,9 +61,19 @@ public class Model extends BaseEntity implements Serializable {
     private List<ModelDimensionColumn> modelDimensionColumnList;
 
     /**
-     * 派生指标列表
+     * 原子指标列表
      */
     @RelationOneToMany(selfField = "id", targetField = "modelId")
+    private List<Atom> atomList;
+
+    /**
+     * 派生指标列表
+     */
+    @RelationManyToMany(
+            joinTable = "atom",
+            selfField = "id", joinSelfColumn = "model_id",
+            targetField = "atomId", joinTargetColumn = "id"
+    )
     private List<Derive> deriveList;
 
 }

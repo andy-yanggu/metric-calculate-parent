@@ -38,11 +38,11 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     //维度字段
     @Mapping(source = "modelDimensionColumnList", target = "dimensionList", qualifiedByName = {"ModelDimensionColumnMapstruct", "toCoreDimension"})
     //时间字段
-    @Mapping(source = "modelTimeColumn", target = "timeColumn", qualifiedByName = {"ModelTimeColumnMapstruct", "toCoreTimeColumn"})
+    @Mapping(source = "atom.modelTimeColumn", target = "timeColumn", qualifiedByName = {"ModelTimeColumnMapstruct", "toCoreTimeColumn"})
     //前置过滤条件
     @Mapping(source = "filterExpressParam", target = "filterExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
     //聚合函数参数
-    @Mapping(source = "aggregateFunctionParam", target = "aggregateFunctionParam", qualifiedByName = {"AggregateFunctionParamMapstruct", "toCoreAggregateFunctionParam"})
+    @Mapping(source = "atom.aggregateFunctionParam", target = "aggregateFunctionParam", qualifiedByName = {"AggregateFunctionParamMapstruct", "toCoreAggregateFunctionParam"})
     //窗口参数
     @Mapping(source = "windowParam", target = "windowParam", qualifiedByName = {"WindowParamMapstruct", "toCoreWindowParam"})
     //精度数据
@@ -60,7 +60,7 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
     @Mapping(source = "derive", target = "deriveMetrics", qualifiedByName = "toDeriveMetrics")
     @Mapping(source = "model.modelColumnList", target = "fieldMap", qualifiedByName = {"ModelMapstruct", "getFieldMap"})
     @Mapping(source = "derive", target = "aviatorFunctionJarPathList", qualifiedByName = "getFromDerive")
-    @Mapping(source = "derive.aggregateFunctionParam", target = "udafJarPathList", qualifiedByName = {"AggregateFunctionParamMapstruct", "getUdafJarPathList"})
+    @Mapping(source = "derive.atom.aggregateFunctionParam", target = "udafJarPathList", qualifiedByName = {"AggregateFunctionParamMapstruct", "getUdafJarPathList"})
     DeriveMetricsConfigData toDeriveMetricsConfigData(Derive derive, Model model);
 
     /**
@@ -76,7 +76,7 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveDto, Derive> {
             aviatorExpressParamList.add(filterExpressParam);
         }
         //从聚合函数参数尝试获取
-        AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
+        AggregateFunctionParam aggregateFunctionParam = derive.getAtom().getAggregateFunctionParam();
         //基本聚合类型参数
         BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
         addAviatorExpressParamFromBaseUdafParam(baseUdafParam, aviatorExpressParamList);

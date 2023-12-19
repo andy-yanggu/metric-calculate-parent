@@ -44,9 +44,9 @@ public class ModelController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除数据明细宽表")
-    public Result<Void> remove(@PathVariable Integer id) {
+    public Result<Void> remove(@PathVariable("id") Integer id) {
         modelService.deleteById(id);
         return Result.ok();
     }
@@ -57,9 +57,9 @@ public class ModelController {
         return Result.ok(modelService.listData(req));
     }
 
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "数据明细宽表详情")
-    public Result<ModelDto> getInfo(@PathVariable Integer id) {
+    public Result<ModelDto> detail(@PathVariable("id") Integer id) {
         return Result.ok(modelService.queryById(id));
     }
 

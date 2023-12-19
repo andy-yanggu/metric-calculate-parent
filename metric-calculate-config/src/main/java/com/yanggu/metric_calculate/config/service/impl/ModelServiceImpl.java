@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ModelColumnFieldType.VIRTUAL;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveTableDef.DERIVE;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelColumnTableDef.MODEL_COLUMN;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelDimensionColumnTableDef.MODEL_DIMENSION_COLUMN;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
@@ -142,8 +141,8 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         //派生指标使用的维度字段
         Set<ModelDimensionColumn> useModelDimensionColumnSet = new HashSet<>();
         for (Derive derive : deriveList) {
-            ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
-            useModelTimeColumnSet.add(modelTimeColumn);
+            //ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
+            //useModelTimeColumnSet.add(modelTimeColumn);
             //添加时间字段对应的宽表字段
             //usedModelColumnSet.add(modelTimeColumn.getModelColumn());
             List<ModelDimensionColumn> dimensionColumnList = derive.getModelDimensionColumnList();
@@ -217,12 +216,12 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     @Transactional(rollbackFor = RuntimeException.class)
     public void deleteById(Integer id) {
         //如果宽表被派生指标使用则不能删除
-        long count = deriveService.queryChain()
-                .where(DERIVE.MODEL_ID.eq(id))
-                .count();
-        if (count > 0) {
-            throw new BusinessException(MODEL_HAS_DERIVE_NOT_DELETE);
-        }
+        //long count = deriveService.queryChain()
+        //        .where(DERIVE.MODEL_ID.eq(id))
+        //        .count();
+        //if (count > 0) {
+        //    throw new BusinessException(MODEL_HAS_DERIVE_NOT_DELETE);
+        //}
         //删除宽表
         removeById(id);
         //删除宽表字段

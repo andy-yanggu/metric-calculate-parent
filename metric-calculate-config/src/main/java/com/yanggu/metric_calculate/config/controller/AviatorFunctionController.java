@@ -44,9 +44,9 @@ public class AviatorFunctionController {
         return Result.ok();
     }
 
-    @DeleteMapping("/remove/{id}")
+    @DeleteMapping("/{id}")
     @Operation(summary = "删除Aviator函数")
-    public Result<Void> deleteById(@PathVariable Integer id) {
+    public Result<Void> deleteById(@PathVariable("id") Integer id) {
         aviatorFunctionService.deleteById(id);
         return Result.ok();
     }
@@ -57,9 +57,9 @@ public class AviatorFunctionController {
         return Result.ok(aviatorFunctionService.listData(req));
     }
 
-    @GetMapping("/getInfo/{id}")
+    @GetMapping("/{id}")
     @Operation(summary = "Aviator函数详情")
-    public Result<AviatorFunctionDto> getInfo(@PathVariable Integer id) {
+    public Result<AviatorFunctionDto> detail(@PathVariable("id") Integer id) {
         return Result.ok(aviatorFunctionService.queryById(id));
     }
 

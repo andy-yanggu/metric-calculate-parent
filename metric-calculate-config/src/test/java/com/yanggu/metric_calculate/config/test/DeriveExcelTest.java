@@ -54,7 +54,7 @@ class DeriveExcelTest {
         //描述
         deriveDto.setDescription(sheet.getRow(4).getCell(1).getStringCellValue());
         //宽表名称
-        deriveDto.setModelName(sheet.getRow(5).getCell(1).getStringCellValue());
+        //deriveDto.setModelName(sheet.getRow(5).getCell(1).getStringCellValue());
         //是否包含当前笔
         deriveDto.setIncludeCurrent(Boolean.valueOf(sheet.getRow(6).getCell(1).getStringCellValue()));
         //计量单位
@@ -70,7 +70,7 @@ class DeriveExcelTest {
         String modelColumnName = sheet.getRow(13).getCell(1).getStringCellValue();
         String timeFormat = sheet.getRow(14).getCell(1).getStringCellValue();
         ModelTimeColumnDto modelTimeColumnDto = new ModelTimeColumnDto();
-        deriveDto.setModelTimeColumn(modelTimeColumnDto);
+        //deriveDto.setModelTimeColumn(modelTimeColumnDto);
         modelTimeColumnDto.setModelColumnName(modelColumnName);
         modelTimeColumnDto.setTimeFormat(timeFormat);
 
@@ -184,7 +184,7 @@ class DeriveExcelTest {
 
         //聚合函数参数
         AggregateFunctionParamDto aggregateFunctionParamDto = new AggregateFunctionParamDto();
-        deriveDto.setAggregateFunctionParam(aggregateFunctionParamDto);
+        //deriveDto.setAggregateFunctionParam(aggregateFunctionParamDto);
         String aggregateFunctionName = sheet.getRow(aggregateFunctionParamIndex).getCell(1).getStringCellValue();
         //根据name换id
         AggregateFunction aggregateFunction = getAggregateFunctionByName(aggregateFunctionName);
