@@ -27,7 +27,7 @@
         <java.version>21</java.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <maven-compiler-plugin.version>3.11.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.12.0</maven-compiler-plugin.version>
         <maven-surefire-plugin.version>3.2.3</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.3.0</maven-source-plugin.version>
         <maven-shade-plugin.version>3.5.1</maven-shade-plugin.version>
@@ -36,18 +36,18 @@
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2022.0.0.0</spring-cloud-alibaba.version>
         <aviator.version>5.4.1</aviator.version>
-        <hutool.version>6.0.0-M8</hutool.version>
+        <hutool.version>6.0.0-M9</hutool.version>
         <knife4j-openapi3-jakarta.version>4.3.0</knife4j-openapi3-jakarta.version>
         <kryo.version>5.5.0</kryo.version>
         <mockito-core.version>5.8.0</mockito-core.version>
-        <guava.version>32.1.3-jre</guava.version>
+        <guava.version>33.0.0-jre</guava.version>
         <jmh.version>1.37</jmh.version>
         <joda-time.version>2.12.5</joda-time.version>
         <jctools-core.version>4.0.2</jctools-core.version>
         <flink.version>1.18.0</flink.version>
         <flink-connector-kafka.version>3.0.2-1.18</flink-connector-kafka.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
-        <mybatis-flex.version>1.7.5</mybatis-flex.version>
+        <mybatis-flex.version>1.7.6</mybatis-flex.version>
         <mybatis-spring.version>3.0.3</mybatis-spring.version>
         <lombok.version>1.18.30</lombok.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
