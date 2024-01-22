@@ -1,18 +1,18 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParam;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParamEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
 
 import java.util.List;
 
 /**
  * 混合类型udaf参数 服务层。
  */
-public interface MixUdafParamService extends IService<MixUdafParam> {
+public interface MixUdafParamService extends IService<MixUdafParamEntity> {
 
-    void saveData(MixUdafParam mixUdafParam, List<ModelColumn> modelColumnList) throws Exception;
+    void saveData(MixUdafParamEntity mixUdafParam, List<ModelColumnEntity> modelColumnList) throws Exception;
 
-    void deleteData(MixUdafParam mixUdafParam);
+    void deleteData(MixUdafParamEntity mixUdafParam);
 
 }

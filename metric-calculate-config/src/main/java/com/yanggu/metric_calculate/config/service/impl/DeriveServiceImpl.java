@@ -10,9 +10,9 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
+import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
+import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
@@ -47,7 +47,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.WindowParamTa
  * 派生指标 服务层实现。
  */
 @Service
-public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> implements DeriveService {
+public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, DeriveEntity> implements DeriveService {
 
     @Autowired
     private DeriveMapstruct deriveMapstruct;
@@ -81,14 +81,14 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(DeriveDto deriveDto) throws Exception {
-        Derive derive = deriveMapstruct.toEntity(deriveDto);
+    public void saveData(DeriveDTO deriveDto) throws Exception {
+        DeriveEntity derive = deriveMapstruct.toEntity(deriveDto);
 
         //检查name、displayName是否重复
         checkExist(derive);
 
         Integer atomId = derive.getAtomId();
-        Atom atom = atomService.queryChain().eq(ATOM.ID.getName(), atomId).withRelations().one();
+        AtomEntity atom = atomService.queryChain().eq(ATOM.ID.getName(), atomId).withRelations().one();
         derive.setAtom(atom);
 
         //保存派生指标
@@ -100,8 +100,8 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateData(DeriveDto deriveDto) throws Exception {
-        Derive updateDerive = deriveMapstruct.toEntity(deriveDto);
+    public void updateData(DeriveDTO deriveDto) throws Exception {
+        DeriveEntity updateDerive = deriveMapstruct.toEntity(deriveDto);
 
         //检查name和displayName是否重复
         checkExist(updateDerive);
@@ -110,7 +110,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         deriveMapper.update(updateDerive, false);
 
         //查询一下数据库中的派生指标
-        Derive dbDerive = getDeriveById(deriveDto.getId());
+        DeriveEntity dbDerive = getDeriveById(deriveDto.getId());
         //删除关联数据
         deleteRelation(dbDerive);
 
@@ -121,7 +121,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void deleteById(Integer id) {
-        Derive derive = getDeriveById(id);
+        DeriveEntity derive = getDeriveById(id);
         //删除派生指标
         super.removeById(id);
 
@@ -130,40 +130,40 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
     }
 
     @Override
-    public List<DeriveDto> listData(DeriveQueryReq deriveQuery) {
+    public List<DeriveDTO> listData(DeriveQuery deriveQuery) {
         QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
-        List<Derive> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
+        List<DeriveEntity> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
         return deriveMapstruct.toDTO(derives);
     }
 
     @Override
-    public DeriveDto queryById(Integer id) {
-        Derive derive = getDeriveById(id);
+    public DeriveDTO queryById(Integer id) {
+        DeriveEntity derive = getDeriveById(id);
         return deriveMapstruct.toDTO(derive);
     }
 
     @Override
-    public Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery) {
+    public Page<DeriveDTO> pageQuery(Integer pageNumber, Integer pageSize, DeriveQuery deriveQuery) {
         QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
-        Page<Derive> derivePage = deriveMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<DeriveDto> list = deriveMapstruct.toDTO(derivePage.getRecords());
+        Page<DeriveEntity> derivePage = deriveMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
+        List<DeriveDTO> list = deriveMapstruct.toDTO(derivePage.getRecords());
         return new Page<>(list, pageNumber, pageSize, derivePage.getTotalRow());
     }
 
     @Override
     public DeriveMetrics toCoreDeriveMetrics(Integer deriveId) {
-        Derive derive = deriveMapper.selectOneWithRelationsById(deriveId);
+        DeriveEntity derive = deriveMapper.selectOneWithRelationsById(deriveId);
         return deriveMapstruct.toDeriveMetrics(derive);
     }
 
     @Override
     public List<DeriveMetricsConfigData> getAllCoreDeriveMetrics() {
         return TenantManager.withoutTenantCondition(() -> {
-            List<Derive> deriveList = deriveMapper.selectAllWithRelations();
+            List<DeriveEntity> deriveList = deriveMapper.selectAllWithRelations();
             if (CollUtil.isEmpty(deriveList)) {
                 return Collections.emptyList();
             }
-            RelationManager.addQueryRelations(Model::getModelColumnList);
+            RelationManager.addQueryRelations(ModelEntity::getModelColumnList);
             List<Integer> modelIdList = deriveList.stream()
                     .map(tempDerive -> tempDerive.getAtom().getModelId())
                     .distinct()
@@ -171,9 +171,9 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
             QueryWrapper queryWrapper = QueryWrapper.create()
                     .from(MODEL)
                     .where(MODEL.ID.in(modelIdList));
-            Map<Integer, Model> modelMap = modelService.getMapper()
+            Map<Integer, ModelEntity> modelMap = modelService.getMapper()
                     .selectListWithRelationsByQuery(queryWrapper).stream()
-                    .collect(Collectors.toMap(Model::getId, Function.identity()));
+                    .collect(Collectors.toMap(ModelEntity::getId, Function.identity()));
 
             if (CollUtil.isEmpty(modelMap)) {
                 return Collections.emptyList();
@@ -181,7 +181,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
 
             return deriveList.stream()
                     .map(derive -> {
-                        Model model = modelMap.get(derive.getAtom().getModelId());
+                        ModelEntity model = modelMap.get(derive.getAtom().getModelId());
                         if (model == null) {
                             throw new BusinessException(MODEL_ID_ERROR, derive.getAtom().getModelId());
                         }
@@ -191,14 +191,14 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         });
     }
 
-    private void saveRelation(Derive derive) throws Exception {
+    private void saveRelation(DeriveEntity derive) throws Exception {
         //保存维度
-        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
+        List<ModelDimensionColumnEntity> modelDimensionColumnList = derive.getModelDimensionColumnList();
         AtomicInteger index = new AtomicInteger(0);
         //转换成派生指标和维度字段中间数据
-        List<DeriveModelDimensionColumnRelation> collect = modelDimensionColumnList.stream()
+        List<DeriveModelDimensionColumnRelationEntity> collect = modelDimensionColumnList.stream()
                 .map(dimensionColumn -> {
-                    DeriveModelDimensionColumnRelation relation = new DeriveModelDimensionColumnRelation();
+                    DeriveModelDimensionColumnRelationEntity relation = new DeriveModelDimensionColumnRelationEntity();
                     relation.setDeriveId(derive.getId());
                     relation.setModelDimensionColumnId(dimensionColumn.getId());
                     relation.setSort(index.incrementAndGet());
@@ -208,35 +208,35 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         deriveModelDimensionColumnRelationService.saveBatch(collect);
 
         //根据宽表id查询对应的宽表字段
-        List<ModelColumn> modelColumnList = modelColumnService.queryChain()
+        List<ModelColumnEntity> modelColumnList = modelColumnService.queryChain()
                 .from(MODEL_COLUMN)
                 .where(MODEL_COLUMN.MODEL_ID.eq(derive.getAtom().getModelId()))
                 .list();
 
         //保存前置过滤条件
-        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
+        AviatorExpressParamEntity filterExpressParam = derive.getFilterExpressParam();
         if (filterExpressParam != null) {
             filterExpressParam.setModelColumnList(modelColumnList);
             aviatorExpressParamService.saveDataByModelColumn(filterExpressParam);
             //保存派生指标和前置过滤条件中间表数据
-            DeriveFilterExpressRelation deriveFilterExpressRelation = new DeriveFilterExpressRelation();
+            DeriveFilterExpressRelationEntity deriveFilterExpressRelation = new DeriveFilterExpressRelationEntity();
             deriveFilterExpressRelation.setDeriveId(derive.getId());
             deriveFilterExpressRelation.setAviatorExpressParamId(filterExpressParam.getId());
             deriveFilterExpressRelationService.save(deriveFilterExpressRelation);
         }
 
         //保存窗口数据
-        WindowParam windowParam = derive.getWindowParam();
+        WindowParamEntity windowParam = derive.getWindowParam();
         windowParamService.saveData(windowParam, modelColumnList);
         //保存派生指标和窗口数据中间表
-        DeriveWindowParamRelation deriveWindowParamRelation = new DeriveWindowParamRelation();
+        DeriveWindowParamRelationEntity deriveWindowParamRelation = new DeriveWindowParamRelationEntity();
         deriveWindowParamRelation.setDeriveId(derive.getId());
         deriveWindowParamRelation.setWindowParamId(windowParam.getId());
         deriveWindowParamRelationService.save(deriveWindowParamRelation);
     }
 
-    private Derive getDeriveById(Integer id) {
-        Derive derive = deriveMapper.selectOneWithRelationsById(id);
+    private DeriveEntity getDeriveById(Integer id) {
+        DeriveEntity derive = deriveMapper.selectOneWithRelationsById(id);
         if (derive == null) {
             throw new BusinessException(DERIVE_ID_ERROR, id);
         }
@@ -249,7 +249,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
      * @param deriveQuery 查询参数
      * @return
      */
-    private QueryWrapper buildDeriveQueryWrapper(DeriveQueryReq deriveQuery) {
+    private QueryWrapper buildDeriveQueryWrapper(DeriveQuery deriveQuery) {
         String timeColumn = "time_column";
         QueryTable timeColumnAlias = MODEL_COLUMN.as(timeColumn);
 
@@ -297,10 +297,10 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                 .groupBy(DERIVE.ID);
     }
 
-    private void deleteRelation(Derive derive) {
+    private void deleteRelation(DeriveEntity derive) {
         Integer id = derive.getId();
         //删除前置过滤条件
-        AviatorExpressParam filterExpressParam = derive.getFilterExpressParam();
+        AviatorExpressParamEntity filterExpressParam = derive.getFilterExpressParam();
         if (filterExpressParam != null) {
             aviatorExpressParamService.deleteData(filterExpressParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
@@ -310,10 +310,10 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
             deriveFilterExpressRelationService.remove(queryWrapper);
         }
         //删除维度字段
-        List<ModelDimensionColumn> modelDimensionColumnList = derive.getModelDimensionColumnList();
+        List<ModelDimensionColumnEntity> modelDimensionColumnList = derive.getModelDimensionColumnList();
         if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
             List<Integer> modelDimensionIdList = modelDimensionColumnList.stream()
-                    .map(ModelDimensionColumn::getId)
+                    .map(ModelDimensionColumnEntity::getId)
                     .toList();
             QueryWrapper dimensionQueryWrapper = QueryWrapper.create()
                     .from(DERIVE_MODEL_DIMENSION_COLUMN_RELATION)
@@ -322,7 +322,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
             deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
         }
         //删除窗口参数
-        WindowParam windowParam = derive.getWindowParam();
+        WindowParamEntity windowParam = derive.getWindowParam();
         if (windowParam != null) {
             windowParamService.deleteData(derive.getWindowParam());
             QueryWrapper windowParamQueryWrapper = QueryWrapper.create()
@@ -338,7 +338,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
      *
      * @param derive
      */
-    private void checkExist(Derive derive) {
+    private void checkExist(DeriveEntity derive) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 .from(DERIVE)
                 //当id存在时为更新

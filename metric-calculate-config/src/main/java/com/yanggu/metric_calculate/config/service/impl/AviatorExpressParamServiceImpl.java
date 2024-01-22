@@ -32,7 +32,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.AviatorFuncti
  * Aviator表达式配置 服务层实现。
  */
 @Service
-public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressParamMapper, AviatorExpressParam> implements AviatorExpressParamService {
+public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressParamMapper, AviatorExpressParamEntity> implements AviatorExpressParamService {
 
     @Autowired
     private AviatorExpressParamModelColumnRelationService aviatorExpressParamModelColumnRelationService;
@@ -51,15 +51,15 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveDataByModelColumn(AviatorExpressParam aviatorExpressParam) throws Exception {
+    public void saveDataByModelColumn(AviatorExpressParamEntity aviatorExpressParam) throws Exception {
         //校验Aviator表达式
-        List<ModelColumn> modelColumnList = aviatorExpressParam.getModelColumnList();
+        List<ModelColumnEntity> modelColumnList = aviatorExpressParam.getModelColumnList();
         Set<String> fieldSet;
         if (CollUtil.isEmpty(modelColumnList)) {
             fieldSet = Collections.emptySet();
         } else {
             fieldSet = modelColumnList.stream()
-                    .map(ModelColumn::getName)
+                    .map(ModelColumnEntity::getName)
                     .collect(Collectors.toSet());
         }
         List<String> paramList = checkAviatorExpress(aviatorExpressParam, fieldSet);
@@ -68,11 +68,11 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
         //保存Aviator表达式依赖的宽表字段
         if (CollUtil.isNotEmpty(modelColumnList)) {
-            List<AviatorExpressParamModelColumnRelation> relationList = modelColumnList.stream()
+            List<AviatorExpressParamModelColumnRelationEntity> relationList = modelColumnList.stream()
                     //过滤出依赖的宽表字段
                     .filter(modelColumn -> paramList.contains(modelColumn.getName()))
                     .map(modelColumn -> {
-                        AviatorExpressParamModelColumnRelation relation = new AviatorExpressParamModelColumnRelation();
+                        AviatorExpressParamModelColumnRelationEntity relation = new AviatorExpressParamModelColumnRelationEntity();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                         relation.setModelColumnId(modelColumn.getId());
                         return relation;
@@ -89,11 +89,11 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveDataByMixUdafParamItem(AviatorExpressParam aviatorExpressParam) throws Exception {
+    public void saveDataByMixUdafParamItem(AviatorExpressParamEntity aviatorExpressParam) throws Exception {
         //校验Aviator表达式
-        List<MixUdafParamItem> mixUdafParamItemList = aviatorExpressParam.getMixUdafParamItemList();
+        List<MixUdafParamItemEntity> mixUdafParamItemList = aviatorExpressParam.getMixUdafParamItemList();
         Set<String> fieldSet = mixUdafParamItemList.stream()
-                .map(MixUdafParamItem::getName)
+                .map(MixUdafParamItemEntity::getName)
                 .collect(Collectors.toSet());
         List<String> paramList = checkAviatorExpress(aviatorExpressParam, fieldSet);
         //保存Aviator表达式
@@ -101,10 +101,10 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
         //保存Aviator表达式依赖的混合参数字段
         if (CollUtil.isNotEmpty(mixUdafParamItemList)) {
-            List<AviatorExpressParamMixUdafParamItemRelation> relationList = mixUdafParamItemList.stream()
+            List<AviatorExpressParamMixUdafParamItemRelationEntity> relationList = mixUdafParamItemList.stream()
                     .filter(mixUdafParamItem -> paramList.contains(mixUdafParamItem.getName()))
                     .map(mixUdafParamItem -> {
-                        AviatorExpressParamMixUdafParamItemRelation relation = new AviatorExpressParamMixUdafParamItemRelation();
+                        AviatorExpressParamMixUdafParamItemRelationEntity relation = new AviatorExpressParamMixUdafParamItemRelationEntity();
                         relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                         relation.setMixUdafParamItemId(mixUdafParamItem.getId());
                         return relation;
@@ -121,14 +121,14 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(AviatorExpressParam aviatorExpressParam) {
+    public void deleteData(AviatorExpressParamEntity aviatorExpressParam) {
         Integer aviatorExpressParamId = aviatorExpressParam.getId();
         super.removeById(aviatorExpressParamId);
-        List<ModelColumn> modelColumnList = aviatorExpressParam.getModelColumnList();
+        List<ModelColumnEntity> modelColumnList = aviatorExpressParam.getModelColumnList();
         //删除和ModelColumn的关联关系
         if (CollUtil.isNotEmpty(modelColumnList)) {
             List<Integer> list = modelColumnList.stream()
-                    .map(ModelColumn::getId)
+                    .map(ModelColumnEntity::getId)
                     .toList();
             QueryWrapper queryWrapper = QueryWrapper.create()
                     .where(AVIATOR_EXPRESS_PARAM_MODEL_COLUMN_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(aviatorExpressParamId))
@@ -136,10 +136,10 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
             aviatorExpressParamModelColumnRelationService.remove(queryWrapper);
         }
         //删除和MixUdafParamItem之间的关联关系
-        List<MixUdafParamItem> mixUdafParamItemList = aviatorExpressParam.getMixUdafParamItemList();
+        List<MixUdafParamItemEntity> mixUdafParamItemList = aviatorExpressParam.getMixUdafParamItemList();
         if (CollUtil.isNotEmpty(mixUdafParamItemList)) {
             List<Integer> list = mixUdafParamItemList.stream()
-                    .map(MixUdafParamItem::getId)
+                    .map(MixUdafParamItemEntity::getId)
                     .toList();
             QueryWrapper queryWrapper = QueryWrapper.create()
                     .where(AVIATOR_EXPRESS_PARAM_MIX_UDAF_PARAM_ITEM_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(aviatorExpressParamId))
@@ -147,10 +147,10 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
             aviatorExpressParamMixUdafParamItemRelationService.remove(queryWrapper);
         }
         //删除和AviatorFunctionInstance的关联关系
-        List<AviatorFunctionInstance> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
+        List<AviatorFunctionInstanceEntity> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
         if (CollUtil.isNotEmpty(aviatorFunctionInstanceList)) {
             List<Integer> list = aviatorFunctionInstanceList.stream()
-                    .map(AviatorFunctionInstance::getId)
+                    .map(AviatorFunctionInstanceEntity::getId)
                     .toList();
             QueryWrapper queryWrapper = QueryWrapper.create().where(AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION.AVIATOR_EXPRESS_PARAM_ID.eq(aviatorExpressParamId))
                     .and(AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION.AVIATOR_FUNCTION_INSTANCE_ID.in(list));
@@ -158,8 +158,8 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
         }
     }
 
-    private List<String> checkAviatorExpress(AviatorExpressParam aviatorExpressParam,
-                                     Set<String> fieldSet) throws Exception {
+    private List<String> checkAviatorExpress(AviatorExpressParamEntity aviatorExpressParam,
+                                             Set<String> fieldSet) throws Exception {
         if (aviatorExpressParam == null) {
             throw new BusinessException(AVIATOR_EXPRESS_CHECK_ERROR);
         }
@@ -175,7 +175,7 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
         //如果使用了自定义Aviator函数, 添加jar包路径
         if (CollUtil.isNotEmpty(aviatorExpressParam.getAviatorFunctionInstanceList())) {
             List<Integer> list = aviatorExpressParam.getAviatorFunctionInstanceList().stream()
-                    .map(AviatorFunctionInstance::getAviatorFunctionId)
+                    .map(AviatorFunctionInstanceEntity::getAviatorFunctionId)
                     .distinct()
                     .toList();
             List<String> jarList = aviatorFunctionService.queryChain()
@@ -183,9 +183,9 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
                     .withRelations()
                     .list()
                     .stream()
-                    .map(AviatorFunction::getJarStore)
+                    .map(AviatorFunctionEntity::getJarStore)
                     .filter(Objects::nonNull)
-                    .map(JarStore::getJarUrl)
+                    .map(JarStoreEntity::getJarUrl)
                     .distinct()
                     .toList();
             aviatorFunctionFactory.setUdfJarPathList(jarList);
@@ -196,18 +196,18 @@ public class AviatorExpressParamServiceImpl extends ServiceImpl<AviatorExpressPa
         return expression.getVariableNames();
     }
 
-    private void saveAviatorFunctionInstanceRelation(AviatorExpressParam aviatorExpressParam) {
+    private void saveAviatorFunctionInstanceRelation(AviatorExpressParamEntity aviatorExpressParam) {
         if (aviatorExpressParam == null) {
             return;
         }
         //保存Aviator表达式依赖的Aviator函数实例
-        List<AviatorFunctionInstance> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
+        List<AviatorFunctionInstanceEntity> aviatorFunctionInstanceList = aviatorExpressParam.getAviatorFunctionInstanceList();
         if (CollUtil.isEmpty(aviatorFunctionInstanceList)) {
             return;
         }
-        List<AviatorExpressParamAviatorFunctionInstanceRelation> relationList = aviatorFunctionInstanceList.stream()
+        List<AviatorExpressParamAviatorFunctionInstanceRelationEntity> relationList = aviatorFunctionInstanceList.stream()
                 .map(aviatorFunctionInstance -> {
-                    AviatorExpressParamAviatorFunctionInstanceRelation relation = new AviatorExpressParamAviatorFunctionInstanceRelation();
+                    AviatorExpressParamAviatorFunctionInstanceRelationEntity relation = new AviatorExpressParamAviatorFunctionInstanceRelationEntity();
                     relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                     relation.setAviatorFunctionInstanceId(aviatorFunctionInstance.getId());
                     return relation;

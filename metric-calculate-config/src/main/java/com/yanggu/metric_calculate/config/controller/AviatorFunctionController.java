@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDto;
-import com.yanggu.metric_calculate.config.pojo.req.AviatorFunctionQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDTO;
+import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
 import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
@@ -25,7 +25,7 @@ public class AviatorFunctionController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增Aviator函数")
-    public Result<Void> saveData(@RequestBody AviatorFunctionDto aviatorFunctionDto) throws Exception {
+    public Result<Void> saveData(@RequestBody AviatorFunctionDTO aviatorFunctionDto) throws Exception {
         aviatorFunctionService.saveData(aviatorFunctionDto);
         return Result.ok();
     }
@@ -39,7 +39,7 @@ public class AviatorFunctionController {
 
     @PutMapping("/updateData")
     @Operation(summary = "修改Aviator函数")
-    public Result<Void> updateData(@RequestBody AviatorFunctionDto aviatorFunctionDto) {
+    public Result<Void> updateData(@RequestBody AviatorFunctionDTO aviatorFunctionDto) {
         aviatorFunctionService.updateData(aviatorFunctionDto);
         return Result.ok();
     }
@@ -53,28 +53,28 @@ public class AviatorFunctionController {
 
     @GetMapping("/listData")
     @Operation(summary = "Aviator函数函数列表")
-    public Result<List<AviatorFunctionDto>> listData(AviatorFunctionQueryReq req) {
+    public Result<List<AviatorFunctionDTO>> listData(AviatorFunctionQuery req) {
         return Result.ok(aviatorFunctionService.listData(req));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Aviator函数详情")
-    public Result<AviatorFunctionDto> detail(@PathVariable("id") Integer id) {
+    public Result<AviatorFunctionDTO> detail(@PathVariable("id") Integer id) {
         return Result.ok(aviatorFunctionService.queryById(id));
     }
 
     @GetMapping("/pageData")
     @Operation(summary = "Aviator函数分页")
-    public Result<Page<AviatorFunctionDto>> pageData(Integer pageNumber,
+    public Result<Page<AviatorFunctionDTO>> pageData(Integer pageNumber,
                                                      Integer pageSize,
-                                                     AviatorFunctionQueryReq req) {
+                                                     AviatorFunctionQuery req) {
         return Result.ok(aviatorFunctionService.pageData(pageNumber, pageSize, req));
     }
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, AviatorFunctionQueryReq req) {
-        List<AviatorFunctionDto> list = aviatorFunctionService.listData(req);
+    public void excelExport(HttpServletResponse response, AviatorFunctionQuery req) {
+        List<AviatorFunctionDTO> list = aviatorFunctionService.listData(req);
         ExcelUtil.exportFormList(response, list);
     }
 

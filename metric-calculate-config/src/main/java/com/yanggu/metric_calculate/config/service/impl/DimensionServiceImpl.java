@@ -6,9 +6,9 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.DimensionMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DimensionMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.DimensionDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Dimension;
-import com.yanggu.metric_calculate.config.pojo.req.DimensionQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.DimensionDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
+import com.yanggu.metric_calculate.config.pojo.query.DimensionQuery;
 import com.yanggu.metric_calculate.config.service.DimensionService;
 import com.yanggu.metric_calculate.config.service.ModelDimensionColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelDimensio
  * 维度表 服务层实现。
  */
 @Service
-public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension> implements DimensionService {
+public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, DimensionEntity> implements DimensionService {
 
     @Autowired
     private DimensionMapper dimensionMapper;
@@ -39,16 +39,16 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(DimensionDto dimensionDto) {
-        Dimension dimension = dimensionMapstruct.toEntity(dimensionDto);
+    public void saveData(DimensionDTO dimensionDto) {
+        DimensionEntity dimension = dimensionMapstruct.toEntity(dimensionDto);
         checkExist(dimension);
         super.save(dimension);
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateData(DimensionDto dimensionDto) {
-        Dimension dimension = dimensionMapstruct.toEntity(dimensionDto);
+    public void updateData(DimensionDTO dimensionDto) {
+        DimensionEntity dimension = dimensionMapstruct.toEntity(dimensionDto);
         checkExist(dimension);
         super.updateById(dimension);
     }
@@ -67,27 +67,27 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
     }
 
     @Override
-    public List<DimensionDto> listData(DimensionQueryReq req) {
+    public List<DimensionDTO> listData(DimensionQuery req) {
         QueryWrapper queryWrapper = buildDimensionQueryWrapper(req);
-        List<Dimension> dimensions = dimensionMapper.selectListByQuery(queryWrapper);
+        List<DimensionEntity> dimensions = dimensionMapper.selectListByQuery(queryWrapper);
         return dimensionMapstruct.toDTO(dimensions);
     }
 
     @Override
-    public DimensionDto queryById(Integer id) {
-        Dimension dimension = dimensionMapper.selectOneById(id);
+    public DimensionDTO queryById(Integer id) {
+        DimensionEntity dimension = dimensionMapper.selectOneById(id);
         return dimensionMapstruct.toDTO(dimension);
     }
 
     @Override
-    public Page<DimensionDto> pageData(Integer pageNumber, Integer pageSize, DimensionQueryReq req) {
+    public Page<DimensionDTO> pageData(Integer pageNumber, Integer pageSize, DimensionQuery req) {
         QueryWrapper queryWrapper = buildDimensionQueryWrapper(req);
-        Page<Dimension> page = dimensionMapper.paginate(pageNumber, pageSize, queryWrapper);
-        List<DimensionDto> list = dimensionMapstruct.toDTO(page.getRecords());
+        Page<DimensionEntity> page = dimensionMapper.paginate(pageNumber, pageSize, queryWrapper);
+        List<DimensionDTO> list = dimensionMapstruct.toDTO(page.getRecords());
         return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
     }
 
-    private void checkExist(Dimension dimension) {
+    private void checkExist(DimensionEntity dimension) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 .where(DIMENSION.ID.ne(dimension.getId()))
                 .and(DIMENSION.NAME.eq(dimension.getName()).or(DIMENSION.DISPLAY_NAME.eq(dimension.getDisplayName())));
@@ -97,7 +97,7 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
         }
     }
 
-    private QueryWrapper buildDimensionQueryWrapper(DimensionQueryReq req) {
+    private QueryWrapper buildDimensionQueryWrapper(DimensionQuery req) {
         return QueryWrapper.create()
                 .where(DIMENSION.NAME.like(req.getDimensionName()))
                 .and(DIMENSION.DISPLAY_NAME.like(req.getDimensionDisplayName()))

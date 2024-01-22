@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
+import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.core.enums.BasicType;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
@@ -16,7 +16,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("ModelMapstruct")
 @Mapper(uses = {ModelColumnMapstruct.class, DeriveMapstruct.class}, componentModel = SPRING)
-public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
+public interface ModelMapstruct extends BaseMapstruct<ModelDTO, ModelEntity> {
 
     /**
      * 转换成core中的宽表
@@ -33,13 +33,13 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
     @Mapping(source = "atomList", target = "udafJarPathList", qualifiedByName = "getUdafJarPathList")
     //自定义aviator函数jar包路径
     @Mapping(source = "model", target = "aviatorFunctionJarPathList", qualifiedByName = "getAviatorFunctionJarPathList")
-    com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Model model);
+    com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(ModelEntity model);
 
     @IterableMapping(qualifiedByName = "toCoreModel")
-    List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> toCoreModel(List<Model> modelList);
+    List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> toCoreModel(List<ModelEntity> modelList);
 
     @Named("getFieldMap")
-    default Map<String, Class<?>> getFieldMap(List<ModelColumn> modelColumnList) {
+    default Map<String, Class<?>> getFieldMap(List<ModelColumnEntity> modelColumnList) {
         List<com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn> collect =
                 modelColumnList.stream()
                         .map(tempModelColumn -> {
@@ -59,12 +59,12 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
      * @return
      */
     @Named("getUdafJarPathList")
-    default List<String> getUdafJarPathList(List<Atom> atomList) {
+    default List<String> getUdafJarPathList(List<AtomEntity> atomList) {
         if (CollUtil.isEmpty(atomList)) {
             return Collections.emptyList();
         }
         return atomList.stream()
-                .map(Atom::getAggregateFunctionParam)
+                .map(AtomEntity::getAggregateFunctionParam)
                 .map(AggregateFunctionParamMapstruct::getUdafJarPathList)
                 .filter(CollUtil::isNotEmpty)
                 .flatMap(Collection::stream)
@@ -79,24 +79,24 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDto, Model> {
      * @return
      */
     @Named("getAviatorFunctionJarPathList")
-    default List<String> getAviatorFunctionJarPathList(Model model) {
-        List<AviatorExpressParam> aviatorExpressParamList = new ArrayList<>();
+    default List<String> getAviatorFunctionJarPathList(ModelEntity model) {
+        List<AviatorExpressParamEntity> aviatorExpressParamList = new ArrayList<>();
         //从宽表虚拟字段表达式尝试获取自定义Aviator函数jar包路径
-        List<ModelColumn> modelColumnList = model.getModelColumnList();
+        List<ModelColumnEntity> modelColumnList = model.getModelColumnList();
         if (CollUtil.isNotEmpty(modelColumnList)) {
-            List<AviatorExpressParam> list = modelColumnList.stream()
-                    .map(ModelColumn::getAviatorExpressParam)
+            List<AviatorExpressParamEntity> list = modelColumnList.stream()
+                    .map(ModelColumnEntity::getAviatorExpressParam)
                     .filter(Objects::nonNull)
                     .toList();
             if (CollUtil.isNotEmpty(list)) {
                 aviatorExpressParamList.addAll(list);
             }
         }
-        List<Derive> deriveList = model.getDeriveList();
+        List<DeriveEntity> deriveList = model.getDeriveList();
         if (CollUtil.isNotEmpty(deriveList)) {
             //尝试从派生指标中获取
-            for (Derive derive : deriveList) {
-                List<AviatorExpressParam> tempList = DeriveMapstruct.getAviatorExpressParamFromDerive(derive);
+            for (DeriveEntity derive : deriveList) {
+                List<AviatorExpressParamEntity> tempList = DeriveMapstruct.getAviatorExpressParamFromDerive(derive);
                 if (CollUtil.isNotEmpty(tempList)) {
                     aviatorExpressParamList.addAll(tempList);
                 }

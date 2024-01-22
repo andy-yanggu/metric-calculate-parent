@@ -2,38 +2,38 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Model;
-import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelEntity;
+import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
 
 import java.util.List;
 
 /**
  * 数据明细宽表 服务层
  */
-public interface ModelService extends IService<Model> {
+public interface ModelService extends IService<ModelEntity> {
 
     /**
      * 新增宽表
      * @param modelDto
      */
-    void saveData(ModelDto modelDto) throws Exception;
+    void saveData(ModelDTO modelDto) throws Exception;
 
     /**
      * 根据主键更新
      *
      * @param modelDto
      */
-    void updateData(ModelDto modelDto);
+    void updateData(ModelDTO modelDto);
 
     /**
      * 修改其他数据
      */
-    void updateOtherData(ModelDto modelDto);
+    void updateOtherData(ModelDTO modelDto);
 
     void deleteById(Integer id);
 
-    List<ModelDto> listData(ModelQueryReq req);
+    List<ModelDTO> listData(ModelQuery req);
 
     /**
      * 根据主键查询
@@ -41,9 +41,9 @@ public interface ModelService extends IService<Model> {
      * @param id
      * @return
      */
-    ModelDto queryById(Integer id);
+    ModelDTO queryById(Integer id);
 
-    Page<ModelDto> pageData(Integer pageNumber, Integer pageSize, ModelQueryReq req);
+    Page<ModelDTO> pageData(Integer pageNumber, Integer pageSize, ModelQuery req);
 
     com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId);
 

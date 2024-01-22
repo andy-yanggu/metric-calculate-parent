@@ -15,7 +15,7 @@ import java.util.List;
  * 映射类型udaf参数 服务层实现。
  */
 @Service
-public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, MapUdafParam> implements MapUdafParamService {
+public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, MapUdafParamEntity> implements MapUdafParamService {
 
     @Autowired
     private AviatorExpressParamService aviatorExpressParamService;
@@ -31,22 +31,22 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(MapUdafParam mapUdafParam, List<ModelColumn> modelColumnList) throws Exception {
+    public void saveData(MapUdafParamEntity mapUdafParam, List<ModelColumnEntity> modelColumnList) throws Exception {
         super.save(mapUdafParam);
 
-        List<AviatorExpressParam> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
-        for (AviatorExpressParam aviatorExpressParam : distinctFieldParamList) {
+        List<AviatorExpressParamEntity> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
+        for (AviatorExpressParamEntity aviatorExpressParam : distinctFieldParamList) {
             aviatorExpressParam.setModelColumnList(modelColumnList);
             aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
-            MapUdafParamDistinctFieldListRelation relation = new MapUdafParamDistinctFieldListRelation();
+            MapUdafParamDistinctFieldListRelationEntity relation = new MapUdafParamDistinctFieldListRelationEntity();
             relation.setMapUdafParamId(mapUdafParam.getId());
             relation.setAviatorExpressParamId(aviatorExpressParam.getId());
             mapUdafParamDistinctFieldListRelationService.save(relation);
         }
 
-        BaseUdafParam valueAggParam = mapUdafParam.getValueAggParam();
+        BaseUdafParamEntity valueAggParam = mapUdafParam.getValueAggParam();
         baseUdafParamService.saveData(valueAggParam, modelColumnList);
-        MapUdafParamValueAggRelation relation = new MapUdafParamValueAggRelation();
+        MapUdafParamValueAggRelationEntity relation = new MapUdafParamValueAggRelationEntity();
         relation.setMapUdafParamId(mapUdafParam.getId());
         relation.setBaseUdafParamId(valueAggParam.getId());
         mapUdafParamValueAggRelationService.save(relation);
@@ -54,16 +54,16 @@ public class MapUdafParamServiceImpl extends ServiceImpl<MapUdafParamMapper, Map
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(MapUdafParam mapUdafParam) {
+    public void deleteData(MapUdafParamEntity mapUdafParam) {
         Integer mapUdafParamId = mapUdafParam.getId();
         super.removeById(mapUdafParamId);
-        List<AviatorExpressParam> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
+        List<AviatorExpressParamEntity> distinctFieldParamList = mapUdafParam.getDistinctFieldParamList();
         if (CollUtil.isNotEmpty(distinctFieldParamList)) {
-            for (AviatorExpressParam aviatorExpressParam : distinctFieldParamList) {
+            for (AviatorExpressParamEntity aviatorExpressParam : distinctFieldParamList) {
                 aviatorExpressParamService.deleteData(aviatorExpressParam);
             }
         }
-        BaseUdafParam valueAggParam = mapUdafParam.getValueAggParam();
+        BaseUdafParamEntity valueAggParam = mapUdafParam.getValueAggParam();
         baseUdafParamService.deleteData(valueAggParam);
     }
 

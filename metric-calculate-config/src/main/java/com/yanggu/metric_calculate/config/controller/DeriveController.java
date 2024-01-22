@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
-import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
+import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.DeriveService;
@@ -26,14 +26,14 @@ public class DeriveController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增派生指标")
-    public Result<Void> saveData(@RequestBody DeriveDto deriveDto) throws Exception {
+    public Result<Void> saveData(@RequestBody DeriveDTO deriveDto) throws Exception {
         deriveService.saveData(deriveDto);
         return Result.ok();
     }
 
     @PutMapping("/updateData")
     @Operation(summary = "修改派生指标")
-    public Result<Void> updateData(@RequestBody DeriveDto deriveDto) throws Exception {
+    public Result<Void> updateData(@RequestBody DeriveDTO deriveDto) throws Exception {
         deriveService.updateData(deriveDto);
         return Result.ok();
     }
@@ -47,19 +47,19 @@ public class DeriveController {
 
     @GetMapping("/listData")
     @Operation(summary = "派生指标列表")
-    public Result<List<DeriveDto>> listData(DeriveQueryReq deriveQuery) {
+    public Result<List<DeriveDTO>> listData(DeriveQuery deriveQuery) {
         return Result.ok(deriveService.listData(deriveQuery));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "派生指标详情")
-    public Result<DeriveDto> detail(@PathVariable("id") Integer id) {
+    public Result<DeriveDTO> detail(@PathVariable("id") Integer id) {
         return Result.ok(deriveService.queryById(id));
     }
 
     @GetMapping("/pageQuery")
     @Operation(summary = "派生指标分页")
-    public Result<Page<DeriveDto>> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery) {
+    public Result<Page<DeriveDTO>> pageQuery(Integer pageNumber, Integer pageSize, DeriveQuery deriveQuery) {
         return Result.ok(deriveService.pageQuery(pageNumber, pageSize, deriveQuery));
     }
 
@@ -79,8 +79,8 @@ public class DeriveController {
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, DeriveQueryReq req) {
-        List<DeriveDto> list = deriveService.listData(req);
+    public void excelExport(HttpServletResponse response, DeriveQuery req) {
+        List<DeriveDTO> list = deriveService.listData(req);
         ExcelUtil.exportFormList(response, list);
     }
 

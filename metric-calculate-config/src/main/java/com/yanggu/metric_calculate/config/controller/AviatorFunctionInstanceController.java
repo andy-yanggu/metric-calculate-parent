@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDto;
-import com.yanggu.metric_calculate.config.pojo.req.AviatorFunctionInstanceQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDTO;
+import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionInstanceQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,14 +23,14 @@ public class AviatorFunctionInstanceController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增Aviator函数实例")
-    public Result<Void> saveData(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstanceDto) {
+    public Result<Void> saveData(@RequestBody AviatorFunctionInstanceDTO aviatorFunctionInstanceDto) {
         aviatorFunctionInstanceService.saveData(aviatorFunctionInstanceDto);
         return Result.ok();
     }
 
     @PutMapping("/updateData")
     @Operation(summary = "修改Aviator函数实例")
-    public Result<Void> updateData(@RequestBody AviatorFunctionInstanceDto aviatorFunctionInstanceDto) {
+    public Result<Void> updateData(@RequestBody AviatorFunctionInstanceDTO aviatorFunctionInstanceDto) {
         aviatorFunctionInstanceService.updateData(aviatorFunctionInstanceDto);
         return Result.ok();
     }
@@ -44,21 +44,21 @@ public class AviatorFunctionInstanceController {
 
     @GetMapping("/listData")
     @Operation(summary = "Aviator函数实例列表")
-    public Result<List<AviatorFunctionInstanceDto>> listData(AviatorFunctionInstanceQueryReq req) {
+    public Result<List<AviatorFunctionInstanceDTO>> listData(AviatorFunctionInstanceQuery req) {
         return Result.ok(aviatorFunctionInstanceService.listData(req));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Aviator函数实例详情")
-    public Result<AviatorFunctionInstanceDto> detail(@PathVariable("id") Integer id) {
+    public Result<AviatorFunctionInstanceDTO> detail(@PathVariable("id") Integer id) {
         return Result.ok(aviatorFunctionInstanceService.queryById(id));
     }
 
     @GetMapping("/pageData")
     @Operation(summary = "Aviator函数实例分页")
-    public Result<Page<AviatorFunctionInstanceDto>> pageData(Integer pageNumber,
+    public Result<Page<AviatorFunctionInstanceDTO>> pageData(Integer pageNumber,
                                                              Integer pageSize,
-                                                             AviatorFunctionInstanceQueryReq req) {
+                                                             AviatorFunctionInstanceQuery req) {
         return Result.ok(aviatorFunctionInstanceService.pageData(pageNumber, pageSize, req));
     }
 

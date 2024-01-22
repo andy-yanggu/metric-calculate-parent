@@ -8,11 +8,11 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AggregateFunctionMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionField;
-import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
-import com.yanggu.metric_calculate.config.pojo.req.AggregateFunctionQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionFieldEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.pojo.query.AggregateFunctionQuery;
 import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
@@ -49,7 +49,7 @@ import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctio
  */
 @Slf4j
 @Service
-public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionMapper, AggregateFunction> implements AggregateFunctionService {
+public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionMapper, AggregateFunctionEntity> implements AggregateFunctionService {
 
     @Autowired
     private AggregateFunctionMapper aggregateFunctionMapper;
@@ -74,9 +74,9 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(AggregateFunctionDto aggregateFunctionDto) throws Exception {
+    public void saveData(AggregateFunctionDTO aggregateFunctionDto) throws Exception {
         Boolean isBuiltIn = aggregateFunctionDto.getIsBuiltIn();
-        AggregateFunction aggregateFunction;
+        AggregateFunctionEntity aggregateFunction;
         //如果是内置的, 检查是否存在
         if (Boolean.TRUE.equals(isBuiltIn)) {
             AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory();
@@ -94,7 +94,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         //检查name、displayName字段是否重复
         checkExist(aggregateFunction);
         super.save(aggregateFunction);
-        List<AggregateFunctionField> aggregateFunctionFieldList = aggregateFunction.getAggregateFunctionFieldList();
+        List<AggregateFunctionFieldEntity> aggregateFunctionFieldList = aggregateFunction.getAggregateFunctionFieldList();
         if (CollUtil.isNotEmpty(aggregateFunctionFieldList)) {
             aggregateFunctionFieldList.forEach(aggregateFunctionField ->
                     aggregateFunctionField.setAggregateFunctionId(aggregateFunction.getId()));
@@ -108,29 +108,29 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         //文件保存到本地
         File dest = new File(SystemUtil.getTmpDirPath() + File.separatorChar + IdUtil.fastSimpleUUID());
         file.transferTo(dest);
-        List<AggregateFunction> aggregateFunctionList = new ArrayList<>();
+        List<AggregateFunctionEntity> aggregateFunctionList = new ArrayList<>();
         Consumer<Class<?>> consumer = clazz -> aggregateFunctionList.add(buildAggregateFunction(clazz));
         //加载class到list中
         FunctionFactory.loadClassFromJar(Collections.singletonList(dest.getAbsolutePath()), CLASS_FILTER, consumer);
         if (CollUtil.isEmpty(aggregateFunctionList)) {
             throw new BusinessException(JAR_NOT_HAVE_CLASS);
         }
-        JarStore jarStore = new JarStore();
+        JarStoreEntity jarStore = new JarStoreEntity();
         //TODO 这里可以根据需要将jar文件保存到远程文件服务器中
         jarStore.setJarUrl(dest.toURI().toURL().getPath());
         jarStoreService.save(jarStore);
-        for (AggregateFunction aggregateFunction : aggregateFunctionList) {
+        for (AggregateFunctionEntity aggregateFunction : aggregateFunctionList) {
             aggregateFunction.setIsBuiltIn(false);
             aggregateFunction.setJarStoreId(jarStore.getId());
-            AggregateFunctionDto dto = aggregateFunctionMapstruct.toDTO(aggregateFunction);
+            AggregateFunctionDTO dto = aggregateFunctionMapstruct.toDTO(aggregateFunction);
             saveData(dto);
         }
     }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateData(AggregateFunctionDto aggregateFunctionDto) {
-        AggregateFunction aggregateFunction = UpdateEntity.of(AggregateFunction.class, aggregateFunctionDto.getId());
+    public void updateData(AggregateFunctionDTO aggregateFunctionDto) {
+        AggregateFunctionEntity aggregateFunction = UpdateEntity.of(AggregateFunctionEntity.class, aggregateFunctionDto.getId());
         //只允许修改description
         aggregateFunction.setDescription(aggregateFunctionDto.getDescription());
         aggregateFunctionMapper.update(aggregateFunction);
@@ -173,41 +173,41 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     }
 
     @Override
-    public List<AggregateFunctionDto> listData(AggregateFunctionQueryReq queryReq) {
+    public List<AggregateFunctionDTO> listData(AggregateFunctionQuery queryReq) {
         QueryWrapper where = buildAggregateFunctionQueryWrapper(queryReq);
-        List<AggregateFunction> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
+        List<AggregateFunctionEntity> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
         return aggregateFunctionMapstruct.toDTO(aggregateFunctionList);
     }
 
     @Override
-    public AggregateFunctionDto queryById(Integer id) {
-        AggregateFunction aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
+    public AggregateFunctionDTO queryById(Integer id) {
+        AggregateFunctionEntity aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
         return aggregateFunctionMapstruct.toDTO(aggregateFunction);
     }
 
     @Override
-    public Page<AggregateFunctionDto> pageQuery(Integer pageNumber,
+    public Page<AggregateFunctionDTO> pageQuery(Integer pageNumber,
                                                 Integer pageSize,
-                                                AggregateFunctionQueryReq queryReq) {
+                                                AggregateFunctionQuery queryReq) {
         QueryWrapper queryWrapper = buildAggregateFunctionQueryWrapper(queryReq);
-        Page<AggregateFunction> aggregateFunctionPage = aggregateFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<AggregateFunctionDto> list = aggregateFunctionMapstruct.toDTO(aggregateFunctionPage.getRecords());
+        Page<AggregateFunctionEntity> aggregateFunctionPage = aggregateFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
+        List<AggregateFunctionDTO> list = aggregateFunctionMapstruct.toDTO(aggregateFunctionPage.getRecords());
         return new Page<>(list, pageNumber, pageSize, aggregateFunctionPage.getTotalRow());
     }
 
-    private QueryWrapper buildAggregateFunctionQueryWrapper(AggregateFunctionQueryReq queryReq) {
+    private QueryWrapper buildAggregateFunctionQueryWrapper(AggregateFunctionQuery queryReq) {
         return QueryWrapper.create()
                 .where(AGGREGATE_FUNCTION.NAME.like(queryReq.getAggregateFunctionName()))
                 .and(AGGREGATE_FUNCTION.DISPLAY_NAME.like(queryReq.getAggregateFunctionDisplayName()))
                 .orderBy(queryReq.getOrderByColumnName(), queryReq.getAsc());
     }
 
-    private static AggregateFunction buildAggregateFunction(Class<?> clazz) {
+    private static AggregateFunctionEntity buildAggregateFunction(Class<?> clazz) {
         AggregateFunctionAnnotation aggregateFunctionAnnotation = clazz.getAnnotation(AggregateFunctionAnnotation.class);
         if (aggregateFunctionAnnotation == null) {
             throw new BusinessException(AGGREGATE_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
         }
-        AggregateFunction aggregateFunction = new AggregateFunction();
+        AggregateFunctionEntity aggregateFunction = new AggregateFunctionEntity();
         //设置名字
         aggregateFunction.setName(aggregateFunctionAnnotation.name());
         //设置中文名
@@ -244,9 +244,9 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AggregateFunctionFieldAnnotation.class);
         if (CollUtil.isNotEmpty(udafCustomParamList)) {
             AtomicInteger index = new AtomicInteger(0);
-            List<AggregateFunctionField> list = udafCustomParamList.stream()
+            List<AggregateFunctionFieldEntity> list = udafCustomParamList.stream()
                     .map(temp -> {
-                        AggregateFunctionField aggregateFunctionField = new AggregateFunctionField();
+                        AggregateFunctionFieldEntity aggregateFunctionField = new AggregateFunctionFieldEntity();
                         aggregateFunctionField.setName(temp.getName());
                         aggregateFunctionField.setDisplayName(temp.getDisplayName());
                         aggregateFunctionField.setDescription(temp.getDescription());
@@ -264,7 +264,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
      *
      * @param aggregateFunction
      */
-    private void checkExist(AggregateFunction aggregateFunction) {
+    private void checkExist(AggregateFunctionEntity aggregateFunction) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
                 .where(AGGREGATE_FUNCTION.ID.ne(aggregateFunction.getId()))

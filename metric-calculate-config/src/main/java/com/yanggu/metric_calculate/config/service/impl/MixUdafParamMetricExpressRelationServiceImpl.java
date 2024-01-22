@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.MixUdafParamMetricExpressRelationMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParamMetricExpressRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.MixUdafParamMetricExpressRelationEntity;
 import com.yanggu.metric_calculate.config.service.MixUdafParamMetricExpressRelationService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-07-10
  */
 @Service
-public class MixUdafParamMetricExpressRelationServiceImpl extends ServiceImpl<MixUdafParamMetricExpressRelationMapper, MixUdafParamMetricExpressRelation> implements MixUdafParamMetricExpressRelationService {
+public class MixUdafParamMetricExpressRelationServiceImpl extends ServiceImpl<MixUdafParamMetricExpressRelationMapper, MixUdafParamMetricExpressRelationEntity> implements MixUdafParamMetricExpressRelationService {
 
 }

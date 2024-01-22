@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
-import com.yanggu.metric_calculate.config.pojo.dto.BaseUdafParamDto;
-import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParam;
+import com.yanggu.metric_calculate.config.pojo.dto.BaseUdafParamDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -10,7 +10,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("BaseUdafParamMapstruct")
 @Mapper(uses = {AviatorExpressParamMapstruct.class}, componentModel = SPRING)
-public interface BaseUdafParamMapstruct extends BaseMapstruct<BaseUdafParamDto, BaseUdafParam> {
+public interface BaseUdafParamMapstruct extends BaseMapstruct<BaseUdafParamDTO, BaseUdafParamEntity> {
 
     /**
      * 转换成core中的BaseUdafParam
@@ -23,6 +23,6 @@ public interface BaseUdafParamMapstruct extends BaseMapstruct<BaseUdafParamDto, 
     @Mapping(source = "metricExpressParam", target = "metricExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
     @Mapping(source = "metricExpressParamList", target = "metricExpressParamList", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
     @Mapping(source = "param", target = "param")
-    com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam toCoreBaseUdafParam(BaseUdafParam baseUdafParam);
+    com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam toCoreBaseUdafParam(BaseUdafParamEntity baseUdafParam);
 
 }

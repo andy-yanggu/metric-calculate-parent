@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.yanggu.metric_calculate.config.mapper.AviatorExpressParamAviatorFunctionInstanceRelationMapper">
     <resultMap id="BaseResultMap"
-               type="com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamAviatorFunctionInstanceRelation">
+               type="com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamAviatorFunctionInstanceRelationEntity">
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="aviator_express_param_id" jdbcType="INTEGER" property="aviatorExpressParamId"/>
         <result column="aviator_function_instance_id" jdbcType="INTEGER" property="aviatorFunctionInstanceId"/>

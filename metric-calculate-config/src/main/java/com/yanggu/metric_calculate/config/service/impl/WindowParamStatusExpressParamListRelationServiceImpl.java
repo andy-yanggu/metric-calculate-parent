@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.WindowParamStatusExpressParamListRelationMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParamStatusExpressParamListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.WindowParamStatusExpressParamListRelationEntity;
 import com.yanggu.metric_calculate.config.service.WindowParamStatusExpressParamListRelationService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-25
  */
 @Service
-public class WindowParamStatusExpressParamListRelationServiceImpl extends ServiceImpl<WindowParamStatusExpressParamListRelationMapper, WindowParamStatusExpressParamListRelation> implements WindowParamStatusExpressParamListRelationService {
+public class WindowParamStatusExpressParamListRelationServiceImpl extends ServiceImpl<WindowParamStatusExpressParamListRelationMapper, WindowParamStatusExpressParamListRelationEntity> implements WindowParamStatusExpressParamListRelationService {
 
 }

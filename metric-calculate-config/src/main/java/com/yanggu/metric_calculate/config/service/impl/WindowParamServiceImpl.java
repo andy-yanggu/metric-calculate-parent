@@ -21,7 +21,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.WindowParamSt
  * 窗口相关参数 服务层实现。
  */
 @Service
-public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, WindowParam> implements WindowParamService {
+public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, WindowParamEntity> implements WindowParamService {
 
     @Autowired
     private AviatorExpressParamService aviatorExpressParamService;
@@ -34,25 +34,25 @@ public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, Windo
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(WindowParam windowParam, List<ModelColumn> modelColumnList) throws Exception {
+    public void saveData(WindowParamEntity windowParam, List<ModelColumnEntity> modelColumnList) throws Exception {
         super.save(windowParam);
 
         //保存状态窗口表达式列表
-        List<AviatorExpressParam> statusExpressParamList = windowParam.getStatusExpressParamList();
+        List<AviatorExpressParamEntity> statusExpressParamList = windowParam.getStatusExpressParamList();
         if (CollUtil.isNotEmpty(statusExpressParamList)) {
-            for (AviatorExpressParam aviatorExpressParam : statusExpressParamList) {
+            for (AviatorExpressParamEntity aviatorExpressParam : statusExpressParamList) {
                 aviatorExpressParam.setModelColumnList(modelColumnList);
                 aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
-                WindowParamStatusExpressParamListRelation relation = new WindowParamStatusExpressParamListRelation();
+                WindowParamStatusExpressParamListRelationEntity relation = new WindowParamStatusExpressParamListRelationEntity();
                 relation.setWindowParamId(windowParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                 windowParamStatusExpressParamListRelationService.save(relation);
             }
         }
 
-        List<NodePattern> nodePatternList = windowParam.getNodePatternList();
+        List<NodePatternEntity> nodePatternList = windowParam.getNodePatternList();
         if (CollUtil.isNotEmpty(nodePatternList)) {
-            for (NodePattern nodePattern : nodePatternList) {
+            for (NodePatternEntity nodePattern : nodePatternList) {
                 nodePattern.setWindowParamId(windowParam.getId());
                 nodePatternService.saveData(nodePattern, modelColumnList);
             }
@@ -61,25 +61,25 @@ public class WindowParamServiceImpl extends ServiceImpl<WindowParamMapper, Windo
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(WindowParam windowParam) {
+    public void deleteData(WindowParamEntity windowParam) {
         Integer windowParamId = windowParam.getId();
         super.removeById(windowParamId);
-        List<AviatorExpressParam> statusExpressParamList = windowParam.getStatusExpressParamList();
+        List<AviatorExpressParamEntity> statusExpressParamList = windowParam.getStatusExpressParamList();
         if (CollUtil.isNotEmpty(statusExpressParamList)) {
-            for (AviatorExpressParam aviatorExpressParam : statusExpressParamList) {
+            for (AviatorExpressParamEntity aviatorExpressParam : statusExpressParamList) {
                 aviatorExpressParamService.deleteData(aviatorExpressParam);
             }
             List<Integer> list = statusExpressParamList.stream()
-                    .map(AviatorExpressParam::getId)
+                    .map(AviatorExpressParamEntity::getId)
                     .toList();
             QueryWrapper queryWrapper = QueryWrapper.create()
                     .where(WINDOW_PARAM_STATUS_EXPRESS_PARAM_LIST_RELATION.WINDOW_PARAM_ID.eq(windowParamId))
                     .and(WINDOW_PARAM_STATUS_EXPRESS_PARAM_LIST_RELATION.AVIATOR_EXPRESS_PARAM_ID.in(list));
             windowParamStatusExpressParamListRelationService.remove(queryWrapper);
         }
-        List<NodePattern> nodePatternList = windowParam.getNodePatternList();
+        List<NodePatternEntity> nodePatternList = windowParam.getNodePatternList();
         if (CollUtil.isNotEmpty(nodePatternList)) {
-            for (NodePattern nodePattern : nodePatternList) {
+            for (NodePatternEntity nodePattern : nodePatternList) {
                 nodePatternService.deleteData(nodePattern);
             }
         }

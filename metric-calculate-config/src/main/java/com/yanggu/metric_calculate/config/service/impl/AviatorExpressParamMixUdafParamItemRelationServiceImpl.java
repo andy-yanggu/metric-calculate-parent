@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.AviatorExpressParamMixUdafParamItemRelationMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamMixUdafParamItemRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamMixUdafParamItemRelationEntity;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamMixUdafParamItemRelationService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-08-23
  */
 @Service
-public class AviatorExpressParamMixUdafParamItemRelationServiceImpl extends ServiceImpl<AviatorExpressParamMixUdafParamItemRelationMapper, AviatorExpressParamMixUdafParamItemRelation> implements AviatorExpressParamMixUdafParamItemRelationService {
+public class AviatorExpressParamMixUdafParamItemRelationServiceImpl extends ServiceImpl<AviatorExpressParamMixUdafParamItemRelationMapper, AviatorExpressParamMixUdafParamItemRelationEntity> implements AviatorExpressParamMixUdafParamItemRelationService {
 
 }

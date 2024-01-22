@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * @since 2023-07-10
  */
 @Repository
-public interface ModelColumnMapper extends BaseMapper<ModelColumn> {
+public interface ModelColumnMapper extends BaseMapper<ModelColumnEntity> {
 
 }

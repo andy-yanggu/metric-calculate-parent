@@ -22,7 +22,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.BaseUdafParam
  * 数值型、集合型、对象型聚合函数相关参数 服务层实现。
  */
 @Service
-public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, BaseUdafParam> implements BaseUdafParamService {
+public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, BaseUdafParamEntity> implements BaseUdafParamService {
 
     @Autowired
     private AviatorExpressParamService aviatorExpressParamService;
@@ -35,23 +35,23 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(BaseUdafParam baseUdafParam, List<ModelColumn> modelColumnList) throws Exception {
+    public void saveData(BaseUdafParamEntity baseUdafParam, List<ModelColumnEntity> modelColumnList) throws Exception {
         super.save(baseUdafParam);
-        AviatorExpressParam metricExpressParam = baseUdafParam.getMetricExpressParam();
+        AviatorExpressParamEntity metricExpressParam = baseUdafParam.getMetricExpressParam();
         if (metricExpressParam != null) {
             metricExpressParam.setModelColumnList(modelColumnList);
             aviatorExpressParamService.saveDataByModelColumn(metricExpressParam);
-            BaseUdafParamMetricExpressRelation relation = new BaseUdafParamMetricExpressRelation();
+            BaseUdafParamMetricExpressRelationEntity relation = new BaseUdafParamMetricExpressRelationEntity();
             relation.setBaseUdafParamId(baseUdafParam.getId());
             relation.setAviatorExpressParamId(metricExpressParam.getId());
             metricExpressRelationService.save(relation);
         }
-        List<AviatorExpressParam> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
+        List<AviatorExpressParamEntity> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
         if (CollUtil.isNotEmpty(metricExpressParamList)) {
-            for (AviatorExpressParam aviatorExpressParam : metricExpressParamList) {
+            for (AviatorExpressParamEntity aviatorExpressParam : metricExpressParamList) {
                 aviatorExpressParam.setModelColumnList(modelColumnList);
                 aviatorExpressParamService.saveDataByModelColumn(aviatorExpressParam);
-                BaseUdafParamMetricExpressListRelation relation = new BaseUdafParamMetricExpressListRelation();
+                BaseUdafParamMetricExpressListRelationEntity relation = new BaseUdafParamMetricExpressListRelationEntity();
                 relation.setBaseUdafParamId(baseUdafParam.getId());
                 relation.setAviatorExpressParamId(aviatorExpressParam.getId());
                 metricExpressListRelationService.save(relation);
@@ -61,10 +61,10 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(BaseUdafParam baseUdafParam) {
+    public void deleteData(BaseUdafParamEntity baseUdafParam) {
         Integer baseUdafParamId = baseUdafParam.getId();
         super.removeById(baseUdafParamId);
-        AviatorExpressParam metricExpressParam = baseUdafParam.getMetricExpressParam();
+        AviatorExpressParamEntity metricExpressParam = baseUdafParam.getMetricExpressParam();
         if (metricExpressParam != null) {
             aviatorExpressParamService.deleteData(metricExpressParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
@@ -73,12 +73,12 @@ public class BaseUdafParamServiceImpl extends ServiceImpl<BaseUdafParamMapper, B
             metricExpressRelationService.remove(queryWrapper);
         }
 
-        List<AviatorExpressParam> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
+        List<AviatorExpressParamEntity> metricExpressParamList = baseUdafParam.getMetricExpressParamList();
         if (CollUtil.isNotEmpty(metricExpressParamList)) {
-            for (AviatorExpressParam aviatorExpressParam : metricExpressParamList) {
+            for (AviatorExpressParamEntity aviatorExpressParam : metricExpressParamList) {
                 aviatorExpressParamService.deleteData(aviatorExpressParam);
             }
-            List<Integer> list = metricExpressParamList.stream().map(AviatorExpressParam::getId).toList();
+            List<Integer> list = metricExpressParamList.stream().map(AviatorExpressParamEntity::getId).toList();
             QueryWrapper queryWrapper = QueryWrapper.create()
                     .where(BASE_UDAF_PARAM_METRIC_EXPRESS_LIST_RELATION.BASE_UDAF_PARAM_ID.eq(baseUdafParamId))
                     .and(BASE_UDAF_PARAM_METRIC_EXPRESS_LIST_RELATION.AVIATOR_EXPRESS_PARAM_ID.in(list));

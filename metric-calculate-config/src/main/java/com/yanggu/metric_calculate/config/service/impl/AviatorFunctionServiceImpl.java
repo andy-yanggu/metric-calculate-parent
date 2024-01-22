@@ -8,11 +8,11 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorFunctionMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDto;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunction;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionField;
-import com.yanggu.metric_calculate.config.pojo.entity.JarStore;
-import com.yanggu.metric_calculate.config.pojo.req.AviatorFunctionQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionFieldEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionQuery;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionFieldService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
@@ -49,7 +49,7 @@ import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionF
  * Aviator函数 服务层实现。
  */
 @Service
-public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMapper, AviatorFunction> implements AviatorFunctionService {
+public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMapper, AviatorFunctionEntity> implements AviatorFunctionService {
 
     @Autowired
     private AviatorFunctionMapper aviatorFunctionMapper;
@@ -68,8 +68,8 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(AviatorFunctionDto aviatorFunctionDto) throws Exception {
-        AviatorFunction aviatorFunction;
+    public void saveData(AviatorFunctionDTO aviatorFunctionDto) throws Exception {
+        AviatorFunctionEntity aviatorFunction;
         if (Boolean.TRUE.equals(aviatorFunctionDto.getIsBuiltIn())) {
             AviatorFunctionFactory aviatorFunctionFactory = new AviatorFunctionFactory();
             aviatorFunctionFactory.init();
@@ -84,7 +84,7 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
         }
         checkExist(aviatorFunction);
         super.save(aviatorFunction);
-        List<AviatorFunctionField> aviatorFunctionFieldList = aviatorFunction.getAviatorFunctionFieldList();
+        List<AviatorFunctionFieldEntity> aviatorFunctionFieldList = aviatorFunction.getAviatorFunctionFieldList();
         if (CollUtil.isNotEmpty(aviatorFunctionFieldList)) {
             aviatorFunctionFieldList.forEach(temp -> temp.setAviatorFunctionId(aviatorFunction.getId()));
             aviatorFunctionFieldService.saveBatch(aviatorFunctionFieldList);
@@ -96,28 +96,28 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
     public void jarSave(MultipartFile file) throws Exception {
         File dest = new File(SystemUtil.getTmpDirPath() + File.separatorChar + IdUtil.fastSimpleUUID());
         file.transferTo(dest);
-        List<AviatorFunction> aviatorFunctionList = new ArrayList<>();
+        List<AviatorFunctionEntity> aviatorFunctionList = new ArrayList<>();
         Consumer<Class<?>> consumer = clazz -> aviatorFunctionList.add(buildAviatorFunction(clazz));
         FunctionFactory.loadClassFromJar(Collections.singletonList(dest.getAbsolutePath()), CLASS_FILTER, consumer);
         if (CollUtil.isEmpty(aviatorFunctionList)) {
             return;
         }
-        JarStore jarStore = new JarStore();
+        JarStoreEntity jarStore = new JarStoreEntity();
         //TODO 这里可以根据需要将jar文件保存到远程文件服务器中
         jarStore.setJarUrl(dest.toURI().toURL().getPath());
         jarStoreService.save(jarStore);
-        for (AviatorFunction aviatorFunction : aviatorFunctionList) {
+        for (AviatorFunctionEntity aviatorFunction : aviatorFunctionList) {
             aviatorFunction.setJarStoreId(jarStore.getId());
             aviatorFunction.setIsBuiltIn(false);
-            AviatorFunctionDto dto = aviatorFunctionMapstruct.toDTO(aviatorFunction);
+            AviatorFunctionDTO dto = aviatorFunctionMapstruct.toDTO(aviatorFunction);
             this.saveData(dto);
         }
     }
 
     @Override
-    public void updateData(AviatorFunctionDto aviatorFunctionDto) {
+    public void updateData(AviatorFunctionDTO aviatorFunctionDto) {
         //只允许修改描述信息
-        AviatorFunction aviatorFunction = UpdateEntity.of(AviatorFunction.class, aviatorFunctionDto.getId());
+        AviatorFunctionEntity aviatorFunction = UpdateEntity.of(AviatorFunctionEntity.class, aviatorFunctionDto.getId());
         aviatorFunction.setDescription(aviatorFunctionDto.getDescription());
         aviatorFunctionMapper.update(aviatorFunction);
     }
@@ -139,39 +139,39 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
     }
 
     @Override
-    public List<AviatorFunctionDto> listData(AviatorFunctionQueryReq req) {
+    public List<AviatorFunctionDTO> listData(AviatorFunctionQuery req) {
         QueryWrapper queryWrapper = buildAviatorFunctionQueryWrapper(req);
-        List<AviatorFunction> aviatorFunctions = aviatorFunctionMapper.selectListWithRelationsByQuery(queryWrapper);
+        List<AviatorFunctionEntity> aviatorFunctions = aviatorFunctionMapper.selectListWithRelationsByQuery(queryWrapper);
         return aviatorFunctionMapstruct.toDTO(aviatorFunctions);
     }
 
     @Override
-    public AviatorFunctionDto queryById(Integer id) {
-        AviatorFunction aviatorFunction = aviatorFunctionMapper.selectOneWithRelationsById(id);
+    public AviatorFunctionDTO queryById(Integer id) {
+        AviatorFunctionEntity aviatorFunction = aviatorFunctionMapper.selectOneWithRelationsById(id);
         return aviatorFunctionMapstruct.toDTO(aviatorFunction);
     }
 
     @Override
-    public Page<AviatorFunctionDto> pageData(Integer pageNumber, Integer pageSize, AviatorFunctionQueryReq req) {
+    public Page<AviatorFunctionDTO> pageData(Integer pageNumber, Integer pageSize, AviatorFunctionQuery req) {
         QueryWrapper queryWrapper = buildAviatorFunctionQueryWrapper(req);
-        Page<AviatorFunction> page = aviatorFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<AviatorFunctionDto> list = aviatorFunctionMapstruct.toDTO(page.getRecords());
+        Page<AviatorFunctionEntity> page = aviatorFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
+        List<AviatorFunctionDTO> list = aviatorFunctionMapstruct.toDTO(page.getRecords());
         return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
     }
 
-    private QueryWrapper buildAviatorFunctionQueryWrapper(AviatorFunctionQueryReq req) {
+    private QueryWrapper buildAviatorFunctionQueryWrapper(AviatorFunctionQuery req) {
         return QueryWrapper.create()
                 .where(AVIATOR_FUNCTION.NAME.like(req.getAviatorFunctionName()))
                 .and(AVIATOR_FUNCTION.DISPLAY_NAME.like(req.getAviatorFunctionDisplayName()))
                 .orderBy(req.getOrderByColumnName(), req.getAsc());
     }
 
-    private static AviatorFunction buildAviatorFunction(Class<?> clazz) {
+    private static AviatorFunctionEntity buildAviatorFunction(Class<?> clazz) {
         AviatorFunctionAnnotation annotation = clazz.getAnnotation(AviatorFunctionAnnotation.class);
         if (annotation == null) {
             throw new BusinessException(AVIATOR_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
         }
-        AviatorFunction aviatorFunction = new AviatorFunction();
+        AviatorFunctionEntity aviatorFunction = new AviatorFunctionEntity();
         aviatorFunction.setName(annotation.name());
         aviatorFunction.setDisplayName(annotation.displayName());
         aviatorFunction.setDescription(annotation.description());
@@ -179,9 +179,9 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
         List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AviatorFunctionFieldAnnotation.class);
         if (CollUtil.isNotEmpty(udafCustomParamList)) {
             AtomicInteger index = new AtomicInteger(0);
-            List<AviatorFunctionField> list = udafCustomParamList.stream()
+            List<AviatorFunctionFieldEntity> list = udafCustomParamList.stream()
                     .map(temp -> {
-                        AviatorFunctionField aviatorFunctionField = new AviatorFunctionField();
+                        AviatorFunctionFieldEntity aviatorFunctionField = new AviatorFunctionFieldEntity();
                         aviatorFunctionField.setName(temp.getName());
                         aviatorFunctionField.setDisplayName(temp.getDisplayName());
                         aviatorFunctionField.setDescription(temp.getDescription());
@@ -199,7 +199,7 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
      *
      * @param aviatorFunction
      */
-    private void checkExist(AviatorFunction aviatorFunction) {
+    private void checkExist(AviatorFunctionEntity aviatorFunction) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
                 .where(AVIATOR_FUNCTION.ID.ne(aviatorFunction.getId()))

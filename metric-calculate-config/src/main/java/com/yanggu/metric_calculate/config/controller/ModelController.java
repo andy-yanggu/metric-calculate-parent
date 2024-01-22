@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
-import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
+import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.ModelService;
 import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
@@ -25,21 +25,21 @@ public class ModelController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增数据明细宽表")
-    public Result<Void> saveData(@RequestBody ModelDto modelDto) throws Exception {
+    public Result<Void> saveData(@RequestBody ModelDTO modelDto) throws Exception {
         modelService.saveData(modelDto);
         return Result.ok();
     }
 
     @PutMapping("/updateData")
     @Operation(summary = "修改数据明细宽表", description = "修改中文名、描述信息等")
-    public Result<Void> updateData(@RequestBody ModelDto modelDto) {
+    public Result<Void> updateData(@RequestBody ModelDTO modelDto) {
         modelService.updateData(modelDto);
         return Result.ok();
     }
 
     @PutMapping("/updateOtherData")
     @Operation(summary = "修改其他数据", description = "修改宽表字段、维度字段、时间字段")
-    public Result<Void> updateOtherData(@RequestBody ModelDto modelDto) {
+    public Result<Void> updateOtherData(@RequestBody ModelDTO modelDto) {
         modelService.updateOtherData(modelDto);
         return Result.ok();
     }
@@ -53,19 +53,19 @@ public class ModelController {
 
     @GetMapping("/listData")
     @Operation(summary = "数据明细宽表列表")
-    public Result<List<ModelDto>> listData(ModelQueryReq req) {
+    public Result<List<ModelDTO>> listData(ModelQuery req) {
         return Result.ok(modelService.listData(req));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "数据明细宽表详情")
-    public Result<ModelDto> detail(@PathVariable("id") Integer id) {
+    public Result<ModelDTO> detail(@PathVariable("id") Integer id) {
         return Result.ok(modelService.queryById(id));
     }
 
     @GetMapping("/pageData")
     @Operation(summary = "数据明细宽表分页")
-    public Result<Page<ModelDto>> pageData(Integer pageNumber, Integer pageSize, ModelQueryReq req) {
+    public Result<Page<ModelDTO>> pageData(Integer pageNumber, Integer pageSize, ModelQuery req) {
         return Result.ok(modelService.pageData(pageNumber, pageSize, req));
     }
 
@@ -83,8 +83,8 @@ public class ModelController {
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, ModelQueryReq req) {
-        List<ModelDto> list = modelService.listData(req);
+    public void excelExport(HttpServletResponse response, ModelQuery req) {
+        List<ModelDTO> list = modelService.listData(req);
         ExcelUtil.exportFormList(response, list);
     }
 

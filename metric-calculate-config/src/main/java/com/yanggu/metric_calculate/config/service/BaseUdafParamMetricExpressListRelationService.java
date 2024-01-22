@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamMetricExpressListRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamMetricExpressListRelationEntity;
 
 /**
  * 基本聚合参数，多字段度量字段表达式中间表 服务层。
@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.BaseUdafParamMetricExpress
  * @author MondayLi
  * @since 2023-07-10
  */
-public interface BaseUdafParamMetricExpressListRelationService extends IService<BaseUdafParamMetricExpressListRelation> {
+public interface BaseUdafParamMetricExpressListRelationService extends IService<BaseUdafParamMetricExpressListRelationEntity> {
 
 }

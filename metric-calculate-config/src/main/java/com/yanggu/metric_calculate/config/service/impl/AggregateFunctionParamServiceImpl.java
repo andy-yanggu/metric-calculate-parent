@@ -22,7 +22,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunc
  * @since 2023-07-10
  */
 @Service
-public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunctionParamMapper, AggregateFunctionParam> implements AggregateFunctionParamService {
+public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunctionParamMapper, AggregateFunctionParamEntity> implements AggregateFunctionParamService {
 
     @Autowired
     private BaseUdafParamService baseUdafParamService;
@@ -44,32 +44,32 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(AggregateFunctionParam aggregateFunctionParam,
-                         List<ModelColumn> modelColumnList) throws Exception {
+    public void saveData(AggregateFunctionParamEntity aggregateFunctionParam,
+                         List<ModelColumnEntity> modelColumnList) throws Exception {
         super.save(aggregateFunctionParam);
         //基本配置类型
-        BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
+        BaseUdafParamEntity baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
         if (baseUdafParam != null) {
             baseUdafParamService.saveData(baseUdafParam, modelColumnList);
-            AggregateFunctionParamBaseUdafParamRelation relation = new AggregateFunctionParamBaseUdafParamRelation();
+            AggregateFunctionParamBaseUdafParamRelationEntity relation = new AggregateFunctionParamBaseUdafParamRelationEntity();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setBaseUdafParamId(baseUdafParam.getId());
             aggregateFunctionParamBaseUdafParamRelationService.save(relation);
         }
         //映射类型
-        MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
+        MapUdafParamEntity mapUdafParam = aggregateFunctionParam.getMapUdafParam();
         if (mapUdafParam != null) {
             mapUdafParamService.saveData(mapUdafParam, modelColumnList);
-            AggregateFunctionParamMapUdafParamRelation relation = new AggregateFunctionParamMapUdafParamRelation();
+            AggregateFunctionParamMapUdafParamRelationEntity relation = new AggregateFunctionParamMapUdafParamRelationEntity();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMapUdafParamId(mapUdafParam.getId());
             aggregateFunctionParamMapUdafParamRelationService.save(relation);
         }
         //混合类型
-        MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
+        MixUdafParamEntity mixUdafParam = aggregateFunctionParam.getMixUdafParam();
         if (mixUdafParam != null) {
             mixUdafParamService.saveData(mixUdafParam, modelColumnList);
-            AggregateFunctionParamMixUdafParamRelation relation = new AggregateFunctionParamMixUdafParamRelation();
+            AggregateFunctionParamMixUdafParamRelationEntity relation = new AggregateFunctionParamMixUdafParamRelationEntity();
             relation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
             relation.setMixUdafParamId(mixUdafParam.getId());
             aggregateFunctionParamMixUdafParamRelationService.save(relation);
@@ -78,11 +78,11 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(AggregateFunctionParam aggregateFunctionParam) {
+    public void deleteData(AggregateFunctionParamEntity aggregateFunctionParam) {
         Integer aggregateFunctionParamId = aggregateFunctionParam.getId();
         super.removeById(aggregateFunctionParamId);
 
-        BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
+        BaseUdafParamEntity baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
         if (baseUdafParam != null) {
             baseUdafParamService.deleteData(baseUdafParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
@@ -90,7 +90,7 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
                     .and(AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION.BASE_UDAF_PARAM_ID.eq(baseUdafParam.getId()));
             aggregateFunctionParamBaseUdafParamRelationService.remove(queryWrapper);
         }
-        MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
+        MapUdafParamEntity mapUdafParam = aggregateFunctionParam.getMapUdafParam();
         if (mapUdafParam != null) {
             mapUdafParamService.deleteData(mapUdafParam);
             QueryWrapper queryWrapper = QueryWrapper.create()
@@ -98,7 +98,7 @@ public class AggregateFunctionParamServiceImpl extends ServiceImpl<AggregateFunc
                     .and(AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION.MAP_UDAF_PARAM_ID.eq(mapUdafParam.getId()));
             aggregateFunctionParamMapUdafParamRelationService.remove(queryWrapper);
         }
-        MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
+        MixUdafParamEntity mixUdafParam = aggregateFunctionParam.getMixUdafParam();
         if (mixUdafParam != null) {
             mixUdafParamService.deleteData(mixUdafParam);
             QueryWrapper queryWrapper = QueryWrapper.create()

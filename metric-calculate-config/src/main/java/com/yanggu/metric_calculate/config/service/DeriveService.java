@@ -2,9 +2,9 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.dto.DeriveDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Derive;
-import com.yanggu.metric_calculate.config.pojo.req.DeriveQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveEntity;
+import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 
@@ -13,14 +13,14 @@ import java.util.List;
 /**
  * 派生指标 服务层。
  */
-public interface DeriveService extends IService<Derive> {
+public interface DeriveService extends IService<DeriveEntity> {
 
     /**
      * 新增派生指标
      *
      * @param deriveDto
      */
-    void saveData(DeriveDto deriveDto) throws Exception;
+    void saveData(DeriveDTO deriveDto) throws Exception;
 
     /**
      * 修改派生指标
@@ -28,7 +28,7 @@ public interface DeriveService extends IService<Derive> {
      * @param deriveDto
      * @throws Exception
      */
-    void updateData(DeriveDto deriveDto) throws Exception;
+    void updateData(DeriveDTO deriveDto) throws Exception;
 
     /**
      * 根据id删除
@@ -37,11 +37,11 @@ public interface DeriveService extends IService<Derive> {
      */
     void deleteById(Integer id);
 
-    DeriveDto queryById(Integer id);
+    DeriveDTO queryById(Integer id);
 
-    List<DeriveDto> listData(DeriveQueryReq deriveQuery);
+    List<DeriveDTO> listData(DeriveQuery deriveQuery);
 
-    Page<DeriveDto> pageQuery(Integer pageNumber, Integer pageSize, DeriveQueryReq deriveQuery);
+    Page<DeriveDTO> pageQuery(Integer pageNumber, Integer pageSize, DeriveQuery deriveQuery);
 
     DeriveMetrics toCoreDeriveMetrics(Integer deriveId);
 

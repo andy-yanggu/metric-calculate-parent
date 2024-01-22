@@ -21,7 +21,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.MixUdafParamM
  * 混合类型udaf参数 服务层实现。
  */
 @Service
-public class MixUdafParamServiceImpl extends ServiceImpl<MixUdafParamMapper, MixUdafParam> implements MixUdafParamService {
+public class MixUdafParamServiceImpl extends ServiceImpl<MixUdafParamMapper, MixUdafParamEntity> implements MixUdafParamService {
 
     @Autowired
     private MixUdafParamItemService mixUdafParamItemService;
@@ -34,18 +34,18 @@ public class MixUdafParamServiceImpl extends ServiceImpl<MixUdafParamMapper, Mix
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(MixUdafParam mixUdafParam, List<ModelColumn> modelColumnList) throws Exception {
+    public void saveData(MixUdafParamEntity mixUdafParam, List<ModelColumnEntity> modelColumnList) throws Exception {
         super.save(mixUdafParam);
-        List<MixUdafParamItem> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
-        for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
+        List<MixUdafParamItemEntity> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
+        for (MixUdafParamItemEntity mixUdafParamItem : mixUdafParamItemList) {
             mixUdafParamItem.setMixUdafParamId(mixUdafParam.getId());
             mixUdafParamItemService.saveData(mixUdafParamItem, modelColumnList);
         }
 
-        AviatorExpressParam metricExpressParam = mixUdafParam.getMetricExpressParam();
+        AviatorExpressParamEntity metricExpressParam = mixUdafParam.getMetricExpressParam();
         metricExpressParam.setMixUdafParamItemList(mixUdafParamItemList);
         aviatorExpressParamService.saveDataByMixUdafParamItem(metricExpressParam);
-        MixUdafParamMetricExpressRelation relation = new MixUdafParamMetricExpressRelation();
+        MixUdafParamMetricExpressRelationEntity relation = new MixUdafParamMetricExpressRelationEntity();
         relation.setMixUdafParamId(mixUdafParam.getId());
         relation.setAviatorExpressParamId(metricExpressParam.getId());
         mixUdafParamMetricExpressRelationService.save(relation);
@@ -53,16 +53,16 @@ public class MixUdafParamServiceImpl extends ServiceImpl<MixUdafParamMapper, Mix
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(MixUdafParam mixUdafParam) {
+    public void deleteData(MixUdafParamEntity mixUdafParam) {
         Integer id = mixUdafParam.getId();
         super.removeById(id);
-        List<MixUdafParamItem> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
+        List<MixUdafParamItemEntity> mixUdafParamItemList = mixUdafParam.getMixUdafParamItemList();
         if (CollUtil.isNotEmpty(mixUdafParamItemList)) {
-            for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
+            for (MixUdafParamItemEntity mixUdafParamItem : mixUdafParamItemList) {
                 mixUdafParamItemService.deleteData(mixUdafParamItem);
             }
         }
-        AviatorExpressParam metricExpressParam = mixUdafParam.getMetricExpressParam();
+        AviatorExpressParamEntity metricExpressParam = mixUdafParam.getMetricExpressParam();
         aviatorExpressParamService.deleteData(metricExpressParam);
         QueryWrapper queryWrapper = QueryWrapper.create()
                 .where(MIX_UDAF_PARAM_METRIC_EXPRESS_RELATION.MIX_UDAF_PARAM_ID.eq(id))

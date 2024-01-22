@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
 
 /**
  * Aviator表达式配置 服务层。
  */
-public interface AviatorExpressParamService extends IService<AviatorExpressParam> {
+public interface AviatorExpressParamService extends IService<AviatorExpressParamEntity> {
 
     /**
      * <p>1. 保存表达式</p>
@@ -15,7 +15,7 @@ public interface AviatorExpressParamService extends IService<AviatorExpressParam
      * @param aviatorExpressParam
      * @throws Exception
      */
-    void saveDataByModelColumn(AviatorExpressParam aviatorExpressParam) throws Exception;
+    void saveDataByModelColumn(AviatorExpressParamEntity aviatorExpressParam) throws Exception;
 
     /**
      * <p>1. 保存表达式</p>
@@ -24,8 +24,8 @@ public interface AviatorExpressParamService extends IService<AviatorExpressParam
      * @param aviatorExpressParam
      * @throws Exception
      */
-    void saveDataByMixUdafParamItem(AviatorExpressParam aviatorExpressParam) throws Exception;
+    void saveDataByMixUdafParamItem(AviatorExpressParamEntity aviatorExpressParam) throws Exception;
 
-    void deleteData(AviatorExpressParam aviatorExpressParam);
+    void deleteData(AviatorExpressParamEntity aviatorExpressParam);
 
 }

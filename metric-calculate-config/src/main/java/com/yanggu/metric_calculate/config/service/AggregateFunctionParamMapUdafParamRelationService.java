@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamMapUdafParamRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamMapUdafParamRelationEntity;
 
 /**
  * 聚合函数参数-映射聚合参数中间表 服务层。
@@ -9,6 +9,6 @@ import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamMapU
  * @author MondayLi
  * @since 2023-07-10
  */
-public interface AggregateFunctionParamMapUdafParamRelationService extends IService<AggregateFunctionParamMapUdafParamRelation> {
+public interface AggregateFunctionParamMapUdafParamRelationService extends IService<AggregateFunctionParamMapUdafParamRelationEntity> {
 
 }

@@ -8,9 +8,9 @@ import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDto;
+import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.req.ModelQueryReq;
+import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
 import com.yanggu.metric_calculate.config.service.*;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
@@ -33,7 +33,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTimeColu
  * 数据明细宽表 服务层实现
  */
 @Service
-public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements ModelService {
+public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelEntity> implements ModelService {
 
     @Autowired
     private ModelMapstruct modelMapstruct;
@@ -55,8 +55,8 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(ModelDto modelDto) throws Exception {
-        Model model = modelMapstruct.toEntity(modelDto);
+    public void saveData(ModelDTO modelDto) throws Exception {
+        ModelEntity model = modelMapstruct.toEntity(modelDto);
 
         //检查name、displayName是否重复
         checkExist(model);
@@ -67,15 +67,15 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         Integer modelId = model.getId();
 
         //2. 保存宽表字段
-        List<ModelColumn> modelColumnList = model.getModelColumnList();
+        List<ModelColumnEntity> modelColumnList = model.getModelColumnList();
         //设置宽表字段中的modelId
         modelColumnList.forEach(tempColumnDto -> tempColumnDto.setModelId(modelId));
         modelColumnService.saveModelColumnList(modelColumnList);
         Map<String, Integer> modelColumnNameIdMap = modelColumnList.stream()
-                .collect(Collectors.toMap(ModelColumn::getName, ModelColumn::getId));
+                .collect(Collectors.toMap(ModelColumnEntity::getName, ModelColumnEntity::getId));
 
         //3. 保存时间字段
-        List<ModelTimeColumn> modelTimeColumnList = model.getModelTimeColumnList();
+        List<ModelTimeColumnEntity> modelTimeColumnList = model.getModelTimeColumnList();
         modelTimeColumnList.forEach(modelTimeColumn -> {
             //设置时间字段对应的宽表id和宽表字段id
             modelTimeColumn.setModelId(modelId);
@@ -88,7 +88,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         modelTimeColumnService.saveBatch(modelTimeColumnList);
 
         //4. 保存维度字段
-        List<ModelDimensionColumn> modelDimensionColumnList = model.getModelDimensionColumnList();
+        List<ModelDimensionColumnEntity> modelDimensionColumnList = model.getModelDimensionColumnList();
         modelDimensionColumnList.forEach(modelDimensionColumn -> {
             //设置维度字段对应的宽表id和宽表字段id
             modelDimensionColumn.setModelId(modelId);
@@ -103,8 +103,8 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateData(ModelDto modelDto) {
-        Model updateModel = modelMapstruct.toEntity(modelDto);
+    public void updateData(ModelDTO modelDto) {
+        ModelEntity updateModel = modelMapstruct.toEntity(modelDto);
 
         //检查name、displayName是否重复
         checkExist(updateModel);
@@ -115,38 +115,38 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
 
     //TODO 待完成修改宽表接口
     @Override
-    public void updateOtherData(ModelDto modelDto) {
-        Model updateModel = modelMapstruct.toEntity(modelDto);
+    public void updateOtherData(ModelDTO modelDto) {
+        ModelEntity updateModel = modelMapstruct.toEntity(modelDto);
         //查询之前的宽表和下面的派生指标
-        Model dbModel = getModel(modelDto.getId());
+        ModelEntity dbModel = getModel(modelDto.getId());
 
         //获取所有的派生指标
-        List<Derive> deriveList = dbModel.getDeriveList();
+        List<DeriveEntity> deriveList = dbModel.getDeriveList();
         //如果宽表下没有派生指标, 直接修改
         if (CollUtil.isEmpty(deriveList)) {
             return;
         }
         //派生指标使用的宽表字段
-        Set<ModelColumn> usedModelColumnSet = deriveList.stream()
+        Set<ModelColumnEntity> usedModelColumnSet = deriveList.stream()
                 .map(DeriveMapstruct::getAviatorExpressParamFromDerive)
                 .filter(CollUtil::isNotEmpty)
                 .flatMap(Collection::stream)
-                .map(AviatorExpressParam::getModelColumnList)
+                .map(AviatorExpressParamEntity::getModelColumnList)
                 .filter(CollUtil::isNotEmpty)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toSet());
 
         //派生指标使用的时间字段
-        Set<ModelTimeColumn> useModelTimeColumnSet = new HashSet<>();
+        Set<ModelTimeColumnEntity> useModelTimeColumnSet = new HashSet<>();
         //派生指标使用的维度字段
-        Set<ModelDimensionColumn> useModelDimensionColumnSet = new HashSet<>();
-        for (Derive derive : deriveList) {
+        Set<ModelDimensionColumnEntity> useModelDimensionColumnSet = new HashSet<>();
+        for (DeriveEntity derive : deriveList) {
             //ModelTimeColumn modelTimeColumn = derive.getModelTimeColumn();
             //useModelTimeColumnSet.add(modelTimeColumn);
             //添加时间字段对应的宽表字段
             //usedModelColumnSet.add(modelTimeColumn.getModelColumn());
-            List<ModelDimensionColumn> dimensionColumnList = derive.getModelDimensionColumnList();
-            for (ModelDimensionColumn modelDimensionColumn : dimensionColumnList) {
+            List<ModelDimensionColumnEntity> dimensionColumnList = derive.getModelDimensionColumnList();
+            for (ModelDimensionColumnEntity modelDimensionColumn : dimensionColumnList) {
                 useModelDimensionColumnSet.add(modelDimensionColumn);
                 //添加维度字段对应的宽表字段
                 //usedModelColumnSet.add(modelDimensionColumn.getModelColumn());
@@ -154,19 +154,19 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         }
 
         //处理宽表字段
-        List<ModelColumn> newModelColumnList = updateModel.getModelColumnList();
+        List<ModelColumnEntity> newModelColumnList = updateModel.getModelColumnList();
         //处理时间字段
-        List<ModelTimeColumn> newModelTimeColumnList = updateModel.getModelTimeColumnList();
+        List<ModelTimeColumnEntity> newModelTimeColumnList = updateModel.getModelTimeColumnList();
         //处理维度字段
-        List<ModelDimensionColumn> newModelDimensionColumnList = updateModel.getModelDimensionColumnList();
+        List<ModelDimensionColumnEntity> newModelDimensionColumnList = updateModel.getModelDimensionColumnList();
 
-        Map<Integer, ModelColumn> collect = newModelColumnList.stream()
+        Map<Integer, ModelColumnEntity> collect = newModelColumnList.stream()
                 .filter(temp -> temp.getId() != null)
-                .collect(Collectors.toUnmodifiableMap(ModelColumn::getId, Function.identity()));
-        List<ModelColumn> updateModelColumnList = new ArrayList<>();
-        for (ModelColumn usedModelColumn : usedModelColumnSet) {
+                .collect(Collectors.toUnmodifiableMap(ModelColumnEntity::getId, Function.identity()));
+        List<ModelColumnEntity> updateModelColumnList = new ArrayList<>();
+        for (ModelColumnEntity usedModelColumn : usedModelColumnSet) {
             //如果派生指标使用的宽表字段被删除了直接报错
-            ModelColumn updateModelColumn = collect.get(usedModelColumn.getId());
+            ModelColumnEntity updateModelColumn = collect.get(usedModelColumn.getId());
             if (updateModelColumn == null) {
                 throw new BusinessException(MODEL_COLUMN_NOT_DELETE_WHEN_DERIVE_USED);
             }
@@ -194,7 +194,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         }
 
         //遍历新的时间字段
-        for (ModelTimeColumn newModelTimeColumn : newModelTimeColumnList) {
+        for (ModelTimeColumnEntity newModelTimeColumn : newModelTimeColumnList) {
             //如果派生指标使用的时间字段被修改了, 直接报错
             if (useModelTimeColumnSet.contains(newModelTimeColumn)) {
                 throw new BusinessException(MODEL_TIME_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED);
@@ -202,7 +202,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         }
 
         //遍历新的维度字段
-        for (ModelDimensionColumn newModelDimensionColumn : newModelDimensionColumnList) {
+        for (ModelDimensionColumnEntity newModelDimensionColumn : newModelDimensionColumnList) {
             //如果派生指标使用的维度字段被修改了, 直接报错
             if (!useModelDimensionColumnSet.contains(newModelDimensionColumn)) {
                 throw new BusinessException(MODEL_DIMENSION_COLUMN_NOT_UPDATE_WHEN_DERIVE_USED);
@@ -239,35 +239,35 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
     }
 
     @Override
-    public List<ModelDto> listData(ModelQueryReq req) {
+    public List<ModelDTO> listData(ModelQuery req) {
         QueryWrapper queryWrapper = buildModelQueryWrapper(req);
-        List<Model> modelList = modelMapper.selectListWithRelationsByQuery(queryWrapper);
+        List<ModelEntity> modelList = modelMapper.selectListWithRelationsByQuery(queryWrapper);
         return modelMapstruct.toDTO(modelList);
     }
 
     @Override
-    public ModelDto queryById(Integer id) {
-        Model model = getModel(id);
+    public ModelDTO queryById(Integer id) {
+        ModelEntity model = getModel(id);
         return modelMapstruct.toDTO(model);
     }
 
     @Override
-    public Page<ModelDto> pageData(Integer pageNumber, Integer pageSize, ModelQueryReq req) {
+    public Page<ModelDTO> pageData(Integer pageNumber, Integer pageSize, ModelQuery req) {
         QueryWrapper queryWrapper = buildModelQueryWrapper(req);
-        Page<Model> page = modelMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<ModelDto> list = modelMapstruct.toDTO(page.getRecords());
+        Page<ModelEntity> page = modelMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
+        List<ModelDTO> list = modelMapstruct.toDTO(page.getRecords());
         return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
     }
 
     @Override
     public com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId) {
-        Model model = TenantManager.withoutTenantCondition(() -> modelMapper.selectOneWithRelationsById(modelId));
+        ModelEntity model = TenantManager.withoutTenantCondition(() -> modelMapper.selectOneWithRelationsById(modelId));
         return modelMapstruct.toCoreModel(model);
     }
 
     @Override
     public List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getAllCoreModel() {
-        List<Model> modelList = TenantManager.withoutTenantCondition(() -> modelMapper.selectAllWithRelations());
+        List<ModelEntity> modelList = TenantManager.withoutTenantCondition(() -> modelMapper.selectAllWithRelations());
         return modelMapstruct.toCoreModel(modelList);
     }
 
@@ -276,7 +276,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
      *
      * @param model
      */
-    private void checkExist(Model model) {
+    private void checkExist(ModelEntity model) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                 //当id存在时为更新
                 .where(MODEL.ID.ne(model.getId()))
@@ -287,16 +287,16 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, Model> implements
         }
     }
 
-    private Model getModel(Integer id) {
+    private ModelEntity getModel(Integer id) {
         //根据主键查询, 同时关联查询其他表数据
-        Model model = modelMapper.selectOneWithRelationsById(id);
+        ModelEntity model = modelMapper.selectOneWithRelationsById(id);
         if (model == null) {
             throw new BusinessException(MODEL_ID_ERROR);
         }
         return model;
     }
 
-    private QueryWrapper buildModelQueryWrapper(ModelQueryReq req) {
+    private QueryWrapper buildModelQueryWrapper(ModelQuery req) {
         return QueryWrapper.create()
                 .where(MODEL.NAME.like(req.getModelName()))
                 .and(MODEL.DISPLAY_NAME.like(req.getModelDisplayName()))

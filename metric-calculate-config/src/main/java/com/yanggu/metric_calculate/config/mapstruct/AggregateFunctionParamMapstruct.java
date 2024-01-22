@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionParamDto;
+import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionParamDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -26,7 +26,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
                 MixUdafParamMapstruct.class
         },
         componentModel = SPRING)
-public interface AggregateFunctionParamMapstruct extends BaseMapstruct<AggregateFunctionParamDto, AggregateFunctionParam> {
+public interface AggregateFunctionParamMapstruct extends BaseMapstruct<AggregateFunctionParamDTO, AggregateFunctionParamEntity> {
 
     /**
      * 转换成core中的类
@@ -42,7 +42,7 @@ public interface AggregateFunctionParamMapstruct extends BaseMapstruct<Aggregate
     @Mapping(source = "mapUdafParam", target = "mapUdafParam", qualifiedByName = {"MapUdafParamMapstruct", "toCoreMapUdafParam"})
     //混合型参数
     @Mapping(source = "mixUdafParam", target = "mixUdafParam", qualifiedByName = {"MixUdafParamMapstruct", "toCoreMixUdafParam"})
-    com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParam aggregateFunctionParam);
+    com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParamEntity aggregateFunctionParam);
 
     /**
      * 获取udaf的jar包路径
@@ -51,38 +51,38 @@ public interface AggregateFunctionParamMapstruct extends BaseMapstruct<Aggregate
      * @return
      */
     @Named("getUdafJarPathList")
-    static List<String> getUdafJarPathList(AggregateFunctionParam aggregateFunctionParam) {
+    static List<String> getUdafJarPathList(AggregateFunctionParamEntity aggregateFunctionParam) {
         if (aggregateFunctionParam == null) {
             return Collections.emptyList();
         }
-        List<AggregateFunction> aggregateFunctionList = new ArrayList<>();
-        AggregateFunction aggregateFunction = aggregateFunctionParam.getAggregateFunction();
+        List<AggregateFunctionEntity> aggregateFunctionList = new ArrayList<>();
+        AggregateFunctionEntity aggregateFunction = aggregateFunctionParam.getAggregateFunction();
         AggregateFunctionTypeEnums aggregateFunctionType = aggregateFunction.getType();
         //基本类型
         if (AggregateFunctionTypeEnums.isBasicType(aggregateFunctionType)) {
-            BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
+            BaseUdafParamEntity baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
             aggregateFunctionList.add(baseUdafParam.getAggregateFunction());
         } else if (MAP_TYPE.equals(aggregateFunctionType)) {
             //映射类型
-            MapUdafParam mapUdafParam = aggregateFunctionParam.getMapUdafParam();
+            MapUdafParamEntity mapUdafParam = aggregateFunctionParam.getMapUdafParam();
             aggregateFunctionList.add(mapUdafParam.getAggregateFunction());
             aggregateFunctionList.add(mapUdafParam.getValueAggParam().getAggregateFunction());
         } else if (MIX.equals(aggregateFunctionType)) {
             //混合类型
-            MixUdafParam mixUdafParam = aggregateFunctionParam.getMixUdafParam();
+            MixUdafParamEntity mixUdafParam = aggregateFunctionParam.getMixUdafParam();
             aggregateFunctionList.add(mixUdafParam.getAggregateFunction());
-            List<AggregateFunction> list = mixUdafParam.getMixUdafParamItemList().stream()
-                    .map(MixUdafParamItem::getBaseUdafParam)
-                    .map(BaseUdafParam::getAggregateFunction)
+            List<AggregateFunctionEntity> list = mixUdafParam.getMixUdafParamItemList().stream()
+                    .map(MixUdafParamItemEntity::getBaseUdafParam)
+                    .map(BaseUdafParamEntity::getAggregateFunction)
                     .toList();
             aggregateFunctionList.addAll(list);
         } else {
             throw new BusinessException(AGGREGATE_FUNCTION_TYPE_ERROR);
         }
         return aggregateFunctionList.stream()
-                .map(AggregateFunction::getJarStore)
+                .map(AggregateFunctionEntity::getJarStore)
                 .filter(Objects::nonNull)
-                .map(JarStore::getJarUrl)
+                .map(JarStoreEntity::getJarUrl)
                 .distinct()
                 .toList();
     }

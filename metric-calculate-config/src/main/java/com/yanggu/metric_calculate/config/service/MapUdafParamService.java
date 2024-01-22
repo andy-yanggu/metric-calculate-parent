@@ -1,18 +1,18 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.MapUdafParam;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
+import com.yanggu.metric_calculate.config.pojo.entity.MapUdafParamEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
 
 import java.util.List;
 
 /**
  * 映射类型udaf参数 服务层。
  */
-public interface MapUdafParamService extends IService<MapUdafParam> {
+public interface MapUdafParamService extends IService<MapUdafParamEntity> {
 
-    void saveData(MapUdafParam mapUdafParam, List<ModelColumn> modelColumnList) throws Exception;
+    void saveData(MapUdafParamEntity mapUdafParam, List<ModelColumnEntity> modelColumnList) throws Exception;
 
-    void deleteData(MapUdafParam mapUdafParam);
+    void deleteData(MapUdafParamEntity mapUdafParam);
 
 }

@@ -2,27 +2,27 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.dto.DimensionDto;
-import com.yanggu.metric_calculate.config.pojo.entity.Dimension;
-import com.yanggu.metric_calculate.config.pojo.req.DimensionQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.DimensionDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
+import com.yanggu.metric_calculate.config.pojo.query.DimensionQuery;
 
 import java.util.List;
 
 /**
  * 维度表 服务层。
  */
-public interface DimensionService extends IService<Dimension> {
+public interface DimensionService extends IService<DimensionEntity> {
 
-    void saveData(DimensionDto dimensionDto);
+    void saveData(DimensionDTO dimensionDto);
 
-    void updateData(DimensionDto dimensionDto);
+    void updateData(DimensionDTO dimensionDto);
 
     void deleteById(Integer id);
 
-    List<DimensionDto> listData(DimensionQueryReq req);
+    List<DimensionDTO> listData(DimensionQuery req);
 
-    DimensionDto queryById(Integer id);
+    DimensionDTO queryById(Integer id);
 
-    Page<DimensionDto> pageData(Integer pageNumber, Integer pageSize, DimensionQueryReq req);
+    Page<DimensionDTO> pageData(Integer pageNumber, Integer pageSize, DimensionQuery req);
 
 }

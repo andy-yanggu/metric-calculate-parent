@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.DeriveFilterExpressRelationMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.DeriveFilterExpressRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.DeriveFilterExpressRelationEntity;
 import com.yanggu.metric_calculate.config.service.DeriveFilterExpressRelationService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-07-10
  */
 @Service
-public class DeriveFilterExpressRelationServiceImpl extends ServiceImpl<DeriveFilterExpressRelationMapper, DeriveFilterExpressRelation> implements DeriveFilterExpressRelationService {
+public class DeriveFilterExpressRelationServiceImpl extends ServiceImpl<DeriveFilterExpressRelationMapper, DeriveFilterExpressRelationEntity> implements DeriveFilterExpressRelationService {
 
 }

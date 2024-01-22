@@ -6,12 +6,12 @@ import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AtomMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AtomMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.AtomDto;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParam;
-import com.yanggu.metric_calculate.config.pojo.entity.Atom;
-import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelation;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
-import com.yanggu.metric_calculate.config.pojo.req.AtomQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.AtomDTO;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.AtomEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelationEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.pojo.query.AtomQuery;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionParamService;
 import com.yanggu.metric_calculate.config.service.AtomAggregateFunctionParamRelationService;
 import com.yanggu.metric_calculate.config.service.AtomService;
@@ -32,7 +32,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTimeColu
  * 原子指标 服务层实现。
  */
 @Service
-public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements AtomService {
+public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> implements AtomService {
 
     @Autowired
     private AtomMapper atomMapper;
@@ -51,18 +51,18 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(AtomDto atomDto) throws Exception {
-        Atom atom = atomMapstruct.toEntity(atomDto);
+    public void saveData(AtomDTO atomDto) throws Exception {
+        AtomEntity atom = atomMapstruct.toEntity(atomDto);
         checkExist(atom);
         this.save(atom);
-        AggregateFunctionParam aggregateFunctionParam = atom.getAggregateFunctionParam();
+        AggregateFunctionParamEntity aggregateFunctionParam = atom.getAggregateFunctionParam();
         //根据宽表id查询对应的宽表字段
-        List<ModelColumn> modelColumnList = modelColumnService.queryChain()
+        List<ModelColumnEntity> modelColumnList = modelColumnService.queryChain()
                 .from(MODEL_COLUMN)
                 .where(MODEL_COLUMN.MODEL_ID.eq(atom.getModelId()))
                 .list();
         aggregateFunctionParamService.saveData(aggregateFunctionParam, modelColumnList);
-        AtomAggregateFunctionParamRelation atomAggregateFunctionParamRelation = new AtomAggregateFunctionParamRelation();
+        AtomAggregateFunctionParamRelationEntity atomAggregateFunctionParamRelation = new AtomAggregateFunctionParamRelationEntity();
         atomAggregateFunctionParamRelation.setAtomId(atom.getId());
         atomAggregateFunctionParamRelation.setAggregateFunctionParamId(aggregateFunctionParam.getId());
         atomAggregateFunctionParamRelationService.save(atomAggregateFunctionParamRelation);
@@ -70,8 +70,8 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void updateData(AtomDto atomDto) throws Exception {
-        Atom atom = atomMapstruct.toEntity(atomDto);
+    public void updateData(AtomDTO atomDto) throws Exception {
+        AtomEntity atom = atomMapstruct.toEntity(atomDto);
         checkExist(atom);
         this.updateById(atom);
     }
@@ -83,27 +83,27 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
     }
 
     @Override
-    public AtomDto queryById(Integer id) {
-        Atom atom = atomMapper.selectOneWithRelationsById(id);
+    public AtomDTO queryById(Integer id) {
+        AtomEntity atom = atomMapper.selectOneWithRelationsById(id);
         return atomMapstruct.toDTO(atom);
     }
 
     @Override
-    public List<AtomDto> listData(AtomQueryReq atomQueryReq) {
+    public List<AtomDTO> listData(AtomQuery atomQueryReq) {
         QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQueryReq);
-        List<Atom> atomList = atomMapper.selectListWithRelationsByQuery(queryWrapper);
+        List<AtomEntity> atomList = atomMapper.selectListWithRelationsByQuery(queryWrapper);
         return atomMapstruct.toDTO(atomList);
     }
 
     @Override
-    public Page<AtomDto> pageQuery(Integer pageNumber, Integer pageSize, AtomQueryReq atomQueryReq) {
+    public Page<AtomDTO> pageQuery(Integer pageNumber, Integer pageSize, AtomQuery atomQueryReq) {
         QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQueryReq);
-        Page<Atom> page = atomMapper.paginate(pageNumber, pageSize, queryWrapper);
-        List<AtomDto> dtoList = atomMapstruct.toDTO(page.getRecords());
+        Page<AtomEntity> page = atomMapper.paginate(pageNumber, pageSize, queryWrapper);
+        List<AtomDTO> dtoList = atomMapstruct.toDTO(page.getRecords());
         return new Page<>(dtoList, pageNumber, pageSize, page.getTotalRow());
     }
 
-    private void checkExist(Atom atom) {
+    private void checkExist(AtomEntity atom) {
         QueryWrapper queryWrapper = QueryWrapper.create()
                         .from(ATOM)
                        .where(ATOM.ID.ne(atom.getId()))
@@ -114,7 +114,7 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, Atom> implements At
         }
     }
 
-    private QueryWrapper buildAtomQueryWrapper(AtomQueryReq atomQueryReq) {
+    private QueryWrapper buildAtomQueryWrapper(AtomQuery atomQueryReq) {
         return QueryWrapper.create()
                 .select(ATOM.DEFAULT_COLUMNS)
                 .from(ATOM)

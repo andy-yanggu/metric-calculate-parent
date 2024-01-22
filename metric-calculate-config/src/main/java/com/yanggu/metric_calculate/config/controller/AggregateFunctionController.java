@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
-import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDto;
-import com.yanggu.metric_calculate.config.pojo.req.AggregateFunctionQueryReq;
+import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDTO;
+import com.yanggu.metric_calculate.config.pojo.query.AggregateFunctionQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.Result;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
 import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
@@ -25,7 +25,7 @@ public class AggregateFunctionController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增聚合函数")
-    public Result<Void> saveData(@RequestBody AggregateFunctionDto aggregateFunctionDto) throws Exception {
+    public Result<Void> saveData(@RequestBody AggregateFunctionDTO aggregateFunctionDto) throws Exception {
         aggregateFunctionService.saveData(aggregateFunctionDto);
         return Result.ok();
     }
@@ -39,7 +39,7 @@ public class AggregateFunctionController {
 
     @PutMapping("/updateData")
     @Operation(summary = "修改聚合函数")
-    public Result<Void> updateData(@RequestBody AggregateFunctionDto aggregateFunctionDto) {
+    public Result<Void> updateData(@RequestBody AggregateFunctionDTO aggregateFunctionDto) {
         aggregateFunctionService.updateData(aggregateFunctionDto);
         return Result.ok();
     }
@@ -53,28 +53,28 @@ public class AggregateFunctionController {
 
     @GetMapping("/listData")
     @Operation(summary = "聚合函数列表")
-    public Result<List<AggregateFunctionDto>> listData(AggregateFunctionQueryReq queryReq) {
+    public Result<List<AggregateFunctionDTO>> listData(AggregateFunctionQuery queryReq) {
         return Result.ok(aggregateFunctionService.listData(queryReq));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "聚合函数详情")
-    public Result<AggregateFunctionDto> detail(@PathVariable("id") Integer id) {
+    public Result<AggregateFunctionDTO> detail(@PathVariable("id") Integer id) {
         return Result.ok(aggregateFunctionService.queryById(id));
     }
 
     @GetMapping("/pageQuery")
     @Operation(summary = "聚合函数分页")
-    public Result<Page<AggregateFunctionDto>> pageQuery(Integer pageNumber,
+    public Result<Page<AggregateFunctionDTO>> pageQuery(Integer pageNumber,
                                                         Integer pageSize,
-                                                        AggregateFunctionQueryReq queryReq) {
+                                                        AggregateFunctionQuery queryReq) {
         return Result.ok(aggregateFunctionService.pageQuery(pageNumber, pageSize, queryReq));
     }
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, AggregateFunctionQueryReq req) {
-        List<AggregateFunctionDto> list = aggregateFunctionService.listData(req);
+    public void excelExport(HttpServletResponse response, AggregateFunctionQuery req) {
+        List<AggregateFunctionDTO> list = aggregateFunctionService.listData(req);
         ExcelUtil.exportFormList(response, list);
     }
 

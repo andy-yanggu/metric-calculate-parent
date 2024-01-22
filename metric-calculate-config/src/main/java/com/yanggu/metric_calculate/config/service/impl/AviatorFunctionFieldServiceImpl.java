@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.AviatorFunctionFieldMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionField;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionFieldService;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +13,6 @@ import org.springframework.stereotype.Service;
  * @since 2023-07-10
  */
 @Service
-public class AviatorFunctionFieldServiceImpl extends ServiceImpl<AviatorFunctionFieldMapper, AviatorFunctionField> implements AviatorFunctionFieldService {
+public class AviatorFunctionFieldServiceImpl extends ServiceImpl<AviatorFunctionFieldMapper, AviatorFunctionFieldEntity> implements AviatorFunctionFieldService {
 
 }

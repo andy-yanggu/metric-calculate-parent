@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.test;
 
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunction;
+import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 //@SpringBootTest
@@ -12,7 +12,7 @@ class TestMapper {
 
     //@Test
     void test1() {
-        AggregateFunction aggregateFunction = new AggregateFunction();
+        AggregateFunctionEntity aggregateFunction = new AggregateFunctionEntity();
         aggregateFunction.setName("SUM");
         aggregateFunction.setDisplayName("求和");
         aggregateFunction.setUserId(1);

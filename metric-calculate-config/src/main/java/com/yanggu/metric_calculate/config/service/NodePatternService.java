@@ -1,18 +1,18 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePattern;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.NodePatternEntity;
 
 import java.util.List;
 
 /**
  * CEP匹配配置数据 服务层。
  */
-public interface NodePatternService extends IService<NodePattern> {
+public interface NodePatternService extends IService<NodePatternEntity> {
 
-    void saveData(NodePattern nodePattern, List<ModelColumn> modelColumnList) throws Exception;
+    void saveData(NodePatternEntity nodePattern, List<ModelColumnEntity> modelColumnList) throws Exception;
 
-    void deleteData(NodePattern nodePattern);
+    void deleteData(NodePatternEntity nodePattern);
 
 }

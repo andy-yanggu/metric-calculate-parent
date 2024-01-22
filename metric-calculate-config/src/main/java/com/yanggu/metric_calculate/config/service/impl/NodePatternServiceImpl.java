@@ -3,10 +3,10 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.NodePatternMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParam;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumn;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePattern;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePatternAviatorExpressParamRelation;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.NodePatternEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.NodePatternAviatorExpressParamRelationEntity;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.NodePatternAviatorExpressParamRelationService;
 import com.yanggu.metric_calculate.config.service.NodePatternService;
@@ -22,7 +22,7 @@ import static com.yanggu.metric_calculate.config.pojo.entity.table.NodePatternAv
  * CEP匹配配置数据 服务层实现。
  */
 @Service
-public class NodePatternServiceImpl extends ServiceImpl<NodePatternMapper, NodePattern> implements NodePatternService {
+public class NodePatternServiceImpl extends ServiceImpl<NodePatternMapper, NodePatternEntity> implements NodePatternService {
 
     @Autowired
     private AviatorExpressParamService aviatorExpressParamService;
@@ -32,13 +32,13 @@ public class NodePatternServiceImpl extends ServiceImpl<NodePatternMapper, NodeP
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void saveData(NodePattern nodePattern, List<ModelColumn> modelColumnList) throws Exception {
+    public void saveData(NodePatternEntity nodePattern, List<ModelColumnEntity> modelColumnList) throws Exception {
         super.save(nodePattern);
 
-        AviatorExpressParam matchExpressParam = nodePattern.getMatchExpressParam();
+        AviatorExpressParamEntity matchExpressParam = nodePattern.getMatchExpressParam();
         matchExpressParam.setModelColumnList(modelColumnList);
         aviatorExpressParamService.saveDataByModelColumn(matchExpressParam);
-        NodePatternAviatorExpressParamRelation relation = new NodePatternAviatorExpressParamRelation();
+        NodePatternAviatorExpressParamRelationEntity relation = new NodePatternAviatorExpressParamRelationEntity();
         relation.setNodePatternId(nodePattern.getId());
         relation.setAviatorExpressParamId(matchExpressParam.getId());
         nodePatternAviatorExpressParamRelationService.save(relation);
@@ -46,7 +46,7 @@ public class NodePatternServiceImpl extends ServiceImpl<NodePatternMapper, NodeP
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
-    public void deleteData(NodePattern nodePattern) {
+    public void deleteData(NodePatternEntity nodePattern) {
         Integer nodePatternId = nodePattern.getId();
         super.removeById(nodePatternId);
         QueryWrapper queryWrapper = QueryWrapper.create()
