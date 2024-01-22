@@ -32,10 +32,8 @@ import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamTableDef.AGGREGATE_FUNCTION_PARAM;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.AtomTableDef.ATOM;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveAggregateFunctionParamRelationTableDef.DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveFilterExpressRelationTableDef.DERIVE_FILTER_EXPRESS_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelDimensionColumnRelationTableDef.DERIVE_MODEL_DIMENSION_COLUMN_RELATION;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveModelTimeColumnRelationTableDef.DERIVE_MODEL_TIME_COLUMN_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveTableDef.DERIVE;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DeriveWindowParamRelationTableDef.DERIVE_WINDOW_PARAM_RELATION;
 import static com.yanggu.metric_calculate.config.pojo.entity.table.DimensionTableDef.DIMENSION;
@@ -260,9 +258,6 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
         return QueryWrapper.create()
                 .select(DERIVE.DEFAULT_COLUMNS)
                 .from(DERIVE)
-                //时间字段
-                .innerJoin(DERIVE_MODEL_TIME_COLUMN_RELATION).on(DERIVE_MODEL_TIME_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
-                .innerJoin(MODEL_TIME_COLUMN).on(MODEL_TIME_COLUMN.ID.eq(DERIVE_MODEL_TIME_COLUMN_RELATION.MODEL_TIME_COLUMN_ID))
                 .innerJoin(MODEL_COLUMN).as(timeColumn).on(MODEL_COLUMN.ID.eq(MODEL_TIME_COLUMN.MODEL_COLUMN_ID))
                 //维度字段
                 .innerJoin(DERIVE_MODEL_DIMENSION_COLUMN_RELATION).on(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.DERIVE_ID.eq(DERIVE.ID))
@@ -270,9 +265,6 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                 .innerJoin(MODEL_COLUMN).as(dimensionColumn).on(MODEL_COLUMN.ID.eq(MODEL_DIMENSION_COLUMN.MODEL_COLUMN_ID))
                 //维度数据
                 .innerJoin(DIMENSION).on(DIMENSION.ID.eq(MODEL_DIMENSION_COLUMN.DIMENSION_ID))
-                //聚合函数
-                .innerJoin(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION).on(DERIVE.ID.eq(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID))
-                .innerJoin(AGGREGATE_FUNCTION_PARAM).on(AGGREGATE_FUNCTION_PARAM.ID.eq(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID))
                 .innerJoin(AGGREGATE_FUNCTION).on(AGGREGATE_FUNCTION.ID.eq(AGGREGATE_FUNCTION_PARAM.AGGREGATE_FUNCTION_ID))
                 //窗口参数
                 .innerJoin(DERIVE_WINDOW_PARAM_RELATION).on(DERIVE.ID.eq(DERIVE_WINDOW_PARAM_RELATION.DERIVE_ID))
@@ -329,16 +321,6 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, Derive> impleme
                     .and(DERIVE_MODEL_DIMENSION_COLUMN_RELATION.MODEL_DIMENSION_COLUMN_ID.in(modelDimensionIdList));
             deriveModelDimensionColumnRelationService.remove(dimensionQueryWrapper);
         }
-        //删除聚合函数参数
-        //AggregateFunctionParam aggregateFunctionParam = derive.getAggregateFunctionParam();
-        //if (aggregateFunctionParam != null) {
-        //    aggregateFunctionParamService.deleteData(aggregateFunctionParam);
-        //    QueryWrapper aggregateFunctionParamQueryWrapper = QueryWrapper.create()
-        //            .from(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION)
-        //            .where(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.DERIVE_ID.eq(id))
-        //            .and(DERIVE_AGGREGATE_FUNCTION_PARAM_RELATION.AGGREGATE_FUNCTION_PARAM_ID.eq(aggregateFunctionParam.getId()));
-        //    deriveAggregateFunctionParamRelationService.remove(aggregateFunctionParamQueryWrapper);
-        //}
         //删除窗口参数
         WindowParam windowParam = derive.getWindowParam();
         if (windowParam != null) {
