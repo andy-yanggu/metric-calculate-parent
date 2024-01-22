@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.core.util.UpdateEntity;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AggregateFunctionMapstruct;
@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AggregateFunctionQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AggregateFunctionVO;
 import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
@@ -89,7 +90,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
             if (aggregateFunctionDto.getJarStoreId() == null) {
                 throw new BusinessException(JAR_STORE_ID_NULL);
             }
-            aggregateFunction = aggregateFunctionMapstruct.toEntity(aggregateFunctionDto);
+            aggregateFunction = aggregateFunctionMapstruct.dtoToEntity(aggregateFunctionDto);
         }
         //检查name、displayName字段是否重复
         checkExist(aggregateFunction);
@@ -122,8 +123,8 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         for (AggregateFunctionEntity aggregateFunction : aggregateFunctionList) {
             aggregateFunction.setIsBuiltIn(false);
             aggregateFunction.setJarStoreId(jarStore.getId());
-            AggregateFunctionDTO dto = aggregateFunctionMapstruct.toDTO(aggregateFunction);
-            saveData(dto);
+            //AggregateFunctionDTO dto = aggregateFunctionMapstruct(aggregateFunction);
+            //saveData(dto);
         }
     }
 
@@ -173,26 +174,23 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
     }
 
     @Override
-    public List<AggregateFunctionDTO> listData(AggregateFunctionQuery queryReq) {
+    public List<AggregateFunctionVO> listData(AggregateFunctionQuery queryReq) {
         QueryWrapper where = buildAggregateFunctionQueryWrapper(queryReq);
         List<AggregateFunctionEntity> aggregateFunctionList = aggregateFunctionMapper.selectListWithRelationsByQuery(where);
-        return aggregateFunctionMapstruct.toDTO(aggregateFunctionList);
+        return aggregateFunctionMapstruct.entityToVO(aggregateFunctionList);
     }
 
     @Override
-    public AggregateFunctionDTO queryById(Integer id) {
+    public AggregateFunctionVO queryById(Integer id) {
         AggregateFunctionEntity aggregateFunction = aggregateFunctionMapper.selectOneWithRelationsById(id);
-        return aggregateFunctionMapstruct.toDTO(aggregateFunction);
+        return aggregateFunctionMapstruct.entityToVO(aggregateFunction);
     }
 
     @Override
-    public Page<AggregateFunctionDTO> pageQuery(Integer pageNumber,
-                                                Integer pageSize,
-                                                AggregateFunctionQuery queryReq) {
+    public PageVO<AggregateFunctionVO> pageQuery(AggregateFunctionQuery queryReq) {
         QueryWrapper queryWrapper = buildAggregateFunctionQueryWrapper(queryReq);
-        Page<AggregateFunctionEntity> aggregateFunctionPage = aggregateFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<AggregateFunctionDTO> list = aggregateFunctionMapstruct.toDTO(aggregateFunctionPage.getRecords());
-        return new Page<>(list, pageNumber, pageSize, aggregateFunctionPage.getTotalRow());
+        aggregateFunctionMapper.paginateWithRelations(queryReq, queryWrapper);
+        return aggregateFunctionMapstruct.entityToPageVO(queryReq);
     }
 
     private QueryWrapper buildAggregateFunctionQueryWrapper(AggregateFunctionQuery queryReq) {

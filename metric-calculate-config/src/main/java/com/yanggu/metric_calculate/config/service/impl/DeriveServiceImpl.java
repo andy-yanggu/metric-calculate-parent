@@ -7,6 +7,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.relation.RelationManager;
 import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
@@ -14,6 +15,7 @@ import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveVO;
 import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -82,7 +84,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, DeriveEntity> i
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(DeriveDTO deriveDto) throws Exception {
-        DeriveEntity derive = deriveMapstruct.toEntity(deriveDto);
+        DeriveEntity derive = deriveMapstruct.dtoToEntity(deriveDto);
 
         //检查name、displayName是否重复
         checkExist(derive);
@@ -101,7 +103,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, DeriveEntity> i
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(DeriveDTO deriveDto) throws Exception {
-        DeriveEntity updateDerive = deriveMapstruct.toEntity(deriveDto);
+        DeriveEntity updateDerive = deriveMapstruct.dtoToEntity(deriveDto);
 
         //检查name和displayName是否重复
         checkExist(updateDerive);
@@ -130,24 +132,23 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, DeriveEntity> i
     }
 
     @Override
-    public List<DeriveDTO> listData(DeriveQuery deriveQuery) {
+    public List<DeriveVO> listData(DeriveQuery deriveQuery) {
         QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
         List<DeriveEntity> derives = deriveMapper.selectListWithRelationsByQuery(queryWrapper);
-        return deriveMapstruct.toDTO(derives);
+        return deriveMapstruct.entityToVO(derives);
     }
 
     @Override
-    public DeriveDTO queryById(Integer id) {
+    public DeriveVO queryById(Integer id) {
         DeriveEntity derive = getDeriveById(id);
-        return deriveMapstruct.toDTO(derive);
+        return deriveMapstruct.entityToVO(derive);
     }
 
     @Override
-    public Page<DeriveDTO> pageQuery(Integer pageNumber, Integer pageSize, DeriveQuery deriveQuery) {
+    public PageVO<DeriveVO> pageQuery(DeriveQuery deriveQuery) {
         QueryWrapper queryWrapper = buildDeriveQueryWrapper(deriveQuery);
-        Page<DeriveEntity> derivePage = deriveMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<DeriveDTO> list = deriveMapstruct.toDTO(derivePage.getRecords());
-        return new Page<>(list, pageNumber, pageSize, derivePage.getTotalRow());
+        deriveMapper.paginateWithRelations(deriveQuery, queryWrapper);
+        return deriveMapstruct.entityToPageVO(deriveQuery);
     }
 
     @Override

@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 
+import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveVO;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.mapstruct.Mapper;
@@ -26,7 +28,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
                 WindowParamMapstruct.class
         }, componentModel = SPRING
 )
-public interface DeriveMapstruct extends BaseMapstruct<DeriveDTO, DeriveEntity> {
+public interface DeriveMapstruct extends BaseMapstruct<DeriveEntity, DeriveVO, DeriveDTO> {
 
     /**
      * 转换成core中的派生指标

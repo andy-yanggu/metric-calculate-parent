@@ -2,8 +2,11 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionParamDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.pojo.vo.AggregateFunctionParamVO;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -26,7 +29,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
                 MixUdafParamMapstruct.class
         },
         componentModel = SPRING)
-public interface AggregateFunctionParamMapstruct extends BaseMapstruct<AggregateFunctionParamDTO, AggregateFunctionParamEntity> {
+public interface AggregateFunctionParamMapstruct extends BaseMapstruct<AggregateFunctionParamEntity, AggregateFunctionParamVO, AggregateFunctionParamDTO> {
 
     /**
      * 转换成core中的类
@@ -42,7 +45,7 @@ public interface AggregateFunctionParamMapstruct extends BaseMapstruct<Aggregate
     @Mapping(source = "mapUdafParam", target = "mapUdafParam", qualifiedByName = {"MapUdafParamMapstruct", "toCoreMapUdafParam"})
     //混合型参数
     @Mapping(source = "mixUdafParam", target = "mixUdafParam", qualifiedByName = {"MixUdafParamMapstruct", "toCoreMixUdafParam"})
-    com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParamEntity aggregateFunctionParam);
+    AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParamEntity aggregateFunctionParam);
 
     /**
      * 获取udaf的jar包路径

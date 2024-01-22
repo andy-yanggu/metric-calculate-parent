@@ -1,11 +1,13 @@
 package com.yanggu.metric_calculate.config.pojo.query;
 
+import com.yanggu.metric_calculate.config.base.query.PageQuery;
+import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
 import lombok.Data;
 
 import java.util.List;
 
 @Data
-public class DimensionQuery {
+public class DimensionQuery extends PageQuery<DimensionEntity> {
 
     /**
      * 维度名称

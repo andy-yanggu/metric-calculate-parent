@@ -5,6 +5,7 @@ import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.core.util.UpdateEntity;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorFunctionMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionMapstruct;
@@ -13,6 +14,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AviatorFunctionVO;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionFieldService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
@@ -80,7 +82,7 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
             if (aviatorFunctionDto.getJarStoreId() == null) {
                 throw new BusinessException(JAR_STORE_ID_NULL);
             }
-            aviatorFunction = aviatorFunctionMapstruct.toEntity(aviatorFunctionDto);
+            aviatorFunction = aviatorFunctionMapstruct.dtoToEntity(aviatorFunctionDto);
         }
         checkExist(aviatorFunction);
         super.save(aviatorFunction);
@@ -109,8 +111,9 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
         for (AviatorFunctionEntity aviatorFunction : aviatorFunctionList) {
             aviatorFunction.setJarStoreId(jarStore.getId());
             aviatorFunction.setIsBuiltIn(false);
-            AviatorFunctionDTO dto = aviatorFunctionMapstruct.toDTO(aviatorFunction);
-            this.saveData(dto);
+            //TODO 这里需要将Aviator函数保存到数据库中
+            //AviatorFunctionDTO dto = aviatorFunctionMapstruct.entityToVO(aviatorFunction);
+            //this.saveData(dto);
         }
     }
 
@@ -139,24 +142,23 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
     }
 
     @Override
-    public List<AviatorFunctionDTO> listData(AviatorFunctionQuery req) {
+    public List<AviatorFunctionVO> listData(AviatorFunctionQuery req) {
         QueryWrapper queryWrapper = buildAviatorFunctionQueryWrapper(req);
         List<AviatorFunctionEntity> aviatorFunctions = aviatorFunctionMapper.selectListWithRelationsByQuery(queryWrapper);
-        return aviatorFunctionMapstruct.toDTO(aviatorFunctions);
+        return aviatorFunctionMapstruct.entityToVO(aviatorFunctions);
     }
 
     @Override
-    public AviatorFunctionDTO queryById(Integer id) {
+    public AviatorFunctionVO queryById(Integer id) {
         AviatorFunctionEntity aviatorFunction = aviatorFunctionMapper.selectOneWithRelationsById(id);
-        return aviatorFunctionMapstruct.toDTO(aviatorFunction);
+        return aviatorFunctionMapstruct.entityToVO(aviatorFunction);
     }
 
     @Override
-    public Page<AviatorFunctionDTO> pageData(Integer pageNumber, Integer pageSize, AviatorFunctionQuery req) {
+    public PageVO<AviatorFunctionVO> pageData(AviatorFunctionQuery req) {
         QueryWrapper queryWrapper = buildAviatorFunctionQueryWrapper(req);
-        Page<AviatorFunctionEntity> page = aviatorFunctionMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<AviatorFunctionDTO> list = aviatorFunctionMapstruct.toDTO(page.getRecords());
-        return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
+        aviatorFunctionMapper.paginateWithRelations(req, queryWrapper);
+        return aviatorFunctionMapstruct.entityToPageVO(req);
     }
 
     private QueryWrapper buildAviatorFunctionQueryWrapper(AviatorFunctionQuery req) {

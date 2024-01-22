@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.config.service;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AggregateFunctionQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AggregateFunctionVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -22,10 +23,10 @@ public interface AggregateFunctionService extends IService<AggregateFunctionEnti
 
     void deleteById(Integer id);
 
-    List<AggregateFunctionDTO> listData(AggregateFunctionQuery queryReq);
+    List<AggregateFunctionVO> listData(AggregateFunctionQuery queryReq);
 
-    AggregateFunctionDTO queryById(Integer id);
+    AggregateFunctionVO queryById(Integer id);
 
-    Page<AggregateFunctionDTO> pageQuery(Integer pageNumber, Integer pageSize, AggregateFunctionQuery queryReq);
+    PageVO<AggregateFunctionVO> pageQuery(AggregateFunctionQuery queryReq);
 
 }

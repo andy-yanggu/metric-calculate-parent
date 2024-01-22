@@ -1,10 +1,13 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
+import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.AviatorExpressParamDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.pojo.vo.AviatorExpressParamVO;
+import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,7 +21,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("AviatorExpressParamMapstruct")
 @Mapper(uses = {AviatorFunctionInstanceMapstruct.class}, componentModel = SPRING)
-public interface AviatorExpressParamMapstruct extends BaseMapstruct<AviatorExpressParamDTO, AviatorExpressParamEntity> {
+public interface AviatorExpressParamMapstruct extends BaseMapstruct<AviatorExpressParamEntity, AviatorExpressParamVO, AviatorExpressParamDTO> {
 
     /**
      * 转换成core中的AviatorExpressParam
@@ -29,7 +32,7 @@ public interface AviatorExpressParamMapstruct extends BaseMapstruct<AviatorExpre
     @Named("toCoreAviatorExpressParam")
     @Mapping(source = "express", target = "express")
     @Mapping(source = "aviatorFunctionInstanceList", target = "aviatorFunctionInstanceList", qualifiedByName = {"AviatorFunctionInstanceMapstruct", "toCoreInstance"})
-    com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam toCoreAviatorExpressParam(AviatorExpressParamEntity param);
+    AviatorExpressParam toCoreAviatorExpressParam(AviatorExpressParamEntity param);
 
     /**
      * 从AviatorExpressParam表达式中获取自定义的aviator函数jar包路径

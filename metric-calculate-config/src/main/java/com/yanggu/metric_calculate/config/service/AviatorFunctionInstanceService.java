@@ -2,9 +2,11 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionInstanceQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AviatorFunctionInstanceVO;
 
 import java.util.List;
 
@@ -19,10 +21,10 @@ public interface AviatorFunctionInstanceService extends IService<AviatorFunction
 
     void deleteById(Integer id);
 
-    List<AviatorFunctionInstanceDTO> listData(AviatorFunctionInstanceQuery req);
+    List<AviatorFunctionInstanceVO> listData(AviatorFunctionInstanceQuery req);
 
-    AviatorFunctionInstanceDTO queryById(Integer id);
+    AviatorFunctionInstanceVO queryById(Integer id);
 
-    Page<AviatorFunctionInstanceDTO> pageData(Integer pageNumber, Integer pageSize, AviatorFunctionInstanceQuery req);
+    PageVO<AviatorFunctionInstanceVO> pageData(AviatorFunctionInstanceQuery req);
 
 }

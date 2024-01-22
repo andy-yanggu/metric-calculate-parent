@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.query;
 
+import com.yanggu.metric_calculate.config.base.query.PageQuery;
+import com.yanggu.metric_calculate.config.pojo.entity.ModelEntity;
 import lombok.Data;
 
 @Data
-public class ModelQuery {
+public class ModelQuery extends PageQuery<ModelEntity> {
 
     /**
      * 宽表名称

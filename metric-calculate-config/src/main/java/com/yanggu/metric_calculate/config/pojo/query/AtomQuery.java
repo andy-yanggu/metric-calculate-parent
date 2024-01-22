@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.query;
 
+import com.yanggu.metric_calculate.config.base.query.PageQuery;
+import com.yanggu.metric_calculate.config.pojo.entity.AtomEntity;
 import lombok.Data;
 
 @Data
-public class AtomQuery {
+public class AtomQuery extends PageQuery<AtomEntity> {
 
     private String atomName;
 

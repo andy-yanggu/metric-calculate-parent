@@ -1,11 +1,12 @@
 package com.yanggu.metric_calculate.config.service;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.DeriveEntity;
 import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveVO;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 
 import java.util.List;
@@ -37,11 +38,11 @@ public interface DeriveService extends IService<DeriveEntity> {
      */
     void deleteById(Integer id);
 
-    DeriveDTO queryById(Integer id);
+    DeriveVO queryById(Integer id);
 
-    List<DeriveDTO> listData(DeriveQuery deriveQuery);
+    List<DeriveVO> listData(DeriveQuery deriveQuery);
 
-    Page<DeriveDTO> pageQuery(Integer pageNumber, Integer pageSize, DeriveQuery deriveQuery);
+    PageVO<DeriveVO> pageQuery(DeriveQuery deriveQuery);
 
     DeriveMetrics toCoreDeriveMetrics(Integer deriveId);
 

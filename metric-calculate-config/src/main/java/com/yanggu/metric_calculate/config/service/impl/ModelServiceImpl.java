@@ -4,6 +4,7 @@ import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
@@ -11,7 +12,9 @@ import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.ModelVO;
 import com.yanggu.metric_calculate.config.service.*;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +59,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelEntity> impl
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(ModelDTO modelDto) throws Exception {
-        ModelEntity model = modelMapstruct.toEntity(modelDto);
+        ModelEntity model = modelMapstruct.dtoToEntity(modelDto);
 
         //检查name、displayName是否重复
         checkExist(model);
@@ -104,7 +107,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelEntity> impl
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(ModelDTO modelDto) {
-        ModelEntity updateModel = modelMapstruct.toEntity(modelDto);
+        ModelEntity updateModel = modelMapstruct.dtoToEntity(modelDto);
 
         //检查name、displayName是否重复
         checkExist(updateModel);
@@ -116,7 +119,7 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelEntity> impl
     //TODO 待完成修改宽表接口
     @Override
     public void updateOtherData(ModelDTO modelDto) {
-        ModelEntity updateModel = modelMapstruct.toEntity(modelDto);
+        ModelEntity updateModel = modelMapstruct.dtoToEntity(modelDto);
         //查询之前的宽表和下面的派生指标
         ModelEntity dbModel = getModel(modelDto.getId());
 
@@ -239,34 +242,33 @@ public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelEntity> impl
     }
 
     @Override
-    public List<ModelDTO> listData(ModelQuery req) {
+    public List<ModelVO> listData(ModelQuery req) {
         QueryWrapper queryWrapper = buildModelQueryWrapper(req);
         List<ModelEntity> modelList = modelMapper.selectListWithRelationsByQuery(queryWrapper);
-        return modelMapstruct.toDTO(modelList);
+        return modelMapstruct.entityToVO(modelList);
     }
 
     @Override
-    public ModelDTO queryById(Integer id) {
+    public ModelVO queryById(Integer id) {
         ModelEntity model = getModel(id);
-        return modelMapstruct.toDTO(model);
+        return modelMapstruct.entityToVO(model);
     }
 
     @Override
-    public Page<ModelDTO> pageData(Integer pageNumber, Integer pageSize, ModelQuery req) {
+    public PageVO<ModelVO> pageData(ModelQuery req) {
         QueryWrapper queryWrapper = buildModelQueryWrapper(req);
-        Page<ModelEntity> page = modelMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<ModelDTO> list = modelMapstruct.toDTO(page.getRecords());
-        return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
+        modelMapper.paginateWithRelations(req, queryWrapper);
+        return modelMapstruct.entityToPageVO(req);
     }
 
     @Override
-    public com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId) {
+    public Model toCoreModel(Integer modelId) {
         ModelEntity model = TenantManager.withoutTenantCondition(() -> modelMapper.selectOneWithRelationsById(modelId));
         return modelMapstruct.toCoreModel(model);
     }
 
     @Override
-    public List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getAllCoreModel() {
+    public List<Model> getAllCoreModel() {
         List<ModelEntity> modelList = TenantManager.withoutTenantCondition(() -> modelMapper.selectAllWithRelations());
         return modelMapstruct.toCoreModel(modelList);
     }

@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.config.controller;
 
 import com.mybatisflex.core.paginate.Page;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
 import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
-import com.yanggu.metric_calculate.config.pojo.vo.Result;
+import com.yanggu.metric_calculate.config.pojo.vo.DeriveVO;
 import com.yanggu.metric_calculate.config.service.DeriveService;
 import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
@@ -26,61 +27,56 @@ public class DeriveController {
 
     @PostMapping("/saveData")
     @Operation(summary = "新增派生指标")
-    public Result<Void> saveData(@RequestBody DeriveDTO deriveDto) throws Exception {
+    public void saveData(@RequestBody DeriveDTO deriveDto) throws Exception {
         deriveService.saveData(deriveDto);
-        return Result.ok();
     }
 
     @PutMapping("/updateData")
     @Operation(summary = "修改派生指标")
-    public Result<Void> updateData(@RequestBody DeriveDTO deriveDto) throws Exception {
+    public void updateData(@RequestBody DeriveDTO deriveDto) throws Exception {
         deriveService.updateData(deriveDto);
-        return Result.ok();
     }
 
     @DeleteMapping("/{id}")
     @Operation(summary = "删除派生指标")
-    public Result<Void> remove(@PathVariable("id") Integer id) {
+    public void remove(@PathVariable("id") Integer id) {
         deriveService.deleteById(id);
-        return Result.ok();
     }
 
     @GetMapping("/listData")
     @Operation(summary = "派生指标列表")
-    public Result<List<DeriveDTO>> listData(DeriveQuery deriveQuery) {
-        return Result.ok(deriveService.listData(deriveQuery));
+    public List<DeriveVO> listData(DeriveQuery deriveQuery) {
+        return deriveService.listData(deriveQuery);
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "派生指标详情")
-    public Result<DeriveDTO> detail(@PathVariable("id") Integer id) {
-        return Result.ok(deriveService.queryById(id));
+    public DeriveVO detail(@PathVariable("id") Integer id) {
+        return deriveService.queryById(id);
     }
 
     @GetMapping("/pageQuery")
     @Operation(summary = "派生指标分页")
-    public Result<Page<DeriveDTO>> pageQuery(Integer pageNumber, Integer pageSize, DeriveQuery deriveQuery) {
-        return Result.ok(deriveService.pageQuery(pageNumber, pageSize, deriveQuery));
+    public PageVO<DeriveVO> pageQuery(DeriveQuery deriveQuery) {
+        return deriveService.pageQuery(deriveQuery);
     }
 
     @GetMapping("/toCoreDeriveMetrics/{deriveId}")
     @Operation(summary = "转换成核心派生指标")
-    public Result<DeriveMetrics> toCoreDeriveMetrics(@PathVariable("deriveId") Integer deriveId) {
-        DeriveMetrics deriveMetrics = deriveService.toCoreDeriveMetrics(deriveId);
-        return Result.ok(deriveMetrics);
+    public DeriveMetrics toCoreDeriveMetrics(@PathVariable("deriveId") Integer deriveId) {
+        return deriveService.toCoreDeriveMetrics(deriveId);
     }
 
     @GetMapping("/allCoreDeriveMetrics")
     @Operation(summary = "转换成所有核心派生指标")
-    public Result<List<DeriveMetricsConfigData>> getAllCoreDeriveMetrics() {
-        List<DeriveMetricsConfigData> list = deriveService.getAllCoreDeriveMetrics();
-        return Result.ok(list);
+    public List<DeriveMetricsConfigData> getAllCoreDeriveMetrics() {
+        return deriveService.getAllCoreDeriveMetrics();
     }
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
     public void excelExport(HttpServletResponse response, DeriveQuery req) {
-        List<DeriveDTO> list = deriveService.listData(req);
+        List<DeriveVO> list = deriveService.listData(req);
         ExcelUtil.exportFormList(response, list);
     }
 

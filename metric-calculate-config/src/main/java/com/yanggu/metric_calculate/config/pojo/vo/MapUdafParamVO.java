@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.vo;
 
+import com.yanggu.metric_calculate.config.base.vo.BaseVO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

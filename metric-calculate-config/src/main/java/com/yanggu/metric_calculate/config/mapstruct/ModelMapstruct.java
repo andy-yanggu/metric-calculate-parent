@@ -1,8 +1,12 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
+import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.pojo.vo.ModelVO;
 import com.yanggu.metric_calculate.core.enums.BasicType;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.mapstruct.IterableMapping;
@@ -16,7 +20,7 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
 @Named("ModelMapstruct")
 @Mapper(uses = {ModelColumnMapstruct.class, DeriveMapstruct.class}, componentModel = SPRING)
-public interface ModelMapstruct extends BaseMapstruct<ModelDTO, ModelEntity> {
+public interface ModelMapstruct extends BaseMapstruct<ModelEntity, ModelVO, ModelDTO> {
 
     /**
      * 转换成core中的宽表
@@ -33,17 +37,17 @@ public interface ModelMapstruct extends BaseMapstruct<ModelDTO, ModelEntity> {
     @Mapping(source = "atomList", target = "udafJarPathList", qualifiedByName = "getUdafJarPathList")
     //自定义aviator函数jar包路径
     @Mapping(source = "model", target = "aviatorFunctionJarPathList", qualifiedByName = "getAviatorFunctionJarPathList")
-    com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(ModelEntity model);
+    Model toCoreModel(ModelEntity model);
 
     @IterableMapping(qualifiedByName = "toCoreModel")
-    List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> toCoreModel(List<ModelEntity> modelList);
+    List<Model> toCoreModel(List<ModelEntity> modelList);
 
     @Named("getFieldMap")
     default Map<String, Class<?>> getFieldMap(List<ModelColumnEntity> modelColumnList) {
-        List<com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn> collect =
+        List<ModelColumn> collect =
                 modelColumnList.stream()
                         .map(tempModelColumn -> {
-                            com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn modelColumn = new com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn();
+                            ModelColumn modelColumn = new ModelColumn();
                             modelColumn.setName(tempModelColumn.getName());
                             modelColumn.setDataType(BasicType.valueOf(tempModelColumn.getDataType().name()));
                             return modelColumn;

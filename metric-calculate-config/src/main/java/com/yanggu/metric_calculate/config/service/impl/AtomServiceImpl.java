@@ -1,17 +1,18 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AtomMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AtomMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.AtomDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.AtomEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelationEntity;
+import com.yanggu.metric_calculate.config.pojo.entity.AtomEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AtomQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AtomVO;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionParamService;
 import com.yanggu.metric_calculate.config.service.AtomAggregateFunctionParamRelationService;
 import com.yanggu.metric_calculate.config.service.AtomService;
@@ -38,7 +39,7 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> impleme
     private AtomMapper atomMapper;
 
     @Autowired
-    private AtomMapstruct  atomMapstruct;
+    private AtomMapstruct atomMapstruct;
 
     @Autowired
     private AggregateFunctionParamService aggregateFunctionParamService;
@@ -52,7 +53,7 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> impleme
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AtomDTO atomDto) throws Exception {
-        AtomEntity atom = atomMapstruct.toEntity(atomDto);
+        AtomEntity atom = atomMapstruct.dtoToEntity(atomDto);
         checkExist(atom);
         this.save(atom);
         AggregateFunctionParamEntity aggregateFunctionParam = atom.getAggregateFunctionParam();
@@ -71,7 +72,7 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> impleme
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(AtomDTO atomDto) throws Exception {
-        AtomEntity atom = atomMapstruct.toEntity(atomDto);
+        AtomEntity atom = atomMapstruct.dtoToEntity(atomDto);
         checkExist(atom);
         this.updateById(atom);
     }
@@ -83,31 +84,30 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> impleme
     }
 
     @Override
-    public AtomDTO queryById(Integer id) {
+    public AtomVO queryById(Integer id) {
         AtomEntity atom = atomMapper.selectOneWithRelationsById(id);
-        return atomMapstruct.toDTO(atom);
+        return atomMapstruct.entityToVO(atom);
     }
 
     @Override
-    public List<AtomDTO> listData(AtomQuery atomQueryReq) {
-        QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQueryReq);
+    public List<AtomVO> listData(AtomQuery atomQuery) {
+        QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQuery);
         List<AtomEntity> atomList = atomMapper.selectListWithRelationsByQuery(queryWrapper);
-        return atomMapstruct.toDTO(atomList);
+        return atomMapstruct.entityToVO(atomList);
     }
 
     @Override
-    public Page<AtomDTO> pageQuery(Integer pageNumber, Integer pageSize, AtomQuery atomQueryReq) {
-        QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQueryReq);
-        Page<AtomEntity> page = atomMapper.paginate(pageNumber, pageSize, queryWrapper);
-        List<AtomDTO> dtoList = atomMapstruct.toDTO(page.getRecords());
-        return new Page<>(dtoList, pageNumber, pageSize, page.getTotalRow());
+    public PageVO<AtomVO> pageQuery(AtomQuery atomQuery) {
+        QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQuery);
+        atomMapper.paginateWithRelations(atomQuery, queryWrapper);
+        return atomMapstruct.entityToPageVO(atomQuery);
     }
 
     private void checkExist(AtomEntity atom) {
         QueryWrapper queryWrapper = QueryWrapper.create()
-                        .from(ATOM)
-                       .where(ATOM.ID.ne(atom.getId()))
-                       .and(ATOM.NAME.eq(atom.getName()).or(ATOM.DISPLAY_NAME.eq(atom.getDisplayName())));
+                .from(ATOM)
+                .where(ATOM.ID.ne(atom.getId()))
+                .and(ATOM.NAME.eq(atom.getName()).or(ATOM.DISPLAY_NAME.eq(atom.getDisplayName())));
         long count = atomMapper.selectCountByQuery(queryWrapper);
         if (count > 0) {
             throw new BusinessException(ATOM_EXIST);

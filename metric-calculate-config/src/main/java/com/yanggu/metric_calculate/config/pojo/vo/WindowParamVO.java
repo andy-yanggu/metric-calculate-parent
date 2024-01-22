@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.vo;
 
+import com.yanggu.metric_calculate.config.base.vo.BaseVO;
 import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;

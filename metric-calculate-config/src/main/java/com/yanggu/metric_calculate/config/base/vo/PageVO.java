@@ -1,4 +1,5 @@
-package com.yanggu.metric_calculate.config.pojo.vo;
+package com.yanggu.metric_calculate.config.base.vo;
+
 
 import lombok.Data;
 

@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.vo;
 
+import com.yanggu.metric_calculate.config.base.vo.BaseVO;
 import com.yanggu.metric_calculate.config.enums.DataType;
 import com.yanggu.metric_calculate.config.enums.ModelColumnFieldType;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;

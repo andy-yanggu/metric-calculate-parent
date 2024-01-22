@@ -2,9 +2,12 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.ModelEntity;
 import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.ModelVO;
+import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 
 import java.util.List;
 
@@ -33,7 +36,7 @@ public interface ModelService extends IService<ModelEntity> {
 
     void deleteById(Integer id);
 
-    List<ModelDTO> listData(ModelQuery req);
+    List<ModelVO> listData(ModelQuery req);
 
     /**
      * 根据主键查询
@@ -41,12 +44,12 @@ public interface ModelService extends IService<ModelEntity> {
      * @param id
      * @return
      */
-    ModelDTO queryById(Integer id);
+    ModelVO queryById(Integer id);
 
-    Page<ModelDTO> pageData(Integer pageNumber, Integer pageSize, ModelQuery req);
+    PageVO<ModelVO> pageData(ModelQuery req);
 
-    com.yanggu.metric_calculate.core.pojo.data_detail_table.Model toCoreModel(Integer modelId);
+    Model toCoreModel(Integer modelId);
 
-    List<com.yanggu.metric_calculate.core.pojo.data_detail_table.Model> getAllCoreModel();
+    List<Model> getAllCoreModel();
 
 }

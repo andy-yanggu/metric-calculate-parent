@@ -1,10 +1,11 @@
 package com.yanggu.metric_calculate.config.service;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.DimensionDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
 import com.yanggu.metric_calculate.config.pojo.query.DimensionQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.DimensionVO;
 
 import java.util.List;
 
@@ -19,10 +20,10 @@ public interface DimensionService extends IService<DimensionEntity> {
 
     void deleteById(Integer id);
 
-    List<DimensionDTO> listData(DimensionQuery req);
+    List<DimensionVO> listData(DimensionQuery req);
 
-    DimensionDTO queryById(Integer id);
+    DimensionVO queryById(Integer id);
 
-    Page<DimensionDTO> pageData(Integer pageNumber, Integer pageSize, DimensionQuery req);
+    PageVO<DimensionVO> pageData(DimensionQuery req);
 
 }

@@ -2,9 +2,11 @@ package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.service.IService;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.AtomDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.AtomEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AtomQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AtomVO;
 
 import java.util.List;
 
@@ -35,10 +37,10 @@ public interface AtomService extends IService<AtomEntity> {
      */
     void deleteById(Integer id);
 
-    AtomDTO queryById(Integer id);
+    AtomVO queryById(Integer id);
 
-    List<AtomDTO> listData(AtomQuery atomQueryReq);
+    List<AtomVO> listData(AtomQuery atomQuery);
 
-    Page<AtomDTO> pageQuery(Integer pageNumber, Integer pageSize, AtomQuery atomQueryReq);
+    PageVO<AtomVO> pageQuery(AtomQuery atomQuery);
 
 }

@@ -3,12 +3,14 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.DimensionMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DimensionMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.DimensionDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
 import com.yanggu.metric_calculate.config.pojo.query.DimensionQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.DimensionVO;
 import com.yanggu.metric_calculate.config.service.DimensionService;
 import com.yanggu.metric_calculate.config.service.ModelDimensionColumnService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(DimensionDTO dimensionDto) {
-        DimensionEntity dimension = dimensionMapstruct.toEntity(dimensionDto);
+        DimensionEntity dimension = dimensionMapstruct.dtoToEntity(dimensionDto);
         checkExist(dimension);
         super.save(dimension);
     }
@@ -48,7 +50,7 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(DimensionDTO dimensionDto) {
-        DimensionEntity dimension = dimensionMapstruct.toEntity(dimensionDto);
+        DimensionEntity dimension = dimensionMapstruct.dtoToEntity(dimensionDto);
         checkExist(dimension);
         super.updateById(dimension);
     }
@@ -67,24 +69,23 @@ public class DimensionServiceImpl extends ServiceImpl<DimensionMapper, Dimension
     }
 
     @Override
-    public List<DimensionDTO> listData(DimensionQuery req) {
+    public List<DimensionVO> listData(DimensionQuery req) {
         QueryWrapper queryWrapper = buildDimensionQueryWrapper(req);
         List<DimensionEntity> dimensions = dimensionMapper.selectListByQuery(queryWrapper);
-        return dimensionMapstruct.toDTO(dimensions);
+        return dimensionMapstruct.entityToVO(dimensions);
     }
 
     @Override
-    public DimensionDTO queryById(Integer id) {
+    public DimensionVO queryById(Integer id) {
         DimensionEntity dimension = dimensionMapper.selectOneById(id);
-        return dimensionMapstruct.toDTO(dimension);
+        return dimensionMapstruct.entityToVO(dimension);
     }
 
     @Override
-    public Page<DimensionDTO> pageData(Integer pageNumber, Integer pageSize, DimensionQuery req) {
+    public PageVO<DimensionVO> pageData(DimensionQuery req) {
         QueryWrapper queryWrapper = buildDimensionQueryWrapper(req);
-        Page<DimensionEntity> page = dimensionMapper.paginate(pageNumber, pageSize, queryWrapper);
-        List<DimensionDTO> list = dimensionMapstruct.toDTO(page.getRecords());
-        return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
+        dimensionMapper.paginate(req, queryWrapper);
+        return dimensionMapstruct.entityToPageVO(req);
     }
 
     private void checkExist(DimensionEntity dimension) {

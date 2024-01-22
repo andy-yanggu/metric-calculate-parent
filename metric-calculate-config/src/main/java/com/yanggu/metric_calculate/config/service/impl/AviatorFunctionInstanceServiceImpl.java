@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
-import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
+import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AviatorFunctionInstanceMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionInstanceMapstruct;
@@ -11,6 +11,7 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEntity;
 import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionInstanceQuery;
+import com.yanggu.metric_calculate.config.pojo.vo.AviatorFunctionInstanceVO;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamAviatorFunctionInstanceRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
@@ -49,7 +50,7 @@ public class AviatorFunctionInstanceServiceImpl extends ServiceImpl<AviatorFunct
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AviatorFunctionInstanceDTO aviatorFunctionInstanceDto) {
-        AviatorFunctionInstanceEntity aviatorFunctionInstance = aviatorFunctionInstanceMapstruct.toEntity(aviatorFunctionInstanceDto);
+        AviatorFunctionInstanceEntity aviatorFunctionInstance = aviatorFunctionInstanceMapstruct.dtoToEntity(aviatorFunctionInstanceDto);
         check(aviatorFunctionInstance);
         super.save(aviatorFunctionInstance);
     }
@@ -57,7 +58,7 @@ public class AviatorFunctionInstanceServiceImpl extends ServiceImpl<AviatorFunct
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void updateData(AviatorFunctionInstanceDTO aviatorFunctionInstanceDto) {
-        AviatorFunctionInstanceEntity aviatorFunctionInstance = aviatorFunctionInstanceMapstruct.toEntity(aviatorFunctionInstanceDto);
+        AviatorFunctionInstanceEntity aviatorFunctionInstance = aviatorFunctionInstanceMapstruct.dtoToEntity(aviatorFunctionInstanceDto);
         check(aviatorFunctionInstance);
         //如果该实例被使用了则不能修改
         long count = relationService.queryChain()
@@ -83,26 +84,23 @@ public class AviatorFunctionInstanceServiceImpl extends ServiceImpl<AviatorFunct
     }
 
     @Override
-    public List<AviatorFunctionInstanceDTO> listData(AviatorFunctionInstanceQuery req) {
+    public List<AviatorFunctionInstanceVO> listData(AviatorFunctionInstanceQuery req) {
         QueryWrapper queryWrapper = buildQueryWrapper(req);
         List<AviatorFunctionInstanceEntity> list = aviatorFunctionInstanceMapper.selectListWithRelationsByQuery(queryWrapper);
-        return aviatorFunctionInstanceMapstruct.toDTO(list);
+        return aviatorFunctionInstanceMapstruct.entityToVO(list);
     }
 
     @Override
-    public AviatorFunctionInstanceDTO queryById(Integer id) {
+    public AviatorFunctionInstanceVO queryById(Integer id) {
         AviatorFunctionInstanceEntity aviatorFunctionInstance = aviatorFunctionInstanceMapper.selectOneWithRelationsById(id);
-        return aviatorFunctionInstanceMapstruct.toDTO(aviatorFunctionInstance);
+        return aviatorFunctionInstanceMapstruct.entityToVO(aviatorFunctionInstance);
     }
 
     @Override
-    public Page<AviatorFunctionInstanceDTO> pageData(Integer pageNumber,
-                                                     Integer pageSize,
-                                                     AviatorFunctionInstanceQuery req) {
+    public PageVO<AviatorFunctionInstanceVO> pageData(AviatorFunctionInstanceQuery req) {
         QueryWrapper queryWrapper = buildQueryWrapper(req);
-        Page<AviatorFunctionInstanceEntity> page = aviatorFunctionInstanceMapper.paginateWithRelations(pageNumber, pageSize, queryWrapper);
-        List<AviatorFunctionInstanceDTO> list = aviatorFunctionInstanceMapstruct.toDTO(page.getRecords());
-        return new Page<>(list, pageNumber, pageSize, page.getTotalRow());
+        aviatorFunctionInstanceMapper.paginateWithRelations(req, queryWrapper);
+        return aviatorFunctionInstanceMapstruct.entityToPageVO(req);
     }
 
     private QueryWrapper buildQueryWrapper(AviatorFunctionInstanceQuery req) {

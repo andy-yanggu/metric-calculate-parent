@@ -1,9 +1,11 @@
 package com.yanggu.metric_calculate.config.pojo.query;
 
+import com.yanggu.metric_calculate.config.base.query.PageQuery;
+import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
 import lombok.Data;
 
 @Data
-public class AviatorFunctionQuery {
+public class AviatorFunctionQuery extends PageQuery<AviatorFunctionEntity> {
 
     /**
      * Aviator函数名称
