@@ -38,7 +38,6 @@ spring:
   #jackson配置
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
-    default-property-inclusion: NON_EMPTY
     time-zone: GMT+8
 
 mybatis-flex:

@@ -7,14 +7,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
  * 对RestController返回值统一处理
  */
-@RestControllerAdvice(annotations = {RestController.class})
+@RestControllerAdvice(basePackages = "${springdoc.group-configs[0].packages-to-scan}")
 public class ResultAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
