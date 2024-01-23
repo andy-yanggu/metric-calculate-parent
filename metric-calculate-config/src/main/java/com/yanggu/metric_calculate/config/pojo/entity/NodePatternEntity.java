@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.RelationOneToOne;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @Data
 @Table(value = "node_pattern")
 @EqualsAndHashCode(callSuper = true)
-public class NodePatternEntity extends BaseEntity implements Serializable {
+public class NodePatternEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2248230353147672225L;

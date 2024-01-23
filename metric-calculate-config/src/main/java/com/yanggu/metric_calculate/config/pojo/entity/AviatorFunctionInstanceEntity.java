@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
 import com.mybatisflex.core.handler.JacksonTypeHandler;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +16,7 @@ import java.util.Map;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "aviator_function_instance")
-public class AviatorFunctionInstanceEntity extends BaseEntity implements Serializable {
+public class AviatorFunctionInstanceEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -566558748751401811L;

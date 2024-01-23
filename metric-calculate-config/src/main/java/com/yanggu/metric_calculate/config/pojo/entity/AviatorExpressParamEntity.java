@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "aviator_express_param")
-public class AviatorExpressParamEntity extends BaseEntity implements Serializable {
+public class AviatorExpressParamEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -393023162832756338L;

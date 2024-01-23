@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "window_param_status_express_param_list_relation")
-public class WindowParamStatusExpressParamListRelationEntity extends BaseEntity implements Serializable {
+public class WindowParamStatusExpressParamListRelationEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 8764702669717667059L;

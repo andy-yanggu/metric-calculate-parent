@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,7 +14,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "model_dimension_column")
-public class ModelDimensionColumnEntity extends BaseEntity implements Serializable {
+public class ModelDimensionColumnEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 5538736519253522391L;

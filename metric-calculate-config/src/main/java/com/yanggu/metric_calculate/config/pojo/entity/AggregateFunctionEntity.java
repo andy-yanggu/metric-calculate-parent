@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "aggregate_function")
-public class AggregateFunctionEntity extends BaseEntity implements Serializable {
+public class AggregateFunctionEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2251996364508407313L;

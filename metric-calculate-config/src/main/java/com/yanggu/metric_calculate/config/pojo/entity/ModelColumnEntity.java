@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.RelationOneToOne;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import com.yanggu.metric_calculate.config.enums.DataType;
 import com.yanggu.metric_calculate.config.enums.ModelColumnFieldType;
 import lombok.Data;
@@ -18,7 +19,7 @@ import java.io.Serializable;
 @Data
 @Table(value = "model_column")
 @EqualsAndHashCode(callSuper = true)
-public class ModelColumnEntity extends BaseEntity implements Serializable {
+public class ModelColumnEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1424390731821599400L;

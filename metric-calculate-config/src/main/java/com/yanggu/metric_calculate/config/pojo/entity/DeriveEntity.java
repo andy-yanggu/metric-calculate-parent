@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import com.yanggu.metric_calculate.config.enums.AccuracyEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +16,7 @@ import java.util.List;
 @Data
 @Table(value = "derive")
 @EqualsAndHashCode(callSuper = true)
-public class DeriveEntity extends BaseEntity implements Serializable {
+public class DeriveEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 2470923557083328784L;

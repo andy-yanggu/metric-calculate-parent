@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "base_udaf_param_metric_express_relation")
-public class BaseUdafParamMetricExpressRelationEntity extends BaseEntity implements Serializable {
+public class BaseUdafParamMetricExpressRelationEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 4531324459779836033L;

@@ -4,7 +4,7 @@ import com.mybatisflex.core.FlexGlobalConfig;
 import com.mybatisflex.core.audit.AuditManager;
 import com.mybatisflex.core.tenant.TenantFactory;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
-import com.yanggu.metric_calculate.config.pojo.entity.BaseEntity;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ public class MyBatisFlexConfiguration implements MyBatisFlexCustomizer {
                 log.info("{}, {}ms", auditMessage.getFullSql(), auditMessage.getElapsedTime()));
 
         //注册Insert监听器, 父类注册, 子类也相当于注册
-        flexGlobalConfig.registerInsertListener(userIdInsertListener, BaseEntity.class);
+        flexGlobalConfig.registerInsertListener(userIdInsertListener, BaseUserEntity.class);
     }
 
     /**

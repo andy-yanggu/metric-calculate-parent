@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
 import com.mybatisflex.core.handler.JacksonTypeHandler;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +17,7 @@ import java.util.Map;
 @Data
 @Table(value = "base_udaf_param")
 @EqualsAndHashCode(callSuper = true)
-public class BaseUdafParamEntity extends BaseEntity implements Serializable {
+public class BaseUdafParamEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 6528404355516826249L;

@@ -1,32 +1,21 @@
 package com.yanggu.metric_calculate.config.base.entity;
 
+
 import com.mybatisflex.annotation.Column;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-import java.io.Serializable;
-
 /**
- * 数据库实体类基类，适用于用户操作的数据表、增删改查
+ * 数据库实体基类
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class BaseUserEntity extends BaseEntity implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = -3534460034686573788L;
+public class BaseUserEntity extends BaseEntity {
 
     /**
-     * 创建人
+     * 用户id
      */
-    @Column("create_user_id")
-    private Long createUserId;
-
-    /**
-     * 修改人
-     */
-    @Column("update_user_id")
-    private Long updateUserId;
+    @Column(value = "user_id", tenantId = true)
+    private Integer userId;
 
 }

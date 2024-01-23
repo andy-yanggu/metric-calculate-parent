@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table("aviator_express_param_aviator_function_instance_relation")
-public class AviatorExpressParamAviatorFunctionInstanceRelationEntity extends BaseEntity implements Serializable {
+public class AviatorExpressParamAviatorFunctionInstanceRelationEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -1246393150898778928L;

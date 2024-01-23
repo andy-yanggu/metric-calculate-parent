@@ -5,7 +5,7 @@ import com.mybatisflex.codegen.dialect.JdbcTypeMapping;
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.service.IService;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.pojo.entity.BaseEntity;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.time.LocalDateTime;
@@ -52,7 +52,7 @@ public class Codegen {
         globalConfig.enableEntity()
                 .setWithLombok(true)
                 //设置父类
-                .setSuperClass(BaseEntity.class)
+                .setSuperClass(BaseUserEntity.class)
                 .setOverwriteEnable(true);
 
         //设置controller

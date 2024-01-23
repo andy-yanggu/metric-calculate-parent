@@ -4,6 +4,7 @@ import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.RelationOneToOne;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -16,7 +17,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "mix_udaf_param_item")
-public class MixUdafParamItemEntity extends BaseEntity implements Serializable {
+public class MixUdafParamItemEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -9143234002581892763L;

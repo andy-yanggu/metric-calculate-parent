@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.config.pojo.entity;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.KeyType;
 import com.mybatisflex.annotation.Table;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,7 +16,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Table(value = "aviator_function_field")
-public class AviatorFunctionFieldEntity extends BaseEntity implements Serializable {
+public class AviatorFunctionFieldEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5711687238733531339L;

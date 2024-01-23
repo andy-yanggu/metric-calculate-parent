@@ -1,6 +1,7 @@
 package com.yanggu.metric_calculate.config.pojo.entity;
 
 import com.mybatisflex.annotation.*;
+import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
 import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import lombok.Data;
@@ -16,7 +17,7 @@ import java.util.List;
 @Data
 @Table(value = "window_param")
 @EqualsAndHashCode(callSuper = true)
-public class WindowParamEntity extends BaseEntity implements Serializable {
+public class WindowParamEntity extends BaseUserEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 7153009252948514786L;
