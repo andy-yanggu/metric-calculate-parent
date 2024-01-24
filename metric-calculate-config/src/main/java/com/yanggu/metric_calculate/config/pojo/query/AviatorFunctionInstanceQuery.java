@@ -3,9 +3,16 @@ package com.yanggu.metric_calculate.config.pojo.query;
 import com.yanggu.metric_calculate.config.base.query.PageQuery;
 import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serial;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AviatorFunctionInstanceQuery extends PageQuery<AviatorFunctionInstanceEntity> {
+
+    @Serial
+    private static final long serialVersionUID = -549643225672010915L;
 
     /**
      * 宽表中文名
