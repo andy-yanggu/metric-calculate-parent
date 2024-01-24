@@ -4,7 +4,6 @@ package com.yanggu.metric_calculate.core.field_process;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.array.ArrayUtil;
-import org.dromara.hutool.core.collection.CollUtil;
 
 import java.util.Arrays;
 import java.util.List;

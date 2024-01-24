@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
+import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.pojo.dto.AggregateFunctionParamDTO;
 import com.yanggu.metric_calculate.config.pojo.entity.*;
 import com.yanggu.metric_calculate.config.pojo.vo.AggregateFunctionParamVO;
