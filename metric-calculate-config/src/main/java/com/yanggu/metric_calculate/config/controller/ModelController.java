@@ -51,8 +51,8 @@ public class ModelController {
 
     @GetMapping("/listData")
     @Operation(summary = "数据明细宽表列表")
-    public List<ModelVO> listData(ModelQuery req) {
-        return modelService.listData(req);
+    public List<ModelVO> listData(ModelQuery query) {
+        return modelService.listData(query);
     }
 
     @GetMapping("/{id}")
@@ -63,8 +63,8 @@ public class ModelController {
 
     @GetMapping("/pageData")
     @Operation(summary = "数据明细宽表分页")
-    public PageVO<ModelVO> pageData(ModelQuery req) {
-        return modelService.pageData(req);
+    public PageVO<ModelVO> pageData(ModelQuery query) {
+        return modelService.pageData(query);
     }
 
     @GetMapping("/getCoreModel/{modelId}")
@@ -81,8 +81,8 @@ public class ModelController {
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, ModelQuery req) {
-        List<ModelVO> list = modelService.listData(req);
+    public void excelExport(HttpServletResponse response, ModelQuery query) {
+        List<ModelVO> list = modelService.listData(query);
         ExcelUtil.exportFormList(response, list);
     }
 

@@ -41,8 +41,8 @@ public class AviatorFunctionInstanceController {
 
     @GetMapping("/listData")
     @Operation(summary = "Aviator函数实例列表")
-    public List<AviatorFunctionInstanceVO> listData(AviatorFunctionInstanceQuery req) {
-        return aviatorFunctionInstanceService.listData(req);
+    public List<AviatorFunctionInstanceVO> listData(AviatorFunctionInstanceQuery query) {
+        return aviatorFunctionInstanceService.listData(query);
     }
 
     @GetMapping("/{id}")
@@ -53,8 +53,8 @@ public class AviatorFunctionInstanceController {
 
     @GetMapping("/pageData")
     @Operation(summary = "Aviator函数实例分页")
-    public PageVO<AviatorFunctionInstanceVO> pageData(AviatorFunctionInstanceQuery req) {
-        return aviatorFunctionInstanceService.pageData(req);
+    public PageVO<AviatorFunctionInstanceVO> pageData(AviatorFunctionInstanceQuery query) {
+        return aviatorFunctionInstanceService.pageData(query);
     }
 
 }

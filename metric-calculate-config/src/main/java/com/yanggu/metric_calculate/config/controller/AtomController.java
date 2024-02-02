@@ -42,8 +42,8 @@ public class AtomController {
 
     @GetMapping("/listData")
     @Operation(summary = "原子指标列表")
-    public List<AtomVO> listData(AtomQuery atomQueryReq) {
-        return atomService.listData(atomQueryReq);
+    public List<AtomVO> listData(AtomQuery atomQuery) {
+        return atomService.listData(atomQuery);
     }
 
     @GetMapping("/{id}")

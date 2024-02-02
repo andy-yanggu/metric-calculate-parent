@@ -43,8 +43,8 @@ public class DimensionController {
 
     @GetMapping("/listData")
     @Operation(summary = "维度列表")
-    public List<DimensionVO> listData(DimensionQuery req) {
-        return dimensionService.listData(req);
+    public List<DimensionVO> listData(DimensionQuery query) {
+        return dimensionService.listData(query);
     }
 
     @GetMapping("/{id}")
@@ -55,14 +55,14 @@ public class DimensionController {
 
     @GetMapping("/pageData")
     @Operation(summary = "维度分页")
-    public PageVO<DimensionVO> pageData(DimensionQuery req) {
-        return dimensionService.pageData(req);
+    public PageVO<DimensionVO> pageData(DimensionQuery query) {
+        return dimensionService.pageData(query);
     }
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, DimensionQuery req) {
-        List<DimensionVO> dimensionDtos = dimensionService.listData(req);
+    public void excelExport(HttpServletResponse response, DimensionQuery query) {
+        List<DimensionVO> dimensionDtos = dimensionService.listData(query);
         ExcelUtil.exportFormList(response, dimensionDtos);
     }
 

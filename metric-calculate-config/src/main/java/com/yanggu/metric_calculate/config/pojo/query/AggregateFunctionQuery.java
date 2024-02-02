@@ -3,8 +3,10 @@ package com.yanggu.metric_calculate.config.pojo.query;
 import com.yanggu.metric_calculate.config.base.query.PageQuery;
 import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class AggregateFunctionQuery extends PageQuery<AggregateFunctionEntity> {
 
     /**

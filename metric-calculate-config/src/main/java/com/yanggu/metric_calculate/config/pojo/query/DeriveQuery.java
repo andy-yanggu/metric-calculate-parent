@@ -4,8 +4,10 @@ import com.yanggu.metric_calculate.config.base.query.PageQuery;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.config.pojo.entity.DeriveEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class DeriveQuery extends PageQuery<DeriveEntity> {
 
     private String deriveName;

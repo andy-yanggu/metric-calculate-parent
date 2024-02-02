@@ -75,8 +75,8 @@ public class DeriveController {
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, DeriveQuery req) {
-        List<DeriveVO> list = deriveService.listData(req);
+    public void excelExport(HttpServletResponse response, DeriveQuery query) {
+        List<DeriveVO> list = deriveService.listData(query);
         ExcelUtil.exportFormList(response, list);
     }
 

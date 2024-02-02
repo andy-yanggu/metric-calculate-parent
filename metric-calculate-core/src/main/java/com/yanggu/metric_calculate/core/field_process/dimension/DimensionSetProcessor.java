@@ -6,13 +6,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 维度字段处理器，从原始数据中提取出维度数据
@@ -47,7 +47,7 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
             //按照ColumnIndex进行升序排序
             this.modelDimensionColumnList = modelDimensionColumnList.stream()
                     .sorted(Comparator.comparingInt(ModelDimensionColumn::getColumnIndex))
-                    .collect(Collectors.toList());
+                    .toList();
         }
     }
 
@@ -58,8 +58,8 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
             for (ModelDimensionColumn modelDimensionColumn : modelDimensionColumnList) {
                 Object result = input.get(modelDimensionColumn.getColumnName());
                 if (result == null) {
-                    throw new RuntimeException("没有对应的维度值, 字段名称: "
-                            + modelDimensionColumn.getColumnName() + ", 原始数据: " + JSONUtil.toJsonStr(input));
+                    throw new RuntimeException(StrUtil.format("没有对应的维度值, 字段名称: {}, 原始数据: {}",
+                            modelDimensionColumn.getColumnName(), JSONUtil.toJsonStr(input)));
                 }
                 map.put(modelDimensionColumn.getDimensionName(), result);
             }

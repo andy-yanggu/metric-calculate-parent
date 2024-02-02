@@ -49,8 +49,8 @@ public class AggregateFunctionController {
 
     @GetMapping("/listData")
     @Operation(summary = "聚合函数列表")
-    public List<AggregateFunctionVO> listData(AggregateFunctionQuery queryReq) {
-        return aggregateFunctionService.listData(queryReq);
+    public List<AggregateFunctionVO> listData(AggregateFunctionQuery query) {
+        return aggregateFunctionService.listData(query);
     }
 
     @GetMapping("/{id}")
@@ -61,14 +61,14 @@ public class AggregateFunctionController {
 
     @GetMapping("/pageQuery")
     @Operation(summary = "聚合函数分页")
-    public PageVO<AggregateFunctionVO> pageQuery(AggregateFunctionQuery queryReq) {
-        return aggregateFunctionService.pageQuery(queryReq);
+    public PageVO<AggregateFunctionVO> pageQuery(AggregateFunctionQuery query) {
+        return aggregateFunctionService.pageQuery(query);
     }
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, AggregateFunctionQuery req) {
-        List<AggregateFunctionVO> list = aggregateFunctionService.listData(req);
+    public void excelExport(HttpServletResponse response, AggregateFunctionQuery query) {
+        List<AggregateFunctionVO> list = aggregateFunctionService.listData(query);
         ExcelUtil.exportFormList(response, list);
     }
 

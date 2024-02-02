@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.config.controller;
 
-import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDTO;
 import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionQuery;
@@ -50,8 +49,8 @@ public class AviatorFunctionController {
 
     @GetMapping("/listData")
     @Operation(summary = "Aviator函数函数列表")
-    public List<AviatorFunctionVO> listData(AviatorFunctionQuery req) {
-        return aviatorFunctionService.listData(req);
+    public List<AviatorFunctionVO> listData(AviatorFunctionQuery query) {
+        return aviatorFunctionService.listData(query);
     }
 
     @GetMapping("/{id}")
@@ -62,14 +61,14 @@ public class AviatorFunctionController {
 
     @GetMapping("/pageData")
     @Operation(summary = "Aviator函数分页")
-    public PageVO<AviatorFunctionVO> pageData(AviatorFunctionQuery req) {
-        return aviatorFunctionService.pageData(req);
+    public PageVO<AviatorFunctionVO> pageData(AviatorFunctionQuery query) {
+        return aviatorFunctionService.pageData(query);
     }
 
     @GetMapping("/excelExport")
     @Operation(summary = "excel导出")
-    public void excelExport(HttpServletResponse response, AviatorFunctionQuery req) {
-        List<AviatorFunctionVO> list = aviatorFunctionService.listData(req);
+    public void excelExport(HttpServletResponse response, AviatorFunctionQuery query) {
+        List<AviatorFunctionVO> list = aviatorFunctionService.listData(query);
         ExcelUtil.exportFormList(response, list);
     }
 
