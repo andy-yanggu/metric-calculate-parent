@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.config.pojo.dto;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;

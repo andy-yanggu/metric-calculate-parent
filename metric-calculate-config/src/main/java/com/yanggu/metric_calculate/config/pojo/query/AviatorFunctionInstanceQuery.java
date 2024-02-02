@@ -5,9 +5,14 @@ import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEnt
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AviatorFunctionInstanceQuery extends PageQuery<AviatorFunctionInstanceEntity> {
+
+    @Serial
+    private static final long serialVersionUID = -549643225672010915L;
 
     /**
      * 宽表中文名

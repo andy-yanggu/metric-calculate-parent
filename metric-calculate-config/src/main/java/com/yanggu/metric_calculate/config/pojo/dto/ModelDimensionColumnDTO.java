@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.config.pojo.dto;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelExport;
 import com.yanggu.metric_calculate.config.util.excel.annotation.ExcelImport;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
 import java.io.Serializable;

@@ -5,7 +5,6 @@ import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
 
 import java.util.HashMap;

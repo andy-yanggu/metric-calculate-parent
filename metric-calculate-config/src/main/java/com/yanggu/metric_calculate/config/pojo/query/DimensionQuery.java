@@ -5,12 +5,16 @@ import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.util.List;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class DimensionQuery extends PageQuery<DimensionEntity> {
 
+    @Serial
+    private static final long serialVersionUID = 7352665037617357988L;
+    
     /**
      * 维度名称
      */

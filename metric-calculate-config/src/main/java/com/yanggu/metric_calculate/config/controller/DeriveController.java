@@ -1,6 +1,5 @@
 package com.yanggu.metric_calculate.config.controller;
 
-import com.mybatisflex.core.paginate.Page;
 import com.yanggu.metric_calculate.config.base.vo.PageVO;
 import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
 import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;

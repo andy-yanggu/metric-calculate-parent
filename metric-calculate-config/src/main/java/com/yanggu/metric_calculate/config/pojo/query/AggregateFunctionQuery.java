@@ -5,9 +5,14 @@ import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class AggregateFunctionQuery extends PageQuery<AggregateFunctionEntity> {
+
+    @Serial
+    private static final long serialVersionUID = 2069586775947652687L;
 
     /**
      * 聚合函数名称
