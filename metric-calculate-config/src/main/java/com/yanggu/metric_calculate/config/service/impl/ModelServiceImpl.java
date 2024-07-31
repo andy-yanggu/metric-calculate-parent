@@ -3,15 +3,15 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.ModelMapper;
 import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.mapstruct.ModelMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.ModelVO;
+import com.yanggu.metric_calculate.config.domain.dto.ModelDTO;
+import com.yanggu.metric_calculate.config.domain.entity.*;
+import com.yanggu.metric_calculate.config.domain.query.ModelQuery;
+import com.yanggu.metric_calculate.config.domain.vo.ModelVO;
 import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import org.dromara.hutool.core.collection.CollUtil;
@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.config.enums.ModelColumnFieldType.VIRTUAL;
 import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelColumnTableDef.MODEL_COLUMN;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelDimensionColumnTableDef.MODEL_DIMENSION_COLUMN;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTimeColumnTableDef.MODEL_TIME_COLUMN;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelColumnTableDef.MODEL_COLUMN;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelDimensionColumnTableDef.MODEL_DIMENSION_COLUMN;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelTableDef.MODEL;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelTimeColumnTableDef.MODEL_TIME_COLUMN;
 
 /**
  * 数据明细宽表 服务层实现

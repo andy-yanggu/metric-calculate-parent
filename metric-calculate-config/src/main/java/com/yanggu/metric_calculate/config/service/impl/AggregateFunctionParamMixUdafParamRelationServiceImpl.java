@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionParamMixUdafParamRelationMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamMixUdafParamRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionParamMixUdafParamRelationEntity;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionParamMixUdafParamRelationService;
 import org.springframework.stereotype.Service;
 

@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.NodePatternDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePatternEntity;
-import com.yanggu.metric_calculate.config.pojo.vo.NodePatternVO;
+import com.yanggu.metric_calculate.config.domain.dto.NodePatternDTO;
+import com.yanggu.metric_calculate.config.domain.entity.NodePatternEntity;
+import com.yanggu.metric_calculate.config.domain.vo.NodePatternVO;
 import com.yanggu.metric_calculate.core.pojo.window.NodePattern;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

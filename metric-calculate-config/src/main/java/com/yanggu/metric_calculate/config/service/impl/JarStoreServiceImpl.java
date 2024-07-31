@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.JarStoreMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.domain.entity.JarStoreEntity;
 import com.yanggu.metric_calculate.config.service.JarStoreService;
 import org.springframework.stereotype.Service;
 

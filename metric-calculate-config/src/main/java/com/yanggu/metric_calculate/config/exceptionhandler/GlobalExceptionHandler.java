@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.config.exceptionhandler;
 
-import com.yanggu.metric_calculate.config.base.vo.Result;
+import com.yanggu.metric_calculate.config.base.domain.vo.Result;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;

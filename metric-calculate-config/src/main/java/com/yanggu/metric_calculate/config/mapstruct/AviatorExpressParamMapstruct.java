@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorExpressParamDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.JarStoreEntity;
-import com.yanggu.metric_calculate.config.pojo.vo.AviatorExpressParamVO;
+import com.yanggu.metric_calculate.config.domain.dto.AviatorExpressParamDTO;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionInstanceEntity;
+import com.yanggu.metric_calculate.config.domain.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.domain.vo.AviatorExpressParamVO;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.mapstruct.Mapper;

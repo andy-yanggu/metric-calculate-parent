@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.WindowParamEntity;
 
 /**
  * 窗口相关参数 映射层。

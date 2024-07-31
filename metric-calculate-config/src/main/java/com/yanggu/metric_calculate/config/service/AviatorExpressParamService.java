@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
 
 /**
  * Aviator表达式配置 服务层。

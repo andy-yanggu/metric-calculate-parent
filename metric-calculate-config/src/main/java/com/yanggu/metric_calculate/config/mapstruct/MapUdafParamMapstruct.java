@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.MapUdafParamDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.MapUdafParamEntity;
-import com.yanggu.metric_calculate.config.pojo.vo.MapUdafParamVO;
+import com.yanggu.metric_calculate.config.domain.dto.MapUdafParamDTO;
+import com.yanggu.metric_calculate.config.domain.entity.MapUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.vo.MapUdafParamVO;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

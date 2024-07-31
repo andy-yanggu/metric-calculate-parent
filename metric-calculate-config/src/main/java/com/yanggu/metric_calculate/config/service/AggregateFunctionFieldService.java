@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionFieldEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionFieldEntity;
 
 /**
  * 聚合函数的字段 服务层。

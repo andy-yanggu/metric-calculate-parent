@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionInstanceDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionInstanceEntity;
-import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionInstanceQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.AviatorFunctionInstanceVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
+import com.yanggu.metric_calculate.config.domain.dto.AviatorFunctionInstanceDTO;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionInstanceEntity;
+import com.yanggu.metric_calculate.config.domain.query.AviatorFunctionInstanceQuery;
+import com.yanggu.metric_calculate.config.domain.vo.AviatorFunctionInstanceVO;
 
 import java.util.List;
 

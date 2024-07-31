@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.DimensionEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DimensionEntity;
 
 /**
  * 维度表 映射层。

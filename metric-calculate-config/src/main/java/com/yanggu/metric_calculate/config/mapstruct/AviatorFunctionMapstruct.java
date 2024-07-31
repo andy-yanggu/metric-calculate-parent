@@ -2,9 +2,9 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorFunctionEntity;
-import com.yanggu.metric_calculate.config.pojo.vo.AviatorFunctionVO;
+import com.yanggu.metric_calculate.config.domain.dto.AviatorFunctionDTO;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionEntity;
+import com.yanggu.metric_calculate.config.domain.vo.AviatorFunctionVO;
 import org.mapstruct.Mapper;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;

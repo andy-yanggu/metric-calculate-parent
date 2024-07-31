@@ -5,7 +5,7 @@ import com.mybatisflex.codegen.dialect.JdbcTypeMapping;
 import com.mybatisflex.core.BaseMapper;
 import com.mybatisflex.core.service.IService;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
+import com.yanggu.metric_calculate.config.base.domain.entity.BaseUserEntity;
 import com.zaxxer.hikari.HikariDataSource;
 
 import java.time.LocalDateTime;

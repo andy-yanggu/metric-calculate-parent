@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelEntity;
-import com.yanggu.metric_calculate.config.pojo.query.ModelQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.ModelVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
+import com.yanggu.metric_calculate.config.domain.dto.ModelDTO;
+import com.yanggu.metric_calculate.config.domain.entity.ModelEntity;
+import com.yanggu.metric_calculate.config.domain.query.ModelQuery;
+import com.yanggu.metric_calculate.config.domain.vo.ModelVO;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 
 import java.util.List;

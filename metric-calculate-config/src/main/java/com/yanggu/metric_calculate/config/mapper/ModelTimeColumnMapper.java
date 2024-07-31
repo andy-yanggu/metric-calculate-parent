@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelTimeColumnEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelTimeColumnEntity;
 
 /**
  * 时间字段 映射层。

@@ -2,7 +2,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.DeriveWindowParamRelationMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.DeriveWindowParamRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveWindowParamRelationEntity;
 import com.yanggu.metric_calculate.config.service.DeriveWindowParamRelationService;
 import org.springframework.stereotype.Service;
 

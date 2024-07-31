@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamModelColumnRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamModelColumnRelationEntity;
 
 /**
  * Aviator表达式和宽表字段中间表 服务层。

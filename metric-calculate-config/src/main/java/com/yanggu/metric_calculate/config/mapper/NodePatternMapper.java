@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePatternEntity;
+import com.yanggu.metric_calculate.config.domain.entity.NodePatternEntity;
 
 /**
  * CEP匹配配置数据 映射层。

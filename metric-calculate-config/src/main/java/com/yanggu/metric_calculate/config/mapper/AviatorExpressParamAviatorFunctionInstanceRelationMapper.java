@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamAviatorFunctionInstanceRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamAviatorFunctionInstanceRelationEntity;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

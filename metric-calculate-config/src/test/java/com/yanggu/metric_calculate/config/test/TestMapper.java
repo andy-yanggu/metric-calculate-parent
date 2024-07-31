@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.test;
 
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 //@SpringBootTest

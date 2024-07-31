@@ -4,7 +4,7 @@ import com.mybatisflex.core.FlexGlobalConfig;
 import com.mybatisflex.core.audit.AuditManager;
 import com.mybatisflex.core.tenant.TenantFactory;
 import com.mybatisflex.spring.boot.MyBatisFlexCustomizer;
-import com.yanggu.metric_calculate.config.base.entity.BaseUserEntity;
+import com.yanggu.metric_calculate.config.base.domain.entity.BaseUserEntity;
 import com.yanggu.metric_calculate.config.util.ThreadLocalUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

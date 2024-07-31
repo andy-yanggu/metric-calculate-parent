@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.controller;
 
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
-import com.yanggu.metric_calculate.config.pojo.dto.AviatorFunctionDTO;
-import com.yanggu.metric_calculate.config.pojo.query.AviatorFunctionQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.AviatorFunctionVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
+import com.yanggu.metric_calculate.config.domain.dto.AviatorFunctionDTO;
+import com.yanggu.metric_calculate.config.domain.query.AviatorFunctionQuery;
+import com.yanggu.metric_calculate.config.domain.vo.AviatorFunctionVO;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
 import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;

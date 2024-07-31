@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.ModelDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.vo.ModelVO;
+import com.yanggu.metric_calculate.config.domain.dto.ModelDTO;
+import com.yanggu.metric_calculate.config.domain.entity.*;
+import com.yanggu.metric_calculate.config.domain.vo.ModelVO;
 import com.yanggu.metric_calculate.core.enums.BasicType;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelColumn;

@@ -3,10 +3,10 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.NodePatternMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePatternAviatorExpressParamRelationEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.NodePatternEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.domain.entity.NodePatternAviatorExpressParamRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.NodePatternEntity;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.NodePatternAviatorExpressParamRelationService;
 import com.yanggu.metric_calculate.config.service.NodePatternService;
@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.yanggu.metric_calculate.config.pojo.entity.table.NodePatternAviatorExpressParamRelationTableDef.NODE_PATTERN_AVIATOR_EXPRESS_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.NodePatternAviatorExpressParamRelationTableDef.NODE_PATTERN_AVIATOR_EXPRESS_PARAM_RELATION;
 
 /**
  * CEP匹配配置数据 服务层实现。

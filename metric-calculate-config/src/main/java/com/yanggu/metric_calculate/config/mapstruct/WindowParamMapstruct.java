@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.WindowParamDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.WindowParamEntity;
-import com.yanggu.metric_calculate.config.pojo.vo.WindowParamVO;
+import com.yanggu.metric_calculate.config.domain.dto.WindowParamDTO;
+import com.yanggu.metric_calculate.config.domain.entity.WindowParamEntity;
+import com.yanggu.metric_calculate.config.domain.vo.WindowParamVO;
 import com.yanggu.metric_calculate.core.pojo.window.WindowParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

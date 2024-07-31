@@ -1,6 +1,6 @@
 package com.yanggu.metric_calculate.config.exceptionhandler;
 
-import com.yanggu.metric_calculate.config.base.vo.Result;
+import com.yanggu.metric_calculate.config.base.domain.vo.Result;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

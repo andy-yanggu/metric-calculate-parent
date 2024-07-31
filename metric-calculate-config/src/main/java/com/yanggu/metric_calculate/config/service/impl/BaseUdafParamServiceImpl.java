@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.BaseUdafParamMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.*;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamMetricExpressListRelationService;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamMetricExpressRelationService;
@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.yanggu.metric_calculate.config.pojo.entity.table.BaseUdafParamMetricExpressListRelationTableDef.BASE_UDAF_PARAM_METRIC_EXPRESS_LIST_RELATION;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.BaseUdafParamMetricExpressRelationTableDef.BASE_UDAF_PARAM_METRIC_EXPRESS_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.BaseUdafParamMetricExpressListRelationTableDef.BASE_UDAF_PARAM_METRIC_EXPRESS_LIST_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.BaseUdafParamMetricExpressRelationTableDef.BASE_UDAF_PARAM_METRIC_EXPRESS_RELATION;
 
 /**
  * 数值型、集合型、对象型聚合函数相关参数 服务层实现。

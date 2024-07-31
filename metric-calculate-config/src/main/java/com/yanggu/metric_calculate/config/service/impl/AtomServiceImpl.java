@@ -2,17 +2,17 @@ package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
 import com.yanggu.metric_calculate.config.mapper.AtomMapper;
 import com.yanggu.metric_calculate.config.mapstruct.AtomMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.AtomDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.AggregateFunctionParamEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.AtomAggregateFunctionParamRelationEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.AtomEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
-import com.yanggu.metric_calculate.config.pojo.query.AtomQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.AtomVO;
+import com.yanggu.metric_calculate.config.domain.dto.AtomDTO;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AtomAggregateFunctionParamRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AtomEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.domain.query.AtomQuery;
+import com.yanggu.metric_calculate.config.domain.vo.AtomVO;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionParamService;
 import com.yanggu.metric_calculate.config.service.AtomAggregateFunctionParamRelationService;
 import com.yanggu.metric_calculate.config.service.AtomService;
@@ -24,10 +24,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 import static com.yanggu.metric_calculate.config.enums.ResultCode.ATOM_EXIST;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.AtomTableDef.ATOM;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelColumnTableDef.MODEL_COLUMN;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTableDef.MODEL;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.ModelTimeColumnTableDef.MODEL_TIME_COLUMN;
+import static com.yanggu.metric_calculate.config.domain.entity.table.AtomTableDef.ATOM;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelColumnTableDef.MODEL_COLUMN;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelTableDef.MODEL;
+import static com.yanggu.metric_calculate.config.domain.entity.table.ModelTimeColumnTableDef.MODEL_TIME_COLUMN;
 
 /**
  * 原子指标 服务层实现。
@@ -53,6 +53,7 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> impleme
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
     public void saveData(AtomDTO atomDto) throws Exception {
+        //atomMapper.xmlPaginate()
         AtomEntity atom = atomMapstruct.dtoToEntity(atomDto);
         checkExist(atom);
         this.save(atom);
@@ -99,8 +100,8 @@ public class AtomServiceImpl extends ServiceImpl<AtomMapper, AtomEntity> impleme
     @Override
     public PageVO<AtomVO> pageQuery(AtomQuery atomQuery) {
         QueryWrapper queryWrapper = buildAtomQueryWrapper(atomQuery);
-        atomMapper.paginateWithRelations(atomQuery, queryWrapper);
-        return atomMapstruct.entityToPageVO(atomQuery);
+        atomMapper.paginateWithRelationsAs(atomQuery, queryWrapper, AtomVO.class);
+        return atomMapstruct.toPageVO(atomQuery);
     }
 
     private void checkExist(AtomEntity atom) {

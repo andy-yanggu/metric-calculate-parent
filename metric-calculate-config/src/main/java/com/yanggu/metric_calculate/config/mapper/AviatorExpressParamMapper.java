@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.config.mapper;
 
 import com.mybatisflex.core.BaseMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
 import org.springframework.stereotype.Repository;
 
 /**

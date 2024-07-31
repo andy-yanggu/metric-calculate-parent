@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.WindowParamMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.*;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.NodePatternService;
 import com.yanggu.metric_calculate.config.service.WindowParamService;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.yanggu.metric_calculate.config.pojo.entity.table.WindowParamStatusExpressParamListRelationTableDef.WINDOW_PARAM_STATUS_EXPRESS_PARAM_LIST_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.WindowParamStatusExpressParamListRelationTableDef.WINDOW_PARAM_STATUS_EXPRESS_PARAM_LIST_RELATION;
 
 /**
  * 窗口相关参数 服务层实现。

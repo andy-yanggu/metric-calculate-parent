@@ -2,10 +2,10 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
-import com.yanggu.metric_calculate.config.pojo.dto.DeriveDTO;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
-import com.yanggu.metric_calculate.config.pojo.vo.DeriveMetricsConfigData;
-import com.yanggu.metric_calculate.config.pojo.vo.DeriveVO;
+import com.yanggu.metric_calculate.config.domain.dto.DeriveDTO;
+import com.yanggu.metric_calculate.config.domain.entity.*;
+import com.yanggu.metric_calculate.config.domain.vo.DeriveMetricsConfigData;
+import com.yanggu.metric_calculate.config.domain.vo.DeriveVO;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.mapstruct.Mapper;

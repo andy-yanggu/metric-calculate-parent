@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service;
 
 import com.mybatisflex.core.service.IService;
-import com.yanggu.metric_calculate.config.pojo.entity.MapUdafParamEntity;
-import com.yanggu.metric_calculate.config.pojo.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MapUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelColumnEntity;
 
 import java.util.List;
 

@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.MixUdafParamItemMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.*;
 import com.yanggu.metric_calculate.config.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.yanggu.metric_calculate.config.pojo.entity.table.MixUdafParamItemBaseUdafParamRelationTableDef.MIX_UDAF_PARAM_ITEM_BASE_UDAF_PARAM_RELATION;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.MixUdafParamItemMapUdafParamRelationTableDef.MIX_UDAF_PARAM_ITEM_MAP_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.MixUdafParamItemBaseUdafParamRelationTableDef.MIX_UDAF_PARAM_ITEM_BASE_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.MixUdafParamItemMapUdafParamRelationTableDef.MIX_UDAF_PARAM_ITEM_MAP_UDAF_PARAM_RELATION;
 
 /**
  * 混合聚合参数，混合聚合类型定义。value只能是数值型、集合型、对象型中间表 服务层实现。

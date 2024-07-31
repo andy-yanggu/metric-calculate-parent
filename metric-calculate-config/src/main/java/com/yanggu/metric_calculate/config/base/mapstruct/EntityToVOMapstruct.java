@@ -1,5 +1,8 @@
 package com.yanggu.metric_calculate.config.base.mapstruct;
 
+import org.dromara.hutool.core.collection.CollUtil;
+
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,6 +21,11 @@ public interface EntityToVOMapstruct<E, V> {
     /**
      * 将Entity列表转换成VO列表
      */
-    List<V> entityToVO(List<E> entityList);
+    default List<V> entityToVO(List<E> entityList) {
+        if (CollUtil.isEmpty(entityList)) {
+            return Collections.emptyList();
+        }
+        return entityList.stream().map(this::entityToVO).toList();
+    }
 
 }

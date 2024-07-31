@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.config.controller;
 
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
-import com.yanggu.metric_calculate.config.pojo.dto.DimensionDTO;
-import com.yanggu.metric_calculate.config.pojo.query.DimensionQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.DimensionVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
+import com.yanggu.metric_calculate.config.domain.dto.DimensionDTO;
+import com.yanggu.metric_calculate.config.domain.query.DimensionQuery;
+import com.yanggu.metric_calculate.config.domain.vo.DimensionVO;
 import com.yanggu.metric_calculate.config.service.DimensionService;
 import com.yanggu.metric_calculate.config.util.excel.ExcelUtil;
 import io.swagger.v3.oas.annotations.Operation;

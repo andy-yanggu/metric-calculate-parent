@@ -1,5 +1,8 @@
 package com.yanggu.metric_calculate.config.base.mapstruct;
 
+import org.dromara.hutool.core.collection.CollUtil;
+
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,6 +21,11 @@ public interface DTOToEntityMapstruct<D, E> {
     /**
      * 将DTO列表转换为Entity列表
      */
-    List<E> dtoToEntity(List<D> dtoList);
+    default List<E> dtoToEntity(List<D> dtoList) {
+        if (CollUtil.isEmpty(dtoList)) {
+            return Collections.emptyList();
+        }
+        return dtoList.stream().map(this::dtoToEntity).toList();
+    }
 
 }

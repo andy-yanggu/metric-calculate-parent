@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.config.controller;
 
-import com.yanggu.metric_calculate.config.base.vo.PageVO;
-import com.yanggu.metric_calculate.config.pojo.dto.AtomDTO;
-import com.yanggu.metric_calculate.config.pojo.query.AtomQuery;
-import com.yanggu.metric_calculate.config.pojo.query.DeriveQuery;
-import com.yanggu.metric_calculate.config.pojo.vo.AtomVO;
+import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
+import com.yanggu.metric_calculate.config.domain.dto.AtomDTO;
+import com.yanggu.metric_calculate.config.domain.query.AtomQuery;
+import com.yanggu.metric_calculate.config.domain.query.DeriveQuery;
+import com.yanggu.metric_calculate.config.domain.vo.AtomVO;
 import com.yanggu.metric_calculate.config.service.AtomService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.mapper.AggregateFunctionParamMapper;
-import com.yanggu.metric_calculate.config.pojo.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.*;
 import com.yanggu.metric_calculate.config.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamBaseUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamMapUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION;
-import static com.yanggu.metric_calculate.config.pojo.entity.table.AggregateFunctionParamMixUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MIX_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionParamBaseUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_BASE_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionParamMapUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MAP_UDAF_PARAM_RELATION;
+import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionParamMixUdafParamRelationTableDef.AGGREGATE_FUNCTION_PARAM_MIX_UDAF_PARAM_RELATION;
 
 /**
  * 聚合函数参数配置类 服务层实现。
