@@ -6,13 +6,21 @@ import org.codehaus.commons.compiler.util.resource.MapResourceCreator;
 import org.codehaus.commons.compiler.util.resource.MapResourceFinder;
 import org.codehaus.commons.compiler.util.resource.Resource;
 import org.codehaus.commons.compiler.util.resource.StringResource;
+import org.codehaus.janino.Compiler;
+import org.codehaus.janino.ExpressionEvaluator;
+import org.codehaus.janino.Java;
+import org.codehaus.janino.Parser;
 import org.codehaus.janino.Scanner;
-import org.codehaus.janino.*;
+import org.codehaus.janino.ScriptEvaluator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringReader;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;

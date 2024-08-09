@@ -9,7 +9,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 去重类的抽象函数基类单元测试类
@@ -96,5 +99,5 @@ class TestDistinctAggregateFunction<IN> extends AbstractDistinctAggregateFunctio
     public List<IN> getResult(Set<IN> acc) {
         return new ArrayList<>(acc);
     }
-    
+
 }

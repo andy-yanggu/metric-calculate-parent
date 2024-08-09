@@ -11,13 +11,8 @@ import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleHashMapKr
 
 public class Constant {
 
-    private Constant() {
-    }
-
     public static final String DERIVE = "derive";
-
     public static final String DERIVE_CONFIG = "derive-config";
-
     public static final AbstractDeriveMetricMiddleStore DERIVE_METRIC_MIDDLE_STORE;
 
     static {
@@ -29,6 +24,9 @@ public class Constant {
         KryoUtil kryoUtil = new KryoUtil(kryoPool, inputPool, outputPool);
         DERIVE_METRIC_MIDDLE_STORE.setKryoUtil(kryoUtil);
         DERIVE_METRIC_MIDDLE_STORE.init();
+    }
+
+    private Constant() {
     }
 
 }

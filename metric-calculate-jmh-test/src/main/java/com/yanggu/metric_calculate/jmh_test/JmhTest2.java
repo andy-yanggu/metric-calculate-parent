@@ -10,7 +10,16 @@ import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Level;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
@@ -34,7 +43,8 @@ public class JmhTest2 {
     @Setup(Level.Trial)
     public static void setup() throws Exception {
         String jsonString = ResourceUtil.readUtf8Str("mock_metric_config/1.json");
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<>() {});
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<>() {
+        });
 
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> tempDeriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
@@ -54,6 +64,15 @@ public class JmhTest2 {
         tempInput = metricCalculate.getParam(tempInput);
 
         input = tempInput;
+    }
+
+    public static void main(String[] args) throws RunnerException {
+        Options opt = new OptionsBuilder()
+                .include(JmhTest2.class.getSimpleName())
+                .result("result.json")
+                .resultFormat(ResultFormatType.JSON)
+                .build();
+        new Runner(opt).run();
     }
 
     /**
@@ -76,15 +95,6 @@ public class JmhTest2 {
     public void testUpdate_With_Kryo(Blackhole blackhole) {
         DeriveMetricCalculateResult<Double> exec = deriveMetricCalculate1.stateExec(input);
         blackhole.consume(exec);
-    }
-
-    public static void main(String[] args) throws RunnerException {
-        Options opt = new OptionsBuilder()
-                .include(JmhTest2.class.getSimpleName())
-                .result("result.json")
-                .resultFormat(ResultFormatType.JSON)
-                .build();
-        new Runner(opt).run();
     }
 
 }

@@ -1,6 +1,11 @@
 package com.yanggu.metric_calculate.core.aggregate_function;
 
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Mix;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Constructor;

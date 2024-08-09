@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.mapper.BaseUdafParamMetricExpressListRelationMapper;
 import com.yanggu.metric_calculate.config.domain.entity.BaseUdafParamMetricExpressListRelationEntity;
+import com.yanggu.metric_calculate.config.mapper.BaseUdafParamMetricExpressListRelationMapper;
 import com.yanggu.metric_calculate.config.service.BaseUdafParamMetricExpressListRelationService;
 import org.springframework.stereotype.Service;
 

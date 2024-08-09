@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.mapper.ModelColumnMapper;
 import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
 import com.yanggu.metric_calculate.config.domain.entity.ModelColumnAviatorExpressParamRelationEntity;
 import com.yanggu.metric_calculate.config.domain.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.mapper.ModelColumnMapper;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
 import com.yanggu.metric_calculate.config.service.ModelColumnAviatorExpressRelationService;
 import com.yanggu.metric_calculate.config.service.ModelColumnService;
@@ -19,7 +19,9 @@ import java.util.List;
 import java.util.Set;
 
 import static com.yanggu.metric_calculate.config.enums.ModelColumnFieldType.VIRTUAL;
-import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_COLUMN_DISPLAY_NAME_DUPLICATE;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_COLUMN_EMPTY;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_COLUMN_NAME_DUPLICATE;
 
 /**
  * 宽表字段 服务层实现。

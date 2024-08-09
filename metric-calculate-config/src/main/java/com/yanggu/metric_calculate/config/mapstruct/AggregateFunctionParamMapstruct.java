@@ -1,11 +1,17 @@
 package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
+import com.yanggu.metric_calculate.config.domain.dto.AggregateFunctionParamDTO;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.BaseUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MapUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MixUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MixUdafParamItemEntity;
+import com.yanggu.metric_calculate.config.domain.vo.AggregateFunctionParamVO;
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.domain.dto.AggregateFunctionParamDTO;
-import com.yanggu.metric_calculate.config.domain.entity.*;
-import com.yanggu.metric_calculate.config.domain.vo.AggregateFunctionParamVO;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -30,22 +36,6 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
         },
         componentModel = SPRING)
 public interface AggregateFunctionParamMapstruct extends BaseMapstruct<AggregateFunctionParamEntity, AggregateFunctionParamVO, AggregateFunctionParamDTO> {
-
-    /**
-     * 转换成core中的类
-     *
-     * @param aggregateFunctionParam
-     * @return
-     */
-    @Named("toCoreAggregateFunctionParam")
-    @Mapping(source = "aggregateFunction.name", target = "aggregateType")
-    //基本聚合函数
-    @Mapping(source = "baseUdafParam", target = "baseUdafParam", qualifiedByName = {"BaseUdafParamMapstruct", "toCoreBaseUdafParam"})
-    //映射类型参数
-    @Mapping(source = "mapUdafParam", target = "mapUdafParam", qualifiedByName = {"MapUdafParamMapstruct", "toCoreMapUdafParam"})
-    //混合型参数
-    @Mapping(source = "mixUdafParam", target = "mixUdafParam", qualifiedByName = {"MixUdafParamMapstruct", "toCoreMixUdafParam"})
-    AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParamEntity aggregateFunctionParam);
 
     /**
      * 获取udaf的jar包路径
@@ -89,5 +79,21 @@ public interface AggregateFunctionParamMapstruct extends BaseMapstruct<Aggregate
                 .distinct()
                 .toList();
     }
+
+    /**
+     * 转换成core中的类
+     *
+     * @param aggregateFunctionParam
+     * @return
+     */
+    @Named("toCoreAggregateFunctionParam")
+    @Mapping(source = "aggregateFunction.name", target = "aggregateType")
+    //基本聚合函数
+    @Mapping(source = "baseUdafParam", target = "baseUdafParam", qualifiedByName = {"BaseUdafParamMapstruct", "toCoreBaseUdafParam"})
+    //映射类型参数
+    @Mapping(source = "mapUdafParam", target = "mapUdafParam", qualifiedByName = {"MapUdafParamMapstruct", "toCoreMapUdafParam"})
+    //混合型参数
+    @Mapping(source = "mixUdafParam", target = "mixUdafParam", qualifiedByName = {"MixUdafParamMapstruct", "toCoreMixUdafParam"})
+    AggregateFunctionParam toCoreAggregateFunctionParam(AggregateFunctionParamEntity aggregateFunctionParam);
 
 }

@@ -3,15 +3,15 @@ package com.yanggu.metric_calculate.config.service.impl;
 import com.mybatisflex.core.query.QueryWrapper;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.mapper.AviatorFunctionInstanceMapper;
-import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionInstanceMapstruct;
 import com.yanggu.metric_calculate.config.domain.dto.AviatorFunctionInstanceDTO;
 import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionEntity;
 import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionInstanceEntity;
 import com.yanggu.metric_calculate.config.domain.query.AviatorFunctionInstanceQuery;
 import com.yanggu.metric_calculate.config.domain.vo.AviatorFunctionInstanceVO;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.mapper.AviatorFunctionInstanceMapper;
+import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionInstanceMapstruct;
 import com.yanggu.metric_calculate.config.service.AviatorExpressParamAviatorFunctionInstanceRelationService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
@@ -24,10 +24,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AviatorExpressParamAviatorFunctionInstanceRelationTableDef.AVIATOR_EXPRESS_PARAM_AVIATOR_FUNCTION_INSTANCE_RELATION;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AviatorFunctionInstanceTableDef.AVIATOR_FUNCTION_INSTANCE;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AviatorFunctionTableDef.AVIATOR_FUNCTION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_EXPRESS_PARAM_USE_AVIATOR_FUNCTION_INSTANCE_NOT_DELETE;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_FUNCTION_ID_ERROR;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_FUNCTION_PARAM_ERROR;
 
 /**
  * Aviator函数实例 服务层实现。

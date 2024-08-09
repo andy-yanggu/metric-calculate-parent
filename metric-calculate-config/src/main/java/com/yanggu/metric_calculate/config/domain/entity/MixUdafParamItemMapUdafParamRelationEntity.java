@@ -20,7 +20,7 @@ public class MixUdafParamItemMapUdafParamRelationEntity extends BaseUserEntity i
 
     @Serial
     private static final long serialVersionUID = -5197004334239854422L;
-    
+
     @Id(keyType = KeyType.Auto)
     private Integer id;
 

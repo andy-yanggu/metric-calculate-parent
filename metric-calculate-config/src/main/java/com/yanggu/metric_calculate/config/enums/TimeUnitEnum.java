@@ -3,7 +3,10 @@ package com.yanggu.metric_calculate.config.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import static java.util.Calendar.*;
+import static java.util.Calendar.DAY_OF_YEAR;
+import static java.util.Calendar.HOUR_OF_DAY;
+import static java.util.Calendar.MILLISECOND;
+import static java.util.Calendar.WEEK_OF_YEAR;
 
 /**
  * 时间单位

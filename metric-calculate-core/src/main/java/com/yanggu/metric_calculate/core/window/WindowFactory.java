@@ -11,7 +11,13 @@ import lombok.Data;
 
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.*;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.EVENT_WINDOW;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.GLOBAL_WINDOW;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SESSION_WINDOW;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SLIDING_COUNT_WINDOW;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SLIDING_TIME_WINDOW;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.STATUS_WINDOW;
+import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.TUMBLING_TIME_WINDOW;
 
 /**
  * 窗口工厂类

@@ -28,9 +28,9 @@ public abstract class AbstractMultiFieldDataValueOutComparableMapAggregateFuncti
      * @return
      */
     protected Stream<Pair<MultiFieldData, ValueOUT>> getCompareLimitStream(
-                                                                    Map<MultiFieldData, ValueACC> accumulator,
-                                                                    Boolean asc,
-                                                                    Integer limit) {
+            Map<MultiFieldData, ValueACC> accumulator,
+            Boolean asc,
+            Integer limit) {
         Comparator<ValueOUT> comparator;
         if (asc.equals(Boolean.TRUE)) {
             comparator = Comparator.nullsFirst(Comparator.naturalOrder());

@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * 真实字段处理器单元测试类
@@ -167,7 +169,7 @@ class RealFieldCalculateTest {
      * 测试宽表字段是boolean, 输入其他类型数据和boolean
      */
     @Test
-    void process7()  throws Exception {
+    void process7() throws Exception {
         String fieldName = "key";
         RealFieldCalculate<Boolean> realFieldCalculate = new RealFieldCalculate<>();
         realFieldCalculate.setColumnName(fieldName);

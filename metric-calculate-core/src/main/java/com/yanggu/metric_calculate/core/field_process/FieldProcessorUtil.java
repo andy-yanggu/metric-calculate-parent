@@ -3,10 +3,19 @@ package com.yanggu.metric_calculate.core.field_process;
 
 import com.googlecode.aviator.Expression;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Mix;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import com.yanggu.metric_calculate.core.aggregate_function.map.AbstractMapAggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.mix.AbstractMixAggregateFunction;
-import com.yanggu.metric_calculate.core.field_process.aggregate.*;
+import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.CollectionFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.MapFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.MixFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.NumberFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.ObjectFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
@@ -18,12 +27,20 @@ import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.*;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.SneakyThrows;
 import org.dromara.hutool.json.JSONObject;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * 字段处理器工具类
@@ -64,8 +81,8 @@ public class FieldProcessorUtil {
     /**
      * 生成维度字段处理器
      *
-     * @param key           指标唯一标识
-     * @param metricName    指标名称
+     * @param key                      指标唯一标识
+     * @param metricName               指标名称
      * @param modelDimensionColumnList 维度列表
      * @return 维度字段处理器
      */
@@ -120,9 +137,9 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static MultiFieldDataFieldProcessor getMultiFieldDataFieldProcessor(
-                                                                    Map<String, Class<?>> fieldMap,
-                                                                    List<AviatorExpressParam> aviatorExpressParamList,
-                                                                    AviatorFunctionFactory aviatorFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            List<AviatorExpressParam> aviatorExpressParamList,
+            AviatorFunctionFactory aviatorFunctionFactory) {
         MultiFieldDataFieldProcessor tempMultiFieldDataFieldProcessor =
                 new MultiFieldDataFieldProcessor(fieldMap, aviatorExpressParamList, aviatorFunctionFactory);
         tempMultiFieldDataFieldProcessor.init();
@@ -141,10 +158,10 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     private static <IN> NumberFieldProcessor<IN> getNumberFieldProcessor(
-                                                                     Map<String, Class<?>> fieldMap,
-                                                                     BaseUdafParam baseUdafParam,
-                                                                     Numerical numerical,
-                                                                     AviatorFunctionFactory aviatorFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            BaseUdafParam baseUdafParam,
+            Numerical numerical,
+            AviatorFunctionFactory aviatorFunctionFactory) {
         NumberFieldProcessor<IN> numberFieldProcessor = new NumberFieldProcessor<>(fieldMap, baseUdafParam, numerical, aviatorFunctionFactory);
         numberFieldProcessor.init();
         return numberFieldProcessor;
@@ -162,10 +179,10 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     private static <IN> CollectionFieldProcessor<IN> getCollectionFieldProcessor(
-                                                                        Map<String, Class<?>> fieldMap,
-                                                                        BaseUdafParam baseUdafParam,
-                                                                        Collective collective,
-                                                                        AviatorFunctionFactory aviatorFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            BaseUdafParam baseUdafParam,
+            Collective collective,
+            AviatorFunctionFactory aviatorFunctionFactory) {
         CollectionFieldProcessor<IN> collectionFieldProcessor = new CollectionFieldProcessor<>(fieldMap, baseUdafParam, collective, aviatorFunctionFactory);
         collectionFieldProcessor.init();
         return collectionFieldProcessor;
@@ -238,10 +255,10 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN> FieldProcessor<JSONObject, IN> getBaseAggregateFieldProcessor(
-                                                                Map<String, Class<?>> fieldMap,
-                                                                BaseUdafParam baseUdafParam,
-                                                                AviatorFunctionFactory aviatorFunctionFactory,
-                                                                AggregateFunctionFactory aggregateFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            BaseUdafParam baseUdafParam,
+            AviatorFunctionFactory aviatorFunctionFactory,
+            AggregateFunctionFactory aggregateFunctionFactory) {
 
         String aggregateType = baseUdafParam.getAggregateType();
         Class<? extends AggregateFunction> aggregateFunctionClass =
@@ -278,10 +295,10 @@ public class FieldProcessorUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                            Map<String, Class<?>> fieldMap,
-                                                            AggregateFunctionParam aggregateFunctionParam,
-                                                            AviatorFunctionFactory aviatorFunctionFactory,
-                                                            AggregateFunctionFactory aggregateFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            AggregateFunctionParam aggregateFunctionParam,
+            AviatorFunctionFactory aviatorFunctionFactory,
+            AggregateFunctionFactory aggregateFunctionFactory) {
         String aggregateType = aggregateFunctionParam.getAggregateType();
 
         AggregateFunction<IN, ACC, OUT> aggregateFunction = aggregateFunctionFactory.getAggregateFunction(aggregateType);

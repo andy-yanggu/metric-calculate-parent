@@ -14,6 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SortValueReturnKeyListMapAggregateFunctionTest {
 
+    public static MultiFieldData create(String data) {
+        return new MultiFieldData(List.of(data));
+    }
+
     @Test
     void testAggregateFunctionName() {
         AggregateFunctionTestBase.testAggregateFunctionName(SortValueReturnKeyListMapAggregateFunction.class, "SORTVALUERETURNKEYMAP");
@@ -47,10 +51,6 @@ class SortValueReturnKeyListMapAggregateFunctionTest {
         List<List<Object>> result = aggregateFunction.getResult(accumulator);
         List<Object> list = result.stream().flatMap(Collection::stream).toList();
         assertEquals(List.of("test2", "test1", "test5", "test4"), list);
-    }
-
-    public static MultiFieldData create(String data) {
-        return new MultiFieldData(List.of(data));
     }
 
 }

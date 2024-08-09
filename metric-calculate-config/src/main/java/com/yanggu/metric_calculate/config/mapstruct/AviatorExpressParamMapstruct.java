@@ -24,17 +24,6 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 public interface AviatorExpressParamMapstruct extends BaseMapstruct<AviatorExpressParamEntity, AviatorExpressParamVO, AviatorExpressParamDTO> {
 
     /**
-     * 转换成core中的AviatorExpressParam
-     *
-     * @param param
-     * @return
-     */
-    @Named("toCoreAviatorExpressParam")
-    @Mapping(source = "express", target = "express")
-    @Mapping(source = "aviatorFunctionInstanceList", target = "aviatorFunctionInstanceList", qualifiedByName = {"AviatorFunctionInstanceMapstruct", "toCoreInstance"})
-    AviatorExpressParam toCoreAviatorExpressParam(AviatorExpressParamEntity param);
-
-    /**
      * 从AviatorExpressParam表达式中获取自定义的aviator函数jar包路径
      *
      * @param aviatorExpressParamList
@@ -52,5 +41,16 @@ public interface AviatorExpressParamMapstruct extends BaseMapstruct<AviatorExpre
                 .distinct()
                 .toList();
     }
+
+    /**
+     * 转换成core中的AviatorExpressParam
+     *
+     * @param param
+     * @return
+     */
+    @Named("toCoreAviatorExpressParam")
+    @Mapping(source = "express", target = "express")
+    @Mapping(source = "aviatorFunctionInstanceList", target = "aviatorFunctionInstanceList", qualifiedByName = {"AviatorFunctionInstanceMapstruct", "toCoreInstance"})
+    AviatorExpressParam toCoreAviatorExpressParam(AviatorExpressParamEntity param);
 
 }

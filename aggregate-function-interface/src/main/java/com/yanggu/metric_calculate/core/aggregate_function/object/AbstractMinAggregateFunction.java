@@ -11,7 +11,7 @@ import java.util.Comparator;
  * <p>子类需要设置比较器的逻辑</p>
  * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
- * @param <IN> 输入数据类型
+ * @param <IN>  输入数据类型
  * @param <OUT> 输出数据类型
  */
 @Data

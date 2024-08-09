@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.domain.query;
 
 import com.yanggu.metric_calculate.config.base.domain.query.PageQuery;
-import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import com.yanggu.metric_calculate.config.domain.entity.DeriveEntity;
+import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

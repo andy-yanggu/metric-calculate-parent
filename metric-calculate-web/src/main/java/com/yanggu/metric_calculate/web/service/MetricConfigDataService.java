@@ -18,12 +18,18 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import static com.yanggu.metric_calculate.web.enums.ResultCode.*;
+import static com.yanggu.metric_calculate.web.enums.ResultCode.DERIVE_ID_ERROR;
+import static com.yanggu.metric_calculate.web.enums.ResultCode.METRIC_CALCULATE_INIT_ERROR;
+import static com.yanggu.metric_calculate.web.enums.ResultCode.TABLE_ID_ERROR;
 
 /**
  * 指标配置数据Service

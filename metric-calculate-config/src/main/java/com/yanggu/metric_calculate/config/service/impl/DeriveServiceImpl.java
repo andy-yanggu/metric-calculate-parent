@@ -7,15 +7,32 @@ import com.mybatisflex.core.relation.RelationManager;
 import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
-import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.domain.dto.DeriveDTO;
-import com.yanggu.metric_calculate.config.domain.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.AtomEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveFilterExpressRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveModelDimensionColumnRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveWindowParamRelationEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelDimensionColumnEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelEntity;
+import com.yanggu.metric_calculate.config.domain.entity.WindowParamEntity;
 import com.yanggu.metric_calculate.config.domain.query.DeriveQuery;
 import com.yanggu.metric_calculate.config.domain.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.domain.vo.DeriveVO;
-import com.yanggu.metric_calculate.config.service.*;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.mapper.DeriveMapper;
+import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
+import com.yanggu.metric_calculate.config.service.AtomService;
+import com.yanggu.metric_calculate.config.service.AviatorExpressParamService;
+import com.yanggu.metric_calculate.config.service.DeriveFilterExpressRelationService;
+import com.yanggu.metric_calculate.config.service.DeriveModelDimensionColumnRelationService;
+import com.yanggu.metric_calculate.config.service.DeriveService;
+import com.yanggu.metric_calculate.config.service.DeriveWindowParamRelationService;
+import com.yanggu.metric_calculate.config.service.ModelColumnService;
+import com.yanggu.metric_calculate.config.service.ModelService;
+import com.yanggu.metric_calculate.config.service.WindowParamService;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +46,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionParamTableDef.AGGREGATE_FUNCTION_PARAM;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AtomTableDef.ATOM;
@@ -43,6 +59,9 @@ import static com.yanggu.metric_calculate.config.domain.entity.table.ModelDimens
 import static com.yanggu.metric_calculate.config.domain.entity.table.ModelTableDef.MODEL;
 import static com.yanggu.metric_calculate.config.domain.entity.table.ModelTimeColumnTableDef.MODEL_TIME_COLUMN;
 import static com.yanggu.metric_calculate.config.domain.entity.table.WindowParamTableDef.WINDOW_PARAM;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_EXIST;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.DERIVE_ID_ERROR;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MODEL_ID_ERROR;
 
 /**
  * 派生指标 服务层实现。

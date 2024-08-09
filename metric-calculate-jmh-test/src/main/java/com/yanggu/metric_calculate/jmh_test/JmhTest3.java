@@ -18,7 +18,8 @@ public class JmhTest3 {
 
     public static void main(String[] args) {
         String jsonString = ResourceUtil.readUtf8Str("mock_metric_config/1.json");
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<>() {});
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<>() {
+        });
 
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);

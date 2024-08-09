@@ -8,16 +8,16 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 public class Example_01_HelloJMH {
 
-    @Benchmark
-    public String sayHello() {
-        return "HELLO JMH!";
-    }
-
     public static void main(String[] args) throws RunnerException {
         Options options = new OptionsBuilder()
                 .include(Example_01_HelloJMH.class.getSimpleName())
                 .forks(1)
                 .build();
         new Runner(options).run();
+    }
+
+    @Benchmark
+    public String sayHello() {
+        return "HELLO JMH!";
     }
 }

@@ -7,7 +7,6 @@ import lombok.Data;
 
 /**
  * 测试ACC能够序列化和反序列化
- *
  */
 @Data
 @AggregateFunctionAnnotation(name = "TEST_ACC", displayName = "测试ACC序列化和反序列化")

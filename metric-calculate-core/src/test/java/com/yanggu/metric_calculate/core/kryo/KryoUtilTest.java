@@ -22,9 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  */
 class KryoUtilTest {
 
-    private KryoUtil kryoUtil;
-
     String jarPath = "D:\\project\\self\\metric-calculate-parent\\metric-calculate-test\\target\\metric-calculate-test-1.0.0-SNAPSHOT.jar";
+    private KryoUtil kryoUtil;
 
     @BeforeEach
     void init() {

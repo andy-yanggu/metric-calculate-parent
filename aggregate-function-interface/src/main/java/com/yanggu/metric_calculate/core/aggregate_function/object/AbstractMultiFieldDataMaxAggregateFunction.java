@@ -11,7 +11,7 @@ import org.dromara.hutool.core.lang.tuple.Pair;
  * 最大值聚合函数抽象类
  * <p>子类需要重写{@link AggregateFunction#getResult(Object)}方法</p>
  *
- * @param <IN> 输入数据类型
+ * @param <IN>  输入数据类型
  * @param <OUT> 输出数据类型
  */
 @Data

@@ -11,7 +11,12 @@ import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateF
 import com.yanggu.metric_calculate.core.aggregate_function.object.FirstObjectAggregateFunction;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
-import com.yanggu.metric_calculate.core.field_process.aggregate.*;
+import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.CollectionFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.MapFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.MixFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.NumberFieldProcessor;
+import com.yanggu.metric_calculate.core.field_process.aggregate.ObjectFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSetProcessor;
 import com.yanggu.metric_calculate.core.field_process.filter.FilterFieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
@@ -23,7 +28,11 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
-import com.yanggu.metric_calculate.core.pojo.udaf_param.*;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
+import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParamItem;
 import org.dromara.hutool.core.collection.ListUtil;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.lang.tuple.Pair;
@@ -31,12 +40,25 @@ import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.*;
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getAggregateFieldProcessor;
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getFilterFieldProcessor;
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getMapFieldProcessor;
+import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getMixFieldProcessor;
 import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
 import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class FieldProcessorUtilTest {
 

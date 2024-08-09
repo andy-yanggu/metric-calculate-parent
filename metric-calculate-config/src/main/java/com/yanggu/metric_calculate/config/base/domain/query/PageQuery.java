@@ -4,7 +4,6 @@ import com.mybatisflex.core.FlexGlobalConfig;
 import com.mybatisflex.core.paginate.Page;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

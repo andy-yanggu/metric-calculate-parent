@@ -11,7 +11,10 @@ import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * 混合型聚合函数单元测试类
@@ -29,7 +32,7 @@ class AbstractMixAggregateFunctionTest {
         baseMixAggregateFunction.setMixAggregateFunctionMap(mixAggregateFunctionMap);
 
         String express =
-                    """
+                """
                         if (tes1 == nil) {
                            tes1 = 0;
                         }
@@ -80,6 +83,7 @@ class AbstractMixAggregateFunctionTest {
         accumulator.put("test1", 1.0D);
         accumulator.put("test2", 2.0D);
         Double result = baseMixAggregateFunction.getResult(accumulator);
+        System.out.println(result);
         assertEquals(3.0D, result, 0.0D);
     }
 

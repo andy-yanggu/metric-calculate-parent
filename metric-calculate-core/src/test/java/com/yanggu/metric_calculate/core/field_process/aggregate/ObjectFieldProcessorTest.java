@@ -201,7 +201,7 @@ class ObjectFieldProcessorTest {
     @Test
     void process8() throws Exception {
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MAXOBJECT", null,  "amount");
+        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MAXOBJECT", null, "amount");
         FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据

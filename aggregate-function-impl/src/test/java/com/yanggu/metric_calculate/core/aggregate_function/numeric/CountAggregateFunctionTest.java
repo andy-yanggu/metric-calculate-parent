@@ -24,7 +24,7 @@ class CountAggregateFunctionTest {
     void testNoArgsConstructor() {
         AggregateFunctionTestBase.testNoArgsConstructor(CountAggregateFunction.class);
     }
-    
+
     @Test
     void testCreateAccumulator() {
         CountAggregateFunction<Integer> countAggregateFunction = new CountAggregateFunction<>();

@@ -25,7 +25,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
     @Test
     void testBaseMap() {
         DeriveMetricCalculate<AbstractMap.SimpleImmutableEntry<MultiFieldData, Integer>, Map<MultiFieldData, Double>,
-                        Map<List<Object>, Double>> deriveMetricCalculate
+                Map<List<Object>, Double>> deriveMetricCalculate
                 = metricCalculate.getDeriveMetricCalculateById(8L);
 
         JSONObject input1 = new JSONObject();

@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.mapper.ModelTimeColumnMapper;
 import com.yanggu.metric_calculate.config.domain.entity.ModelTimeColumnEntity;
+import com.yanggu.metric_calculate.config.mapper.ModelTimeColumnMapper;
 import com.yanggu.metric_calculate.config.service.ModelTimeColumnService;
 import org.springframework.stereotype.Service;
 
