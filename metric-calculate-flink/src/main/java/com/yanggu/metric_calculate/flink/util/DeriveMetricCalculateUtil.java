@@ -23,10 +23,10 @@ import java.util.Map;
 @Slf4j
 public class DeriveMetricCalculateUtil {
 
+    public static final MapStateDescriptor<Long, DeriveConfigData> deriveMapStateDescriptor = new MapStateDescriptor<>("deriveMapState", Long.class, DeriveConfigData.class);
+
     private DeriveMetricCalculateUtil() {
     }
-
-    public static final MapStateDescriptor<Long, DeriveConfigData> deriveMapStateDescriptor = new MapStateDescriptor<>("deriveMapState", Long.class, DeriveConfigData.class);
 
     public static void initializeState(FunctionInitializationContext context, String url) throws Exception {
         BroadcastState<Long, DeriveConfigData> broadcastState = context.getOperatorStateStore().getBroadcastState(deriveMapStateDescriptor);

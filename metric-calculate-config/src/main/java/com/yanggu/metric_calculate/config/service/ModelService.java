@@ -17,6 +17,7 @@ public interface ModelService extends IService<ModelEntity> {
 
     /**
      * 新增宽表
+     *
      * @param modelDto
      */
     void saveData(ModelDTO modelDto) throws Exception;

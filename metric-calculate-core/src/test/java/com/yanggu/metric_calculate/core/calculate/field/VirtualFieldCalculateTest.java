@@ -27,13 +27,11 @@ import static org.mockito.Mockito.mockStatic;
 @ExtendWith(MockitoExtension.class)
 class VirtualFieldCalculateTest {
 
+    private final String express = "username";
     @Mock
     private MetricFieldProcessor<String> mockMetricFieldProcessor;
-
     @Mock
     private Map<String, Class<?>> fieldMap;
-
-    private final String express = "username";
 
     @Test
     void init() {

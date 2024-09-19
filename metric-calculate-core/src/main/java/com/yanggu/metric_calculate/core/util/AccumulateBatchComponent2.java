@@ -79,21 +79,14 @@ public class AccumulateBatchComponent2<T> {
     @Data
     public static class WorkThread<T> implements Runnable {
 
-        private String name;
-
-        private int limit;
-
-        private long interval;
-
-        private Consumer<List<T>> consumer;
-
-        private BlockingQueue<T> queue;
-
-        private List<T> list;
-
         private final ScheduledThreadPoolExecutor scheduledThreadPoolExecutor =
                 new ScheduledThreadPoolExecutor(1, new NamedThreadFactory("攒批定时器线程", true));
-
+        private String name;
+        private int limit;
+        private long interval;
+        private Consumer<List<T>> consumer;
+        private BlockingQueue<T> queue;
+        private List<T> list;
         private ScheduledFuture<?> scheduledFuture;
 
         public WorkThread(Integer limit, long interval, Consumer<List<T>> consumer) {

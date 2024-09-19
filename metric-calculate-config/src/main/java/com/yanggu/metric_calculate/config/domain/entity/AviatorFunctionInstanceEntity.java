@@ -1,6 +1,10 @@
 package com.yanggu.metric_calculate.config.domain.entity;
 
-import com.mybatisflex.annotation.*;
+import com.mybatisflex.annotation.Column;
+import com.mybatisflex.annotation.Id;
+import com.mybatisflex.annotation.KeyType;
+import com.mybatisflex.annotation.RelationManyToOne;
+import com.mybatisflex.annotation.Table;
 import com.mybatisflex.core.handler.JacksonTypeHandler;
 import com.yanggu.metric_calculate.config.base.domain.entity.BaseUserEntity;
 import lombok.Data;

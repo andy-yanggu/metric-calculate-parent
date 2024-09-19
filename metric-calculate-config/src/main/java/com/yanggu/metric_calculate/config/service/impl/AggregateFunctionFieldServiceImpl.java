@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.config.service.impl;
 
 import com.mybatisflex.spring.service.impl.ServiceImpl;
-import com.yanggu.metric_calculate.config.mapper.AggregateFunctionFieldMapper;
 import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionFieldEntity;
+import com.yanggu.metric_calculate.config.mapper.AggregateFunctionFieldMapper;
 import com.yanggu.metric_calculate.config.service.AggregateFunctionFieldService;
 import org.springframework.stereotype.Service;
 

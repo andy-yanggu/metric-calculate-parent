@@ -33,7 +33,7 @@ import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.d
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = true)
 public class KeyedBatchDeriveBroadcastProcessFunction extends KeyedBroadcastProcessFunction<DimensionSet, DeriveCalculateData, DeriveConfigData, MetricCube>
-                implements CheckpointedFunction, Serializable {
+        implements CheckpointedFunction, Serializable {
 
     @Serial
     private static final long serialVersionUID = -9142601084519183501L;

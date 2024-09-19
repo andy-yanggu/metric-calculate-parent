@@ -57,8 +57,8 @@ public class FieldProcessorTestBase {
     }
 
     public static MultiFieldDataFieldProcessor getDistinctFieldFieldProcessor(
-                                                                Map<String, Class<?>> fieldMap,
-                                                                List<AviatorExpressParam> distinctFieldListParamList) {
+            Map<String, Class<?>> fieldMap,
+            List<AviatorExpressParam> distinctFieldListParamList) {
         return FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, distinctFieldListParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
@@ -91,9 +91,9 @@ public class FieldProcessorTestBase {
     }
 
     public static <IN, ACC, OUT> AggregateFieldProcessor<IN, ACC, OUT> getAggregateFieldProcessor(
-                                                                    Map<String, Class<?>> fieldMap,
-                                                                    AggregateFunctionParam aggregateFunctionParam,
-                                                                    AggregateFunctionFactory aggregateFunctionFactory) {
+            Map<String, Class<?>> fieldMap,
+            AggregateFunctionParam aggregateFunctionParam,
+            AggregateFunctionFactory aggregateFunctionFactory) {
         return FieldProcessorUtil.getAggregateFieldProcessor(fieldMap, aggregateFunctionParam, AVIATOR_FUNCTION_FACTORY, aggregateFunctionFactory);
     }
 

@@ -5,17 +5,29 @@ import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.core.util.UpdateEntity;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
-import com.yanggu.metric_calculate.config.mapstruct.AggregateFunctionMapstruct;
 import com.yanggu.metric_calculate.config.domain.dto.AggregateFunctionDTO;
 import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
 import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.domain.entity.JarStoreEntity;
+import com.yanggu.metric_calculate.config.domain.entity.table.BaseUdafParamTableDef;
 import com.yanggu.metric_calculate.config.domain.query.AggregateFunctionQuery;
 import com.yanggu.metric_calculate.config.domain.vo.AggregateFunctionVO;
-import com.yanggu.metric_calculate.config.service.*;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.*;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.mapper.AggregateFunctionMapper;
+import com.yanggu.metric_calculate.config.mapstruct.AggregateFunctionMapstruct;
+import com.yanggu.metric_calculate.config.service.AggregateFunctionFieldService;
+import com.yanggu.metric_calculate.config.service.AggregateFunctionService;
+import com.yanggu.metric_calculate.config.service.BaseUdafParamService;
+import com.yanggu.metric_calculate.config.service.JarStoreService;
+import com.yanggu.metric_calculate.config.service.MapUdafParamService;
+import com.yanggu.metric_calculate.config.service.MixUdafParamService;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionFieldAnnotation;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.MapType;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Mix;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import com.yanggu.metric_calculate.core.aggregate_function.annotation.Objective;
 import com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory;
 import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.util.UdafCustomParamData;
@@ -36,13 +48,23 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.*;
-import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionFieldTableDef.AGGREGATE_FUNCTION_FIELD;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AggregateFunctionTableDef.AGGREGATE_FUNCTION;
-import static com.yanggu.metric_calculate.config.domain.entity.table.BaseUdafParamTableDef.BASE_UDAF_PARAM;
 import static com.yanggu.metric_calculate.config.domain.entity.table.MapUdafParamTableDef.MAP_UDAF_PARAM;
 import static com.yanggu.metric_calculate.config.domain.entity.table.MixUdafParamTableDef.MIX_UDAF_PARAM;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.COLLECTIVE;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.MAP_TYPE;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.MIX;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.NUMERICAL;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.OBJECTIVE;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AGGREGATE_FUNCTION_CLASS_NOT_HAVE_ANNOTATION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AGGREGATE_FUNCTION_CLASS_TYPE_ERROR;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AGGREGATE_FUNCTION_EXIST;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.BASE_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.JAR_NOT_HAVE_CLASS;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.JAR_STORE_ID_NULL;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MAP_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.MIX_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION;
 import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactory.CLASS_FILTER;
 
 /**
@@ -72,6 +94,63 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
 
     @Autowired
     private MixUdafParamService mixUdafParamService;
+
+    private static AggregateFunctionEntity buildAggregateFunction(Class<?> clazz) {
+        AggregateFunctionAnnotation aggregateFunctionAnnotation = clazz.getAnnotation(AggregateFunctionAnnotation.class);
+        if (aggregateFunctionAnnotation == null) {
+            throw new BusinessException(AGGREGATE_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
+        }
+        AggregateFunctionEntity aggregateFunction = new AggregateFunctionEntity();
+        //设置名字
+        aggregateFunction.setName(aggregateFunctionAnnotation.name());
+        //设置中文名
+        aggregateFunction.setDisplayName(aggregateFunctionAnnotation.displayName());
+        //设置描述信息
+        aggregateFunction.setDescription(aggregateFunctionAnnotation.description());
+        //数值型
+        if (clazz.isAnnotationPresent(Numerical.class)) {
+            Numerical numerical = clazz.getAnnotation(Numerical.class);
+            aggregateFunction.setMultiNumber(numerical.multiNumber());
+            aggregateFunction.setType(NUMERICAL);
+        } else if (clazz.isAnnotationPresent(Collective.class)) {
+            //集合型
+            Collective collective = clazz.getAnnotation(Collective.class);
+            aggregateFunction.setKeyStrategy(collective.keyStrategy());
+            aggregateFunction.setRetainStrategy(collective.retainStrategy());
+            aggregateFunction.setType(COLLECTIVE);
+        } else if (clazz.isAnnotationPresent(Objective.class)) {
+            //对象型
+            Objective objective = clazz.getAnnotation(Objective.class);
+            aggregateFunction.setKeyStrategy(objective.keyStrategy());
+            aggregateFunction.setRetainStrategy(objective.retainStrategy());
+            aggregateFunction.setType(OBJECTIVE);
+        } else if (clazz.isAnnotationPresent(Mix.class)) {
+            //混合型
+            aggregateFunction.setType(MIX);
+        } else if (clazz.isAnnotationPresent(MapType.class)) {
+            //映射型
+            aggregateFunction.setType(MAP_TYPE);
+        } else {
+            throw new BusinessException(AGGREGATE_FUNCTION_CLASS_TYPE_ERROR, clazz.getName());
+        }
+        //设置聚合函数字段
+        List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AggregateFunctionFieldAnnotation.class);
+        if (CollUtil.isNotEmpty(udafCustomParamList)) {
+            AtomicInteger index = new AtomicInteger(0);
+            List<AggregateFunctionFieldEntity> list = udafCustomParamList.stream()
+                    .map(temp -> {
+                        AggregateFunctionFieldEntity aggregateFunctionField = new AggregateFunctionFieldEntity();
+                        aggregateFunctionField.setName(temp.getName());
+                        aggregateFunctionField.setDisplayName(temp.getDisplayName());
+                        aggregateFunctionField.setDescription(temp.getDescription());
+                        aggregateFunctionField.setSort(index.incrementAndGet());
+                        return aggregateFunctionField;
+                    })
+                    .toList();
+            aggregateFunction.setAggregateFunctionFieldList(list);
+        }
+        return aggregateFunction;
+    }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -143,7 +222,7 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
         //检查基本聚合类型是否引用
         //这里包含了映射类型的value和混合类型的item
         long count = baseUdafParamService.queryChain()
-                .where(BASE_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
+                .where(BaseUdafParamTableDef.BASE_UDAF_PARAM.AGGREGATE_FUNCTION_ID.eq(id))
                 .count();
         if (count > 0) {
             throw new BusinessException(BASE_UDAF_PARAM_REFERENCE_AGGREGATE_FUNCTION);
@@ -198,63 +277,6 @@ public class AggregateFunctionServiceImpl extends ServiceImpl<AggregateFunctionM
                 .where(AGGREGATE_FUNCTION.NAME.like(queryReq.getAggregateFunctionName()))
                 .and(AGGREGATE_FUNCTION.DISPLAY_NAME.like(queryReq.getAggregateFunctionDisplayName()))
                 .orderBy(queryReq.getOrderByColumnName(), queryReq.getAsc());
-    }
-
-    private static AggregateFunctionEntity buildAggregateFunction(Class<?> clazz) {
-        AggregateFunctionAnnotation aggregateFunctionAnnotation = clazz.getAnnotation(AggregateFunctionAnnotation.class);
-        if (aggregateFunctionAnnotation == null) {
-            throw new BusinessException(AGGREGATE_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
-        }
-        AggregateFunctionEntity aggregateFunction = new AggregateFunctionEntity();
-        //设置名字
-        aggregateFunction.setName(aggregateFunctionAnnotation.name());
-        //设置中文名
-        aggregateFunction.setDisplayName(aggregateFunctionAnnotation.displayName());
-        //设置描述信息
-        aggregateFunction.setDescription(aggregateFunctionAnnotation.description());
-        //数值型
-        if (clazz.isAnnotationPresent(Numerical.class)) {
-            Numerical numerical = clazz.getAnnotation(Numerical.class);
-            aggregateFunction.setMultiNumber(numerical.multiNumber());
-            aggregateFunction.setType(NUMERICAL);
-        } else if (clazz.isAnnotationPresent(Collective.class)) {
-            //集合型
-            Collective collective = clazz.getAnnotation(Collective.class);
-            aggregateFunction.setKeyStrategy(collective.keyStrategy());
-            aggregateFunction.setRetainStrategy(collective.retainStrategy());
-            aggregateFunction.setType(COLLECTIVE);
-        } else if (clazz.isAnnotationPresent(Objective.class)) {
-            //对象型
-            Objective objective = clazz.getAnnotation(Objective.class);
-            aggregateFunction.setKeyStrategy(objective.keyStrategy());
-            aggregateFunction.setRetainStrategy(objective.retainStrategy());
-            aggregateFunction.setType(OBJECTIVE);
-        } else if (clazz.isAnnotationPresent(Mix.class)) {
-            //混合型
-            aggregateFunction.setType(MIX);
-        } else if (clazz.isAnnotationPresent(MapType.class)) {
-            //映射型
-            aggregateFunction.setType(MAP_TYPE);
-        } else {
-            throw new BusinessException(AGGREGATE_FUNCTION_CLASS_TYPE_ERROR, clazz.getName());
-        }
-        //设置聚合函数字段
-        List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AggregateFunctionFieldAnnotation.class);
-        if (CollUtil.isNotEmpty(udafCustomParamList)) {
-            AtomicInteger index = new AtomicInteger(0);
-            List<AggregateFunctionFieldEntity> list = udafCustomParamList.stream()
-                    .map(temp -> {
-                        AggregateFunctionFieldEntity aggregateFunctionField = new AggregateFunctionFieldEntity();
-                        aggregateFunctionField.setName(temp.getName());
-                        aggregateFunctionField.setDisplayName(temp.getDisplayName());
-                        aggregateFunctionField.setDescription(temp.getDescription());
-                        aggregateFunctionField.setSort(index.incrementAndGet());
-                        return aggregateFunctionField;
-                    })
-                    .toList();
-            aggregateFunction.setAggregateFunctionFieldList(list);
-        }
-        return aggregateFunction;
     }
 
     /**

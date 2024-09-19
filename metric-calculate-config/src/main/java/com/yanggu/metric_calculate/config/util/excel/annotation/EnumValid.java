@@ -7,11 +7,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE })
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface EnumValid {
 
     Class<? extends Enum<?>> enumClass(); // 枚举类
+
     String message() default "不在枚举类范围内"; // 错误信息
 
     Class<?>[] groups() default {};

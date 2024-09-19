@@ -7,7 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * 最大聚合函数抽象类单元测试类
@@ -61,7 +63,7 @@ class AbstractMaxAggregateFunctionTest {
         MutableObj<Integer> merge = maxObjectAggregateFunction.merge(accumulator1, accumulator2);
         assertEquals(Integer.valueOf(2), merge.get());
     }
-    
+
 }
 
 class TestMaxAggregateFunction<IN extends Comparable<IN>> extends AbstractMaxAggregateFunction<IN, IN> {

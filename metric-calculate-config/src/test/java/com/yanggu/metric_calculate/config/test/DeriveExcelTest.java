@@ -1,12 +1,22 @@
 package com.yanggu.metric_calculate.config.test;
 
 
+import com.yanggu.metric_calculate.config.domain.dto.AggregateFunctionParamDTO;
+import com.yanggu.metric_calculate.config.domain.dto.AviatorExpressParamDTO;
+import com.yanggu.metric_calculate.config.domain.dto.AviatorFunctionInstanceDTO;
+import com.yanggu.metric_calculate.config.domain.dto.BaseUdafParamDTO;
+import com.yanggu.metric_calculate.config.domain.dto.DeriveDTO;
+import com.yanggu.metric_calculate.config.domain.dto.MapUdafParamDTO;
+import com.yanggu.metric_calculate.config.domain.dto.MixUdafParamDTO;
+import com.yanggu.metric_calculate.config.domain.dto.MixUdafParamItemDTO;
+import com.yanggu.metric_calculate.config.domain.dto.ModelDimensionColumnDTO;
+import com.yanggu.metric_calculate.config.domain.dto.ModelTimeColumnDTO;
+import com.yanggu.metric_calculate.config.domain.dto.WindowParamDTO;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
 import com.yanggu.metric_calculate.config.enums.AccuracyEnum;
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
-import com.yanggu.metric_calculate.config.domain.dto.*;
-import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -23,8 +33,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.*;
-import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.*;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.COLLECTIVE;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.MAP_TYPE;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.MIX;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.NUMERICAL;
+import static com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums.OBJECTIVE;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.EVENT_WINDOW;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.GLOBAL_WINDOW;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.SESSION_WINDOW;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.SLIDING_COUNT_WINDOW;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.SLIDING_TIME_WINDOW;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.STATUS_WINDOW;
+import static com.yanggu.metric_calculate.config.enums.WindowTypeEnum.TUMBLING_TIME_WINDOW;
 
 @DisplayName("派生指标导入和导出测试")
 class DeriveExcelTest {
@@ -217,7 +237,7 @@ class DeriveExcelTest {
 
                 //排序字段表达式列表
             } else if (Integer.valueOf(2).equals(keyStrategy)) {
-                
+
             } else {
 
             }

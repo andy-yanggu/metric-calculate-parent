@@ -3,7 +3,16 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.domain.dto.DeriveDTO;
-import com.yanggu.metric_calculate.config.domain.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.BaseUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MapUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MixUdafParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.MixUdafParamItemEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelEntity;
+import com.yanggu.metric_calculate.config.domain.entity.NodePatternEntity;
+import com.yanggu.metric_calculate.config.domain.entity.WindowParamEntity;
 import com.yanggu.metric_calculate.config.domain.vo.DeriveMetricsConfigData;
 import com.yanggu.metric_calculate.config.domain.vo.DeriveVO;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
@@ -29,41 +38,6 @@ import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
         }, componentModel = SPRING
 )
 public interface DeriveMapstruct extends BaseMapstruct<DeriveEntity, DeriveVO, DeriveDTO> {
-
-    /**
-     * 转换成core中的派生指标
-     *
-     * @param derive
-     * @return
-     */
-    @Named("toDeriveMetrics")
-    //维度字段
-    @Mapping(source = "modelDimensionColumnList", target = "dimensionList", qualifiedByName = {"ModelDimensionColumnMapstruct", "toCoreDimension"})
-    //时间字段
-    @Mapping(source = "atom.modelTimeColumn", target = "timeColumn", qualifiedByName = {"ModelTimeColumnMapstruct", "toCoreTimeColumn"})
-    //前置过滤条件
-    @Mapping(source = "filterExpressParam", target = "filterExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
-    //聚合函数参数
-    @Mapping(source = "atom.aggregateFunctionParam", target = "aggregateFunctionParam", qualifiedByName = {"AggregateFunctionParamMapstruct", "toCoreAggregateFunctionParam"})
-    //窗口参数
-    @Mapping(source = "windowParam", target = "windowParam", qualifiedByName = {"WindowParamMapstruct", "toCoreWindowParam"})
-    //精度数据
-    @Mapping(source = "roundAccuracyType", target = "roundAccuracy.type")
-    @Mapping(source = "roundAccuracyLength", target = "roundAccuracy.length")
-    DeriveMetrics toDeriveMetrics(DeriveEntity derive);
-
-    /**
-     * 转换成流计算和批计算中的派生指标配置类
-     *
-     * @param derive
-     * @param model
-     * @return
-     */
-    @Mapping(source = "derive", target = "deriveMetrics", qualifiedByName = "toDeriveMetrics")
-    @Mapping(source = "model.modelColumnList", target = "fieldMap", qualifiedByName = {"ModelMapstruct", "getFieldMap"})
-    @Mapping(source = "derive", target = "aviatorFunctionJarPathList", qualifiedByName = "getFromDerive")
-    @Mapping(source = "derive.atom.aggregateFunctionParam", target = "udafJarPathList", qualifiedByName = {"AggregateFunctionParamMapstruct", "getUdafJarPathList"})
-    DeriveMetricsConfigData toDeriveMetricsConfigData(DeriveEntity derive, ModelEntity model);
 
     /**
      * 尝试从派生指标中获取使用的表达式
@@ -146,5 +120,40 @@ public interface DeriveMapstruct extends BaseMapstruct<DeriveEntity, DeriveVO, D
             aviatorExpressParamList.addAll(metricExpressParamList);
         }
     }
+
+    /**
+     * 转换成core中的派生指标
+     *
+     * @param derive
+     * @return
+     */
+    @Named("toDeriveMetrics")
+    //维度字段
+    @Mapping(source = "modelDimensionColumnList", target = "dimensionList", qualifiedByName = {"ModelDimensionColumnMapstruct", "toCoreDimension"})
+    //时间字段
+    @Mapping(source = "atom.modelTimeColumn", target = "timeColumn", qualifiedByName = {"ModelTimeColumnMapstruct", "toCoreTimeColumn"})
+    //前置过滤条件
+    @Mapping(source = "filterExpressParam", target = "filterExpressParam", qualifiedByName = {"AviatorExpressParamMapstruct", "toCoreAviatorExpressParam"})
+    //聚合函数参数
+    @Mapping(source = "atom.aggregateFunctionParam", target = "aggregateFunctionParam", qualifiedByName = {"AggregateFunctionParamMapstruct", "toCoreAggregateFunctionParam"})
+    //窗口参数
+    @Mapping(source = "windowParam", target = "windowParam", qualifiedByName = {"WindowParamMapstruct", "toCoreWindowParam"})
+    //精度数据
+    @Mapping(source = "roundAccuracyType", target = "roundAccuracy.type")
+    @Mapping(source = "roundAccuracyLength", target = "roundAccuracy.length")
+    DeriveMetrics toDeriveMetrics(DeriveEntity derive);
+
+    /**
+     * 转换成流计算和批计算中的派生指标配置类
+     *
+     * @param derive
+     * @param model
+     * @return
+     */
+    @Mapping(source = "derive", target = "deriveMetrics", qualifiedByName = "toDeriveMetrics")
+    @Mapping(source = "model.modelColumnList", target = "fieldMap", qualifiedByName = {"ModelMapstruct", "getFieldMap"})
+    @Mapping(source = "derive", target = "aviatorFunctionJarPathList", qualifiedByName = "getFromDerive")
+    @Mapping(source = "derive.atom.aggregateFunctionParam", target = "udafJarPathList", qualifiedByName = {"AggregateFunctionParamMapstruct", "getUdafJarPathList"})
+    DeriveMetricsConfigData toDeriveMetricsConfigData(DeriveEntity derive, ModelEntity model);
 
 }

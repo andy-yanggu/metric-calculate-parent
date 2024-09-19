@@ -13,10 +13,10 @@ import static com.yanggu.metric_calculate.config.util.Constant.USER_ID;
  */
 public class ThreadLocalUtil {
 
+    private static final TransmittableThreadLocal<Map<String, Object>> TRANSMITTABLE_THREAD_LOCAL = TransmittableThreadLocal.withInitial(HashMap::new);
+
     private ThreadLocalUtil() {
     }
-
-    private static final TransmittableThreadLocal<Map<String, Object>> TRANSMITTABLE_THREAD_LOCAL =  TransmittableThreadLocal.withInitial(HashMap::new);
 
     public static Integer getUserId() {
         return (Integer) TRANSMITTABLE_THREAD_LOCAL.get().get(USER_ID);

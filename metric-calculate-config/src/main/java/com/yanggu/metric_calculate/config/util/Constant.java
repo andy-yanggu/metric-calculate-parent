@@ -6,9 +6,9 @@ package com.yanggu.metric_calculate.config.util;
  */
 public class Constant {
 
+    public static final String USER_ID = "userId";
+
     private Constant() {
     }
-
-    public static final String USER_ID = "userId";
 
 }

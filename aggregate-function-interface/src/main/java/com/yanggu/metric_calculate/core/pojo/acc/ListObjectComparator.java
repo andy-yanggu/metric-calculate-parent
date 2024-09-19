@@ -22,8 +22,8 @@ public class ListObjectComparator<IN> implements Comparator<Pair<MultiFieldData,
      * 创建升序的比较器
      *
      * @param compareParamLength
-     * @return
      * @param <IN>
+     * @return
      */
     public static <IN> ListObjectComparator<IN> createAscInstance(Integer compareParamLength) {
         List<Boolean> booleanList = new ArrayList<>(compareParamLength);

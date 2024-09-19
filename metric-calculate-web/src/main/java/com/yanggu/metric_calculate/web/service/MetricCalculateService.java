@@ -20,7 +20,12 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
@@ -163,6 +168,7 @@ public class MetricCalculateService {
 
     /**
      * 有状态计算(批读、批写)
+     *
      * @param input
      * @return
      */
@@ -341,20 +347,20 @@ public class MetricCalculateService {
         }
         List<DeriveMetricCalculateResult<Object>> deriveMetricsList = new CopyOnWriteArrayList<>();
         CompletableFuture[] array = deriveMetricCalculateList.stream()
-            .map(deriveMetricCalculate ->
-                CompletableFuture.runAsync(() -> {
-                    DeriveMetricCalculateResult<Object> temp;
-                    if (update) {
-                        temp = deriveMetricCalculate.stateExec(detail);
-                    } else {
-                        temp = deriveMetricCalculate.noStateExec(detail);
-                    }
-                    if (temp != null) {
-                        deriveMetricsList.add(temp);
-                    }
-                }, threadPoolExecutor)
-            )
-            .toArray(CompletableFuture[]::new);
+                .map(deriveMetricCalculate ->
+                        CompletableFuture.runAsync(() -> {
+                            DeriveMetricCalculateResult<Object> temp;
+                            if (update) {
+                                temp = deriveMetricCalculate.stateExec(detail);
+                            } else {
+                                temp = deriveMetricCalculate.noStateExec(detail);
+                            }
+                            if (temp != null) {
+                                deriveMetricsList.add(temp);
+                            }
+                        }, threadPoolExecutor)
+                )
+                .toArray(CompletableFuture[]::new);
 
         //等待所有线程完成
         CompletableFuture.allOf(array).join();

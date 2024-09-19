@@ -18,10 +18,10 @@ public abstract class AbstractDeriveMetricMiddleStore implements DeriveMetricMid
      * 序列化之前进行判空处理
      *
      * @param updateMetricCube
-     * @return
      * @param <IN>
      * @param <ACC>
      * @param <OUT>
+     * @return
      */
     protected <IN, ACC, OUT> byte[] serialize(MetricCube<IN, ACC, OUT> updateMetricCube) {
         if (updateMetricCube == null) {

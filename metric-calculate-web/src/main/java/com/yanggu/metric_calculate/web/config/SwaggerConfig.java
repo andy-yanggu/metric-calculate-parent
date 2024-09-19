@@ -26,11 +26,11 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                    .info(new Info()
-                            .title(applicationName)
-                            .version(version)
-                            .description(description)
-                    );
+                .info(new Info()
+                        .title(applicationName)
+                        .version(version)
+                        .description(description)
+                );
     }
 
 }

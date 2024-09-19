@@ -5,15 +5,15 @@ import com.mybatisflex.core.tenant.TenantManager;
 import com.mybatisflex.core.util.UpdateEntity;
 import com.mybatisflex.spring.service.impl.ServiceImpl;
 import com.yanggu.metric_calculate.config.base.domain.vo.PageVO;
-import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
-import com.yanggu.metric_calculate.config.mapper.AviatorFunctionMapper;
-import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionMapstruct;
 import com.yanggu.metric_calculate.config.domain.dto.AviatorFunctionDTO;
 import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionEntity;
 import com.yanggu.metric_calculate.config.domain.entity.AviatorFunctionFieldEntity;
 import com.yanggu.metric_calculate.config.domain.entity.JarStoreEntity;
 import com.yanggu.metric_calculate.config.domain.query.AviatorFunctionQuery;
 import com.yanggu.metric_calculate.config.domain.vo.AviatorFunctionVO;
+import com.yanggu.metric_calculate.config.exceptionhandler.BusinessException;
+import com.yanggu.metric_calculate.config.mapper.AviatorFunctionMapper;
+import com.yanggu.metric_calculate.config.mapstruct.AviatorFunctionMapstruct;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionFieldService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionInstanceService;
 import com.yanggu.metric_calculate.config.service.AviatorFunctionService;
@@ -40,10 +40,13 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
-import static com.yanggu.metric_calculate.config.enums.ResultCode.*;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AviatorFunctionFieldTableDef.AVIATOR_FUNCTION_FIELD;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AviatorFunctionInstanceTableDef.AVIATOR_FUNCTION_INSTANCE;
 import static com.yanggu.metric_calculate.config.domain.entity.table.AviatorFunctionTableDef.AVIATOR_FUNCTION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_FUNCTION_CLASS_NOT_HAVE_ANNOTATION;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_FUNCTION_EXIST;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.AVIATOR_FUNCTION_HAS_INSTANCE;
+import static com.yanggu.metric_calculate.config.enums.ResultCode.JAR_STORE_ID_NULL;
 import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory.CLASS_FILTER;
 
 /**
@@ -66,6 +69,34 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
 
     @Autowired
     private AviatorFunctionInstanceService aviatorFunctionInstanceService;
+
+    private static AviatorFunctionEntity buildAviatorFunction(Class<?> clazz) {
+        AviatorFunctionAnnotation annotation = clazz.getAnnotation(AviatorFunctionAnnotation.class);
+        if (annotation == null) {
+            throw new BusinessException(AVIATOR_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
+        }
+        AviatorFunctionEntity aviatorFunction = new AviatorFunctionEntity();
+        aviatorFunction.setName(annotation.name());
+        aviatorFunction.setDisplayName(annotation.displayName());
+        aviatorFunction.setDescription(annotation.description());
+        //设置聚合函数字段
+        List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AviatorFunctionFieldAnnotation.class);
+        if (CollUtil.isNotEmpty(udafCustomParamList)) {
+            AtomicInteger index = new AtomicInteger(0);
+            List<AviatorFunctionFieldEntity> list = udafCustomParamList.stream()
+                    .map(temp -> {
+                        AviatorFunctionFieldEntity aviatorFunctionField = new AviatorFunctionFieldEntity();
+                        aviatorFunctionField.setName(temp.getName());
+                        aviatorFunctionField.setDisplayName(temp.getDisplayName());
+                        aviatorFunctionField.setDescription(temp.getDescription());
+                        aviatorFunctionField.setSort(index.incrementAndGet());
+                        return aviatorFunctionField;
+                    })
+                    .toList();
+            aviatorFunction.setAviatorFunctionFieldList(list);
+        }
+        return aviatorFunction;
+    }
 
     @Override
     @Transactional(rollbackFor = RuntimeException.class)
@@ -165,34 +196,6 @@ public class AviatorFunctionServiceImpl extends ServiceImpl<AviatorFunctionMappe
                 .where(AVIATOR_FUNCTION.NAME.like(req.getAviatorFunctionName()))
                 .and(AVIATOR_FUNCTION.DISPLAY_NAME.like(req.getAviatorFunctionDisplayName()))
                 .orderBy(req.getOrderByColumnName(), req.getAsc());
-    }
-
-    private static AviatorFunctionEntity buildAviatorFunction(Class<?> clazz) {
-        AviatorFunctionAnnotation annotation = clazz.getAnnotation(AviatorFunctionAnnotation.class);
-        if (annotation == null) {
-            throw new BusinessException(AVIATOR_FUNCTION_CLASS_NOT_HAVE_ANNOTATION, clazz.getName());
-        }
-        AviatorFunctionEntity aviatorFunction = new AviatorFunctionEntity();
-        aviatorFunction.setName(annotation.name());
-        aviatorFunction.setDisplayName(annotation.displayName());
-        aviatorFunction.setDescription(annotation.description());
-        //设置聚合函数字段
-        List<UdafCustomParamData> udafCustomParamList = UdafCustomParamDataUtil.getUdafCustomParamList(clazz, AviatorFunctionFieldAnnotation.class);
-        if (CollUtil.isNotEmpty(udafCustomParamList)) {
-            AtomicInteger index = new AtomicInteger(0);
-            List<AviatorFunctionFieldEntity> list = udafCustomParamList.stream()
-                    .map(temp -> {
-                        AviatorFunctionFieldEntity aviatorFunctionField = new AviatorFunctionFieldEntity();
-                        aviatorFunctionField.setName(temp.getName());
-                        aviatorFunctionField.setDisplayName(temp.getDisplayName());
-                        aviatorFunctionField.setDescription(temp.getDescription());
-                        aviatorFunctionField.setSort(index.incrementAndGet());
-                        return aviatorFunctionField;
-                    })
-                    .toList();
-            aviatorFunction.setAviatorFunctionFieldList(list);
-        }
-        return aviatorFunction;
     }
 
     /**

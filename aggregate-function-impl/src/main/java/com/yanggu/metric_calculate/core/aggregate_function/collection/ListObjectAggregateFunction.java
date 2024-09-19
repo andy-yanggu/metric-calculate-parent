@@ -6,7 +6,6 @@ import org.dromara.hutool.json.JSONObject;
 
 /**
  * 对象列表
- *
  */
 @Collective(keyStrategy = 0, retainStrategy = 2)
 @AggregateFunctionAnnotation(name = "LISTOBJECT", displayName = "对象列表")

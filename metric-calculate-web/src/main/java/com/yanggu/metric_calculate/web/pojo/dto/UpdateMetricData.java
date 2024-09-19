@@ -2,7 +2,13 @@ package com.yanggu.metric_calculate.web.pojo.dto;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.yanggu.metric_calculate.core.window.*;
+import com.yanggu.metric_calculate.core.window.AbstractWindow;
+import com.yanggu.metric_calculate.core.window.GlobalWindow;
+import com.yanggu.metric_calculate.core.window.PatternWindow;
+import com.yanggu.metric_calculate.core.window.SlidingCountWindow;
+import com.yanggu.metric_calculate.core.window.SlidingTimeWindow;
+import com.yanggu.metric_calculate.core.window.StatusWindow;
+import com.yanggu.metric_calculate.core.window.TumblingTimeWindow;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;

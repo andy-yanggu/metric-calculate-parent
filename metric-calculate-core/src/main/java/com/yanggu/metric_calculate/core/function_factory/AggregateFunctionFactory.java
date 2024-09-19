@@ -30,28 +30,17 @@ public class AggregateFunctionFactory {
      * 内置AggregateFunction的包路径
      */
     public static final String SCAN_PACKAGE = "com.yanggu.metric_calculate.core.aggregate_function";
-
-    private static final String ERROR_MESSAGE = "自定义聚合函数唯一标识重复, 重复的全类名: ";
-
     /**
      * 扫描有AggregateFunctionAnnotation注解并且是AggregateFunction子类
      */
     public static final Predicate<Class<?>> CLASS_FILTER = clazz -> clazz.isAnnotationPresent(AggregateFunctionAnnotation.class)
             && AggregateFunction.class.isAssignableFrom(clazz);
-
+    public static final JarClassLoader ACC_CLASS_LOADER = new JarClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
+    private static final String ERROR_MESSAGE = "自定义聚合函数唯一标识重复, 重复的全类名: ";
     /**
      * 内置的AggregateFunction
      */
     private static final Map<String, Class<? extends AggregateFunction>> BUILT_IN_FUNCTION_MAP = new HashMap<>();
-
-    public static final JarClassLoader ACC_CLASS_LOADER = new JarClassLoader(new URL[0], ClassLoader.getSystemClassLoader());
-
-    private final Map<String, Class<? extends AggregateFunction>> functionMap = new HashMap<>();
-
-    /**
-     * udaf的jar包路径
-     */
-    private List<String> udafJarPathList;
 
     static {
         //扫描系统自带的聚合函数
@@ -62,8 +51,44 @@ public class AggregateFunctionFactory {
         }
     }
 
+    private final Map<String, Class<? extends AggregateFunction>> functionMap = new HashMap<>();
+    /**
+     * udaf的jar包路径
+     */
+    private List<String> udafJarPathList;
+
     public AggregateFunctionFactory(List<String> udafJarPathList) {
         this.udafJarPathList = udafJarPathList;
+    }
+
+    /**
+     * 通过反射给聚合函数设置参数
+     *
+     * @param aggregateFunction
+     * @param params
+     */
+    public static <IN, ACC, OUT> void initAggregateFunction(AggregateFunction<IN, ACC, OUT> aggregateFunction,
+                                                            Map<String, Object> params) {
+        FunctionFactory.setParam(aggregateFunction, params);
+        aggregateFunction.init();
+    }
+
+    @SneakyThrows
+    private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AggregateFunction>> functionMap) {
+        if (!CLASS_FILTER.test(tempClazz)) {
+            return;
+        }
+        String value = tempClazz.getAnnotation(AggregateFunctionAnnotation.class).name();
+        //使用JarClassLoader统一加载ACC，便于Kryo的序列化和反序列化
+        Method createAccumulatorMethod = MethodUtil.getMethodByName(tempClazz, "createAccumulator");
+        if (createAccumulatorMethod != null) {
+            Class<?> accumulatorClass = createAccumulatorMethod.getReturnType();
+            ACC_CLASS_LOADER.loadClass(accumulatorClass.getName());
+        }
+        Class<? extends AggregateFunction> put = functionMap.put(value, (Class<? extends AggregateFunction>) tempClazz);
+        if (put != null) {
+            throw new RuntimeException(ERROR_MESSAGE + put.getName());
+        }
     }
 
     /**
@@ -84,18 +109,6 @@ public class AggregateFunctionFactory {
 
         //支持添加自定义的聚合函数
         FunctionFactory.loadClassFromJar(udafJarPathList, CLASS_FILTER, loadClass -> addClassToMap(loadClass, functionMap));
-    }
-
-    /**
-     * 通过反射给聚合函数设置参数
-     *
-     * @param aggregateFunction
-     * @param params
-     */
-    public static <IN, ACC, OUT> void initAggregateFunction(AggregateFunction<IN, ACC, OUT> aggregateFunction,
-                                                            Map<String, Object> params) {
-        FunctionFactory.setParam(aggregateFunction, params);
-        aggregateFunction.init();
     }
 
     /**
@@ -122,24 +135,6 @@ public class AggregateFunctionFactory {
             throw new RuntimeException("传入的" + aggregate + "有误");
         }
         return clazz;
-    }
-
-    @SneakyThrows
-    private static void addClassToMap(Class<?> tempClazz, Map<String, Class<? extends AggregateFunction>> functionMap) {
-        if (!CLASS_FILTER.test(tempClazz)) {
-            return;
-        }
-        String value = tempClazz.getAnnotation(AggregateFunctionAnnotation.class).name();
-        //使用JarClassLoader统一加载ACC，便于Kryo的序列化和反序列化
-        Method createAccumulatorMethod = MethodUtil.getMethodByName(tempClazz, "createAccumulator");
-        if (createAccumulatorMethod != null) {
-            Class<?> accumulatorClass = createAccumulatorMethod.getReturnType();
-            ACC_CLASS_LOADER.loadClass(accumulatorClass.getName());
-        }
-        Class<? extends AggregateFunction> put = functionMap.put(value, (Class<? extends AggregateFunction>) tempClazz);
-        if (put != null) {
-            throw new RuntimeException(ERROR_MESSAGE + put.getName());
-        }
     }
 
 }

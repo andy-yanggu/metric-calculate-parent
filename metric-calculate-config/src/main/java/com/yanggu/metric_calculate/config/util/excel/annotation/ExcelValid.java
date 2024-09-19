@@ -9,9 +9,10 @@ import java.lang.annotation.Target;
 
 /**
  * 基于不同的校验注解 校验Excel单元格数据
+ *
  * @author yy
  */
-@Target({ ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE })
+@Target({ElementType.METHOD, ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ExcelValid {
 

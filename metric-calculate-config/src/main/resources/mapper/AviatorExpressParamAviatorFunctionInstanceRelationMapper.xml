@@ -15,8 +15,12 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        `id`, `aviator_express_param_id`, `aviator_function_instance_id`, `user_id`, `is_deleted`, `create_time`,
+        `id`,
+        `aviator_express_param_id`,
+        `aviator_function_instance_id`,
+        `user_id`,
+        `is_deleted`,
+        `create_time`,
         `update_time`
     </sql>
-
 </mapper>

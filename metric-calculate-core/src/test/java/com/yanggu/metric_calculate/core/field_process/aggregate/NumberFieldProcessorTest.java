@@ -47,7 +47,7 @@ class NumberFieldProcessorTest {
      */
     @Test
     void testProcess_CovUnit() throws Exception {
-        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("COV", null,  "amount", "amount1");
+        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("COV", null, "amount", "amount1");
         FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         JSONObject input = new JSONObject();

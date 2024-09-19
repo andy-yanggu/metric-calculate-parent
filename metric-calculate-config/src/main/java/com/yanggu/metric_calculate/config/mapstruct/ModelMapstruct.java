@@ -2,7 +2,11 @@ package com.yanggu.metric_calculate.config.mapstruct;
 
 import com.yanggu.metric_calculate.config.base.mapstruct.BaseMapstruct;
 import com.yanggu.metric_calculate.config.domain.dto.ModelDTO;
-import com.yanggu.metric_calculate.config.domain.entity.*;
+import com.yanggu.metric_calculate.config.domain.entity.AtomEntity;
+import com.yanggu.metric_calculate.config.domain.entity.AviatorExpressParamEntity;
+import com.yanggu.metric_calculate.config.domain.entity.DeriveEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelColumnEntity;
+import com.yanggu.metric_calculate.config.domain.entity.ModelEntity;
 import com.yanggu.metric_calculate.config.domain.vo.ModelVO;
 import com.yanggu.metric_calculate.core.enums.BasicType;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
@@ -14,7 +18,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 

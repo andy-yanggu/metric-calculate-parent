@@ -189,10 +189,10 @@ public class MetricUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDeriveMetrics(
-                                                                   DeriveMetrics deriveMetrics,
-                                                                   Map<String, Class<?>> fieldMap,
-                                                                   AviatorFunctionFactory aviatorFunctionFactory,
-                                                                   AggregateFunctionFactory aggregateFunctionFactory) {
+            DeriveMetrics deriveMetrics,
+            Map<String, Class<?>> fieldMap,
+            AviatorFunctionFactory aviatorFunctionFactory,
+            AggregateFunctionFactory aggregateFunctionFactory) {
 
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 

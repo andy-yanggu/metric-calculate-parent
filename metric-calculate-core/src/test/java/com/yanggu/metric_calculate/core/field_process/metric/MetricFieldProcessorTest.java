@@ -59,7 +59,6 @@ class MetricFieldProcessorTest {
 
     /**
      * 如果度量表达式的变量没有在宽表字段中, 应该报错
-     *
      */
     @Test
     void init4() {

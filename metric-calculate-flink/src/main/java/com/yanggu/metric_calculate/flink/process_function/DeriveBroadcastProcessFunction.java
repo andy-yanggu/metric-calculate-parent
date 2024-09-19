@@ -22,7 +22,7 @@ import static com.yanggu.metric_calculate.flink.util.DeriveMetricCalculateUtil.d
 
 @Slf4j
 public class DeriveBroadcastProcessFunction extends BroadcastProcessFunction<MetricCube, DeriveConfigData, DeriveMetricCalculateResult>
-                implements CheckpointedFunction, Serializable {
+        implements CheckpointedFunction, Serializable {
 
     @Serial
     private static final long serialVersionUID = -1838715009731159197L;

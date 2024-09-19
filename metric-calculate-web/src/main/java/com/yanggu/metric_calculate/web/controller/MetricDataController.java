@@ -14,7 +14,13 @@ import jakarta.validation.constraints.NotNull;
 import org.dromara.hutool.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,9 +41,9 @@ public class MetricDataController {
             @DynamicParameter(name = "name2", value = "value2", example = "多个维度写多个kv")
     })
     public <IN, ACC, OUT> Result<DeriveMetricCalculateResult<OUT>> queryDeriveData(
-                        @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
-                        @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                        @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) throws Exception {
+            @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
+            @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
+            @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) throws Exception {
         DeriveMetricCalculateResult<OUT> result = metricDataService.<IN, ACC, OUT>queryDeriveData(tableId, deriveId, dimensionMap);
         return Result.ok(result);
     }
@@ -64,9 +70,9 @@ public class MetricDataController {
     @Operation(summary = "部分填充（单个派生指标）")
     @PostMapping("/fill-derive-data-by-id")
     public Result<Void> fillDeriveDataById(
-                 @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
-                 @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                 @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) throws Exception {
+            @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
+            @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
+            @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) throws Exception {
         metricDataService.fillDeriveDataById(tableId, deriveId, dataList);
         return Result.ok();
     }
@@ -78,9 +84,9 @@ public class MetricDataController {
             @DynamicParameter(name = "name2", value = "value2", example = "多个维度写多个kv")
     })
     public Result<Void> deleteDeriveData(
-                        @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
-                        @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                        @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) throws Exception {
+            @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
+            @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
+            @NotEmpty(message = "维度json数据不能为空") @Parameter(description = "维度json数据", required = true) @RequestBody LinkedHashMap<String, Object> dimensionMap) throws Exception {
         metricDataService.deleteDeriveData(tableId, deriveId, dimensionMap);
         return Result.ok();
     }

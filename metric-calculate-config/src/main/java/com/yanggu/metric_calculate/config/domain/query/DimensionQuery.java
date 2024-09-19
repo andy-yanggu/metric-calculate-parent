@@ -14,7 +14,7 @@ public class DimensionQuery extends PageQuery<DimensionEntity> {
 
     @Serial
     private static final long serialVersionUID = 7352665037617357988L;
-    
+
     /**
      * 维度名称
      */
