@@ -2,7 +2,8 @@ package com.yanggu.metric_calculate.core.window;
 
 
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
-import org.dromara.hutool.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * 数据切分核心接口
@@ -18,7 +19,7 @@ public interface Window<OUT> {
      *
      * @param input
      */
-    void put(JSONObject input);
+    void put(Map<String, Object> input);
 
     /**
      * 查询操作
@@ -34,7 +35,7 @@ public interface Window<OUT> {
      * <p>根据窗口条件查询</p>
      * <p>窗口数据是通过input传入的</p>
      */
-    DeriveMetricCalculateResult<OUT> query(JSONObject input);
+    DeriveMetricCalculateResult<OUT> query(Map<String, Object> input);
 
     /**
      * 删除数据
@@ -44,7 +45,7 @@ public interface Window<OUT> {
     void deleteData();
 
     ///**
-    // * 合并表操作
+    // * 合并操作
     // *
     // * @param thatWindow
     // * @return

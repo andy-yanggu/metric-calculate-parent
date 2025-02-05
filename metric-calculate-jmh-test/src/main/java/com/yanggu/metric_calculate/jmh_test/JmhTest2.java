@@ -8,7 +8,6 @@ import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
@@ -17,6 +16,9 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @BenchmarkMode(Mode.Throughput)
 @State(Scope.Thread)
@@ -29,7 +31,7 @@ public class JmhTest2 {
 
     private static DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate1;
 
-    private static JSONObject input;
+    private static Map<String, Object> input;
 
     @Setup(Level.Trial)
     public static void setup() throws Exception {
@@ -45,11 +47,11 @@ public class JmhTest2 {
         deriveMetricMiddleHashMapKryoStore.init();
         deriveMetricCalculate1.setDeriveMetricMiddleStore(deriveMetricMiddleHashMapKryoStore);
 
-        JSONObject tempInput = new JSONObject();
-        tempInput.set("account_no_out", "000000000011");
-        tempInput.set("account_no_in", "000000000012");
-        tempInput.set("amount", 800.0D);
-        tempInput.set("trans_timestamp", 1679887968782L);
+        Map<String, Object> tempInput = new HashMap<>();
+        tempInput.put("account_no_out", "000000000011");
+        tempInput.put("account_no_in", "000000000012");
+        tempInput.put("amount", 800.0D);
+        tempInput.put("trans_timestamp", 1679887968782L);
 
         tempInput = metricCalculate.getParam(tempInput);
 

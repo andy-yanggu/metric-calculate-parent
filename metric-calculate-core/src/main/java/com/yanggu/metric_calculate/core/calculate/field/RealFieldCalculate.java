@@ -2,9 +2,8 @@ package com.yanggu.metric_calculate.core.calculate.field;
 
 import lombok.Data;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.Map;
 
@@ -15,7 +14,7 @@ import java.util.Map;
  * @param <R>
  */
 @Data
-public class RealFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
+public class RealFieldCalculate<R> implements FieldCalculate<Map<String, Object>, R> {
 
     private String columnName;
 
@@ -38,8 +37,8 @@ public class RealFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
     }
 
     @Override
-    public R process(JSONObject input) throws Exception {
-        if (CollUtil.isEmpty((Map<?, ?>) input)) {
+    public R process(Map<String, Object> input) throws Exception {
+        if (CollUtil.isEmpty(input)) {
             throw new RuntimeException("传入的数据为空");
         }
         Object result = input.get(columnName);
@@ -50,7 +49,7 @@ public class RealFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
             return (R) result;
         } else {
             //如果字段数据类型不匹配, 进行强转
-            return Convert.convert(dataClass, result);
+            return ConvertUtil.convert(dataClass, result);
         }
     }
 

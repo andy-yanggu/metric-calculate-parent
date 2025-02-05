@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ public class StatusWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
 
     @Override
     @SneakyThrows
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         List<Object> newStatusList = multiFieldDataFieldProcessor.process(input).getFieldList();
         //如果状态不相同, 清空数据
         if (!newStatusList.equals(statusList)) {

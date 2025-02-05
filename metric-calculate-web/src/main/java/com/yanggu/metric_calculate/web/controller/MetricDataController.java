@@ -11,13 +11,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.dromara.hutool.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Validated
 @RestController
@@ -47,7 +47,7 @@ public class MetricDataController {
     public Result<List<DeriveMetricCalculateResult<Object>>> queryDeriveCurrentData(
             @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
             @NotEmpty(message = "派生指标id列表不能为空") @Parameter(description = "派生指标id列表", required = true) @RequestParam List<Long> deriveIdList,
-            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody JSONObject input) throws Exception {
+            @NotEmpty(message = "明细宽表数据不能为空") @Parameter(description = "明细宽表数据", required = true) @RequestBody Map<String, Object> input) throws Exception {
         List<DeriveMetricCalculateResult<Object>> list = metricDataService.queryDeriveCurrentData(tableId, deriveIdList, input);
         return Result.ok(list);
     }
@@ -56,7 +56,7 @@ public class MetricDataController {
     @PostMapping("/full-fill-derive-data")
     public Result<Void> fullUpdate(
             @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
-            @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) throws Exception {
+            @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<Map<String, Object>> dataList) throws Exception {
         metricDataService.fullFillDeriveData(dataList, tableId);
         return Result.ok();
     }
@@ -66,7 +66,7 @@ public class MetricDataController {
     public Result<Void> fillDeriveDataById(
                  @NotNull(message = "数据明细宽表id不能为空") @Parameter(description = "数据明细宽表id", required = true) @RequestParam Long tableId,
                  @NotNull(message = "派生指标id不能为空") @Parameter(description = "派生指标id", required = true) @RequestParam Long deriveId,
-                 @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<JSONObject> dataList) throws Exception {
+                 @NotEmpty(message = "数据list不能为空") @Parameter(description = "数据list", required = true) @RequestBody List<Map<String, Object>> dataList) throws Exception {
         metricDataService.fillDeriveDataById(tableId, deriveId, dataList);
         return Result.ok();
     }

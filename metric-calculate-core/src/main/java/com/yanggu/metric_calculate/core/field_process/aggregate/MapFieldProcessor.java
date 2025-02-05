@@ -11,7 +11,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.Map;
 
@@ -20,7 +19,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
+public class MapFieldProcessor<IN> implements FieldProcessor<Map<String, Object>, IN> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -38,7 +37,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     /**
      * value生成字段处理器
      */
-    private FieldProcessor<JSONObject, Object> valueAggregateFieldProcessor;
+    private FieldProcessor<Map<String, Object>, Object> valueAggregateFieldProcessor;
 
     public MapFieldProcessor(Map<String, Class<?>> fieldMap,
                              MapUdafParam mapUdafParam,
@@ -66,7 +65,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     }
 
     @Override
-    public IN process(JSONObject input) throws Exception {
+    public IN process(Map<String, Object> input) throws Exception {
         MultiFieldData key = keyFieldProcessor.process(input);
         Object value = valueAggregateFieldProcessor.process(input);
         return (IN) new Pair<>(key, value);

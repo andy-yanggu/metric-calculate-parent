@@ -10,10 +10,11 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,7 +32,7 @@ public class MetricCalculate extends Model implements Serializable {
     /**
      * 字段计算类
      */
-    private transient List<FieldCalculate<JSONObject, Object>> fieldCalculateList;
+    private transient List<FieldCalculate<Map<String, Object>, Object>> fieldCalculateList;
 
     /**
      * 派生指标计算类
@@ -62,15 +63,15 @@ public class MetricCalculate extends Model implements Serializable {
      * @return
      */
     @SneakyThrows
-    public JSONObject getParam(JSONObject input) {
-        if (CollUtil.isEmpty((Map<?, ?>) input)) {
+    public Map<String, Object> getParam(Map<String, Object> input) {
+        if (MapUtil.isEmpty(input)) {
             throw new RuntimeException("输入的明细数据为空");
         }
-        JSONObject data = new JSONObject();
-        for (FieldCalculate<JSONObject, Object> fieldCalculate : fieldCalculateList) {
+        Map<String, Object> data = new HashMap<>();
+        for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
             Object process = fieldCalculate.process(input);
             if (process != null) {
-                data.set(fieldCalculate.getName(), process);
+                data.put(fieldCalculate.getName(), process);
             }
         }
         return data;

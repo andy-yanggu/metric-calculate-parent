@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.field_process.filter;
 
 import com.googlecode.aviator.AviatorEvaluator;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -129,12 +128,12 @@ class FilterFieldProcessorTest {
         aviatorExpressParam.setExpress(filterExpress);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("amount", 50);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("amount", 50);
         Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
-        jsonObject.set("amount", 120);
+        jsonObject.put("amount", 120);
         result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
@@ -155,12 +154,12 @@ class FilterFieldProcessorTest {
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("name", "李四");
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("name", "李四");
         Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
-        jsonObject.set("name", "张三");
+        jsonObject.put("name", "张三");
         result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
@@ -180,12 +179,12 @@ class FilterFieldProcessorTest {
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("amount", 50L);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("amount", 50L);
         Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
-        jsonObject.set("amount", 600L);
+        jsonObject.put("amount", 600L);
         result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
@@ -205,12 +204,12 @@ class FilterFieldProcessorTest {
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("result", false);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("result", false);
         Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
-        jsonObject.set("result", true);
+        jsonObject.put("result", true);
         result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
@@ -231,13 +230,13 @@ class FilterFieldProcessorTest {
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("amount", 50);
-        jsonObject.set("age", 21);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("amount", 50);
+        jsonObject.put("age", 21);
         Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
-        jsonObject.set("amount", 120);
+        jsonObject.put("amount", 120);
         result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }
@@ -257,12 +256,12 @@ class FilterFieldProcessorTest {
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("amount", BigDecimal.valueOf(50L));
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("amount", BigDecimal.valueOf(50L));
         Boolean result = filterFieldProcessor.process(jsonObject);
         assertFalse(result);
 
-        jsonObject.set("amount", BigDecimal.valueOf(120L));
+        jsonObject.put("amount", BigDecimal.valueOf(120L));
         result = filterFieldProcessor.process(jsonObject);
         assertTrue(result);
     }

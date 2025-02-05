@@ -4,8 +4,10 @@ import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTest
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,10 +35,10 @@ class MinObjectAggregateFunctionTest {
     void getResult() {
         MinObjectAggregateFunction minObjectAggregateFunction = new MinObjectAggregateFunction();
 
-        MutableObj<Pair<MultiFieldData, JSONObject>> accumulator = new MutableObj<>();
-        JSONObject data = new JSONObject();
+        MutableObj<Pair<MultiFieldData, Map<String, Object>>> accumulator = new MutableObj<>();
+        Map<String, Object> data = new HashMap<>();
         accumulator.set(new Pair<>(null, data));
-        JSONObject result = minObjectAggregateFunction.getResult(accumulator);
+        Map<String, Object> result = minObjectAggregateFunction.getResult(accumulator);
         assertEquals(data, result);
     }
 

@@ -39,23 +39,23 @@ class DateUtilsTest {
         long timestamp = System.currentTimeMillis();
         Date date = new Date(timestamp);
         //毫秒
-        assertEquals(DateUtil.ceiling(date, DateField.MILLISECOND).getTime(), DateUtils.ceiling(timestamp, MILLISECOND));
+        assertEquals(DateUtil.ceiling(date, DateField.MILLISECOND, false).getTime(), DateUtils.ceiling(timestamp, MILLISECOND));
         assertEquals(DateUtil.truncate(date, DateField.MILLISECOND).getTime(), DateUtils.truncate(timestamp, MILLISECOND));
 
         //秒
-        assertEquals(DateUtil.ceiling(date, DateField.SECOND).getTime() + 1, DateUtils.ceiling(timestamp, SECOND));
+        assertEquals(DateUtil.ceiling(date, DateField.SECOND, false).getTime() + 1, DateUtils.ceiling(timestamp, SECOND));
         assertEquals(DateUtil.truncate(date, DateField.SECOND).getTime(), DateUtils.truncate(timestamp, SECOND));
 
         //分钟
-        assertEquals(DateUtil.ceiling(date, DateField.MINUTE).getTime() + 1, DateUtils.ceiling(timestamp, MINUTE));
+        assertEquals(DateUtil.ceiling(date, DateField.MINUTE, false).getTime() + 1, DateUtils.ceiling(timestamp, MINUTE));
         assertEquals(DateUtil.truncate(date, DateField.MINUTE).getTime(), DateUtils.truncate(timestamp, MINUTE));
 
         //小时
-        assertEquals(DateUtil.ceiling(date, DateField.HOUR_OF_DAY).getTime() + 1, DateUtils.ceiling(timestamp, HOUR_OF_DAY));
+        assertEquals(DateUtil.ceiling(date, DateField.HOUR_OF_DAY, false).getTime() + 1, DateUtils.ceiling(timestamp, HOUR_OF_DAY));
         assertEquals(DateUtil.truncate(date, DateField.HOUR_OF_DAY).getTime(), DateUtils.truncate(timestamp, HOUR_OF_DAY));
 
         //天
-        assertEquals(DateUtil.ceiling(date, DateField.DAY_OF_YEAR).getTime() + 1, DateUtils.ceiling(timestamp, DAY_OF_YEAR));
+        assertEquals(DateUtil.ceiling(date, DateField.DAY_OF_YEAR, false).getTime() + 1, DateUtils.ceiling(timestamp, DAY_OF_YEAR));
         assertEquals(DateUtil.truncate(date, DateField.DAY_OF_YEAR).getTime(), DateUtils.truncate(timestamp, DAY_OF_YEAR));
 
         //周
@@ -63,11 +63,11 @@ class DateUtilsTest {
         assertEquals(new DateTime(timestamp).weekOfWeekyear().roundFloorCopy().getMillis(), DateUtils.truncate(timestamp, WEEK_OF_YEAR));
 
         //月
-        assertEquals(DateUtil.ceiling(date, DateField.MONTH).getTime() + 1, DateUtils.ceiling(timestamp, MONTH));
+        assertEquals(DateUtil.ceiling(date, DateField.MONTH, false).getTime() + 1, DateUtils.ceiling(timestamp, MONTH));
         assertEquals(DateUtil.truncate(date, DateField.MONTH).getTime(), DateUtils.truncate(timestamp, MONTH));
 
         //年
-        assertEquals(DateUtil.ceiling(date, DateField.YEAR).getTime() + 1, DateUtils.ceiling(timestamp, YEAR));
+        assertEquals(DateUtil.ceiling(date, DateField.YEAR, false).getTime() + 1, DateUtils.ceiling(timestamp, YEAR));
         assertEquals(DateUtil.truncate(date, DateField.YEAR).getTime(), DateUtils.truncate(timestamp, YEAR));
 
     }

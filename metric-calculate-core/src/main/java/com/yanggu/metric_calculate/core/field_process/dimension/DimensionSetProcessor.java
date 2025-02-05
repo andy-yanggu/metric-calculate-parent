@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 维度字段处理器，从原始数据中提取出维度数据
@@ -20,7 +20,7 @@ import java.util.List;
 @Data
 @Slf4j
 @NoArgsConstructor
-public class DimensionSetProcessor implements FieldProcessor<JSONObject, DimensionSet> {
+public class DimensionSetProcessor implements FieldProcessor<Map<String, Object>, DimensionSet> {
 
     /**
      * 指标标识(数据明细宽表id-指标id)
@@ -52,7 +52,7 @@ public class DimensionSetProcessor implements FieldProcessor<JSONObject, Dimensi
     }
 
     @Override
-    public DimensionSet process(JSONObject input) {
+    public DimensionSet process(Map<String, Object> input) {
         LinkedHashMap<String, Object> map = new LinkedHashMap<>();
         if (CollUtil.isNotEmpty(modelDimensionColumnList)) {
             for (ModelDimensionColumn modelDimensionColumn : modelDimensionColumnList) {

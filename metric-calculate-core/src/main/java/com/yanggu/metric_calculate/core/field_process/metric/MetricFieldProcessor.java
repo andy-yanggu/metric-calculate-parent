@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.Map;
 
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
+public class MetricFieldProcessor<R> implements FieldProcessor<Map<String, Object>, R> {
 
     /**
      * 宽表字段
@@ -70,7 +69,7 @@ public class MetricFieldProcessor<R> implements FieldProcessor<JSONObject, R> {
 
     @Override
     @SneakyThrows
-    public R process(JSONObject input) {
+    public R process(Map<String, Object> input) {
         return (R) metricExpression.execute(input);
     }
 

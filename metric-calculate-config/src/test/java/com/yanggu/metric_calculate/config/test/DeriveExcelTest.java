@@ -1,12 +1,12 @@
 package com.yanggu.metric_calculate.config.test;
 
 
+import com.yanggu.metric_calculate.config.domain.dto.*;
+import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
 import com.yanggu.metric_calculate.config.enums.AccuracyEnum;
 import com.yanggu.metric_calculate.config.enums.AggregateFunctionTypeEnums;
 import com.yanggu.metric_calculate.config.enums.TimeUnitEnum;
 import com.yanggu.metric_calculate.config.enums.WindowTypeEnum;
-import com.yanggu.metric_calculate.config.domain.dto.*;
-import com.yanggu.metric_calculate.config.domain.entity.AggregateFunctionEntity;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -274,7 +274,7 @@ class DeriveExcelTest {
         if (StrUtil.isBlank(paramJsonString)) {
             return null;
         }
-        return JSONUtil.parseObj(paramJsonString);
+        return JSONUtil.parseObj(paramJsonString).toMap(String.class, Object.class);
     }
 
     private AviatorExpressParamDTO createAviatorExpressParamDto() {

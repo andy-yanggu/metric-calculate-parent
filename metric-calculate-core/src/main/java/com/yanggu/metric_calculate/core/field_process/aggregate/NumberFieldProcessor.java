@@ -12,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
+public class NumberFieldProcessor<IN> implements FieldProcessor<Map<String, Object>, IN> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -66,7 +65,7 @@ public class NumberFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
     }
 
     @Override
-    public IN process(JSONObject input) throws Exception {
+    public IN process(Map<String, Object> input) throws Exception {
         Object process;
         if (numerical.multiNumber()) {
             process = multiFieldDataFieldProcessor.process(input);

@@ -13,7 +13,6 @@ import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.util.MetricCalculateThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -63,7 +62,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> noStateCalculateThread(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> noStateCalculateThread(Map<String, Object> input) {
         //无状态计算派生指标
         return calcDerive(input, false);
     }
@@ -77,11 +76,11 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> noStateCalculateBatch(JSONObject input) throws Exception {
+    public List<DeriveMetricCalculateResult<Object>> noStateCalculateBatch(Map<String, Object> input) throws Exception {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
-        JSONObject detail = metricCalculate.getParam(input);
+        Map<String, Object> detail = metricCalculate.getParam(input);
         log.info("输入明细数据: {}, 计算后的输入明细数据: {}", JSONUtil.toJsonStr(input), JSONUtil.toJsonStr(detail));
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
@@ -120,7 +119,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> noStateCalculateAccumulateBatch(JSONObject input) {
+    public DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> noStateCalculateAccumulateBatch(Map<String, Object> input) {
         DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> deferredResult = createDeferredResult(5000L);
 
         //获取指标计算类
@@ -132,7 +131,7 @@ public class MetricCalculateService {
         }
 
         //进行字段计算
-        JSONObject detail = metricCalculate.getParam(input);
+        Map<String, Object> detail = metricCalculate.getParam(input);
         List<CompletableFuture<DeriveMetricCalculateResult>> completableFutureList = new ArrayList<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
             QueryRequest queryRequest = getQueryRequest(detail, deriveMetricCalculate);
@@ -156,7 +155,7 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> stateCalculateThread(JSONObject input) {
+    public List<DeriveMetricCalculateResult<Object>> stateCalculateThread(Map<String, Object> input) {
         //计算派生指标
         return calcDerive(input, true);
     }
@@ -166,11 +165,11 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public List<DeriveMetricCalculateResult<Object>> stateCalculateBatch(JSONObject input) throws Exception {
+    public List<DeriveMetricCalculateResult<Object>> stateCalculateBatch(Map<String, Object> input) throws Exception {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
-        JSONObject detail = metricCalculate.getParam(input);
+        Map<String, Object> detail = metricCalculate.getParam(input);
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             return Collections.emptyList();
@@ -220,13 +219,13 @@ public class MetricCalculateService {
      * @param input
      * @return
      */
-    public DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> stateCalculateAccumulateBatch(JSONObject input) {
+    public DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> stateCalculateAccumulateBatch(Map<String, Object> input) {
         DeferredResult<Result<List<DeriveMetricCalculateResult<Object>>>> deferredResult = createDeferredResult(5000L);
 
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
-        JSONObject detail = metricCalculate.getParam(input);
+        Map<String, Object> detail = metricCalculate.getParam(input);
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
             deferredResult.setResult(Result.ok(null));
@@ -275,7 +274,7 @@ public class MetricCalculateService {
         return deferredResult;
     }
 
-    private Map<DimensionSet, DeriveMetricCalculate> getDimensionSetDeriveMetricCalculateMap(List<DeriveMetricCalculate> deriveMetricCalculateList, JSONObject detail) {
+    private Map<DimensionSet, DeriveMetricCalculate> getDimensionSetDeriveMetricCalculateMap(List<DeriveMetricCalculate> deriveMetricCalculateList, Map<String, Object> detail) {
         Map<DimensionSet, DeriveMetricCalculate> map = new HashMap<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
             //提取出维度字段
@@ -320,7 +319,7 @@ public class MetricCalculateService {
                 });
     }
 
-    private QueryRequest getQueryRequest(JSONObject detail, DeriveMetricCalculate deriveMetricCalculate) {
+    private QueryRequest getQueryRequest(Map<String, Object> detail, DeriveMetricCalculate deriveMetricCalculate) {
         DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(detail);
         QueryRequest queryRequest = new QueryRequest();
         queryRequest.setDimensionSet(dimensionSet);
@@ -328,12 +327,12 @@ public class MetricCalculateService {
         return queryRequest;
     }
 
-    private List<DeriveMetricCalculateResult<Object>> calcDerive(JSONObject input,
+    private List<DeriveMetricCalculateResult<Object>> calcDerive(Map<String, Object> input,
                                                                  boolean update) {
         //获取指标计算类
         MetricCalculate metricCalculate = getMetricCalculate(input);
         //进行字段计算
-        JSONObject detail = metricCalculate.getParam(input);
+        Map<String, Object> detail = metricCalculate.getParam(input);
         log.info("输入明细数据: {}, 计算后的输入明细数据: {}, 是否更新: {}", JSONUtil.toJsonStr(input), JSONUtil.toJsonStr(detail), update);
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isEmpty(deriveMetricCalculateList)) {
@@ -368,8 +367,8 @@ public class MetricCalculateService {
         return deriveMetricsList;
     }
 
-    private MetricCalculate getMetricCalculate(JSONObject input) {
-        Long tableId = input.getLong("tableId");
+    private MetricCalculate getMetricCalculate(Map<String, Object> input) {
+        Long tableId = (Long) input.get("tableId");
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId, 原始数据: " + JSONUtil.toJsonStr(input));
         }

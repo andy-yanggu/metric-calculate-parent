@@ -6,7 +6,8 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * 有序对象列表
@@ -16,10 +17,10 @@ import org.dromara.hutool.json.JSONObject;
 @Collective(keyStrategy = 2, retainStrategy = 2)
 @AggregateFunctionAnnotation(name = "SORTEDLIMITLISTOBJECT", displayName = "有序对象列表")
 public class SortedListObjectAggregateFunction extends
-        AbstractMultiFieldSortedListAggregateFunction<JSONObject, JSONObject> {
+        AbstractMultiFieldSortedListAggregateFunction<Map<String, Object>, Map<String, Object>> {
 
     @Override
-    public JSONObject inToOut(Pair<MultiFieldData, JSONObject> pair) {
+    public Map<String, Object> inToOut(Pair<MultiFieldData, Map<String, Object>> pair) {
         return pair.getRight();
     }
 

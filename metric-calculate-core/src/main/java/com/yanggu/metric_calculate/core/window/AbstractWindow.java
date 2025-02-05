@@ -3,7 +3,8 @@ package com.yanggu.metric_calculate.core.window;
 import com.yanggu.metric_calculate.core.field_process.aggregate.AggregateFieldProcessor;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
-import org.dromara.hutool.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * 对无界的数据进行切分, 变成有界
@@ -37,7 +38,7 @@ public abstract class AbstractWindow<IN, ACC, OUT> implements Window<OUT> {
      * @param input
      * @return
      */
-    public IN getInFromInput(JSONObject input) {
+    public IN getInFromInput(Map<String, Object> input) {
         return aggregateFieldProcessor.process(input);
     }
 
@@ -55,7 +56,7 @@ public abstract class AbstractWindow<IN, ACC, OUT> implements Window<OUT> {
      * @return
      */
     @Override
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> query(Map<String, Object> input) {
         return query();
     }
 

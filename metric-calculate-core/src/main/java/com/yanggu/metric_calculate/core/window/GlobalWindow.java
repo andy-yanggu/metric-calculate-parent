@@ -5,7 +5,8 @@ import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.json.JSONObject;
+
+import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.GLOBAL_WINDOW;
 
@@ -24,7 +25,7 @@ public class GlobalWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     private ACC accumulator;
 
     @Override
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         accumulator = aggregateFieldProcessor.add(accumulator, getInFromInput(input));
     }
 

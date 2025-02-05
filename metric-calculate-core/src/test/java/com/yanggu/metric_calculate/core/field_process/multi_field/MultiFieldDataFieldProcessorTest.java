@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.field_process.multi_field;
 
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -34,9 +33,9 @@ class MultiFieldDataFieldProcessorTest {
         aviatorExpressParam.setExpress("name");
         MultiFieldDataFieldProcessor multiFieldDataFieldProcessor = getDistinctFieldFieldProcessor(fieldMap, List.of(aviatorExpressParam));
 
-        JSONObject input = new JSONObject();
-        input.set("name", "张三");
-        input.set("age", 20);
+        Map<String, Object> input = new HashMap<>();
+        input.put("name", "张三");
+        input.put("age", 20);
         MultiFieldData process = multiFieldDataFieldProcessor.process(input);
         assertNotNull(process);
         assertEquals(List.of("张三"), process.getFieldList());

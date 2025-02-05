@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.lang.mutable.MutableObj;
-import org.dromara.hutool.json.JSONObject;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -86,7 +86,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> noStateExec(Map<String, Object> input) {
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
@@ -106,7 +106,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public DeriveMetricCalculateResult<OUT> noStateExec(JSONObject input,
+    public DeriveMetricCalculateResult<OUT> noStateExec(Map<String, Object> input,
                                                         MetricCube<IN, ACC, OUT> historyMetricCube,
                                                         DimensionSet dimensionSet) {
         //包含当前笔且前置过滤条件为true
@@ -127,7 +127,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public DeriveMetricCalculateResult<OUT> stateExec(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> stateExec(Map<String, Object> input) {
         //提取出维度字段
         DimensionSet dimensionSet = dimensionSetProcessor.process(input);
 
@@ -163,7 +163,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @return
      */
     @SneakyThrows
-    public void stateExec(JSONObject input,
+    public void stateExec(Map<String, Object> input,
                           MetricCube<IN, ACC, OUT> historyMetricCube,
                           DimensionSet dimensionSet,
                           Consumer<MetricCube<IN, ACC, OUT>> filterFalseConsumer,
@@ -205,7 +205,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @param input
      * @return
      */
-    public DeriveMetricCalculateResult<OUT> query(MetricCube<IN, ACC, OUT> metricCube, JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> query(MetricCube<IN, ACC, OUT> metricCube, Map<String, Object> input) {
         if (metricCube == null) {
             return null;
         }
@@ -221,7 +221,7 @@ public class DeriveMetricCalculate<IN, ACC, OUT> {
      * @param dimensionSet
      * @return
      */
-    public MetricCube<IN, ACC, OUT> addInput(JSONObject input,
+    public MetricCube<IN, ACC, OUT> addInput(Map<String, Object> input,
                                              MetricCube<IN, ACC, OUT> historyMetricCube,
                                              DimensionSet dimensionSet) {
         if (historyMetricCube == null) {

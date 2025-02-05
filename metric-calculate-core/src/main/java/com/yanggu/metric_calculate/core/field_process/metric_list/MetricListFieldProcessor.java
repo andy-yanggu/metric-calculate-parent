@@ -10,7 +10,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +19,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List<Object>> {
+public class MetricListFieldProcessor implements FieldProcessor<Map<String, Object>, List<Object>> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -60,7 +59,7 @@ public class MetricListFieldProcessor implements FieldProcessor<JSONObject, List
 
     @SneakyThrows
     @Override
-    public List<Object> process(JSONObject input) {
+    public List<Object> process(Map<String, Object> input) {
         return this.metricFieldProcessorList.stream()
                 .map(tempFieldProcessor -> tempFieldProcessor.process(input))
                 .toList();

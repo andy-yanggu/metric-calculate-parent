@@ -49,7 +49,7 @@ public class MetricDataService {
 
     public List<DeriveMetricCalculateResult<Object>> queryDeriveCurrentData(Long tableId,
                                                                             List<Long> deriveIdList,
-                                                                            JSONObject input) throws Exception {
+                                                                            Map<String, Object> input) throws Exception {
 
         //获宽表下的派生指标
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricConfigDataService.getDeriveMetricCalculateList(tableId, deriveIdList);
@@ -83,14 +83,14 @@ public class MetricDataService {
         return list;
     }
 
-    public void fillDeriveDataById(Long tableId, Long deriveId, List<JSONObject> dataList) throws Exception {
+    public void fillDeriveDataById(Long tableId, Long deriveId, List<Map<String, Object>> dataList) throws Exception {
         fullFillDeriveDataByDeriveIdList(dataList, tableId, Collections.singletonList(deriveId));
     }
 
     /**
      * 全量铺底接口, 计算宽表下的所有派生指标
      */
-    public void fullFillDeriveData(List<JSONObject> dataList, Long tableId) throws Exception {
+    public void fullFillDeriveData(List<Map<String, Object>> dataList, Long tableId) throws Exception {
         List<Long> allDeriveIdList = metricConfigDataService.getAllDeriveIdList(tableId);
         fullFillDeriveDataByDeriveIdList(dataList, tableId, allDeriveIdList);
     }
@@ -98,7 +98,7 @@ public class MetricDataService {
     /**
      * 计算宽表下的指定派生指标
      */
-    public void fullFillDeriveDataByDeriveIdList(List<JSONObject> dataList, Long tableId, List<Long> deriveIdList) throws Exception {
+    public void fullFillDeriveDataByDeriveIdList(List<Map<String, Object>> dataList, Long tableId, List<Long> deriveIdList) throws Exception {
         MetricCalculate metricCalculate = metricConfigDataService.getMetricCalculate(tableId);
 
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateListById(deriveIdList);
@@ -109,9 +109,9 @@ public class MetricDataService {
         Set<DimensionSet> dimensionSets = new HashSet<>();
         List<Tuple> tupleList = new ArrayList<>();
         for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
-            for (JSONObject input : dataList) {
+            for (Map<String, Object> input : dataList) {
                 //进行字段计算
-                JSONObject detail = metricCalculate.getParam(input);
+                Map<String, Object> detail = metricCalculate.getParam(input);
                 Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(detail);
                 if (Boolean.TRUE.equals(filter)) {
                     DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(detail);

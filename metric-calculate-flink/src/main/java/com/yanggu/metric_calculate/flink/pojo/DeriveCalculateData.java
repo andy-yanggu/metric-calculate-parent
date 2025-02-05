@@ -3,7 +3,8 @@ package com.yanggu.metric_calculate.flink.pojo;
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import lombok.Data;
-import org.dromara.hutool.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * 派生指标计算数据
@@ -24,7 +25,7 @@ public class DeriveCalculateData<IN, ACC, OUT> {
     /**
      * 明细数据
      */
-    private JSONObject data;
+    private Map<String, Object> data;
 
     /**
      * 指标数据

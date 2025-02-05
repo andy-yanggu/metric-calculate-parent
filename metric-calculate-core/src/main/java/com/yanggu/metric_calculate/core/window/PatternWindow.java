@@ -11,7 +11,6 @@ import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.*;
 
@@ -59,7 +58,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         Long tempTimestamp = timeFieldProcessor.process(input);
         filterFieldProcessorMap.forEach((nodePattern, filterProcessor) -> {
             Boolean process = filterProcessor.process(input);
@@ -77,7 +76,7 @@ public class PatternWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> query(Map<String, Object> input) {
         Long process = timeFieldProcessor.process(input);
         return query(process);
     }

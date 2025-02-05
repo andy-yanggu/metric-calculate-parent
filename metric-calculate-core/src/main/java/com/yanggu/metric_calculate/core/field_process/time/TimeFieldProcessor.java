@@ -4,8 +4,9 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.util.DateUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
+
+import java.util.Map;
 
 
 /**
@@ -15,7 +16,7 @@ import org.dromara.hutool.json.JSONUtil;
  * @param timeColumnName 时间字段名称
  */
 @Slf4j
-public record TimeFieldProcessor(String timeFormat, String timeColumnName) implements FieldProcessor<JSONObject, Long> {
+public record TimeFieldProcessor(String timeFormat, String timeColumnName) implements FieldProcessor<Map<String, Object>, Long> {
 
     private static final String TIMESTAMP = "TIMESTAMP";
 
@@ -30,18 +31,14 @@ public record TimeFieldProcessor(String timeFormat, String timeColumnName) imple
     }
 
     @Override
-    public Long process(JSONObject input) {
+    public Long process(Map<String, Object> input) {
         Object data = input.get(timeColumnName);
         if (data == null) {
             throw new RuntimeException(StrUtil.format("时间字段没有值, "
                     + "时间字段名: {}, 原始数据: {}", timeColumnName, JSONUtil.toJsonStr(input)));
         }
         if (StrUtil.equals(timeFormat.toUpperCase(), TIMESTAMP)) {
-            if (data instanceof Long) {
-                return (Long) data;
-            } else {
-                return Long.parseLong(data.toString());
-            }
+            return Long.parseLong(data.toString());
         } else {
             return DateUtils.parse(data.toString(), timeFormat);
         }

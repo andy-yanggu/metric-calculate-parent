@@ -4,10 +4,10 @@ import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SLIDING_COUNT_WINDOW;
 
@@ -28,7 +28,7 @@ public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OU
     private List<IN> inList = new ArrayList<>();
 
     @Override
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         IN in = aggregateFieldProcessor.process(input);
         inList.add(in);
         while (inList.size() > limit) {

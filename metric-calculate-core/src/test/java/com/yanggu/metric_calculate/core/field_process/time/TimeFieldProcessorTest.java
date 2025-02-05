@@ -1,8 +1,10 @@
 package com.yanggu.metric_calculate.core.field_process.time;
 
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -52,9 +54,9 @@ class TimeFieldProcessorTest {
     void process1() {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timestamp", "tran_timestamp");
 
-        JSONObject jsonObject = new JSONObject();
+        Map<String, Object> jsonObject = new HashMap<>();
         long currentTimeMillis = System.currentTimeMillis();
-        jsonObject.set("tran_timestamp", currentTimeMillis);
+        jsonObject.put("tran_timestamp", currentTimeMillis);
 
         Long process = timeFieldProcessor.process(jsonObject);
         assertEquals(currentTimeMillis, process.longValue());
@@ -69,8 +71,8 @@ class TimeFieldProcessorTest {
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("yyyyMMdd", "tran_date");
 
         String date = "20221124";
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("tran_date", date);
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("tran_date", date);
 
         Long process = timeFieldProcessor.process(jsonObject);
         assertEquals(DateUtil.parse(date).getTime(), process.longValue());

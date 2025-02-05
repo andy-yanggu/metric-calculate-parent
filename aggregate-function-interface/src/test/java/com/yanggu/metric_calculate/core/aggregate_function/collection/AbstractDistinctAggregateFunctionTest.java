@@ -20,7 +20,7 @@ class AbstractDistinctAggregateFunctionTest {
 
     @BeforeEach
     void init() {
-        distinctAggregateFunction = new TestDistinctAggregateFunction<Integer>();
+        distinctAggregateFunction = new TestDistinctAggregateFunction<>();
     }
 
     /**
@@ -63,9 +63,9 @@ class AbstractDistinctAggregateFunctionTest {
         //确认结果列表中包含已添加的元素
         assertTrue(result.contains(1));
         assertEquals(1, result.size());
-        assertEquals(1, result.get(0));
+        assertEquals(1, result.getFirst());
         //确认结果列表是ArrayList类型
-        assertTrue(result instanceof ArrayList);
+        assertInstanceOf(ArrayList.class, result);
     }
 
     /**

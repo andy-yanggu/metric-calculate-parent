@@ -5,7 +5,6 @@ import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcesso
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import org.dromara.hutool.core.date.DateUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -75,9 +74,9 @@ class VirtualFieldCalculateTest {
 
         virtualFieldCalculate.init();
 
-        JSONObject input = new JSONObject();
+        Map<String, Object> input = new HashMap<>();
         long currentTimeMillis = System.currentTimeMillis();
-        input.set("tran_timestamp", currentTimeMillis);
+        input.put("tran_timestamp", currentTimeMillis);
         String process = virtualFieldCalculate.process(input);
         assertEquals(DateUtil.format(new Date(currentTimeMillis), "yyyy-MM-dd"), process);
     }

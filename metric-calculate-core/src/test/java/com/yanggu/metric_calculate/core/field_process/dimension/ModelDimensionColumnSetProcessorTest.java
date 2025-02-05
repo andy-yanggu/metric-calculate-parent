@@ -1,12 +1,9 @@
 package com.yanggu.metric_calculate.core.field_process.dimension;
 
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelDimensionColumn;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -63,8 +60,8 @@ class ModelDimensionColumnSetProcessorTest {
         dimensionSetProcessor.setModelDimensionColumnList(Collections.singletonList(modelDimensionColumn));
         dimensionSetProcessor.init();
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("name", "张三");
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("name", "张三");
 
         DimensionSet process = dimensionSetProcessor.process(jsonObject);
 

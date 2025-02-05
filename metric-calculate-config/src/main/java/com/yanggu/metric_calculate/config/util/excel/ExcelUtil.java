@@ -13,7 +13,7 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.poi.xssf.usermodel.extensions.XSSFCellBorder;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.convert.Convert;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.CollectionUtils;
@@ -88,7 +88,7 @@ public class ExcelUtil {
                     formTitle.add(field.getAnnotation(ExcelExport.class).name());
                     ExcelExport annotation = field.getAnnotation(ExcelExport.class);
                     if (StringUtils.isNotEmpty(annotation.readConverterExp())) {
-                        String value = reverseByExp(Convert.toStr(field.get(t)), annotation.readConverterExp(), annotation.separator());
+                        String value = reverseByExp(ConvertUtil.toStr(field.get(t)), annotation.readConverterExp(), annotation.separator());
                         formData.add(value);
                     } else {
                         formData.add(field.get(t));
@@ -167,7 +167,7 @@ public class ExcelUtil {
                             if (field1.isAnnotationPresent(ExcelExport.class)) {
                                 ExcelExport annotation = field1.getAnnotation(ExcelExport.class);
                                 if (StringUtils.isNotEmpty(annotation.readConverterExp())) {
-                                    String value = reverseByExp(Convert.toStr(field1.get(baseEntity1)), annotation.readConverterExp(), annotation.separator());
+                                    String value = reverseByExp(ConvertUtil.toStr(field1.get(baseEntity1)), annotation.readConverterExp(), annotation.separator());
                                     data.add(value);
                                 } else {
                                     data.add(field1.get(baseEntity1));

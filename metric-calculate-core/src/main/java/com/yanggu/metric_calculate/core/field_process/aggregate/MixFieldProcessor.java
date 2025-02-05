@@ -12,7 +12,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
+public class MixFieldProcessor<IN> implements FieldProcessor<Map<String, Object>, IN> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -35,7 +34,7 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
 
     private final AggregateFunctionFactory aggregateFunctionFactory;
 
-    private Map<String, FieldProcessor<JSONObject, Object>> multiBaseAggProcessorMap;
+    private Map<String, FieldProcessor<Map<String, Object>, Object>> multiBaseAggProcessorMap;
 
     public MixFieldProcessor(Map<String, Class<?>> fieldMap, MixUdafParam mixUdafParam, AviatorFunctionFactory aviatorFunctionFactory, AggregateFunctionFactory aggregateFunctionFactory) {
         this.fieldMap = fieldMap;
@@ -66,9 +65,9 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
             throw new RuntimeException("Aviator函数工厂类为空");
         }
 
-        Map<String, FieldProcessor<JSONObject, Object>> map = new HashMap<>();
+        Map<String, FieldProcessor<Map<String, Object>, Object>> map = new HashMap<>();
         for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
-            FieldProcessor<JSONObject, Object> metricFieldProcessor = null;
+            FieldProcessor<Map<String, Object>, Object> metricFieldProcessor = null;
             BaseUdafParam baseUdafParam = mixUdafParamItem.getBaseUdafParam();
             if (baseUdafParam != null) {
                 metricFieldProcessor = FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
@@ -87,11 +86,11 @@ public class MixFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
     }
 
     @Override
-    public IN process(JSONObject input) throws Exception {
+    public IN process(Map<String, Object> input) throws Exception {
         Map<String, Object> dataMap = new HashMap<>();
-        for (Map.Entry<String, FieldProcessor<JSONObject, Object>> entry : multiBaseAggProcessorMap.entrySet()) {
+        for (Map.Entry<String, FieldProcessor<Map<String, Object>, Object>> entry : multiBaseAggProcessorMap.entrySet()) {
             String paramName = entry.getKey();
-            FieldProcessor<JSONObject, Object> metricFieldProcessor = entry.getValue();
+            FieldProcessor<Map<String, Object>, Object> metricFieldProcessor = entry.getValue();
             Object process = metricFieldProcessor.process(input);
             dataMap.put(paramName, process);
         }

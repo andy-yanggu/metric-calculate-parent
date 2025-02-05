@@ -29,7 +29,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.util.ArrayList;
@@ -103,7 +102,7 @@ public class MetricUtil {
         if (CollUtil.isEmpty(modelColumnList)) {
             throw new RuntimeException("宽表字段为空");
         }
-        List<FieldCalculate<JSONObject, Object>> fieldCalculateList = new ArrayList<>();
+        List<FieldCalculate<Map<String, Object>, Object>> fieldCalculateList = new ArrayList<>();
         for (ModelColumn modelColumn : modelColumnList) {
             FieldTypeEnum fieldType = modelColumn.getFieldType();
             //真实字段

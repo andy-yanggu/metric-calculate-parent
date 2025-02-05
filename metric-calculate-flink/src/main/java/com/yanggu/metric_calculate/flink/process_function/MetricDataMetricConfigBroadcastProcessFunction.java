@@ -62,21 +62,21 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
         }
 
         //执行字段计算
-        input = metricCalculate.getParam(input);
+        Map<String, Object> data = metricCalculate.getParam(input.toMap(String.class, Object.class));
 
         //派生指标
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
             for (DeriveMetricCalculate deriveMetricCalculate : deriveMetricCalculateList) {
                 //执行前置过滤条件
-                Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(input);
+                Boolean filter = deriveMetricCalculate.getFilterFieldProcessor().process(data);
                 if (Boolean.FALSE.equals(filter)) {
                     continue;
                 }
                 DeriveCalculateData deriveCalculateData = new DeriveCalculateData<>();
-                deriveCalculateData.setData(input.clone());
+                deriveCalculateData.setData(data);
                 deriveCalculateData.setDeriveId(deriveMetricCalculate.getId());
-                DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(input);
+                DimensionSet dimensionSet = deriveMetricCalculate.getDimensionSetProcessor().process(data);
                 deriveCalculateData.setDimensionSet(dimensionSet);
 
                 readOnlyContext.output(new OutputTag<>(DERIVE, TypeInformation.of(DeriveCalculateData.class)), deriveCalculateData);

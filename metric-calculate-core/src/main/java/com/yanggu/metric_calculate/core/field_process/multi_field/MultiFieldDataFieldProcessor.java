@@ -9,7 +9,6 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class MultiFieldDataFieldProcessor implements FieldProcessor<JSONObject, MultiFieldData> {
+public class MultiFieldDataFieldProcessor implements FieldProcessor<Map<String, Object>, MultiFieldData> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -57,7 +56,7 @@ public class MultiFieldDataFieldProcessor implements FieldProcessor<JSONObject, 
     }
 
     @Override
-    public MultiFieldData process(JSONObject input) throws Exception {
+    public MultiFieldData process(Map<String, Object> input) throws Exception {
         List<Object> collect = metricFieldProcessorList.stream()
                 .map(tempMetricExpress -> tempMetricExpress.process(input))
                 .toList();

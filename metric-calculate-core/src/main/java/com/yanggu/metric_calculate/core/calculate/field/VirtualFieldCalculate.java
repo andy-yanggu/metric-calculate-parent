@@ -5,7 +5,6 @@ import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcesso
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import lombok.Data;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.Map;
 
@@ -16,7 +15,7 @@ import java.util.Map;
  * <p>可以实现简单的字段补全逻辑</p>
  */
 @Data
-public class VirtualFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
+public class VirtualFieldCalculate<R> implements FieldCalculate<Map<String, Object>, R> {
 
     private String columnName;
 
@@ -39,7 +38,7 @@ public class VirtualFieldCalculate<R> implements FieldCalculate<JSONObject, R> {
     }
 
     @Override
-    public R process(JSONObject input) {
+    public R process(Map<String, Object> input) {
         return metricFieldProcessor.process(input);
     }
 

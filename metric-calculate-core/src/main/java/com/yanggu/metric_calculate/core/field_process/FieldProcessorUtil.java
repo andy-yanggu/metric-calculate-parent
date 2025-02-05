@@ -21,7 +21,6 @@ import com.yanggu.metric_calculate.core.pojo.data_detail_table.ModelTimeColumn;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.*;
 import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.SneakyThrows;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.*;
 
@@ -237,7 +236,7 @@ public class FieldProcessorUtil {
      * @return
      */
     @SneakyThrows
-    public static <IN> FieldProcessor<JSONObject, IN> getBaseAggregateFieldProcessor(
+    public static <IN> FieldProcessor<Map<String, Object>, IN> getBaseAggregateFieldProcessor(
                                                                 Map<String, Class<?>> fieldMap,
                                                                 BaseUdafParam baseUdafParam,
                                                                 AviatorFunctionFactory aviatorFunctionFactory,
@@ -292,7 +291,7 @@ public class FieldProcessorUtil {
                 || aggregateFunctionClass.isAnnotationPresent(Collective.class)
                 || aggregateFunctionClass.isAnnotationPresent(Objective.class)) {
             BaseUdafParam baseUdafParam = aggregateFunctionParam.getBaseUdafParam();
-            FieldProcessor<JSONObject, IN> baseFieldProcessor =
+            FieldProcessor<Map<String, Object>, IN> baseFieldProcessor =
                     getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, aviatorFunctionFactory, aggregateFunctionFactory);
             AggregateFunctionFactory.initAggregateFunction(aggregateFunction, baseUdafParam.getParam());
             return new AggregateFieldProcessor<>(baseFieldProcessor, aggregateFunction);

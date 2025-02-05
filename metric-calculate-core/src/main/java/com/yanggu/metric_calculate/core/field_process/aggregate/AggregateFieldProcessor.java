@@ -5,9 +5,9 @@ import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 聚合字段处理器
@@ -19,7 +19,7 @@ import java.util.List;
  * @param fieldProcessor    从输入的明细数据中提取出度量值
  * @param aggregateFunction 聚合函数
  */
-public record AggregateFieldProcessor<IN, ACC, OUT>(FieldProcessor<JSONObject, IN> fieldProcessor,
+public record AggregateFieldProcessor<IN, ACC, OUT>(FieldProcessor<Map<String, Object>, IN> fieldProcessor,
                                                     AggregateFunction<IN, ACC, OUT> aggregateFunction) {
 
     /**
@@ -29,7 +29,7 @@ public record AggregateFieldProcessor<IN, ACC, OUT>(FieldProcessor<JSONObject, I
      * @return 度量值
      */
     @SneakyThrows
-    public IN process(JSONObject input) {
+    public IN process(Map<String, Object> input) {
         return fieldProcessor.process(input);
     }
 

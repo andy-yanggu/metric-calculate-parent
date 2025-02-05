@@ -2,7 +2,6 @@ package com.yanggu.metric_calculate.core.field_process.metric_list;
 
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import org.dromara.hutool.core.collection.ListUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -52,9 +51,9 @@ class MetricListFieldProcessorTest {
         aviatorExpressParam2.setExpress("test2");
         MetricListFieldProcessor metricListFieldProcessor = getMetricListFieldProcessor(fieldMap, ListUtil.of(aviatorExpressParam1, aviatorExpressParam2));
 
-        JSONObject input = new JSONObject();
-        input.set("test1", "aaa");
-        input.set("test2", "bbb");
+        Map<String, Object> input = new HashMap<>();
+        input.put("test1", "aaa");
+        input.put("test2", "bbb");
 
         List<Object> process = metricListFieldProcessor.process(input);
         assertEquals(2, process.size());

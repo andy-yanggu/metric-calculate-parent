@@ -9,7 +9,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +18,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean> {
+public class FilterFieldProcessor implements FieldProcessor<Map<String, Object>, Boolean> {
 
     /**
      * 宽表字段
@@ -78,7 +77,7 @@ public class FilterFieldProcessor implements FieldProcessor<JSONObject, Boolean>
     }
 
     @Override
-    public Boolean process(JSONObject input) {
+    public Boolean process(Map<String, Object> input) {
         //如果表达式为空, 直接return true
         if (filterExpressParam == null || StrUtil.isBlank(filterExpressParam.getExpress())) {
             return true;

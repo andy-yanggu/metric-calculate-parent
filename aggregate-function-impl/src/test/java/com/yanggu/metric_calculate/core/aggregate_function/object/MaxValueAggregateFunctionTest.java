@@ -32,6 +32,7 @@ class MaxValueAggregateFunctionTest {
     @Test
     void getResult() {
         var maxValueAggregateFunction = new MaxValueAggregateFunction();
+        maxValueAggregateFunction.setCompareParamLength(1);
         var accumulator = maxValueAggregateFunction.createAccumulator();
         accumulator.set(new Pair<>(new MultiFieldData(List.of(1)), null));
         var result = maxValueAggregateFunction.getResult(accumulator);

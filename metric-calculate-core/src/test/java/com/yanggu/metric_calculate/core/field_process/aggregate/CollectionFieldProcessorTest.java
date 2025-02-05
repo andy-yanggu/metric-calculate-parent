@@ -5,7 +5,6 @@ import com.yanggu.metric_calculate.core.field_process.UdafParamTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,15 +40,15 @@ class CollectionFieldProcessorTest {
     @Test
     void process1() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("LISTFIELD", "name");
-        FieldProcessor<JSONObject, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("name", "张三");
+        Map<String, Object> input = new HashMap<>();
+        input.put("name", "张三");
         String process = baseFieldProcessor.process(input);
         assertEquals("张三", process);
 
-        input.set("name", "张三2");
+        input.put("name", "张三2");
         process = baseFieldProcessor.process(input);
         assertEquals("张三2", process);
     }
@@ -60,18 +59,18 @@ class CollectionFieldProcessorTest {
     @Test
     void process2() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("LISTOBJECT", null);
-        FieldProcessor<JSONObject, JSONObject> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Map<String, Object>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
-        JSONObject process = baseFieldProcessor.process(input);
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
+        Map<String, Object> process = baseFieldProcessor.process(input);
         assertEquals(input, process);
 
-        JSONObject input2 = new JSONObject();
-        input2.set("amount", 200);
-        input2.set("name", "张三2");
+        Map<String, Object> input2 = new HashMap<>();
+        input2.put("amount", 200);
+        input2.put("name", "张三2");
         process = baseFieldProcessor.process(input2);
         assertEquals(input2, process);
     }
@@ -82,13 +81,13 @@ class CollectionFieldProcessorTest {
     @Test
     void process3() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SORTEDLIMITLISTOBJECT", null, "amount");
-        FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
-        Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
+        Pair<MultiFieldData, Map<String, Object>> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
         assertEquals(input, process.getRight());
     }
@@ -99,12 +98,12 @@ class CollectionFieldProcessorTest {
     @Test
     void process4() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SORTEDLIMITLISTFIELD", "name", "amount");
-        FieldProcessor<JSONObject, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
         Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
         assertEquals("张三", process.getRight());
@@ -116,12 +115,12 @@ class CollectionFieldProcessorTest {
     @Test
     void process5() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SORTEDLIMITLIST", null, "amount");
-        FieldProcessor<JSONObject, Pair<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
         Pair<MultiFieldData, Void> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
     }
@@ -132,14 +131,14 @@ class CollectionFieldProcessorTest {
     @Test
     void process6() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTLISTOBJECT", null, "amount");
-        FieldProcessor<JSONObject, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
-        Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getLeft().getFieldList().get(0));
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
+        Pair<MultiFieldData, Map<String, Object>> process = baseFieldProcessor.process(input);
+        assertEquals(100, process.getLeft().getFieldList().getFirst());
         assertEquals(input, process.getRight());
     }
 
@@ -149,14 +148,14 @@ class CollectionFieldProcessorTest {
     @Test
     void process7() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTLISTFIELD", "name", "amount");
-        FieldProcessor<JSONObject, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
         Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getLeft().getFieldList().get(0));
+        assertEquals(100, process.getLeft().getFieldList().getFirst());
         assertEquals("张三", process.getRight());
     }
 
@@ -166,14 +165,14 @@ class CollectionFieldProcessorTest {
     @Test
     void process8() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTLIST", null, "amount");
-        FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
         MultiFieldData process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getFieldList().get(0));
+        assertEquals(100, process.getFieldList().getFirst());
     }
 
     /**
@@ -182,14 +181,14 @@ class CollectionFieldProcessorTest {
     @Test
     void process9() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("DISTINCTCOUNT", null, "amount");
-        FieldProcessor<JSONObject, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100);
-        input.set("name", "张三");
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100);
+        input.put("name", "张三");
         MultiFieldData process = baseFieldProcessor.process(input);
-        assertEquals(100, process.getFieldList().get(0));
+        assertEquals(100, process.getFieldList().getFirst());
     }
 
     /**
@@ -198,15 +197,15 @@ class CollectionFieldProcessorTest {
     @Test
     void process10() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SLIDINGCOUNTWINDOW", "amount");
-        FieldProcessor<JSONObject, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        FieldProcessor<Map<String, Object>, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
         //构造原始数据
-        JSONObject input = new JSONObject();
-        input.set("amount", 100.0D);
+        Map<String, Object> input = new HashMap<>();
+        input.put("amount", 100.0D);
         Double process = baseFieldProcessor.process(input);
         assertEquals(100.0D, process, 0.0D);
 
-        input.set("amount", 200.0D);
+        input.put("amount", 200.0D);
         process = baseFieldProcessor.process(input);
         assertEquals(200.0D, process, 0.0D);
     }

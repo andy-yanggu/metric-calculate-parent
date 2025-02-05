@@ -8,9 +8,9 @@ import com.yanggu.metric_calculate.core.pojo.window.TimeWindowData;
 import com.yanggu.metric_calculate.core.util.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 时间窗口
@@ -31,7 +31,7 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
     protected Long timestamp;
 
     @Override
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         Long tempTimestamp = timeFieldProcessor.process(input);
         put(tempTimestamp, getInFromInput(input));
     }
@@ -44,7 +44,7 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
     }
 
     @Override
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> query(Map<String, Object> input) {
         Long process = timeFieldProcessor.process(input);
         return query(process);
     }
@@ -60,7 +60,7 @@ public abstract class TimeWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, O
 
     public DeriveMetricCalculateResult<OUT> query(Long timestamp) {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         long windowStart = timeWindowData.windowStart();
         long windowEnd = timeWindowData.windowEnd();
         OUT query = query(windowStart, windowEnd);

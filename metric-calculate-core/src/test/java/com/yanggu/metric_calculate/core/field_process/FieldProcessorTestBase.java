@@ -15,7 +15,6 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.AggregateFunctionParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class FieldProcessorTestBase {
         return FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, distinctFieldListParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
-    public static <T> FieldProcessor<JSONObject, T> getBaseAggregateFieldProcessor(Map<String, Class<?>> fieldMap,
+    public static <T> FieldProcessor<Map<String, Object>, T> getBaseAggregateFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                                    BaseUdafParam baseUdafParam) {
         return FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, baseUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
     }

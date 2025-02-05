@@ -7,8 +7,10 @@ import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
 import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 火焰图测试代码
@@ -23,11 +25,11 @@ public class JmhTest3 {
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
 
-        JSONObject tempInput = new JSONObject();
-        tempInput.set("account_no_out", "000000000011");
-        tempInput.set("account_no_in", "000000000012");
-        tempInput.set("amount", "800");
-        tempInput.set("trans_timestamp", "1679887968782");
+        Map<String, Object> tempInput = new HashMap<>();
+        tempInput.put("account_no_out", "000000000011");
+        tempInput.put("account_no_in", "000000000012");
+        tempInput.put("amount", "800");
+        tempInput.put("trans_timestamp", "1679887968782");
 
         tempInput = metricCalculate.getParam(tempInput);
 

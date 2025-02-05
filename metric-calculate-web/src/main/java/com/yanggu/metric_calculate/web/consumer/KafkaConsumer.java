@@ -37,7 +37,9 @@ public class KafkaConsumer {
                 .collect(Collectors.groupingBy(temp -> temp.getLong("tableId")));
         for (Map.Entry<Long, List<JSONObject>> entry : collect.entrySet()) {
             Long tempTableId = entry.getKey();
-            List<JSONObject> tempList = entry.getValue();
+            List<Map<String, Object>> tempList = entry.getValue().stream()
+                    .map(temp -> temp.toMap(String.class, Object.class))
+                    .toList();
             metricDataService.fullFillDeriveData(tempList, tempTableId);
         }
     }

@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.field_process.metric;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -108,8 +107,8 @@ class MetricFieldProcessorTest {
         fieldMap.put("amount", BigDecimal.class);
         MetricFieldProcessor<Object> objectMetricFieldProcessor = getMetricFieldProcessor(fieldMap, aviatorExpressParam);
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.set("amount", BigDecimal.valueOf(100L));
+        Map<String, Object> jsonObject = new HashMap<>();
+        jsonObject.put("amount", BigDecimal.valueOf(100L));
         Object process = objectMetricFieldProcessor.process(jsonObject);
 
         assertEquals(BigDecimal.valueOf(100L), process);

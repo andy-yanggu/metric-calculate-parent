@@ -2,8 +2,10 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -31,7 +33,7 @@ class MaxObjectAggregateFunctionTest {
     void getResult() {
         var maxObjectAggregateFunction = new MaxObjectAggregateFunction();
         var accumulator = maxObjectAggregateFunction.createAccumulator();
-        JSONObject data = new JSONObject();
+        Map<String, Object> data = new HashMap<>();
         accumulator.set(new Pair<>(null, data));
         var result = maxObjectAggregateFunction.getResult(accumulator);
         assertEquals(data, result);

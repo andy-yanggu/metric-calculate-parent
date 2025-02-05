@@ -14,7 +14,6 @@ import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.map.MapUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ import java.util.Map;
  */
 @Getter
 @EqualsAndHashCode
-public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> {
+public class ObjectFieldProcessor<IN> implements FieldProcessor<Map<String, Object>, IN> {
 
     private final Map<String, Class<?>> fieldMap;
 
@@ -88,7 +87,7 @@ public class ObjectFieldProcessor<IN> implements FieldProcessor<JSONObject, IN> 
 
     @Override
     @SneakyThrows
-    public IN process(JSONObject input) {
+    public IN process(Map<String, Object> input) {
         Object result;
 
         int retainStrategy = objective.retainStrategy();

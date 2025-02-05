@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
-import static org.dromara.hutool.core.date.DatePattern.NORM_DATETIME_MS_PATTERN;
+import static org.dromara.hutool.core.date.DateFormatPool.NORM_DATETIME_MS_PATTERN;
 
 
 @Slf4j

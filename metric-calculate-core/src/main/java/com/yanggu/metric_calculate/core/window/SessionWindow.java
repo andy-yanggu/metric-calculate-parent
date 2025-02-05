@@ -6,10 +6,10 @@ import com.yanggu.metric_calculate.core.util.DateUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.SESSION_WINDOW;
 
@@ -51,7 +51,7 @@ public class SessionWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     private List<IN> inList = new ArrayList<>();
 
     @Override
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         Long tempTimestamp = timeFieldProcessor.process(input);
 
         //如果时间差超过间隔时间则生成一个新的会话窗口
@@ -70,7 +70,7 @@ public class SessionWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OUT> {
     }
 
     @Override
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> query(Map<String, Object> input) {
         Long tempTimestamp = timeFieldProcessor.process(input);
 
         //如果时间差超过间隔时间则生成一个新的会话窗口

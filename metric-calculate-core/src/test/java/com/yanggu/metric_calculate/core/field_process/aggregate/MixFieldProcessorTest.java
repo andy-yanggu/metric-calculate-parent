@@ -3,7 +3,6 @@ package com.yanggu.metric_calculate.core.field_process.aggregate;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.io.file.FileUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -80,17 +79,17 @@ class MixFieldProcessorTest {
         MixUdafParam mixUdafParam = JSONUtil.toBean(jsonString, MixUdafParam.class);
         MixFieldProcessor<Map<String, Long>> mixFieldProcessor = getMixFieldProcessor(fieldMap, mixUdafParam);
 
-        JSONObject input1 = new JSONObject();
-        input1.set("amount", 100L);
-        input1.set("city", "上海");
+        Map<String, Object> input1 = new HashMap<>();
+        input1.put("amount", 100L);
+        input1.put("city", "上海");
         Map<String, Long> process = mixFieldProcessor.process(input1);
         assertEquals(2, process.size());
         assertEquals(100L, process.get("上海_sum").longValue());
         assertEquals(100L, process.get("全国_sum").longValue());
 
-        JSONObject input2 = new JSONObject();
-        input2.set("amount", 200L);
-        input2.set("city", "北京");
+        Map<String, Object> input2 = new HashMap<>();
+        input2.put("amount", 200L);
+        input2.put("city", "北京");
         process = mixFieldProcessor.process(input2);
         assertEquals(2, process.size());
         assertEquals(0L, process.get("上海_sum").longValue());

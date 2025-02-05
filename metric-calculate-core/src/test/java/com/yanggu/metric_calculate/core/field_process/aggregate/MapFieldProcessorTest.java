@@ -4,7 +4,6 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.MapUdafParam;
 import org.dromara.hutool.core.io.file.FileUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,11 +44,11 @@ class MapFieldProcessorTest {
         MapUdafParam mapUdafParam = JSONUtil.toBean(jsonString, MapUdafParam.class);
         MapFieldProcessor<Pair<MultiFieldData, Integer>> mapFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
 
-        JSONObject input1 = new JSONObject();
-        input1.set("account_no_out", "a");
-        input1.set("account_no_in", "b");
-        input1.set("amount", 1);
-        Pair<MultiFieldData, Integer> process = mapFieldProcessor.process(input1);
+        Map<String, Object> input = new HashMap<>();
+        input.put("account_no_out", "a");
+        input.put("account_no_in", "b");
+        input.put("amount", 1);
+        Pair<MultiFieldData, Integer> process = mapFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of("b")), process.getLeft());
         assertEquals(Integer.valueOf(1), process.getRight());
     }

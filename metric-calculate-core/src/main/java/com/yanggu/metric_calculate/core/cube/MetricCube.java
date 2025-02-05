@@ -4,7 +4,8 @@ import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.window.AbstractWindow;
 import lombok.Data;
-import org.dromara.hutool.json.JSONObject;
+
+import java.util.Map;
 
 /**
  * 指标数据
@@ -40,7 +41,7 @@ public class MetricCube<IN, ACC, OUT> {
      *
      * @param input
      */
-    public void put(JSONObject input) {
+    public void put(Map<String, Object> input) {
         if (window == null) {
             return;
         }
@@ -75,7 +76,7 @@ public class MetricCube<IN, ACC, OUT> {
      * @param input
      * @return
      */
-    public DeriveMetricCalculateResult<OUT> query(JSONObject input) {
+    public DeriveMetricCalculateResult<OUT> query(Map<String, Object> input) {
         if (isEmpty()) {
             return null;
         }
