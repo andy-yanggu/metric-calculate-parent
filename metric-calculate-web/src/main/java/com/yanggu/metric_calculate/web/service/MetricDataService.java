@@ -10,7 +10,6 @@ import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import com.yanggu.metric_calculate.web.pojo.dto.UpdateMetricData;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.tuple.Tuple;
-import org.dromara.hutool.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -134,7 +133,7 @@ public class MetricDataService {
 
         for (Tuple tuple : tupleList) {
             DeriveMetricCalculate deriveMetricCalculate = tuple.get(0);
-            JSONObject detail = tuple.get(1);
+            Map<String, Object> detail = tuple.get(1);
             DimensionSet dimensionSet = tuple.get(2);
             MetricCube historyMetricCube = dimensionSetMetricCubeMap.get(dimensionSet);
             historyMetricCube = deriveMetricCalculate.addInput(detail, historyMetricCube, dimensionSet);

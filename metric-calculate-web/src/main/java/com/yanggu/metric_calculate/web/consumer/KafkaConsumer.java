@@ -1,10 +1,10 @@
 package com.yanggu.metric_calculate.web.consumer;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.yanggu.metric_calculate.web.service.MetricDataService;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.json.JSONObject;
-import org.dromara.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 
@@ -33,12 +33,12 @@ public class KafkaConsumer {
         }
         Map<Long, List<JSONObject>> collect = records.stream()
                 .map(ConsumerRecord::value)
-                .map(JSONUtil::parseObj)
+                .map(JSON::parseObject)
                 .collect(Collectors.groupingBy(temp -> temp.getLong("tableId")));
         for (Map.Entry<Long, List<JSONObject>> entry : collect.entrySet()) {
             Long tempTableId = entry.getKey();
             List<Map<String, Object>> tempList = entry.getValue().stream()
-                    .map(temp -> temp.toMap(String.class, Object.class))
+                    .map(temp -> ((Map<String, Object>) temp))
                     .toList();
             metricDataService.fullFillDeriveData(tempList, tempTableId);
         }

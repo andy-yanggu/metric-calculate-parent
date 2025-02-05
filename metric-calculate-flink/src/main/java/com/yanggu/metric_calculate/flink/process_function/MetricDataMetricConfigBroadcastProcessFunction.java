@@ -1,5 +1,7 @@
 package com.yanggu.metric_calculate.flink.process_function;
 
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
@@ -20,7 +22,6 @@ import org.apache.flink.util.OutputTag;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.text.StrUtil;
 import org.dromara.hutool.http.HttpUtil;
-import org.dromara.hutool.json.JSONObject;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.io.Serial;
@@ -48,7 +49,7 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
     public void processElement(String jsonString,
                                BroadcastProcessFunction<String, Model, Void>.ReadOnlyContext readOnlyContext,
                                Collector<Void> collector) throws Exception {
-        JSONObject input = JSONUtil.parseObj(jsonString);
+        JSONObject input = JSON.parseObject(jsonString);
         Long tableId = input.getLong("tableId");
         if (tableId == null) {
             log.error("明细数据中, 没有明细宽表数据");
@@ -62,7 +63,7 @@ public class MetricDataMetricConfigBroadcastProcessFunction extends BroadcastPro
         }
 
         //执行字段计算
-        Map<String, Object> data = metricCalculate.getParam(input.toMap(String.class, Object.class));
+        Map<String, Object> data = metricCalculate.getParam(input);
 
         //派生指标
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();

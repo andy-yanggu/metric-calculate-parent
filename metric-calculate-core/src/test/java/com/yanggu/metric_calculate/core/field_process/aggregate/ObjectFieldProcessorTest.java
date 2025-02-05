@@ -5,7 +5,6 @@ import com.yanggu.metric_calculate.core.field_process.UdafParamTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.dromara.hutool.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -202,13 +201,13 @@ class ObjectFieldProcessorTest {
     void process8() throws Exception {
 
         BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MAXOBJECT", null,  "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         Map<String, Object> input = new HashMap<>();
         input.put("amount", 100);
         input.put("name", "张三");
-        Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
+        Pair<MultiFieldData, Map<String, Object>> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
         assertEquals(input, process.getRight());
 
@@ -271,13 +270,13 @@ class ObjectFieldProcessorTest {
     @Test
     void process11() throws Exception {
         BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MINOBJECT", null, "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, JSONObject>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
 
         //构造原始数据
         Map<String, Object> input = new HashMap<>();
         input.put("amount", 100);
         input.put("name", "张三");
-        Pair<MultiFieldData, JSONObject> process = baseFieldProcessor.process(input);
+        Pair<MultiFieldData, Map<String, Object>> process = baseFieldProcessor.process(input);
         assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
         assertEquals(input, process.getRight());
 

@@ -21,7 +21,6 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.dromara.hutool.core.lang.mutable.MutablePair;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.core.lang.tuple.Tuple;
-import org.dromara.hutool.json.JSONObject;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 import java.util.ArrayList;
@@ -71,7 +70,6 @@ public class KryoPool extends Pool<Kryo> {
         kryo.register(Pair.class, new PairSerializer<>(), 25);
         kryo.register(MultiFieldData.class, new MultiFieldDataSerializer(), 26);
         kryo.register(NodePattern.class, new BeanSerializer<>(kryo, NodePattern.class), 27);
-        kryo.register(JSONObject.class, 28);
         kryo.register(String.class, new DefaultSerializers.StringSerializer(), 29);
         kryo.register(ArrayList.class, new CollectionSerializer<ArrayList<Object>>(), 30);
         kryo.register(TreeMap.class, new DefaultSerializers.TreeMapSerializer(), 31);
