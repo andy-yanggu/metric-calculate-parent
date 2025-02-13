@@ -1,11 +1,11 @@
 package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
-import org.dromara.hutool.core.collection.ListUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,7 +34,7 @@ class AbstractLagAggregateFunctionTest {
 
         lagObjectAggregateFunction.add("test1", accumulator);
         assertEquals(1, accumulator.size());
-        assertEquals("test1", accumulator.get(0));
+        assertEquals("test1", accumulator.getFirst());
 
         lagObjectAggregateFunction.add("test2", accumulator);
         assertEquals(2, accumulator.size());
@@ -87,7 +87,7 @@ class AbstractLagAggregateFunctionTest {
         result = lagObjectAggregateFunction.getResult(accumulator);
         assertEquals("test4", result);
 
-        //重新设置offset
+        // 重新设置offset
         lagObjectAggregateFunction.setOffset(1);
         result = lagObjectAggregateFunction.getResult(accumulator);
         assertEquals("test5", result);
@@ -108,7 +108,7 @@ class AbstractLagAggregateFunctionTest {
         accumulator2.add("test6");
 
         LinkedList<String> merge = lagObjectAggregateFunction.merge(accumulator1, accumulator2);
-        assertEquals(ListUtil.ofLinked("test2", "test3", "test4", "test5", "test6"), merge);
+        assertEquals(List.of("test2", "test3", "test4", "test5", "test6"), merge);
     }
 
 }

@@ -16,7 +16,7 @@ import org.apache.flink.runtime.state.StateSnapshotContext;
 import org.apache.flink.streaming.api.operators.AbstractStreamOperator;
 import org.apache.flink.streaming.api.operators.OneInputStreamOperator;
 import org.apache.flink.streaming.runtime.streamrecord.StreamRecord;
-import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -134,7 +134,7 @@ public class LocalKeyByAccumulateBatchOperator<KEY, IN, ACC, OUT> extends Abstra
             //但是后面没有新的数据来, 不会注册新的定时器
             //可能会造成永远不会向下游输出
             //因此这里强制向下游输出
-            if (CollUtil.isNotEmpty(localMap)) {
+            if (MapUtil.isNotEmpty(localMap)) {
                 flush();
             }
         }
@@ -144,7 +144,7 @@ public class LocalKeyByAccumulateBatchOperator<KEY, IN, ACC, OUT> extends Abstra
     public void snapshotState(StateSnapshotContext context) throws Exception {
         //将本地缓存中的数据拷贝到listState中
         listState.clear();
-        if (CollUtil.isNotEmpty(localMap)) {
+        if (MapUtil.isNotEmpty(localMap)) {
             for (Map.Entry<KEY, ACC> entry : localMap.entrySet()) {
                 listState.add(Tuple2.of(entry.getKey(), entry.getValue()));
             }
@@ -176,13 +176,13 @@ public class LocalKeyByAccumulateBatchOperator<KEY, IN, ACC, OUT> extends Abstra
      */
     @Override
     public void onProcessingTime(long time) {
-        if (CollUtil.isNotEmpty(localMap)) {
+        if (MapUtil.isNotEmpty(localMap)) {
             flush();
         }
     }
 
     private void flush() {
-        if (CollUtil.isEmpty(localMap)) {
+        if (MapUtil.isEmpty(localMap)) {
             return;
         }
         //for循环向下游输出Tuple2<KEY, ACC>

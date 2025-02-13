@@ -12,6 +12,7 @@ import com.yanggu.metric_calculate.web.exceptionhandler.BusinessException;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
@@ -55,7 +56,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      * @return
      */
     public List<Model> allMetricConfigData() {
-        if (CollUtil.isEmpty(metricMap)) {
+        if (MapUtil.isEmpty(metricMap)) {
             return Collections.emptyList();
         }
         return metricMap.values().stream()
@@ -78,7 +79,7 @@ public class MetricConfigDataService implements ApplicationRunner {
      * @return
      */
     public Model metricConfigDataById(Long tableId) {
-        if (CollUtil.isEmpty(metricMap)) {
+        if (MapUtil.isEmpty(metricMap)) {
             return null;
         }
         Lock readLock = readWriteLockStriped.get(tableId).readLock();

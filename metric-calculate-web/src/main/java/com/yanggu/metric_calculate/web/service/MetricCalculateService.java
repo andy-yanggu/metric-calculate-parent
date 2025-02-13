@@ -13,6 +13,7 @@ import com.yanggu.metric_calculate.web.pojo.vo.Result;
 import com.yanggu.metric_calculate.web.util.MetricCalculateThreadPoolTaskExecutor;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.convert.ConvertUtil;
 import org.dromara.hutool.json.JSONUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -368,7 +369,7 @@ public class MetricCalculateService {
     }
 
     private MetricCalculate getMetricCalculate(Map<String, Object> input) {
-        Long tableId = (Long) input.get("tableId");
+        Long tableId = ConvertUtil.toLong(input.get("tableId"));
         if (tableId == null) {
             throw new RuntimeException("没有传入tableId, 原始数据: " + JSONUtil.toJsonStr(input));
         }

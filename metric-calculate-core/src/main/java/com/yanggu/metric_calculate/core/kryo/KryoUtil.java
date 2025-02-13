@@ -15,11 +15,20 @@ import org.dromara.hutool.core.reflect.FieldUtil;
  */
 public class KryoUtil {
 
+    public static final KryoUtil INSTANCE;
+
     private final KryoPool kryoPool;
 
     private final InputPool inputPool;
 
     private final OutputPool outputPool;
+
+    static {
+        KryoPool kryoPool = new KryoPool(100, null);
+        InputPool inputPool = new InputPool(100);
+        OutputPool outputPool = new OutputPool(100);
+        INSTANCE = new KryoUtil(kryoPool, inputPool, outputPool);
+    }
 
     public KryoUtil(KryoPool kryoPool, InputPool inputPool, OutputPool outputPool) {
         this.kryoPool = kryoPool;

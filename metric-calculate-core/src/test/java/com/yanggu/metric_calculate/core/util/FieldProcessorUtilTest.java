@@ -183,7 +183,7 @@ class FieldProcessorUtilTest {
         MapUdafParam mapUdafParam = new MapUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("name");
-        mapUdafParam.setDistinctFieldParamList(ListUtil.of(aviatorExpressParam));
+        mapUdafParam.setDistinctFieldParamList(List.of(aviatorExpressParam));
 
         BaseUdafParam valueAggParam = new BaseUdafParam();
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
@@ -373,7 +373,7 @@ class FieldProcessorUtilTest {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("test1", Double.class);
         FieldProcessor<Map<String, Object>, Double> fieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
-        assertTrue(fieldProcessor instanceof NumberFieldProcessor);
+        assertInstanceOf(NumberFieldProcessor.class, fieldProcessor);
         NumberFieldProcessor<Double> numberFieldProcessor = (NumberFieldProcessor<Double>) fieldProcessor;
         assertEquals(baseUdafParam, numberFieldProcessor.getUdafParam());
         assertEquals(fieldMap, numberFieldProcessor.getFieldMap());
@@ -393,7 +393,7 @@ class FieldProcessorUtilTest {
         fieldMap.put("field1", String.class);
         fieldMap.put("field2", Integer.class);
         FieldProcessor<Map<String, Object>, String> fieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
-        assertTrue(fieldProcessor instanceof ObjectFieldProcessor);
+        assertInstanceOf(ObjectFieldProcessor.class, fieldProcessor);
     }
 
     @Test
@@ -402,7 +402,7 @@ class FieldProcessorUtilTest {
         baseUdafParam.setAggregateType("LISTOBJECT");
         Map<String, Class<?>> fieldMap = new HashMap<>();
         FieldProcessor<Map<String, Object>, Map<String, Object>> fieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
-        assertTrue(fieldProcessor instanceof CollectionFieldProcessor);
+        assertInstanceOf(CollectionFieldProcessor.class, fieldProcessor);
     }
 
     @Test

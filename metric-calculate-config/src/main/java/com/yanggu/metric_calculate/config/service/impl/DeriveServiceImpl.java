@@ -18,6 +18,7 @@ import com.yanggu.metric_calculate.config.mapstruct.DeriveMapstruct;
 import com.yanggu.metric_calculate.config.service.*;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetrics;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -175,7 +176,7 @@ public class DeriveServiceImpl extends ServiceImpl<DeriveMapper, DeriveEntity> i
                     .selectListWithRelationsByQuery(queryWrapper).stream()
                     .collect(Collectors.toMap(ModelEntity::getId, Function.identity()));
 
-            if (CollUtil.isEmpty(modelMap)) {
+            if (MapUtil.isEmpty(modelMap)) {
                 return Collections.emptyList();
             }
 

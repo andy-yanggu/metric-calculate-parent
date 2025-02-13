@@ -3,7 +3,7 @@ package com.yanggu.metric_calculate.core.window;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +75,7 @@ public class TumblingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     @Override
     public boolean isEmpty() {
-        return CollUtil.isEmpty(treeMap);
+        return MapUtil.isEmpty(treeMap);
     }
 
 }

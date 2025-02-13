@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public class MultiFieldDataFieldProcessor implements FieldProcessor<Map<String, 
 
     @Override
     public void init() throws Exception {
-        if (CollUtil.isEmpty(fieldMap)) {
+        if (MapUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
 

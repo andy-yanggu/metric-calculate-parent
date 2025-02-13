@@ -8,6 +8,7 @@ import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.List;
@@ -58,7 +59,7 @@ public class FilterFieldProcessor implements FieldProcessor<Map<String, Object>,
         if (filterExpressParam == null || StrUtil.isBlank(filterExpressParam.getExpress())) {
             return;
         }
-        if (CollUtil.isEmpty(fieldMap)) {
+        if (MapUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("明细宽表字段map为空");
         }
         if (aviatorFunctionFactory == null) {

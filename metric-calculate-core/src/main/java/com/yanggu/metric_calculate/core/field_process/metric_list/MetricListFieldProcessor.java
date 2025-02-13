@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class MetricListFieldProcessor implements FieldProcessor<Map<String, Obje
     @Override
     @SneakyThrows
     public void init() {
-        if (CollUtil.isEmpty(fieldMap)) {
+        if (MapUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
         }
 

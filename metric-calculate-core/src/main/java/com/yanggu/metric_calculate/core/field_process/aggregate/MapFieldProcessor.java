@@ -11,6 +11,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.Map;
 
@@ -80,7 +81,7 @@ public class MapFieldProcessor<IN> implements FieldProcessor<Map<String, Object>
             throw new RuntimeException("value的聚合函数参数为空");
         }
 
-        if (CollUtil.isEmpty(fieldMap)) {
+        if (MapUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
         }
 

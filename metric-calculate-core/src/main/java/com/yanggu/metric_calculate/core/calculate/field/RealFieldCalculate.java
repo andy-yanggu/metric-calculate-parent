@@ -1,8 +1,8 @@
 package com.yanggu.metric_calculate.core.calculate.field;
 
 import lombok.Data;
-import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.convert.ConvertUtil;
+import org.dromara.hutool.core.map.MapUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.util.Map;
@@ -38,7 +38,7 @@ public class RealFieldCalculate<R> implements FieldCalculate<Map<String, Object>
 
     @Override
     public R process(Map<String, Object> input) throws Exception {
-        if (CollUtil.isEmpty(input)) {
+        if (MapUtil.isEmpty(input)) {
             throw new RuntimeException("传入的数据为空");
         }
         Object result = input.get(columnName);

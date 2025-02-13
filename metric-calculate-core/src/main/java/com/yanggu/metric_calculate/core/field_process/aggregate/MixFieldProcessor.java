@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,7 @@ public class MixFieldProcessor<IN> implements FieldProcessor<Map<String, Object>
     @Override
     @SneakyThrows
     public void init() throws Exception {
-        if (CollUtil.isEmpty(fieldMap)) {
+        if (MapUtil.isEmpty(fieldMap)) {
             throw new RuntimeException("宽表字段为空");
         }
         if (mixUdafParam == null) {

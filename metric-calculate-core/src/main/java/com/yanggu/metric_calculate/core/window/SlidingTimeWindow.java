@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.lang.tuple.Pair;
+import org.dromara.hutool.core.map.MapUtil;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,7 +84,7 @@ public class SlidingTimeWindow<IN, ACC, OUT> extends TimeWindow<IN, ACC, OUT> {
 
     @Override
     public boolean isEmpty() {
-        return CollUtil.isEmpty(map);
+        return MapUtil.isEmpty(map);
     }
 
 }

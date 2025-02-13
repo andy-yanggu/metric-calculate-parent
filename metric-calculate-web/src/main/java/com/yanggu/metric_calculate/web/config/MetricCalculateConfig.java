@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.web.config;
 
 import com.yanggu.metric_calculate.core.cube.MetricCube;
 import com.yanggu.metric_calculate.core.field_process.dimension.DimensionSet;
+import com.yanggu.metric_calculate.core.kryo.KryoUtil;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleRedisStore;
 import com.yanggu.metric_calculate.core.middle_store.DeriveMetricMiddleStore;
 import com.yanggu.metric_calculate.core.util.AccumulateBatchComponent;
@@ -46,6 +47,8 @@ public class MetricCalculateConfig {
                 clientConfiguration.getPoolConfig(), false);
         DeriveMetricMiddleRedisStore deriveMetricMiddleStore = new DeriveMetricMiddleRedisStore();
         deriveMetricMiddleStore.setRedisConnectionPool(genericObjectPool);
+        //初始化kryo工具类
+        deriveMetricMiddleStore.setKryoUtil(KryoUtil.INSTANCE);
         deriveMetricMiddleStore.init();
         log.info("派生指标外部存储初始化完成: 指标存储类: {}", deriveMetricMiddleStore.getClass().getName());
         return deriveMetricMiddleStore;
