@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.test;
+package com.yanggu.metric_calculate.test2;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;

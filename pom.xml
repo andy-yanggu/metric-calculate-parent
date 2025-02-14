@@ -9,7 +9,6 @@
 
     <modules>
         <module>metric-calculate-web</module>
-        <module>metric-calculate-test</module>
         <module>metric-calculate-core</module>
         <module>metric-calculate-flink</module>
         <module>metric-calculate-config</module>
@@ -17,6 +16,8 @@
         <module>aviator-function-impl</module>
         <module>aggregate-function-interface</module>
         <module>aviator-function-interface</module>
+        <module>metric-calculate-test</module>
+        <module>metric-calculate-function-test</module>
         <module>metric-calculate-jmh-test</module>
     </modules>
     <packaging>pom</packaging>
