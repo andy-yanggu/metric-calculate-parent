@@ -32,11 +32,10 @@ class VirtualFieldCalculateTest {
     @Mock
     private Map<String, Class<?>> fieldMap;
 
-    private final String express = "username";
-
     @Test
     void init() {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        String express = "username";
         aviatorExpressParam.setExpress(express);
 
         MockedStatic<FieldProcessorUtil> fieldProcessorUtilMockedStatic = mockStatic(FieldProcessorUtil.class);

@@ -6,7 +6,10 @@ import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * CollectionFieldProcessor单元测试类
  * <p>聚合对集合型字段处理器单元测试类</p>
  */
+@DisplayName("CollectionFieldProcessor单元测试类")
 class CollectionFieldProcessorTest {
 
     private Map<String, Class<?>> fieldMap;
@@ -194,20 +198,21 @@ class CollectionFieldProcessorTest {
     /**
      * SLIDINGCOUNTWINDOW、滑动计数窗口函数: 没有去重字段、没有排序字段和保留指定字段
      */
-    @Test
-    void process10() throws Exception {
+    @ParameterizedTest
+    @ValueSource(doubles = {100.0D, 200.0D})
+    void process10(Double amount) throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SLIDINGCOUNTWINDOW", "amount");
-        FieldProcessor<Map<String, Object>, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        Double process = process(baseUdafParam, amount);
+        assertEquals(amount, process, 0.0D);
+    }
 
+    private <T> T process(BaseUdafParam baseUdafParam,
+                          Object inputParam) throws Exception {
+        FieldProcessor<Map<String, Object>, T> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
         //构造原始数据
         Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100.0D);
-        Double process = baseFieldProcessor.process(input);
-        assertEquals(100.0D, process, 0.0D);
-
-        input.put("amount", 200.0D);
-        process = baseFieldProcessor.process(input);
-        assertEquals(200.0D, process, 0.0D);
+        input.put("amount", inputParam);
+        return baseFieldProcessor.process(input);
     }
 
 }

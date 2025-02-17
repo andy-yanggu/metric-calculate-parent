@@ -23,7 +23,7 @@ class MapFieldProcessorTest {
     private Map<String, Class<?>> fieldMap;
 
     @BeforeEach
-    void init() throws Exception {
+    void init() {
         this.fieldMap = new HashMap<>();
         fieldMap.put("account_no_out", String.class);
         fieldMap.put("account_no_in", String.class);
