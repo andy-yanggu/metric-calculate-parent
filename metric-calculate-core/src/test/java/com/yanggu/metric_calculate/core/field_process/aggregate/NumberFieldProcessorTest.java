@@ -4,58 +4,72 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessor;
 import com.yanggu.metric_calculate.core.field_process.UdafParamTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * NumberFieldProcessor单元测试类
  * <p>数值型聚合字段处理器单元测试类</p>
  */
+@DisplayName("NumberFieldProcessor单元测试类")
 class NumberFieldProcessorTest {
 
-    private Map<String, Class<?>> fieldMap;
+    private static FieldProcessor<Map<String, Object>, Double> sumNumberFieldProcessor;
 
-    @BeforeEach
-    void init() {
-        this.fieldMap = new HashMap<>();
+    private static FieldProcessor<Map<String, Object>, MultiFieldData> covNumberFieldProcessor;
+
+    @BeforeAll
+    static void init() {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Double.class);
-        fieldMap.put("amount1", Long.class);
-    }
+        fieldMap.put("amount2", Double.class);
 
-    @Test
-    void testProcess1() throws Exception {
         BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("SUM", "amount");
-        FieldProcessor<Map<String, Object>, Double> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+        sumNumberFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
 
-        Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("amount", 100.0D);
-        Double process = baseFieldProcessor.process(jsonObject);
-        assertEquals(100.0D, process, 0.0D);
+        BaseUdafParam baseUdafParam2 = UdafParamTestBase.createBaseUdafParam("COV", null, "amount", "amount2");
+        covNumberFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam2);
     }
 
     /**
-     * 测试协方差CovUnit
-     *
-     * @throws Exception
+     * 测试SUM
      */
-    @Test
-    void testProcess_CovUnit() throws Exception {
-        BaseUdafParam baseUdafParam = UdafParamTestBase.createBaseUdafParam("COV", null,  "amount", "amount1");
-        FieldProcessor<Map<String, Object>, MultiFieldData> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam);
+    @ParameterizedTest
+    @DisplayName("测试SUM")
+    @CsvSource(value = {"100.0, 100.0", "200.0, 200.0", "300.0, 300.0"})
+    void testProcess1(Double amount, Double expected) throws Exception {
+        Map<String, Object> inputParam = new HashMap<>();
+        inputParam.put("amount", amount);
 
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 1L);
-        input.put("amount1", 2L);
-        MultiFieldData process = baseFieldProcessor.process(input);
+        Double process = sumNumberFieldProcessor.process(inputParam);
+        assertEquals(expected, process, 0.0D);
+    }
+
+    /**
+     * 测试协方差COV
+     */
+    @ParameterizedTest
+    @DisplayName("测试COV")
+    @CsvSource(value = {"100.0,200.0,100.0,200.0", "150.0,300.0,150.0,300.0", "200.0,400.0,200.0,400.0"})
+    void testProcess2(Double amount1, Double amount2, Double expected1, Double expected2) throws Exception {
+        Map<String, Object> inputParam = new HashMap<>();
+        inputParam.put("amount", amount1);
+        inputParam.put("amount2", amount2);
+
+        MultiFieldData process = covNumberFieldProcessor.process(inputParam);
+        assertNotNull(process);
         assertEquals(2, process.getFieldList().size());
-        assertEquals(1L, process.getFieldList().get(0));
-        assertEquals(2L, process.getFieldList().get(1));
+        assertEquals(expected1, process.getFieldList().get(0));
+        assertEquals(expected2, process.getFieldList().get(1));
     }
 
 }
