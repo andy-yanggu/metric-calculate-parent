@@ -2,7 +2,10 @@ package com.yanggu.metric_calculate.core.field_process.filter;
 
 import com.googlecode.aviator.AviatorEvaluator;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 前置过滤条件字段处理器单元测试类
  */
+@DisplayName("前置过滤条件字段处理器单元测试类")
 class FilterFieldProcessorTest {
 
     /**
@@ -32,10 +36,9 @@ class FilterFieldProcessorTest {
     /**
      * 如果设置了过滤表达式, 但是没有设置fieldMap应该应该报错
      *
-     * @throws Exception
      */
     @Test
-    void init2() throws Exception {
+    void init2() {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("true");
 
@@ -46,15 +49,15 @@ class FilterFieldProcessorTest {
     /**
      * 没有设置aviatorFunctionFactory应该报错
      *
-     * @throws Exception
      */
     @Test
-    void init3() throws Exception {
+    void init3() {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", BigDecimal.class);
+
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         String filterExpress = "amount";
         aviatorExpressParam.setExpress(filterExpress);
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", BigDecimal.class);
 
         RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getFilterFieldProcessor(fieldMap, aviatorExpressParam, null));
         assertEquals("Aviator函数工厂类为空", runtimeException.getMessage());
@@ -64,29 +67,29 @@ class FilterFieldProcessorTest {
     /**
      * 表达式中使用了常量表达式, 应该报错
      *
-     * @throws Exception
      */
     @Test
-    void init4() throws Exception {
+    void init4() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
+
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         String filterExpress = "true";
         aviatorExpressParam.setExpress(filterExpress);
-        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getFilterFieldProcessor(fieldMap, aviatorExpressParam));
 
+        RuntimeException runtimeException = assertThrows(RuntimeException.class, () -> getFilterFieldProcessor(fieldMap, aviatorExpressParam));
         assertEquals("过滤条件为常量表达式, 没有意义: " + filterExpress, runtimeException.getMessage());
     }
 
     /**
      * 表达式中使用了数据明细宽表中没有的字段, 应该报错
      *
-     * @throws Exception
      */
     @Test
-    void init5() throws Exception {
+    void init5() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount2", BigDecimal.class);
+
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         String filterExpress = "amount > 100.00";
         aviatorExpressParam.setExpress(filterExpress);
@@ -98,12 +101,12 @@ class FilterFieldProcessorTest {
     /**
      * 表达式正常, 应该正常编译
      *
-     * @throws Exception
      */
     @Test
-    void init6() throws Exception {
+    void init6() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
+
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         String filterExpress = "amount > 100.00";
         aviatorExpressParam.setExpress(filterExpress);
@@ -116,170 +119,123 @@ class FilterFieldProcessorTest {
 
     /**
      * 测试过滤字段为BigDecimal的数据类型
-     *
-     * @throws Exception
      */
-    @Test
-    void process1() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"50,false", "120,true"})
+    @DisplayName("测试过滤字段为BigDecimal的数据类型")
+    void process1(BigDecimal amount, Boolean expected) {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
+
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         String filterExpress = "amount > 100.00";
         aviatorExpressParam.setExpress(filterExpress);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
         Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("amount", 50);
+        jsonObject.put("amount", amount);
         Boolean result = filterFieldProcessor.process(jsonObject);
-        assertFalse(result);
-
-        jsonObject.put("amount", 120);
-        result = filterFieldProcessor.process(jsonObject);
-        assertTrue(result);
+        assertEquals(expected, result);
     }
 
     /**
      * 测试字段为字符串类型
-     *
-     * @throws Exception
      */
-    @Test
-    void process2() throws Exception {
-        String express = "name == '张三'";
-        Map<String, Class<?>> fieldMap = new HashMap<String, Class<?>>() {{
-            put("name", String.class);
-        }};
+    @ParameterizedTest
+    @DisplayName("测试字段为字符串类型")
+    @CsvSource({"'张三',true", "'李四',false"})
+    void process2(String name, Boolean expected) {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("name", String.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        String express = "name == '张三'";
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
         Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("name", "李四");
+        jsonObject.put("name", name);
         Boolean result = filterFieldProcessor.process(jsonObject);
-        assertFalse(result);
-
-        jsonObject.put("name", "张三");
-        result = filterFieldProcessor.process(jsonObject);
-        assertTrue(result);
+        assertEquals(expected, result);
     }
 
     /**
      * 测试字段为整数类型
-     *
-     * @throws Exception
      */
-    @Test
-    void process3() throws Exception {
-        String express = "amount > 500";
+    @ParameterizedTest
+    @DisplayName("测试字段为整数类型")
+    @CsvSource({"500,false", "600,true"})
+    void process3(Long amount, Boolean expected) {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Long.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        String express = "amount > 500";
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
         Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("amount", 50L);
+        jsonObject.put("amount", amount);
         Boolean result = filterFieldProcessor.process(jsonObject);
-        assertFalse(result);
-
-        jsonObject.put("amount", 600L);
-        result = filterFieldProcessor.process(jsonObject);
-        assertTrue(result);
+        assertEquals(expected, result);
     }
 
     /**
      * 测试字段为布尔类型
-     *
-     * @throws Exception
      */
-    @Test
-    void process4() throws Exception {
-        String express = "result";
+    @ParameterizedTest
+    @DisplayName("测试字段为布尔类型")
+    @CsvSource({"true,true", "false,false"})
+    void process4(Boolean input, Boolean expected) {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("result", Boolean.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        String express = "result";
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
         Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("result", false);
+        jsonObject.put("result", input);
         Boolean result = filterFieldProcessor.process(jsonObject);
-        assertFalse(result);
-
-        jsonObject.put("result", true);
-        result = filterFieldProcessor.process(jsonObject);
-        assertTrue(result);
+        assertEquals(expected, result);
     }
 
     /**
      * 测试逻辑运算&&、||、()、!(取反操作)
-     *
-     * @throws Exception
      */
-    @Test
-    void process5() throws Exception {
-        String express = "amount > 100.00 && age >= 20";
+    @ParameterizedTest
+    @DisplayName("测试逻辑运算&&、||、()、!(取反操作)")
+    @CsvSource({"50,21,false", "120,21,true", "120,20,true"})
+    void process5(BigDecimal amount, Long age, Boolean expected) {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
         fieldMap.put("age", Long.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
+        String express = "amount > 100.00 && age >= 20";
         aviatorExpressParam.setExpress(express);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
 
         Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("amount", 50);
-        jsonObject.put("age", 21);
+        jsonObject.put("amount", amount);
+        jsonObject.put("age", age);
         Boolean result = filterFieldProcessor.process(jsonObject);
-        assertFalse(result);
-
-        jsonObject.put("amount", 120);
-        result = filterFieldProcessor.process(jsonObject);
-        assertTrue(result);
-    }
-
-    /**
-     * 测试过滤字段为BigDecimal的数据类型
-     *
-     * @throws Exception
-     */
-    @Test
-    void process6() throws Exception {
-        String express = "amount > 100.00";
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", BigDecimal.class);
-
-        AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
-        aviatorExpressParam.setExpress(express);
-        FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, aviatorExpressParam);
-
-        Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("amount", BigDecimal.valueOf(50L));
-        Boolean result = filterFieldProcessor.process(jsonObject);
-        assertFalse(result);
-
-        jsonObject.put("amount", BigDecimal.valueOf(120L));
-        result = filterFieldProcessor.process(jsonObject);
-        assertTrue(result);
+        assertEquals(expected, result);
     }
 
     /**
      * 没有前置过滤条件, 应该返回true
-     *
-     * @throws Exception
      */
     @Test
-    void process7() throws Exception {
+    @DisplayName("没有前置过滤条件, 应该返回true")
+    void process6() {
         Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", BigDecimal.class);
         FilterFieldProcessor filterFieldProcessor = getFilterFieldProcessor(fieldMap, null);
 
         Boolean process = filterFieldProcessor.process(null);
         assertTrue(process);
-
     }
 
 }
