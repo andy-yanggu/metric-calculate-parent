@@ -5,28 +5,82 @@ import com.yanggu.metric_calculate.core.field_process.UdafParamTestBase;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.udaf_param.BaseUdafParam;
 import org.dromara.hutool.core.lang.tuple.Pair;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getBaseAggregateFieldProcessor;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * ObjectFieldProcessor单元测试类
  * <p>聚合对象型字段处理器单元测试类</p>
  */
+@DisplayName("ObjectFieldProcessor单元测试类")
 class ObjectFieldProcessorTest {
 
-    private final Map<String, Class<?>> fieldMap = new HashMap<>();
+    private static Map<String, FieldProcessor<Map<String, Object>, ?>> fieldProcessorMap;
 
-    @BeforeEach
-    void init() {
+    @BeforeAll
+    static void init() {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("amount", Double.class);
         fieldMap.put("name", String.class);
+
+        fieldProcessorMap = new HashMap<>();
+        BaseUdafParam udafParam1 = UdafParamTestBase.createBaseUdafParam("FIRSTFIELD", "name");
+        FieldProcessor<Map<String, Object>, String> firstFieldObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam1);
+        fieldProcessorMap.put("FIRSTFIELD", firstFieldObjectFieldProcessor);
+
+        BaseUdafParam udafParam2 = UdafParamTestBase.createBaseUdafParam("FIRSTOBJECT", null);
+        FieldProcessor<Map<String, Object>, Map<String, Object>> firstObjectObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam2);
+        fieldProcessorMap.put("FIRSTOBJECT", firstObjectObjectFieldProcessor);
+
+        BaseUdafParam udafParam3 = UdafParamTestBase.createBaseUdafParam("LAGFIELD", "name");
+        FieldProcessor<Map<String, Object>, String> lagFieldObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam3);
+        fieldProcessorMap.put("LAGFIELD", lagFieldObjectFieldProcessor);
+
+        BaseUdafParam udafParam4 = UdafParamTestBase.createBaseUdafParam("LAGOBJECT", null);
+        FieldProcessor<Map<String, Object>, Map<String, Object>> lagObjectObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam4);
+        fieldProcessorMap.put("LAGOBJECT", lagObjectObjectFieldProcessor);
+
+        BaseUdafParam udafParam5 = UdafParamTestBase.createBaseUdafParam("LASTFIELD", "name");
+        FieldProcessor<Map<String, Object>, String> lastFieldObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam5);
+        fieldProcessorMap.put("LASTFIELD", lastFieldObjectFieldProcessor);
+
+        BaseUdafParam udafParam6 = UdafParamTestBase.createBaseUdafParam("LASTOBJECT", null);
+        FieldProcessor<Map<String, Object>, Map<String, Object>> lastObjectObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam6);
+        fieldProcessorMap.put("LASTOBJECT", lastObjectObjectFieldProcessor);
+
+        BaseUdafParam udafParam7 = UdafParamTestBase.createBaseUdafParam("MAXFIELD", "name", "amount");
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, String>> maxFieldObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam7);
+        fieldProcessorMap.put("MAXFIELD", maxFieldObjectFieldProcessor);
+
+        BaseUdafParam udafParam8 = UdafParamTestBase.createBaseUdafParam("MAXOBJECT", null, "amount");
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> maxObjectObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam8);
+        fieldProcessorMap.put("MAXOBJECT", maxObjectObjectFieldProcessor);
+
+        BaseUdafParam udafParam9 = UdafParamTestBase.createBaseUdafParam("MAXVALUE", null, "amount");
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Void>> maxValueObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam9);
+        fieldProcessorMap.put("MAXVALUE", maxValueObjectFieldProcessor);
+
+        BaseUdafParam udafParam10 = UdafParamTestBase.createBaseUdafParam("MINFIELD", "name", "amount");
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, String>> minFieldObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam10);
+        fieldProcessorMap.put("MINFIELD", minFieldObjectFieldProcessor);
+
+        BaseUdafParam udafParam11 = UdafParamTestBase.createBaseUdafParam("MINOBJECT", null, "amount");
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> minObjectObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam11);
+        fieldProcessorMap.put("MINOBJECT", minObjectObjectFieldProcessor);
+
+        BaseUdafParam udafParam12 = UdafParamTestBase.createBaseUdafParam("MINVALUE", null, "amount");
+        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Void>> minValueObjectFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam12);
+        fieldProcessorMap.put("MINVALUE", minValueObjectFieldProcessor);
     }
 
     @Test
@@ -36,277 +90,174 @@ class ObjectFieldProcessorTest {
     /**
      * 测试FIRSTFIELD, 对象型, 没有比较字段以及保留指定字段
      */
-    @Test
-    void process1() throws Exception {
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("FIRSTFIELD", "name");
-        FieldProcessor<Map<String, Object>, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        String process = baseFieldProcessor.process(input);
-        assertEquals("张三", process);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("amount", 200);
-        input2.put("name", "张三2");
-        process = baseFieldProcessor.process(input2);
-        assertEquals("张三2", process);
+    @ParameterizedTest
+    @DisplayName("测试FIRSTFIELD, 对象型, 没有比较字段以及保留指定字段")
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    void process1(Double amount, String name) throws Exception {
+        String process = process("FIRSTFIELD", amount, name);
+        assertEquals(name, process);
     }
 
     /**
      * 测试FIRSTOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      */
-    @Test
-    void process2() throws Exception {
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("FIRSTOBJECT", null);
-        FieldProcessor<Map<String, Object>, Map<String, Object>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试FIRSTOBJECT, 对象型, 没有比较字段以及保留原始对象数据")
+    void process2(Double amount, String name) throws Exception {
+        Map<String, Object> process = process("FIRSTOBJECT", amount, name);
 
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Map<String, Object> process = baseFieldProcessor.process(input);
-        assertEquals(input, process);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("amount", 100);
-        input2.put("name", "张三");
-        process = baseFieldProcessor.process(input2);
-        assertEquals(input2, process);
+        assertNotNull(process);
+        assertEquals(buildParamMap(amount, name), process);
     }
 
     /**
      * 测试LAGFIELD, 对象型, 没有比较字段以及保留指定字段
      */
-    @Test
-    void process3() throws Exception {
-
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("LAGFIELD", "name");
-        FieldProcessor<Map<String, Object>, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        String process = baseFieldProcessor.process(input);
-        assertEquals("张三", process);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("amount", 200);
-        input2.put("name", "张三2");
-        process = baseFieldProcessor.process(input2);
-        assertEquals("张三2", process);
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试LAGFIELD, 对象型, 没有比较字段以及保留指定字段")
+    void process3(Double amount, String name) throws Exception {
+        String process = process("LAGFIELD", amount, name);
+        assertEquals(name, process);
     }
 
     /**
      * 测试LAGOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      */
-    @Test
-    void process4() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试LAGOBJECT, 对象型, 没有比较字段以及保留原始对象数据")
+    void process4(Double amount, String name) throws Exception {
+        Map<String, Object> process = process("LAGOBJECT", amount, name);
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("LAGOBJECT", null);
-        FieldProcessor<Map<String, Object>, Map<String, Object>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Map<String, Object> process = baseFieldProcessor.process(input);
-        assertEquals(input, process);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("amount", 100);
-        input2.put("name", "张三");
-        process = baseFieldProcessor.process(input2);
-        assertEquals(input2, process);
+        assertNotNull(process);
+        assertEquals(buildParamMap(amount, name), process);
     }
 
     /**
      * 测试LASTFIELD, 对象型, 没有比较字段以及保留指定字段
      */
-    @Test
-    void process5() throws Exception {
-
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("LASTFIELD", "name");
-        FieldProcessor<Map<String, Object>, String> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        String process = baseFieldProcessor.process(input);
-        assertEquals("张三", process);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("amount", 200);
-        input2.put("name", "张三2");
-        process = baseFieldProcessor.process(input2);
-        assertEquals("张三2", process);
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试LASTFIELD, 对象型, 没有比较字段以及保留指定字段")
+    void process5(Double amount, String name) throws Exception {
+        String process = process("LASTFIELD", amount, name);
+        assertEquals(name, process);
     }
 
     /**
      * 测试LASTOBJECT, 对象型, 没有比较字段以及保留原始对象数据
      */
-    @Test
-    void process6() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试LASTOBJECT, 对象型, 没有比较字段以及保留原始对象数据")
+    void process6(Double amount, String name) throws Exception {
+        Map<String, Object> process = process("LASTOBJECT", amount, name);
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("LASTOBJECT", null);
-        FieldProcessor<Map<String, Object>, Map<String, Object>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Map<String, Object> process = baseFieldProcessor.process(input);
-        assertEquals(input, process);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("amount", 100);
-        input2.put("name", "张三");
-        process = baseFieldProcessor.process(input2);
-        assertEquals(input2, process);
+        assertNotNull(process);
+        assertEquals(buildParamMap(amount, name), process);
     }
 
     /**
-     * MAXFIELD: 有比较字段以及保留指定字段
+     * 测试MAXFIELD: 有比较字段以及保留指定字段
      */
-    @Test
-    void process7() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试MAXFIELD: 有比较字段以及保留指定字段")
+    void process7(Double amount, String name) throws Exception {
+        Pair<MultiFieldData, String> process = process("MAXFIELD", amount, name);
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MAXFIELD", "name", "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-
-        Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
-        assertEquals("张三", process.getRight());
-        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
-
-        input.put("amount", 200);
-        input.put("name", "张三2");
-        process = baseFieldProcessor.process(input);
-        assertEquals("张三2", process.getRight());
-        assertEquals(new MultiFieldData(List.of(200)), process.getLeft());
+        assertNotNull(process);
+        assertEquals(List.of(amount), process.getLeft().getFieldList());
+        assertEquals(name, process.getRight());
     }
 
     /**
      * 测试MAXOBJECT, 对象型, 需要比较字段以及保留原始对象数据
      */
-    @Test
-    void process8() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试MAXOBJECT, 对象型, 需要比较字段以及保留原始对象数据")
+    void process8(Double amount, String name) throws Exception {
+        Pair<MultiFieldData, Map<String, Object>> process = process("MAXOBJECT", amount, name);
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MAXOBJECT", null,  "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Pair<MultiFieldData, Map<String, Object>> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
-        assertEquals(input, process.getRight());
-
-        input.put("amount", 200);
-        input.put("name", "张三2");
-        process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(200)), process.getLeft());
-        assertEquals(input, process.getRight());
+        assertNotNull(process);
+        assertEquals(List.of(amount), process.getLeft().getFieldList());
+        assertEquals(buildParamMap(amount, name), process.getRight());
     }
 
     /**
-     * MAXVALUE: 有比较字段和不保留任何数据
+     * 测试MAXVALUE: 有比较字段和不保留任何数据
      */
-    @Test
-    void process9() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试MAXVALUE: 有比较字段和不保留任何数据")
+    void process9(Double amount, String name) throws Exception {
+        Pair<MultiFieldData, Void> process = process("MAXVALUE", amount, name);
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MAXVALUE", null, "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
-
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-
-        Pair<MultiFieldData, Void> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
-
-        input.put("amount", 200);
-        input.put("name", "张三2");
-        process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(200)), process.getLeft());
+        assertNotNull(process);
+        assertEquals(List.of(amount), process.getLeft().getFieldList());
+        assertNull(process.getRight());
     }
 
     /**
-     * MINFIELD: 有比较字段以及保留指定字段
+     * 测试MINFIELD: 有比较字段以及保留指定字段
      */
-    @Test
-    void process10() throws Exception {
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MINFIELD", "name", "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, String>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试MINFIELD: 有比较字段以及保留指定字段")
+    void process10(Double amount, String name) throws Exception {
+        Pair<MultiFieldData, String> process = process("MINFIELD", amount, name);
 
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Pair<MultiFieldData, String> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
-        assertEquals("张三", process.getRight());
-
-        input.put("amount", 200);
-        input.put("name", "张三2");
-        process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(200)), process.getLeft());
-        assertEquals("张三2", process.getRight());
+        assertNotNull(process);
+        assertEquals(List.of(amount), process.getLeft().getFieldList());
+        assertEquals(name, process.getRight());
     }
 
     /**
      * 测试MINOBJECT, 对象型, 需要比较字段以及保留原始对象数据
      */
-    @Test
-    void process11() throws Exception {
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MINOBJECT", null, "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Map<String, Object>>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试MINOBJECT, 对象型, 需要比较字段以及保留原始对象数据")
+    void process11(Double amount, String name) throws Exception {
+        Pair<MultiFieldData, Map<String, Object>> process = process("MINOBJECT", amount, name);
 
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Pair<MultiFieldData, Map<String, Object>> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
-        assertEquals(input, process.getRight());
-
-        input.put("amount", 200);
-        input.put("name", "张三2");
-        process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(200)), process.getLeft());
-        assertEquals(input, process.getRight());
+        assertNotNull(process);
+        assertEquals(List.of(amount), process.getLeft().getFieldList());
+        assertEquals(buildParamMap(amount, name), process.getRight());
     }
 
     /**
-     * MINVALUE: 有比较字段和不保留任何数据
+     * 测试MINVALUE: 有比较字段和不保留任何数据
      */
-    @Test
-    void process12() throws Exception {
+    @ParameterizedTest
+    @CsvSource({"100,'张三'", "200,'张三2'"})
+    @DisplayName("测试MINVALUE: 有比较字段和不保留任何数据")
+    void process12(Double amount, String name) throws Exception {
+        Pair<MultiFieldData, Void> process = process("MINVALUE", amount, name);
 
-        BaseUdafParam udafParam = UdafParamTestBase.createBaseUdafParam("MINVALUE", null, "amount");
-        FieldProcessor<Map<String, Object>, Pair<MultiFieldData, Void>> baseFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, udafParam);
+        assertNotNull(process);
+        assertEquals(List.of(amount), process.getLeft().getFieldList());
+        assertNull(process.getRight());
+    }
 
-        //构造原始数据
-        Map<String, Object> input = new HashMap<>();
-        input.put("amount", 100);
-        input.put("name", "张三");
-        Pair<MultiFieldData, Void> process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(100)), process.getLeft());
+    private Map<String, Object> buildParamMap(Double amount, String name) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("amount", amount);
+        paramMap.put("name", name);
+        return paramMap;
+    }
 
-        input.put("amount", 200);
-        input.put("name", "张三2");
-        process = baseFieldProcessor.process(input);
-        assertEquals(new MultiFieldData(List.of(200)), process.getLeft());
+    private <T> T process(String aggregateType, Double amount, String name) throws Exception {
+        //构造参数
+        Map<String, Object> paramMap = buildParamMap(amount, name);
+
+        FieldProcessor<Map<String, Object>, ?> fieldProcessor = fieldProcessorMap.get(aggregateType);
+        assertNotNull(fieldProcessor, "aggregateType错误");
+
+        return (T) fieldProcessor.process(paramMap);
     }
 
 }
