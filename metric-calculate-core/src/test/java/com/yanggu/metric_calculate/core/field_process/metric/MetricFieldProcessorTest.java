@@ -3,7 +3,11 @@ package com.yanggu.metric_calculate.core.field_process.metric;
 import com.googlecode.aviator.AviatorEvaluator;
 import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -16,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * 度量字段处理器单元测试类
  */
+@DisplayName("度量字段处理器单元测试类")
 class MetricFieldProcessorTest {
 
     /**
@@ -77,10 +82,9 @@ class MetricFieldProcessorTest {
     /**
      * init方法应该对度量值进行编译
      *
-     * @throws Exception
      */
     @Test
-    void init5() throws Exception {
+    void init5() {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
 
@@ -98,20 +102,22 @@ class MetricFieldProcessorTest {
     /**
      * 从明细数据中取出度量值
      */
-    @Test
-    void process() {
+    @ParameterizedTest
+    @DisplayName("从明细数据中取出度量值")
+    @ValueSource(doubles = {100.0D, 200.1D, 300.2D})
+    void process(Double amount) {
+        Map<String, Class<?>> fieldMap = new HashMap<>();
+        fieldMap.put("amount", Double.class);
 
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("amount");
-        Map<String, Class<?>> fieldMap = new HashMap<>();
-        fieldMap.put("amount", BigDecimal.class);
-        MetricFieldProcessor<Object> objectMetricFieldProcessor = getMetricFieldProcessor(fieldMap, aviatorExpressParam);
+        MetricFieldProcessor<Double> objectMetricFieldProcessor = getMetricFieldProcessor(fieldMap, aviatorExpressParam);
 
-        Map<String, Object> jsonObject = new HashMap<>();
-        jsonObject.put("amount", BigDecimal.valueOf(100L));
-        Object process = objectMetricFieldProcessor.process(jsonObject);
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("amount", amount);
 
-        assertEquals(BigDecimal.valueOf(100L), process);
+        Double process = objectMetricFieldProcessor.process(paramMap);
+        assertEquals(amount, process);
     }
 
 }
