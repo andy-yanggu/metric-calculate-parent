@@ -4,7 +4,6 @@ package com.yanggu.metric_calculate.core.calculate.metric;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -12,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 混合型派生指标单元测试类
@@ -21,9 +21,12 @@ class DeriveMetricsCalculateMixTest extends DeriveMetricsCalculateBase {
 
     private static DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate;
 
+    private static DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate2;
+
     @BeforeAll
     static void init() {
         deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(9L);
+        deriveMetricCalculate2 = metricCalculate.getDeriveMetricCalculateById(15L);
     }
 
     /**
@@ -47,45 +50,20 @@ class DeriveMetricsCalculateMixTest extends DeriveMetricsCalculateBase {
     /**
      * 转出账号近一个月的转出金额，不包含当天
      */
-    @Test
-    void test2() {
-        DeriveMetricCalculate<Map<String, Object>, Map<String, Object>, Double> deriveMetricCalculate =
-                metricCalculate.getDeriveMetricCalculateById(15L);
+    @ParameterizedTest
+    @DisplayName("转出账号近一个月的转出金额，不包含当天")
+    @CsvSource({"1696156871000,800,0", "1697550002392,1200,800", "1697636402000,200,2000", "1697636402000,200,2000"})
+    void test2(Long tranTimestamp, Double amount, Double expected) {
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("account_no_out", "000000000011");
+        paramMap.put("account_no_in", "000000000012");
+        paramMap.put("trans_timestamp", tranTimestamp);
+        paramMap.put("amount", amount);
 
-        DeriveMetricCalculateResult<Double> query;
-
-        Map<String, Object> input1 = new HashMap<>();
-        input1.put("account_no_out", "000000000011");
-        input1.put("account_no_in", "000000000012");
-        //时间戳为2023-10-01 18:41:11
-        input1.put("trans_timestamp", 1696156871000L);
-        input1.put("amount", 800);
-        input1 = metricCalculate.getParam(input1);
-        query = deriveMetricCalculate.stateExec(input1);
-        Double result = query.getResult();
-        assertEquals(0.0D, result, 0.0D);
-
-        Map<String, Object> input2 = new HashMap<>();
-        input2.put("account_no_out", "000000000011");
-        input2.put("account_no_in", "000000000012");
-        //时间戳为2023-10-17 21:40:02
-        input2.put("trans_timestamp", 1697550002392L);
-        input2.put("amount", 1200);
-        input2 = metricCalculate.getParam(input2);
-        query = deriveMetricCalculate.stateExec(input2);
-        result = query.getResult();
-        assertEquals(800.0D, result, 0.0D);
-
-        Map<String, Object> input3 = new HashMap<>();
-        input3.put("account_no_out", "000000000011");
-        input3.put("account_no_in", "000000000012");
-        //时间戳为2023-10-18 21:40:02
-        input3.put("trans_timestamp", 1697636402000L);
-        input3.put("amount", 200);
-        input3 = metricCalculate.getParam(input3);
-        query = deriveMetricCalculate.stateExec(input3);
-        result = query.getResult();
-        assertEquals(2000.0D, result, 0.0D);
+        paramMap = metricCalculate.getParam(paramMap);
+        DeriveMetricCalculateResult<Double> query = deriveMetricCalculate2.stateExec(paramMap);
+        assertNotNull(query);
+        assertEquals(expected, query.getResult(), 0.0D);
     }
 
 }
