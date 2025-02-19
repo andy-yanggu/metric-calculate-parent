@@ -55,10 +55,10 @@ public class FieldProcessorTestBase {
         return FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressParamList, aviatorFunctionFactory);
     }
 
-    public static MultiFieldDataFieldProcessor getDistinctFieldFieldProcessor(
+    public static MultiFieldDataFieldProcessor getMultiFieldDataFieldFieldProcessor(
                                                                 Map<String, Class<?>> fieldMap,
-                                                                List<AviatorExpressParam> distinctFieldListParamList) {
-        return FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, distinctFieldListParamList, AVIATOR_FUNCTION_FACTORY);
+                                                                List<AviatorExpressParam> metricExpressParamList) {
+        return FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, metricExpressParamList, AVIATOR_FUNCTION_FACTORY);
     }
 
     public static <T> FieldProcessor<Map<String, Object>, T> getBaseAggregateFieldProcessor(Map<String, Class<?>> fieldMap,
