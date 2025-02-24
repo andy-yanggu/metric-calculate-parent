@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * 列表聚合函数抽象类单元测试类
@@ -26,7 +25,7 @@ class AbstractListAggregateFunctionTest {
     void testCreateAccumulator() {
         List<String> accumulator = function.createAccumulator();
         assertEquals(0, accumulator.size());
-        assertTrue(accumulator instanceof ArrayList<String>);
+        assertInstanceOf(ArrayList.class, accumulator);
     }
 
     @Test

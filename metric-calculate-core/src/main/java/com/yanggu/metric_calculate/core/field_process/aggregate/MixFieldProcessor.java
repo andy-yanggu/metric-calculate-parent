@@ -14,7 +14,7 @@ import lombok.SneakyThrows;
 import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.core.map.MapUtil;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,7 +66,7 @@ public class MixFieldProcessor<IN> implements FieldProcessor<Map<String, Object>
             throw new RuntimeException("Aviator函数工厂类为空");
         }
 
-        Map<String, FieldProcessor<Map<String, Object>, Object>> map = new HashMap<>();
+        Map<String, FieldProcessor<Map<String, Object>, Object>> map = new LinkedHashMap<>();
         for (MixUdafParamItem mixUdafParamItem : mixUdafParamItemList) {
             FieldProcessor<Map<String, Object>, Object> metricFieldProcessor = null;
             BaseUdafParam baseUdafParam = mixUdafParamItem.getBaseUdafParam();
@@ -88,7 +88,7 @@ public class MixFieldProcessor<IN> implements FieldProcessor<Map<String, Object>
 
     @Override
     public IN process(Map<String, Object> input) throws Exception {
-        Map<String, Object> dataMap = new HashMap<>();
+        Map<String, Object> dataMap = new LinkedHashMap<>();
         for (Map.Entry<String, FieldProcessor<Map<String, Object>, Object>> entry : multiBaseAggProcessorMap.entrySet()) {
             String paramName = entry.getKey();
             FieldProcessor<Map<String, Object>, Object> metricFieldProcessor = entry.getValue();

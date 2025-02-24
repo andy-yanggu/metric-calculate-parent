@@ -24,15 +24,15 @@ class AbstractMapAggregateFunctionTest {
 
     @Test
     void testCreateAccumulator() {
-        var accumulator = mapAggregateFunction.createAccumulator();
+        Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
-        assertTrue(accumulator instanceof HashMap);
+        assertInstanceOf(HashMap.class, accumulator);
     }
 
     @Test
     void testAdd() {
-        var accumulator = mapAggregateFunction.createAccumulator();
+        Map<String, Double> accumulator = mapAggregateFunction.createAccumulator();
         String name1 = "张三";
         Pair<String, Double> tuple2 = new Pair<>(name1, 100.0D);
         Map<String, Double> add = mapAggregateFunction.add(tuple2, accumulator);

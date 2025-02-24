@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 /**
  * 对象型派生指标单元测试类
  */
+@DisplayName("对象型派生指标单元测试类")
 class DeriveMetricsCalculateObjectTest extends DeriveMetricsCalculateBase {
 
     private static DeriveMetricCalculate<Pair<MultiFieldData, Long>, MutableObj<Pair<MultiFieldData, Long>>, Long> deriveMetricCalculate;

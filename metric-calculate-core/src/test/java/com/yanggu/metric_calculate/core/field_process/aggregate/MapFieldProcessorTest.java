@@ -24,13 +24,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DisplayName("映射类型字段处理器单元测试类")
 class MapFieldProcessorTest {
 
-    private static Map<String, Class<?>> fieldMap;
-
     private static MapFieldProcessor<Pair<MultiFieldData, Double>> mapFieldProcessor;
 
     @BeforeAll
     static void init() {
-        fieldMap = new HashMap<>();
+        Map<String, Class<?>> fieldMap = new HashMap<>();
         fieldMap.put("account_no_out", String.class);
         fieldMap.put("account_no_in", String.class);
         fieldMap.put("amount", Double.class);
@@ -60,6 +58,7 @@ class MapFieldProcessorTest {
         input.put("account_no_out", accountNoOut);
         input.put("account_no_in", accountNoIn);
         input.put("amount", amount);
+
         Pair<MultiFieldData, Double> process = mapFieldProcessor.process(input);
         assertEquals(List.of(accountNoIn), process.getLeft().getFieldList());
         assertEquals(amount, process.getRight(), 0.0D);

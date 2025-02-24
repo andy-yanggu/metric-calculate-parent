@@ -12,11 +12,12 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 状态窗口派生指标单元测试类
@@ -47,9 +48,10 @@ class DeriveMetricsCalculateStatusWindowTest {
         paramMap.put("timestamp", timestamp);
 
         DeriveMetricCalculateResult<Double> deriveMetricCalculateResult = deriveMetricCalculate.stateExec(paramMap);
+        assertNotNull(deriveMetricCalculateResult);
         Double result = deriveMetricCalculateResult.getResult();
         assertEquals(expected, result.longValue(), 0.0D);
-        assertEquals(Collections.singletonList(status), deriveMetricCalculateResult.getStatusList());
+        assertEquals(List.of(status), deriveMetricCalculateResult.getStatusList());
     }
 
 }

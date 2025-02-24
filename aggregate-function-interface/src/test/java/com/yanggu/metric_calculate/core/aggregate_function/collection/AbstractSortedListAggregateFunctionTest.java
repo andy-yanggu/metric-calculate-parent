@@ -23,7 +23,7 @@ class AbstractSortedListAggregateFunctionTest {
 
     @Test
     void createAccumulator() {
-        var accumulator = sortedListObjectAggregateFunction.createAccumulator();
+        BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
         assertNotNull(accumulator);
         assertTrue(accumulator.isEmpty());
         assertEquals(10, accumulator.getCapacity());
@@ -33,7 +33,7 @@ class AbstractSortedListAggregateFunctionTest {
     void testAdd1() {
         //设置为3个
         sortedListObjectAggregateFunction.setLimit(3);
-        var accumulator = sortedListObjectAggregateFunction.createAccumulator();
+        BoundedPriorityQueue<Integer> accumulator = sortedListObjectAggregateFunction.createAccumulator();
 
         sortedListObjectAggregateFunction.add(1, accumulator);
         List<Integer> integers = accumulator.toList();
@@ -70,8 +70,8 @@ class AbstractSortedListAggregateFunctionTest {
     void testMerge() {
         sortedListObjectAggregateFunction.setLimit(3);
 
-        var accumulator1 = sortedListObjectAggregateFunction.createAccumulator();
-        var accumulator2 = sortedListObjectAggregateFunction.createAccumulator();
+        BoundedPriorityQueue<Integer> accumulator1 = sortedListObjectAggregateFunction.createAccumulator();
+        BoundedPriorityQueue<Integer> accumulator2 = sortedListObjectAggregateFunction.createAccumulator();
 
         sortedListObjectAggregateFunction.add(1, accumulator1);
         sortedListObjectAggregateFunction.add(3, accumulator1);
@@ -83,7 +83,7 @@ class AbstractSortedListAggregateFunctionTest {
         sortedListObjectAggregateFunction.add(1, accumulator2);
         sortedListObjectAggregateFunction.add(2, accumulator2);
 
-        var merge = sortedListObjectAggregateFunction.merge(accumulator1, accumulator2);
+        BoundedPriorityQueue<Integer> merge = sortedListObjectAggregateFunction.merge(accumulator1, accumulator2);
         List<Integer> result = sortedListObjectAggregateFunction.getResult(merge);
 
         assertEquals(List.of(-1, 0, 1), result);

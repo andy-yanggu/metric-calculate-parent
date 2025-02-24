@@ -9,7 +9,7 @@ import org.dromara.hutool.core.lang.mutable.MutableObj;
  *
  * @param <IN>
  */
-public class AbstractFirstAggregateFunction<IN> implements AggregateFunction<IN, MutableObj<IN>, IN> {
+public abstract class AbstractFirstAggregateFunction<IN> implements AggregateFunction<IN, MutableObj<IN>, IN> {
 
     @Override
     public MutableObj<IN> createAccumulator() {

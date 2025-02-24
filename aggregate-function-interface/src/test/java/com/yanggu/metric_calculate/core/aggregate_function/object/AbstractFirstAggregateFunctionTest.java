@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 首次聚合函数抽象类单元测试类
  */
+@DisplayName("首次聚合函数抽象类单元测试类")
 class AbstractFirstAggregateFunctionTest {
 
     private TestFirstAggregateFunction<String> firstObjectAggregateFunction;
@@ -29,6 +31,8 @@ class AbstractFirstAggregateFunctionTest {
     @Test
     void testAdd() {
         MutableObj<String> accumulator = firstObjectAggregateFunction.createAccumulator();
+        firstObjectAggregateFunction.add(null, accumulator);
+        assertNull(accumulator.get());
 
         firstObjectAggregateFunction.add("test1", accumulator);
         assertEquals("test1", accumulator.get());

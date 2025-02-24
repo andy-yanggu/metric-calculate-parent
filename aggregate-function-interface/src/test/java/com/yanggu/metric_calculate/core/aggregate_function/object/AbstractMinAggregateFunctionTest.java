@@ -3,6 +3,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 import org.dromara.hutool.core.lang.mutable.MutableObj;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Comparator;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 最小聚合函数抽象类单元测试类
  */
+@DisplayName("最小聚合函数抽象类单元测试类")
 class AbstractMinAggregateFunctionTest {
 
     private TestObjectMinAggregateFunction<Integer> minValueAggregateFunction;

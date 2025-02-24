@@ -30,7 +30,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(5L);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals(4L, timeWindowData.windowStart());
         assertEquals(6L, timeWindowData.windowEnd());
 
@@ -48,7 +48,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2023-03-30 14:02:22", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-03-30 14:02:24", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -66,7 +66,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2023-03-30 14:01:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-03-30 14:03:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -84,7 +84,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2023-03-30 13:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-03-30 15:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -102,7 +102,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2023-03-29 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-03-31 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -121,7 +121,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2023-03-20 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-04-03 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -139,7 +139,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2023-02-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -157,7 +157,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2022-10-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2023-04-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 
@@ -175,7 +175,7 @@ class TimeBaselineDimensionTestColumn {
         List<TimeWindowData> timeWindowDataList = timeBaselineDimension.getTimeWindowList(timestamp);
         assertEquals(2, timeWindowDataList.size());
 
-        TimeWindowData timeWindowData = timeWindowDataList.get(0);
+        TimeWindowData timeWindowData = timeWindowDataList.getFirst();
         assertEquals("2022-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowStart()));
         assertEquals("2024-01-01 00:00:00", DateUtils.formatDateTime(timeWindowData.windowEnd()));
 

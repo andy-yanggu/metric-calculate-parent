@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * 滑动计数求和派生指标单元测试类
@@ -49,6 +50,7 @@ class DeriveMetricsCalculateSlidingCountWindowTest extends DeriveMetricsCalculat
         paramMap.put("amount", input);
 
         DeriveMetricCalculateResult<Double> query = deriveMetricCalculate.stateExec(paramMap);
+        assertNotNull(query);
         assertEquals(expected, query.getResult(), 0.0D);
     }
 

@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.collection;
 
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 去重类的抽象函数基类单元测试类
  */
+@DisplayName("去重类的抽象函数基类单元测试类")
 class AbstractDistinctAggregateFunctionTest {
 
     private TestDistinctAggregateFunction<Integer> distinctAggregateFunction;
@@ -28,7 +30,7 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testCreateAccumulator() {
-        var accumulator = distinctAggregateFunction.createAccumulator();
+        Set<Integer> accumulator = distinctAggregateFunction.createAccumulator();
         //确认累加器不为null
         assertNotNull(accumulator);
         //确定累加器为空
@@ -42,7 +44,7 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testAdd() {
-        var accumulator = distinctAggregateFunction.createAccumulator();
+        Set<Integer> accumulator = distinctAggregateFunction.createAccumulator();
         distinctAggregateFunction.add(1, accumulator);
         //添加重复的元素
         distinctAggregateFunction.add(1, accumulator);
@@ -57,9 +59,9 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testGetResult() {
-        var accumulator = distinctAggregateFunction.createAccumulator();
+        Set<Integer> accumulator = distinctAggregateFunction.createAccumulator();
         accumulator = distinctAggregateFunction.add(1, accumulator);
-        var result = distinctAggregateFunction.getResult(accumulator);
+        List<Integer> result = distinctAggregateFunction.getResult(accumulator);
         //确认结果列表中包含已添加的元素
         assertTrue(result.contains(1));
         assertEquals(1, result.size());
@@ -73,9 +75,9 @@ class AbstractDistinctAggregateFunctionTest {
      */
     @Test
     void testMerge() {
-        var thisAccumulator = distinctAggregateFunction.createAccumulator();
+        Set<Integer> thisAccumulator = distinctAggregateFunction.createAccumulator();
         distinctAggregateFunction.add(1, thisAccumulator);
-        var thatAccumulator = distinctAggregateFunction.createAccumulator();
+        Set<Integer> thatAccumulator = distinctAggregateFunction.createAccumulator();
         distinctAggregateFunction.add(2, thatAccumulator);
         //向第二个累加器添加重复元素
         distinctAggregateFunction.add(1, thatAccumulator);

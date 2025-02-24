@@ -2,6 +2,7 @@ package com.yanggu.metric_calculate.core.aggregate_function.object;
 
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * 当前行的第前N条对象聚合函数单元测试类
  */
+@DisplayName("AbstractLagAggregateFunction单元测试类")
 class AbstractLagAggregateFunctionTest {
 
     private TestLagAggregateFunction<String> lagObjectAggregateFunction;
