@@ -1,3 +1,6 @@
+CREATE DATABASE `metric_calculate_config` CHARACTER SET 'utf8mb4' COLLATE 'utf8mb4_general_ci';
+
+USE metric_calculate_config;
 CREATE TABLE atom
 (
     id                   int                                                           NOT NULL AUTO_INCREMENT,
