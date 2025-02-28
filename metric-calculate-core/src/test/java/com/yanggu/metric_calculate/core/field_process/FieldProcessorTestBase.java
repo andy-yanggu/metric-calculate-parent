@@ -19,14 +19,10 @@ import com.yanggu.metric_calculate.core.pojo.udaf_param.MixUdafParam;
 import java.util.List;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
-import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
+import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryBase.AGGREGATE_FUNCTION_FACTORY;
+import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryBase.AVIATOR_FUNCTION_FACTORY;
 
 public class FieldProcessorTestBase {
-
-    public static final AviatorFunctionFactory AVIATOR_FUNCTION_FACTORY = getAviatorFunctionFactory();
-
-    public static final AggregateFunctionFactory AGGREGATE_FUNCTION_FACTORY = getAggregateFunctionFactory();
 
     public static <R> MetricFieldProcessor<R> getMetricFieldProcessor(Map<String, Class<?>> fieldMap,
                                                                       AviatorExpressParam metricExpressParam) {

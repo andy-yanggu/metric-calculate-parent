@@ -16,7 +16,9 @@ import java.util.Map;
  * @param timeColumnName 时间字段名称
  */
 @Slf4j
-public record TimeFieldProcessor(String timeFormat, String timeColumnName) implements FieldProcessor<Map<String, Object>, Long> {
+public record TimeFieldProcessor(String timeFormat,
+                                 String timeColumnName)
+        implements FieldProcessor<Map<String, Object>, Long> {
 
     private static final String TIMESTAMP = "TIMESTAMP";
 
@@ -37,8 +39,14 @@ public record TimeFieldProcessor(String timeFormat, String timeColumnName) imple
             throw new RuntimeException(StrUtil.format("时间字段没有值, "
                     + "时间字段名: {}, 原始数据: {}", timeColumnName, JSONUtil.toJsonStr(input)));
         }
-        if (StrUtil.equals(timeFormat.toUpperCase(), TIMESTAMP)) {
-            return Long.parseLong(data.toString());
+        if (StrUtil.equals(timeFormat, TIMESTAMP)) {
+            if (data instanceof Long) {
+                return ((Long) data);
+            } else if (data instanceof Number tempNumber) {
+                return tempNumber.longValue();
+            } else {
+                return Long.parseLong(data.toString());
+            }
         } else {
             return DateUtils.parse(data.toString(), timeFormat);
         }

@@ -12,6 +12,9 @@ import org.dromara.hutool.core.reflect.method.MethodUtil;
 import org.dromara.hutool.core.text.StrUtil;
 
 import java.io.File;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.HashMap;
@@ -110,7 +113,12 @@ public class AggregateFunctionFactory {
     @SneakyThrows
     public <IN, ACC, OUT> AggregateFunction<IN, ACC, OUT> getAggregateFunction(String aggregate) {
         Class<? extends AggregateFunction> clazz = getAggregateFunctionClass(aggregate);
-        return clazz.getDeclaredConstructor().newInstance();
+        Constructor<? extends AggregateFunction> constructor = clazz.getDeclaredConstructor();
+
+        // 使用 MethodHandles.Lookup 提高性能和安全性
+        MethodHandles.Lookup lookup = MethodHandles.lookup();
+        MethodHandle methodHandle = lookup.unreflectConstructor(constructor);
+        return (AggregateFunction<IN, ACC, OUT>) methodHandle.invoke();
     }
 
     public Class<? extends AggregateFunction> getAggregateFunctionClass(String aggregate) {

@@ -2,34 +2,20 @@ package com.yanggu.metric_calculate.core.function_factory;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
-import com.yanggu.metric_calculate.core.util.TestJarUtil;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryBase.AGGREGATE_FUNCTION_FACTORY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AggregateFunctionFactoryTest {
-
-    public static AggregateFunctionFactory aggregateFunctionFactory;
-
-    static {
-        AggregateFunctionFactory tempAggregateFunctionFactory = new AggregateFunctionFactory(TestJarUtil.testJarPath());
-        try {
-            tempAggregateFunctionFactory.init();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-        aggregateFunctionFactory = tempAggregateFunctionFactory;
-    }
-
-    public static AggregateFunctionFactory getAggregateFunctionFactory() {
-        return aggregateFunctionFactory;
-    }
+@DisplayName("聚合函数工厂单元测试类")
+class AggregateFunctionFactoryTest {
 
     @Test
     @Disabled("可能会报错")
     void test1() {
-        AggregateFunction<Integer, Double, Double> aggregateFunction = aggregateFunctionFactory.getAggregateFunction("TEST_SUM");
+        AggregateFunction<Integer, Double, Double> aggregateFunction = AGGREGATE_FUNCTION_FACTORY.getAggregateFunction("TEST_SUM");
         AggregateFunctionFactory.initAggregateFunction(aggregateFunction, null);
         Double accumulator = aggregateFunction.createAccumulator();
         accumulator = aggregateFunction.add(1, accumulator);
@@ -40,7 +26,7 @@ public class AggregateFunctionFactoryTest {
 
     @Test
     void test2() {
-        AggregateFunction<Integer, Double, Double> aggregateFunction = aggregateFunctionFactory.getAggregateFunction("SUM");
+        AggregateFunction<Integer, Double, Double> aggregateFunction = AGGREGATE_FUNCTION_FACTORY.getAggregateFunction("SUM");
         AggregateFunctionFactory.initAggregateFunction(aggregateFunction, null);
         Double accumulator = aggregateFunction.createAccumulator();
         accumulator = aggregateFunction.add(1, accumulator);

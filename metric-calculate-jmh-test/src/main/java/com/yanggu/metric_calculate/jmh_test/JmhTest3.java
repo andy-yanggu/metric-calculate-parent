@@ -6,7 +6,6 @@ import com.yanggu.metric_calculate.core.calculate.metric.DeriveMetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
 import org.dromara.hutool.core.io.resource.ResourceUtil;
-import org.dromara.hutool.core.reflect.TypeReference;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.util.HashMap;
@@ -20,7 +19,7 @@ public class JmhTest3 {
 
     public static void main(String[] args) {
         String jsonString = ResourceUtil.readUtf8Str("mock_metric_config/1.json");
-        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, new TypeReference<>() {});
+        MetricCalculate tempMetricCalculate = JSONUtil.toBean(jsonString, MetricCalculate.class);
 
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tempMetricCalculate);
         DeriveMetricCalculate<Double, Double, Double> deriveMetricCalculate = metricCalculate.getDeriveMetricCalculateById(1L);
@@ -29,7 +28,7 @@ public class JmhTest3 {
         tempInput.put("account_no_out", "000000000011");
         tempInput.put("account_no_in", "000000000012");
         tempInput.put("amount", "800");
-        tempInput.put("trans_timestamp", "1679887968782");
+        tempInput.put("trans_timestamp", 1679887968782L);
 
         tempInput = metricCalculate.getParam(tempInput);
 

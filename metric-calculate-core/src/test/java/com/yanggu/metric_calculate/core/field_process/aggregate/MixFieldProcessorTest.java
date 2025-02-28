@@ -14,9 +14,9 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.AVIATOR_FUNCTION_FACTORY;
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.getMixFieldProcessor;
-import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
+import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryBase.AGGREGATE_FUNCTION_FACTORY;
+import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryBase.AVIATOR_FUNCTION_FACTORY;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -83,7 +83,7 @@ class MixFieldProcessorTest {
 
         assertSame(fieldMap, mixFieldProcessor.getFieldMap());
         assertSame(mixUdafParam, mixFieldProcessor.getMixUdafParam());
-        assertSame(getAggregateFunctionFactory(), mixFieldProcessor.getAggregateFunctionFactory());
+        assertSame(AGGREGATE_FUNCTION_FACTORY, mixFieldProcessor.getAggregateFunctionFactory());
         assertTrue(CollUtil.isNotEmpty(mixFieldProcessor.getMultiBaseAggProcessorMap()));
     }
 

@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
+import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryBase.AVIATOR_FUNCTION_FACTORY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mockStatic;
@@ -39,7 +39,7 @@ class VirtualFieldCalculateTest {
         aviatorExpressParam.setExpress(express);
 
         MockedStatic<FieldProcessorUtil> fieldProcessorUtilMockedStatic = mockStatic(FieldProcessorUtil.class);
-        AviatorFunctionFactory aviatorFunctionFactory = getAviatorFunctionFactory();
+        AviatorFunctionFactory aviatorFunctionFactory = AVIATOR_FUNCTION_FACTORY;
         fieldProcessorUtilMockedStatic.when(() -> FieldProcessorUtil.getMetricFieldProcessor(eq(fieldMap), eq(aviatorExpressParam), eq(aviatorFunctionFactory)))
                 .thenReturn(mockMetricFieldProcessor);
 
@@ -69,7 +69,7 @@ class VirtualFieldCalculateTest {
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress("date_to_string(new java.util.Date(tran_timestamp), 'yyyy-MM-dd')");
         virtualFieldCalculate.setAviatorExpressParam(aviatorExpressParam);
-        virtualFieldCalculate.setAviatorFunctionFactory(getAviatorFunctionFactory());
+        virtualFieldCalculate.setAviatorFunctionFactory(AVIATOR_FUNCTION_FACTORY);
 
         virtualFieldCalculate.init();
 

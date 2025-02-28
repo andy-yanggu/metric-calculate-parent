@@ -33,8 +33,8 @@ import org.mockito.Mockito;
 import java.util.*;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.*;
-import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryTest.getAggregateFunctionFactory;
-import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryTest.getAviatorFunctionFactory;
+import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryBase.AGGREGATE_FUNCTION_FACTORY;
+import static com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactoryBase.AVIATOR_FUNCTION_FACTORY;
 import static org.junit.jupiter.api.Assertions.*;
 
 class FieldProcessorUtilTest {
@@ -47,7 +47,7 @@ class FieldProcessorUtilTest {
         String filterExpress = "name == 'John'";
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(filterExpress);
-        FilterFieldProcessor filterFieldProcessor = FieldProcessorUtil.getFilterFieldProcessor(fieldMap, aviatorExpressParam, getAviatorFunctionFactory());
+        FilterFieldProcessor filterFieldProcessor = FieldProcessorUtil.getFilterFieldProcessor(fieldMap, aviatorExpressParam, AVIATOR_FUNCTION_FACTORY);
         assertNotNull(filterFieldProcessor);
     }
 
@@ -91,7 +91,7 @@ class FieldProcessorUtilTest {
         String metricExpress = "field1 + field2";
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
         aviatorExpressParam.setExpress(metricExpress);
-        MetricFieldProcessor<Integer> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, aviatorExpressParam, getAviatorFunctionFactory());
+        MetricFieldProcessor<Integer> metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, aviatorExpressParam, AVIATOR_FUNCTION_FACTORY);
         assertNotNull(metricFieldProcessor);
         assertEquals(fieldMap, metricFieldProcessor.getFieldMap());
         assertEquals(aviatorExpressParam, metricFieldProcessor.getAviatorExpressParam());
@@ -110,7 +110,7 @@ class FieldProcessorUtilTest {
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("metric2");
         List<AviatorExpressParam> metricExpressList = Arrays.asList(aviatorExpressParam, aviatorExpressParam1);
-        MetricListFieldProcessor metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList, getAviatorFunctionFactory());
+        MetricListFieldProcessor metricListFieldProcessor = FieldProcessorUtil.getMetricListFieldProcessor(fieldMap, metricExpressList, AVIATOR_FUNCTION_FACTORY);
         assertNotNull(metricListFieldProcessor);
         assertEquals(fieldMap, metricListFieldProcessor.getFieldMap());
         assertEquals(metricExpressList, metricListFieldProcessor.getMetricExpressParamList());
@@ -131,7 +131,7 @@ class FieldProcessorUtilTest {
         AviatorExpressParam aviatorExpressParam1 = new AviatorExpressParam();
         aviatorExpressParam1.setExpress("field2");
         List<AviatorExpressParam> distinctFieldList = Arrays.asList(aviatorExpressParam, aviatorExpressParam1);
-        MultiFieldDataFieldProcessor processor = FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, distinctFieldList, getAviatorFunctionFactory());
+        MultiFieldDataFieldProcessor processor = FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, distinctFieldList, AVIATOR_FUNCTION_FACTORY);
         assertNotNull(processor);
         assertEquals(fieldMap, processor.getFieldMap());
         assertEquals(distinctFieldList, processor.getAviatorExpressParamList());
@@ -162,11 +162,11 @@ class FieldProcessorUtilTest {
         mixUdafParamItem.setSort(0);
         mixUdafParamItemList.add(mixUdafParamItem);
 
-        MixFieldProcessor<Object> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MixFieldProcessor<Object> mixFieldProcessor = FieldProcessorUtil.getMixFieldProcessor(fieldMap, mixUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
 
         assertEquals(fieldMap, mixFieldProcessor.getFieldMap());
         assertEquals(mixUdafParam, mixFieldProcessor.getMixUdafParam());
-        assertEquals(getAggregateFunctionFactory(), mixFieldProcessor.getAggregateFunctionFactory());
+        assertEquals(AGGREGATE_FUNCTION_FACTORY, mixFieldProcessor.getAggregateFunctionFactory());
         Map<String, FieldProcessor<Map<String, Object>, Object>> multiBaseAggProcessorMap = mixFieldProcessor.getMultiBaseAggProcessorMap();
         assertEquals(1, multiBaseAggProcessorMap.size());
         assertEquals(getBaseAggregateFieldProcessor(fieldMap, baseUdafParam), multiBaseAggProcessorMap.get("SUM"));
@@ -178,7 +178,7 @@ class FieldProcessorUtilTest {
         fieldMap.put("name", String.class);
         fieldMap.put("amount", Integer.class);
 
-        AggregateFunctionFactory factory = getAggregateFunctionFactory();
+        AggregateFunctionFactory factory = AGGREGATE_FUNCTION_FACTORY;
 
         MapUdafParam mapUdafParam = new MapUdafParam();
         AviatorExpressParam aviatorExpressParam = new AviatorExpressParam();
@@ -192,15 +192,15 @@ class FieldProcessorUtilTest {
         valueAggParam.setAggregateType("SUM");
         mapUdafParam.setValueAggParam(valueAggParam);
 
-        MapFieldProcessor<Pair<MultiFieldData, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, getAviatorFunctionFactory(), getAggregateFunctionFactory());
+        MapFieldProcessor<Pair<MultiFieldData, Integer>> mapFieldProcessor = FieldProcessorUtil.getMapFieldProcessor(fieldMap, mapUdafParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY);
 
         assertNotNull(mapFieldProcessor);
         assertEquals(fieldMap, mapFieldProcessor.getFieldMap());
         assertEquals(mapUdafParam, mapFieldProcessor.getMapUdafParam());
         assertEquals(factory, mapFieldProcessor.getAggregateFunctionFactory());
 
-        assertEquals(FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldParamList(), getAviatorFunctionFactory()), mapFieldProcessor.getKeyFieldProcessor());
-        assertEquals(FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, valueAggParam, getAviatorFunctionFactory(), getAggregateFunctionFactory()), mapFieldProcessor.getValueAggregateFieldProcessor());
+        assertEquals(FieldProcessorUtil.getMultiFieldDataFieldProcessor(fieldMap, mapUdafParam.getDistinctFieldParamList(), AVIATOR_FUNCTION_FACTORY), mapFieldProcessor.getKeyFieldProcessor());
+        assertEquals(FieldProcessorUtil.getBaseAggregateFieldProcessor(fieldMap, valueAggParam, AVIATOR_FUNCTION_FACTORY, AGGREGATE_FUNCTION_FACTORY), mapFieldProcessor.getValueAggregateFieldProcessor());
     }
 
     /**
