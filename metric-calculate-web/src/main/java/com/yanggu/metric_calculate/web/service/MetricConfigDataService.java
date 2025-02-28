@@ -286,9 +286,6 @@ public class MetricConfigDataService implements ApplicationRunner {
         }
         //初始化指标计算类
         MetricCalculate metricCalculate = MetricUtil.initMetricCalculate(tableData);
-        if (metricCalculate == null) {
-            throw new BusinessException(METRIC_CALCULATE_INIT_ERROR);
-        }
         List<DeriveMetricCalculate> deriveMetricCalculateList = metricCalculate.getDeriveMetricCalculateList();
         if (CollUtil.isNotEmpty(deriveMetricCalculateList)) {
             //设置派生指标外部存储

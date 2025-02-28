@@ -37,7 +37,9 @@ public class MockMetricConfigDataController {
         MultiResource resources = ResourceFinder.of().find("mock_metric_config" + File.separator + "*.json");
         List<Model> list = new ArrayList<>();
         for (Resource resource : resources) {
-            list.add(JSONUtil.toBean(IoUtil.readUtf8(resource.getStream()), Model.class));
+            String jsonString = IoUtil.readUtf8(resource.getStream());
+            Model tempModel = JSONUtil.toBean(jsonString, Model.class);
+            list.add(tempModel);
         }
         this.modelList = list;
     }
@@ -55,7 +57,7 @@ public class MockMetricConfigDataController {
         return modelList.stream()
                 .filter(temp -> temp.getId().equals(tableId))
                 .findFirst()
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("传入的tableId错误"));
     }
 
     @Operation(summary = "获取所有宽表id")

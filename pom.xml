@@ -46,7 +46,7 @@
         <jmh.version>1.37</jmh.version>
         <joda-time.version>2.13.1</joda-time.version>
         <jctools-core.version>4.0.5</jctools-core.version>
-        <flink.version>1.19.0</flink.version>
+        <flink.version>1.20.1</flink.version>
         <flink-connector-kafka.version>3.1.0-1.18</flink-connector-kafka.version>
         <metric-calculate-test.version>1.0.0-SNAPSHOT</metric-calculate-test.version>
         <mybatis-flex.version>1.9.7</mybatis-flex.version>

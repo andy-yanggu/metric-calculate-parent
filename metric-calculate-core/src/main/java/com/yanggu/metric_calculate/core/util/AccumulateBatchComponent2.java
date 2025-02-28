@@ -69,7 +69,7 @@ public class AccumulateBatchComponent2<T> {
     public void add(T item) {
         int len = this.workThreads.size();
         if (len == 1) {
-            this.workThreads.get(0).add(item);
+            this.workThreads.getFirst().add(item);
         } else {
             int mod = this.index.incrementAndGet() % len;
             this.workThreads.get(mod).add(item);
@@ -142,11 +142,9 @@ public class AccumulateBatchComponent2<T> {
                 log.error("攒批线程消费失败", e);
             }
             if (registerTimeStamp == 0L) {
-                log.info(name + "攒批大小到, 当前时间: " + DateUtil.formatDateTime(new Date()) +
-                        ", list被消费了, 消费list大小" + list.size());
+                log.info("{}攒批大小到, 当前时间: {}, list被消费了, 消费list大小{}", name, DateUtil.formatDateTime(new Date()), list.size());
             } else {
-                log.info(name + "攒批时间到, 定时器注册时间: " + DateUtil.format(new Date(registerTimeStamp), NORM_DATETIME_MS_PATTERN) +
-                        ", 当前时间: " + DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN) + ", list被消费了, 消费list大小" + list.size());
+                log.info("{}攒批时间到, 定时器注册时间: {}, 当前时间: {}, list被消费了, 消费list大小{}", name, DateUtil.format(new Date(registerTimeStamp), NORM_DATETIME_MS_PATTERN), DateUtil.format(new Date(), NORM_DATETIME_MS_PATTERN), list.size());
             }
             list.clear();
             if (scheduledFuture != null) {

@@ -72,7 +72,7 @@ public class AccumulateBatchComponent<T> {
     public void add(T item) {
         int len = this.works.size();
         if (len == 1) {
-            this.works.get(0).add(item);
+            this.works.getFirst().add(item);
         } else {
             int mod = this.index.incrementAndGet() % len;
             this.works.get(mod).add(item);

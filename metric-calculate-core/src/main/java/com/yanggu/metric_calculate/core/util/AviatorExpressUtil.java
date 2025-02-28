@@ -9,6 +9,7 @@ import com.yanggu.metric_calculate.core.aviator_function.AbstractUdfAviatorFunct
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorFunctionInstance;
+import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.collection.CollUtil;
 
 import java.util.List;
@@ -20,6 +21,7 @@ import static com.googlecode.aviator.Options.USE_USER_ENV_AS_TOP_ENV_DIRECTLY;
 /**
  * Aviator表达式工具类
  */
+@Slf4j
 public class AviatorExpressUtil {
 
     private AviatorExpressUtil() {
@@ -58,6 +60,7 @@ public class AviatorExpressUtil {
             //编译表达式
             return aviatorEvaluatorInstance.compile(aviatorExpressParam.getExpress(), true);
         } catch (Exception e) {
+            log.error("Aviator表达式编译失败, 请检查表达式编写是否正确或者传参是否正确", e);
             throw new RuntimeException("Aviator表达式编译失败, 请检查表达式编写是否正确或者传参是否正确");
         }
     }
