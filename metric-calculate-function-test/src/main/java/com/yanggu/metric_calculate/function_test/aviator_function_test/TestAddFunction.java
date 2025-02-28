@@ -9,9 +9,9 @@ import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunct
 import com.yanggu.metric_calculate.core.aviator_function.annotation.AviatorFunctionFieldAnnotation;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.dromara.hutool.core.math.NumberUtil;
 
 import java.io.Serial;
-import java.math.BigDecimal;
 import java.util.Map;
 
 import static java.math.RoundingMode.UP;
@@ -31,7 +31,7 @@ public class TestAddFunction extends AbstractUdfAviatorFunction {
     public AviatorObject variadicCall(Map<String, Object> env, AviatorObject... args) {
         Number left = FunctionUtils.getNumberValue(args[0], env);
         Number right = FunctionUtils.getNumberValue(args[1], env);
-        return new AviatorDecimal(BigDecimal.valueOf(left.doubleValue() + right.doubleValue()).setScale(length, UP));
+        return new AviatorDecimal(NumberUtil.add(left, right).setScale(length, UP));
     }
 
 }

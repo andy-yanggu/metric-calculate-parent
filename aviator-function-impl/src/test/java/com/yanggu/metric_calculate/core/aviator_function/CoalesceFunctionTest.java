@@ -62,6 +62,9 @@ class CoalesceFunctionTest {
     void testExpress() {
         AviatorEvaluator.addFunction(coalesceFunction);
 
+        //没有参数的情况
+        assertNull(AviatorEvaluator.execute("coalesce()"));
+
         //两个参数的情况
         assertNull(AviatorEvaluator.execute("coalesce(Nil, Nil)"));
         assertEquals(1L, AviatorEvaluator.execute("coalesce(1, Nil)"));

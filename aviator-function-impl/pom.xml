@@ -17,6 +17,10 @@
             <artifactId>aviator-function-interface</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.dromara.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <scope>test</scope>
