@@ -16,7 +16,7 @@
       ],
       "timeColumn": {
         "columnName": "timestamp",
-        "timeFormat": "timestamp"
+        "timeFormat": "TIMESTAMP"
       },
       "aggregateFunctionParam": {
         "aggregateType": "BASEMIX",

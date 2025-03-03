@@ -92,7 +92,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -141,7 +141,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp"
+        "timeFormat": "TIMESTAMP"
       },
       "filterExpressParam": null,
       "aggregateFunctionParam": {
@@ -183,7 +183,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -220,7 +220,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -258,7 +258,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -304,7 +304,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -350,7 +350,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -510,7 +510,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,
@@ -621,7 +621,7 @@
       ],
       "timeColumn": {
         "columnName": "trans_timestamp",
-        "timeFormat": "timestamp",
+        "timeFormat": "TIMESTAMP",
         "columnIndex": null
       },
       "filterExpressParam": null,

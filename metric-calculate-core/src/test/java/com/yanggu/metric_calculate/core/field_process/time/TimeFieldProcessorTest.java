@@ -52,7 +52,7 @@ class TimeFieldProcessorTest {
      */
     @Test
     void process1() {
-        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("timestamp", "tran_timestamp");
+        TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("TIMESTAMP", "tran_timestamp");
 
         Map<String, Object> jsonObject = new HashMap<>();
         long currentTimeMillis = System.currentTimeMillis();
@@ -67,7 +67,6 @@ class TimeFieldProcessorTest {
      */
     @Test
     void process2() {
-
         TimeFieldProcessor timeFieldProcessor = new TimeFieldProcessor("yyyyMMdd", "tran_date");
 
         String date = "20221124";
