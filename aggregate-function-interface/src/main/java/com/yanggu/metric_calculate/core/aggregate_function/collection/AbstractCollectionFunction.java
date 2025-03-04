@@ -12,9 +12,9 @@ import java.util.Collection;
  * <p>定义了merge方法，直接调用{@link Collection#addAll(Collection)}方法</p>
  * <p>子类需要重写{@link AggregateFunction#createAccumulator()}方法和{@link AggregateFunction#getResult(Object)}方法</p>
  *
- * @param <IN>
- * @param <ACC>
- * @param <OUT>
+ * @param <IN>  输入类型
+ * @param <ACC> 累加器类型，必须是Collection的子类
+ * @param <OUT> 输出类型
  */
 public abstract class AbstractCollectionFunction<IN, ACC extends Collection<IN>, OUT> implements AggregateFunction<IN, ACC, OUT> {
 

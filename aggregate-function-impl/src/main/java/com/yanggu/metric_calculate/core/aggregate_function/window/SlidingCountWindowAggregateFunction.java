@@ -1,9 +1,8 @@
-package com.yanggu.metric_calculate.core.aggregate_function.collection;
+package com.yanggu.metric_calculate.core.aggregate_function.window;
 
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
-import com.yanggu.metric_calculate.core.aggregate_function.annotation.Collective;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -17,7 +16,6 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
-@Collective(keyStrategy = 0, retainStrategy = 1)
 @AggregateFunctionAnnotation(name = "SLIDINGCOUNTWINDOW", displayName = "滑动计数窗口函数")
 public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<IN, List<IN>, OUT> {
 
@@ -34,7 +32,7 @@ public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements Aggreg
     public List<IN> add(IN input, List<IN> accumulator) {
         accumulator.add(input);
         while (accumulator.size() > limit) {
-            accumulator.remove(0);
+            accumulator.removeFirst();
         }
         return accumulator;
     }
@@ -52,7 +50,7 @@ public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements Aggreg
     public List<IN> merge(List<IN> thisAccumulator, List<IN> thatAccumulator) {
         thisAccumulator.addAll(thatAccumulator);
         while (thisAccumulator.size() > limit) {
-            thisAccumulator.remove(0);
+            thisAccumulator.removeFirst();
         }
         return thisAccumulator;
     }

@@ -11,8 +11,10 @@ import java.util.*;
 import static com.yanggu.metric_calculate.core.enums.SortType.*;
 
 /**
- * 有界优先队列<br>
- * 按照给定的排序规则，排序元素，当队列满时，按照给定的排序规则淘汰末尾元素（去除末尾元素）
+ * 有界优先队列
+ * <p>按照给定的排序规则，排序元素</p>
+ * <p>支持窗口函数中排序函数ROW_NUMBER、RANK、DENSE_RANK的排序值语义</p>
+ * <p>在{@link #toList()}方法中实现三种排序语义</p>
  *
  * @param <E> 成员类型
  */

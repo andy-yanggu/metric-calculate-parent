@@ -15,6 +15,12 @@ import java.util.Map;
 public interface Window<OUT> {
 
     /**
+     * 初始化接口
+     */
+    default void init() {
+    }
+
+    /**
      * 放入明细数据进行累加
      *
      * @param input
@@ -51,8 +57,6 @@ public interface Window<OUT> {
     // * @return
     // */
     //W merge(W thatWindow);
-
-    //W createWindow();
 
     /**
      * 窗口是否为空

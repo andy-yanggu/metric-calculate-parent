@@ -32,7 +32,7 @@ public class SlidingCountWindow<IN, ACC, OUT> extends AbstractWindow<IN, ACC, OU
         IN in = aggregateFieldProcessor.process(input);
         inList.add(in);
         while (inList.size() > limit) {
-            inList.remove(0);
+            inList.removeFirst();
         }
     }
 

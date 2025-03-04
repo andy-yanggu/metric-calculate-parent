@@ -27,12 +27,6 @@ public abstract class AbstractWindow<IN, ACC, OUT> implements Window<OUT> {
     protected AggregateFieldProcessor<IN, ACC, OUT> aggregateFieldProcessor;
 
     /**
-     * 初始化接口
-     */
-    public void init() {
-    }
-
-    /**
      * 从明细数据中获取度量值
      *
      * @param input

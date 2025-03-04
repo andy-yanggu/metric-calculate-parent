@@ -1,5 +1,6 @@
-package com.yanggu.metric_calculate.core.aggregate_function;
+package com.yanggu.metric_calculate.core.aggregate_function.window;
 
+import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import lombok.Data;
 import org.dromara.hutool.core.lang.mutable.MutablePair;
 
@@ -50,7 +51,17 @@ public class StateWindowAggregateFunction<K, IN, ACC, OUT> implements AggregateF
     @Override
     public MutablePair<K, ACC> merge(MutablePair<K, ACC> thisAccumulator,
                                      MutablePair<K, ACC> thatAccumulator) {
-        return null;
+        K thisStatus = thisAccumulator.getLeft();
+        K thatStatus = thatAccumulator.getLeft();
+
+        //如果状态不同，无法合并
+        if (!Objects.equals(thisStatus, thatStatus)) {
+            throw new IllegalArgumentException("Cannot merge accumulators with different states");
+        }
+
+        //合并累加器
+        ACC newAcc = aggregateFunction.merge(thisAccumulator.getRight(), thatAccumulator.getRight());
+        return new MutablePair<>(thisStatus, newAcc);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.aggregate_function;
+package com.yanggu.metric_calculate.core.aggregate_function.window;
 
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
 import org.dromara.hutool.core.lang.mutable.MutablePair;

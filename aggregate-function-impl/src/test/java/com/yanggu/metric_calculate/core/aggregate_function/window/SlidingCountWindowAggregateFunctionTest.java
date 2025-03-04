@@ -1,4 +1,4 @@
-package com.yanggu.metric_calculate.core.aggregate_function.collection;
+package com.yanggu.metric_calculate.core.aggregate_function.window;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;

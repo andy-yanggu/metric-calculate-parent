@@ -5,6 +5,7 @@ import lombok.Getter;
 
 /**
  * 排序方式枚举
+ * <p>类似窗口函数的rank函数，三种排序语义</p>
  */
 @Getter
 @AllArgsConstructor

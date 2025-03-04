@@ -17,7 +17,7 @@ import java.util.*;
 import static com.yanggu.metric_calculate.core.enums.WindowTypeEnum.EVENT_WINDOW;
 
 /**
- * CEP类型
+ * CEP窗口
  *
  * @param <IN>
  * @param <ACC>
