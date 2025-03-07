@@ -1,5 +1,6 @@
 package com.yanggu.metric_calculate.web.controller;
 
+import com.alibaba.fastjson2.JSON;
 import com.yanggu.metric_calculate.core.calculate.MetricCalculate;
 import com.yanggu.metric_calculate.core.pojo.data_detail_table.Model;
 import com.yanggu.metric_calculate.core.util.MetricUtil;
@@ -13,7 +14,6 @@ import org.dromara.hutool.core.io.IoUtil;
 import org.dromara.hutool.core.io.resource.MultiResource;
 import org.dromara.hutool.core.io.resource.Resource;
 import org.dromara.hutool.core.io.resource.ResourceFinder;
-import org.dromara.hutool.json.JSONUtil;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,7 +38,7 @@ public class MockMetricConfigDataController {
         List<Model> list = new ArrayList<>();
         for (Resource resource : resources) {
             String jsonString = IoUtil.readUtf8(resource.getStream());
-            Model tempModel = JSONUtil.toBean(jsonString, Model.class);
+            Model tempModel = JSON.parseObject(jsonString, Model.class);
             list.add(tempModel);
         }
         this.modelList = list;

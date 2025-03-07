@@ -67,14 +67,14 @@ public class MetricCalculate extends Model implements Serializable {
         if (MapUtil.isEmpty(input)) {
             throw new RuntimeException("输入的明细数据为空");
         }
-        Map<String, Object> data = new HashMap<>();
+        Map<String, Object> processMap = new HashMap<>(input);
         for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
-            Object process = fieldCalculate.process(input);
+            Object process = fieldCalculate.process(processMap);
             if (process != null) {
-                data.put(fieldCalculate.getName(), process);
+                processMap.put(fieldCalculate.getName(), process);
             }
         }
-        return data;
+        return processMap;
     }
 
     /**
