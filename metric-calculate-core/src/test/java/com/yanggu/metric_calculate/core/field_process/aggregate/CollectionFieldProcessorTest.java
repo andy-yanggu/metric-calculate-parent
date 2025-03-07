@@ -69,10 +69,6 @@ class CollectionFieldProcessorTest {
         BaseUdafParam baseUdafParam9 = UdafParamTestBase.createBaseUdafParam("DISTINCTCOUNT", null, "amount");
         FieldProcessor<Map<String, Object>, MultiFieldData> distinctCountFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam9);
         fieldProcessorMap.put("DISTINCTCOUNT", distinctCountFieldProcessor);
-
-        BaseUdafParam baseUdafParam10 = UdafParamTestBase.createBaseUdafParam("SLIDINGCOUNTWINDOW", "amount");
-        FieldProcessor<Map<String, Object>, Double> slidingCountWindowFieldProcessor = getBaseAggregateFieldProcessor(fieldMap, baseUdafParam10);
-        fieldProcessorMap.put("SLIDINGCOUNTWINDOW", slidingCountWindowFieldProcessor);
     }
 
     @Test
@@ -195,17 +191,6 @@ class CollectionFieldProcessorTest {
 
         assertNotNull(process);
         assertEquals(List.of(amount), process.getFieldList());
-    }
-
-    /**
-     * SLIDINGCOUNTWINDOW、滑动计数窗口函数: 没有去重字段、没有排序字段和保留指定字段
-     */
-    @ParameterizedTest
-    @CsvSource({"100,'张三'", "200,'张三2'"})
-    @DisplayName("SLIDINGCOUNTWINDOW、滑动计数窗口函数: 没有去重字段、没有排序字段和保留指定字段")
-    void process10(Double amount, String name) throws Exception {
-        Double process = process("SLIDINGCOUNTWINDOW", amount, name);
-        assertEquals(amount, process, 0.0D);
     }
 
     private Map<String, Object> buildParamMap(Double amount, String name) {

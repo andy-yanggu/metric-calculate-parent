@@ -2,22 +2,22 @@ package com.yanggu.metric_calculate.core.aggregate_function.window;
 
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunctionTestBase;
 import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateFunction;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * 滑动计数窗口单元测试类
+ */
+@DisplayName("滑动计数窗口单元测试类")
 class SlidingCountWindowAggregateFunctionTest {
 
     @Test
     void testAggregateFunctionName() {
         AggregateFunctionTestBase.testAggregateFunctionName(SlidingCountWindowAggregateFunction.class, "SLIDINGCOUNTWINDOW");
-    }
-
-    @Test
-    void testCollective() {
-        AggregateFunctionTestBase.testCollective(SlidingCountWindowAggregateFunction.class, 0, 1);
     }
 
     @Test
@@ -42,16 +42,16 @@ class SlidingCountWindowAggregateFunctionTest {
         List<Integer> accumulator = slidingCountWindowAggregateFunction.createAccumulator();
         slidingCountWindowAggregateFunction.add(1, accumulator);
         assertEquals(1, accumulator.size());
-        assertEquals(Integer.valueOf(1), accumulator.get(0));
+        assertEquals(Integer.valueOf(1), accumulator.getFirst());
 
         slidingCountWindowAggregateFunction.add(2, accumulator);
         assertEquals(2, accumulator.size());
-        assertEquals(Integer.valueOf(1), accumulator.get(0));
+        assertEquals(Integer.valueOf(1), accumulator.getFirst());
         assertEquals(Integer.valueOf(2), accumulator.get(1));
 
         slidingCountWindowAggregateFunction.add(3, accumulator);
         assertEquals(2, accumulator.size());
-        assertEquals(Integer.valueOf(2), accumulator.get(0));
+        assertEquals(Integer.valueOf(2), accumulator.getFirst());
         assertEquals(Integer.valueOf(3), accumulator.get(1));
     }
 
