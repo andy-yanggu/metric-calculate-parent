@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("映射型派生指标单元测试类")
 class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
 
-    private static DeriveMetricCalculate<Pair<MultiFieldData, Integer>, Map<MultiFieldData, Double>, Map<List<Object>, Double>> deriveMetricCalculate;
+    private static DeriveMetricCalculate<Pair<MultiFieldData, Integer>, Map<MultiFieldData, Double>, Map<List<Object>, BigDecimal>> deriveMetricCalculate;
 
     @BeforeAll
     static void init() {
@@ -44,7 +45,7 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
         paramMap.put("trans_timestamp", "1654768045000");
         paramMap.put("amount", testData.getInput().getAmount());
 
-        DeriveMetricCalculateResult<Map<List<Object>, Double>> result = deriveMetricCalculate.stateExec(paramMap);
+        DeriveMetricCalculateResult<Map<List<Object>, BigDecimal>> result = deriveMetricCalculate.stateExec(paramMap);
         assertNotNull(result);
         assertEquals(testData.getOutput(), result.getResult());
     }

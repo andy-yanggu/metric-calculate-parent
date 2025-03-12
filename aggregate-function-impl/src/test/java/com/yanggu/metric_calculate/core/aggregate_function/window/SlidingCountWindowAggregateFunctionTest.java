@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateF
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,7 +36,7 @@ class SlidingCountWindowAggregateFunctionTest {
 
     @Test
     void add() {
-        SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
+        SlidingCountWindowAggregateFunction<Integer, BigDecimal, BigDecimal> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         slidingCountWindowAggregateFunction.setLimit(2);
         slidingCountWindowAggregateFunction.setAggregateFunction(new SumAggregateFunction<>());
 
@@ -57,7 +58,7 @@ class SlidingCountWindowAggregateFunctionTest {
 
     @Test
     void getResult() {
-        SlidingCountWindowAggregateFunction<Integer, Double, Double> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
+        SlidingCountWindowAggregateFunction<Integer, BigDecimal, BigDecimal> slidingCountWindowAggregateFunction = new SlidingCountWindowAggregateFunction<>();
         slidingCountWindowAggregateFunction.setLimit(2);
         slidingCountWindowAggregateFunction.setAggregateFunction(new SumAggregateFunction<>());
 
@@ -65,8 +66,8 @@ class SlidingCountWindowAggregateFunctionTest {
         slidingCountWindowAggregateFunction.add(1, accumulator);
         slidingCountWindowAggregateFunction.add(2, accumulator);
 
-        Double result = slidingCountWindowAggregateFunction.getResult(accumulator);
-        assertEquals(3.0D, result, 0.0D);
+        BigDecimal result = slidingCountWindowAggregateFunction.getResult(accumulator);
+        assertEquals(3.0D, result.doubleValue(), 0.0D);
     }
 
     @Test

@@ -7,6 +7,7 @@ import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 class BaseMapAggregateFunctionTest {
 
-    private BaseMapAggregateFunction<Double, Double, Double> basemap;
+    private BaseMapAggregateFunction<Double, BigDecimal, BigDecimal> basemap;
 
     @BeforeEach
     void init() {
@@ -47,9 +48,9 @@ class BaseMapAggregateFunctionTest {
         var accumulator = basemap.createAccumulator();
         MultiFieldData mapKey = new MultiFieldData(List.of("张三"));
         basemap.add(new Pair<>(mapKey, 100.0D), accumulator);
-        Map<List<Object>, Double> result = basemap.getResult(accumulator);
+        Map<List<Object>, BigDecimal> result = basemap.getResult(accumulator);
         assertNotNull(result);
-        assertEquals(100.0D, result.get(List.of("张三")), 0.0D);
+        assertEquals(BigDecimal.valueOf(100.0D), result.get(List.of("张三")));
     }
 
 }

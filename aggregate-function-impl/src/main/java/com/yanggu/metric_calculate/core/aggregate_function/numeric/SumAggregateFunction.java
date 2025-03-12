@@ -4,6 +4,9 @@ package com.yanggu.metric_calculate.core.aggregate_function.numeric;
 import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
+import org.dromara.hutool.core.math.NumberUtil;
+
+import java.math.BigDecimal;
 
 /**
  * 求和
@@ -12,26 +15,26 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
  */
 @Numerical
 @AggregateFunctionAnnotation(name = "SUM", displayName = "求和")
-public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
+public class SumAggregateFunction<T extends Number> implements AggregateFunction<T, BigDecimal, BigDecimal> {
 
     @Override
-    public Double createAccumulator() {
-        return 0.0D;
+    public BigDecimal createAccumulator() {
+        return BigDecimal.ZERO;
     }
 
     @Override
-    public Double add(T input, Double accumulator) {
-        return input.doubleValue() + accumulator;
+    public BigDecimal add(T input, BigDecimal accumulator) {
+        return NumberUtil.add(input, accumulator);
     }
 
     @Override
-    public Double getResult(Double accumulator) {
+    public BigDecimal getResult(BigDecimal accumulator) {
         return accumulator;
     }
 
     @Override
-    public Double merge(Double thisAccumulator, Double thatAccumulator) {
-        return thisAccumulator + thatAccumulator;
+    public BigDecimal merge(BigDecimal thisAccumulator, BigDecimal thatAccumulator) {
+        return NumberUtil.add(thisAccumulator, thatAccumulator);
     }
 
 }

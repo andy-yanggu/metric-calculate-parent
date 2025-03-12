@@ -5,6 +5,7 @@ import com.yanggu.metric_calculate.core.aggregate_function.numeric.SumAggregateF
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,29 +39,29 @@ class SortValueReturnMapMapAggregateFunctionTest {
      */
     @Test
     void testGetResult() {
-        Map<MultiFieldData, Double> accumulator = new HashMap<>();
-        accumulator.put(create("key1"), 1.0D);
-        accumulator.put(create("key2"), 2.0D);
-        accumulator.put(create("key3"), 3.0D);
-        accumulator.put(create("key4"), 4.0D);
-        accumulator.put(create("key5"), 5.0D);
-        accumulator.put(create("key6"), 6.0D);
-        accumulator.put(create("key7"), 7.0D);
-        accumulator.put(create("key8"), 8.0D);
-        accumulator.put(create("key9"), 9.0D);
-        accumulator.put(create("key10"), 10.0D);
+        Map<MultiFieldData, BigDecimal> accumulator = new HashMap<>();
+        accumulator.put(create("key1"), BigDecimal.valueOf(1.0D));
+        accumulator.put(create("key2"), BigDecimal.valueOf(2.0D));
+        accumulator.put(create("key3"), BigDecimal.valueOf(3.0D));
+        accumulator.put(create("key4"), BigDecimal.valueOf(4.0D));
+        accumulator.put(create("key5"), BigDecimal.valueOf(5.0D));
+        accumulator.put(create("key6"), BigDecimal.valueOf(6.0D));
+        accumulator.put(create("key7"), BigDecimal.valueOf(7.0D));
+        accumulator.put(create("key8"), BigDecimal.valueOf(8.0D));
+        accumulator.put(create("key9"), BigDecimal.valueOf(9.0D));
+        accumulator.put(create("key10"), BigDecimal.valueOf(10.0D));
 
-        SortValueReturnMapMapAggregateFunction<Integer, Double, Double> sortValueReturnMapMapAggregateFunction = new SortValueReturnMapMapAggregateFunction<>();
+        SortValueReturnMapMapAggregateFunction<Integer, BigDecimal, BigDecimal> sortValueReturnMapMapAggregateFunction = new SortValueReturnMapMapAggregateFunction<>();
 
         sortValueReturnMapMapAggregateFunction.setValueAggregateFunction(new SumAggregateFunction<>());
         sortValueReturnMapMapAggregateFunction.setLimit(5);
-        Map<List<Object>, Double> actualResult = sortValueReturnMapMapAggregateFunction.getResult(accumulator);
-        Map<List<Object>, Double> expectedResult = new LinkedHashMap<>();
-        expectedResult.put(List.of("key1"), 1.0D);
-        expectedResult.put(List.of("key2"), 2.0D);
-        expectedResult.put(List.of("key3"), 3.0D);
-        expectedResult.put(List.of("key4"), 4.0D);
-        expectedResult.put(List.of("key5"), 5.0D);
+        Map<List<Object>, BigDecimal> actualResult = sortValueReturnMapMapAggregateFunction.getResult(accumulator);
+        Map<List<Object>, BigDecimal> expectedResult = new LinkedHashMap<>();
+        expectedResult.put(List.of("key1"), BigDecimal.valueOf(1.0D));
+        expectedResult.put(List.of("key2"), BigDecimal.valueOf(2.0D));
+        expectedResult.put(List.of("key3"), BigDecimal.valueOf(3.0D));
+        expectedResult.put(List.of("key4"), BigDecimal.valueOf(4.0D));
+        expectedResult.put(List.of("key5"), BigDecimal.valueOf(5.0D));
         assertEquals(expectedResult, actualResult);
     }
 
@@ -69,30 +70,30 @@ class SortValueReturnMapMapAggregateFunctionTest {
      */
     @Test
     void testGetResult_Negative() {
-        Map<MultiFieldData, Double> accumulator = new HashMap<>();
-        accumulator.put(create("key1"), 1.0D);
-        accumulator.put(create("key2"), 2.0D);
-        accumulator.put(create("key3"), 3.0D);
-        accumulator.put(create("key4"), 4.0D);
-        accumulator.put(create("key5"), 5.0D);
-        accumulator.put(create("key6"), 6.0D);
-        accumulator.put(create("key7"), 7.0D);
-        accumulator.put(create("key8"), 8.0D);
-        accumulator.put(create("key9"), 9.0D);
-        accumulator.put(create("key10"), 10.0D);
+        Map<MultiFieldData, BigDecimal> accumulator = new HashMap<>();
+        accumulator.put(create("key1"), BigDecimal.valueOf(1.0D));
+        accumulator.put(create("key2"), BigDecimal.valueOf(2.0D));
+        accumulator.put(create("key3"), BigDecimal.valueOf(3.0D));
+        accumulator.put(create("key4"), BigDecimal.valueOf(4.0D));
+        accumulator.put(create("key5"), BigDecimal.valueOf(5.0D));
+        accumulator.put(create("key6"), BigDecimal.valueOf(6.0D));
+        accumulator.put(create("key7"), BigDecimal.valueOf(7.0D));
+        accumulator.put(create("key8"), BigDecimal.valueOf(8.0D));
+        accumulator.put(create("key9"), BigDecimal.valueOf(9.0D));
+        accumulator.put(create("key10"), BigDecimal.valueOf(10.0D));
 
-        SortValueReturnMapMapAggregateFunction<Integer, Double, Double> sortValueReturnMapMapAggregateFunction = new SortValueReturnMapMapAggregateFunction<>();
+        SortValueReturnMapMapAggregateFunction<Integer, BigDecimal, BigDecimal> sortValueReturnMapMapAggregateFunction = new SortValueReturnMapMapAggregateFunction<>();
 
         sortValueReturnMapMapAggregateFunction.setValueAggregateFunction(new SumAggregateFunction<>());
         sortValueReturnMapMapAggregateFunction.setAsc(false);
         sortValueReturnMapMapAggregateFunction.setLimit(5);
-        Map<List<Object>, Double> actualResult = sortValueReturnMapMapAggregateFunction.getResult(accumulator);
-        Map<List<Object>, Double> expectedResult = new LinkedHashMap<>();
-        expectedResult.put(List.of("key10"), 10.0D);
-        expectedResult.put(List.of("key9"), 9.0D);
-        expectedResult.put(List.of("key8"), 8.0D);
-        expectedResult.put(List.of("key7"), 7.0D);
-        expectedResult.put(List.of("key6"), 6.0D);
+        Map<List<Object>, BigDecimal> actualResult = sortValueReturnMapMapAggregateFunction.getResult(accumulator);
+        Map<List<Object>, BigDecimal> expectedResult = new LinkedHashMap<>();
+        expectedResult.put(List.of("key10"), BigDecimal.valueOf(10.0D));
+        expectedResult.put(List.of("key9"), BigDecimal.valueOf(9.0D));
+        expectedResult.put(List.of("key8"), BigDecimal.valueOf(8.0D));
+        expectedResult.put(List.of("key7"), BigDecimal.valueOf(7.0D));
+        expectedResult.put(List.of("key6"), BigDecimal.valueOf(6.0D));
         assertEquals(expectedResult, actualResult);
     }
 

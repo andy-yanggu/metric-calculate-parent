@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("滑动计数窗口派生指标单元测试类")
 class DeriveMetricsCalculateSlidingCountWindowTest extends DeriveMetricsCalculateBase {
 
-    private static DeriveMetricCalculate<Integer, Double, Double> deriveMetricCalculate;
+    private static DeriveMetricCalculate<Integer, BigDecimal, BigDecimal> deriveMetricCalculate;
 
     @BeforeAll
     static void init() {
@@ -42,16 +43,16 @@ class DeriveMetricsCalculateSlidingCountWindowTest extends DeriveMetricsCalculat
                     "100.0,2400.0"
             }
     )
-    void testSum(Double input, Double expected) {
+    void testSum(BigDecimal input, BigDecimal expected) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("account_no_out", "000000000011");
         paramMap.put("account_no_in", "000000000012");
         paramMap.put("trans_timestamp", "1654768045000");
         paramMap.put("amount", input);
 
-        DeriveMetricCalculateResult<Double> query = deriveMetricCalculate.stateExec(paramMap);
+        DeriveMetricCalculateResult<BigDecimal> query = deriveMetricCalculate.stateExec(paramMap);
         assertNotNull(query);
-        assertEquals(expected, query.getResult(), 0.0D);
+        assertEquals(expected, query.getResult());
     }
 
 }

@@ -30,6 +30,7 @@ import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 import static com.yanggu.metric_calculate.core.field_process.FieldProcessorTestBase.*;
@@ -296,12 +297,12 @@ class FieldProcessorUtilTest {
         fieldMap.put("name", String.class);
         fieldMap.put("amount", Integer.class);
 
-        AggregateFieldProcessor<AbstractMap.SimpleImmutableEntry<MultiFieldData, Integer>, Map<MultiFieldData, Double>, Map<List<Object>, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
+        AggregateFieldProcessor<Pair<MultiFieldData, Integer>, Map<MultiFieldData, Double>, Map<List<Object>, Double>> aggregateFieldProcessor = getAggregateFieldProcessor(fieldMap, aggregateFunctionParam);
 
         FieldProcessor<Map<String, Object>, AbstractMap.SimpleImmutableEntry<MultiFieldData, Integer>> baseFieldProcessor = getMapFieldProcessor(fieldMap, mapUdafParam);
         assertEquals(baseFieldProcessor, aggregateFieldProcessor.fieldProcessor());
 
-        BaseMapAggregateFunction<Integer, Double, Double> baseMapAggregateFunction = new BaseMapAggregateFunction<>();
+        BaseMapAggregateFunction<Integer, BigDecimal, BigDecimal> baseMapAggregateFunction = new BaseMapAggregateFunction<>();
         baseMapAggregateFunction.setValueAggregateFunction(new SumAggregateFunction<>());
         assertEquals(baseMapAggregateFunction, aggregateFieldProcessor.aggregateFunction());
     }

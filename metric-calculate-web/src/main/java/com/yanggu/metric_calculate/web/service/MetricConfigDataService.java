@@ -24,7 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 
-import static com.yanggu.metric_calculate.web.enums.ResultCode.*;
+import static com.yanggu.metric_calculate.web.enums.ResultCode.DERIVE_ID_ERROR;
+import static com.yanggu.metric_calculate.web.enums.ResultCode.TABLE_ID_ERROR;
 
 /**
  * 指标配置数据Service

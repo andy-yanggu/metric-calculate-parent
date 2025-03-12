@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.aggregate_function.window;
 
 
-import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +16,12 @@ import java.util.List;
  * @param <OUT>
  */
 @Data
+@EqualsAndHashCode(callSuper = true)
 @AggregateFunctionAnnotation(name = "SLIDINGCOUNTWINDOW", displayName = "滑动计数窗口函数")
-public class SlidingCountWindowAggregateFunction<IN, ACC, OUT> implements AggregateFunction<IN, List<IN>, OUT> {
+public class SlidingCountWindowAggregateFunction<IN, ACC, OUT>
+        extends AbstractWindowAggregateFunction<IN, List<IN>, OUT, IN, ACC, OUT> {
 
     private Integer limit = 10;
-
-    private AggregateFunction<IN, ACC, OUT> aggregateFunction;
 
     @Override
     public List<IN> createAccumulator() {

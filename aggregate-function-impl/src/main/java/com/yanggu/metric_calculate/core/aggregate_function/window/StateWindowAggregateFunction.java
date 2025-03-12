@@ -1,7 +1,7 @@
 package com.yanggu.metric_calculate.core.aggregate_function.window;
 
-import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.dromara.hutool.core.lang.mutable.MutablePair;
 
 import java.util.Objects;
@@ -11,9 +11,9 @@ import java.util.Objects;
  * <p>K相同时进行累加, 不相同时重新累加</p>
  */
 @Data
-public class StateWindowAggregateFunction<K, IN, ACC, OUT> implements AggregateFunction<MutablePair<K, IN>, MutablePair<K, ACC>, MutablePair<K, OUT>> {
-
-    private AggregateFunction<IN, ACC, OUT> aggregateFunction;
+@EqualsAndHashCode(callSuper = true)
+public class StateWindowAggregateFunction<K, IN, ACC, OUT> extends
+        AbstractWindowAggregateFunction<MutablePair<K, IN>, MutablePair<K, ACC>, MutablePair<K, OUT>, IN, ACC, OUT> {
 
     @Override
     public MutablePair<K, ACC> createAccumulator() {

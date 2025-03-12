@@ -6,6 +6,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
+
 import static com.yanggu.metric_calculate.core.function_factory.AggregateFunctionFactoryBase.AGGREGATE_FUNCTION_FACTORY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,13 +28,13 @@ class AggregateFunctionFactoryTest {
 
     @Test
     void test2() {
-        AggregateFunction<Integer, Double, Double> aggregateFunction = AGGREGATE_FUNCTION_FACTORY.getAggregateFunction("SUM");
+        AggregateFunction<Integer, BigDecimal, BigDecimal> aggregateFunction = AGGREGATE_FUNCTION_FACTORY.getAggregateFunction("SUM");
         AggregateFunctionFactory.initAggregateFunction(aggregateFunction, null);
-        Double accumulator = aggregateFunction.createAccumulator();
+        BigDecimal accumulator = aggregateFunction.createAccumulator();
         accumulator = aggregateFunction.add(1, accumulator);
         accumulator = aggregateFunction.add(2, accumulator);
-        Double result = aggregateFunction.getResult(accumulator);
-        assertEquals(3.0D, result, 0.0D);
+        BigDecimal result = aggregateFunction.getResult(accumulator);
+        assertEquals(3.0D, result.doubleValue(), 0.0D);
     }
 
 }
