@@ -5,6 +5,8 @@ import com.yanggu.metric_calculate.core.aggregate_function.AggregateFunction;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.AggregateFunctionAnnotation;
 import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
 
+import java.math.BigDecimal;
+
 /**
  * 最大数值
  *
@@ -12,29 +14,39 @@ import com.yanggu.metric_calculate.core.aggregate_function.annotation.Numerical;
  */
 @Numerical
 @AggregateFunctionAnnotation(name = "MAX", displayName = "最大数值")
-public class MaxAggregateFunction<T extends Number> implements AggregateFunction<T, Double, Double> {
+public class MaxAggregateFunction<T extends Number> implements AggregateFunction<T, BigDecimal, BigDecimal> {
 
     @Override
-    public Double createAccumulator() {
-        return Double.MIN_VALUE;
+    public BigDecimal createAccumulator() {
+        return BigDecimal.valueOf(Double.MIN_VALUE);
     }
 
     @Override
-    public Double add(T input, Double accumulator) {
+    public BigDecimal add(T input, BigDecimal accumulator) {
         if (input == null) {
             return accumulator;
         }
-        return Math.max(input.doubleValue(), accumulator);
+        BigDecimal inputValue = new BigDecimal(input.toString());
+        if (accumulator == null) {
+            return inputValue;
+        }
+        return accumulator.max(inputValue);
     }
 
     @Override
-    public Double getResult(Double accumulator) {
+    public BigDecimal getResult(BigDecimal accumulator) {
         return accumulator;
     }
 
     @Override
-    public Double merge(Double thisAccumulator, Double thatAccumulator) {
-        return Math.max(thisAccumulator, thatAccumulator);
+    public BigDecimal merge(BigDecimal thisAccumulator, BigDecimal thatAccumulator) {
+        if (thisAccumulator == null) {
+            return thatAccumulator;
+        }
+        if (thatAccumulator == null) {
+            return thisAccumulator;
+        }
+        return thisAccumulator.max(thatAccumulator);
     }
 
 }

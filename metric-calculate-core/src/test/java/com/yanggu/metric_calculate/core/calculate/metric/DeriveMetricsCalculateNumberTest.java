@@ -22,7 +22,7 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
 
     private static DeriveMetricCalculate<Double, BigDecimal, BigDecimal> sumDeriveMetricCalculate;
 
-    private static DeriveMetricCalculate<Double, Double, Double> minDeriveMetricCalculate;
+    private static DeriveMetricCalculate<Double, BigDecimal, BigDecimal> minDeriveMetricCalculate;
 
     private static DeriveMetricCalculate<Double, BigDecimal, BigDecimal> fitlerSumDeriveMetricCalculate;
 
@@ -56,15 +56,15 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
     @ParameterizedTest
     @DisplayName("测试MIN, 最小值")
     @CsvSource({"800,800.0", "900,800.0", "400,400.0", "500,400.0"})
-    void testMin(Double amount, Double expected) {
+    void testMin(BigDecimal amount, BigDecimal expected) {
         Map<String, Object> inputParam = new HashMap<>();
         inputParam.put("account_no_out", "000000000011");
         inputParam.put("account_no_in", "000000000012");
         inputParam.put("trans_timestamp", "1654768045000");
         inputParam.put("amount", amount);
 
-        DeriveMetricCalculateResult<Double> doubles = minDeriveMetricCalculate.stateExec(inputParam);
-        assertEquals(expected, doubles.getResult(), 0.0D);
+        DeriveMetricCalculateResult<BigDecimal> doubles = minDeriveMetricCalculate.stateExec(inputParam);
+        assertTrue(NumberUtil.valueEquals(expected, doubles.getResult()));
     }
 
     /**

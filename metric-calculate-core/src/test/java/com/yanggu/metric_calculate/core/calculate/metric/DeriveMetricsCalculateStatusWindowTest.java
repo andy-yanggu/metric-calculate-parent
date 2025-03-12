@@ -12,6 +12,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DisplayName("状态窗口派生指标单元测试类")
 class DeriveMetricsCalculateStatusWindowTest {
 
-    private static DeriveMetricCalculate<Long, Map<String, Object>, Double> deriveMetricCalculate;
+    private static DeriveMetricCalculate<Long, Map<String, Object>, BigDecimal> deriveMetricCalculate;
 
     @BeforeAll
     static void init() {
@@ -47,10 +48,10 @@ class DeriveMetricsCalculateStatusWindowTest {
         paramMap.put("status", status);
         paramMap.put("timestamp", timestamp);
 
-        DeriveMetricCalculateResult<Double> deriveMetricCalculateResult = deriveMetricCalculate.stateExec(paramMap);
+        DeriveMetricCalculateResult<BigDecimal> deriveMetricCalculateResult = deriveMetricCalculate.stateExec(paramMap);
         assertNotNull(deriveMetricCalculateResult);
-        Double result = deriveMetricCalculateResult.getResult();
-        assertEquals(expected, result.longValue(), 0.0D);
+        BigDecimal result = deriveMetricCalculateResult.getResult();
+        assertEquals(expected, result.doubleValue(), 0.0D);
         assertEquals(List.of(status), deriveMetricCalculateResult.getStatusList());
     }
 
