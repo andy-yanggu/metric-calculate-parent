@@ -64,7 +64,7 @@ class DeriveMetricsCalculateMixTest extends DeriveMetricsCalculateBase {
         paramMap = metricCalculate.getParam(paramMap);
         DeriveMetricCalculateResult<BigDecimal> query = deriveMetricCalculate2.stateExec(paramMap);
         assertNotNull(query);
-        assertTrue(NumberUtil.equals(expected, query.getResult()));
+        assertTrue(NumberUtil.valueEquals(expected, query.getResult()));
     }
 
 }

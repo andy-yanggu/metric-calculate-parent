@@ -47,7 +47,7 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         inputParam.put("amount", amount);
 
         DeriveMetricCalculateResult<BigDecimal> doubles = sumDeriveMetricCalculate.stateExec(inputParam);
-        assertTrue(NumberUtil.equals(expected, doubles.getResult()));
+        assertTrue(NumberUtil.valueEquals(expected, doubles.getResult()));
     }
 
     /**
@@ -84,7 +84,7 @@ class DeriveMetricsCalculateNumberTest extends DeriveMetricsCalculateBase {
         if (expected == null) {
             assertNull(result);
         } else {
-            assertTrue(NumberUtil.equals(expected, result.getResult()));
+            assertTrue(NumberUtil.valueEquals(expected, result.getResult()));
         }
     }
 
