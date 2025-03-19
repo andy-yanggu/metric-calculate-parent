@@ -2,8 +2,6 @@ package com.yanggu.metric_calculate.core.util;
 
 
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.reflect.TypeReference;
-import org.dromara.hutool.json.JSONUtil;
 
 import java.util.*;
 
@@ -36,6 +34,11 @@ public class DAGUtil {
             }
         }
 
+        //没有入度为0的节点，则说明存在循环依赖
+        if (queue.isEmpty()) {
+            throw new IllegalArgumentException("The graph contains a cycle.");
+        }
+
         // 存储拓扑排序的结果
         List<String> sortedList = new ArrayList<>();
         while (!queue.isEmpty()) {
@@ -55,19 +58,24 @@ public class DAGUtil {
             }
         }
 
+        //如果排序后的节点数量和所有节点数量不一致，则说明存在循环依赖
+        if (sortedList.size() != inDegree.size()) {
+            throw new IllegalArgumentException("The graph contains a cycle.");
+        }
+
         return sortedList;
     }
 
     public static void main(String[] args) {
-        String json = "{\"trans_no\":[],\"account_no_out\":[],\"amount\":[],\"account_no_in\":[],\"trans_timestamp\":[\"trans_date\",\"trans_hour\"]}";
-        Map<String, Set<String>> graph = JSONUtil.toBean(json, new TypeReference<Map<String, Set<String>>>() {
-        });
-        //graph.put("A", new HashSet<>(Arrays.asList("B", "C")));
-        //graph.put("B", new HashSet<>(Arrays.asList("D")));
-        //graph.put("C", new HashSet<>(Arrays.asList("D")));
-        //graph.put("D", new HashSet<>());
+        Map<String, Set<String>> graph = new HashMap<>();
+        graph.put("A", Set.of("B", "C"));
+        graph.put("B", Set.of("D"));
+        graph.put("C", Set.of("D"));
+        graph.put("D", Set.of("A"));
+        graph.put("E", Set.of("F"));
 
         List<String> result = topologicalSort(graph);
-        System.out.println(result); // 预期输出：[A, B, C, D] 或 [A, C, B, D]
+        //存在循环依赖，应该会报错
+        System.out.println(result);
     }
 }
