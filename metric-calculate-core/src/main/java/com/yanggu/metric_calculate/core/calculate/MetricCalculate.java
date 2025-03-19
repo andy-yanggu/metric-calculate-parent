@@ -69,10 +69,9 @@ public class MetricCalculate extends Model implements Serializable {
         }
         Map<String, Object> processMap = new HashMap<>(input);
         for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
+            //计算得到的结果作为下一个计算的输入
             Object process = fieldCalculate.process(processMap);
-            if (process != null) {
-                processMap.put(fieldCalculate.getName(), process);
-            }
+            processMap.put(fieldCalculate.getName(), process);
         }
         return processMap;
     }

@@ -29,12 +29,10 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
+import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.yanggu.metric_calculate.core.enums.FieldTypeEnum.REAL;
 import static com.yanggu.metric_calculate.core.enums.FieldTypeEnum.VIRTUAL;
@@ -103,6 +101,7 @@ public class MetricUtil {
             throw new RuntimeException("宽表字段为空");
         }
         List<FieldCalculate<Map<String, Object>, Object>> fieldCalculateList = new ArrayList<>();
+        Set<String> fieldNameSet = metricCalculate.getFieldMap().keySet();
         for (ModelColumn modelColumn : modelColumnList) {
             FieldTypeEnum fieldType = modelColumn.getFieldType();
             //真实字段
@@ -125,6 +124,29 @@ public class MetricUtil {
                 throw new RuntimeException("字段类型异常");
             }
         }
+        //因为字段之间可能存在依赖关系，所以需要构建依赖图，重新排序字段计算顺序
+        //构建依赖图
+        Map<String, Set<String>> graph = new HashMap<>();
+        //构建依赖关系left -> right, left指向right, right依赖left
+        List<Pair<String, String>> pairList = new ArrayList<>();
+        for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
+            String name = fieldCalculate.getName();
+            List<String> dependFields = fieldCalculate.dependFields();
+            if (CollUtil.isNotEmpty(dependFields)) {
+                for (String dependField : dependFields) {
+                    pairList.add(Pair.of(dependField, name));
+                }
+            } else {
+                graph.put(name, new HashSet<>());
+            }
+        }
+        for (Pair<String, String> pair : pairList) {
+            graph.get(pair.getLeft()).add(pair.getRight());
+        }
+
+        List<String> list = DAGUtil.topologicalSort(graph);
+        //重新进行排序
+        fieldCalculateList.sort(Comparator.comparingInt(temp -> list.indexOf(temp.getName())));
         metricCalculate.setFieldCalculateList(fieldCalculateList);
     }
 
@@ -188,10 +210,10 @@ public class MetricUtil {
      */
     @SneakyThrows
     public static <IN, ACC, OUT> DeriveMetricCalculate<IN, ACC, OUT> initDeriveMetrics(
-                                                                   DeriveMetrics deriveMetrics,
-                                                                   Map<String, Class<?>> fieldMap,
-                                                                   AviatorFunctionFactory aviatorFunctionFactory,
-                                                                   AggregateFunctionFactory aggregateFunctionFactory) {
+            DeriveMetrics deriveMetrics,
+            Map<String, Class<?>> fieldMap,
+            AviatorFunctionFactory aviatorFunctionFactory,
+            AggregateFunctionFactory aggregateFunctionFactory) {
 
         DeriveMetricCalculate<IN, ACC, OUT> deriveMetricCalculate = new DeriveMetricCalculate<>();
 

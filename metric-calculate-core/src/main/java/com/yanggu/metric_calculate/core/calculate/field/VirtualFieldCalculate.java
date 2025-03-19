@@ -4,8 +4,10 @@ import com.yanggu.metric_calculate.core.field_process.FieldProcessorUtil;
 import com.yanggu.metric_calculate.core.field_process.metric.MetricFieldProcessor;
 import com.yanggu.metric_calculate.core.function_factory.AviatorFunctionFactory;
 import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam;
+import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.Data;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -30,6 +32,11 @@ public class VirtualFieldCalculate<R> implements FieldCalculate<Map<String, Obje
     @Override
     public void init() {
         this.metricFieldProcessor = FieldProcessorUtil.getMetricFieldProcessor(fieldMap, aviatorExpressParam, aviatorFunctionFactory);
+    }
+
+    @Override
+    public List<String> dependFields() {
+        return AviatorExpressUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory).getVariableNames();
     }
 
     @Override
