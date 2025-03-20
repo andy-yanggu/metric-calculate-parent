@@ -29,7 +29,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.dromara.hutool.core.bean.BeanUtil;
 import org.dromara.hutool.core.collection.CollUtil;
-import org.dromara.hutool.core.lang.tuple.Pair;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.util.*;
@@ -125,26 +124,19 @@ public class MetricUtil {
             }
         }
         //因为字段之间可能存在依赖关系，所以需要构建依赖图，重新排序字段计算顺序
-        //构建依赖图
-        Map<String, Set<String>> graph = new HashMap<>();
-        //构建依赖关系left -> right, left指向right, right依赖left
-        List<Pair<String, String>> pairList = new ArrayList<>();
+        //构建右向左依赖图
+        Map<String, Set<String>> rightGraph = new HashMap<>();
         for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
-            String name = fieldCalculate.getName();
             List<String> dependFields = fieldCalculate.dependFields();
             if (CollUtil.isNotEmpty(dependFields)) {
-                for (String dependField : dependFields) {
-                    pairList.add(Pair.of(dependField, name));
-                }
-            } else {
-                graph.put(name, new HashSet<>());
+                rightGraph.put(fieldCalculate.getName(), new HashSet<>(dependFields));
             }
         }
-        for (Pair<String, String> pair : pairList) {
-            graph.get(pair.getLeft()).add(pair.getRight());
-        }
+        //转换成左向右依赖图
+        Map<String, Set<String>> leftGraph = DAGUtil.rightToLeft(rightGraph);
 
-        List<String> list = DAGUtil.topologicalSort(graph);
+        //进行拓扑排序
+        List<String> list = DAGUtil.topologicalSort(leftGraph);
         //重新进行排序
         fieldCalculateList.sort(Comparator.comparingInt(temp -> list.indexOf(temp.getName())));
         metricCalculate.setFieldCalculateList(fieldCalculateList);
