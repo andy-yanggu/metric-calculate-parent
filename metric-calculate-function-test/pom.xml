@@ -27,7 +27,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.furyio</groupId>
+            <groupId>org.apache.fury</groupId>
             <artifactId>fury-core</artifactId>
             <scope>test</scope>
         </dependency>

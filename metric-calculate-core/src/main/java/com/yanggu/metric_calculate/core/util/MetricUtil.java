@@ -32,6 +32,7 @@ import org.dromara.hutool.core.collection.CollUtil;
 import org.dromara.hutool.json.JSONUtil;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.yanggu.metric_calculate.core.enums.FieldTypeEnum.REAL;
 import static com.yanggu.metric_calculate.core.enums.FieldTypeEnum.VIRTUAL;
@@ -125,13 +126,8 @@ public class MetricUtil {
         }
         //因为字段之间可能存在依赖关系，所以需要构建依赖图，重新排序字段计算顺序
         //构建右向左依赖图
-        Map<String, Set<String>> rightGraph = new HashMap<>();
-        for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
-            List<String> dependFields = fieldCalculate.dependFields();
-            if (CollUtil.isNotEmpty(dependFields)) {
-                rightGraph.put(fieldCalculate.getName(), new HashSet<>(dependFields));
-            }
-        }
+        Map<String, Set<String>> rightGraph = fieldCalculateList.stream()
+                .collect(Collectors.toMap(FieldCalculate::getName, FieldCalculate::dependFields));
         //转换成左向右依赖图
         Map<String, Set<String>> leftGraph = DAGUtil.rightToLeft(rightGraph);
 

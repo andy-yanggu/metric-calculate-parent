@@ -7,8 +7,10 @@ import com.yanggu.metric_calculate.core.pojo.aviator_express.AviatorExpressParam
 import com.yanggu.metric_calculate.core.util.AviatorExpressUtil;
 import lombok.Data;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * 虚拟字段计算类
@@ -35,8 +37,9 @@ public class VirtualFieldCalculate<R> implements FieldCalculate<Map<String, Obje
     }
 
     @Override
-    public List<String> dependFields() {
-        return AviatorExpressUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory).getVariableNames();
+    public Set<String> dependFields() {
+        List<String> variableNames = AviatorExpressUtil.compileExpress(aviatorExpressParam, aviatorFunctionFactory).getVariableNames();
+        return new HashSet<>(variableNames);
     }
 
     @Override

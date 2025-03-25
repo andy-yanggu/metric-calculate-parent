@@ -1,7 +1,6 @@
 package com.yanggu.metric_calculate.core.calculate.field;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Set;
 
 /**
  * 字段计算类
@@ -17,8 +16,8 @@ public interface FieldCalculate<T, R> {
     /**
      * 依赖的字段。默认为空
      */
-    default List<String> dependFields() {
-        return new ArrayList<>();
+    default Set<String> dependFields() {
+        return Set.of();
     }
 
     /**

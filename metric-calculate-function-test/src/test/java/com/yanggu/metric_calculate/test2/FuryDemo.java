@@ -2,8 +2,8 @@ package com.yanggu.metric_calculate.test2;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import io.fury.Fury;
-import io.fury.config.Language;
+import org.apache.fury.Fury;
+import org.apache.fury.config.Language;
 
 import java.util.Arrays;
 import java.util.List;
