@@ -6,6 +6,7 @@ import com.yanggu.metric_calculate.core.function_factory.FunctionFactory;
 import com.yanggu.metric_calculate.core.kryo.pool.InputPool;
 import com.yanggu.metric_calculate.core.kryo.pool.KryoPool;
 import com.yanggu.metric_calculate.core.kryo.pool.OutputPool;
+import com.yanggu.metric_calculate.core.util.TestJarUtil;
 import org.dromara.hutool.core.lang.mutable.MutablePair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -24,8 +25,6 @@ class KryoUtilTest {
 
     private KryoUtil kryoUtil;
 
-    String jarPath = "D:\\project\\self\\metric-calculate-parent\\metric-calculate-test\\target\\metric-calculate-test-1.0.0-SNAPSHOT.jar";
-
     @BeforeEach
     void init() {
         KryoPool kryoPool = new KryoPool(100, null);
@@ -42,10 +41,13 @@ class KryoUtilTest {
         assertEquals(pair, deserialize);
     }
 
+    /**
+     * 测试Jar包中的ACC能够序列化和反序列化成功
+     */
     @Test
-    @Disabled("测试Jar包中的ACC能够序列化和反序列化成功")
+    @Disabled("不一定能成功，测试jar包不一定存在")
     void test2() throws Exception {
-        List<String> jarPathList = List.of(jarPath);
+        List<String> jarPathList = TestJarUtil.testJarPath();
         AggregateFunctionFactory aggregateFunctionFactory = new AggregateFunctionFactory(jarPathList);
         aggregateFunctionFactory.init();
         AggregateFunction<Object, Object, Object> testAcc = aggregateFunctionFactory.getAggregateFunction("TEST_ACC");

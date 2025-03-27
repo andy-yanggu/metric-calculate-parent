@@ -20,13 +20,13 @@ public class FunctionFactoryTestBase {
     }
 
     /**
-     * 使用maven命令生产metric-calculate-test-1.0.0-SNAPSHOT.jar包
+     * 使用maven命令生产metric-calculate-function-test-1.0.0-SNAPSHOT.jar包
      *
      * @return jar路径
      * @throws Exception
      */
     public static String testJarPath() throws Exception {
-        String testModuleName = "metric-calculate-test";
+        String testModuleName = "metric-calculate-function-test";
         String version = "1.0.0-SNAPSHOT";
         String separator = File.separator;
 
@@ -59,7 +59,7 @@ public class FunctionFactoryTestBase {
         InvocationRequest request = new DefaultInvocationRequest();
         request.setPomFile(new File(canonicalPath + separator + "pom.xml"));
         System.out.println(canonicalPath + separator + "pom.xml");
-        request.setGoals(Collections.singletonList("package"));
+        request.addArg("package");
         request.setProjects(Collections.singletonList(testModuleName));
         request.setAlsoMake(true);
         request.setThreads("2.0C");

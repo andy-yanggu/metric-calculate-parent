@@ -11,7 +11,7 @@ public class TestJarUtil {
 
     @SneakyThrows
     public static List<String> testJarPath() {
-        String testModuleName = "metric-calculate-test";
+        String testModuleName = "metric-calculate-function-test";
         String version = "1.0.0-SNAPSHOT";
         String separator = File.separator;
 
