@@ -26,9 +26,9 @@ class NumberTest {
     @Test
     @DisplayName("测试使用模板生成代码并进行编译")
     void test1() throws Exception {
-        TemplateConfig templateConfig = new TemplateConfig("merged_unit_template", TemplateConfig.ResourceMode.CLASSPATH);
+        TemplateConfig templateConfig = new TemplateConfig("aggregate_function_template", TemplateConfig.ResourceMode.CLASSPATH);
         TemplateEngine engine = TemplateUtil.getEngine().init(templateConfig);
-        Template template = engine.getTemplate("number.ftl");
+        Template template = engine.getTemplate("sum.ftl");
 
         Map<String, Object> param = new HashMap<>();
 
@@ -37,20 +37,21 @@ class NumberTest {
 
         //生成模板代码
         String templateCode = template.render(param);
-        System.out.println(templateCode);
+        //System.out.println(templateCode);
 
+        //使用janino进行内存编译源码为class
         Compiler compiler = new Compiler();
 
-        // Store generated .class files in a Map:
         Map<String, byte[]> classes = new HashMap<>();
         compiler.setClassFileCreator((new MapResourceCreator(classes)));
 
         compiler.compile(new Resource[]{new StringResource("com.yanggu.metric_calculate.core.aggregate_function.numeric/Sum_Double_AggregateFunction.java", templateCode)});
 
         ClassLoader classLoader = new ResourceFinderClassLoader(
-                new MapResourceFinder(classes),  /// resourceFinder
-                ClassLoader.getSystemClassLoader()  /// parent
+                new MapResourceFinder(classes),
+                ClassLoader.getSystemClassLoader()
         );
+        //使用自定义类加载器加载编译后的类
         Class<?> clazz = classLoader.loadClass("com.yanggu.metric_calculate.core.aggregate_function.numeric.Sum_Double_AggregateFunction");
         AggregateFunction<Double, Double, Double> aggregateFunction = (AggregateFunction<Double, Double, Double>) clazz.getDeclaredConstructor().newInstance();
         Double accumulator = aggregateFunction.createAccumulator();
