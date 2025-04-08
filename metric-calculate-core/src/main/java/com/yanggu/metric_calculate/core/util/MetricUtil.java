@@ -132,10 +132,20 @@ public class MetricUtil {
         Map<String, Set<String>> leftGraph = DAGUtil.rightToLeft(rightGraph);
 
         //进行拓扑排序
-        List<String> list = DAGUtil.topologicalSort(leftGraph);
+        List<List<String>> lists = DAGUtil.parallelTopologicalSort(leftGraph);
         //重新进行排序
-        fieldCalculateList.sort(Comparator.comparingInt(temp -> list.indexOf(temp.getName())));
-        metricCalculate.setFieldCalculateList(fieldCalculateList);
+        List<List<FieldCalculate<Map<String, Object>, Object>>> fieldCalculateListList = new ArrayList<>();
+        for (List<String> list : lists) {
+            List<FieldCalculate<Map<String, Object>, Object>> tempFieldCalculateList = new ArrayList<>();
+            fieldCalculateListList.add(tempFieldCalculateList);
+            for (String fieldName : list) {
+                tempFieldCalculateList.add(fieldCalculateList.stream()
+                        .filter(fieldCalculate -> fieldCalculate.getName().equals(fieldName))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("字段计算类不存在")));
+            }
+        }
+        metricCalculate.setFieldCalculateListList(fieldCalculateListList);
     }
 
     /**

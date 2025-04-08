@@ -32,6 +32,11 @@ public class MetricCalculate extends Model implements Serializable {
     /**
      * 字段计算类
      */
+    private transient List<List<FieldCalculate<Map<String, Object>, Object>>> fieldCalculateListList;
+
+    /**
+     * 字段计算类
+     */
     private transient List<FieldCalculate<Map<String, Object>, Object>> fieldCalculateList;
 
     /**
@@ -68,10 +73,13 @@ public class MetricCalculate extends Model implements Serializable {
             throw new RuntimeException("输入的明细数据为空");
         }
         Map<String, Object> processMap = new HashMap<>(input);
-        for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculateList) {
-            //计算得到的结果作为下一个计算的输入
-            Object process = fieldCalculate.process(processMap);
-            processMap.put(fieldCalculate.getName(), process);
+        for (List<FieldCalculate<Map<String, Object>, Object>> fieldCalculates : fieldCalculateListList) {
+            //这个fieldCalculates可以优化成多线程计算。
+            for (FieldCalculate<Map<String, Object>, Object> fieldCalculate : fieldCalculates) {
+                //计算得到的结果作为下一个计算的输入
+                Object process = fieldCalculate.process(processMap);
+                processMap.put(fieldCalculate.getName(), process);
+            }
         }
         return processMap;
     }

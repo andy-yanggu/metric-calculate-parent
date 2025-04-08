@@ -96,17 +96,80 @@ public class DAGUtil {
         return sortedList;
     }
 
-    public static void main(String[] args) {
-        Map<String, Set<String>> graph = new HashMap<>();
-        graph.put("A", Set.of("B", "C"));
-        graph.put("B", Set.of("D"));
-        graph.put("C", Set.of("D"));
-        graph.put("D", Set.of("A"));
-        graph.put("E", Set.of("F"));
+    //拓扑排序，且可以获取到并行节点
+    public static List<List<String>> parallelTopologicalSort(Map<String, Set<String>> graph) {
+        Map<String, Integer> inDegree = new HashMap<>();
+        graph.keySet().forEach(node -> inDegree.put(node, 0));
 
-        List<String> result = topologicalSort(graph);
-        //存在循环依赖，应该会报错
-        System.out.println(result);
+        //计算入度（保持不变）
+        graph.values().stream()
+                .filter(CollUtil::isNotEmpty)
+                .flatMap(Set::stream)
+                .forEach(neighbor -> inDegree.put(neighbor, inDegree.getOrDefault(neighbor, 0) + 1));
+
+        //将入度为0的节点加入队列（删除冗余检查）
+        Queue<String> queue = new LinkedList<>();
+        inDegree.entrySet().stream()
+                .filter(entry -> entry.getValue() == 0)
+                .forEach(entry -> queue.offer(entry.getKey()));
+
+        if (queue.isEmpty()) {
+            throw new IllegalArgumentException("Cyclic dependency detected");
+        }
+
+        List<List<String>> parallelGroups = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            //获当前层级的可并行节点数量
+            int levelSize = queue.size();
+            List<String> currentLevel = new ArrayList<>();
+
+            //处理当前层级所有可并行节点
+            for (int i = 0; i < levelSize; i++) {
+                String node = queue.poll();
+                currentLevel.add(node);
+
+                //更新邻居节点入度
+                graph.getOrDefault(node, Collections.emptySet()).forEach(neighbor -> {
+                    inDegree.put(neighbor, inDegree.get(neighbor) - 1);
+                    if (inDegree.get(neighbor) == 0) {
+                        queue.offer(neighbor);
+                    }
+                });
+            }
+            parallelGroups.add(currentLevel);
+        }
+
+        if (parallelGroups.stream().mapToInt(List::size).sum() != inDegree.size()) {
+            throw new IllegalArgumentException("Cyclic dependency detected");
+        }
+
+        return parallelGroups;
+    }
+
+    public static void main(String[] args) {
+        Map<String, Set<String>> graph6 = Map.of(
+                "A", Set.of("B", "C"),
+                "B", Set.of("D"),
+                "C", Set.of("E"),
+                "D", Set.of("F"),
+                "E", Set.of("F")
+        );
+        /* 预期结果：
+          [A],
+          [B,C],
+          [D,E],
+          [F]
+        */
+        parallelTopologicalSort(graph6).forEach(System.out::println);
+
+        graph6 = Map.of(
+                "A", Set.of("B", "C"),
+                "B", Set.of("D"),
+                "C", Set.of("E"),
+                "D", Set.of("E"),
+                "E", Set.of("F")
+        );
+        parallelTopologicalSort(graph6).forEach(System.out::println);
     }
 
 }
