@@ -15,6 +15,14 @@ import java.lang.annotation.Target;
 @ArgumentsSource(JsonArgumentsProvider.class)
 public @interface JsonSource {
 
+    /**
+     * json文件路径
+     */
     String value();
+
+    /**
+     * 标识只有一个参数时，是平铺还是聚合对象
+     */
+    boolean aggregate() default true;
 
 }

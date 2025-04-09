@@ -1,9 +1,9 @@
 package com.yanggu.metric_calculate.core.calculate.metric;
 
 
-import com.yanggu.metric_calculate.core.pojo.TestData;
 import com.yanggu.metric_calculate.core.pojo.acc.MultiFieldData;
 import com.yanggu.metric_calculate.core.pojo.metric.DeriveMetricCalculateResult;
+import com.yanggu.metric_calculate.test.junit5.param.JsonParam;
 import com.yanggu.metric_calculate.test.junit5.param.JsonSource;
 import org.dromara.hutool.core.lang.tuple.Pair;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,21 +33,24 @@ class DeriveMetricsCalculateMapTest extends DeriveMetricsCalculateBase {
 
     /**
      * 测试基本映射BASEMAP
-     * <p>所有交易账号的累计交易金额
+     * <p>所有交易账号的累计交易金额</p>
      */
     @ParameterizedTest
     @JsonSource("test_data.json")
     @DisplayName("测试基本映射BASEMAP")
-    void testBaseMap(TestData testData) {
+    void testBaseMap(@JsonParam("input.accountNoIn") String accountNoIn,
+                     @JsonParam("input.amount") BigDecimal amount,
+                     Map<List<String>, BigDecimal> output) {
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("account_no_out", "000000000011");
-        paramMap.put("account_no_in", testData.getInput().getAccountNoIn());
+        paramMap.put("account_no_in", accountNoIn);
         paramMap.put("trans_timestamp", "1654768045000");
-        paramMap.put("amount", testData.getInput().getAmount());
+        paramMap.put("amount", amount);
 
         DeriveMetricCalculateResult<Map<List<Object>, BigDecimal>> result = deriveMetricCalculate.stateExec(paramMap);
         assertNotNull(result);
-        assertEquals(testData.getOutput(), result.getResult());
+        assertNotNull(result.getResult());
+        assertEquals(output, result.getResult());
     }
 
 }
