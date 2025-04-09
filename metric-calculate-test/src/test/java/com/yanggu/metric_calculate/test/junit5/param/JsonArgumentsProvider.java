@@ -34,20 +34,20 @@ public class JsonArgumentsProvider extends AnnotationBasedArgumentsProvider<Json
             return Stream.empty();
         }
         String jsonArrayString = FileUtil.readUtf8String(annotation.value());
-        if (StrUtil.isBlank(jsonArrayString)) {
+        if (!JSONUtil.isTypeJSONArray(jsonArrayString)) {
             return Stream.empty();
         }
         JSONArray jsonArray = JSONUtil.parseArray(jsonArrayString);
         if (JSONUtil.isEmpty(jsonArray)) {
             return Stream.empty();
         }
-        // 如果只有一个参数，并且需要聚合，则直接返回一个参数的集合
-        if (parameters.length == 1 && annotation.aggregate()) {
+        //如果只有一个参数，且需要反射直接赋值，则直接返回一个集合
+        if (parameters.length == 1 && annotation.useReflect()) {
             return JSONUtil.toList(jsonArray, method.getParameterTypes()[0])
                     .stream()
                     .map(Arguments::of);
         } else {
-            // 多个参数，则返回多个参数的集合
+            //多个参数，则返回多个参数的集合
             return jsonArray.stream()
                     .map(json -> {
                         Object[] args = Arrays.stream(parameters)
@@ -65,20 +65,20 @@ public class JsonArgumentsProvider extends AnnotationBasedArgumentsProvider<Json
         JsonParam jsonParam = parameter.getAnnotation(JsonParam.class);
         Object paramData;
         Type parameterizedType = parameter.getParameterizedType();
-        //如果使用了注解，使用path取值
         String name = parameter.getName();
+        //如果使用了注解，使用path取值
         if (jsonParam != null) {
             String path = jsonParam.value();
-            //如果使用了path，使用name取值
+            //如果path为空，使用name取值
             if (StrUtil.isBlank(path)) {
                 path = name;
             }
             paramData = JSONUtil.getByPath(json, path, parameterizedType);
-            //如果没有path取值，使用默认值
+            //如果没有取到值，使用默认值
             if (paramData == null) {
                 paramData = ConvertUtil.convert(parameterizedType, jsonParam.defaultValue());
             }
-            //如果是必传参数，并且取值失败，抛出异常
+            //如果是必传参数，并且取值为空，抛出异常
             if (jsonParam.required() && ObjUtil.isEmpty(paramData)) {
                 throw new IllegalArgumentException("参数" + name + "为必传参数");
             }

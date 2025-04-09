@@ -21,8 +21,8 @@ public @interface JsonSource {
     String value();
 
     /**
-     * 标识只有一个参数时，是平铺还是聚合对象
+     * 标识只有一个参数时，使用反射赋值
      */
-    boolean aggregate() default true;
+    boolean useReflect() default true;
 
 }
